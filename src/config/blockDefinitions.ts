@@ -1553,7 +1553,8 @@ export const blockDefinitions: BlockDefinition[] = [
     properties: {
       logoUrl: {
         type: "string",
-        default: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        default:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         label: "URL do Logo",
       },
       logoAlt: {
@@ -1571,7 +1572,7 @@ export const blockDefinitions: BlockDefinition[] = [
       logoHeight: {
         type: "number",
         default: 80,
-        label: "Altura do Logo (px)", 
+        label: "Altura do Logo (px)",
         min: 40,
         max: 200,
       },
@@ -1632,7 +1633,8 @@ export const blockDefinitions: BlockDefinition[] = [
     },
     label: "Cabeçalho de Quiz",
     defaultProps: {
-      logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+      logoUrl:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
       logoAlt: "Logo",
       logoWidth: 80,
       logoHeight: 80,
@@ -1666,7 +1668,7 @@ export const blockDefinitions: BlockDefinition[] = [
         label: "Texto da Opção",
       },
       value: {
-        type: "string", 
+        type: "string",
         default: "option-value",
         label: "Valor da Opção",
       },

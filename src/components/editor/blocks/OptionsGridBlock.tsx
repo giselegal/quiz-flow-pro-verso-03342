@@ -6,17 +6,23 @@ interface Option {
   id: string;
   text: string;
   imageUrl?: string;
+  value?: string;
+  category?: string;
+  styleCategory?: string;
+  keyword?: string;
+  points?: number;
 }
 
 interface OptionsGridBlockProps extends BlockComponentProps {
   properties: {
     question?: string;
+    questionId?: string;
     options?: Option[];
-    columns?: number;
+    columns?: number | string;
     selectedOption?: string;
     // 🎯 CONTROLES DE IMAGEM
     showImages?: boolean;
-    imageSize?: "small" | "medium" | "large" | "custom";
+    imageSize?: "small" | "medium" | "large" | "custom" | string; // Permite strings também
     imageWidth?: number;
     imageHeight?: number;
     imagePosition?: "top" | "left" | "right" | "bottom";
@@ -25,8 +31,25 @@ interface OptionsGridBlockProps extends BlockComponentProps {
     multipleSelection?: boolean;
     maxSelections?: number;
     minSelections?: number;
+    requiredSelections?: number;
     gridGap?: number;
     responsiveColumns?: boolean;
+    // 🎯 CONTROLES DE SELEÇÃO
+    selectionStyle?: string;
+    selectedColor?: string;
+    hoverColor?: string;
+    allowDeselection?: boolean;
+    showSelectionCount?: boolean;
+    // 🎯 CONTROLES DE VALIDAÇÃO
+    validationMessage?: string;
+    progressMessage?: string;
+    enableButtonOnlyWhenValid?: boolean;
+    showValidationFeedback?: boolean;
+    // 🎯 CONTROLES DE COMPORTAMENTO
+    autoAdvanceOnComplete?: boolean;
+    autoAdvanceDelay?: number;
+    instantActivation?: boolean;
+    trackSelectionOrder?: boolean;
   };
 }
 
@@ -86,6 +109,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 }) => {
   const {
     question,
+    questionId,
     options = [],
     columns = 2,
     selectedOption,
@@ -100,6 +124,25 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     gridGap = 16,
     responsiveColumns = true,
     multipleSelection = false,
+    maxSelections = 1,
+    minSelections = 1,
+    requiredSelections = 1,
+    // 🎯 PROPRIEDADES DE ESTILO
+    selectionStyle = "border",
+    selectedColor = "#B89B7A",
+    hoverColor = "#D4C2A8",
+    // 🎯 PROPRIEDADES DE COMPORTAMENTO
+    allowDeselection = true,
+    showSelectionCount = true,
+    validationMessage = "Selecione uma opção",
+    progressMessage = "{selected} de {maxSelections} selecionados",
+    enableButtonOnlyWhenValid = true,
+    showValidationFeedback = true,
+    autoAdvanceOnComplete = false,
+    autoAdvanceDelay = 0,
+    instantActivation = true,
+    trackSelectionOrder = false,
+    // 🎯 PROPRIEDADES LEGADAS
     className: blockClassName,
     showQuestionTitle = true,
   } = (block?.properties as any) || {};
@@ -120,13 +163,25 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       large: 256,
     } as const;
 
+    // Se for uma string com "px", extrair o número
+    if (typeof imageSize === "string" && imageSize.includes("px")) {
+      const size = parseInt(imageSize.replace("px", ""), 10);
+      return { width: size, height: size };
+    }
+
+    // Se for um número como string
+    if (typeof imageSize === "string" && !isNaN(parseInt(imageSize, 10))) {
+      const size = parseInt(imageSize, 10);
+      return { width: size, height: size };
+    }
+
     if (imageSize === "custom") {
       const w = toPxNumber(imageWidth) ?? 150;
       const h = toPxNumber(imageHeight) ?? w;
       return { width: w, height: h };
     }
 
-    const side = presets[imageSize] ?? presets.medium;
+    const side = presets[imageSize as keyof typeof presets] ?? presets.medium;
     return { width: side, height: side };
   };
 
@@ -138,10 +193,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       : "flex flex-col";
 
   const gridColsClass = (() => {
-    if (columns === 1) return "grid-cols-1";
-    if (columns === 2)
-      return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
-    return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-3";
+    const colNum = typeof columns === "string" ? parseInt(columns, 10) : columns;
+    if (colNum === 1) return "grid-cols-1";
+    if (colNum === 2) return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
+    if (colNum === 3)
+      return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-3";
+    if (colNum === 4)
+      return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4" : "grid-cols-4";
+    return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
   })();
 
   const imageOrderClass = (() => {
