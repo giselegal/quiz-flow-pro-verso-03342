@@ -184,7 +184,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Função para extrair número da etapa do stageId
   const getStepNumberFromStageId = (stageId: string | null): number => {
     if (!stageId) return 1;
-    const match = stageId.match(/stage-(\d+)/);
+    const match = stageId.match(/step-(\d+)/);
     return match ? parseInt(match[1], 10) : 1;
   };
 

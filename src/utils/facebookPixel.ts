@@ -6,8 +6,38 @@ declare global {
   interface Window {
     fbq?: (event: string, eventName: string, params?: any) => void;
     _fbq?: any;
+    __ACTIVE_PIXEL_ID?: string;
+    __pixelTest?: (eventName?: string, params?: any) => void;
   }
 }
+
+/**
+ * Utilities to ensure the Pixel script is loaded and initialized
+ */
+const ensurePixelScriptLoaded = (): void => {
+  if (typeof document === "undefined") return;
+  const src = "https://connect.facebook.net/en_US/fbevents.js";
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) return;
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = src;
+  document.head.appendChild(script);
+};
+
+const attachDebugTools = (): void => {
+  try {
+    window.__pixelTest = (eventName = "TestEvent", params: any = {}) => {
+      if (!window.fbq) {
+        console.warn("[Pixel] fbq not ready for test");
+        return;
+      }
+      const payload = { ...params, test: true, ts: Date.now(), pixel_id: window.__ACTIVE_PIXEL_ID };
+      window.fbq("trackCustom", eventName, payload);
+      console.log(`[Pixel] Test event '${eventName}' sent`, payload);
+    };
+  } catch {}
+};
 
 /**
  * Initialize Facebook Pixel with the provided ID
@@ -21,19 +51,23 @@ export const initFacebookPixel = (pixelId: string): boolean => {
       return false;
     }
 
-    // Initialize Facebook Pixel
+    ensurePixelScriptLoaded();
+
     if (!window.fbq) {
-      window.fbq = function (event: string, eventName: string, params?: any) {
-        (window.fbq as any).q = (window.fbq as any).q || [];
-        (window.fbq as any).q.push([event, eventName, params]);
+      const w = window as any;
+      w.fbq = function () {
+        w.fbq.callMethod ? w.fbq.callMethod.apply(w.fbq, arguments) : w.fbq.queue.push(arguments);
       };
-      window._fbq = window.fbq;
-      (window.fbq as any).loaded = true;
-      (window.fbq as any).version = "2.0";
+      if (!w._fbq) w._fbq = w.fbq;
+      w.fbq.push = w.fbq;
+      w.fbq.loaded = true;
+      w.fbq.version = "2.0";
+      w.fbq.queue = [];
     }
 
-    window.fbq("track", "init", { pixelId });
-    // Facebook Pixel - PageView será disparado manualmente quando necessário
+    (window as any).fbq("init", pixelId);
+    window.__ACTIVE_PIXEL_ID = pixelId;
+    attachDebugTools();
 
     console.log(`Facebook Pixel initialized with ID: ${pixelId}`);
     return true;

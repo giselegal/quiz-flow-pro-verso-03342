@@ -70,6 +70,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // chamará o `onUpdate` do `EditorProvider`.
   const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
     useUnifiedProperties(
+      actualBlock?.type || "",
+      actualBlock?.id,
       actualBlock,
       onUpdate // Passa o `onUpdate` do painel diretamente para o hook
     );

@@ -85,49 +85,78 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   className = "",
 }) => {
   const {
-    question = "Escolha uma opção",
+    question,
     options = [],
     columns = 2,
     selectedOption,
     // 🎯 PROPRIEDADES DE IMAGEM
     showImages = true,
     imageSize = "medium",
-    imageWidth = 150,
-    imageHeight = 120,
+    imageWidth,
+    imageHeight,
     imagePosition = "top",
     imageLayout = "vertical",
     // 🎯 PROPRIEDADES DE LAYOUT
     gridGap = 16,
     responsiveColumns = true,
     multipleSelection = false,
-  } = block?.properties || {};
+    className: blockClassName,
+    showQuestionTitle = true,
+  } = (block?.properties as any) || {};
 
-  // 🎯 CALCULAR TAMANHOS DE IMAGEM
-  const getImageClasses = () => {
-    const sizeClasses: Record<string, string> = {
-      small: "w-16 h-16",
-      medium: "w-24 h-20",
-      large: "w-32 h-28",
-      custom: `w-[${imageWidth}px] h-[${imageHeight}px]`,
-    };
-
-    const positionClasses: Record<string, string> = {
-      top: "mb-3",
-      bottom: "mt-3 order-last",
-      left: "mr-3",
-      right: "ml-3",
-    };
-
-    return `${sizeClasses[imageSize]} object-cover rounded-md ${positionClasses[imagePosition]}`;
+  // Helpers
+  const toPxNumber = (val?: number | string): number | undefined => {
+    if (val == null) return undefined;
+    if (typeof val === "number") return val;
+    const n = parseInt(String(val), 10);
+    return isNaN(n) ? undefined : n;
   };
 
-  // 🎯 CALCULAR LAYOUT DO CARD
-  const getCardLayoutClasses = () => {
-    if (imageLayout === "horizontal" && (imagePosition === "left" || imagePosition === "right")) {
-      return "flex items-center";
+  // 🎯 Normalizar tamanhos de imagem
+  const getImageSize = () => {
+    const presets = {
+      small: 96,
+      medium: 128,
+      large: 256,
+    } as const;
+
+    if (imageSize === "custom") {
+      const w = toPxNumber(imageWidth) ?? 150;
+      const h = toPxNumber(imageHeight) ?? w;
+      return { width: w, height: h };
     }
-    return "flex flex-col";
+
+    const side = presets[imageSize] ?? presets.medium;
+    return { width: side, height: side };
   };
+
+  const { width: imgW, height: imgH } = getImageSize();
+
+  const cardLayoutClass =
+    imageLayout === "horizontal" && (imagePosition === "left" || imagePosition === "right")
+      ? "flex items-center"
+      : "flex flex-col";
+
+  const gridColsClass = (() => {
+    if (columns === 1) return "grid-cols-1";
+    if (columns === 2)
+      return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
+    return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-3";
+  })();
+
+  const imageOrderClass = (() => {
+    switch (imagePosition) {
+      case "bottom":
+        return "order-last mt-3";
+      case "left":
+        return "mr-3";
+      case "right":
+        return "ml-3";
+      case "top":
+      default:
+        return "mb-3";
+    }
+  })();
 
   const handleOptionSelect = (optionId: string) => {
     if (onPropertyChange) {
@@ -137,62 +166,43 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
 
   return (
     <div
-      className={`
-        py-8 px-4 cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
-        ${className}
-      `}
+      className={`${isSelected ? "ring-2 ring-amber-500/60 ring-offset-1" : ""} ${className}`}
       onClick={onClick}
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold text-center mb-8 text-[#432818]">{question}</h2>
+      {/* Título interno opcional: só renderiza se existir e for permitido */}
+      {question && showQuestionTitle && (
+        <h2 className="text-2xl font-bold text-center mb-6">{question}</h2>
+      )}
 
-        <div
-          className={`grid gap-${Math.floor(gridGap / 4)} ${
-            columns === 1
-              ? "grid-cols-1"
-              : columns === 2
-                ? responsiveColumns
-                  ? "grid-cols-1 md:grid-cols-2"
-                  : "grid-cols-2"
-                : responsiveColumns
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                  : "grid-cols-3"
-          }`}
-        >
-          {(options || []).map((opt: any) => (
-            <div
-              key={opt.id}
-              className={`bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${getCardLayoutClasses()}`}
-              onClick={() => handleOptionSelect(opt.id)}
-            >
-              {opt.imageUrl && showImages && (
-                <img
-                  src={opt.imageUrl}
-                  alt={opt.text}
-                  className={getImageClasses()}
-                  style={
-                    imageSize === "custom"
-                      ? { width: `${imageWidth}px`, height: `${imageHeight}px` }
-                      : {}
-                  }
-                />
-              )}
-              <p
-                className={`text-center text-[#432818] font-medium ${
-                  imageLayout === "horizontal" &&
-                  (imagePosition === "left" || imagePosition === "right")
-                    ? "flex-1"
-                    : ""
-                }`}
-              >
-                {opt.text}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div
+        className={`grid ${gridColsClass} ${blockClassName || ""}`}
+        style={{ gap: `${gridGap}px` }}
+      >
+        {(options || []).map((opt: any) => (
+          <div
+            key={opt.id}
+            className={`rounded-lg border border-neutral-200 bg-white p-4 hover:shadow-md transition-all duration-200 cursor-pointer ${cardLayoutClass}`}
+            onClick={() => handleOptionSelect(opt.id)}
+          >
+            {opt.imageUrl && showImages && (
+              <img
+                src={opt.imageUrl}
+                alt={opt.text || "opção"}
+                className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
+                width={imgW}
+                height={imgH}
+                style={{ width: `${imgW}px`, height: `${imgH}px` }}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+            <p className={`${imageLayout === "horizontal" ? "flex-1" : "text-center"} font-medium`}>
+              {opt.text}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import FunnelsPage from "./pages/FunnelsPage";
 import Home from "./pages/Home";
 import { ResultConfigPage } from "./pages/ResultConfigPage";
 import ResultPage from "./pages/ResultPage";
+import PixelInitializer from "./components/PixelInitializer";
 
 function App() {
   console.log("🔧 DEBUG: App component iniciado");
@@ -33,6 +34,7 @@ function App() {
         <AdminAuthProvider>
           <Router>
             <div className="min-h-screen bg-background">
+              <PixelInitializer pageType="other" />
               <Switch>
                 {/* Redirect /editor para /editor-fixed */}
                 <Route path="/editor">

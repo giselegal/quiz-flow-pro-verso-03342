@@ -1,3 +1,21 @@
+interface ContainerConfig {
+  base: string;
+  padding: {
+    mobile: string;
+    tablet: string;
+    desktop: string;
+  };
+  spacing: {
+    tight: string;
+    normal: string;
+    loose: string;
+  };
+  maxWidth: {
+    full: string;
+    content: string;
+    narrow: string;
+  };
+}
 export const containerConfig: ContainerConfig = {
   base: "w-full mx-auto flex flex-col",
   padding: {

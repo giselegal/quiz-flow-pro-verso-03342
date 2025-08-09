@@ -20,10 +20,13 @@ export interface UniversalBlockRendererProps {
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (
+  value: number | string,
+  type: "top" | "bottom" | "left" | "right"
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
   const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
@@ -99,10 +102,10 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
           "p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500",
           containerClasses,
           // Margens universais com controles deslizantes
-          getMarginClass(marginTop, "top"),
-          getMarginClass(marginBottom, "bottom"),
-          getMarginClass(marginLeft, "left"),
-          getMarginClass(marginRight, "right")
+          getMarginClass(block.properties?.marginTop ?? 0, "top"),
+          getMarginClass(block.properties?.marginBottom ?? 0, "bottom"),
+          getMarginClass(block.properties?.marginLeft ?? 0, "left"),
+          getMarginClass(block.properties?.marginRight ?? 0, "right")
         )}
         onClick={onClick}
         style={inlineStyles}
