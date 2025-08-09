@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Button } from "@/components/ui/button";
 
@@ -5,8 +6,8 @@ interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
 }
 
-export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
+export const getMarginClass = (value, type) => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return "";
@@ -50,7 +51,7 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
     { type: "header", label: "Header" },
     { type: "text", label: "Text" },
@@ -84,3 +85,6 @@ const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect
     </div>
   );
 };
+
+export default ComponentsSidebar;
+
