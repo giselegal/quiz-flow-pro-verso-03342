@@ -491,6 +491,32 @@ const TemplatesIA: React.FC = () => {
 
   const getCurrentTemplate = () => AVAILABLE_TEMPLATES[selectedTemplate];
 
+  // Validações de seleção
+  const validateSelection = () => {
+    if (!selectedTemplate) {
+      toast({
+        title: "⚠️ Template não selecionado",
+        description: "Por favor, selecione um template antes de continuar.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    const template = getCurrentTemplate();
+    if (!template) {
+      toast({
+        title: "❌ Erro no Template",
+        description: "Template selecionado não encontrado. Tente novamente.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Track analytics
+    trackAIAgentStart();
+    return true;
+  };
+
   const updateStepStatus = (stepIndex: number, status: AgentStep["status"], progress: number) => {
     setSteps(prev =>
       prev.map((step, index) => (index === stepIndex ? { ...step, status, progress } : step))

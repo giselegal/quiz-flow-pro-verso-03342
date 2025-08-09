@@ -30,6 +30,7 @@ import FormInputBlock from "../components/editor/blocks/FormInputBlock";
 import HeadingInlineBlock from "../components/editor/blocks/HeadingInlineBlock";
 import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
 import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
+import QuizOptionsGridBlock from "../components/blocks/quiz/QuizOptionsGridBlock";
 import QuizOptionBlock from "../components/editor/blocks/QuizOptionBlock";
 import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
 import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
@@ -67,7 +68,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "legal-notice-inline": LegalNoticeInlineBlock,
 
   // Quiz Advanced
-  "options-grid": OptionsGridBlock,
+  "options-grid": QuizOptionsGridBlock,
   "quiz-option": QuizOptionBlock,
   "quiz-progress": QuizProgressBlock,
   "quiz-results": QuizResultsEditor,
