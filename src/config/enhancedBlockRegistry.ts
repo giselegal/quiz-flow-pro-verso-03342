@@ -1,7 +1,7 @@
-import { BlockDefinition } from "../types/editor";
 import { Heading, Image, Minus, MousePointer, Type } from "lucide-react";
 import React from "react";
 import OptionsGridInlineBlock from "../components/blocks/inline/OptionsGridInlineBlock";
+import { BlockDefinition } from "../types/editor";
 
 /**
  * ENHANCED BLOCK REGISTRY - APENAS COMPONENTES PRINCIPAIS

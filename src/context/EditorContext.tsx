@@ -1,7 +1,4 @@
 // EditorDatabaseAdapter removed - using direct context state management
-import { getTemplateByStep, STEP_TEMPLATES } from "../config/stepTemplatesMapping";
-import { EditorBlock, FunnelStage } from "../types/editor";
-import { TemplateManager } from "../utils/TemplateManager";
 import React, {
   createContext,
   ReactNode,
@@ -10,6 +7,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { getTemplateByStep, STEP_TEMPLATES } from "../config/stepTemplatesMapping";
+import { EditorBlock, FunnelStage } from "../types/editor";
+import { TemplateManager } from "../utils/TemplateManager";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
