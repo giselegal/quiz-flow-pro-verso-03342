@@ -177,13 +177,8 @@
         style="display: none"
         src="https://www.facebook.com/tr?id=&ev=PageView&noscript=1"
     /></noscript>
-    <div id="root" class="js-loading">
-      <div class="loading-fallback">
-        <div class="loading-spinner"></div>
-      </div>
-    </div>
+    <div id="root"></div>
     <script>
-      document.getElementById("root")?.classList.remove("js-loading");
       // Unregister any existing service workers to avoid caching/fetch conflicts
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => {
