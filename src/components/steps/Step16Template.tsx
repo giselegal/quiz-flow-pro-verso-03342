@@ -97,4 +97,3 @@ export const getStep16Template = () => {
   ];
 };
 
-export default Step16;

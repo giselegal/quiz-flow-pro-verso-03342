@@ -1,5 +1,6 @@
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import DebugStep02 from "@/components/debug/DebugStep02";
+import TestAllTemplates from "@/components/debug/TestAllTemplates";
 import TestOptionsRendering from "@/components/debug/TestOptionsRendering";
 import TestStep02Direct from "@/components/debug/TestStep02Direct";
 import { Toaster } from "@/components/ui/toaster";
@@ -101,6 +102,7 @@ function App() {
                   )}
                 </Route>
                 <Route path="/test/step02-direct" component={TestStep02Direct} />
+                <Route path="/test/all-templates" component={TestAllTemplates} />
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>

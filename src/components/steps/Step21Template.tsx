@@ -98,4 +98,3 @@ export const getStep21Template = () => {
   ];
 };
 
-export default Step21;

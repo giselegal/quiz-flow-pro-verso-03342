@@ -97,4 +97,3 @@ export const getStep14Template = () => {
   ];
 };
 
-export default Step14;

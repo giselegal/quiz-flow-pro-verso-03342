@@ -228,4 +228,3 @@ export const getStep09Template = () => {
   ];
 };
 
-export default Step09;

@@ -97,4 +97,3 @@ export const getStep17Template = () => {
   ];
 };
 
-export default Step17;

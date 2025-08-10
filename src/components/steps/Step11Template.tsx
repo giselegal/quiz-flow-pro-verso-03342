@@ -228,4 +228,3 @@ export const getStep11Template = () => {
   ];
 };
 
-export default Step11;
