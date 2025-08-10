@@ -1109,6 +1109,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       currentBlocks.length
     );
     console.log("📋 DEBUG: stageBlocks[activeStageId]:", stageBlocks[activeStageId]?.length || 0);
+    console.log("📋 DEBUG: currentBlocks details:", currentBlocks.map(b => `${b.id}:${b.type}`));
 
     // Só carregar se a etapa ativa não tiver blocos (evitar sobrescrever blocos já carregados)
     const currentStageBlocks = stageBlocks[activeStageId] || [];
@@ -1122,6 +1123,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       console.log(
         `📋 EditorContext: Etapa ${activeStageId} já tem ${currentStageBlocks.length} blocos carregados - mantendo dados`
       );
+      // ✅ DEBUG: Verificar estrutura dos blocos
+      currentStageBlocks.forEach((block, index) => {
+        console.log(`📦 Bloco ${index + 1}:`, {
+          id: block.id,
+          type: block.type,
+          hasContent: !!block.content,
+          hasProperties: !!block.properties,
+          order: block.order
+        });
+      });
     } else {
       console.log(
         `📋 EditorContext: Etapa ${activeStageId} inválida ou sem dados para carregar`
