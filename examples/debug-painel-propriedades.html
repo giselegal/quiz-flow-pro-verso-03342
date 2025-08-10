@@ -96,21 +96,14 @@
           <p>Status: <span id="server-status">Verificando...</span></p>
           <p>
             URL:
-            <a href="http://localhost:8081/editor" target="_blank"
-              >http://localhost:8081/editor</a
-            >
+            <a href="http://localhost:8081/editor" target="_blank">http://localhost:8081/editor</a>
           </p>
         </div>
 
         <div class="status-card" id="components-status">
           <h3>🎛️ Componentes</h3>
-          <p>
-            UniversalPropertiesPanel:
-            <span id="panel-status">Verificando...</span>
-          </p>
-          <p>
-            useUnifiedProperties: <span id="hook-status">Verificando...</span>
-          </p>
+          <p>UniversalPropertiesPanel: <span id="panel-status">Verificando...</span></p>
+          <p>useUnifiedProperties: <span id="hook-status">Verificando...</span></p>
         </div>
 
         <div class="status-card" id="integration-status">
@@ -124,21 +117,13 @@
         <h2>🧪 Testes Interativos</h2>
         <p>Use estes botões para testar a funcionalidade do painel:</p>
 
-        <button class="test-button" onclick="testServerConnection()">
-          🌐 Testar Servidor
-        </button>
+        <button class="test-button" onclick="testServerConnection()">🌐 Testar Servidor</button>
 
-        <button class="test-button" onclick="openEditorInNewTab()">
-          📝 Abrir Editor
-        </button>
+        <button class="test-button" onclick="openEditorInNewTab()">📝 Abrir Editor</button>
 
-        <button class="test-button" onclick="checkConsoleErrors()">
-          🔍 Verificar Console
-        </button>
+        <button class="test-button" onclick="checkConsoleErrors()">🔍 Verificar Console</button>
 
-        <button class="test-button" onclick="testPanelFunctionality()">
-          🎛️ Testar Painel
-        </button>
+        <button class="test-button" onclick="testPanelFunctionality()">🎛️ Testar Painel</button>
 
         <div class="log-output" id="debug-log">
           📋 LOG DE DEBUG: =============== Aguardando testes...
@@ -149,24 +134,19 @@
         <h2>📋 Instruções de Teste Manual</h2>
         <ol>
           <li>
-            <strong>Abrir Editor:</strong> Clique em "📝 Abrir Editor" ou vá
-            para
-            <a href="http://localhost:8081/editor" target="_blank"
-              >http://localhost:8081/editor</a
-            >
+            <strong>Abrir Editor:</strong> Clique em "📝 Abrir Editor" ou vá para
+            <a href="http://localhost:8081/editor" target="_blank">http://localhost:8081/editor</a>
           </li>
           <li><strong>Abrir DevTools:</strong> Pressione F12 no navegador</li>
           <li>
-            <strong>Adicionar Componente:</strong> No painel esquerdo, clique em
-            "Texto" ou "Botão"
+            <strong>Adicionar Componente:</strong> No painel esquerdo, clique em "Texto" ou "Botão"
           </li>
           <li>
-            <strong>Selecionar Componente:</strong> Clique no componente
-            adicionado na área central
+            <strong>Selecionar Componente:</strong> Clique no componente adicionado na área central
           </li>
           <li>
-            <strong>Verificar Painel:</strong> Deve aparecer um painel à direita
-            com abas de propriedades
+            <strong>Verificar Painel:</strong> Deve aparecer um painel à direita com abas de
+            propriedades
           </li>
         </ol>
       </div>
@@ -176,10 +156,7 @@
         <div id="functionality-checklist">
           <div>⏳ Componente fica selecionado (borda marrom)</div>
           <div>⏳ Painel aparece à direita</div>
-          <div>
-            ⏳ Abas de propriedades visíveis (Conteúdo, Estilo, Layout,
-            Avançado)
-          </div>
+          <div>⏳ Abas de propriedades visíveis (Conteúdo, Estilo, Layout, Avançado)</div>
           <div>⏳ Campos de propriedades aparecem</div>
           <div>⏳ Propriedades são editáveis</div>
           <div>⏳ Mudanças aplicam ao componente</div>
@@ -206,8 +183,7 @@
         debugLog.innerHTML += `\n[${timestamp}] ${message}`;
         if (className) {
           const lines = debugLog.innerHTML.split("\n");
-          lines[lines.length - 1] =
-            `<span class="${className}">${lines[lines.length - 1]}</span>`;
+          lines[lines.length - 1] = `<span class="${className}">${lines[lines.length - 1]}</span>`;
           debugLog.innerHTML = lines.join("\n");
         }
         debugLog.scrollTop = debugLog.scrollHeight;
@@ -217,17 +193,16 @@
         log("🌐 Testando conexão com servidor...", "info");
 
         fetch("http://localhost:8081")
-          .then((response) => {
+          .then(response => {
             if (response.ok) {
               log("✅ Servidor respondendo normalmente", "success");
-              document.getElementById("server-status").textContent =
-                "Online ✅";
+              document.getElementById("server-status").textContent = "Online ✅";
             } else {
               log(`❌ Servidor retornou status ${response.status}`, "error");
               document.getElementById("server-status").textContent = "Erro ❌";
             }
           })
-          .catch((error) => {
+          .catch(error => {
             log(`❌ Erro de conexão: ${error.message}`, "error");
             document.getElementById("server-status").textContent = "Offline ❌";
           });
@@ -265,10 +240,7 @@
           if (errorCount === 0 && warnCount === 0) {
             log("✅ Nenhum erro ou warning detectado", "success");
           } else {
-            log(
-              `📊 Detectados ${errorCount} erros e ${warnCount} warnings`,
-              "warning"
-            );
+            log(`📊 Detectados ${errorCount} erros e ${warnCount} warnings`, "warning");
           }
         }, 2000);
       }

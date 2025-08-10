@@ -28,15 +28,7 @@ export interface PropertyDefinition {
 }
 
 export interface PropertySchema {
-  type:
-    | "string"
-    | "number"
-    | "boolean"
-    | "select"
-    | "textarea"
-    | "array"
-    | "color"
-    | "range";
+  type: "string" | "number" | "boolean" | "select" | "textarea" | "array" | "color" | "range";
 
   default: any;
 
@@ -44,14 +36,7 @@ export interface PropertySchema {
 
   description?: string;
 
-  category?:
-    | "general"
-    | "layout"
-    | "styling"
-    | "content"
-    | "behavior"
-    | "validation"
-    | "advanced";
+  category?: "general" | "layout" | "styling" | "content" | "behavior" | "validation" | "advanced";
 
   required?: boolean;
 
@@ -296,15 +281,7 @@ export interface FunnelStage {
 
   order: number;
 
-  type:
-    | "intro"
-    | "question"
-    | "transition"
-    | "processing"
-    | "result"
-    | "lead"
-    | "offer"
-    | "final";
+  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
 
   description?: string;
 

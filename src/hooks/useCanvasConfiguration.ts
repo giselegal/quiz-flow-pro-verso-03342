@@ -20,22 +20,19 @@ export const useCanvasConfiguration = () => {
   const [isStep20Loaded, setIsStep20Loaded] = useState(false);
   const [isStep21Loaded, setIsStep21Loaded] = useState(false);
 
-  const updateConfiguration = useCallback(
-    (updates: Partial<CanvasConfiguration>) => {
-      setConfiguration((prev) => ({ ...prev, ...updates }));
-    },
-    []
-  );
+  const updateConfiguration = useCallback((updates: Partial<CanvasConfiguration>) => {
+    setConfiguration(prev => ({ ...prev, ...updates }));
+  }, []);
 
   const addComponent = useCallback((component: any) => {
-    setConfiguration((prev) => ({
+    setConfiguration(prev => ({
       ...prev,
       components: [...prev.components, component],
     }));
   }, []);
 
   const removeComponent = useCallback((index: number) => {
-    setConfiguration((prev) => ({
+    setConfiguration(prev => ({
       ...prev,
       components: prev.components.filter((_, i) => i !== index),
     }));

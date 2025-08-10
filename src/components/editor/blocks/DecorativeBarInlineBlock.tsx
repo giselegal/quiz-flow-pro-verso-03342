@@ -1,4 +1,4 @@
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import React from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
@@ -17,14 +17,7 @@ const getMarginClass = (
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {

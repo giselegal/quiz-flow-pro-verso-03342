@@ -95,9 +95,7 @@ export const insertFunnelPageSchema = createInsertSchema(funnelPages).pick({
   metadata: true,
 });
 
-export const insertFunnelVersionSchema = createInsertSchema(
-  funnelVersions
-).pick({
+export const insertFunnelVersionSchema = createInsertSchema(funnelVersions).pick({
   funnelId: true,
   version: true,
   funnelData: true,

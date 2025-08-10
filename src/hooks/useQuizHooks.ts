@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { QuizQuestion, UserResponse, StyleResult } from "../types/quiz";
+import { QuizQuestion, UserResponse, StyleResult } from "@/types/quiz";
 
 export const useQuizHooks = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -7,8 +7,8 @@ export const useQuizHooks = () => {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const handleAnswer = useCallback((response: UserResponse) => {
-    setResponses((prev) => [...prev, response]);
-    setCurrentQuestionIndex((prev) => prev + 1);
+    setResponses(prev => [...prev, response]);
+    setCurrentQuestionIndex(prev => prev + 1);
   }, []);
 
   const calculateResults = useCallback((): StyleResult[] => {

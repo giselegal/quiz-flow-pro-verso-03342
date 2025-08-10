@@ -8,19 +8,12 @@ export const getPersonalizedText = (
   return pattern.replace("{{username}}", username);
 };
 
-export const trackComponentView = (
-  componentId: string,
-  componentType: string
-) => {
+export const trackComponentView = (componentId: string, componentType: string) => {
   // Analytics tracking implementation
   console.log(`Component view: ${componentType} (${componentId})`);
 };
 
-export const trackComponentClick = (
-  componentId: string,
-  componentType: string,
-  action: string
-) => {
+export const trackComponentClick = (componentId: string, componentType: string, action: string) => {
   // Analytics tracking implementation
   console.log(`Component click: ${componentType} (${componentId}) - ${action}`);
 };
@@ -31,9 +24,7 @@ export const trackComponentConversion = (
   value: number
 ) => {
   // Conversion tracking implementation
-  console.log(
-    `Component conversion: ${componentType} (${componentId}) - Value: ${value}`
-  );
+  console.log(`Component conversion: ${componentType} (${componentId}) - Value: ${value}`);
 };
 
 export const RESPONSIVE_PATTERNS = {

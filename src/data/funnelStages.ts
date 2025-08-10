@@ -6,7 +6,7 @@
  */
 
 // @ts-nocheck
-import type { FunnelStep as FunnelStage } from "../types/funnel";
+import type { FunnelStep as FunnelStage } from "@/types/funnel";
 
 // 🚀 ETAPAS PADRÃO DO QUIZ
 export const defaultFunnelStages: FunnelStage[] = [
@@ -172,8 +172,7 @@ export const defaultFunnelStages: FunnelStage[] = [
   {
     id: "step-13",
     name: "Q11 - Guarda-Roupa",
-    description:
-      "Quando você olha para o seu guarda-roupa, qual dessas frases te vem à cabeça?",
+    description: "Quando você olha para o seu guarda-roupa, qual dessas frases te vem à cabeça?",
     order: 13,
     type: "question",
     isActive: false,
@@ -302,14 +301,12 @@ export const getFunnelStages = (): FunnelStage[] => {
 
 // 🎯 FUNÇÃO PARA OBTER ETAPA POR ID
 export const getFunnelStageById = (id: string): FunnelStage | undefined => {
-  return defaultFunnelStages.find((stage) => stage.id === id);
+  return defaultFunnelStages.find(stage => stage.id === id);
 };
 
 // 🎯 FUNÇÃO PARA OBTER ETAPA POR ORDEM
-export const getFunnelStageByOrder = (
-  order: number
-): FunnelStage | undefined => {
-  return defaultFunnelStages.find((stage) => stage.order === order);
+export const getFunnelStageByOrder = (order: number): FunnelStage | undefined => {
+  return defaultFunnelStages.find(stage => stage.order === order);
 };
 
 // 🎯 ESTATÍSTICAS DAS ETAPAS
@@ -317,12 +314,12 @@ export const getFunnelStagesStats = () => {
   const stages = defaultFunnelStages;
   return {
     total: stages.length,
-    intro: stages.filter((s) => s.type === "intro").length,
-    questions: stages.filter((s) => s.type === "question").length,
-    transitions: stages.filter((s) => s.type === "transition").length,
-    processing: stages.filter((s) => s.type === "processing").length,
-    results: stages.filter((s) => s.type === "result").length,
-    leads: stages.filter((s) => s.type === "lead").length,
-    offers: stages.filter((s) => s.type === "offer").length,
+    intro: stages.filter(s => s.type === "intro").length,
+    questions: stages.filter(s => s.type === "question").length,
+    transitions: stages.filter(s => s.type === "transition").length,
+    processing: stages.filter(s => s.type === "processing").length,
+    results: stages.filter(s => s.type === "result").length,
+    leads: stages.filter(s => s.type === "lead").length,
+    offers: stages.filter(s => s.type === "offer").length,
   };
 };

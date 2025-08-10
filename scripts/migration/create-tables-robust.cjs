@@ -194,9 +194,7 @@ async function createTablesDirectly() {
         .limit(1);
 
       if (funnelsError) {
-        console.log(
-          `❌ Erro ao acessar tabela funnels: ${funnelsError.message}`
-        );
+        console.log(`❌ Erro ao acessar tabela funnels: ${funnelsError.message}`);
       } else {
         console.log(`✅ Tabela 'funnels' criada e acessível`);
       }
@@ -208,9 +206,7 @@ async function createTablesDirectly() {
         .limit(1);
 
       if (pagesError) {
-        console.log(
-          `❌ Erro ao acessar tabela funnel_pages: ${pagesError.message}`
-        );
+        console.log(`❌ Erro ao acessar tabela funnel_pages: ${pagesError.message}`);
       } else {
         console.log(`✅ Tabela 'funnel_pages' criada e acessível`);
       }

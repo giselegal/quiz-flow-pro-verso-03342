@@ -8,9 +8,7 @@ const SUPABASE_SERVICE_KEY =
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
 async function fixRLSPolicies() {
-  console.log(
-    "🔧 Ajustando políticas RLS para permitir operações com chave anônima...\n"
-  );
+  console.log("🔧 Ajustando políticas RLS para permitir operações com chave anônima...\n");
 
   try {
     // Desabilitar RLS temporariamente para testes
@@ -95,9 +93,7 @@ async function fixRLSPolicies() {
 
     console.log("\n🎉 Ajustes de RLS concluídos!");
     console.log("\n📝 Próximos passos:");
-    console.log(
-      "   1. Teste a API: curl http://localhost:3001/api/schema-driven/funnels"
-    );
+    console.log("   1. Teste a API: curl http://localhost:3001/api/schema-driven/funnels");
     console.log("   2. Teste a criação via editor");
   } catch (error) {
     console.error("❌ Erro geral:", error);

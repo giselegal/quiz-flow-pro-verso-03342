@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -8,14 +8,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {

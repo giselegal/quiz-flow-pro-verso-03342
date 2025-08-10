@@ -1,5 +1,5 @@
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 
 // Estilos CSS customizados para animações sofisticadas
@@ -67,8 +67,7 @@ export const Auth: React.FC = () => {
         className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
         style={{
           backgroundColor: "#FEFEFE",
-          background:
-            "linear-gradient(135deg, #FEFEFE 0%, #FAF9F7 50%, #F3E8E6 100%)",
+          background: "linear-gradient(135deg, #FEFEFE 0%, #FAF9F7 50%, #F3E8E6 100%)",
         }}
       >
         {/* Elementos de fundo decorativos */}
@@ -80,10 +79,7 @@ export const Auth: React.FC = () => {
           ></div>
           <div
             className="absolute bottom-20 right-10 w-24 h-24 rounded-full opacity-10"
-            style={{
-              backgroundColor: "#A88B6A",
-              animation: "float 6s ease-in-out infinite",
-            }}
+            style={{ backgroundColor: "#A88B6A", animation: "float 6s ease-in-out infinite" }}
           ></div>
           <div
             className="absolute top-1/2 left-5 w-16 h-16 rounded-full opacity-5"
@@ -98,8 +94,7 @@ export const Auth: React.FC = () => {
           className="relative max-w-md w-full rounded-2xl shadow-2xl p-8 border-0 backdrop-blur-sm logo-container"
           style={{
             backgroundColor: "rgba(254, 254, 254, 0.95)",
-            boxShadow:
-              "0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(184, 155, 122, 0.1)",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(184, 155, 122, 0.1)",
             border: "1px solid rgba(184, 155, 122, 0.2)",
           }}
         >
@@ -113,19 +108,11 @@ export const Auth: React.FC = () => {
               ></div>
               <div
                 className="absolute inset-2 rounded-full animate-ping"
-                style={{
-                  backgroundColor: "#A88B6A",
-                  opacity: 0.3,
-                  animationDuration: "3s",
-                }}
+                style={{ backgroundColor: "#A88B6A", opacity: 0.3, animationDuration: "3s" }}
               ></div>
               <div
                 className="absolute inset-4 rounded-full"
-                style={{
-                  backgroundColor: "#8B7355",
-                  opacity: 0.1,
-                  animation: "pulse 4s infinite",
-                }}
+                style={{ backgroundColor: "#8B7355", opacity: 0.1, animation: "pulse 4s infinite" }}
               ></div>
 
               {/* Container da logo com efeitos */}
@@ -202,8 +189,7 @@ export const Auth: React.FC = () => {
                 style={{
                   color: "#432818",
                   textShadow: "0 2px 10px rgba(67, 40, 24, 0.1)",
-                  background:
-                    "linear-gradient(135deg, #432818 0%, #B89B7A 50%, #432818 100%)",
+                  background: "linear-gradient(135deg, #432818 0%, #B89B7A 50%, #432818 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -236,7 +222,7 @@ export const Auth: React.FC = () => {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
                 autoComplete="email"
@@ -257,7 +243,7 @@ export const Auth: React.FC = () => {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
@@ -283,9 +269,7 @@ export const Auth: React.FC = () => {
               style={{ color: "#B89B7A" }}
             >
               <span className="relative z-10">
-                {isLogin
-                  ? "Não tem conta? Criar uma gratuita"
-                  : "Já tem conta? Entrar agora"}
+                {isLogin ? "Não tem conta? Criar uma gratuita" : "Já tem conta? Entrar agora"}
               </span>
               <div
                 className="absolute inset-0 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -295,29 +279,16 @@ export const Auth: React.FC = () => {
 
             {/* Divisor elegante */}
             <div className="flex items-center justify-center space-x-4 my-6">
-              <div
-                className="h-px w-12"
-                style={{ backgroundColor: "#E5DDD5" }}
-              ></div>
-              <div
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: "#B89B7A" }}
-              ></div>
-              <div
-                className="h-px w-12"
-                style={{ backgroundColor: "#E5DDD5" }}
-              ></div>
+              <div className="h-px w-12" style={{ backgroundColor: "#E5DDD5" }}></div>
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#B89B7A" }}></div>
+              <div className="h-px w-12" style={{ backgroundColor: "#E5DDD5" }}></div>
             </div>
 
             {/* Branding e direitos */}
             <div className="space-y-4 pt-2">
               <div className="space-y-2">
-                <p
-                  className="text-xs font-medium tracking-wide"
-                  style={{ color: "#6B4F43" }}
-                >
-                  Transforme dados em insights • Simplifique • Interaja •
-                  Converta
+                <p className="text-xs font-medium tracking-wide" style={{ color: "#6B4F43" }}>
+                  Transforme dados em insights • Simplifique • Interaja • Converta
                 </p>
                 <div className="flex items-center justify-center space-x-2">
                   <div
@@ -325,8 +296,7 @@ export const Auth: React.FC = () => {
                     style={{ backgroundColor: "#B89B7A" }}
                   ></div>
                   <p className="text-xs" style={{ color: "#8B7355" }}>
-                    Powered by{" "}
-                    <span className="font-semibold">Gisele Galvão</span>
+                    Powered by <span className="font-semibold">Gisele Galvão</span>
                   </p>
                   <div
                     className="w-1 h-1 rounded-full"
@@ -336,10 +306,7 @@ export const Auth: React.FC = () => {
               </div>
 
               {/* Informações de marca e copyright */}
-              <div
-                className="pt-4 border-t space-y-2"
-                style={{ borderColor: "#E5DDD5" }}
-              >
+              <div className="pt-4 border-t space-y-2" style={{ borderColor: "#E5DDD5" }}>
                 <div className="flex items-center justify-center space-x-1">
                   <div
                     className="w-3 h-3 flex items-center justify-center rounded-full text-xs font-bold text-white"
@@ -356,11 +323,9 @@ export const Auth: React.FC = () => {
                   className="text-xs leading-relaxed max-w-sm mx-auto"
                   style={{ color: "#8B7355" }}
                 >
-                  <span className="font-semibold">QuizFlow</span> é uma marca
-                  registrada de
-                  <span className="font-semibold"> Gisele Galvão</span>.
-                  Plataforma especializada em conversão digital através de
-                  quizzes interativos.
+                  <span className="font-semibold">QuizFlow</span> é uma marca registrada de
+                  <span className="font-semibold"> Gisele Galvão</span>. Plataforma especializada em
+                  conversão digital através de quizzes interativos.
                 </p>
 
                 <div className="flex items-center justify-center space-x-4 text-xs mt-3">

@@ -1,21 +1,16 @@
 import React, { useState } from "react";
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
-import { Card } from "../../../components/ui/card";
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 import { Image, Upload } from "lucide-react";
 
 interface EnhancedImagePropertiesProps {
@@ -23,10 +18,7 @@ interface EnhancedImagePropertiesProps {
   onUpdate: (data: any) => void;
 }
 
-const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
-  data,
-  onUpdate,
-}) => {
+const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data, onUpdate }) => {
   const [activeTab, setActiveTab] = useState("url");
 
   return (
@@ -52,7 +44,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
               <Input
                 type="text"
                 value={data.imageUrl || ""}
-                onChange={(e) =>
+                onChange={e =>
                   onUpdate({
                     ...data,
                     imageUrl: e.target.value,
@@ -67,7 +59,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
             <Card className="border border-dashed p-6 text-center">
               <div className="flex flex-col items-center gap-2">
                 <Upload className="h-8 w-8 text-gray-400" />
-                <p style={{ color: "#8B7355" }}>
+                <p style={{ color: '#8B7355' }}>
                   Arraste uma imagem ou clique para fazer upload
                 </p>
                 <Button className="mt-2" size="sm">
@@ -79,7 +71,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
                 accept="image/*"
                 className="hidden"
                 id="image-upload"
-                onChange={(e) => {
+                onChange={e => {
                   // Implementar lógica de upload
                   console.log("Implementar lógica de upload", e.target.files);
                 }}
@@ -90,10 +82,10 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
           <TabsContent value="gallery" className="pt-4">
             <div className="grid grid-cols-3 gap-2">
               {/* Exemplo de imagens da galeria */}
-              {[1, 2, 3, 4, 5, 6].map((i) => (
+              {[1, 2, 3, 4, 5, 6].map(i => (
                 <div
                   key={i}
-                  style={{ backgroundColor: "#E5DDD5" }}
+                  style={{ backgroundColor: '#E5DDD5' }}
                   onClick={() =>
                     onUpdate({
                       ...data,
@@ -115,9 +107,8 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
             src={data.imageUrl}
             alt="Preview"
             className="max-h-40 mx-auto object-contain"
-            onError={(e) => {
-              e.currentTarget.src =
-                "https://placehold.co/300x300?text=Error+loading+image";
+            onError={e => {
+              e.currentTarget.src = "https://placehold.co/300x300?text=Error+loading+image";
             }}
           />
         </div>
@@ -127,7 +118,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
         <Label>Texto Alternativo</Label>
         <Input
           value={data.alt || ""}
-          onChange={(e) =>
+          onChange={e =>
             onUpdate({
               ...data,
               alt: e.target.value,
@@ -141,7 +132,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({
         <Label>Tamanho da Imagem</Label>
         <Select
           value={data.imageSize || "medium"}
-          onValueChange={(value) =>
+          onValueChange={value =>
             onUpdate({
               ...data,
               imageSize: value,

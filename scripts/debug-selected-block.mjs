@@ -5,18 +5,8 @@ console.log("🔍 DEBUG: Painel de Propriedades");
 const mockData = {
   selectedBlockId: "step-1-block-text-1",
   currentBlocks: [
-    {
-      id: "step-1-block-text-1",
-      type: "text",
-      content: { text: "Test" },
-      order: 1,
-    },
-    {
-      id: "step-1-block-heading-2",
-      type: "heading",
-      content: { text: "Title" },
-      order: 2,
-    },
+    { id: "step-1-block-text-1", type: "text", content: { text: "Test" }, order: 1 },
+    { id: "step-1-block-heading-2", type: "heading", content: { text: "Title" }, order: 2 },
   ],
 };
 
@@ -25,9 +15,7 @@ console.log("📦 Mock currentBlocks:", mockData.currentBlocks);
 
 // Simular a busca que acontece no EditorContext
 const foundBlock = mockData.selectedBlockId
-  ? mockData.currentBlocks.find(
-      (block) => block.id === mockData.selectedBlockId
-    )
+  ? mockData.currentBlocks.find(block => block.id === mockData.selectedBlockId)
   : undefined;
 
 console.log("🎯 Bloco encontrado:", foundBlock);
@@ -50,9 +38,7 @@ if (foundBlock) {
 console.log("\n🔍 Teste de correspondência de IDs:");
 mockData.currentBlocks.forEach((block, index) => {
   const matches = block.id === mockData.selectedBlockId;
-  console.log(
-    `   Bloco ${index}: ${block.id} ${matches ? "✅ MATCH" : "❌ NO MATCH"}`
-  );
+  console.log(`   Bloco ${index}: ${block.id} ${matches ? "✅ MATCH" : "❌ NO MATCH"}`);
 });
 
 export default {};

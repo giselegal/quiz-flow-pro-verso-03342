@@ -1,5 +1,5 @@
 // @ts-nocheck
-import QuizQuestion from "../../../components/funnel-blocks/QuizQuestion";
+import QuizQuestion from "@/components/funnel-blocks/QuizQuestion";
 import React, { useState } from "react";
 import { QuizBlockProps } from "./types";
 
@@ -81,14 +81,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -149,11 +142,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     console.log("QuizOptionsGridBlock - parseOptions input:", options);
 
     // Se já é um array de objetos, retornar diretamente
-    if (
-      Array.isArray(options) &&
-      options.length > 0 &&
-      typeof options[0] === "object"
-    ) {
+    if (Array.isArray(options) && options.length > 0 && typeof options[0] === "object") {
       console.log("QuizOptionsGridBlock - returning object array:", options);
       return options;
     }
@@ -162,7 +151,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     if (typeof options === "string") {
       const parsed = options
         .split("\n")
-        .filter((line) => line.trim() !== "")
+        .filter(line => line.trim() !== "")
         .map((line, index) => ({
           id: `option-${index}`,
           text: line.trim(),
@@ -193,9 +182,9 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   // Se não há opções, mostrar um placeholder de debug
   if (!options || options.length === 0) {
     return (
-      <div style={{ borderColor: "#E5DDD5" }}>
-        <h3 style={{ color: "#432818" }}>Debug: QuizOptionsGridBlock</h3>
-        <p style={{ color: "#6B4F43" }}>Nenhuma opção encontrada</p>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <h3 style={{ color: '#432818' }}>Debug: QuizOptionsGridBlock</h3>
+        <p style={{ color: '#6B4F43' }}>Nenhuma opção encontrada</p>
         <pre className="text-xs mt-2 bg-white p-2 rounded overflow-auto">
           {JSON.stringify({ properties, id }, null, 2)}
         </pre>
@@ -216,12 +205,9 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     if (onPropertyChange) {
       onPropertyChange(
         "selectedOptions",
-        selectedOptions.map((opt) => opt.id)
+        selectedOptions.map(opt => opt.id)
       );
-      onPropertyChange(
-        "hasCompleteSelection",
-        selectedOptions.length >= minSelections
-      );
+      onPropertyChange("hasCompleteSelection", selectedOptions.length >= minSelections);
     }
   };
 
@@ -231,7 +217,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       onPropertyChange("complete", true);
       onPropertyChange(
         "selectedOptions",
-        selectedOptions.map((opt) => opt.id)
+        selectedOptions.map(opt => opt.id)
       );
     }
   };
@@ -277,12 +263,9 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const finalImageHeight = imageHeight || imageSize;
 
   // Classes de layout baseadas na orientação
-  const layoutClass =
-    layoutOrientation === "horizontal" ? "grid" : "flex flex-col";
+  const layoutClass = layoutOrientation === "horizontal" ? "grid" : "flex flex-col";
   const gridColumnsClass =
-    typeof columns === "string"
-      ? `grid-cols-${columns}`
-      : `grid-cols-${columns}`;
+    typeof columns === "string" ? `grid-cols-${columns}` : `grid-cols-${columns}`;
 
   // Estilos dinâmicos para bordas e sombras
   const optionStyles = {
@@ -311,7 +294,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
       <QuizQuestion
         question={properties?.question || ""}
         description={properties?.description || ""}
-        options={options.map((option) => ({
+        options={options.map(option => ({
           ...option,
           // Aplicar configurações visuais
           imageUrl: contentType === "text-only" ? undefined : option.imageUrl,
@@ -326,11 +309,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
         optionStyle={properties?.optionStyle || "card"}
         showLetters={properties?.useLetterOptions === false}
         optionImageSize={
-          finalImageWidth <= 128
-            ? "small"
-            : finalImageWidth >= 256
-              ? "large"
-              : "medium"
+          finalImageWidth <= 128 ? "small" : finalImageWidth >= 256 ? "large" : "medium"
         }
         autoAdvance={properties?.autoAdvance === false}
         autoAdvanceDelay={properties?.autoAdvanceDelay || 1000}
@@ -350,10 +329,7 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
           imageHeight: `${finalImageHeight}px`,
           scale: scale,
           layoutOrientation,
-          columnsCount:
-            typeof columns === "number"
-              ? columns
-              : parseInt(columns as string) || 2,
+          columnsCount: typeof columns === "number" ? columns : parseInt(columns as string) || 2,
           borderWidth,
           borderColor,
           borderRadius,

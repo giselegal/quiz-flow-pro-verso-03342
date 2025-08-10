@@ -30,8 +30,8 @@ expectedFiles.forEach(({ step, file, exists }) => {
 });
 
 // Verificar quantos estão faltando
-const missing = expectedFiles.filter((f) => !f.exists);
-const existing = expectedFiles.filter((f) => f.exists);
+const missing = expectedFiles.filter(f => !f.exists);
+const existing = expectedFiles.filter(f => f.exists);
 
 console.log(`\n📊 Resultado:`);
 console.log(`✅ Existem: ${existing.length}/21`);

@@ -37,9 +37,7 @@ app.get("*", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
-  console.log(
-    `📁 Servindo arquivos de: ${path.join(__dirname, "../dist/public")}`
-  );
+  console.log(`📁 Servindo arquivos de: ${path.join(__dirname, "../dist/public")}`);
 });
 ```
 

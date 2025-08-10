@@ -1,23 +1,10 @@
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
-import { Card, CardContent } from "../../../components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../../components/ui/tooltip";
-import { cn } from "../../../lib/utils";
-import type { BlockData } from "../../../types/blocks";
-import {
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  History,
-  Redo2,
-  Save,
-  Undo2,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import type { BlockData } from "@/types/blocks";
+import { AlertCircle, CheckCircle, Clock, History, Redo2, Save, Undo2 } from "lucide-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface EditorAction {
@@ -63,59 +50,56 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Validar blocos
-  const validateBlocks = useCallback(
-    (blocksToValidate: BlockData[]): ValidationResult => {
-      const warnings: string[] = [];
-      const errors: string[] = [];
+  const validateBlocks = useCallback((blocksToValidate: BlockData[]): ValidationResult => {
+    const warnings: string[] = [];
+    const errors: string[] = [];
 
-      blocksToValidate.forEach((block) => {
-        // Validações básicas
-        if (!block.id) {
-          errors.push(`Bloco sem ID encontrado`);
+    blocksToValidate.forEach(block => {
+      // Validações básicas
+      if (!block.id) {
+        errors.push(`Bloco sem ID encontrado`);
+      }
+
+      if (!block.type) {
+        errors.push(`Bloco ${block.id} sem tipo definido`);
+      }
+
+      // Validações específicas por tipo
+      if (block.type === "options-grid") {
+        const options = block.properties?.options;
+        if (!options || !Array.isArray(options) || options.length === 0) {
+          warnings.push(`Grade de opções ${block.id} está vazia`);
         }
+      }
 
-        if (!block.type) {
-          errors.push(`Bloco ${block.id} sem tipo definido`);
+      if (block.type === "text-inline" || block.type === "heading-inline") {
+        if (!block.properties?.content) {
+          warnings.push(`Bloco de texto ${block.id} está vazio`);
         }
+      }
 
-        // Validações específicas por tipo
-        if (block.type === "options-grid") {
-          const options = block.properties?.options;
-          if (!options || !Array.isArray(options) || options.length === 0) {
-            warnings.push(`Grade de opções ${block.id} está vazia`);
-          }
+      if (block.type === "image-display-inline") {
+        if (!block.properties?.imageUrl) {
+          warnings.push(`Bloco de imagem ${block.id} sem URL`);
         }
+      }
 
-        if (block.type === "text-inline" || block.type === "heading-inline") {
-          if (!block.properties?.content) {
-            warnings.push(`Bloco de texto ${block.id} está vazio`);
-          }
+      if (block.type === "button-inline") {
+        if (!block.properties?.text) {
+          warnings.push(`Botão ${block.id} sem texto`);
         }
-
-        if (block.type === "image-display-inline") {
-          if (!block.properties?.imageUrl) {
-            warnings.push(`Bloco de imagem ${block.id} sem URL`);
-          }
+        if (!block.properties?.href && !block.properties?.onClick) {
+          warnings.push(`Botão ${block.id} sem ação definida`);
         }
+      }
+    });
 
-        if (block.type === "button-inline") {
-          if (!block.properties?.text) {
-            warnings.push(`Botão ${block.id} sem texto`);
-          }
-          if (!block.properties?.href && !block.properties?.onClick) {
-            warnings.push(`Botão ${block.id} sem ação definida`);
-          }
-        }
-      });
-
-      return {
-        isValid: errors.length === 0,
-        warnings,
-        errors,
-      };
-    },
-    []
-  );
+    return {
+      isValid: errors.length === 0,
+      warnings,
+      errors,
+    };
+  }, []);
 
   // Adicionar ação ao histórico
   const addToHistory = useCallback(
@@ -125,7 +109,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         timestamp: Date.now(),
       };
 
-      setHistory((prev) => {
+      setHistory(prev => {
         const newHistory = prev.slice(0, currentIndex + 1);
         newHistory.push(newAction);
 
@@ -133,7 +117,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         return newHistory.slice(-50);
       });
 
-      setCurrentIndex((prev) => Math.min(prev + 1, 49));
+      setCurrentIndex(prev => Math.min(prev + 1, 49));
     },
     [currentIndex]
   );
@@ -145,11 +129,11 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
 
     if (JSON.stringify(currentBlocks) !== JSON.stringify(previousBlocks)) {
       // Determinar tipo de mudança
-      const currentIds = new Set(currentBlocks.map((b) => b.id));
-      const previousIds = new Set(previousBlocks.map((b) => b.id));
+      const currentIds = new Set(currentBlocks.map(b => b.id));
+      const previousIds = new Set(previousBlocks.map(b => b.id));
 
       // Blocos adicionados
-      currentBlocks.forEach((block) => {
+      currentBlocks.forEach(block => {
         if (!previousIds.has(block.id)) {
           addToHistory({
             type: "add",
@@ -160,7 +144,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       });
 
       // Blocos removidos
-      previousBlocks.forEach((block) => {
+      previousBlocks.forEach(block => {
         if (!currentIds.has(block.id)) {
           addToHistory({
             type: "delete",
@@ -171,14 +155,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       });
 
       // Blocos modificados
-      currentBlocks.forEach((currentBlock) => {
-        const previousBlock = previousBlocks.find(
-          (b) => b.id === currentBlock.id
-        );
-        if (
-          previousBlock &&
-          JSON.stringify(currentBlock) !== JSON.stringify(previousBlock)
-        ) {
+      currentBlocks.forEach(currentBlock => {
+        const previousBlock = previousBlocks.find(b => b.id === currentBlock.id);
+        if (previousBlock && JSON.stringify(currentBlock) !== JSON.stringify(previousBlock)) {
           addToHistory({
             type: "update",
             blockId: currentBlock.id,
@@ -216,7 +195,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
 
     switch (action.type) {
       case "add":
-        newBlocks = newBlocks.filter((b) => b.id !== action.blockId);
+        newBlocks = newBlocks.filter(b => b.id !== action.blockId);
         break;
       case "delete":
         if (action.previousState) {
@@ -225,7 +204,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         break;
       case "update":
         if (action.previousState) {
-          const index = newBlocks.findIndex((b) => b.id === action.blockId);
+          const index = newBlocks.findIndex(b => b.id === action.blockId);
           if (index !== -1) {
             newBlocks[index] = action.previousState;
           }
@@ -233,7 +212,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         break;
     }
 
-    setCurrentIndex((prev) => prev - 1);
+    setCurrentIndex(prev => prev - 1);
     onBlocksChange(newBlocks);
   }, [canUndo, history, currentIndex, blocks, onBlocksChange]);
 
@@ -251,11 +230,11 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         }
         break;
       case "delete":
-        newBlocks = newBlocks.filter((b) => b.id !== action.blockId);
+        newBlocks = newBlocks.filter(b => b.id !== action.blockId);
         break;
       case "update":
         if (action.newState) {
-          const index = newBlocks.findIndex((b) => b.id === action.blockId);
+          const index = newBlocks.findIndex(b => b.id === action.blockId);
           if (index !== -1) {
             newBlocks[index] = action.newState;
           }
@@ -357,11 +336,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
             {validationResult.errors.length > 0 ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div style={{ color: "#432818" }}>
+                  <div style={{ color: '#432818' }}>
                     <AlertCircle className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      {validationResult.errors.length}
-                    </span>
+                    <span className="text-sm font-medium">{validationResult.errors.length}</span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -385,10 +362,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
             {validationResult.warnings.length > 0 && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Badge
-                    variant="outline"
-                    className="text-yellow-600 border-yellow-600"
-                  >
+                  <Badge variant="outline" className="text-yellow-600 border-yellow-600">
                     {validationResult.warnings.length} avisos
                   </Badge>
                 </TooltipTrigger>
@@ -411,7 +385,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <div style={{ color: "#6B4F43" }}>
+              <div style={{ color: '#6B4F43' }}>
                 <History className="w-4 h-4" />
                 {history.length}
               </div>
@@ -430,15 +404,13 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
                 disabled={isSaving}
                 className="border-[#B89B7A]/30 hover:border-[#B89B7A]"
               >
-                <Save
-                  className={cn("w-4 h-4 mr-1", isSaving && "animate-pulse")}
-                />
+                <Save className={cn("w-4 h-4 mr-1", isSaving && "animate-pulse")} />
                 {isSaving ? "Salvando..." : "Salvar"}
               </Button>
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div style={{ color: "#8B7355" }}>
+                  <div style={{ color: '#8B7355' }}>
                     <Clock className="w-3 h-3" />
                     {getTimeSinceLastSave()}
                   </div>

@@ -3,23 +3,14 @@
  * Sistema padronizado com paleta organizada e preview em tempo real
  */
 
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/popover";
-import { cn } from "../../lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { Check, Palette } from "lucide-react";
 import { useState } from "react";
-import {
-  COLOR_GROUPS,
-  ColorOption,
-  ColorUtils,
-  POPULAR_COLORS,
-} from "../../config/colorPalette";
+import { COLOR_GROUPS, ColorOption, ColorUtils, POPULAR_COLORS } from "../../config/colorPalette";
 
 interface ColorPickerProps {
   value: string;
@@ -59,17 +50,10 @@ export function ColorPicker({
     setIsOpen(false);
   };
 
-  const isValidColor =
-    value === "transparent" || value.match(/^#[0-9A-F]{6}$/i);
+  const isValidColor = value === "transparent" || value.match(/^#[0-9A-F]{6}$/i);
 
   // Renderizar preview da cor atual
-  const ColorPreview = ({
-    color,
-    size = "w-10 h-10",
-  }: {
-    color: string;
-    size?: string;
-  }) => (
+  const ColorPreview = ({ color, size = "w-10 h-10" }: { color: string; size?: string }) => (
     <div
       className={cn(
         size,
@@ -117,7 +101,9 @@ export function ColorPicker({
             </div>
           )}
         </div>
-        <span style={{ color: "#6B4F43" }}>{colorOption.label}</span>
+        <span style={{ color: '#6B4F43' }}>
+          {colorOption.label}
+        </span>
       </button>
     );
   };
@@ -133,7 +119,7 @@ export function ColorPicker({
         {/* Input de texto */}
         <Input
           value={inputValue}
-          onChange={(e) => handleInputChange(e.target.value)}
+          onChange={e => handleInputChange(e.target.value)}
           placeholder="#B89B7A ou transparent"
           className="font-mono text-sm flex-1"
           disabled={disabled}
@@ -142,32 +128,27 @@ export function ColorPicker({
         {/* Popover com seletor */}
         <Popover open={isOpen} onOpenChange={setIsOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={disabled}
-              className="flex-shrink-0"
-            >
+            <Button variant="outline" size="icon" disabled={disabled} className="flex-shrink-0">
               <Palette className="w-4 h-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-4 max-h-96 overflow-y-auto">
             <div className="space-y-4">
               {/* Informações da cor atual */}
-              <div style={{ backgroundColor: "#FAF9F7" }}>
+              <div style={{ backgroundColor: '#FAF9F7' }}>
                 <ColorPreview color={value} size="w-8 h-8" />
                 <div className="flex-1">
-                  <div style={{ color: "#432818" }}>
+                  <div style={{ color: '#432818' }}>
                     {ColorUtils.getColorLabel(value)}
                   </div>
-                  <div style={{ color: "#8B7355" }}>
+                  <div style={{ color: '#8B7355' }}>
                     {value === "transparent" ? "Transparente" : value}
                   </div>
                 </div>
               </div>
 
               {/* Tabs */}
-              <div style={{ backgroundColor: "#E5DDD5" }}>
+              <div style={{ backgroundColor: '#E5DDD5' }}>
                 <button
                   onClick={() => setActiveTab("popular")}
                   className={cn(
@@ -208,15 +189,10 @@ export function ColorPicker({
               {/* Content */}
               {activeTab === "popular" && (
                 <div>
-                  <Label className="text-sm font-medium mb-2 block">
-                    Cores Mais Usadas
-                  </Label>
+                  <Label className="text-sm font-medium mb-2 block">Cores Mais Usadas</Label>
                   <div className="grid grid-cols-6 gap-2">
-                    {POPULAR_COLORS.map((colorOption) => (
-                      <ColorSwatch
-                        key={colorOption.value}
-                        colorOption={colorOption}
-                      />
+                    {POPULAR_COLORS.map(colorOption => (
+                      <ColorSwatch key={colorOption.value} colorOption={colorOption} />
                     ))}
                   </div>
                 </div>
@@ -224,17 +200,12 @@ export function ColorPicker({
 
               {activeTab === "all" && (
                 <div className="space-y-4">
-                  {COLOR_GROUPS.map((group) => (
+                  {COLOR_GROUPS.map(group => (
                     <div key={group.id}>
-                      <Label className="text-sm font-medium mb-2 block">
-                        {group.name}
-                      </Label>
+                      <Label className="text-sm font-medium mb-2 block">{group.name}</Label>
                       <div className="grid grid-cols-6 gap-2">
-                        {group.colors.map((colorOption) => (
-                          <ColorSwatch
-                            key={colorOption.value}
-                            colorOption={colorOption}
-                          />
+                        {group.colors.map(colorOption => (
+                          <ColorSwatch key={colorOption.value} colorOption={colorOption} />
                         ))}
                       </div>
                     </div>
@@ -245,33 +216,25 @@ export function ColorPicker({
               {activeTab === "custom" && showCustomInput && (
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Seletor Nativo
-                    </Label>
+                    <Label className="text-sm font-medium mb-2 block">Seletor Nativo</Label>
                     <input
                       type="color"
-                      value={
-                        isValidColor && value !== "transparent"
-                          ? value
-                          : "#B89B7A"
-                      }
-                      onChange={(e) => handleColorSelect(e.target.value)}
-                      style={{ borderColor: "#E5DDD5" }}
+                      value={isValidColor && value !== "transparent" ? value : "#B89B7A"}
+                      onChange={e => handleColorSelect(e.target.value)}
+                      style={{ borderColor: '#E5DDD5' }}
                     />
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Código Personalizado
-                    </Label>
+                    <Label className="text-sm font-medium mb-2 block">Código Personalizado</Label>
                     <Input
                       value={inputValue}
-                      onChange={(e) => handleInputChange(e.target.value)}
+                      onChange={e => handleInputChange(e.target.value)}
                       placeholder="#B89B7A, transparent, etc."
                       className="font-mono text-sm"
                     />
                     {!isValidColor && inputValue && (
-                      <p style={{ color: "#432818" }}>
+                      <p style={{ color: '#432818' }}>
                         Use formato #RRGGBB ou "transparent"
                       </p>
                     )}
@@ -279,7 +242,7 @@ export function ColorPicker({
 
                   <button
                     onClick={() => handleColorSelect("transparent")}
-                    style={{ borderColor: "#E5DDD5" }}
+                    style={{ borderColor: '#E5DDD5' }}
                   >
                     Usar Transparente
                   </button>
@@ -292,16 +255,14 @@ export function ColorPicker({
 
       {/* Preview Area */}
       {showPreview && isValidColor && (
-        <div style={{ backgroundColor: "#FAF9F7" }}>
-          <div style={{ color: "#6B4F43" }}>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ color: '#6B4F43' }}>
             <span>Preview:</span>
             <div
               className="px-3 py-1 rounded-md font-medium transition-colors"
               style={{
                 backgroundColor: value === "transparent" ? "#B89B7A" : value,
-                color: ColorUtils.getContrastColor(
-                  value === "transparent" ? "#B89B7A" : value
-                ),
+                color: ColorUtils.getContrastColor(value === "transparent" ? "#B89B7A" : value),
               }}
             >
               Texto de Exemplo

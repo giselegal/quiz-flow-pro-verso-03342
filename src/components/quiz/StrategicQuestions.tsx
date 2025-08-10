@@ -1,6 +1,6 @@
 import React from "react";
 import QuizQuestion from "../QuizQuestion";
-import { UserResponse } from "../../types/quiz";
+import { UserResponse } from "@/types/quiz";
 
 export interface StrategicQuestionsProps {
   currentQuestionIndex: number;

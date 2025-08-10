@@ -1,12 +1,9 @@
-import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
-import { useContainerProperties } from "../../../hooks/useContainerProperties";
-import { cn } from "../../../lib/utils";
-import { Block } from "../../../types/editor";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
@@ -36,8 +33,8 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
     if (!over || active.id === over.id) return;
 
-    const oldIndex = blocks.findIndex((block) => block.id === active.id);
-    const newIndex = blocks.findIndex((block) => block.id === over.id);
+    const oldIndex = blocks.findIndex(block => block.id === active.id);
+    const newIndex = blocks.findIndex(block => block.id === over.id);
 
     if (oldIndex !== -1 && newIndex !== -1) {
       onReorderBlocks(oldIndex, newIndex);
@@ -63,14 +60,12 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   // 🎯 Componente simplificado para preview (2 containers apenas)
   const PreviewBlock: React.FC<{ block: Block }> = ({ block }) => {
-    const { containerClasses, inlineStyles } = useContainerProperties(
-      block.properties
-    );
+    const { containerClasses, inlineStyles } = useContainerProperties(block.properties);
     const Component = getBlockComponent(block.type);
 
     if (!Component) {
       return (
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <p>Componente não encontrado: {block.type}</p>
         </div>
       );
@@ -86,10 +81,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     };
 
     return (
-      <div
-        className={cn("transition-all duration-200", containerClasses)}
-        style={inlineStyles}
-      >
+      <div className={cn("transition-all duration-200", containerClasses)} style={inlineStyles}>
         <Component {...componentProps} />
       </div>
     );
@@ -99,7 +91,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     return (
       <div className={`py-1 ${getViewportClasses()}`}>
         <div className="space-y-1">
-          {blocks.map((block) => (
+          {blocks.map(block => (
             <div key={block.id} className="w-full flex justify-center">
               <div className="w-full max-w-none">
                 <PreviewBlock block={block} />
@@ -114,12 +106,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   return (
     <div className={`py-1 ${getViewportClasses()}`}>
       <DndContext onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={blocks.map((b) => b.id)}
-          strategy={verticalListSortingStrategy}
-        >
+        <SortableContext items={blocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
           <div className="space-y-1">
-            {blocks.map((block) => (
+            {blocks.map(block => (
               <div key={block.id} className="w-full flex justify-center">
                 <div className="w-full max-w-none">
                   <SortableBlockWrapper
@@ -127,18 +116,16 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
                     block={block}
                     isSelected={selectedBlockId === block.id}
                     onSelect={() => onSelectBlock(block.id)}
-                    onUpdate={(updates) => handleUpdateBlock(block.id, updates)}
+                    onUpdate={updates => handleUpdateBlock(block.id, updates)}
                     onDelete={() => onDeleteBlock(block.id)}
                   />
                 </div>
               </div>
             ))}
             {blocks.length === 0 && (
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 <p>Nenhum componente adicionado ainda.</p>
-                <p className="text-sm">
-                  Arraste componentes da barra lateral para começar.
-                </p>
+                <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
               </div>
             )}
           </div>

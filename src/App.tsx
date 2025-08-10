@@ -16,11 +16,7 @@ const EditorPage = lazy(() => import("./pages/editor-fixed"));
 const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
 const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
 const ResultPage = lazy(() => import("./pages/ResultPage"));
-const ResultConfigPage = lazy(() =>
-  import("./pages/ResultConfigPage").then((module) => ({
-    default: module.ResultConfigPage,
-  }))
-);
+const ResultConfigPage = lazy(() => import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage })));
 const QuizPageUser = lazy(() => import("./components/QuizPageUser"));
 
 // Lazy load das páginas admin
@@ -32,15 +28,9 @@ const DebugEditorContext = lazy(() => import("./pages/debug-editor"));
 const TestButton = lazy(() => import("./pages/test-button"));
 const TestPropertiesPanel = lazy(() => import("./pages/test-properties"));
 const DebugStep02 = lazy(() => import("./components/debug/DebugStep02"));
-const TestAllTemplates = lazy(
-  () => import("./components/debug/TestAllTemplates")
-);
-const TestOptionsRendering = lazy(
-  () => import("./components/debug/TestOptionsRendering")
-);
-const TestStep02Direct = lazy(
-  () => import("./components/debug/TestStep02Direct")
-);
+const TestAllTemplates = lazy(() => import("./components/debug/TestAllTemplates"));
+const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRendering"));
+const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
 
 // Loading component
 const PageLoading = () => (
@@ -217,16 +207,16 @@ function App() {
                 </Route>
 
                 {/* Protected Routes */}
-                <ProtectedRoute
-                  path="/admin/funis"
+                <ProtectedRoute 
+                  path="/admin/funis" 
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <FunnelsPage />
                     </Suspense>
                   )}
                 />
-                <ProtectedRoute
-                  path="/admin/resultados"
+                <ProtectedRoute 
+                  path="/admin/resultados" 
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ResultConfigPage />

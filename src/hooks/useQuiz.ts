@@ -1,6 +1,6 @@
-import { StyleResult, QuizResult } from "../types/quiz";
+import { StyleResult, QuizResult } from "@/types/quiz";
 import { useState, useEffect, useCallback } from "react"; // Adicionado useCallback
-import { toast } from "../components/ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 import { useLocation } from "wouter";
 import { useQuizLogic } from "./useQuizLogic"; // Importar o hook de lógica principal
 
@@ -23,9 +23,7 @@ export const useQuiz = () => {
   // ou lógica de UI que não pertence ao core do quiz.
   const startQuiz = async (name: string, email: string, quizId: string) => {
     try {
-      console.log(
-        `Starting quiz for ${name} (${email}) with quiz ID ${quizId}`
-      );
+      console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
       // Aqui poderia haver uma chamada de API para registrar o início do quiz
       // Por enquanto, retorna um mock
       return { id: "1", name, email };
@@ -102,12 +100,9 @@ export const useQuiz = () => {
   useEffect(() => {
     if (
       !quizResult &&
-      (window.location.href.includes("/admin/editor") ||
-        process.env.NODE_ENV === "development")
+      (window.location.href.includes("/admin/editor") || process.env.NODE_ENV === "development")
     ) {
-      console.log(
-        "Using mock data for editor as quizResult is null in useQuiz"
-      );
+      console.log("Using mock data for editor as quizResult is null in useQuiz");
       // Se precisar setar mock data, idealmente useQuizLogic deveria ter uma função para isso,
       // ou o componente que precisa do mock data o faria diretamente.
       // Por ora, esta lógica de mock data está efetivamente desabilitada pois primaryStyle/secondaryStyles são derivados.

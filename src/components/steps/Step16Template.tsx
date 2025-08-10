@@ -68,8 +68,7 @@ export const getStep16Template = () => {
         alt: "undefined",
         width: 500,
         height: 350,
-        className:
-          "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
+        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
         marginBottom: 32,
         spacing: "small",
@@ -94,3 +93,4 @@ export const getStep16Template = () => {
     },
   ];
 };
+

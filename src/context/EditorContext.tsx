@@ -7,10 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import {
-  getTemplateByStep,
-  STEP_TEMPLATES,
-} from "../config/stepTemplatesMapping";
+import { getTemplateByStep, STEP_TEMPLATES } from "../config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "../types/editor";
 import { TemplateManager } from "../utils/TemplateManager";
 
@@ -35,11 +32,7 @@ interface EditorContextType {
 
   blockActions: {
     addBlock: (type: string, stageId?: string) => string;
-    addBlockAtPosition: (
-      type: string,
-      position: number,
-      stageId?: string
-    ) => string;
+    addBlockAtPosition: (type: string, position: number, stageId?: string) => string;
     duplicateBlock: (blockId: string, stageId?: string) => string;
     deleteBlock: (blockId: string) => void;
     updateBlock: (blockId: string, updates: Partial<EditorBlock>) => void;
@@ -88,12 +81,8 @@ export const useEditor = () => {
   return context;
 };
 
-export const EditorProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
-  console.log("🔥 DEBUG: Timestamp:", Date.now());
-  console.log("🔥 DEBUG: React.version:", React.version || "unknown");
 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
@@ -103,8 +92,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     setDatabaseMode: (_enabled: boolean) => {},
     setQuizId: (_quizId: string) => {},
     migrateLocalToDatabase: () => Promise.resolve(false),
-    getQuizStats: () =>
-      Promise.resolve({ error: "Database adapter not available" }),
+    getQuizStats: () => Promise.resolve({ error: "Database adapter not available" }),
   };
 
   // Estado do modo banco
@@ -116,19 +104,14 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // ═══════════════════════════════════════════════
   const [stages, setStages] = useState<FunnelStage[]>(() => {
     // ✅ INICIALIZAÇÃO SÍNCRONA NO ESTADO INICIAL COM TEMPLATES ESPECÍFICOS
-    console.log(
-      "🚀 EditorProvider: Inicializando stages com templates específicos"
-    );
+    console.log("🚀 EditorProvider: Inicializando stages com templates específicos");
 
     // ✅ USAR TEMPLATES ESPECÍFICOS DAS ETAPAS
     const allStepTemplates = STEP_TEMPLATES;
-    console.log(
-      "📋 EditorProvider: Templates carregados:",
-      allStepTemplates.length
-    );
+    console.log("📋 EditorProvider: Templates carregados:", allStepTemplates.length);
     console.log(
       "📋 EditorProvider: Templates detalhados:",
-      allStepTemplates.map((t) => ({
+      allStepTemplates.map(t => ({
         stepNumber: t.stepNumber,
         name: t.name,
         hasFunction: typeof t.templateFunction === "function",
@@ -159,8 +142,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         blocksCount: 0,
         lastModified: new Date(),
         isCustom: false,
-        templateBlocks:
-          getTemplateByStep(stepTemplate.stepNumber)?.templateFunction() || [], // ✅ CARREGAR BLOCOS DO TEMPLATE
+        templateBlocks: getTemplateByStep(stepTemplate.stepNumber)?.templateFunction() || [], // ✅ CARREGAR BLOCOS DO TEMPLATE
       },
     }));
 
@@ -171,118 +153,45 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     return initialStages;
   });
 
-  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(
-    () => {
-      // ✅ INICIALIZAR BLOCOS VAZIOS - CARREGAR TEMPLATES JSON ASSÍNCRONO
-      const initialBlocks: Record<string, EditorBlock[]> = {};
+  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
+    // ✅ INICIALIZAR BLOCOS VAZIOS - CARREGAR TEMPLATES JSON ASSÍNCRONO
+    const initialBlocks: Record<string, EditorBlock[]> = {};
 
-      // Inicializar todas as etapas com arrays vazios
-      for (let i = 1; i <= 21; i++) {
-        const stageId = `step-${i}`;
-        initialBlocks[stageId] = [];
-      }
-
-      console.log(
-        "✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono"
-      );
-
-      // ✅ CARREGAR IMEDIATAMENTE O STEP-1 PARA EVITAR TELA VAZIA
-      const step1Template = getTemplateByStep(1);
-      if (step1Template?.templateFunction) {
-        try {
-          const step1Blocks = step1Template.templateFunction();
-          if (step1Blocks && step1Blocks.length > 0) {
-            initialBlocks["step-1"] = step1Blocks.map(
-              (block: any, index: number) => ({
-                id: block.id || `step-1-block-${index + 1}`,
-                type: block.type,
-                content: block.properties || {}, // ✅ CORREÇÃO: content deve ser das properties
-                order: index + 1,
-                properties: block.properties || {}, // ✅ CORREÇÃO: manter properties originais
-              })
-            );
-            console.log(
-              "✅ Step-1 carregado imediatamente:",
-              initialBlocks["step-1"].length,
-              "blocos"
-            );
-            console.log(
-              "✅ Step-1 primeiro bloco:",
-              initialBlocks["step-1"][0]
-            );
-          }
-        } catch (error) {
-          console.error("❌ Erro ao carregar step-1 imediatamente:", error);
-        }
-      }
-
-      return initialBlocks;
+    // Inicializar todas as etapas com arrays vazios
+    for (let i = 1; i <= 21; i++) {
+      const stageId = `step-${i}`;
+      initialBlocks[stageId] = [];
     }
-  );
+
+    console.log("✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono");
+    return initialBlocks;
+  });
 
   // ✅ EFEITO PARA CARREGAR TEMPLATES JSON ASSÍNCRONO
   useEffect(() => {
     const loadInitialTemplates = async () => {
-      console.log(
-        "🔄 EditorProvider: Iniciando carregamento de templates JSON..."
-      );
-      console.log(
-        "🔄 DEBUG: currentBlocks.length:",
-        currentBlocks?.length || 0
-      );
-      console.log("🔄 DEBUG: stageBlocks keys:", Object.keys(stageBlocks));
-
+      console.log("🔄 EditorProvider: Iniciando carregamento de templates JSON...");
+      
       // Carregar templates para as primeiras 3 etapas imediatamente
       for (let i = 1; i <= 3; i++) {
         const stageId = `step-${i}`;
-        const existingBlocks = stageBlocks[stageId] || [];
-
-        // Pular se já tem blocos carregados
-        if (existingBlocks.length > 0) {
-          console.log(
-            `⏩ ${stageId} já tem ${existingBlocks.length} blocos, pulando...`
-          );
-          continue;
-        }
-
+        
         try {
           console.log(`🔄 Carregando template JSON para ${stageId}...`);
-          let blocks: any[] = [];
-
-          // Tentar carregar JSON primeiro
-          try {
-            blocks = await TemplateManager.loadStepBlocks(stageId);
-            console.log(
-              `📦 JSON template carregado para ${stageId}:`,
-              blocks?.length || 0
-            );
-          } catch (jsonError) {
-            console.warn(`⚠️ JSON falhou para ${stageId}, usando TSX fallback`);
-            // Fallback para TSX
-            const tsxTemplate = getTemplateByStep(i);
-            if (tsxTemplate?.templateFunction) {
-              blocks = tsxTemplate.templateFunction();
-              console.log(
-                `📦 TSX fallback carregado para ${stageId}:`,
-                blocks?.length || 0
-              );
-            }
-          }
-
+          const blocks = await TemplateManager.loadStepBlocks(stageId);
+          
           if (blocks && blocks.length > 0) {
-            setStageBlocks((prev) => ({
+            setStageBlocks(prev => ({
               ...prev,
               [stageId]: blocks.map((block, index) => ({
                 id: block.id || `${stageId}-block-${index + 1}`,
                 type: block.type,
-                content: block.properties || {}, // ✅ CORREÇÃO: content vem das properties dos templates JSON
+                content: block.content || block.properties || {},
                 order: index + 1,
-                properties: block.properties || {}, // ✅ CORREÇÃO: manter properties originais
-              })),
+                properties: block.properties || block.content || {},
+              }))
             }));
-            console.log(
-              `✅ Template ${stageId} carregado: ${blocks.length} blocos`
-            );
+            console.log(`✅ Template ${stageId} carregado: ${blocks.length} blocos`);
           } else {
             console.warn(`⚠️ Nenhum bloco encontrado para ${stageId}`);
           }
@@ -292,9 +201,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
 
-    // Executar após 100ms para dar tempo do provider inicializar
-    const timer = setTimeout(loadInitialTemplates, 100);
-    return () => clearTimeout(timer);
+    loadInitialTemplates();
   }, []); // Executar apenas uma vez na inicialização
 
   const [stageBlocksLegacy] = useState<Record<string, EditorBlock[]>>(() => {
@@ -308,35 +215,24 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       if (i <= 3) {
         try {
           const templateBlocks = getTemplateByStep(i)?.templateFunction();
-          console.log(
-            `🔄 Legacy: Carregando template para etapa ${i}:`,
-            templateBlocks?.length || 0
-          );
+          console.log(`🔄 Legacy: Carregando template para etapa ${i}:`, templateBlocks?.length || 0);
 
           if (templateBlocks && templateBlocks.length > 0) {
             legacyBlocks[stageId] = templateBlocks.map(
-              (
-                block: { id: any; type: any; properties: any; content: any },
-                index: number
-              ) => ({
+              (block: { id: any; type: any; properties: any; content: any }, index: number) => ({
                 id: block.id || `${stageId}-legacy-block-${index + 1}`,
                 type: block.type as any,
-                content: block.properties || {}, // ✅ CORREÇÃO: content vem das properties
+                content: block.properties || block.content || {},
                 order: index + 1,
                 properties: block.properties || {},
               })
             );
-            console.log(
-              `✅ Legacy: ${legacyBlocks[stageId].length} blocos carregados para etapa ${i}`
-            );
+            console.log(`✅ Legacy: ${legacyBlocks[stageId].length} blocos carregados para etapa ${i}`);
           } else {
             legacyBlocks[stageId] = [];
           }
         } catch (error) {
-          console.error(
-            `❌ Legacy: Erro ao carregar template da etapa ${i}:`,
-            error
-          );
+          console.error(`❌ Legacy: Erro ao carregar template da etapa ${i}:`, error);
           legacyBlocks[stageId] = [];
         }
       } else {
@@ -353,14 +249,12 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
   // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
   useEffect(() => {
-    console.log(
-      "🚀 EditorProvider: Iniciando pré-carregamento de templates JSON"
-    );
+    console.log("🚀 EditorProvider: Iniciando pré-carregamento de templates JSON");
     TemplateManager.preloadCommonTemplates()
       .then(() => {
         console.log("✅ Templates JSON pré-carregados com sucesso");
       })
-      .catch((error) => {
+      .catch(error => {
         console.warn("⚠️ Erro no pré-carregamento de templates JSON:", error);
       });
   }, []);
@@ -369,9 +263,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // 🎨 UI STATE
   // ═══════════════════════════════════════════════
   const [isPreviewing, setIsPreviewing] = useState(false);
-  const [viewportSize, setViewportSize] = useState<"sm" | "md" | "lg" | "xl">(
-    "lg"
-  );
+  const [viewportSize, setViewportSize] = useState<"sm" | "md" | "lg" | "xl">("lg");
 
   // ✅ DEBUG LOGGING
   console.log("📊 EditorProvider: Estado atual:", {
@@ -385,7 +277,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // ═══════════════════════════════════════════════
   const validateStageId = useCallback(
     (stageId: string): boolean => {
-      const isValid = stages.some((stage) => stage.id === stageId);
+      const isValid = stages.some(stage => stage.id === stageId);
       console.log(`🔍 EditorContext: Validando stage ${stageId}:`, isValid);
       return isValid;
     },
@@ -394,7 +286,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
   const getStageById = useCallback(
     (stageId: string): FunnelStage | undefined => {
-      return stages.find((stage) => stage.id === stageId);
+      return stages.find(stage => stage.id === stageId);
     },
     [stages]
   );
@@ -406,50 +298,31 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE JSON (SISTEMA HÍBRIDO)
   const loadStageTemplate = useCallback(
     async (stageId: string) => {
-      const stage = stages.find((s) => s.id === stageId);
+      const stage = stages.find(s => s.id === stageId);
       if (!stage) return;
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
 
-      console.log(
-        `🎨 EditorContext: Carregando template JSON para etapa ${stepNumber}`
-      );
+      console.log(`🎨 EditorContext: Carregando template JSON para etapa ${stepNumber}`);
 
       try {
         // 🚀 PRIORIZAR SISTEMA JSON
         let templateBlocks: any[] = [];
 
         try {
-          console.log(
-            `📄 Tentando carregar template JSON para step-${stepNumber}`
-          );
+          console.log(`📄 Tentando carregar template JSON para step-${stepNumber}`);
           templateBlocks = await TemplateManager.loadStepBlocks(stageId);
-          console.log(
-            `✅ Template JSON carregado:`,
-            templateBlocks?.length || 0,
-            "blocos"
-          );
+          console.log(`✅ Template JSON carregado:`, templateBlocks?.length || 0, "blocos");
         } catch (jsonError) {
-          console.warn(
-            `⚠️ JSON template falhou, usando TSX fallback:`,
-            jsonError
-          );
+          console.warn(`⚠️ JSON template falhou, usando TSX fallback:`, jsonError);
           // FALLBACK: usar sistema TSX antigo
-          templateBlocks =
-            getTemplateByStep(stepNumber)?.templateFunction() || [];
-          console.log(
-            `📦 Template TSX fallback:`,
-            templateBlocks?.length || 0,
-            "blocos"
-          );
+          templateBlocks = getTemplateByStep(stepNumber)?.templateFunction() || [];
+          console.log(`📦 Template TSX fallback:`, templateBlocks?.length || 0, "blocos");
         }
 
         if (templateBlocks && templateBlocks.length > 0) {
           const editorBlocks: EditorBlock[] = templateBlocks.map(
-            (
-              block: { id: any; type: any; properties: any; content: any },
-              index: number
-            ) => {
+            (block: { id: any; type: any; properties: any; content: any }, index: number) => {
               console.log(`🔧 Processando bloco ${index}:`, {
                 id: block.id,
                 type: block.type,
@@ -459,24 +332,22 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
               return {
                 id: block.id || `${stageId}-block-${index + 1}`,
                 type: block.type as any,
-                content: block.properties || {}, // ✅ CORREÇÃO: content vem das properties
+                content: block.properties || block.content || {},
                 order: index + 1,
                 properties: block.properties || {},
               };
             }
           );
 
-          console.log(
-            `💾 Salvando ${editorBlocks.length} blocos para etapa ${stepNumber}`
-          );
-          setStageBlocks((prev) => ({
+          console.log(`💾 Salvando ${editorBlocks.length} blocos para etapa ${stepNumber}`);
+          setStageBlocks(prev => ({
             ...prev,
             [stageId]: editorBlocks,
           }));
 
           // Chamar updateStage diretamente
-          setStages((prev) =>
-            prev.map((stage) =>
+          setStages(prev =>
+            prev.map(stage =>
               stage.id === stageId
                 ? {
                     ...stage,
@@ -494,15 +365,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
             `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber} via JSON`
           );
         } else {
-          console.warn(
-            `⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`
-          );
+          console.warn(`⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`);
         }
       } catch (error) {
-        console.error(
-          `❌ EditorContext: Erro ao carregar template da etapa ${stepNumber}:`,
-          error
-        );
+        console.error(`❌ EditorContext: Erro ao carregar template da etapa ${stepNumber}:`, error);
       }
     },
     [stages]
@@ -522,22 +388,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
 
       // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
       const currentBlocks = stageBlocks[stageId] || [];
-      console.log(
-        `🔍 EditorContext: Etapa ${stageId} tem ${currentBlocks.length} blocos`
-      );
+      console.log(`🔍 EditorContext: Etapa ${stageId} tem ${currentBlocks.length} blocos`);
 
       if (currentBlocks.length === 0) {
-        console.log(
-          `🎨 EditorContext: Etapa ${stageId} vazia, carregando template JSON...`
-        );
+        console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template JSON...`);
         // Executar carregamento assíncrono do template JSON
-        loadStageTemplate(stageId).catch((error) => {
+        loadStageTemplate(stageId).catch(error => {
           console.error(`❌ Erro ao carregar template para ${stageId}:`, error);
         });
       } else {
         console.log(
           `📋 EditorContext: Etapa ${stageId} já tem blocos:`,
-          currentBlocks.map((b) => b.type)
+          currentBlocks.map(b => b.type)
         );
       }
 
@@ -563,8 +425,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         },
       };
 
-      setStages((prev) => [...prev, newStage]);
-      setStageBlocks((prev) => ({ ...prev, [newStageId]: [] }));
+      setStages(prev => [...prev, newStage]);
+      setStageBlocks(prev => ({ ...prev, [newStageId]: [] }));
 
       console.log("➕ EditorContext: Nova etapa adicionada:", newStageId);
       return newStageId;
@@ -575,22 +437,19 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   const removeStage = useCallback(
     (stageId: string) => {
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de remover etapa inválida:",
-          stageId
-        );
+        console.warn("⚠️ EditorContext: Tentativa de remover etapa inválida:", stageId);
         return;
       }
 
-      setStages((prev) => prev.filter((stage) => stage.id !== stageId));
-      setStageBlocks((prev) => {
+      setStages(prev => prev.filter(stage => stage.id !== stageId));
+      setStageBlocks(prev => {
         const updated = { ...prev };
         delete updated[stageId];
         return updated;
       });
 
       if (activeStageId === stageId) {
-        const remainingStages = stages.filter((stage) => stage.id !== stageId);
+        const remainingStages = stages.filter(stage => stage.id !== stageId);
         if (remainingStages.length > 0) {
           setActiveStageId(remainingStages[0].id);
         }
@@ -604,15 +463,12 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   const updateStage = useCallback(
     (stageId: string, updates: Partial<FunnelStage>) => {
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de atualizar etapa inválida:",
-          stageId
-        );
+        console.warn("⚠️ EditorContext: Tentativa de atualizar etapa inválida:", stageId);
         return;
       }
 
-      setStages((prev) =>
-        prev.map((stage) =>
+      setStages(prev =>
+        prev.map(stage =>
           stage.id === stageId
             ? {
                 ...stage,
@@ -635,10 +491,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:",
-          stageId
-        );
+        console.warn("⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:", stageId);
         return "";
       }
 
@@ -655,7 +508,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         properties: {},
       };
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: [...(prev[stageId] || []), newBlock],
       }));
@@ -685,10 +538,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:",
-          stageId
-        );
+        console.warn("⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:", stageId);
         return "";
       }
 
@@ -714,7 +564,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         order: index + 1,
       }));
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: reorderedBlocks,
       }));
@@ -747,28 +597,21 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de duplicar bloco em etapa inválida:",
-          stageId
-        );
+        console.warn("⚠️ EditorContext: Tentativa de duplicar bloco em etapa inválida:", stageId);
         return "";
       }
 
       const currentStageBlocks = stageBlocks[stageId] || [];
-      const blockToDuplicate = currentStageBlocks.find((b) => b.id === blockId);
+      const blockToDuplicate = currentStageBlocks.find(b => b.id === blockId);
 
       if (!blockToDuplicate) {
-        console.warn(
-          "⚠️ EditorContext: Bloco para duplicar não encontrado:",
-          blockId
-        );
+        console.warn("⚠️ EditorContext: Bloco para duplicar não encontrado:", blockId);
         return "";
       }
 
       // Gerar ID semântico para duplicação
       const duplicateNumber =
-        currentStageBlocks.filter((b) => b.type === blockToDuplicate.type)
-          .length + 1;
+        currentStageBlocks.filter(b => b.type === blockToDuplicate.type).length + 1;
 
       const duplicatedBlockId = `${stageId}-block-${blockToDuplicate.type}-copy-${duplicateNumber}`;
 
@@ -778,7 +621,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         order: currentStageBlocks.length + 1,
       };
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: [...(prev[stageId] || []), duplicatedBlock],
       }));
@@ -806,10 +649,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn(
-          "⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:",
-          stageId
-        );
+        console.warn("⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:", stageId);
         return;
       }
 
@@ -828,7 +668,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       // Reordenar blocos baseado na ordem dos IDs
       const reorderedBlocks = blockIds
         .map((blockId, index) => {
-          const block = currentStageBlocks.find((b) => b.id === blockId);
+          const block = currentStageBlocks.find(b => b.id === blockId);
           if (!block) {
             console.warn("⚠️ EditorContext: Bloco não encontrado:", blockId);
             return null;
@@ -840,7 +680,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         })
         .filter(Boolean) as EditorBlock[];
 
-      setStageBlocks((prev) => ({
+      setStageBlocks(prev => ({
         ...prev,
         [stageId]: reorderedBlocks,
       }));
@@ -859,15 +699,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     (blockId: string) => {
       let deletedFromStage = "";
 
-      setStageBlocks((prev) => {
+      setStageBlocks(prev => {
         const updated = { ...prev };
 
         for (const stageId in updated) {
           const blocks = updated[stageId];
-          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+          const blockIndex = blocks.findIndex(block => block.id === blockId);
 
           if (blockIndex !== -1) {
-            updated[stageId] = blocks.filter((block) => block.id !== blockId);
+            updated[stageId] = blocks.filter(block => block.id !== blockId);
             deletedFromStage = stageId;
             break;
           }
@@ -892,136 +732,108 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
         setSelectedBlockId(null);
       }
 
-      console.log(
-        "🗑️ EditorContext: Bloco removido:",
-        blockId,
-        "da etapa:",
-        deletedFromStage
-      );
+      console.log("🗑️ EditorContext: Bloco removido:", blockId, "da etapa:", deletedFromStage);
     },
     [selectedBlockId, getStageById, updateStage]
   );
 
-  const updateBlock = useCallback(
-    (blockId: string, updates: Partial<EditorBlock>) => {
-      console.log("🔧 EditorContext updateBlock chamado:", {
-        blockId,
-        updates,
-      });
+  const updateBlock = useCallback((blockId: string, updates: Partial<EditorBlock>) => {
+    console.log("🔧 EditorContext updateBlock chamado:", { blockId, updates });
 
-      setStageBlocks((prev) => {
-        const updated = { ...prev };
+    setStageBlocks(prev => {
+      const updated = { ...prev };
 
-        for (const stageId in updated) {
-          const blocks = updated[stageId];
-          const blockIndex = blocks.findIndex((block) => block.id === blockId);
+      for (const stageId in updated) {
+        const blocks = updated[stageId];
+        const blockIndex = blocks.findIndex(block => block.id === blockId);
 
-          if (blockIndex !== -1) {
-            updated[stageId] = blocks.map((block) => {
-              if (block.id === blockId) {
-                console.log("🔧 Bloco encontrado, estado atual:", block);
+        if (blockIndex !== -1) {
+          updated[stageId] = blocks.map(block => {
+            if (block.id === blockId) {
+              console.log("🔧 Bloco encontrado, estado atual:", block);
 
-                // Criar uma nova cópia do bloco
-                const updatedBlock = { ...block };
+              // Criar uma nova cópia do bloco
+              const updatedBlock = { ...block };
 
-                // Processar cada propriedade de atualização separadamente
-                Object.entries(updates).forEach(([key, value]) => {
-                  console.log(`🔧 Processando update: ${key} =`, value);
+              // Processar cada propriedade de atualização separadamente
+              Object.entries(updates).forEach(([key, value]) => {
+                console.log(`🔧 Processando update: ${key} =`, value);
 
-                  if (key === "properties") {
-                    // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
+                if (key === "properties") {
+                  // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
+                  updatedBlock.properties = {
+                    ...block.properties,
+                    ...(value as Record<string, any>),
+                  };
+                  console.log("🔧 Properties merged:", updatedBlock.properties);
+
+                  // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
+                  updatedBlock.content = {
+                    ...block.content,
+                    ...(value as Record<string, any>),
+                  };
+                  console.log("🔧 Content também sincronizado:", updatedBlock.content);
+                } else if (key === "content") {
+                  // Para content, fazer um merge profundo preservando imutabilidade
+                  updatedBlock.content = {
+                    ...block.content,
+                    ...(value as Record<string, any>),
+                  };
+                  console.log("🔧 Content atualizado:", updatedBlock.content);
+                } else {
+                  // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
+                  if (block.content && typeof value !== "object") {
+                    updatedBlock.content = {
+                      ...block.content,
+                      [key]: value,
+                    };
+                    console.log("🔧 Content direto atualizado:", updatedBlock.content);
+                  }
+
+                  if (block.properties) {
                     updatedBlock.properties = {
                       ...block.properties,
-                      ...(value as Record<string, any>),
+                      [key]: value,
                     };
-                    console.log(
-                      "🔧 Properties merged:",
-                      updatedBlock.properties
-                    );
-
-                    // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
-                    updatedBlock.content = {
-                      ...block.content,
-                      ...(value as Record<string, any>),
-                    };
-                    console.log(
-                      "🔧 Content também sincronizado:",
-                      updatedBlock.content
-                    );
-                  } else if (key === "content") {
-                    // Para content, fazer um merge profundo preservando imutabilidade
-                    updatedBlock.content = {
-                      ...block.content,
-                      ...(value as Record<string, any>),
-                    };
-                    console.log("🔧 Content atualizado:", updatedBlock.content);
+                    console.log("🔧 Properties direto atualizada:", updatedBlock.properties);
                   } else {
-                    // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
-                    if (block.content && typeof value !== "object") {
-                      updatedBlock.content = {
-                        ...block.content,
-                        [key]: value,
-                      };
-                      console.log(
-                        "🔧 Content direto atualizado:",
-                        updatedBlock.content
-                      );
-                    }
-
-                    if (block.properties) {
-                      updatedBlock.properties = {
-                        ...block.properties,
-                        [key]: value,
-                      };
-                      console.log(
-                        "🔧 Properties direto atualizada:",
-                        updatedBlock.properties
-                      );
-                    } else {
-                      // Para outras propriedades, atualização direta com casting seguro
-                      (updatedBlock as any)[key] = value;
-                      console.log(
-                        `🔧 Propriedade direta ${key} atualizada:`,
-                        value
-                      );
-                    }
+                    // Para outras propriedades, atualização direta com casting seguro
+                    (updatedBlock as any)[key] = value;
+                    console.log(`🔧 Propriedade direta ${key} atualizada:`, value);
                   }
-                });
+                }
+              });
 
-                console.log("🔧 Bloco final atualizado:", updatedBlock);
-                return updatedBlock;
-              }
-              return block;
-            });
-            break;
-          }
+              console.log("🔧 Bloco final atualizado:", updatedBlock);
+              return updatedBlock;
+            }
+            return block;
+          });
+          break;
         }
+      }
 
-        return updated;
-      });
+      return updated;
+    });
 
-      console.log("📝 EditorContext: Bloco atualizado:", blockId, updates);
-    },
-    []
-  );
+    console.log("📝 EditorContext: Bloco atualizado:", blockId, updates);
+  }, []);
 
   const getBlocksForStage = useCallback(
     (stageId: string): EditorBlock[] => {
       const blocks = stageBlocks[stageId] || [];
-      console.log(
-        `📦 EditorContext: Obtendo blocos para etapa ${stageId}:`,
-        blocks.length
-      );
+      console.log(`📦 EditorContext: Obtendo blocos para etapa ${stageId}:`, blocks.length);
       return blocks;
     },
     [stageBlocks]
   );
 
+  // ═══════════════════════════════════════════════
   // 📊 COMPUTED VALUES (PERFORMANCE OTIMIZADA)
   // ═══════════════════════════════════════════════
   const currentBlocks = getBlocksForStage(activeStageId);
   const selectedBlock = selectedBlockId
-    ? currentBlocks.find((block) => block.id === selectedBlockId)
+    ? currentBlocks.find(block => block.id === selectedBlockId)
     : undefined;
 
   const totalBlocks = Object.values(stageBlocks).reduce(
@@ -1030,49 +842,13 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   );
   const stageCount = stages.length;
 
-  // 🚨 FALLBACK DE EMERGÊNCIA - Garantir que sempre tenha pelo menos um bloco
-  useEffect(() => {
-    if (activeStageId && currentBlocks.length === 0) {
-      console.log(
-        "🚨 EMERGENCY FALLBACK: Criando bloco básico para",
-        activeStageId
-      );
-
-      // Criar um bloco básico de emergência
-      const emergencyBlock: EditorBlock = {
-        id: `${activeStageId}-emergency-block`,
-        type: "text-inline",
-        content: {
-          content: `Etapa ${activeStageId.replace("step-", "")} - Carregando template...`,
-          fontSize: "text-lg",
-          textAlign: "text-center",
-          color: "#6B7280",
-        },
-        order: 1,
-        properties: {
-          content: `Etapa ${activeStageId.replace("step-", "")} - Carregando template...`,
-          fontSize: "text-lg",
-          textAlign: "text-center",
-          color: "#6B7280",
-        },
-      };
-
-      setStageBlocks((prev) => ({
-        ...prev,
-        [activeStageId]: [emergencyBlock],
-      }));
-    }
-  }, [activeStageId, currentBlocks.length]);
-
   // ═══════════════════════════════════════════════
   // 🔌 FUNÇÕES DO MODO BANCO DE DADOS
   // ═══════════════════════════════════════════════
 
   const setDatabaseMode = useCallback(
     (enabled: boolean) => {
-      console.log(
-        `🔧 EditorContext: Modo banco ${enabled ? "ativado" : "desativado"}`
-      );
+      console.log(`🔧 EditorContext: Modo banco ${enabled ? "ativado" : "desativado"}`);
       setDatabaseModeEnabled(enabled);
       adapter.setDatabaseMode(enabled);
     },
@@ -1128,47 +904,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     console.log("🚀 EditorContext: useEffect de inicialização executado");
     console.log("📋 EditorContext: activeStageId:", activeStageId);
-    console.log(
-      "📋 EditorContext: currentBlocks.length:",
-      currentBlocks.length
-    );
-    console.log(
-      "📋 DEBUG: stageBlocks[activeStageId]:",
-      stageBlocks[activeStageId]?.length || 0
-    );
-    console.log(
-      "📋 DEBUG: currentBlocks details:",
-      currentBlocks.map((b) => `${b.id}:${b.type}`)
-    );
+    console.log("📋 EditorContext: currentBlocks.length:", currentBlocks.length);
 
     // Só carregar se a etapa ativa não tiver blocos (evitar sobrescrever blocos já carregados)
-    const currentStageBlocks = stageBlocks[activeStageId] || [];
-
-    if (activeStageId && currentStageBlocks.length === 0) {
-      console.log(
-        `🎨 EditorContext: Carregando template automaticamente para ${activeStageId}`
-      );
+    if (activeStageId && currentBlocks.length === 0) {
+      console.log(`🎨 EditorContext: Carregando template automaticamente para ${activeStageId}`);
       loadStageTemplate(activeStageId);
-    } else if (currentStageBlocks.length > 0) {
+    } else if (currentBlocks.length > 0) {
       console.log(
-        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentStageBlocks.length} blocos carregados - mantendo dados`
+        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentBlocks.length} blocos carregados - mantendo dados`
       );
-      // ✅ DEBUG: Verificar estrutura dos blocos
-      currentStageBlocks.forEach((block, index) => {
-        console.log(`📦 Bloco ${index + 1}:`, {
-          id: block.id,
-          type: block.type,
-          hasContent: !!block.content,
-          hasProperties: !!block.properties,
-          order: block.order,
-        });
-      });
     } else {
-      console.log(
-        `📋 EditorContext: Etapa ${activeStageId} inválida ou sem dados para carregar`
-      );
+      console.log(`📋 EditorContext: Etapa ${activeStageId} inválida ou sem dados para carregar`);
     }
-  }, [activeStageId, loadStageTemplate]); // ✅ Incluir loadStageTemplate nas dependências
+  }, [activeStageId]); // ✅ Remover currentBlocks.length das dependências para evitar loops
 
   // ═══════════════════════════════════════════════
   // 🎯 CONTEXT VALUE (INTERFACE COMPLETA)
@@ -1220,21 +969,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     },
   };
 
-  console.log(
-    "🎯 EditorContext: Providing context value com",
-    stages.length,
-    "etapas"
-  );
-  console.log("🎯 DEBUG: activeStageId:", activeStageId);
-  console.log("🎯 DEBUG: currentBlocks length:", currentBlocks.length);
-  console.log(
-    "🎯 DEBUG: stageBlocks summary:",
-    Object.keys(stageBlocks).map((key) => `${key}:${stageBlocks[key].length}`)
-  );
+  console.log("🎯 EditorContext: Providing context value com", stages.length, "etapas");
 
-  return (
-    <EditorContext.Provider value={contextValue}>
-      {children}
-    </EditorContext.Provider>
-  );
+  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };

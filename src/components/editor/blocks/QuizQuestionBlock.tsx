@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { EditableContent } from "../../../types/editor";
-import { cn } from "../../../lib/utils";
+import { EditableContent } from "@/types/editor";
+import { cn } from "@/lib/utils";
 
 interface QuizQuestionBlockProps {
   content?: EditableContent;
@@ -18,14 +18,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -83,8 +76,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const styleProps = typeof style === "object" ? style : {};
 
   const containerStyle = {
-    backgroundColor:
-      styleProps.backgroundColor || content.backgroundColor || "#ffffff",
+    backgroundColor: styleProps.backgroundColor || content.backgroundColor || "#ffffff",
     padding: styleProps.padding || content.padding || "1rem",
     margin: styleProps.margin || content.margin || "0",
     borderRadius: styleProps.borderRadius || content.borderRadius || "8px",
@@ -111,14 +103,17 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       onClick={handleClick}
     >
       <div className="space-y-4">
-        {content.title && <h3 style={{ color: "#432818" }}>{content.title}</h3>}
+        {content.title && <h3 style={{ color: '#432818' }}>{content.title}</h3>}
 
-        {content.text && <p style={{ color: "#6B4F43" }}>{content.text}</p>}
+        {content.text && <p style={{ color: '#6B4F43' }}>{content.text}</p>}
 
         <div className="space-y-2">
           {options.map((option: any) => (
-            <div key={option.id} style={{ backgroundColor: "#E5DDD5" }}>
-              <span style={{ color: "#432818" }}>{option.text}</span>
+            <div
+              key={option.id}
+              style={{ backgroundColor: '#E5DDD5' }}
+            >
+              <span style={{ color: '#432818' }}>{option.text}</span>
             </div>
           ))}
         </div>

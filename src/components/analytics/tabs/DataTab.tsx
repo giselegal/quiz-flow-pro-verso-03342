@@ -6,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import {
   Table,
@@ -16,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../components/ui/table";
+} from "@/components/ui/table";
 
 interface DataTabProps {
   analyticsData: any;
@@ -49,13 +49,9 @@ export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
                 {events.map((event: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">{event.type}</TableCell>
-                    <TableCell>
-                      {new Date(event.timestamp).toLocaleString("pt-BR")}
-                    </TableCell>
+                    <TableCell>{new Date(event.timestamp).toLocaleString("pt-BR")}</TableCell>
                     <TableCell>{event.userName || "N/A"}</TableCell>
-                    <TableCell>
-                      {event.userEmail || event.email || "N/A"}
-                    </TableCell>
+                    <TableCell>{event.userEmail || event.email || "N/A"}</TableCell>
                     <TableCell className="max-w-[12rem] truncate">
                       {Object.entries(event)
                         .filter(
@@ -71,8 +67,7 @@ export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
                         )
                         .map(([key, value]) => (
                           <div key={key} className="text-xs">
-                            <span className="font-medium">{key}:</span>{" "}
-                            {JSON.stringify(value)}
+                            <span className="font-medium">{key}:</span> {JSON.stringify(value)}
                           </div>
                         ))}
                     </TableCell>
@@ -80,13 +75,8 @@ export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
                 ))}
                 {events.length === 0 && (
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="text-center py-6 text-muted-foreground"
-                    >
-                      {loading
-                        ? "Carregando dados..."
-                        : "Nenhum dado de analytics encontrado"}
+                    <TableCell colSpan={5} className="text-center py-6 text-muted-foreground">
+                      {loading ? "Carregando dados..." : "Nenhum dado de analytics encontrado"}
                     </TableCell>
                   </TableRow>
                 )}
@@ -94,18 +84,13 @@ export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
             </Table>
           </div>
           {analyticsData?.events?.length > 50 && (
-            <div style={{ color: "#8B7355" }}>
-              Mostrando os 50 eventos mais recentes. Exporte o CSV para
-              visualizar todos os dados.
+            <div style={{ color: '#8B7355' }}>
+              Mostrando os 50 eventos mais recentes. Exporte o CSV para visualizar todos os dados.
             </div>
           )}
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => analyticsData?.onExportData?.()}
-          >
+          <Button variant="outline" size="sm" onClick={() => analyticsData?.onExportData?.()}>
             <FileText className="h-4 w-4 mr-2" />
             Exportar todos os dados
           </Button>

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { BlockComponentProps } from "../../../types/blocks";
+import { BlockComponentProps } from "@/types/blocks";
 
 interface VideoPlayerBlockProps extends BlockComponentProps {
   videoUrl?: string;
@@ -15,14 +15,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -74,9 +67,7 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
   return (
     <div
       className={`p-4 border-2 border-dashed border-gray-300 rounded-lg ${
-        isSelected
-          ? "border-[#B89B7A] bg-[#B89B7A]/10"
-          : "hover:border-gray-400"
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "hover:border-gray-400"
       } ${className}`}
       onClick={onClick}
     >
@@ -91,15 +82,15 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
           />
         </div>
       ) : (
-        <div style={{ backgroundColor: "#E5DDD5" }}>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
           <div className="text-center">
             <div className="text-4xl text-gray-400 mb-2">📹</div>
-            <p style={{ color: "#6B4F43" }}>Clique para adicionar vídeo</p>
+            <p style={{ color: '#6B4F43' }}>Clique para adicionar vídeo</p>
           </div>
         </div>
       )}
 
-      {title && <h3 style={{ color: "#432818" }}>{title}</h3>}
+      {title && <h3 style={{ color: '#432818' }}>{title}</h3>}
     </div>
   );
 };

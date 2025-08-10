@@ -1,4 +1,4 @@
-import { EditableContent } from "../types/editor";
+import { EditableContent } from "@/types/editor";
 
 export const getDefaultContentForType = (type: string): EditableContent => {
   switch (type) {

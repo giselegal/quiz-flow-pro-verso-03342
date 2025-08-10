@@ -10,15 +10,12 @@ function testManualSave() {
   console.log(`✅ 1. No editor: ${isOnEditor}`);
 
   // 2. Verificar se há botão Salvar visível
-  const saveButton = document.querySelector(
-    'button[class*="bg-\\[\\#B89B7A\\]"]'
-  );
+  const saveButton = document.querySelector('button[class*="bg-\\[\\#B89B7A\\]"]');
   console.log(`✅ 2. Botão Salvar encontrado: ${!!saveButton}`);
 
   // 3. Verificar se o estado do funil existe
   const hasReactState =
-    window.React &&
-    window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+    window.React && window.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
   console.log(`✅ 3. React carregado: ${!!hasReactState}`);
 
   // 4. Verificar localStorage
@@ -26,15 +23,11 @@ function testManualSave() {
   console.log(`✅ 4. Funnels no localStorage: ${!!localFunnels}`);
   if (localFunnels) {
     const parsed = JSON.parse(localFunnels);
-    console.log(
-      `   📊 Quantidade de funnels locais: ${Object.keys(parsed).length}`
-    );
+    console.log(`   📊 Quantidade de funnels locais: ${Object.keys(parsed).length}`);
   }
 
   // 5. Verificar se há mudanças pendentes
-  const hasPendingChanges = localStorage.getItem(
-    "schema-driven-pending-changes"
-  );
+  const hasPendingChanges = localStorage.getItem("schema-driven-pending-changes");
   console.log(`✅ 5. Mudanças pendentes: ${hasPendingChanges}`);
 
   // 6. Testar clique no botão
@@ -67,7 +60,7 @@ const testResult = testManualSave();
 console.log("📊 Resultado do teste:", testResult);
 
 // Adicionar listener para monitorar cliques no botão
-document.addEventListener("click", (event) => {
+document.addEventListener("click", event => {
   if (
     event.target &&
     event.target.closest &&

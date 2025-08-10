@@ -1,8 +1,8 @@
 import React from "react";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Textarea } from "../../components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { X } from "lucide-react";
 
 interface PropertiesPanelProps {
@@ -20,10 +20,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   if (!selectedBlock) {
     return (
-      <div style={{ borderColor: "#E5DDD5" }}>
-        <p style={{ color: "#8B7355" }}>
-          Selecione um bloco para editar suas propriedades
-        </p>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <p style={{ color: '#8B7355' }}>Selecione um bloco para editar suas propriedades</p>
       </div>
     );
   }
@@ -39,8 +37,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   };
 
   return (
-    <div style={{ borderColor: "#E5DDD5" }}>
-      <div style={{ borderColor: "#E5DDD5" }}>
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <h3 className="text-lg font-medium">Propriedades</h3>
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="w-4 h-4" />
@@ -50,12 +48,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         <div>
           <Label htmlFor="block-type">Tipo</Label>
-          <Input
-            id="block-type"
-            value={selectedBlock.type}
-            disabled
-            style={{ backgroundColor: "#FAF9F7" }}
-          />
+          <Input id="block-type" value={selectedBlock.type} disabled style={{ backgroundColor: '#FAF9F7' }} />
         </div>
 
         {selectedBlock.type === "text" && (
@@ -64,7 +57,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <Textarea
               id="text-content"
               value={selectedBlock.content?.text || ""}
-              onChange={(e) => handlePropertyChange("text", e.target.value)}
+              onChange={e => handlePropertyChange("text", e.target.value)}
               rows={4}
             />
           </div>
@@ -77,7 +70,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="heading-text"
                 value={selectedBlock.content?.text || ""}
-                onChange={(e) => handlePropertyChange("text", e.target.value)}
+                onChange={e => handlePropertyChange("text", e.target.value)}
               />
             </div>
             <div>
@@ -85,8 +78,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <select
                 id="heading-level"
                 value={selectedBlock.content?.level || "h2"}
-                onChange={(e) => handlePropertyChange("level", e.target.value)}
-                style={{ borderColor: "#E5DDD5" }}
+                onChange={e => handlePropertyChange("level", e.target.value)}
+                style={{ borderColor: '#E5DDD5' }}
               >
                 <option value="h1">H1</option>
                 <option value="h2">H2</option>
@@ -106,9 +99,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="image-url"
                 value={selectedBlock.content?.imageUrl || ""}
-                onChange={(e) =>
-                  handlePropertyChange("imageUrl", e.target.value)
-                }
+                onChange={e => handlePropertyChange("imageUrl", e.target.value)}
                 placeholder="https://exemplo.com/imagem.jpg"
               />
             </div>
@@ -117,7 +108,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="image-alt"
                 value={selectedBlock.content?.alt || ""}
-                onChange={(e) => handlePropertyChange("alt", e.target.value)}
+                onChange={e => handlePropertyChange("alt", e.target.value)}
                 placeholder="Descrição da imagem"
               />
             </div>
@@ -131,7 +122,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="button-text"
                 value={selectedBlock.content?.text || ""}
-                onChange={(e) => handlePropertyChange("text", e.target.value)}
+                onChange={e => handlePropertyChange("text", e.target.value)}
               />
             </div>
             <div>
@@ -139,14 +130,14 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <Input
                 id="button-url"
                 value={selectedBlock.content?.url || ""}
-                onChange={(e) => handlePropertyChange("url", e.target.value)}
+                onChange={e => handlePropertyChange("url", e.target.value)}
                 placeholder="https://exemplo.com"
               />
             </div>
           </>
         )}
 
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <Button
             variant="destructive"
             onClick={() => onDeleteBlock(selectedBlock.id)}

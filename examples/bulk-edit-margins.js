@@ -32,7 +32,7 @@ const stepFiles = [
 
 const basePath = "/workspaces/quiz-quest-challenge-verse/src/components/steps";
 
-stepFiles.forEach((fileName) => {
+stepFiles.forEach(fileName => {
   const filePath = path.join(basePath, fileName);
 
   if (!fs.existsSync(filePath)) {

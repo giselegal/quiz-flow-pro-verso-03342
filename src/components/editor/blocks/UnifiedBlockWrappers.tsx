@@ -1,6 +1,6 @@
 import React from "react";
-import FunnelHeroSection from "../../../components/funnel/base/FunnelHeroSection";
-import FunnelPainSection from "../../../components/funnel/base/FunnelPainSection";
+import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
+import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
 
 // Interface que todos os blocos do editor devem implementar
 interface BlockComponentProps {
@@ -26,14 +26,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,10 +73,8 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>
-          Erro: Propriedades do bloco inválidas
-        </p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Propriedades do bloco inválidas</p>
       </div>
     );
   }
@@ -119,10 +110,8 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>
-          Erro: Propriedades do bloco inválidas
-        </p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Propriedades do bloco inválidas</p>
       </div>
     );
   }
@@ -132,9 +121,7 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Garantir que painPoints seja um array válido
-  const painPoints = Array.isArray(block.properties.painPoints)
-    ? block.properties.painPoints
-    : [];
+  const painPoints = Array.isArray(block.properties.painPoints) ? block.properties.painPoints : [];
 
   // Usar o componente base exatamente como no funil real
   return (

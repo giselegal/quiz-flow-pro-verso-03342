@@ -20,9 +20,7 @@ export const markTestVariant = (testId, variant, expireDays = 30) => {
     });
   }
 
-  console.log(
-    `[AB Testing] Usuário marcado para teste ${testId}, variante ${variant}`
-  );
+  console.log(`[AB Testing] Usuário marcado para teste ${testId}, variante ${variant}`);
 
   return variant;
 };

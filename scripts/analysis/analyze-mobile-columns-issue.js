@@ -33,8 +33,7 @@ const mobileIssues = {
         </div>
       </div>
     `,
-    solucao:
-      "Converter para grid-cols-1 em mobile e grid-cols-2 apenas em telas maiores",
+    solucao: "Converter para grid-cols-1 em mobile e grid-cols-2 apenas em telas maiores",
   },
 
   resultCTA: {

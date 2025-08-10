@@ -67,10 +67,7 @@ export const renderLucideIcon = (
  * @param fallback - Ícone padrão caso o nome não seja encontrado
  * @returns Componente do ícone
  */
-export const getLucideIcon = (
-  iconName: string,
-  fallback: LucideIcon = AlertCircle
-): LucideIcon => {
+export const getLucideIcon = (iconName: string, fallback: LucideIcon = AlertCircle): LucideIcon => {
   return iconMap[iconName] || fallback;
 };
 

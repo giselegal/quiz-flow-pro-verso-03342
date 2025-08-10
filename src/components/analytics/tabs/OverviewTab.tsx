@@ -1,13 +1,7 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetricCard } from "../MetricCard";
-import { Skeleton } from "../../../components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ResponsiveContainer,
   LineChart,
@@ -26,10 +20,7 @@ interface OverviewTabProps {
   loading?: boolean;
 }
 
-export const OverviewTab: React.FC<OverviewTabProps> = ({
-  analyticsData,
-  loading = false,
-}) => {
+export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading = false }) => {
   if (loading || !analyticsData) {
     return (
       <div className="space-y-4">
@@ -71,10 +62,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
     // Convert to array and sort by date
     chartData.push(...Object.values(eventsByDate));
-    chartData.sort(
-      (a: any, b: any) =>
-        new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    chartData.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
   // Format date labels for chart
@@ -219,10 +207,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                             ? "Leads"
                             : "Vendas",
                   ]}
-                  labelFormatter={(label) => `Data: ${formatDate(label)}`}
+                  labelFormatter={label => `Data: ${formatDate(label)}`}
                 />
                 <Legend
-                  formatter={(value) =>
+                  formatter={value =>
                     value === "quiz_start"
                       ? "Início do Quiz"
                       : value === "quiz_complete"
@@ -234,23 +222,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                             : "Vendas"
                   }
                 />
-                <Line
-                  type="monotone"
-                  dataKey="quiz_start"
-                  stroke="#8884d8"
-                  activeDot={{ r: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="quiz_complete"
-                  stroke="#82ca9d"
-                />
+                <Line type="monotone" dataKey="quiz_start" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="quiz_complete" stroke="#82ca9d" />
                 <Line type="monotone" dataKey="result_view" stroke="#ffc658" />
-                <Line
-                  type="monotone"
-                  dataKey="lead_generated"
-                  stroke="#ff7300"
-                />
+                <Line type="monotone" dataKey="lead_generated" stroke="#ff7300" />
                 <Line type="monotone" dataKey="sale" stroke="#ff0000" />
               </LineChart>
             </ResponsiveContainer>
@@ -261,9 +236,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <Card>
         <CardHeader>
           <CardTitle>Conversão do Funil</CardTitle>
-          <CardDescription>
-            Análise das taxas de conversão entre etapas do funil
-          </CardDescription>
+          <CardDescription>Análise das taxas de conversão entre etapas do funil</CardDescription>
         </CardHeader>
         <CardContent>
           <div className={`w-full ${compactView ? "h-[200px]" : "h-[300px]"}`}>
@@ -279,10 +252,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="title" />
-                <YAxis tickFormatter={(value) => `${value}%`} />
+                <YAxis tickFormatter={value => `${value}%`} />
                 <Tooltip
-                  formatter={(value) => [value, "Taxa"]}
-                  labelFormatter={(label) => `${label}`}
+                  formatter={value => [value, "Taxa"]}
+                  labelFormatter={label => `${label}`}
                 />
                 <Bar dataKey="value" name="Taxa" fill="#4f46e5" />
               </BarChart>

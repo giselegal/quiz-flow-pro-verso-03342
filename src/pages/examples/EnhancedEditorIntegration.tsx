@@ -4,23 +4,9 @@
 import React, { useState, useEffect } from "react";
 import { useRoute } from "wouter";
 import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
-import {
-  ArrowLeft,
-  Settings,
-  Eye,
-  Edit3,
-  BarChart3,
-  Users,
-  Calendar,
-  Globe,
-} from "lucide-react";
+import { ArrowLeft, Settings, Eye, Edit3, BarChart3, Users, Calendar, Globe } from "lucide-react";
 
 // Importar o editor melhorado
 import EnhancedEditor from "../../components/editor/EnhancedEditor";
@@ -28,18 +14,18 @@ import EnhancedEditor from "../../components/editor/EnhancedEditor";
 // Componente de integração para a página de edição
 const EditorPage: React.FC = () => {
   const [match, params] = useRoute("/admin/funis/:funnelId/editor");
-  const funnelId = params?.funnelId || "";
+  const funnelId = params?.funnelId;
 
   // Verificar se a rota está correta
   if (!match || !funnelId) {
     return (
-      <div style={{ backgroundColor: "#FAF9F7" }}>
+      <div style={{ backgroundColor: '#FAF9F7' }}>
         <Card className="w-96">
           <CardHeader>
             <CardTitle className="text-center">Erro</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
-            <p style={{ color: "#6B4F43" }}>Funil não encontrado</p>
+            <p style={{ color: '#6B4F43' }}>Funil não encontrado</p>
             <Button onClick={() => window.history.back()}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Voltar
@@ -97,9 +83,7 @@ const FunnelManagementPage: React.FC = () => {
     } as const;
 
     return (
-      <Badge variant={variants[status as keyof typeof variants] || "secondary"}>
-        {status}
-      </Badge>
+      <Badge variant={variants[status as keyof typeof variants] || "secondary"}>{status}</Badge>
     );
   };
 
@@ -114,8 +98,7 @@ const FunnelManagementPage: React.FC = () => {
                 Voltar para Lista
               </Button>
               <h2 className="text-lg font-semibold">
-                Editando:{" "}
-                {mockFunnels.find((f) => f.id === selectedFunnel)?.name}
+                Editando: {mockFunnels.find(f => f.id === selectedFunnel)?.name}
               </h2>
             </div>
             <div className="flex-1">
@@ -137,9 +120,7 @@ const FunnelManagementPage: React.FC = () => {
             {/* Aqui você pode importar e usar o AdvancedAnalytics diretamente */}
             <Card>
               <CardContent className="p-6">
-                <p style={{ color: "#6B4F43" }}>
-                  Dashboard de Analytics estará aqui
-                </p>
+                <p style={{ color: '#6B4F43' }}>Dashboard de Analytics estará aqui</p>
               </CardContent>
             </Card>
           </div>
@@ -157,22 +138,17 @@ const FunnelManagementPage: React.FC = () => {
             </div>
 
             <div className="grid gap-4">
-              {mockFunnels.map((funnel) => (
-                <Card
-                  key={funnel.id}
-                  className="hover:shadow-md transition-shadow"
-                >
+              {mockFunnels.map(funnel => (
+                <Card key={funnel.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold">
-                            {funnel.name}
-                          </h3>
+                          <h3 className="text-lg font-semibold">{funnel.name}</h3>
                           {renderStatusBadge(funnel.status)}
                         </div>
 
-                        <div style={{ color: "#6B4F43" }}>
+                        <div style={{ color: '#6B4F43' }}>
                           <div className="flex items-center gap-1">
                             <Eye className="h-4 w-4" />
                             {funnel.views} visualizações
@@ -204,9 +180,7 @@ const FunnelManagementPage: React.FC = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            window.open(`/preview/${funnel.id}`, "_blank")
-                          }
+                          onClick={() => window.open(`/preview/${funnel.id}`, "_blank")}
                         >
                           <Eye className="h-4 w-4 mr-2" />
                           Preview
@@ -233,7 +207,7 @@ const FunnelManagementPage: React.FC = () => {
     }
   };
 
-  return <div style={{ backgroundColor: "#FAF9F7" }}>{renderView()}</div>;
+  return <div style={{ backgroundColor: '#FAF9F7' }}>{renderView()}</div>;
 };
 
 // Hook personalizado para facilitar integração
@@ -346,8 +320,7 @@ const useEnhancedEditor = (funnelId: string) => {
     // Métodos de navegação
     openEditor: () => window.open(`/admin/funis/${funnelId}/editor`, "_blank"),
     openPreview: () => window.open(`/preview/${funnelId}`, "_blank"),
-    openAnalytics: () =>
-      window.open(`/admin/funis/${funnelId}/analytics`, "_blank"),
+    openAnalytics: () => window.open(`/admin/funis/${funnelId}/analytics`, "_blank"),
 
     // Método para recarregar dados
     refresh: () => {
@@ -381,7 +354,7 @@ const ExistingComponentExample: React.FC = () => {
         <CardContent className="p-6">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p style={{ color: "#6B4F43" }}>Carregando funil...</p>
+            <p style={{ color: '#6B4F43' }}>Carregando funil...</p>
           </div>
         </CardContent>
       </Card>
@@ -393,8 +366,8 @@ const ExistingComponentExample: React.FC = () => {
       <Card>
         <CardContent className="p-6">
           <div className="text-center">
-            <div style={{ color: "#432818" }}>❌</div>
-            <p style={{ color: "#432818" }}>{error}</p>
+            <div style={{ color: '#432818' }}>❌</div>
+            <p style={{ color: '#432818' }}>{error}</p>
             <Button onClick={refresh} size="sm">
               Tentar Novamente
             </Button>
@@ -417,11 +390,7 @@ const ExistingComponentExample: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        <Button
-          onClick={openEditor}
-          disabled={!isEditorReady}
-          className="w-full"
-        >
+        <Button onClick={openEditor} disabled={!isEditorReady} className="w-full">
           <Edit3 className="h-4 w-4 mr-2" />
           Abrir Editor Melhorado
         </Button>
@@ -467,7 +436,7 @@ const ExistingComponentExample: React.FC = () => {
         </div>
 
         {funnelData && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <p>
               <strong>ID:</strong> {funnelData.id}
             </p>
@@ -475,8 +444,7 @@ const ExistingComponentExample: React.FC = () => {
               <strong>Páginas:</strong> {funnelData.pages?.length || 0}
             </p>
             <p>
-              <strong>Última atualização:</strong>{" "}
-              {new Date().toLocaleDateString()}
+              <strong>Última atualização:</strong> {new Date().toLocaleDateString()}
             </p>
           </div>
         )}
@@ -486,9 +454,4 @@ const ExistingComponentExample: React.FC = () => {
 };
 
 export default EditorPage;
-export {
-  EmbeddedEditor,
-  FunnelManagementPage,
-  useEnhancedEditor,
-  ExistingComponentExample,
-};
+export { EmbeddedEditor, FunnelManagementPage, useEnhancedEditor, ExistingComponentExample };

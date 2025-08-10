@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 /**
  * StrategicQuestionBlock - Componente para questões estratégicas (Etapas 13-18)
@@ -66,14 +66,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -142,9 +135,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   disabled = false,
   onClick,
 }) => {
-  const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(
-    selectedAnswer
-  );
+  const [currentAnswer, setCurrentAnswer] = useState<string | string[]>(selectedAnswer);
   const [freeTextAnswer, setFreeTextAnswer] = useState("");
   const [showFreeText, setShowFreeText] = useState(false);
 
@@ -159,7 +150,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     } else {
       const currentArray = Array.isArray(currentAnswer) ? currentAnswer : [];
       if (currentArray.includes(option)) {
-        newAnswer = currentArray.filter((a) => a !== option);
+        newAnswer = currentArray.filter(a => a !== option);
       } else {
         newAnswer = [...currentArray, option];
       }
@@ -189,8 +180,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
   };
 
   const getOptionClasses = (option: string) => {
-    const baseClasses =
-      "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
+    const baseClasses = "w-full p-4 rounded-lg transition-all duration-200 border-2 cursor-pointer";
 
     if (optionStyle === "cards") {
       return `${baseClasses} ${
@@ -249,7 +239,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         </h2>
 
         {/* Descrição */}
-        {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {/* Opções */}
         <div className="space-y-4 mb-8">
@@ -286,13 +276,11 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
             ) : (
               <div className="space-y-4">
                 <div
-                  style={{ borderColor: "#E5DDD5" }}
+                  style={{ borderColor: '#E5DDD5' }}
                   onClick={onClick}
                   title="Configure a área de texto no Painel de Propriedades"
                 >
-                  {freeTextAnswer ||
-                    placeholder ||
-                    "Área de texto configurável"}
+                  {freeTextAnswer || placeholder || "Área de texto configurável"}
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -302,10 +290,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
                   >
                     Confirmar Resposta
                   </Button>
-                  <Button
-                    onClick={() => setShowFreeText(false)}
-                    variant="outline"
-                  >
+                  <Button onClick={() => setShowFreeText(false)} variant="outline">
                     Cancelar
                   </Button>
                 </div>
@@ -315,10 +300,8 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         )}
 
         {/* Informação adicional */}
-        <div style={{ color: "#8B7355" }}>
-          <p>
-            💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado
-          </p>
+        <div style={{ color: '#8B7355' }}>
+          <p>💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado</p>
         </div>
       </div>
     </div>

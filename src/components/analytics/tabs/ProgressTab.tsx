@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BarChart,
   Bar,
@@ -26,21 +20,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../components/ui/table";
-import { ChartConfig, ChartContainer } from "../../../components/ui/chart";
-import { Progress } from "../../../components/ui/progress";
-import { GridLayout } from "../../../components/shared/GridLayout";
-import { getUserProgressData } from "../../../utils/analyticsHelpers";
+} from "@/components/ui/table";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { Progress } from "@/components/ui/progress";
+import { GridLayout } from "@/components/shared/GridLayout";
+import { getUserProgressData } from "@/utils/analyticsHelpers";
 
 interface ProgressTabProps {
   analyticsData: any;
   loading: boolean;
 }
 
-export const ProgressTab: React.FC<ProgressTabProps> = ({
-  analyticsData,
-  loading,
-}) => {
+export const ProgressTab: React.FC<ProgressTabProps> = ({ analyticsData, loading }) => {
   const userProgressData = React.useMemo(() => {
     if (!analyticsData?.events) return [];
     return getUserProgressData(analyticsData.events);
@@ -52,22 +43,14 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
 
     return userProgressData.map((item, index) => {
       const prevItem = index > 0 ? userProgressData[index - 1] : null;
-      const nextItem =
-        index < userProgressData.length - 1
-          ? userProgressData[index + 1]
-          : null;
+      const nextItem = index < userProgressData.length - 1 ? userProgressData[index + 1] : null;
 
       const dropoffRate = nextItem
-        ? (
-            ((item.uniqueUsers - nextItem.uniqueUsers) / item.uniqueUsers) *
-            100
-          ).toFixed(1)
+        ? (((item.uniqueUsers - nextItem.uniqueUsers) / item.uniqueUsers) * 100).toFixed(1)
         : "0.0";
 
       const retentionFromStart = userProgressData[0]
-        ? ((item.uniqueUsers / userProgressData[0].uniqueUsers) * 100).toFixed(
-            1
-          )
+        ? ((item.uniqueUsers / userProgressData[0].uniqueUsers) * 100).toFixed(1)
         : "100.0";
 
       return {
@@ -107,17 +90,11 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
 
     return (
       <div className="bg-white p-1.5 border border-gray-100 shadow-lg rounded-md">
-        <p className="text-[7px] font-medium mb-0.5">
-          Questão {data.questionId}
-        </p>
+        <p className="text-[7px] font-medium mb-0.5">Questão {data.questionId}</p>
         <p className="text-[7px] font-semibold">{data.uniqueUsers} usuários</p>
-        <p style={{ color: "#8B7355" }}>
-          {data.retentionFromStart}% retenção total
-        </p>
+        <p style={{ color: '#8B7355' }}>{data.retentionFromStart}% retenção total</p>
         {data.dropoffRate > 0 && (
-          <p className="text-[6px] text-rose-500 mt-0.5">
-            {data.dropoffRate}% abandonaram aqui
-          </p>
+          <p className="text-[6px] text-rose-500 mt-0.5">{data.dropoffRate}% abandonaram aqui</p>
         )}
       </div>
     );
@@ -126,9 +103,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <p className="text-muted-foreground">
-          Carregando dados de progresso...
-        </p>
+        <p className="text-muted-foreground">Carregando dados de progresso...</p>
       </div>
     );
   }
@@ -146,15 +121,8 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
           <CardContent className="pt-1 px-2">
             <div className="h-[55px]">
               <ChartContainer config={chartConfig}>
-                <BarChart
-                  data={userProgressData}
-                  margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="#e0e0e0"
-                    vertical={false}
-                  />
+                <BarChart data={userProgressData} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
                   <XAxis
                     dataKey="questionId"
                     stroke="#888888"
@@ -197,10 +165,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
           <CardContent className="pt-1 px-2">
             <div className="h-[55px]">
               <ChartContainer config={chartConfig}>
-                <LineChart
-                  data={dropoffData}
-                  margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
-                >
+                <LineChart data={dropoffData} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
                   <XAxis
                     dataKey="questionId"
@@ -232,9 +197,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
       <Card className="border border-border/40 shadow-sm">
         <CardHeader className="pb-1.5">
           <CardTitle>Funil de Questões</CardTitle>
-          <CardDescription className="text-xs">
-            Taxas de queda por etapa do quiz
-          </CardDescription>
+          <CardDescription className="text-xs">Taxas de queda por etapa do quiz</CardDescription>
         </CardHeader>
         <CardContent className="pt-1.5">
           <div className="rounded-md border border-border/40 overflow-x-auto">
@@ -251,15 +214,9 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
               <TableBody>
                 {dropoffData.map((item, index) => (
                   <TableRow key={item.questionId}>
-                    <TableCell className="font-medium py-1.5 text-xs">
-                      Q{index + 1}
-                    </TableCell>
-                    <TableCell className="py-1.5 text-xs">
-                      {item.uniqueUsers}
-                    </TableCell>
-                    <TableCell className="py-1.5 text-xs">
-                      {item.totalAnswers}
-                    </TableCell>
+                    <TableCell className="font-medium py-1.5 text-xs">Q{index + 1}</TableCell>
+                    <TableCell className="py-1.5 text-xs">{item.uniqueUsers}</TableCell>
+                    <TableCell className="py-1.5 text-xs">{item.totalAnswers}</TableCell>
                     <TableCell className="py-1.5">
                       <div className="flex items-center gap-2">
                         <Progress
@@ -269,23 +226,16 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({
                           {...(item.retentionFromStart != null && {
                             style: {
                               "--tw-bg-opacity": "1",
-                              backgroundColor: getBarColor(
-                                index,
-                                dropoffData.length
-                              ),
+                              backgroundColor: getBarColor(index, dropoffData.length),
                             } as React.CSSProperties,
                           })}
                         />
-                        <span className="text-xs">
-                          {item.retentionFromStart}%
-                        </span>
+                        <span className="text-xs">{item.retentionFromStart}%</span>
                       </div>
                     </TableCell>
                     <TableCell className="py-1.5 text-xs">
                       {item.dropoffRate > 0 ? (
-                        <span className="text-rose-500">
-                          {item.dropoffRate}%
-                        </span>
+                        <span className="text-rose-500">{item.dropoffRate}%</span>
                       ) : (
                         <span className="text-muted-foreground">-</span>
                       )}

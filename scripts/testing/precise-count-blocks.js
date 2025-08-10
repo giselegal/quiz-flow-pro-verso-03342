@@ -34,8 +34,7 @@ objects.forEach((obj, index) => {
   // Reconstituir o objeto
   let fullObj = obj;
   if (index > 0 && !fullObj.startsWith("{")) fullObj = "{" + fullObj;
-  if (index < objects.length - 1 && !fullObj.endsWith("}"))
-    fullObj = fullObj + "}";
+  if (index < objects.length - 1 && !fullObj.endsWith("}")) fullObj = fullObj + "}";
 
   const hasType = /type:\s*['"`]([^'"`]+)['"`]/.test(fullObj);
   const hasName = /name:\s*['"`]([^'"`]+)['"`]/.test(fullObj);
@@ -65,15 +64,11 @@ console.log(`\n✅ BLOCOS VÁLIDOS: ${validBlocks}`);
 console.log(`❌ OBJETOS INVÁLIDOS: ${invalidObjects}`);
 
 console.log(`\n🏷️ CATEGORIAS ENCONTRADAS: ${categories.size}`);
-const sortedCategories = Array.from(categories.entries()).sort(
-  (a, b) => b[1] - a[1]
-);
+const sortedCategories = Array.from(categories.entries()).sort((a, b) => b[1] - a[1]);
 
 sortedCategories.forEach(([category, count]) => {
   console.log(`📁 ${category}: ${count} componentes`);
 });
 
 console.log("\n" + "=".repeat(60));
-console.log(
-  `🎯 RESULTADO: ${validBlocks} componentes válidos de ${objects.length} objetos total`
-);
+console.log(`🎯 RESULTADO: ${validBlocks} componentes válidos de ${objects.length} objetos total`);

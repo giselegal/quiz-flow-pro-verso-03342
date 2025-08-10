@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Block } from "../../../types/editor";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Block } from "@/types/editor";
 
 interface CTABlockEditorProps {
   block: Block;
@@ -18,7 +18,7 @@ const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id="title"
           value={content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Transforme seu estilo agora"
         />
       </div>
@@ -28,7 +28,7 @@ const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id="buttonText"
           value={content.buttonText || ""}
-          onChange={(e) => onUpdate({ buttonText: e.target.value })}
+          onChange={e => onUpdate({ buttonText: e.target.value })}
           placeholder="Clique Aqui"
         />
       </div>
@@ -38,9 +38,7 @@ const CTABlockEditor: React.FC<CTABlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id="url"
           value={content.url || content.ctaUrl || ""}
-          onChange={(e) =>
-            onUpdate({ url: e.target.value, ctaUrl: e.target.value })
-          }
+          onChange={e => onUpdate({ url: e.target.value, ctaUrl: e.target.value })}
           placeholder="https://pay.hotmart.com/..."
         />
       </div>

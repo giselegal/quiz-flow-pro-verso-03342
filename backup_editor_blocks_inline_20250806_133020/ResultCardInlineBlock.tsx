@@ -3,11 +3,7 @@ import { cn } from "@/lib/utils";
 import { Award, TrendingUp } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { BlockComponentProps } from "@/types/blocks";
-import {
-  safeGetBlockProperties,
-  isValidBlock,
-  logBlockDebug,
-} from "@/utils/blockUtils";
+import { safeGetBlockProperties, isValidBlock, logBlockDebug } from "@/utils/blockUtils";
 
 /**
  * ResultCardInlineBlock - Componente modular inline horizontal
@@ -23,11 +19,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   // 🛡️ Validação e logging de debug
   if (!isValidBlock(block)) {
     console.error("❌ ResultCardInlineBlock: Bloco inválido recebido", block);
-    return (
-      <div className="p-2 bg-red-100 text-red-600 text-xs rounded">
-        Erro: Bloco inválido
-      </div>
-    );
+    return <div className="p-2 bg-red-100 text-red-600 text-xs rounded">Erro: Bloco inválido</div>;
   }
 
   logBlockDebug("ResultCardInlineBlock", block);
@@ -90,8 +82,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         className
       )}
       style={{
-        backgroundColor:
-          backgroundColor === "white" ? undefined : backgroundColor,
+        backgroundColor: backgroundColor === "white" ? undefined : backgroundColor,
       }}
       onClick={onClick}
     >
@@ -106,10 +97,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
             style={{ backgroundColor: `${accentColor}20` }}
           >
             <Award
-              className={cn(
-                "text-current",
-                iconSizes[size as keyof typeof iconSizes]
-              )}
+              className={cn("text-current", iconSizes[size as keyof typeof iconSizes])}
               style={{ color: accentColor }}
             />
           </div>
@@ -118,35 +106,25 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         {showProgress && (
           <div className="text-right">
             <div
-              className={cn(
-                "font-bold",
-                titleSizes[size as keyof typeof titleSizes]
-              )}
+              className={cn("font-bold", titleSizes[size as keyof typeof titleSizes])}
               style={{ color: accentColor }}
             >
               {percentage}%
             </div>
-            <div className="text-xs text-gray-500 uppercase tracking-wide">
-              Compatibilidade
-            </div>
+            <div className="text-xs text-gray-500 uppercase tracking-wide">Compatibilidade</div>
           </div>
         )}
       </div>
 
       {/* Nome do estilo */}
       <h3
-        className={cn(
-          "font-bold mb-3 text-gray-900",
-          titleSizes[size as keyof typeof titleSizes]
-        )}
+        className={cn("font-bold mb-3 text-gray-900", titleSizes[size as keyof typeof titleSizes])}
       >
         Estilo {styleName}
       </h3>
 
       {/* Descrição */}
-      <p className="text-gray-600 text-sm leading-relaxed mb-4">
-        {description}
-      </p>
+      <p className="text-gray-600 text-sm leading-relaxed mb-4">{description}</p>
 
       {/* Barra de progresso */}
       {showProgress && (

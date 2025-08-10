@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Label } from "../../components/ui/label";
-import { Button } from "../../components/ui/button";
-import { Switch } from "../../components/ui/switch";
-import { Separator } from "../../components/ui/separator";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import { Link } from "wouter";
 
 export const MarketingTab: React.FC = () => {
@@ -21,8 +15,7 @@ export const MarketingTab: React.FC = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          UTM parameters help track the effectiveness of your marketing
-          campaigns.
+          UTM parameters help track the effectiveness of your marketing campaigns.
         </p>
 
         <div className="space-y-4">
@@ -38,15 +31,11 @@ export const MarketingTab: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Switch id="utm-facebook" defaultChecked={true} />
-                <Label htmlFor="utm-facebook">
-                  Facebook (utm_source=facebook)
-                </Label>
+                <Label htmlFor="utm-facebook">Facebook (utm_source=facebook)</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Switch id="utm-instagram" defaultChecked={true} />
-                <Label htmlFor="utm-instagram">
-                  Instagram (utm_source=instagram)
-                </Label>
+                <Label htmlFor="utm-instagram">Instagram (utm_source=instagram)</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <Switch id="utm-email" defaultChecked={true} />
@@ -61,9 +50,7 @@ export const MarketingTab: React.FC = () => {
             <Label className="text-base">Analytics Integration</Label>
             <div className="flex items-center space-x-2 mt-2">
               <Switch id="utm-to-ga" defaultChecked={true} />
-              <Label htmlFor="utm-to-ga">
-                Send UTM data to Google Analytics
-              </Label>
+              <Label htmlFor="utm-to-ga">Send UTM data to Google Analytics</Label>
             </div>
             <div className="flex items-center space-x-2 mt-2">
               <Switch id="utm-to-fb" defaultChecked={true} />
@@ -72,9 +59,7 @@ export const MarketingTab: React.FC = () => {
           </div>
         </div>
 
-        <Button className="mt-4 bg-[#B89B7A] hover:bg-[#A38A69]">
-          Save UTM Settings
-        </Button>
+        <Button className="mt-4 bg-[#B89B7A] hover:bg-[#A38A69]">Save UTM Settings</Button>
 
         <div className="mt-6">
           <Button variant="outline" asChild>

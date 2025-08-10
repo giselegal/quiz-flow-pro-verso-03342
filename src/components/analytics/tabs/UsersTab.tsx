@@ -1,14 +1,8 @@
 import React, { useState, useMemo } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -17,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/ui/dialog";
-import { ScrollArea } from "../../../components/ui/scroll-area";
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Search,
   User,
@@ -37,17 +31,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../components/ui/table";
+} from "@/components/ui/table";
 
 interface UsersTabProps {
   analyticsData: any;
   loading: boolean;
 }
 
-export const UsersTab: React.FC<UsersTabProps> = ({
-  analyticsData,
-  loading,
-}) => {
+export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [selectedUserData, setSelectedUserData] = useState<any>(null);
@@ -102,7 +93,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
     // Convert map to array and filter by search term
     return Array.from(uniqueUsers.values())
       .filter(
-        (user) =>
+        user =>
           user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -151,7 +142,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
       case "quiz_complete":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "quiz_answer":
-        return <Clock style={{ color: "#B89B7A" }} />;
+        return <Clock style={{ color: '#B89B7A' }} />;
       case "result_view":
         return <Eye className="h-4 w-4 text-indigo-500" />;
       case "lead_generated":
@@ -159,7 +150,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
       case "sale":
         return <ShoppingCart className="h-4 w-4 text-green-500" />;
       default:
-        return <User style={{ color: "#8B7355" }} />;
+        return <User style={{ color: '#8B7355' }} />;
     }
   };
 
@@ -182,7 +173,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                 className="w-[250px]"
                 placeholder="Buscar por nome ou email..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
@@ -211,21 +202,14 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                       <TableCell>{formatDate(user.lastActivity)}</TableCell>
                       <TableCell>
                         {user.completed ? (
-                          <Badge className="bg-green-500 text-white">
-                            Concluído
-                          </Badge>
+                          <Badge className="bg-green-500 text-white">Concluído</Badge>
                         ) : (
-                          <Badge
-                            variant="outline"
-                            className="border-yellow-500 text-yellow-500"
-                          >
+                          <Badge variant="outline" className="border-yellow-500 text-yellow-500">
                             Em progresso
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell className="text-center">
-                        {user.totalQuestions}
-                      </TableCell>
+                      <TableCell className="text-center">{user.totalQuestions}</TableCell>
                       <TableCell className="text-right">
                         <Dialog>
                           <DialogTrigger asChild>
@@ -249,44 +233,36 @@ export const UsersTab: React.FC<UsersTabProps> = ({
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               <div>
-                                <p style={{ color: "#8B7355" }}>Nome</p>
-                                <p className="text-base">
-                                  {selectedUserData?.name}
-                                </p>
+                                <p style={{ color: '#8B7355' }}>Nome</p>
+                                <p className="text-base">{selectedUserData?.name}</p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Email</p>
-                                <p className="text-base">
-                                  {selectedUserData?.email}
-                                </p>
+                                <p style={{ color: '#8B7355' }}>Email</p>
+                                <p className="text-base">{selectedUserData?.email}</p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Início</p>
+                                <p style={{ color: '#8B7355' }}>Início</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.startTime)}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Conclusão</p>
+                                <p style={{ color: '#8B7355' }}>Conclusão</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.completeTime)}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>
+                                <p style={{ color: '#8B7355' }}>
                                   Perguntas Respondidas
                                 </p>
-                                <p className="text-base">
-                                  {selectedUserData?.totalQuestions}
-                                </p>
+                                <p className="text-base">{selectedUserData?.totalQuestions}</p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Status</p>
+                                <p style={{ color: '#8B7355' }}>Status</p>
                                 <p className="text-base">
                                   {selectedUserData?.completed ? (
-                                    <Badge className="bg-green-500 text-white">
-                                      Concluído
-                                    </Badge>
+                                    <Badge className="bg-green-500 text-white">Concluído</Badge>
                                   ) : (
                                     <Badge
                                       variant="outline"
@@ -300,7 +276,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                             </div>
 
                             <div className="border-t pt-4">
-                              <h4 style={{ color: "#8B7355" }}>
+                              <h4 style={{ color: '#8B7355' }}>
                                 Histórico de Eventos
                               </h4>
                               <ScrollArea className="h-[300px]">
@@ -316,43 +292,29 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                       <div className="flex-1">
                                         <p className="text-sm font-medium">
                                           {event.type === "quiz_answer" ? (
-                                            <>
-                                              Respondeu à questão{" "}
-                                              {event.questionIndex + 1}
-                                            </>
+                                            <>Respondeu à questão {event.questionIndex + 1}</>
                                           ) : event.type === "quiz_start" ? (
                                             <>Iniciou o quiz</>
                                           ) : event.type === "quiz_complete" ? (
                                             <>Completou o quiz</>
                                           ) : event.type === "result_view" ? (
-                                            <>
-                                              Visualizou o resultado:{" "}
-                                              {event.resultType}
-                                            </>
-                                          ) : event.type ===
-                                            "lead_generated" ? (
+                                            <>Visualizou o resultado: {event.resultType}</>
+                                          ) : event.type === "lead_generated" ? (
                                             <>Lead gerado: {event.email}</>
                                           ) : event.type === "sale" ? (
-                                            <>
-                                              Realizou uma compra no valor de R${" "}
-                                              {event.value}
-                                            </>
+                                            <>Realizou uma compra no valor de R$ {event.value}</>
                                           ) : (
                                             <>Evento: {event.type}</>
                                           )}
                                         </p>
-                                        <p style={{ color: "#8B7355" }}>
-                                          {new Date(
-                                            event.timestamp
-                                          ).toLocaleString()}
+                                        <p style={{ color: '#8B7355' }}>
+                                          {new Date(event.timestamp).toLocaleString()}
                                         </p>
                                         {event.type === "quiz_answer" && (
-                                          <div style={{ color: "#6B4F43" }}>
+                                          <div style={{ color: '#6B4F43' }}>
                                             <p>
                                               Opções selecionadas:{" "}
-                                              {event.selectedOptions?.join(
-                                                ", "
-                                              ) || "N/A"}
+                                              {event.selectedOptions?.join(", ") || "N/A"}
                                             </p>
                                           </div>
                                         )}
@@ -360,9 +322,8 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                     </div>
                                   ))}
                                   {userEvents.length === 0 && (
-                                    <p style={{ color: "#8B7355" }}>
-                                      Nenhum evento encontrado para este
-                                      usuário.
+                                    <p style={{ color: '#8B7355' }}>
+                                      Nenhum evento encontrado para este usuário.
                                     </p>
                                   )}
                                 </div>
@@ -374,10 +335,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                                 variant="outline"
                                 onClick={() => {
                                   // Export functionality kept the same as original
-                                  console.log(
-                                    "Exporting data for user:",
-                                    selectedUserData?.name
-                                  );
+                                  console.log("Exporting data for user:", selectedUserData?.name);
                                 }}
                               >
                                 <Download className="h-4 w-4 mr-2" />
@@ -391,10 +349,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={7}
-                      className="text-center py-6 text-muted-foreground"
-                    >
+                    <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                       {searchTerm
                         ? "Nenhum usuário encontrado para esta busca."
                         : "Nenhum usuário encontrado."}

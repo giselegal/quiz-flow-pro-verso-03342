@@ -66,8 +66,7 @@ export const getStep04Template = () => {
             category: "Natural",
             styleCategory: "Natural",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
             marginTop: 0,
             spacing: "small",
             marginBottom: 0,
@@ -79,8 +78,7 @@ export const getStep04Template = () => {
             category: "Clássico",
             styleCategory: "Clássico",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
           },
           {
             id: "3c",
@@ -99,8 +97,7 @@ export const getStep04Template = () => {
             category: "Elegante",
             styleCategory: "Elegante",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
           },
           {
             id: "3e",
@@ -109,8 +106,7 @@ export const getStep04Template = () => {
             category: "Romântico",
             styleCategory: "Romântico",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
           },
           {
             id: "3f",
@@ -119,8 +115,7 @@ export const getStep04Template = () => {
             category: "Sexy",
             styleCategory: "Sexy",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
           },
           {
             id: "3g",
@@ -129,8 +124,7 @@ export const getStep04Template = () => {
             category: "Dramático",
             styleCategory: "Dramático",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
           },
           {
             id: "3h",
@@ -139,8 +133,7 @@ export const getStep04Template = () => {
             category: "Criativo",
             styleCategory: "Criativo",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
           },
         ],
         columns: 2,

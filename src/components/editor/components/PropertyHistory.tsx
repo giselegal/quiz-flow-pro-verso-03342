@@ -9,16 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { ScrollArea } from "../../ui/scroll-area";
 import { Badge } from "../../ui/badge";
 import { Separator } from "../../ui/separator";
-import {
-  History,
-  Undo2,
-  Redo2,
-  RotateCcw,
-  Clock,
-  CheckCircle,
-  Circle,
-  Trash2,
-} from "lucide-react";
+import { History, Undo2, Redo2, RotateCcw, Clock, CheckCircle, Circle, Trash2 } from "lucide-react";
 
 interface HistoryEntry {
   id: string;
@@ -73,14 +64,11 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
     }
   };
 
-  const getChangedProperties = (
-    current: Record<string, any>,
-    previous?: Record<string, any>
-  ) => {
+  const getChangedProperties = (current: Record<string, any>, previous?: Record<string, any>) => {
     if (!previous) return [];
 
     const changes: string[] = [];
-    Object.keys(current).forEach((key) => {
+    Object.keys(current).forEach(key => {
       if (current[key] !== previous[key]) {
         changes.push(key);
       }
@@ -117,12 +105,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
       {/* History dropdown */}
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            title="Ver histórico"
-          >
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Ver histórico">
             <History className="w-4 h-4" />
           </Button>
         </PopoverTrigger>
@@ -130,9 +113,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
           <Card className="border-0 shadow-none">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base">
-                  Histórico de Propriedades
-                </CardTitle>
+                <CardTitle className="text-base">Histórico de Propriedades</CardTitle>
                 <div className="flex items-center space-x-1">
                   <Badge variant="secondary" className="text-xs">
                     {history.length} entradas
@@ -141,7 +122,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={onClearHistory}
-                    style={{ color: "#432818" }}
+                    style={{ color: '#432818' }}
                     title="Limpar histórico"
                   >
                     <Trash2 className="w-3 h-3" />
@@ -185,17 +166,17 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between">
-                                <p style={{ color: "#432818" }}>
+                                <p style={{ color: '#432818' }}>
                                   {entry.description}
                                 </p>
-                                <div style={{ color: "#8B7355" }}>
+                                <div style={{ color: '#8B7355' }}>
                                   <Clock className="w-3 h-3" />
                                   <span>{formatTime(entry.timestamp)}</span>
                                 </div>
                               </div>
                               {changes.length > 0 && (
                                 <div className="flex items-center space-x-1 mt-1">
-                                  {changes.map((prop) => (
+                                  {changes.map(prop => (
                                     <Badge
                                       key={prop}
                                       variant="outline"
@@ -205,12 +186,8 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                                     </Badge>
                                   ))}
                                   {Object.keys(entry.properties).length > 3 && (
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs py-0 px-1"
-                                    >
-                                      +
-                                      {Object.keys(entry.properties).length - 3}
+                                    <Badge variant="outline" className="text-xs py-0 px-1">
+                                      +{Object.keys(entry.properties).length - 3}
                                     </Badge>
                                   )}
                                 </div>
@@ -218,17 +195,15 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                             </div>
                           </div>
                         </button>
-                        {index < history.length - 1 && (
-                          <Separator className="my-1" />
-                        )}
+                        {index < history.length - 1 && <Separator className="my-1" />}
                       </div>
                     );
                   })}
                 </div>
               </ScrollArea>
 
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <div style={{ color: "#6B4F43" }}>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <div style={{ color: '#6B4F43' }}>
                   <span>
                     Posição: {currentIndex + 1} de {history.length}
                   </span>

@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { sharedStyles } from "../styles/sharedStyles";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { sharedStyles } from "@/styles/sharedStyles";
 import { ContentContainer } from "./shared/ContentContainer";
-import { Card, CardContent } from "../components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Sparkles, Users, Award } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface QuizIntroProps {
   onStart: (userName: string) => void;
   globalStyles?: Record<string, any>;
 }
 
-const QuizIntro: React.FC<QuizIntroProps> = ({
-  onStart,
-  globalStyles = {},
-}) => {
+const QuizIntro: React.FC<QuizIntroProps> = ({ onStart, globalStyles = {} }) => {
   const [userName, setUserName] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -86,8 +83,8 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
               className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto opacity-90"
               style={textStyle}
             >
-              Um quiz personalizado para descobrir qual estilo de roupa combina
-              mais com você e receber dicas exclusivas.
+              Um quiz personalizado para descobrir qual estilo de roupa combina mais com você e
+              receber dicas exclusivas.
             </p>
           </div>
 
@@ -135,18 +132,14 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <label
-                    htmlFor="userName"
-                    className="block text-sm font-medium"
-                    style={textStyle}
-                  >
+                  <label htmlFor="userName" className="block text-sm font-medium" style={textStyle}>
                     Como você gostaria de ser chamada?
                   </label>
                   <Input
                     id="userName"
                     type="text"
                     value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
+                    onChange={e => setUserName(e.target.value)}
                     placeholder="Digite seu primeiro nome"
                     className="w-full bg-white/20 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A] placeholder:text-gray-400"
                     required
@@ -182,8 +175,7 @@ const QuizIntro: React.FC<QuizIntroProps> = ({
 
           {/* Footer Text */}
           <p className="text-sm opacity-70 max-w-md mx-auto" style={textStyle}>
-            ✨ Este quiz leva apenas 3 minutos e foi desenvolvido por
-            especialistas em moda
+            ✨ Este quiz leva apenas 3 minutos e foi desenvolvido por especialistas em moda
           </p>
         </div>
       </ContentContainer>

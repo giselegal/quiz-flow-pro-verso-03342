@@ -4,8 +4,7 @@
 export const QUIZ_CONFIGURATION = {
   meta: {
     name: "Quiz Estilo Pessoal - Template Completo",
-    description:
-      "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda.",
+    description: "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda.",
     version: "1.2.3",
     author: "giselegal",
   },
@@ -63,8 +62,7 @@ export const QUIZ_CONFIGURATION = {
     {
       type: "intro",
       title: "Bem-vinda ao Quiz de Estilo",
-      descriptionTop:
-        "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+      descriptionTop: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
       imageIntro:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
       descriptionBottom:
@@ -99,8 +97,7 @@ export const QUIZ_CONFIGURATION = {
       rules: {
         multiSelect: 3,
         colunas: 2,
-        buttonActivation:
-          "O botão 'Avançar' só ativa quando o usuário seleciona 3 opções",
+        buttonActivation: "O botão 'Avançar' só ativa quando o usuário seleciona 3 opções",
         visualValidation: "Opções selecionadas recebem borda e sombra especial",
         errorMessage: "Selecione 3 opções para avançar.",
       },
@@ -188,41 +185,13 @@ export const QUIZ_CONFIGURATION = {
               text: "Informal, espontânea, alegre, essencialista.",
               styleCategory: "Natural",
             },
-            {
-              id: "2b",
-              text: "Conservadora, séria, organizada.",
-              styleCategory: "Clássico",
-            },
-            {
-              id: "2c",
-              text: "Informada, ativa, prática.",
-              styleCategory: "Contemporâneo",
-            },
-            {
-              id: "2d",
-              text: "Exigente, sofisticada, seletiva.",
-              styleCategory: "Elegante",
-            },
-            {
-              id: "2e",
-              text: "Feminina, meiga, delicada, sensível.",
-              styleCategory: "Romântico",
-            },
-            {
-              id: "2f",
-              text: "Glamorosa, vaidosa, sensual.",
-              styleCategory: "Sexy",
-            },
-            {
-              id: "2g",
-              text: "Cosmopolita, moderna e audaciosa.",
-              styleCategory: "Dramático",
-            },
-            {
-              id: "2h",
-              text: "Exótica, aventureira, livre.",
-              styleCategory: "Criativo",
-            },
+            { id: "2b", text: "Conservadora, séria, organizada.", styleCategory: "Clássico" },
+            { id: "2c", text: "Informada, ativa, prática.", styleCategory: "Contemporâneo" },
+            { id: "2d", text: "Exigente, sofisticada, seletiva.", styleCategory: "Elegante" },
+            { id: "2e", text: "Feminina, meiga, delicada, sensível.", styleCategory: "Romântico" },
+            { id: "2f", text: "Glamorosa, vaidosa, sensual.", styleCategory: "Sexy" },
+            { id: "2g", text: "Cosmopolita, moderna e audaciosa.", styleCategory: "Dramático" },
+            { id: "2h", text: "Exótica, aventureira, livre.", styleCategory: "Criativo" },
           ],
         },
         {
@@ -314,12 +283,7 @@ export const QUIZ_CONFIGURATION = {
       type: "strategicQuestions",
       title: "Perguntas Estratégicas",
       description: "Escolha UMA opção para avançar.",
-      progressBar: {
-        show: true,
-        color: "#B89B7A",
-        background: "#F3E8E6",
-        height: "6px",
-      },
+      progressBar: { show: true, color: "#B89B7A", background: "#F3E8E6", height: "6px" },
       animations: { transition: "fade, scale", optionSelect: "glow, scale" },
       rules: {
         multiSelect: 1,
@@ -336,22 +300,10 @@ export const QUIZ_CONFIGURATION = {
           imageSize: { width: 400, height: 256 },
           layout: "1col",
           options: [
-            {
-              id: "strategic-1-1",
-              text: "Completamente perdida, não sei o que combina comigo",
-            },
-            {
-              id: "strategic-1-2",
-              text: "Tenho algumas ideias, mas não sei como aplicá-las",
-            },
-            {
-              id: "strategic-1-3",
-              text: "Conheço meu estilo, mas quero refiná-lo",
-            },
-            {
-              id: "strategic-1-4",
-              text: "Estou satisfeita, só buscando inspiração",
-            },
+            { id: "strategic-1-1", text: "Completamente perdida, não sei o que combina comigo" },
+            { id: "strategic-1-2", text: "Tenho algumas ideias, mas não sei como aplicá-las" },
+            { id: "strategic-1-3", text: "Conheço meu estilo, mas quero refiná-lo" },
+            { id: "strategic-1-4", text: "Estou satisfeita, só buscando inspiração" },
           ],
         },
         {
@@ -371,30 +323,17 @@ export const QUIZ_CONFIGURATION = {
               id: "strategic-2-3",
               text: "Não consigo criar looks diferentes com as peças que tenho",
             },
-            {
-              id: "strategic-2-4",
-              text: "Compro peças por impulso que depois não uso",
-            },
+            { id: "strategic-2-4", text: "Compro peças por impulso que depois não uso" },
           ],
         },
         {
           id: "strategic-3",
-          title:
-            "Você já considerou investir em algum guia ou consultoria de estilo no passado?",
+          title: "Você já considerou investir em algum guia ou consultoria de estilo no passado?",
           layout: "1col",
           options: [
-            {
-              id: "strategic-3-1",
-              text: "Sim, já pesquisei mas não cheguei a comprar",
-            },
-            {
-              id: "strategic-3-2",
-              text: "Sim, já investi em algum curso/guia/consultoria",
-            },
-            {
-              id: "strategic-3-3",
-              text: "Não, esta é a primeira vez que considero isso",
-            },
+            { id: "strategic-3-1", text: "Sim, já pesquisei mas não cheguei a comprar" },
+            { id: "strategic-3-2", text: "Sim, já investi em algum curso/guia/consultoria" },
+            { id: "strategic-3-3", text: "Não, esta é a primeira vez que considero isso" },
             { id: "strategic-3-4", text: "Prefiro não responder" },
           ],
         },
@@ -418,18 +357,9 @@ export const QUIZ_CONFIGURATION = {
           title: "Qual aspecto você mais deseja melhorar no seu estilo?",
           layout: "1col",
           options: [
-            {
-              id: "strategic-5-1",
-              text: "Aprender a combinar melhor as peças",
-            },
-            {
-              id: "strategic-5-2",
-              text: "Ter mais confiança ao escolher looks",
-            },
-            {
-              id: "strategic-5-3",
-              text: "Valorizar o corpo com as roupas certas",
-            },
+            { id: "strategic-5-1", text: "Aprender a combinar melhor as peças" },
+            { id: "strategic-5-2", text: "Ter mais confiança ao escolher looks" },
+            { id: "strategic-5-3", text: "Valorizar o corpo com as roupas certas" },
             { id: "strategic-5-4", text: "Sentir-se autêntica e única" },
           ],
         },
@@ -466,8 +396,7 @@ export const QUIZ_CONFIGURATION = {
       styles: [
         {
           name: "Natural",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
           description:
@@ -475,8 +404,7 @@ export const QUIZ_CONFIGURATION = {
         },
         {
           name: "Clássico",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp",
           description:
@@ -484,8 +412,7 @@ export const QUIZ_CONFIGURATION = {
         },
         {
           name: "Contemporâneo",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CONTEMPOR%C3%82NEO_vcklxe.webp",
           description:
@@ -493,8 +420,7 @@ export const QUIZ_CONFIGURATION = {
         },
         {
           name: "Elegante",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_ELEGANTE_asez1q.webp",
           description:
@@ -502,17 +428,14 @@ export const QUIZ_CONFIGURATION = {
         },
         {
           name: "Romântico",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_ROM%C3%82NTICO_ci4hgk.webp",
-          description:
-            "Você valoriza a delicadeza e os detalhes femininos, com muita suavidade.",
+          description: "Você valoriza a delicadeza e os detalhes femininos, com muita suavidade.",
         },
         {
           name: "Sexy",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071349/GUIA_SEXY_t5x2ov.webp",
           description:
@@ -520,17 +443,14 @@ export const QUIZ_CONFIGURATION = {
         },
         {
           name: "Dramático",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745073346/GUIA_DRAM%C3%81TICO_mpn60d.webp",
-          description:
-            "Você tem personalidade forte e gosta de causar impacto com seu visual.",
+          description: "Você tem personalidade forte e gosta de causar impacto com seu visual.",
         },
         {
           name: "Criativo",
-          image:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+          image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
           guideImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_CRIATIVO_ntbzph.webp",
           description:
@@ -560,34 +480,24 @@ export const QUIZ_CONFIGURATION = {
     selection: {
       normal:
         "Avança apenas se o mínimo de seleções (multiSelect) for atingido; botão de avançar desativado até lá.",
-      strategic:
-        "Só avança se selecionar uma opção; não permite desmarcar opção já marcada.",
-      visualValidation:
-        "Opções selecionadas mudam cor/borda; erro visual caso não atinja mínimo.",
+      strategic: "Só avança se selecionar uma opção; não permite desmarcar opção já marcada.",
+      visualValidation: "Opções selecionadas mudam cor/borda; erro visual caso não atinja mínimo.",
     },
     calculation: {
-      method:
-        "Soma ponto por categoria de cada opção marcada em todas as perguntas principais.",
+      method: "Soma ponto por categoria de cada opção marcada em todas as perguntas principais.",
       resultado:
         "O estilo com maior pontuação é o predominante. Os demais estilos são exibidos como secundários.",
-      estrategicas:
-        "As respostas estratégicas podem influenciar o CTA, bônus e copy do resultado.",
+      estrategicas: "As respostas estratégicas podem influenciar o CTA, bônus e copy do resultado.",
     },
     transitions: {
       betweenSteps:
         "Usa animação fade/scale, preload de imagens da próxima etapa, barra de progresso animada.",
-      toStrategic:
-        "Exibe tela de transição especial com mensagem/efeito visual.",
+      toStrategic: "Exibe tela de transição especial com mensagem/efeito visual.",
       toResult: "Tela final revela resultado com animação, CTA e guia visual.",
     },
   },
   config: {
-    localStorageKeys: [
-      "userName",
-      "quizAnswers",
-      "strategicAnswers",
-      "quizCompletedAt",
-    ],
+    localStorageKeys: ["userName", "quizAnswers", "strategicAnswers", "quizCompletedAt"],
     analyticsEvents: [
       "quiz_started",
       "question_answered",

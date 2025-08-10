@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Alert, AlertDescription } from "../../components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 
 interface TestResult {
@@ -32,9 +27,7 @@ const SystemIntegrationTest: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
 
   const updateTest = (name: string, updates: Partial<TestResult>) => {
-    setTests((prev) =>
-      prev.map((test) => (test.name === name ? { ...test, ...updates } : test))
-    );
+    setTests(prev => prev.map(test => (test.name === name ? { ...test, ...updates } : test)));
   };
 
   const runTest = async (testName: string): Promise<void> => {
@@ -43,9 +36,7 @@ const SystemIntegrationTest: React.FC = () => {
 
     try {
       // Simulate test execution
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000 + Math.random() * 2000)
-      );
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
       // Mock test logic
       switch (testName) {
@@ -222,8 +213,8 @@ const SystemIntegrationTest: React.FC = () => {
     setIsRunning(true);
 
     // Reset all tests
-    setTests((prev) =>
-      prev.map((test) => ({
+    setTests(prev =>
+      prev.map(test => ({
         ...test,
         status: "pending" as const,
         message: "Waiting...",
@@ -243,7 +234,7 @@ const SystemIntegrationTest: React.FC = () => {
       case "success":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "error":
-        return <XCircle style={{ color: "#432818" }} />;
+        return <XCircle style={{ color: '#432818' }} />;
       case "running":
         return <Clock className="w-5 h-5 text-[#B89B7A] animate-spin" />;
       default:
@@ -264,9 +255,9 @@ const SystemIntegrationTest: React.FC = () => {
     }
   };
 
-  const successCount = tests.filter((t) => t.status === "success").length;
-  const errorCount = tests.filter((t) => t.status === "error").length;
-  const runningCount = tests.filter((t) => t.status === "running").length;
+  const successCount = tests.filter(t => t.status === "success").length;
+  const errorCount = tests.filter(t => t.status === "error").length;
+  const runningCount = tests.filter(t => t.status === "running").length;
 
   return (
     <div className="p-6 space-y-6">
@@ -282,25 +273,21 @@ const SystemIntegrationTest: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 border rounded-lg bg-green-50">
-              <div className="text-2xl font-bold text-green-600">
-                {successCount}
-              </div>
-              <div style={{ color: "#6B4F43" }}>Sucessos</div>
+              <div className="text-2xl font-bold text-green-600">{successCount}</div>
+              <div style={{ color: '#6B4F43' }}>Sucessos</div>
             </div>
-            <div style={{ backgroundColor: "#FAF9F7" }}>
-              <div style={{ color: "#432818" }}>{errorCount}</div>
-              <div style={{ color: "#6B4F43" }}>Erros</div>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ color: '#432818' }}>{errorCount}</div>
+              <div style={{ color: '#6B4F43' }}>Erros</div>
             </div>
             <div className="text-center p-4 border rounded-lg bg-[#B89B7A]/10">
-              <div className="text-2xl font-bold text-[#B89B7A]">
-                {runningCount}
-              </div>
-              <div style={{ color: "#6B4F43" }}>Executando</div>
+              <div className="text-2xl font-bold text-[#B89B7A]">{runningCount}</div>
+              <div style={{ color: '#6B4F43' }}>Executando</div>
             </div>
           </div>
 
           <div className="space-y-3">
-            {tests.map((test) => (
+            {tests.map(test => (
               <div
                 key={test.name}
                 className={`p-4 border rounded-lg ${getStatusColor(test.status)}`}
@@ -310,12 +297,12 @@ const SystemIntegrationTest: React.FC = () => {
                     {getStatusIcon(test.status)}
                     <div>
                       <div className="font-medium">{test.name}</div>
-                      <div style={{ color: "#6B4F43" }}>{test.message}</div>
+                      <div style={{ color: '#6B4F43' }}>{test.message}</div>
                     </div>
                   </div>
                   <div className="text-right">
                     {test.duration && (
-                      <div style={{ color: "#8B7355" }}>{test.duration}ms</div>
+                      <div style={{ color: '#8B7355' }}>{test.duration}ms</div>
                     )}
                     <Button
                       size="sm"

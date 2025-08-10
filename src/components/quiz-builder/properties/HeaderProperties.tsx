@@ -1,17 +1,14 @@
 import React from "react";
-import { QuizComponentData } from "../../../types/quizBuilder";
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
+import { QuizComponentData } from "@/types/quizBuilder";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface HeaderPropertiesProps {
   component: QuizComponentData;
   onUpdate: (id: string, data: any) => void;
 }
 
-export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({
-  component,
-  onUpdate,
-}) => {
+export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({ component, onUpdate }) => {
   const data = component.data || {};
 
   const handleUpdate = (field: string, value: any) => {
@@ -28,7 +25,7 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({
         <Input
           id="title"
           value={data.title || ""}
-          onChange={(e) => handleUpdate("title", e.target.value)}
+          onChange={e => handleUpdate("title", e.target.value)}
           placeholder="Digite o título"
         />
       </div>
@@ -38,7 +35,7 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({
         <Input
           id="subtitle"
           value={data.subtitle || ""}
-          onChange={(e) => handleUpdate("subtitle", e.target.value)}
+          onChange={e => handleUpdate("subtitle", e.target.value)}
           placeholder="Digite o subtítulo"
         />
       </div>

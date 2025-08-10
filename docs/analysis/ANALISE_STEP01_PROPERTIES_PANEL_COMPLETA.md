@@ -72,8 +72,7 @@ const advancedProps = getPropertiesByCategory("advanced");
 
 ```typescript
 const renderField = (property: any) => {
-  const { key, label, type, value, options, min, max, step, unit, required } =
-    property;
+  const { key, label, type, value, options, min, max, step, unit, required } = property;
 
   switch (type) {
     case PropertyType.TEXT: // Input básico
@@ -213,9 +212,7 @@ const [colorPickerOpen, setColorPickerOpen] = useState(false);
 
 ```typescript
 // ❌ PROBLEMA: Estado sem uso
-const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">(
-  "desktop"
-);
+const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
 // ✅ SOLUÇÃO: Aplicar responsividade real
 const containerClasses = {

@@ -1,17 +1,15 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
-import { Card } from "../../../components/ui/card";
-import { giseleStyleTemplate } from "../../../services/templates/giseleStyleTemplate";
-import { useResultPageConfig } from "../../../hooks/useResultPageConfig";
-import { toast } from "../../../components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { giseleStyleTemplate } from "@/services/templates/giseleStyleTemplate";
+import { useResultPageConfig } from "@/hooks/useResultPageConfig";
+import { toast } from "@/components/ui/use-toast";
 
 interface TemplateListProps {
   onSelectTemplate?: () => void;
 }
 
-export const TemplateList: React.FC<TemplateListProps> = ({
-  onSelectTemplate,
-}) => {
+export const TemplateList: React.FC<TemplateListProps> = ({ onSelectTemplate }) => {
   const { resultPageConfig, updateSection } = useResultPageConfig("Natural");
 
   const handleSelectTemplate = (template: any) => {
@@ -58,8 +56,7 @@ export const TemplateList: React.FC<TemplateListProps> = ({
           Modelo de Página - Estilo Gisele Galvão
         </h3>
         <p className="text-[#8F7A6A] mb-4">
-          Página de vendas otimizada com design exclusivo e elementos
-          estratégicos.
+          Página de vendas otimizada com design exclusivo e elementos estratégicos.
         </p>
         <Button
           onClick={() => handleSelectTemplate(giseleStyleTemplate)}

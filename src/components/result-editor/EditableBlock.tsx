@@ -1,12 +1,12 @@
 import React from "react";
-import { Block } from "../../types/editor";
-import { StyleResult } from "../../types/quiz";
+import { Block } from "@/types/editor";
+import { StyleResult } from "@/types/quiz";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { GripVertical, Trash2, ArrowUp, ArrowDown } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 import BlockRenderer from "./BlockRenderer";
 
 export interface EditableBlockProps {
@@ -35,14 +35,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
   isPreviewMode = false,
   primaryStyle,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     disabled: isPreviewMode,
   });
@@ -72,24 +65,22 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       style={style}
       className={cn(
         "relative border-2 cursor-pointer transition-all duration-200",
-        isSelected
-          ? "border-[#B89B7A] shadow-lg"
-          : "border-gray-200 hover:border-gray-300"
+        isSelected ? "border-[#B89B7A] shadow-lg" : "border-gray-200 hover:border-gray-300"
       )}
       onClick={handleClick}
     >
       {/* Toolbar for selected block */}
       {isSelected && (
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex items-center gap-2">
             <div
               {...attributes}
               {...listeners}
-              style={{ backgroundColor: "#E5DDD5" }}
+              style={{ backgroundColor: '#E5DDD5' }}
             >
-              <GripVertical style={{ color: "#8B7355" }} />
+              <GripVertical style={{ color: '#8B7355' }} />
             </div>
-            <span style={{ color: "#6B4F43" }}>{block.type}</span>
+            <span style={{ color: '#6B4F43' }}>{block.type}</span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -98,7 +89,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     onMove("up");
                   }}
@@ -109,7 +100,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     onMove("down");
                   }}
@@ -122,11 +113,11 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onDelete();
               }}
-              style={{ color: "#432818" }}
+              style={{ color: '#432818' }}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

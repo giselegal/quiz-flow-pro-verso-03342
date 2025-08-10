@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Plus, Image, Video, FileText } from "lucide-react";
 
 const CreativesPage: React.FC = () => {
@@ -20,9 +15,7 @@ const CreativesPage: React.FC = () => {
           >
             Biblioteca de Criativos
           </h1>
-          <p className="text-[#8F7A6A] mt-2">
-            Gerencie suas imagens, vídeos e materiais criativos
-          </p>
+          <p className="text-[#8F7A6A] mt-2">Gerencie suas imagens, vídeos e materiais criativos</p>
         </div>
         <Button className="bg-[#B89B7A] hover:bg-[#A0895B] text-white">
           <Plus className="w-4 h-4 mr-2" />
@@ -34,9 +27,7 @@ const CreativesPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Imagens
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Imagens</CardTitle>
             <Image className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -47,9 +38,7 @@ const CreativesPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Vídeos
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Vídeos</CardTitle>
             <Video className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -60,9 +49,7 @@ const CreativesPage: React.FC = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[#8F7A6A]">
-              Documentos
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-[#8F7A6A]">Documentos</CardTitle>
             <FileText className="h-4 w-4 text-[#B89B7A]" />
           </CardHeader>
           <CardContent>
@@ -80,7 +67,10 @@ const CreativesPage: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} style={{ backgroundColor: "#E5DDD5" }}>
+              <div
+                key={i}
+                style={{ backgroundColor: '#E5DDD5' }}
+              >
                 <Image className="w-8 h-8 text-[#B89B7A]" />
               </div>
             ))}

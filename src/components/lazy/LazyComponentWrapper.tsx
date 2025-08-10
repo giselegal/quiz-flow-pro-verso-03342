@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, ComponentType } from "react";
-import { LoadingSpinner } from "../../components/ui/loading-spinner";
-import { usePerformanceOptimization } from "../../hooks/usePerformanceOptimization";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 
 interface LazyComponentWrapperProps {
   fallback?: React.ReactNode;
@@ -77,7 +77,7 @@ export const useLazyLoad = (threshold = 0.1) => {
 
   React.useEffect(() => {
     const observer = createIntersectionObserver(
-      (entries) => {
+      entries => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsVisible(true);

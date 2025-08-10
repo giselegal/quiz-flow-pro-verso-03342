@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useMemo, useCallback } from "react";
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -16,14 +16,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -145,8 +138,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         // CANVAS GRID SYSTEM: Compatível com flex-wrap do canvas
         "flex-shrink-0 flex-grow-0",
         // ES7+ Computed property access com nullish coalescing
-        gridClasses[gridColumns as keyof typeof gridClasses] ??
-          gridClasses.auto,
+        gridClasses[gridColumns as keyof typeof gridClasses] ?? gridClasses.auto,
 
         // VISUAL STYLING: Modular e independente
         "rounded-lg transition-all duration-200",
@@ -156,8 +148,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         "cursor-pointer",
 
         // SPACING - ES7+ Computed property com fallback
-        spacingClasses[spacing as keyof typeof spacingClasses] ??
-          spacingClasses.normal,
+        spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,
 
         className,
         // Margens universais com controles deslizantes
@@ -175,12 +166,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       <div
         className={cn(
           // ES7+ Computed properties com fallbacks
-          fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ??
-            fontSizeClasses.medium,
+          fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
           fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
             fontWeightClasses.normal,
-          textAlignClasses[textAlign as keyof typeof textAlignClasses] ??
-            textAlignClasses.left,
+          textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
 
           // Responsividade e quebra de texto
           "leading-relaxed break-words whitespace-pre-wrap"
@@ -202,22 +191,8 @@ export default TextInlineBlock;
 export type { BlockComponentProps };
 
 // ES7+ Const assertion para readonly arrays/objects
-export const TEXT_SIZES = [
-  "xs",
-  "sm",
-  "medium",
-  "lg",
-  "xl",
-  "2xl",
-  "3xl",
-] as const;
-export const TEXT_WEIGHTS = [
-  "light",
-  "normal",
-  "medium",
-  "semibold",
-  "bold",
-] as const;
+export const TEXT_SIZES = ["xs", "sm", "medium", "lg", "xl", "2xl", "3xl"] as const;
+export const TEXT_WEIGHTS = ["light", "normal", "medium", "semibold", "bold"] as const;
 export const TEXT_ALIGNS = ["left", "center", "right", "justify"] as const;
 
 // ES7+ Template literal types (para uso futuro)

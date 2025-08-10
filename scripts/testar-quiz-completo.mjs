@@ -30,9 +30,7 @@ for (let i = 1; i <= 21; i++) {
 }
 
 if (!templatesOk) {
-  console.log(
-    "\n❌ ERRO: Templates faltando. Execute o script de configuração primeiro."
-  );
+  console.log("\n❌ ERRO: Templates faltando. Execute o script de configuração primeiro.");
   process.exit(1);
 }
 
@@ -79,9 +77,7 @@ for (let i = 1; i <= 21; i++) {
     if (blocos >= minBlocos) {
       console.log(`✅ step-${stepNum} (${tipoEsperado}): ${blocos} blocos`);
     } else {
-      console.log(
-        `⚠️ step-${stepNum} (${tipoEsperado}): ${blocos} blocos (mínimo: ${minBlocos})`
-      );
+      console.log(`⚠️ step-${stepNum} (${tipoEsperado}): ${blocos} blocos (mínimo: ${minBlocos})`);
       estruturaOk = false;
     }
   } catch (error) {
@@ -94,27 +90,15 @@ for (let i = 1; i <= 21; i++) {
 console.log("\n3. VERIFICANDO COMPONENTES ESPECÍFICOS:");
 
 const componentesEsperados = [
-  {
-    file: "src/components/blocks/inline/ResultStyleCardBlock.tsx",
-    nome: "ResultStyleCard",
-  },
-  {
-    file: "src/components/blocks/inline/BonusShowcaseBlock.tsx",
-    nome: "BonusShowcase",
-  },
-  {
-    file: "src/components/blocks/inline/LoadingAnimationBlock.tsx",
-    nome: "LoadingAnimation",
-  },
-  {
-    file: "src/components/blocks/inline/OptionsGridInlineBlock.tsx",
-    nome: "OptionsGrid",
-  },
+  { file: "src/components/blocks/inline/ResultStyleCardBlock.tsx", nome: "ResultStyleCard" },
+  { file: "src/components/blocks/inline/BonusShowcaseBlock.tsx", nome: "BonusShowcase" },
+  { file: "src/components/blocks/inline/LoadingAnimationBlock.tsx", nome: "LoadingAnimation" },
+  { file: "src/components/blocks/inline/OptionsGridInlineBlock.tsx", nome: "OptionsGrid" },
 ];
 
 let componentesOk = true;
 
-componentesEsperados.forEach((comp) => {
+componentesEsperados.forEach(comp => {
   if (fs.existsSync(comp.file)) {
     console.log(`✅ ${comp.nome} - OK`);
   } else {
@@ -130,16 +114,11 @@ const registryPath = "src/config/enhancedBlockRegistry.ts";
 if (fs.existsSync(registryPath)) {
   const registryContent = fs.readFileSync(registryPath, "utf8");
 
-  const blocosQuiz = [
-    "result-style-card",
-    "bonus-showcase",
-    "loading-animation",
-    "options-grid",
-  ];
+  const blocosQuiz = ["result-style-card", "bonus-showcase", "loading-animation", "options-grid"];
 
   let registryOk = true;
 
-  blocosQuiz.forEach((bloco) => {
+  blocosQuiz.forEach(bloco => {
     if (registryContent.includes(`"${bloco}"`)) {
       console.log(`✅ ${bloco} - Registrado`);
     } else {
@@ -160,20 +139,14 @@ if (fs.existsSync(registryPath)) {
 console.log("\n5. VERIFICANDO SISTEMA DE PONTUAÇÃO:");
 
 // Pega um template de pergunta para verificar o sistema de scores
-const templatePergunta = JSON.parse(
-  fs.readFileSync(`${TEMPLATES_DIR}/step-02.json`, "utf8")
-);
-const optionsGrid = templatePergunta.blocks.find(
-  (b) => b.type === "options-grid"
-);
+const templatePergunta = JSON.parse(fs.readFileSync(`${TEMPLATES_DIR}/step-02.json`, "utf8"));
+const optionsGrid = templatePergunta.blocks.find(b => b.type === "options-grid");
 
 if (optionsGrid && optionsGrid.properties && optionsGrid.properties.options) {
   const opcoes = optionsGrid.properties.options;
   const temScores = opcoes.some(
-    (opcao) =>
-      opcao.scores &&
-      typeof opcao.scores === "object" &&
-      Object.keys(opcao.scores).length > 0
+    opcao =>
+      opcao.scores && typeof opcao.scores === "object" && Object.keys(opcao.scores).length > 0
   );
 
   if (temScores) {
@@ -181,9 +154,9 @@ if (optionsGrid && optionsGrid.properties && optionsGrid.properties.options) {
 
     // Verificar se tem as 8 categorias esperadas
     const categorias = new Set();
-    opcoes.forEach((opcao) => {
+    opcoes.forEach(opcao => {
       if (opcao.scores) {
-        Object.keys(opcao.scores).forEach((cat) => categorias.add(cat));
+        Object.keys(opcao.scores).forEach(cat => categorias.add(cat));
       }
     });
 
@@ -197,9 +170,7 @@ if (optionsGrid && optionsGrid.properties && optionsGrid.properties.options) {
       "dramatico",
       "criativo",
     ];
-    const todasCategorias = categoriasEsperadas.every((cat) =>
-      categorias.has(cat)
-    );
+    const todasCategorias = categoriasEsperadas.every(cat => categorias.has(cat));
 
     if (todasCategorias) {
       console.log("✅ Todas as 8 categorias de estilo configuradas");

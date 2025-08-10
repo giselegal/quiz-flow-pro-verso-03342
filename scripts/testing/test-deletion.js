@@ -38,9 +38,7 @@ async function testDeletion() {
     console.log("1. Verificando se o editor carregou...");
 
     // Aguardar o canvas carregar
-    await waitForElement(
-      '[data-testid="droppable-canvas"], .canvas-container, .editor-canvas'
-    );
+    await waitForElement('[data-testid="droppable-canvas"], .canvas-container, .editor-canvas');
     console.log("   ✅ Canvas encontrado");
 
     // Verificar se existem componentes
@@ -56,9 +54,7 @@ async function testDeletion() {
       const deleteButtons = document.querySelectorAll(
         'button[title*="xcluir"], button[title*="elete"], .delete-btn, [data-action="delete"]'
       );
-      console.log(
-        `   🗑️  Botões de exclusão encontrados: ${deleteButtons.length}`
-      );
+      console.log(`   🗑️  Botões de exclusão encontrados: ${deleteButtons.length}`);
 
       if (deleteButtons.length > 0) {
         console.log("   Clicando no primeiro botão de exclusão...");
@@ -69,9 +65,7 @@ async function testDeletion() {
           const remainingBlocks = document.querySelectorAll(
             "[data-block-id], .block-item, .sortable-block"
           );
-          console.log(
-            `   📦 Componentes após exclusão: ${remainingBlocks.length}`
-          );
+          console.log(`   📦 Componentes após exclusão: ${remainingBlocks.length}`);
 
           if (remainingBlocks.length < existingBlocks.length) {
             console.log("   ✅ Exclusão funcionou!");
@@ -87,26 +81,18 @@ async function testDeletion() {
         console.log(`   🔍 Total de botões na página: ${allButtons.length}`);
 
         allButtons.forEach((btn, index) => {
-          const text =
-            btn.textContent ||
-            btn.title ||
-            btn.getAttribute("aria-label") ||
-            "";
+          const text = btn.textContent || btn.title || btn.getAttribute("aria-label") || "";
           if (
             text.toLowerCase().includes("excl") ||
             text.toLowerCase().includes("delet") ||
             text.innerHTML.includes("trash")
           ) {
-            console.log(
-              `     Botão ${index}: "${text}" - HTML: ${btn.innerHTML}`
-            );
+            console.log(`     Botão ${index}: "${text}" - HTML: ${btn.innerHTML}`);
           }
         });
       }
     } else {
-      console.log(
-        "2. Nenhum componente para excluir. Vamos tentar adicionar um..."
-      );
+      console.log("2. Nenhum componente para excluir. Vamos tentar adicionar um...");
 
       // Procurar sidebar de componentes
       const sidebar = document.querySelector(
@@ -119,14 +105,10 @@ async function testDeletion() {
         const draggableComponents = sidebar.querySelectorAll(
           '[draggable="true"], .draggable-component, .component-item'
         );
-        console.log(
-          `   🎯 Componentes arrastáveis: ${draggableComponents.length}`
-        );
+        console.log(`   🎯 Componentes arrastáveis: ${draggableComponents.length}`);
 
         if (draggableComponents.length > 0) {
-          console.log(
-            "   Para testar, arraste um componente para o canvas e tente excluí-lo"
-          );
+          console.log("   Para testar, arraste um componente para o canvas e tente excluí-lo");
         }
       }
     }

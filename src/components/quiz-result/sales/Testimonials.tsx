@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "../../../components/ui/card";
+import { Card } from "@/components/ui/card";
 import { QuoteIcon } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -69,8 +69,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
           Transformações Reais
         </h3>
         <p className="text-center text-[#8F7A6A] mb-4 max-w-2xl mx-auto">
-          O que mulheres como você estão dizendo sobre esta jornada de
-          transformação
+          O que mulheres como você estão dizendo sobre esta jornada de transformação
         </p>
         <motion.div
           className="h-0.5 w-32 mx-auto bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]"
@@ -124,15 +123,11 @@ const Testimonials: React.FC<TestimonialsProps> = ({
                 </motion.div>
               </div>
 
-              <p className="text-[#8F7A6A] italic mb-6 leading-relaxed flex-grow">
-                "{item.text}"
-              </p>
+              <p className="text-[#8F7A6A] italic mb-6 leading-relaxed flex-grow">"{item.text}"</p>
 
               <div className="mt-auto pt-4 border-t border-[#B89B7A]/20">
                 <p className="font-medium text-[#432818]">{item.name}</p>
-                {item.role && (
-                  <p className="text-sm text-[#8F7A6A]/70">{item.role}</p>
-                )}
+                {item.role && <p className="text-sm text-[#8F7A6A]/70">{item.role}</p>}
               </div>
             </Card>
           </motion.div>

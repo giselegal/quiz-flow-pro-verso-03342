@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { InlineEditableText } from "./InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -88,7 +81,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
+      setTimeLeft(prev => {
         if (prev <= 1) {
           setIsExpired(true);
           return 0;
@@ -132,12 +125,10 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
         {!isExpired ? (
           <>
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <Clock style={{ color: "#432818" }} />
+              <Clock style={{ color: '#432818' }} />
               <InlineEditableText
                 value={title}
-                onChange={(value: string) =>
-                  handlePropertyChange("title", value)
-                }
+                onChange={(value: string) => handlePropertyChange("title", value)}
                 className="text-lg font-semibold text-[#432818]"
                 placeholder="Título do timer de urgência"
               />
@@ -146,21 +137,17 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
             <div
               className={`${colorClasses[timerColor as keyof typeof colorClasses] || colorClasses.red} rounded-lg py-4 px-6 inline-block shadow-lg`}
             >
-              <div className="text-3xl font-bold font-mono">
-                {formatTime(timeLeft)}
-              </div>
+              <div className="text-3xl font-bold font-mono">{formatTime(timeLeft)}</div>
               <div className="text-sm mt-1 opacity-90">minutos restantes</div>
             </div>
           </>
         ) : (
           showExpiredMessage && (
-            <div style={{ backgroundColor: "#E5DDD5" }}>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
               <InlineEditableText
                 value={expiredMessage}
-                onChange={(value: string) =>
-                  handlePropertyChange("expiredMessage", value)
-                }
-                style={{ color: "#6B4F43" }}
+                onChange={(value: string) => handlePropertyChange("expiredMessage", value)}
+                style={{ color: '#6B4F43' }}
                 placeholder="Mensagem quando o timer expira"
               />
             </div>

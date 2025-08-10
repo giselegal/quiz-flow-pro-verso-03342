@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { Check, X, Star, Shield, Zap } from "lucide-react";
-import type { BlockComponentProps, BlockData } from "../../../types/blocks";
+import type { BlockComponentProps, BlockData } from "@/types/blocks";
 
 interface ProsConsBlockProps extends BlockComponentProps {
   block: BlockData & {
@@ -39,14 +39,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -147,24 +140,15 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
         {prosTitle}
       </h3>
       <ul className="space-y-3">
-        {pros.map((pro) => (
+        {pros.map(pro => (
           <li
             key={pro.id}
             className={`flex items-start gap-3 p-3 rounded-lg ${
-              pro.highlight
-                ? "bg-green-100 border border-green-300"
-                : "bg-white"
+              pro.highlight ? "bg-green-100 border border-green-300" : "bg-white"
             }`}
           >
-            {showIcons && (
-              <div className="flex-shrink-0 mt-0.5">
-                {getIcon(pro.icon, true)}
-              </div>
-            )}
-            <span
-              className={`${pro.highlight ? "font-medium" : ""}`}
-              style={{ color: textColor }}
-            >
+            {showIcons && <div className="flex-shrink-0 mt-0.5">{getIcon(pro.icon, true)}</div>}
+            <span className={`${pro.highlight ? "font-medium" : ""}`} style={{ color: textColor }}>
               {pro.text}
             </span>
             {pro.highlight && (
@@ -177,7 +161,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
   );
 
   const ConsSection = () => (
-    <div style={{ borderColor: "#E5DDD5" }}>
+    <div style={{ borderColor: '#E5DDD5' }}>
       <h3
         className="text-xl font-semibold mb-4 flex items-center gap-2"
         style={{ color: consColor }}
@@ -186,17 +170,11 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
         {consTitle}
       </h3>
       <ul className="space-y-3">
-        {cons.map((con) => (
-          <li
-            key={con.id}
-            className="flex items-start gap-3 p-3 bg-white rounded-lg"
-          >
+        {cons.map(con => (
+          <li key={con.id} className="flex items-start gap-3 p-3 bg-white rounded-lg">
             {showIcons && (
               <div className="flex-shrink-0 mt-0.5">
-                <X
-                  className="w-5 h-5"
-                  style={{ color: getSeverityColor(con.severity) }}
-                />
+                <X className="w-5 h-5" style={{ color: getSeverityColor(con.severity) }} />
               </div>
             )}
             <span style={{ color: textColor }}>{con.text}</span>
@@ -235,14 +213,11 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
       {(title || subtitle) && (
         <div className="text-center mb-8">
           {title && (
-            <h2
-              className="text-2xl md:text-3xl font-bold mb-2"
-              style={{ color: textColor }}
-            >
+            <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: textColor }}>
               {title}
             </h2>
           )}
-          {subtitle && <p style={{ color: "#6B4F43" }}>{subtitle}</p>}
+          {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
         </div>
       )}
 
@@ -258,8 +233,8 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
       {/* Summary */}
       {pros.length > 0 && cons.length > 0 && (
-        <div style={{ backgroundColor: "#E5DDD5" }}>
-          <p style={{ color: "#6B4F43" }}>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <p style={{ color: '#6B4F43' }}>
             <span className="font-medium" style={{ color: prosColor }}>
               {pros.length} vantagens
             </span>

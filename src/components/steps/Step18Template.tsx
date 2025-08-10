@@ -67,8 +67,7 @@ export const getStep18Template = () => {
         alt: "Calculando seu Resultado...",
         width: 500,
         height: 350,
-        className:
-          "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
+        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
         marginBottom: 32,
         spacing: "small",
@@ -81,8 +80,7 @@ export const getStep18Template = () => {
       id: "transition-description-step18",
       type: "text-inline",
       properties: {
-        content:
-          "Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...",
+        content: "Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...",
         fontSize: "text-lg",
         textAlign: "text-center",
         color: "#432818",

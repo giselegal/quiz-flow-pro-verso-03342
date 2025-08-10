@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { ArrowLeftRight, Edit3 } from "lucide-react";
 
 interface ComparisonInlineBlockProps {
@@ -21,14 +21,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -105,12 +98,12 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
     >
       {/* Before Section */}
       <div
-        style={{ borderColor: "#E5DDD5" }}
+        style={{ borderColor: '#E5DDD5' }}
         style={{ width: `${dragPosition}%` }}
       >
         <h4
           className="font-bold text-red-800 mb-2 cursor-pointer text-center"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt('Novo título "Antes":', beforeTitle);
@@ -122,7 +115,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
         </h4>
         <p
           className="text-sm text-red-700 text-center cursor-pointer"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt('Novo texto "Antes":', beforeText);
@@ -141,7 +134,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       >
         <h4
           className="font-bold text-green-800 mb-2 cursor-pointer text-center"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt('Novo título "Depois":', afterTitle);
@@ -152,8 +145,8 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
           {afterTitle}
         </h4>
         <p
-          style={{ color: "#6B4F43" }}
-          onClick={(e) => {
+          style={{ color: '#6B4F43' }}
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt('Novo texto "Depois":', afterText);

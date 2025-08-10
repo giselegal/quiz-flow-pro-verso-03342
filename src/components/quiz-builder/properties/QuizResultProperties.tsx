@@ -1,19 +1,16 @@
 import React from "react";
-import { QuizComponentData } from "../../../types/quizBuilder";
-import { Label } from "../../../components/ui/label";
-import { Input } from "../../../components/ui/input";
-import { Textarea } from "../../../components/ui/textarea";
-import { Switch } from "../../../components/ui/switch";
+import { QuizComponentData } from "@/types/quizBuilder";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 interface QuizResultPropertiesProps {
   data: QuizComponentData["data"];
   onUpdate: (data: any) => void;
 }
 
-const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
-  data = {},
-  onUpdate,
-}) => {
+const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, onUpdate }) => {
   return (
     <div className="space-y-5">
       <div className="space-y-2">
@@ -21,7 +18,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
         <Input
           id="title"
           value={data.title || ""}
-          onChange={(e) => onUpdate({ ...data, title: e.target.value })}
+          onChange={e => onUpdate({ ...data, title: e.target.value })}
           placeholder="Seu Resultado"
         />
       </div>
@@ -31,7 +28,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
         <Textarea
           id="description"
           value={data.description || ""}
-          onChange={(e) => onUpdate({ ...data, description: e.target.value })}
+          onChange={e => onUpdate({ ...data, description: e.target.value })}
           placeholder="Descrição do resultado"
           rows={3}
         />
@@ -45,9 +42,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
           <Switch
             id="showPrimaryStyle"
             checked={data.showPrimaryStyle !== false}
-            onCheckedChange={(checked) =>
-              onUpdate({ ...data, showPrimaryStyle: checked })
-            }
+            onCheckedChange={checked => onUpdate({ ...data, showPrimaryStyle: checked })}
           />
         </div>
 
@@ -56,9 +51,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
           <Switch
             id="showSecondaryStyles"
             checked={data.showSecondaryStyles !== false}
-            onCheckedChange={(checked) =>
-              onUpdate({ ...data, showSecondaryStyles: checked })
-            }
+            onCheckedChange={checked => onUpdate({ ...data, showSecondaryStyles: checked })}
           />
         </div>
 
@@ -67,9 +60,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
           <Switch
             id="showOfferSection"
             checked={data.showOfferSection !== false}
-            onCheckedChange={(checked) =>
-              onUpdate({ ...data, showOfferSection: checked })
-            }
+            onCheckedChange={checked => onUpdate({ ...data, showOfferSection: checked })}
           />
         </div>
       </div>

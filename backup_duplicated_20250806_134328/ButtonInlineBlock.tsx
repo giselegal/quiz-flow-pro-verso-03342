@@ -128,10 +128,7 @@ export const ButtonInlineBlock: React.FC<ButtonInlineBlockProps> = ({
         disabled={advanced.disabled || advanced.loading}
         onClick={handleClick}
         style={customStyle}
-        className={cn(
-          "transition-all duration-200",
-          advanced.loading && "opacity-70"
-        )}
+        className={cn("transition-all duration-200", advanced.loading && "opacity-70")}
       >
         {advanced.loading ? (
           <>

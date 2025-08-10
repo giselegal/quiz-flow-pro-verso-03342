@@ -95,10 +95,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
       setInputValue(newValue);
 
       // Validate hex color
-      if (
-        /^#[0-9A-F]{6}$/i.test(newValue) ||
-        /^#[0-9A-F]{3}$/i.test(newValue)
-      ) {
+      if (/^#[0-9A-F]{6}$/i.test(newValue) || /^#[0-9A-F]{3}$/i.test(newValue)) {
         onChange(newValue);
       }
     },
@@ -107,10 +104,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   const handleInputBlur = useCallback(() => {
     // If invalid color, revert to original value
-    if (
-      !/^#[0-9A-F]{6}$/i.test(inputValue) &&
-      !/^#[0-9A-F]{3}$/i.test(inputValue)
-    ) {
+    if (!/^#[0-9A-F]{6}$/i.test(inputValue) && !/^#[0-9A-F]{3}$/i.test(inputValue)) {
       setInputValue(value);
     }
   }, [inputValue, value]);
@@ -131,7 +125,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         <PopoverContent className="w-64 p-3" align="start">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <Palette style={{ color: "#8B7355" }} />
+              <Palette style={{ color: '#8B7355' }} />
               <span className="text-sm font-medium">Escolher Cor</span>
             </div>
 
@@ -140,24 +134,24 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               <input
                 type="color"
                 value={value}
-                onChange={(e) => handleColorChange(e.target.value)}
+                onChange={e => handleColorChange(e.target.value)}
                 className="w-8 h-8 rounded border cursor-pointer"
               />
-              <span style={{ color: "#8B7355" }}>Seletor nativo</span>
+              <span style={{ color: '#8B7355' }}>Seletor nativo</span>
             </div>
 
             {/* Preset colors grid */}
             <div>
-              <span style={{ color: "#6B4F43" }}>Cores predefinidas</span>
+              <span style={{ color: '#6B4F43' }}>
+                Cores predefinidas
+              </span>
               <div className="grid grid-cols-7 gap-1">
-                {presets.map((preset) => (
+                {presets.map(preset => (
                   <button
                     key={preset}
                     onClick={() => handleColorChange(preset)}
                     className={`w-6 h-6 rounded border-2 transition-all hover:scale-110 ${
-                      value === preset
-                        ? "border-gray-900 shadow-md"
-                        : "border-gray-300"
+                      value === preset ? "border-gray-900 shadow-md" : "border-gray-300"
                     }`}
                     style={{ backgroundColor: preset }}
                     title={preset}

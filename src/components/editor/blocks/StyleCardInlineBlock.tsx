@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Sparkles, Edit3 } from "lucide-react";
 
 interface StyleCardInlineBlockProps {
@@ -19,14 +19,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -102,7 +95,7 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
       <div className="flex-1 min-w-0">
         <h3
           className="font-semibold text-[#432818] text-sm md:text-base truncate"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newTitle = prompt("Novo título:", title);
@@ -114,12 +107,11 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
         </h3>
         <p
           className="text-xs md:text-sm text-[#8F7A6A] truncate"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newSubtitle = prompt("Novo subtítulo:", subtitle);
-              if (newSubtitle !== null)
-                onPropertyChange("subtitle", newSubtitle);
+              if (newSubtitle !== null) onPropertyChange("subtitle", newSubtitle);
             }
           }}
         >
@@ -128,12 +120,11 @@ const StyleCardInlineBlock: React.FC<StyleCardInlineBlockProps> = ({
         {description && (
           <p
             className="text-xs text-[#8F7A6A] mt-1 line-clamp-2"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
                 const newDescription = prompt("Nova descrição:", description);
-                if (newDescription !== null)
-                  onPropertyChange("description", newDescription);
+                if (newDescription !== null) onPropertyChange("description", newDescription);
               }
             }}
           >

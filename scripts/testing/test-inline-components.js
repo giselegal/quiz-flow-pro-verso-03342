@@ -10,10 +10,7 @@ const path = require("path");
 console.log("🔍 TESTE DOS COMPONENTES INLINE NO EDITOR\n");
 
 // 1. Verificar se os componentes inline estão exportados
-const inlineIndexPath = path.join(
-  __dirname,
-  "client/src/components/editor/blocks/inline/index.ts"
-);
+const inlineIndexPath = path.join(__dirname, "client/src/components/editor/blocks/inline/index.ts");
 console.log("1. Verificando exports dos componentes inline...");
 if (fs.existsSync(inlineIndexPath)) {
   const content = fs.readFileSync(inlineIndexPath, "utf8");
@@ -31,7 +28,7 @@ if (fs.existsSync(inlineIndexPath)) {
     "CountdownInlineBlock",
   ];
 
-  components.forEach((comp) => {
+  components.forEach(comp => {
     if (content.includes(comp)) {
       console.log(`   ✅ ${comp} está exportado`);
     } else {
@@ -44,10 +41,7 @@ if (fs.existsSync(inlineIndexPath)) {
 
 // 2. Verificar se componentDefinitions.ts inclui componentes inline
 console.log("\n2. Verificando componentDefinitions.ts...");
-const componentDefsPath = path.join(
-  __dirname,
-  "client/src/data/componentDefinitions.ts"
-);
+const componentDefsPath = path.join(__dirname, "client/src/data/componentDefinitions.ts");
 if (fs.existsSync(componentDefsPath)) {
   const content = fs.readFileSync(componentDefsPath, "utf8");
 
@@ -67,7 +61,7 @@ if (fs.existsSync(componentDefsPath)) {
       "countdown",
     ];
 
-    inlineComponents.forEach((comp) => {
+    inlineComponents.forEach(comp => {
       if (content.includes(`"${comp}"`)) {
         console.log(`   ✅ ${comp} está definido`);
       } else {
@@ -99,7 +93,7 @@ if (fs.existsSync(rendererPath)) {
     "pricing-inline",
   ];
 
-  inlineCases.forEach((caseType) => {
+  inlineCases.forEach(caseType => {
     if (content.includes(`'${caseType}'`)) {
       console.log(`   ✅ Case '${caseType}' encontrado`);
     } else {
@@ -112,10 +106,7 @@ if (fs.existsSync(rendererPath)) {
 
 // 4. Verificar se PageEditorCanvas foi atualizado
 console.log("\n4. Verificando PageEditorCanvas.tsx...");
-const canvasPath = path.join(
-  __dirname,
-  "client/src/components/editor/PageEditorCanvas.tsx"
-);
+const canvasPath = path.join(__dirname, "client/src/components/editor/PageEditorCanvas.tsx");
 if (fs.existsSync(canvasPath)) {
   const content = fs.readFileSync(canvasPath, "utf8");
 

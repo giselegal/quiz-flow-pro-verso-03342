@@ -33,10 +33,7 @@ const ignoredWarnings = [
   "The resource https://www.facebook.com",
 ];
 
-const ignoredLogs = [
-  "Strategy 4: No clear indicators found",
-  "assuming All tab",
-];
+const ignoredLogs = ["Strategy 4: No clear indicators found", "assuming All tab"];
 ```
 
 **Funcionalidades:**
@@ -94,7 +91,7 @@ const debouncedFunction = optimizedUtils.debounce(myFunction, 300);
 ```typescript
 optimizedUtils.smoothAnimation(
   1000,
-  (progress) => {
+  progress => {
     // Animation logic
   },
   () => {
@@ -157,11 +154,7 @@ if (process.env.NODE_ENV === "development") {
 ### 2. **Import Manual (se necessário)**
 
 ```typescript
-import {
-  dragDropDebugger,
-  optimizedUtils,
-  performanceMonitor,
-} from "@/utils/development";
+import { dragDropDebugger, optimizedUtils, performanceMonitor } from "@/utils/development";
 ```
 
 ### 3. **Uso nos Componentes**
@@ -203,10 +196,7 @@ optimizedUtils.throttledTimeout(callback, 100);
 
 ```typescript
 // Adicionar novos padrões ignorados
-const customIgnoredWarnings = [
-  "seu-padrão-customizado",
-  "outro-aviso-específico",
-];
+const customIgnoredWarnings = ["seu-padrão-customizado", "outro-aviso-específico"];
 ```
 
 ### Ajustar Thresholds de Performance:
@@ -215,9 +205,7 @@ const customIgnoredWarnings = [
 // Alterar limite de alerta de performance
 if (measure.duration > 32) {
   // 2 frames em 60fps
-  console.warn(
-    `⚡ Performance: ${label} took ${measure.duration.toFixed(2)}ms`
-  );
+  console.warn(`⚡ Performance: ${label} took ${measure.duration.toFixed(2)}ms`);
 }
 ```
 

@@ -105,12 +105,7 @@ const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
 const RatingStars: React.FC<{ rating: number }> = ({ rating }) => (
   <div className="flex text-brand-accent">
     {[...Array(5)].map((_, i) => (
-      <Star
-        key={i}
-        size={16}
-        fill={i < rating ? "currentColor" : "none"}
-        className="mr-0.5"
-      />
+      <Star key={i} size={16} fill={i < rating ? "currentColor" : "none"} className="mr-0.5" />
     ))}
   </div>
 );
@@ -121,7 +116,7 @@ const ActiveUsersIndicator: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveCustomers((prev) =>
+      setActiveCustomers(prev =>
         Math.max(300, Math.min(350, prev + (Math.floor(Math.random() * 5) - 2)))
       );
     }, 13000);
@@ -130,7 +125,7 @@ const ActiveUsersIndicator: React.FC = () => {
 
   return (
     <div className="flex items-center bg-gradient-to-r from-pink-100 via-purple-100 to-indigo-100 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm text-purple-800 shadow-lg">
-      <Heart size={16} style={{ color: "#B89B7A" }} />
+      <Heart size={16} style={{ color: '#B89B7A' }} />
       <span className="font-semibold">+{activeCustomers} Clientes Felizes</span>
       <span className="ml-1 hidden sm:inline">Transformaram Seus Estilos!</span>
     </div>
@@ -143,7 +138,7 @@ const CountdownTimer: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime((prev) => {
+      setTime(prev => {
         if (prev.s > 0) return { ...prev, s: prev.s - 1 };
         if (prev.m > 0) return { ...prev, m: prev.m - 1, s: 59 };
         if (prev.h > 0) return { h: prev.h - 1, m: 59, s: 59 };
@@ -167,11 +162,7 @@ const CountdownTimer: React.FC = () => {
             <div className="bg-brand-dark text-white px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-lg text-base sm:text-lg font-mono font-bold shadow-md">
               {format(time[unit])}
             </div>
-            {i < 2 && (
-              <span className="text-brand-accent font-bold text-lg sm:text-xl">
-                :
-              </span>
-            )}
+            {i < 2 && <span className="text-brand-accent font-bold text-lg sm:text-xl">:</span>}
           </React.Fragment>
         ))}
       </div>
@@ -185,9 +176,7 @@ const LimitedSpotsNotification: React.FC = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSpotsFilled((prev) =>
-        Math.min(98, Math.max(70, prev + Math.floor(Math.random() * 3) - 1))
-      );
+      setSpotsFilled(prev => Math.min(98, Math.max(70, prev + Math.floor(Math.random() * 3) - 1)));
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -197,12 +186,8 @@ const LimitedSpotsNotification: React.FC = () => {
       <div className="flex items-center mb-2 sm:mb-0">
         <TrendingUp size={20} className="text-[#B89B7A] mr-2" />
         <div>
-          <p className="font-semibold text-orange-800">
-            Vagas limitadas para hoje!
-          </p>
-          <p className="text-[#A38A69]">
-            Apenas {100 - spotsFilled} vagas restantes
-          </p>
+          <p className="font-semibold text-orange-800">Vagas limitadas para hoje!</p>
+          <p className="text-[#A38A69]">Apenas {100 - spotsFilled} vagas restantes</p>
         </div>
       </div>
       <div className="h-2.5 w-full sm:w-32 bg-gray-300 rounded-full overflow-hidden mt-1.5 sm:mt-0">
@@ -256,9 +241,7 @@ const FaqSectionNew: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <h3 className="font-playfair text-brand-dark mb-10 text-center">
-        Perguntas Frequentes
-      </h3>
+      <h3 className="font-playfair text-brand-dark mb-10 text-center">Perguntas Frequentes</h3>
       <div className="space-y-4">
         {faqItems.map((item, index) => (
           <div
@@ -267,18 +250,18 @@ const FaqSectionNew: React.FC = () => {
           >
             <button
               onClick={() => setOpenItem(openItem === index ? null : index)}
-              style={{ backgroundColor: "#FAF9F7" }}
+              style={{ backgroundColor: '#FAF9F7' }}
             >
-              <span className="font-semibold text-brand-dark text-base sm:text-lg">
-                {item.q}
-              </span>
+              <span className="font-semibold text-brand-dark text-base sm:text-lg">{item.q}</span>
               <ChevronRight
                 size={22}
                 className={`text-brand-accent transition-transform duration-300 ${openItem === index ? "transform rotate-90" : ""}`}
               />
             </button>
             {openItem === index && (
-              <div style={{ borderColor: "#E5DDD5" }}>{item.a}</div>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                {item.a}
+              </div>
             )}
           </div>
         ))}
@@ -312,21 +295,15 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
 // Componente principal da página
 const PreviewQuizOfferPage: React.FC = () => {
   // Função para rastreamento de cliques (mock)
-  const trackButtonClick = useCallback(
-    (buttonId: string, action: string, page: string) => {
-      console.log("Rastreando clique (mock):", { buttonId, action, page });
-    },
-    []
-  );
+  const trackButtonClick = useCallback((buttonId: string, action: string, page: string) => {
+    console.log("Rastreando clique (mock):", { buttonId, action, page });
+  }, []);
 
   // Função para lidar com cliques no CTA
   const handleCtaClick = useCallback(
     (buttonId: string, action = "Comprar Agora") => {
       trackButtonClick(buttonId, action, "quiz_offer_page");
-      window.open(
-        "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "_blank"
-      );
+      window.open("https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912", "_blank");
     },
     [trackButtonClick]
   );
@@ -334,7 +311,7 @@ const PreviewQuizOfferPage: React.FC = () => {
   // Preload de imagens críticas
   useEffect(() => {
     const preloadCriticalImages = (imageUrls: string[]) => {
-      imageUrls.forEach((url) => {
+      imageUrls.forEach(url => {
         const link = document.createElement("link");
         link.rel = "preload";
         link.as = "image";
@@ -415,9 +392,8 @@ const PreviewQuizOfferPage: React.FC = () => {
               Descubra Seu Estilo Autêntico e Transforme Seu Guarda-Roupa!
             </h1>
             <p className="text-brand-medium max-w-3xl mx-auto mb-7 sm:mb-12 leading-relaxed">
-              Chega de um guarda-roupa lotado e da sensação de que nada combina
-              com você. Descubra seu estilo predominante e aprenda a montar
-              looks que refletem sua essência, com{" "}
+              Chega de um guarda-roupa lotado e da sensação de que nada combina com você. Descubra
+              seu estilo predominante e aprenda a montar looks que refletem sua essência, com{" "}
               <strong>praticidade e confiança.</strong>
             </p>
             <div className="mb-8 sm:mb-12 max-w-md lg:max-w-lg mx-auto relative rounded-2xl overflow-hidden shadow-xl image-hover-effect">
@@ -434,22 +410,15 @@ const PreviewQuizOfferPage: React.FC = () => {
               <div className="absolute -bottom-2.5 -left-2.5 w-9 h-9 border-b-3 border-l-3 border-brand-accent rounded-bl-lg sm:-bottom-3.5 sm:-left-3.5 sm:w-11 sm:h-11 sm:border-b-4 sm:border-l-4 sm:rounded-bl-xl" />
             </div>
             <button
-              onClick={() =>
-                handleCtaClick(
-                  "headline_cta",
-                  "Quero Descobrir Meu Estilo Agora!"
-                )
-              }
+              onClick={() => handleCtaClick("headline_cta", "Quero Descobrir Meu Estilo Agora!")}
               className="btn-primary-3d animate-pulse-gentle text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
-                <ArrowRight size={22} strokeWidth={2.5} /> Quero Descobrir Meu
-                Estilo Agora!
+                <ArrowRight size={22} strokeWidth={2.5} /> Quero Descobrir Meu Estilo Agora!
               </span>
             </button>
             <p className="text-xs sm:text-sm text-brand-medium flex items-center justify-center gap-1.5 mt-5">
-              <Lock size={14} className="text-brand-accent" /> Compra segura e
-              acesso imediato.
+              <Lock size={14} className="text-brand-accent" /> Compra segura e acesso imediato.
             </p>
             <div className="mt-7 flex justify-center">
               <ActiveUsersIndicator />
@@ -478,29 +447,24 @@ const PreviewQuizOfferPage: React.FC = () => {
             <div className="space-y-5 sm:space-y-6 text-brand-medium leading-relaxed text-left md:text-justify">
               <p>
                 Você já se sentiu{" "}
-                <strong>
-                  frustrada ao abrir seu guarda-roupa cheio e não ter o que
-                  vestir?
-                </strong>{" "}
-                Ou comprou peças que pareciam perfeitas na loja, mas nunca
-                combinaram com nada?
+                <strong>frustrada ao abrir seu guarda-roupa cheio e não ter o que vestir?</strong>{" "}
+                Ou comprou peças que pareciam perfeitas na loja, mas nunca combinaram com nada?
               </p>
               <p>
-                Ter um armário lotado não significa ter um guarda-roupa
-                funcional. Muitas vezes, isso só aumenta a ansiedade e o
-                sentimento de que <strong>"nada fica bom em mim"</strong>.
+                Ter um armário lotado não significa ter um guarda-roupa funcional. Muitas vezes,
+                isso só aumenta a ansiedade e o sentimento de que{" "}
+                <strong>"nada fica bom em mim"</strong>.
               </p>
               <p>
-                Quantas vezes você perdeu tempo tentando montar um look que te
-                fizesse sentir <strong>confiante</strong>? Ou gastou dinheiro em
-                peças que raramente usou? Talvez sinta que sua imagem não
-                comunica quem você realmente é.
+                Quantas vezes você perdeu tempo tentando montar um look que te fizesse sentir{" "}
+                <strong>confiante</strong>? Ou gastou dinheiro em peças que raramente usou? Talvez
+                sinta que sua imagem não comunica quem você realmente é.
               </p>
               <p className="font-semibold text-brand-dark bg-brand-accent-highlight/60 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent shadow-inner mt-6">
                 Isso acontece porque você ainda não descobriu seu{" "}
-                <strong>estilo predominante</strong> - alinhado com sua
-                personalidade, valores e essência. Sem esse conhecimento, você
-                continua comprando peças aleatórias que não conversam entre si.
+                <strong>estilo predominante</strong> - alinhado com sua personalidade, valores e
+                essência. Sem esse conhecimento, você continua comprando peças aleatórias que não
+                conversam entre si.
               </p>
             </div>
           </div>
@@ -521,8 +485,7 @@ const PreviewQuizOfferPage: React.FC = () => {
                 imgClassName="rounded-2xl"
               />
               <div className="absolute -top-3.5 -right-3.5 sm:-top-4 sm:-right-4 bg-gradient-to-br from-brand-accent to-brand-accent-darker text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full shadow-xl text-sm sm:text-base font-bold transform rotate-6 ring-2 ring-white/80 ring-offset-2 ring-offset-white">
-                <Gift size={18} className="inline-block mr-1.5 sm:mr-2" />{" "}
-                Exclusivo!
+                <Gift size={18} className="inline-block mr-1.5 sm:mr-2" /> Exclusivo!
               </div>
             </div>
             <h2 className="font-playfair text-brand-dark mb-6 sm:mb-8 leading-tight">
@@ -530,45 +493,34 @@ const PreviewQuizOfferPage: React.FC = () => {
             </h2>
             <div className="space-y-5 sm:space-y-6 text-brand-medium leading-relaxed mb-8 sm:mb-10 text-left md:text-justify">
               <p>
-                E se eu te dissesse que em minutos você pode descobrir seu
-                estilo predominante e transformar sua relação com a moda e sua
-                imagem?
+                E se eu te dissesse que em minutos você pode descobrir seu estilo predominante e
+                transformar sua relação com a moda e sua imagem?
               </p>
               <p className="text-lg sm:text-xl text-brand-dark font-bold bg-brand-accent-highlight/70 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent shadow-inner">
-                Apresento o <strong>Quiz de Estilo Gisele Galvão</strong> - uma
-                ferramenta baseada em anos de experiência em consultoria de
-                imagem.
+                Apresento o <strong>Quiz de Estilo Gisele Galvão</strong> - uma ferramenta baseada
+                em anos de experiência em consultoria de imagem.
               </p>
               <p>
-                Não é um teste genérico. É um <strong>método preciso</strong>{" "}
-                que analisa suas preferências e identifica seu estilo entre os{" "}
-                <strong>7 estilos universais:</strong> Clássico, Natural,
-                Romântico, Dramático, Criativo, Elegante e Contemporâneo.
+                Não é um teste genérico. É um <strong>método preciso</strong> que analisa suas
+                preferências e identifica seu estilo entre os <strong>7 estilos universais:</strong>{" "}
+                Clássico, Natural, Romântico, Dramático, Criativo, Elegante e Contemporâneo.
               </p>
               <p>
-                Descobrir seu estilo é o primeiro passo para um guarda-roupa
-                funcional, economizar tempo e dinheiro, expressar sua
-                personalidade e sentir-se{" "}
+                Descobrir seu estilo é o primeiro passo para um guarda-roupa funcional, economizar
+                tempo e dinheiro, expressar sua personalidade e sentir-se{" "}
                 <strong>confiante e autêntica todos os dias.</strong>
               </p>
               <p>
-                O quiz é <strong>rápido e intuitivo</strong>, para mulheres que
-                desejam alinhar imagem à essência, sem seguir tendências
-                passageiras ou gastar fortunas.
+                O quiz é <strong>rápido e intuitivo</strong>, para mulheres que desejam alinhar
+                imagem à essência, sem seguir tendências passageiras ou gastar fortunas.
               </p>
             </div>
             <button
-              onClick={() =>
-                handleCtaClick(
-                  "solution_cta",
-                  "Fazer o Quiz e Descobrir Meu Estilo"
-                )
-              }
+              onClick={() => handleCtaClick("solution_cta", "Fazer o Quiz e Descobrir Meu Estilo")}
               className="btn-primary-3d animate-pulse-gentle text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
-                <ShoppingBag size={22} strokeWidth={2.5} /> Fazer o Quiz e
-                Descobrir Meu Estilo
+                <ShoppingBag size={22} strokeWidth={2.5} /> Fazer o Quiz e Descobrir Meu Estilo
               </span>
             </button>
             <CountdownTimer />
@@ -586,15 +538,13 @@ const PreviewQuizOfferPage: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-10 sm:gap-14 items-center mb-10 sm:mb-14">
               <div className="order-2 md:order-1 space-y-5">
                 <p className="text-brand-medium leading-relaxed">
-                  Descobrir seu estilo é só o começo. Para transformar sua
-                  imagem, você precisa de{" "}
+                  Descobrir seu estilo é só o começo. Para transformar sua imagem, você precisa de{" "}
                   <strong>orientação prática e estratégica.</strong>
                 </p>
                 <p className="text-lg sm:text-xl text-brand-dark font-bold leading-relaxed bg-brand-accent-highlight/60 p-4 rounded-xl border-l-4 border-brand-accent-darker shadow-inner">
                   Por isso, ao fazer o quiz, você terá acesso ao{" "}
                   <strong>
-                    Guia de Imagem e Estilo específico para o seu estilo
-                    predominante!
+                    Guia de Imagem e Estilo específico para o seu estilo predominante!
                   </strong>
                 </p>
                 <p className="text-brand-medium leading-relaxed font-semibold mt-1">
@@ -608,9 +558,7 @@ const PreviewQuizOfferPage: React.FC = () => {
                         className="text-brand-accent mr-3 mt-0.5 flex-shrink-0"
                       />
                       <div>
-                        <span className="font-semibold text-brand-dark">
-                          {item.title}
-                        </span>{" "}
+                        <span className="font-semibold text-brand-dark">{item.title}</span>{" "}
                         {item.text}
                       </div>
                     </li>
@@ -637,10 +585,9 @@ const PreviewQuizOfferPage: React.FC = () => {
               />
             </div>
             <p className="text-brand-medium text-center max-w-3xl mx-auto leading-relaxed">
-              Com o <strong>Guia de Imagem e Estilo</strong>, você terá as
-              ferramentas para construir uma imagem que reflete quem você é e
-              potencializa sua comunicação. Não é sobre moda, mas sobre criar um{" "}
-              <strong>estilo atemporal que te representa.</strong>
+              Com o <strong>Guia de Imagem e Estilo</strong>, você terá as ferramentas para
+              construir uma imagem que reflete quem você é e potencializa sua comunicação. Não é
+              sobre moda, mas sobre criar um <strong>estilo atemporal que te representa.</strong>
             </p>
           </div>
         </SectionWrapper>
@@ -669,11 +616,8 @@ const PreviewQuizOfferPage: React.FC = () => {
               <div className="space-y-4">
                 <p className="text-brand-medium leading-relaxed">
                   Como bônus, você receberá o{" "}
-                  <strong>
-                    Guia das Peças-Chave do Guarda-Roupa de Sucesso
-                  </strong>{" "}
-                  - um manual para construir um armário funcional, versátil e
-                  alinhado à sua identidade.
+                  <strong>Guia das Peças-Chave do Guarda-Roupa de Sucesso</strong> - um manual para
+                  construir um armário funcional, versátil e alinhado à sua identidade.
                 </p>
                 <p className="text-brand-medium leading-relaxed font-semibold">
                   Neste guia, você vai descobrir:
@@ -681,10 +625,7 @@ const PreviewQuizOfferPage: React.FC = () => {
                 <ul className="list-none space-y-3 text-brand-medium pl-0">
                   {bonus1Features.map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <Check
-                        size={22}
-                        className="text-brand-accent mr-3 mt-0.5 flex-shrink-0"
-                      />
+                      <Check size={22} className="text-brand-accent mr-3 mt-0.5 flex-shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -701,15 +642,13 @@ const PreviewQuizOfferPage: React.FC = () => {
               />
             </div>
             <p className="text-brand-medium text-center max-w-3xl mx-auto leading-relaxed">
-              Imagine um guarda-roupa onde tudo combina, looks incríveis em
-              minutos, e cada item reflete quem você é! Sem compras por impulso,
-              peças esquecidas ou frustração ao se vestir.
+              Imagine um guarda-roupa onde tudo combina, looks incríveis em minutos, e cada item
+              reflete quem você é! Sem compras por impulso, peças esquecidas ou frustração ao se
+              vestir.
             </p>
             <p className="text-lg sm:text-xl text-brand-dark font-bold text-center max-w-3xl mx-auto mt-7 leading-relaxed bg-brand-accent-highlight/60 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent shadow-inner">
-              Este bônus te ajudará a{" "}
-              <strong>economizar tempo e dinheiro</strong>, eliminando a
-              frustração diária. É como ter uma consultora pessoal te
-              orientando.
+              Este bônus te ajudará a <strong>economizar tempo e dinheiro</strong>, eliminando a
+              frustração diária. É como ter uma consultora pessoal te orientando.
             </p>
           </div>
         </SectionWrapper>
@@ -720,8 +659,7 @@ const PreviewQuizOfferPage: React.FC = () => {
         <SectionWrapper id="bonus2">
           <div className="bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-brand-accent/20 card-hover-effect">
             <h2 className="font-playfair text-brand-dark mb-2.5 text-center">
-              BÔNUS ESPECIAL{" "}
-              <span className="text-brand-accent-darker">#2</span>
+              BÔNUS ESPECIAL <span className="text-brand-accent-darker">#2</span>
             </h2>
             <p className="text-xl sm:text-2xl text-brand-accent-darker font-bold mb-10 sm:mb-14 text-center drop-shadow-sm">
               Guia de Visagismo Facial
@@ -729,13 +667,11 @@ const PreviewQuizOfferPage: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-10 sm:gap-14 items-center mb-10 sm:mb-14">
               <div className="order-2 md:order-1 space-y-4">
                 <p className="text-brand-medium leading-relaxed">
-                  E tem mais! O <strong>Guia de Visagismo Facial</strong> - uma
-                  ferramenta para valorizar seus traços naturais e potencializar
-                  sua beleza única.
+                  E tem mais! O <strong>Guia de Visagismo Facial</strong> - uma ferramenta para
+                  valorizar seus traços naturais e potencializar sua beleza única.
                 </p>
                 <p className="text-brand-medium leading-relaxed font-semibold">
-                  O visagismo harmoniza sua imagem com a estrutura do seu rosto.
-                  Aprenda:
+                  O visagismo harmoniza sua imagem com a estrutura do seu rosto. Aprenda:
                 </p>
                 <ul className="list-none space-y-3 text-brand-medium pl-0">
                   {bonus2Features.map((item, index) => (
@@ -770,14 +706,11 @@ const PreviewQuizOfferPage: React.FC = () => {
             </div>
             <p className="text-brand-medium text-center max-w-3xl mx-auto leading-relaxed">
               Saber quais acessórios escolher para valorizar seu rosto vai{" "}
-              <strong>
-                transformar como você se vê e como os outros te percebem.
-              </strong>
+              <strong>transformar como você se vê e como os outros te percebem.</strong>
             </p>
             <p className="text-lg sm:text-xl text-brand-dark font-bold text-center max-w-3xl mx-auto mt-7 leading-relaxed bg-brand-accent-highlight/60 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent-darker shadow-inner">
-              Com o Guia de Visagismo, você terá mais uma ferramenta para uma
-              imagem autêntica e impactante. Acessórios e corte de cabelo a
-              favor da sua beleza natural.
+              Com o Guia de Visagismo, você terá mais uma ferramenta para uma imagem autêntica e
+              impactante. Acessórios e corte de cabelo a favor da sua beleza natural.
             </p>
           </div>
         </SectionWrapper>
@@ -787,9 +720,7 @@ const PreviewQuizOfferPage: React.FC = () => {
         {/* Seção da Mentora */}
         <SectionWrapper bgClassName="bg-brand-light" id="mentora">
           <div className="text-center">
-            <h2 className="font-playfair text-brand-dark mb-10 sm:mb-14">
-              Conheça Sua Mentora
-            </h2>
+            <h2 className="font-playfair text-brand-dark mb-10 sm:mb-14">Conheça Sua Mentora</h2>
             <div className="bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-brand-accent/20 md:flex md:items-center md:gap-10 lg:gap-12 max-w-3xl mx-auto card-hover-effect">
               <div className="md:w-1/3 mb-7 md:mb-0 flex-shrink-0">
                 <FixedIntroImage
@@ -804,25 +735,22 @@ const PreviewQuizOfferPage: React.FC = () => {
               <div className="md:w-2/3 text-left space-y-3.5">
                 <h3 className="font-playfair text-brand-dark">Gisele Galvão</h3>
                 <p className="text-brand-accent font-semibold border-b-2 border-brand-accent/30 pb-2.5 text-sm sm:text-base">
-                  Consultora de Imagem e Estilo, Personal Branding, Estrategista
-                  de Marca Pessoal e Especialista em Coloração Pessoal com
-                  Certificação Internacional.
+                  Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca Pessoal e
+                  Especialista em Coloração Pessoal com Certificação Internacional.
                 </p>
                 <p className="text-brand-medium text-sm sm:text-base leading-relaxed">
-                  Advogada de formação. Mãe da Victória, esposa do Fabrício.
-                  Apaixonada pela vida, detalhes, viagens e crescimento pessoal.
+                  Advogada de formação. Mãe da Victória, esposa do Fabrício. Apaixonada pela vida,
+                  detalhes, viagens e crescimento pessoal.
                 </p>
                 <p className="text-brand-medium text-sm sm:text-base leading-relaxed">
-                  Colérica, virginiana, paciente, pacificadora e empata.
-                  Linguagens de amor: receber, atos de serviço e tempo de
-                  qualidade. Ama vinho, chás e café. Valores: família, justiça,
-                  honestidade, ética e liberdade.
+                  Colérica, virginiana, paciente, pacificadora e empata. Linguagens de amor:
+                  receber, atos de serviço e tempo de qualidade. Ama vinho, chás e café. Valores:
+                  família, justiça, honestidade, ética e liberdade.
                 </p>
                 <p className="text-brand-medium text-sm sm:text-base leading-relaxed bg-brand-accent-highlight/60 p-3.5 rounded-xl border-l-4 border-brand-accent-darker shadow-inner">
-                  "Há anos ajudo mulheres a descobrirem seu estilo autêntico.
-                  Minha missão é que você se vista de si mesma, comunicando sua
-                  essência. Já transformei centenas de vidas com minha
-                  metodologia."
+                  "Há anos ajudo mulheres a descobrirem seu estilo autêntico. Minha missão é que
+                  você se vista de si mesma, comunicando sua essência. Já transformei centenas de
+                  vidas com minha metodologia."
                 </p>
               </div>
             </div>
@@ -838,8 +766,8 @@ const PreviewQuizOfferPage: React.FC = () => {
               Resultados Reais de Mulheres Reais
             </h2>
             <p className="text-brand-medium max-w-3xl mx-auto mb-10 sm:mb-14 leading-relaxed">
-              Veja o que dizem as mulheres que já descobriram seu estilo e
-              transformaram sua imagem com os guias:
+              Veja o que dizem as mulheres que já descobriram seu estilo e transformaram sua imagem
+              com os guias:
             </p>
             <div className="mb-10 sm:mb-14 image-hover-effect overflow-hidden rounded-2xl shadow-xl max-w-xl mx-auto">
               <FixedIntroImage
@@ -851,28 +779,26 @@ const PreviewQuizOfferPage: React.FC = () => {
               />
             </div>
             <blockquote className="text-brand-medium mb-10 sm:mb-14 leading-relaxed font-semibold italic p-5 sm:p-7 bg-brand-accent-highlight/60 rounded-2xl border-l-4 border-brand-accent shadow-xl max-w-2xl mx-auto text-base sm:text-lg">
-              "Os guias da Gisele me deram a clareza que eu precisava. Agora sei
-              o que me valoriza e me sinto muito mais confiante!" - Maria S.
+              "Os guias da Gisele me deram a clareza que eu precisava. Agora sei o que me valoriza e
+              me sinto muito mais confiante!" - Maria S.
             </blockquote>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8 mb-10 sm:mb-14">
-              {[
-                BEFORE_AFTER_IMAGE_1_URL,
-                BEFORE_AFTER_IMAGE_2_URL,
-                BEFORE_AFTER_IMAGE_3_URL,
-              ].map((src, i) => (
-                <div
-                  key={i}
-                  className="image-hover-effect overflow-hidden rounded-2xl shadow-lg border-4 border-brand-accent/20"
-                >
-                  <FixedIntroImage
-                    src={src}
-                    alt={`Antes e Depois Cliente ${i + 1}`}
-                    width={300}
-                    height={300}
-                    imgClassName="rounded-xl aspect-square object-cover"
-                  />
-                </div>
-              ))}
+              {[BEFORE_AFTER_IMAGE_1_URL, BEFORE_AFTER_IMAGE_2_URL, BEFORE_AFTER_IMAGE_3_URL].map(
+                (src, i) => (
+                  <div
+                    key={i}
+                    className="image-hover-effect overflow-hidden rounded-2xl shadow-lg border-4 border-brand-accent/20"
+                  >
+                    <FixedIntroImage
+                      src={src}
+                      alt={`Antes e Depois Cliente ${i + 1}`}
+                      width={300}
+                      height={300}
+                      imgClassName="rounded-xl aspect-square object-cover"
+                    />
+                  </div>
+                )
+              )}
             </div>
             <div className="mb-10 sm:mb-14 image-hover-effect overflow-hidden rounded-2xl shadow-xl max-w-xl mx-auto">
               <FixedIntroImage
@@ -884,22 +810,16 @@ const PreviewQuizOfferPage: React.FC = () => {
               />
             </div>
             <p className="text-brand-medium mb-7 leading-relaxed">
-              Estas são algumas das centenas de mulheres que transformaram sua
-              relação com a moda e imagem pessoal.
+              Estas são algumas das centenas de mulheres que transformaram sua relação com a moda e
+              imagem pessoal.
             </p>
             <p className="text-lg sm:text-xl text-brand-dark font-bold mb-8 sm:mb-10 leading-relaxed p-5 bg-brand-light rounded-2xl border-l-4 border-brand-accent shadow-xl max-w-3xl mx-auto">
               Você também pode ter essa transformação! Imagine se vestir com{" "}
-              <strong>confiança</strong>, com um guarda-roupa que reflete quem
-              você é, economizando <strong>tempo e dinheiro</strong>, e sentindo
-              sua imagem alinhada com seu interior.
+              <strong>confiança</strong>, com um guarda-roupa que reflete quem você é, economizando{" "}
+              <strong>tempo e dinheiro</strong>, e sentindo sua imagem alinhada com seu interior.
             </p>
             <button
-              onClick={() =>
-                handleCtaClick(
-                  "testimonials_cta",
-                  "Sim, Quero Essa Transformação!"
-                )
-              }
+              onClick={() => handleCtaClick("testimonials_cta", "Sim, Quero Essa Transformação!")}
               className="btn-primary-3d animate-subtle-float text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
@@ -935,28 +855,22 @@ const PreviewQuizOfferPage: React.FC = () => {
               Sua Satisfação Garantida ou Seu Dinheiro de Volta!
             </h2>
             <p className="text-gray-200 mb-9 leading-relaxed max-w-2xl mx-auto text-sm sm:text-base">
-              Estou tão confiante de que estes materiais transformarão sua
-              relação com a moda que ofereço uma{" "}
-              <strong>garantia incondicional de 7 dias.</strong> Se não ficar
-              satisfeita, peça o reembolso e devolveremos{" "}
-              <strong>100% do seu investimento</strong>, sem perguntas. Risco
-              zero!
+              Estou tão confiante de que estes materiais transformarão sua relação com a moda que
+              ofereço uma <strong>garantia incondicional de 7 dias.</strong> Se não ficar
+              satisfeita, peça o reembolso e devolveremos <strong>100% do seu investimento</strong>,
+              sem perguntas. Risco zero!
             </p>
             <div className="bg-brand-lightest text-brand-dark p-6 sm:p-10 rounded-3xl shadow-2xl mb-9 sm:mb-12 border border-brand-accent/30 max-w-2xl mx-auto">
               <h3 className="font-playfair text-brand-dark mb-5">
                 Investimento Único Para Uma Transformação Completa:
               </h3>
               <div className="flex justify-center items-baseline mb-3 sm:mb-5">
-                <span className="text-xl sm:text-2xl font-semibold mr-1.5">
-                  R$
-                </span>
+                <span className="text-xl sm:text-2xl font-semibold mr-1.5">R$</span>
                 <span className="text-4xl sm:text-6xl font-extrabold text-brand-accent drop-shadow-md">
                   {VALOR_PRODUTO}
                 </span>
               </div>
-              <p className="text-brand-dark mb-2 sm:mb-4 font-semibold">
-                Você terá acesso a:
-              </p>
+              <p className="text-brand-dark mb-2 sm:mb-4 font-semibold">Você terá acesso a:</p>
               <ul className="list-none text-left space-y-2.5 max-w-md mx-auto text-sm sm:text-base mb-7 sm:mb-9 pl-0">
                 {[
                   {
@@ -977,17 +891,10 @@ const PreviewQuizOfferPage: React.FC = () => {
                   },
                 ].map((item, i) => (
                   <li key={i} className="flex items-center text-brand-medium">
-                    <Check
-                      size={20}
-                      className="text-green-500 mr-2.5 flex-shrink-0"
-                    />
+                    <Check size={20} className="text-green-500 mr-2.5 flex-shrink-0" />
                     <span
                       className={
-                        item.boldExtra
-                          ? "font-extrabold"
-                          : item.bold
-                            ? "font-semibold"
-                            : ""
+                        item.boldExtra ? "font-extrabold" : item.bold ? "font-semibold" : ""
                       }
                     >
                       {item.text}
@@ -1005,27 +912,20 @@ const PreviewQuizOfferPage: React.FC = () => {
                 />
               </div>
               <p className="text-brand-medium mb-5 leading-relaxed text-sm sm:text-base">
-                Pense: quanto já gastou com roupas que não usou? Quanto vale
-                economizar tempo todas as manhãs? Quanto vale se sentir
-                confiante e autêntica?
+                Pense: quanto já gastou com roupas que não usou? Quanto vale economizar tempo todas
+                as manhãs? Quanto vale se sentir confiante e autêntica?
               </p>
               <p className="text-brand-dark font-bold leading-relaxed bg-brand-accent-highlight/60 p-4 sm:p-5 rounded-xl border-l-4 border-brand-accent-darker shadow-inner text-base sm:text-lg">
-                Este investimento em autoconhecimento é um investimento em você,
-                na sua confiança e na forma como o mundo te percebe.
+                Este investimento em autoconhecimento é um investimento em você, na sua confiança e
+                na forma como o mundo te percebe.
               </p>
             </div>
             <button
-              onClick={() =>
-                handleCtaClick(
-                  "guarantee_cta",
-                  "Quero Descobrir Meu Estilo Agora!"
-                )
-              }
+              onClick={() => handleCtaClick("guarantee_cta", "Quero Descobrir Meu Estilo Agora!")}
               className="btn-primary-3d animate-pulse-gentle text-base sm:text-lg md:text-xl py-3.5 px-7 sm:py-4 sm:px-12"
             >
               <span className="flex items-center justify-center gap-2.5">
-                Quero Descobrir Meu Estilo Agora!{" "}
-                <Shield size={22} strokeWidth={2.5} />
+                Quero Descobrir Meu Estilo Agora! <Shield size={22} strokeWidth={2.5} />
               </span>
             </button>
             <p className="mt-5 text-xs sm:text-sm text-gray-300 flex items-center justify-center gap-1.5">
@@ -1052,23 +952,16 @@ const PreviewQuizOfferPage: React.FC = () => {
             <FaqSectionNew />
             <div className="mt-12 sm:mt-16">
               <button
-                onClick={() =>
-                  handleCtaClick(
-                    "faq_cta",
-                    "Quero Transformar Minha Imagem Agora!"
-                  )
-                }
+                onClick={() => handleCtaClick("faq_cta", "Quero Transformar Minha Imagem Agora!")}
                 className="btn-primary-3d text-base sm:text-lg py-3.5 px-7 sm:py-4 sm:px-10"
               >
                 <span className="flex items-center justify-center gap-2.5">
-                  Quero Transformar Minha Imagem Agora!{" "}
-                  <ArrowRight size={20} strokeWidth={2.5} />
+                  Quero Transformar Minha Imagem Agora! <ArrowRight size={20} strokeWidth={2.5} />
                 </span>
               </button>
               <p className="mt-5 text-xs sm:text-sm text-brand-medium flex items-center justify-center gap-1.5">
                 <Users size={16} className="text-brand-accent" />
-                Junte-se a centenas de mulheres que já redescobriram sua
-                confiança!
+                Junte-se a centenas de mulheres que já redescobriram sua confiança!
               </p>
             </div>
           </div>
@@ -1078,13 +971,11 @@ const PreviewQuizOfferPage: React.FC = () => {
       {/* Footer */}
       <footer className="text-center py-10 bg-brand-dark text-gray-400 text-xs sm:text-sm">
         <p>
-          &copy; {new Date().getFullYear()} Gisele Galvão Consultoria de Imagem.
-          Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Gisele Galvão Consultoria de Imagem. Todos os direitos
+          reservados.
         </p>
-        <p className="mt-1.5">
-          CNPJ: XX.XXX.XXX/0001-XX - Contato: contato@giselegalvao.com.br
-        </p>
-        <p style={{ color: "#8B7355" }}>Design e Desenvolvimento com ❤️</p>
+        <p className="mt-1.5">CNPJ: XX.XXX.XXX/0001-XX - Contato: contato@giselegalvao.com.br</p>
+        <p style={{ color: '#8B7355' }}>Design e Desenvolvimento com ❤️</p>
       </footer>
     </div>
   );

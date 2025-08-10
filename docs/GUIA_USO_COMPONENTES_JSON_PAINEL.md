@@ -51,10 +51,7 @@ graph TD
 **⚙️ Registry Mapping** (`/src/config/enhancedBlockRegistry.ts`):
 
 ```typescript
-export const ENHANCED_BLOCK_REGISTRY: Record<
-  string,
-  React.ComponentType<any>
-> = {
+export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   "options-grid": OptionsGridInlineBlock, // ← JSON "type" → Componente React
   "text-inline": TextInlineBlock,
   "button-inline": ButtonInlineFixed,
@@ -93,11 +90,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
   // 🎨 Renderização baseada nas propriedades JSON
   return (
-    <div
-      className="grid gap-4"
-      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
-    >
-      {options.map((option) => (
+    <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
+      {options.map(option => (
         <div key={option.id} onClick={() => handleOptionClick(option.id)}>
           {option.text}
         </div>

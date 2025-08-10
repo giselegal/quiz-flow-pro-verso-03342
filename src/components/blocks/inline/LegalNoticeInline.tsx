@@ -78,11 +78,7 @@ const LegalNoticeInline: React.FC<LegalNoticeInlineProps> = ({
   };
 
   return (
-    <div
-      className={`legal-notice-inline ${className}`}
-      style={containerStyle}
-      {...props}
-    >
+    <div className={`legal-notice-inline ${className}`} style={containerStyle} {...props}>
       {/* Copyright */}
       <div style={{ marginBottom: `${spacing / 2}px` }}>{copyrightText}</div>
 
@@ -91,11 +87,7 @@ const LegalNoticeInline: React.FC<LegalNoticeInlineProps> = ({
         style={{
           display: "flex",
           justifyContent:
-            textAlign === "center"
-              ? "center"
-              : textAlign === "right"
-                ? "flex-end"
-                : "flex-start",
+            textAlign === "center" ? "center" : textAlign === "right" ? "flex-end" : "flex-start",
           alignItems: "center",
           flexWrap: "wrap",
           gap: showDividers ? 0 : `${spacing}px`,
@@ -104,11 +96,11 @@ const LegalNoticeInline: React.FC<LegalNoticeInlineProps> = ({
         <a
           style={linkStyle}
           onClick={() => handleLinkClick(onPrivacyClick, "/privacy")}
-          onMouseEnter={(e) => {
+          onMouseEnter={e => {
             e.currentTarget.style.opacity = "0.8";
             e.currentTarget.style.textDecoration = "underline";
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={e => {
             e.currentTarget.style.opacity = "1";
             e.currentTarget.style.textDecoration = "none";
           }}
@@ -121,11 +113,11 @@ const LegalNoticeInline: React.FC<LegalNoticeInlineProps> = ({
         <a
           style={linkStyle}
           onClick={() => handleLinkClick(onTermsClick, "/terms")}
-          onMouseEnter={(e) => {
+          onMouseEnter={e => {
             e.currentTarget.style.opacity = "0.8";
             e.currentTarget.style.textDecoration = "underline";
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={e => {
             e.currentTarget.style.opacity = "1";
             e.currentTarget.style.textDecoration = "none";
           }}

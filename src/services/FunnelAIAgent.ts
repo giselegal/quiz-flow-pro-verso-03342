@@ -1,4 +1,4 @@
-import { generateSemanticId } from "../utils/semanticIdGenerator";
+import { generateSemanticId } from "@/utils/semanticIdGenerator";
 
 export interface FunnelTemplate {
   meta: {
@@ -69,10 +69,7 @@ export interface AgentStep {
   id: string;
   name: string;
   description: string;
-  processor: (
-    template: FunnelTemplate,
-    progress: (p: number) => void
-  ) => Promise<any>;
+  processor: (template: FunnelTemplate, progress: (p: number) => void) => Promise<any>;
 }
 
 export class FunnelAIAgent {
@@ -113,8 +110,7 @@ export class FunnelAIAgent {
       {
         id: "questions",
         name: "Configurando Perguntas Principais",
-        description:
-          "Criando grids de opções com imagens e validação multiselect...",
+        description: "Criando grids de opções com imagens e validação multiselect...",
         processor: this.createQuestionsSteps.bind(this),
       },
       {
@@ -194,7 +190,7 @@ export class FunnelAIAgent {
       try {
         this.onStepUpdate?.(step.id, "processing", 0);
 
-        const result = await step.processor(template, (progress) => {
+        const result = await step.processor(template, progress => {
           this.onStepUpdate?.(step.id, "processing", progress);
         });
 
@@ -302,23 +298,14 @@ export class FunnelAIAgent {
     await this.delay(500);
 
     const introStep = {
-      id: generateSemanticId({
-        context: "step",
-        type: "intro",
-        identifier: "intro-page",
-      }),
+      id: generateSemanticId({ context: "step", type: "intro", identifier: "intro-page" }),
       type: "intro",
       order: 1,
       content: {
-        title:
-          template.steps.find((s) => s.type === "intro")?.title ||
-          "Bem-vindo ao Quiz",
-        subtitle:
-          template.steps.find((s) => s.type === "intro")?.descriptionTop || "",
-        description:
-          template.steps.find((s) => s.type === "intro")?.descriptionBottom ||
-          "",
-        image: template.steps.find((s) => s.type === "intro")?.imageIntro || "",
+        title: template.steps.find(s => s.type === "intro")?.title || "Bem-vindo ao Quiz",
+        subtitle: template.steps.find(s => s.type === "intro")?.descriptionTop || "",
+        description: template.steps.find(s => s.type === "intro")?.descriptionBottom || "",
+        image: template.steps.find(s => s.type === "intro")?.imageIntro || "",
         inputConfig: {
           type: "text",
           label: "Nome *",
@@ -355,7 +342,7 @@ export class FunnelAIAgent {
     await this.delay(600);
 
     // Simula criação de múltiplas perguntas
-    const questionsData = template.steps.find((s) => s.type === "questions");
+    const questionsData = template.steps.find(s => s.type === "questions");
     const questionSteps = [];
 
     if (questionsData?.questions) {
@@ -410,7 +397,7 @@ export class FunnelAIAgent {
     await this.delay(400);
 
     const transitions = template.steps.filter(
-      (s) => s.type.includes("Transition") || s.type.includes("transition")
+      s => s.type.includes("Transition") || s.type.includes("transition")
     );
     const transitionSteps = transitions.map((transition, index) => ({
       id: generateSemanticId({
@@ -452,9 +439,7 @@ export class FunnelAIAgent {
     progress(20);
     await this.delay(700);
 
-    const strategicData = template.steps.find(
-      (s) => s.type === "strategicQuestions"
-    );
+    const strategicData = template.steps.find(s => s.type === "strategicQuestions");
     const strategicSteps = [];
 
     if (strategicData?.questions) {
@@ -508,14 +493,10 @@ export class FunnelAIAgent {
     progress(30);
     await this.delay(500);
 
-    const resultData = template.steps.find((s) => s.type === "result");
+    const resultData = template.steps.find(s => s.type === "result");
 
     const resultStep = {
-      id: generateSemanticId({
-        context: "step",
-        type: "result",
-        identifier: "result-page",
-      }),
+      id: generateSemanticId({ context: "step", type: "result", identifier: "result-page" }),
       type: "result",
       order: 21,
       content: {
@@ -692,7 +673,7 @@ export class FunnelAIAgent {
   }
 
   private async delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private saveFunnelToStorage(funnelId: string, funnelData: any): void {

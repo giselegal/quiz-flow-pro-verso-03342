@@ -10,9 +10,7 @@
 export const injectCriticalCSS = (css: string, id = "critical") => {
   if (typeof document !== "undefined") {
     // Verificar se já existe um estilo com este ID
-    const existingStyle = document.querySelector(
-      `style[data-critical-id="${id}"]`
-    );
+    const existingStyle = document.querySelector(`style[data-critical-id="${id}"]`);
     if (existingStyle) {
       existingStyle.textContent = css;
       return;
@@ -42,7 +40,7 @@ export const removeCriticalCSS = (id?: string) => {
       : 'style[data-critical="true"]';
 
     const criticalStyles = document.querySelectorAll(selector);
-    criticalStyles.forEach((style) => {
+    criticalStyles.forEach(style => {
       style.remove();
       if (process.env.NODE_ENV !== "production") {
         console.log(`Critical CSS ${id ? `"${id}"` : ""} removed`);

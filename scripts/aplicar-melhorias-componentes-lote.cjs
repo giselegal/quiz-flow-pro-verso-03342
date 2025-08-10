@@ -205,7 +205,7 @@ console.log("🚀 Iniciando aplicação de melhorias em lote nos componentes...\
 let successCount = 0;
 let totalCount = componentsToUpdate.length;
 
-componentsToUpdate.forEach((componentName) => {
+componentsToUpdate.forEach(componentName => {
   if (updateComponent(componentName)) {
     successCount++;
   }
@@ -213,9 +213,7 @@ componentsToUpdate.forEach((componentName) => {
 
 console.log(`\n📊 Resumo:`);
 console.log(`✅ Componentes atualizados: ${successCount}/${totalCount}`);
-console.log(
-  `❌ Componentes com erro: ${totalCount - successCount}/${totalCount}`
-);
+console.log(`❌ Componentes com erro: ${totalCount - successCount}/${totalCount}`);
 
 if (successCount === totalCount) {
   console.log("\n🎉 Todas as melhorias foram aplicadas com sucesso!");

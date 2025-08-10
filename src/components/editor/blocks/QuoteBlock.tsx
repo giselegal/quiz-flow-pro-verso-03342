@@ -2,7 +2,7 @@
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { Quote } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -98,7 +91,7 @@ const QuoteBlock: React.FC<BlockComponentProps> = ({
         "
       </blockquote>
       {author && (
-        <p style={{ color: "#6B4F43" }}>
+        <p style={{ color: '#6B4F43' }}>
           -{" "}
           <InlineEditableText
             value={author}

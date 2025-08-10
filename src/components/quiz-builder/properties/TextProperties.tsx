@@ -1,18 +1,15 @@
 import React from "react";
-import { QuizComponentData } from "../../../types/quizBuilder";
-import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
-import { Input } from "../../../components/ui/input";
+import { QuizComponentData } from "@/types/quizBuilder";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 interface TextPropertiesProps {
   component: QuizComponentData;
   onUpdate: (id: string, data: any) => void;
 }
 
-export const TextProperties: React.FC<TextPropertiesProps> = ({
-  component,
-  onUpdate,
-}) => {
+export const TextProperties: React.FC<TextPropertiesProps> = ({ component, onUpdate }) => {
   const data = component.data || {};
 
   const handleUpdate = (field: string, value: any) => {
@@ -29,7 +26,7 @@ export const TextProperties: React.FC<TextPropertiesProps> = ({
         <Textarea
           id="text"
           value={data.text || ""}
-          onChange={(e) => handleUpdate("text", e.target.value)}
+          onChange={e => handleUpdate("text", e.target.value)}
           placeholder="Digite o texto"
           rows={4}
         />
@@ -41,7 +38,7 @@ export const TextProperties: React.FC<TextPropertiesProps> = ({
           id="textColor"
           type="color"
           value={data.textColor || "#000000"}
-          onChange={(e) => handleUpdate("textColor", e.target.value)}
+          onChange={e => handleUpdate("textColor", e.target.value)}
         />
       </div>
 
@@ -50,7 +47,7 @@ export const TextProperties: React.FC<TextPropertiesProps> = ({
         <Input
           id="fontSize"
           value={data.fontSize || "16"}
-          onChange={(e) => handleUpdate("fontSize", e.target.value)}
+          onChange={e => handleUpdate("fontSize", e.target.value)}
           placeholder="Tamanho em px"
         />
       </div>

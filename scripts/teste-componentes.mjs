@@ -2,10 +2,7 @@
 console.log("🧪 TESTE: Iniciando verificação do sistema");
 
 // Verificar se todos os componentes estão registrados
-import {
-  ENHANCED_BLOCK_REGISTRY,
-  getBlockComponent,
-} from "./src/config/enhancedBlockRegistry.ts";
+import { ENHANCED_BLOCK_REGISTRY, getBlockComponent } from "./src/config/enhancedBlockRegistry.ts";
 
 const tiposStep01 = [
   "quiz-intro-header",
@@ -19,7 +16,7 @@ const tiposStep01 = [
 
 console.log("📋 Verificando componentes da Step01:");
 
-tiposStep01.forEach((tipo) => {
+tiposStep01.forEach(tipo => {
   const component = getBlockComponent(tipo);
   const status = component ? "✅" : "❌";
   console.log(`${status} ${tipo}`);

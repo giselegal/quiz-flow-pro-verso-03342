@@ -1,9 +1,9 @@
 import React from "react";
-import { QuizComponentData, QuizStage } from "../../../types/quizBuilder";
-import { ScrollArea } from "../../../components/ui/scroll-area";
-import { cn } from "../../../lib/utils";
+import { QuizComponentData, QuizStage } from "@/types/quizBuilder";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 import ComponentRenderer from "./ComponentRenderer";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 interface ComponentPreviewPanelProps {
@@ -26,9 +26,7 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
   if (!activeStage) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p style={{ color: "#8B7355" }}>
-          Selecione uma etapa para visualizar seus componentes.
-        </p>
+        <p style={{ color: '#8B7355' }}>Selecione uma etapa para visualizar seus componentes.</p>
       </div>
     );
   }
@@ -37,8 +35,8 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
 
   return (
     <div className="h-full bg-[#F9F5F1] flex flex-col">
-      <div style={{ borderColor: "#E5DDD5" }}>
-        <h3 style={{ color: "#6B4F43" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <h3 style={{ color: '#6B4F43' }}>
           Visualizando: {activeStage.title || `Etapa ${activeStage.order + 1}`}
         </h3>
       </div>
@@ -51,21 +49,16 @@ export const ComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
           )}
         >
           {sortedComponents.length === 0 ? (
-            <div style={{ borderColor: "#E5DDD5" }}>
-              <p style={{ color: "#8B7355" }}>
+            <div style={{ borderColor: '#E5DDD5' }}>
+              <p style={{ color: '#8B7355' }}>
                 Adicione componentes para esta etapa usando o painel lateral.
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {}}
-                style={{ color: "#8B7355" }}
-              >
+              <Button variant="outline" size="sm" onClick={() => {}} style={{ color: '#8B7355' }}>
                 <Plus className="w-4 h-4 mr-1" /> Adicionar Componente
               </Button>
             </div>
           ) : (
-            sortedComponents.map((component) => (
+            sortedComponents.map(component => (
               <ComponentRenderer
                 key={component.id}
                 component={component}

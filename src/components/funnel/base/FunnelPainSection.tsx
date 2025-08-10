@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface FunnelPainSectionProps {
   title?: string;
@@ -35,15 +35,15 @@ const FunnelPainSection: React.FC<FunnelPainSectionProps> = ({
       onClick={onClick}
     >
       <div className="text-center mb-8">
-        <h2 style={{ color: "#432818" }}>{title}</h2>
-        <p style={{ color: "#6B4F43" }}>{description}</p>
+        <h2 style={{ color: '#432818' }}>{title}</h2>
+        <p style={{ color: '#6B4F43' }}>{description}</p>
       </div>
 
       <div className="space-y-4 mb-8">
         {painPoints.map((point, index) => (
           <div key={index} className="flex items-start gap-3">
-            <div style={{ backgroundColor: "#FAF9F7" }} />
-            <p style={{ color: "#6B4F43" }}>{point}</p>
+            <div style={{ backgroundColor: '#FAF9F7' }} />
+            <p style={{ color: '#6B4F43' }}>{point}</p>
           </div>
         ))}
       </div>

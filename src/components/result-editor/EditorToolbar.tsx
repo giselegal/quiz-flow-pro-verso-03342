@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Save, Eye, RefreshCw, Palette } from "lucide-react";
 import { JsonConfigEditor } from "./JsonConfigEditor";
 
@@ -28,11 +28,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
       <div className="flex items-center gap-2">
         {onShowTemplates && (
-          <Button
-            variant="outline"
-            onClick={onShowTemplates}
-            className="text-[#8F7A6A]"
-          >
+          <Button variant="outline" onClick={onShowTemplates} className="text-[#8F7A6A]">
             Modelos de Página
           </Button>
         )}
@@ -47,17 +43,14 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
         </Button>
 
         {resultPageConfig && onUpdateConfig && (
-          <JsonConfigEditor
-            config={resultPageConfig}
-            onUpdate={onUpdateConfig}
-          />
+          <JsonConfigEditor config={resultPageConfig} onUpdate={onUpdateConfig} />
         )}
 
         <Button
           variant="outline"
           size="sm"
           onClick={onReset}
-          style={{ color: "#6B4F43" }}
+          style={{ color: '#6B4F43' }}
         >
           <RefreshCw className="w-4 h-4 mr-2" />
           Resetar

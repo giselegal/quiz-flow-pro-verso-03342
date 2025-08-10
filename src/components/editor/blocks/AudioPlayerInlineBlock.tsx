@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
@@ -11,7 +11,7 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "../../../utils/inlineComponentUtils";
+} from "@/utils/inlineComponentUtils";
 import {
   Play,
   Pause,
@@ -48,14 +48,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -148,7 +141,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
         audioRef.current.pause();
       } else {
         audioRef.current.play();
-        setPlayCount((prev) => prev + 1);
+        setPlayCount(prev => prev + 1);
 
         // Track play event
         if (trackingEnabled) {
@@ -218,19 +211,13 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   const playerStyleClasses = {
-    modern:
-      "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl shadow-lg",
+    modern: "bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl shadow-lg",
     minimal: "bg-white border border-gray-200 rounded-lg",
     dark: "bg-gray-900 text-white rounded-lg border border-gray-700",
     elegant: "bg-white rounded-2xl shadow-2xl border border-gray-100",
   };
 
-  const personalizedTitle = getPersonalizedText(
-    title,
-    title,
-    username,
-    useUsername
-  );
+  const personalizedTitle = getPersonalizedText(title, title, username, useUsername);
 
   return (
     <InlineBaseWrapper
@@ -330,7 +317,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   {showTitle && (
                     <InlineEditableText
                       value={personalizedTitle}
-                      onChange={(value) => handlePropertyChange("title", value)}
+                      onChange={value => handlePropertyChange("title", value)}
                       placeholder="Título do áudio..."
                       fontSize="lg"
                       fontWeight="semibold"
@@ -345,9 +332,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   {showArtist && (
                     <InlineEditableText
                       value={artist}
-                      onChange={(value) =>
-                        handlePropertyChange("artist", value)
-                      }
+                      onChange={value => handlePropertyChange("artist", value)}
                       placeholder="Nome do artista..."
                       fontSize="sm"
                       className={
@@ -361,9 +346,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   {showDescription && (
                     <InlineEditableText
                       value={description}
-                      onChange={(value) =>
-                        handlePropertyChange("description", value)
-                      }
+                      onChange={value => handlePropertyChange("description", value)}
                       placeholder="Descrição do áudio..."
                       fontSize="xs"
                       className={
@@ -525,7 +508,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Stats (Editor Mode) */}
         {isSelected && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <span>Style: {playerStyle}</span>
             <span>•</span>
             <span>Duration: {formatTime(duration)}</span>

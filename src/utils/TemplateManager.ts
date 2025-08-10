@@ -1,5 +1,6 @@
 // Update the import path below to the correct relative path if needed
 import type { Block } from "../types/editor";
+import { TemplateJsonLoader } from "./TemplateJsonLoader";
 
 /**
  * Mapeamento de etapas para templates JSON
@@ -46,32 +47,15 @@ export class TemplateManager {
       }
 
       // Busca template path
-      const templatePath =
-        TEMPLATE_MAPPING[stepId as keyof typeof TEMPLATE_MAPPING];
+      const templatePath = TEMPLATE_MAPPING[stepId as keyof typeof TEMPLATE_MAPPING];
       if (!templatePath) {
         console.warn(`⚠️ Template não encontrado para etapa: ${stepId}`);
         return this.getFallbackBlocks(stepId);
       }
 
-      // Retorna blocos padrão para o stepId
-      console.log(
-        `🔄 Gerando blocos padrão para ${stepId} (TemplateJsonLoader removido)`
-      );
-
-      // Gera blocos básicos padrão
-      const blocks: Block[] = [
-        {
-          id: `${stepId}-default`,
-          type: "text-inline",
-          content: {
-            text: `Conteúdo padrão para ${stepId}`,
-          },
-          order: 0,
-          properties: {
-            className: "text-center",
-          },
-        },
-      ];
+      // Carrega template JSON
+      console.log(`🔄 Carregando template JSON para ${stepId}: ${templatePath}`);
+      const blocks = await TemplateJsonLoader.loadTemplateAsBlocks(templatePath, stepId);
 
       // Armazena no cache
       this.cache.set(stepId, blocks);
@@ -159,7 +143,7 @@ export class TemplateManager {
 
     console.log("🚀 Pre-carregando templates comuns...");
 
-    const promises = commonSteps.map(async (stepId) => {
+    const promises = commonSteps.map(async stepId => {
       try {
         await this.loadStepBlocks(stepId);
       } catch (error) {
@@ -176,6 +160,7 @@ export class TemplateManager {
    */
   static async reloadTemplate(stepId: string): Promise<Block[]> {
     this.cache.delete(stepId);
+    TemplateJsonLoader.clearCache();
     return this.loadStepBlocks(stepId);
   }
 
@@ -198,6 +183,7 @@ export class TemplateManager {
    */
   static clearCache(): void {
     this.cache.clear();
+    TemplateJsonLoader.clearCache();
   }
 }
 

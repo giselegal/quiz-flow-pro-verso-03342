@@ -15,21 +15,19 @@ export function checkSiteHealth() {
   };
 
   // 1. Verificar se os scripts carregaram corretamente
-  checks.scripts =
-    typeof React !== "undefined" && typeof ReactDOM !== "undefined";
+  checks.scripts = typeof React !== "undefined" && typeof ReactDOM !== "undefined";
 
   // 2. Verificar se as imagens estão carregando corretamente
   const images = document.querySelectorAll("img");
   let loadedImages = 0;
 
-  images.forEach((img) => {
+  images.forEach(img => {
     if (img.complete && img.naturalHeight !== 0) {
       loadedImages++;
     }
   });
 
-  checks.images =
-    images.length > 0 ? loadedImages / images.length >= 0.7 : true;
+  checks.images = images.length > 0 ? loadedImages / images.length >= 0.7 : true;
 
   // 3. Verificar se os estilos foram aplicados
   const body = document.body;
@@ -55,14 +53,11 @@ export function checkSiteHealth() {
     const fixedCount = window.fixBlurryIntroQuizImages();
     console.log(`✅ ${fixedCount} imagens foram otimizadas`);
   } else {
-    console.log(
-      "❌ A função de correção de imagens borradas não está disponível"
-    );
+    console.log("❌ A função de correção de imagens borradas não está disponível");
   }
 
   // Resultado final
-  const overallHealth =
-    Object.values(checks).filter(Boolean).length / Object.values(checks).length;
+  const overallHealth = Object.values(checks).filter(Boolean).length / Object.values(checks).length;
   console.log(`📋 Saúde geral do site: ${Math.round(overallHealth * 100)}%`);
 
   return {

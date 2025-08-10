@@ -1,8 +1,8 @@
 // Verificação de componentes Step01 na sidebar
 // src/test/sidebar-step01-verification.tsx
 
-import { generateBlockDefinitions } from "../config/enhancedBlockRegistry";
-import { QUIZ_CONFIGURATION } from "../config/quizConfiguration";
+import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 
 // Função para gerar blocos do quiz (simulando o que está na sidebar)
 const generateQuizBlocks = () => {
@@ -24,8 +24,7 @@ const generateQuizBlocks = () => {
   const stepBlocks = QUIZ_CONFIGURATION.steps.map((step, index) => ({
     type: `quiz-${step.type}`,
     name: `${step.title}`,
-    description:
-      step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
+    description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
     category: "Questões do Quiz",
   }));
 
@@ -52,15 +51,13 @@ export const SidebarStep01Verification = () => {
   );
 
   const step01Blocks = allBlocks.filter(
-    (block) => block.type.includes("step01") || block.type.includes("intro")
+    block => block.type.includes("step01") || block.type.includes("intro")
   );
 
   return (
     <div className="p-6 space-y-6">
       <div>
-        <h2 className="text-xl font-bold mb-4">
-          Verificação dos Componentes Step01
-        </h2>
+        <h2 className="text-xl font-bold mb-4">Verificação dos Componentes Step01</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="border rounded-lg p-4">
@@ -74,33 +71,25 @@ export const SidebarStep01Verification = () => {
           </div>
 
           <div className="border rounded-lg p-4">
-            <h3 className="font-semibold mb-2">
-              Componentes Step01 Encontrados
-            </h3>
+            <h3 className="font-semibold mb-2">Componentes Step01 Encontrados</h3>
             {step01Blocks.length > 0 ? (
               <ul className="space-y-1 text-sm">
                 {step01Blocks.map((block, index) => (
                   <li key={index} className="flex justify-between">
-                    <span className="font-mono text-blue-600">
-                      {block.type}
-                    </span>
+                    <span className="font-mono text-blue-600">{block.type}</span>
                     <span className="text-gray-600">{block.category}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-red-600">
-                ❌ Nenhum componente step01 encontrado!
-              </p>
+              <p className="text-red-600">❌ Nenhum componente step01 encontrado!</p>
             )}
           </div>
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-3">
-          Componentes por Categoria
-        </h3>
+        <h3 className="text-lg font-semibold mb-3">Componentes por Categoria</h3>
         <div className="space-y-4">
           {Object.entries(groupedBlocks).map(([category, blocks]) => (
             <div key={category} className="border rounded-lg p-4">

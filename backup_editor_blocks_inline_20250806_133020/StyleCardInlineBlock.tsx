@@ -3,11 +3,7 @@ import { cn } from "@/lib/utils";
 import { Award, Star } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import type { BlockComponentProps } from "@/types/blocks";
-import {
-  safeGetBlockProperties,
-  isValidBlock,
-  logBlockDebug,
-} from "@/utils/blockUtils";
+import { safeGetBlockProperties, isValidBlock, logBlockDebug } from "@/utils/blockUtils";
 
 /**
  * StyleCardInlineBlock - Componente modular inline horizontal
@@ -24,11 +20,7 @@ const StyleCardInlineBlock: React.FC<BlockComponentProps> = ({
   // 🛡️ Validação e logging de debug
   if (!isValidBlock(block)) {
     console.error("❌ StyleCardInlineBlock: Bloco inválido recebido", block);
-    return (
-      <div className="p-2 bg-red-100 text-red-600 text-xs rounded">
-        Erro: Bloco inválido
-      </div>
-    );
+    return <div className="p-2 bg-red-100 text-red-600 text-xs rounded">Erro: Bloco inválido</div>;
   }
 
   logBlockDebug("StyleCardInlineBlock", block);
@@ -83,8 +75,7 @@ const StyleCardInlineBlock: React.FC<BlockComponentProps> = ({
         className
       )}
       style={{
-        backgroundColor:
-          backgroundColor === "white" ? undefined : backgroundColor,
+        backgroundColor: backgroundColor === "white" ? undefined : backgroundColor,
         borderColor: borderColor,
       }}
       onClick={onClick}
@@ -93,12 +84,7 @@ const StyleCardInlineBlock: React.FC<BlockComponentProps> = ({
       <div className="text-center mb-3 sm:mb-4">
         {/* Ícone responsivo */}
         <div className="inline-flex items-center justify-center bg-gradient-to-br from-[#B89B7A] to-[#A1835D] rounded-full mb-2 sm:mb-3 p-2 sm:p-3">
-          <Award
-            className={cn(
-              "text-white",
-              iconSizes[cardSize as keyof typeof iconSizes]
-            )}
-          />
+          <Award className={cn("text-white", iconSizes[cardSize as keyof typeof iconSizes])} />
         </div>
 
         {/* Título responsivo */}
@@ -112,9 +98,7 @@ const StyleCardInlineBlock: React.FC<BlockComponentProps> = ({
         </h3>
 
         {/* Descrição responsiva */}
-        <p className="text-[#5D4A3A] text-xs sm:text-sm leading-relaxed">
-          {description}
-        </p>
+        <p className="text-[#5D4A3A] text-xs sm:text-sm leading-relaxed">{description}</p>
       </div>
 
       {/* Progress modular e responsivo */}
@@ -138,7 +122,7 @@ const StyleCardInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Stars responsivas */}
       {showStars && (
         <div className="flex justify-center space-x-0.5 sm:space-x-1">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {[1, 2, 3, 4, 5].map(star => (
             <Star
               key={star}
               className={cn(

@@ -1,5 +1,5 @@
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps, BlockData } from "../../../types/blocks";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps, BlockData } from "@/types/blocks";
 import React from "react";
 
 interface Props extends BlockComponentProps {
@@ -17,14 +17,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -118,16 +111,12 @@ const LoadingAnimationBlock: React.FC<Props> = ({
 
   const renderDots = () => (
     <div className="flex space-x-1">
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2].map(i => (
         <div
           key={i}
           className={cn(
             "rounded-full animate-pulse",
-            size === "small"
-              ? "w-2 h-2"
-              : size === "large"
-                ? "w-4 h-4"
-                : "w-3 h-3"
+            size === "small" ? "w-2 h-2" : size === "large" ? "w-4 h-4" : "w-3 h-3"
           )}
           style={{
             backgroundColor: color,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,37 +16,33 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../components/ui/dialog";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Textarea } from "../../components/ui/textarea";
-import { TemplateListItem } from "../../types/quizTemplate";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { TemplateListItem } from "@/types/quizTemplate";
 import {
   getAllTemplates,
   createTemplate,
   duplicateTemplate,
   deleteTemplate,
-} from "../../services/templates/templateService";
+} from "@/services/templates/templateService";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Plus, Copy, Trash2, Edit, Check, X } from "lucide-react";
-import { toast } from "../../components/ui/use-toast";
-import { styleQuizTemplate } from "../../services/templates/styleQuizTemplate";
+import { toast } from "@/components/ui/use-toast";
+import { styleQuizTemplate } from "@/services/templates/styleQuizTemplate";
 
 interface TemplateSelectorProps {
   onSelectTemplate: (templateId: string) => void;
 }
 
-const TemplateSelector: React.FC<TemplateSelectorProps> = ({
-  onSelectTemplate,
-}) => {
+const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate }) => {
   const [templates, setTemplates] = useState<TemplateListItem[]>([]);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newTemplateName, setNewTemplateName] = useState("");
   const [newTemplateDescription, setNewTemplateDescription] = useState("");
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState<string | null>(
-    null
-  );
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState<string | null>(null);
 
   // Carregar templates ao iniciar
   useEffect(() => {
@@ -152,9 +148,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-playfair text-[#432818]">
-          Selecione um Template
-        </h2>
+        <h2 className="text-2xl font-playfair text-[#432818]">Selecione um Template</h2>
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
@@ -177,7 +171,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 <Input
                   id="name"
                   value={newTemplateName}
-                  onChange={(e) => setNewTemplateName(e.target.value)}
+                  onChange={e => setNewTemplateName(e.target.value)}
                   placeholder="Ex: Quiz de Estilo Pessoal"
                 />
               </div>
@@ -187,7 +181,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                 <Textarea
                   id="description"
                   value={newTemplateDescription}
-                  onChange={(e) => setNewTemplateDescription(e.target.value)}
+                  onChange={e => setNewTemplateDescription(e.target.value)}
                   placeholder="Uma breve descrição sobre este template..."
                   rows={3}
                 />
@@ -195,16 +189,10 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
             </div>
 
             <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setIsCreateDialogOpen(false)}
-              >
+              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                 Cancelar
               </Button>
-              <Button
-                className="bg-[#B89B7A] hover:bg-[#A38A69]"
-                onClick={handleCreateTemplate}
-              >
+              <Button className="bg-[#B89B7A] hover:bg-[#A38A69]" onClick={handleCreateTemplate}>
                 Criar Template
               </Button>
             </DialogFooter>
@@ -213,15 +201,10 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {templates.map((template) => (
-          <Card
-            key={template.id}
-            className="overflow-hidden border border-[#B89B7A]/20"
-          >
+        {templates.map(template => (
+          <Card key={template.id} className="overflow-hidden border border-[#B89B7A]/20">
             <CardHeader className="bg-[#FAF9F7]">
-              <CardTitle className="font-playfair text-[#432818]">
-                {template.name}
-              </CardTitle>
+              <CardTitle className="font-playfair text-[#432818]">{template.name}</CardTitle>
               <CardDescription className="line-clamp-2">
                 {template.description || "Sem descrição"}
               </CardDescription>
@@ -279,7 +262,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
                     size="sm"
                     variant="ghost"
                     onClick={() => setIsDeleteConfirmOpen(template.id)}
-                    style={{ color: "#432818" }}
+                    style={{ color: '#432818' }}
                   >
                     <Trash2 className="w-4 h-4 mr-1" />
                     Excluir

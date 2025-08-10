@@ -37,22 +37,19 @@ const requiredComponents = [
 // Caminhos dos arquivos de componentes
 const componentPaths = {
   "quiz-intro-header": "src/components/editor/blocks/QuizIntroHeaderBlock.tsx",
-  "decorative-bar-inline":
-    "src/components/editor/blocks/DecorativeBarInlineBlock.tsx",
+  "decorative-bar-inline": "src/components/editor/blocks/DecorativeBarInlineBlock.tsx",
   "text-inline": "src/components/editor/blocks/TextInlineBlock.tsx",
-  "image-display-inline":
-    "src/components/editor/blocks/inline/ImageDisplayInlineBlock.tsx",
+  "image-display-inline": "src/components/editor/blocks/inline/ImageDisplayInlineBlock.tsx",
   "form-input": "src/components/editor/blocks/FormInputBlock.tsx",
   "button-inline": "src/components/editor/blocks/ButtonInlineBlock.tsx",
-  "legal-notice-inline":
-    "src/components/editor/blocks/LegalNoticeInlineBlock.tsx",
+  "legal-notice-inline": "src/components/editor/blocks/LegalNoticeInlineBlock.tsx",
 };
 
 console.log("📂 Verificando arquivos de componentes...\n");
 
 let allComponentsExist = true;
 
-requiredComponents.forEach((componentType) => {
+requiredComponents.forEach(componentType => {
   const filePath = componentPaths[componentType];
   const fullPath = path.join(process.cwd(), filePath);
 
@@ -71,23 +68,16 @@ const registryPath = path.join(
   process.cwd(),
   "src/components/editor/blocks/EnhancedBlockRegistry.tsx"
 );
-const configRegistryPath = path.join(
-  process.cwd(),
-  "src/config/enhancedBlockRegistry.ts"
-);
+const configRegistryPath = path.join(process.cwd(), "src/config/enhancedBlockRegistry.ts");
 
 if (fs.existsSync(registryPath)) {
   const registryContent = fs.readFileSync(registryPath, "utf8");
 
-  requiredComponents.forEach((componentType) => {
+  requiredComponents.forEach(componentType => {
     if (registryContent.includes(`'${componentType}':`)) {
-      console.log(
-        `✅ ${componentType}: Registrado em EnhancedBlockRegistry.tsx`
-      );
+      console.log(`✅ ${componentType}: Registrado em EnhancedBlockRegistry.tsx`);
     } else {
-      console.log(
-        `⚠️  ${componentType}: NÃO registrado em EnhancedBlockRegistry.tsx`
-      );
+      console.log(`⚠️  ${componentType}: NÃO registrado em EnhancedBlockRegistry.tsx`);
     }
   });
 } else {
@@ -99,15 +89,11 @@ console.log("\n📋 Verificando definições de componentes...\n");
 if (fs.existsSync(configRegistryPath)) {
   const configContent = fs.readFileSync(configRegistryPath, "utf8");
 
-  requiredComponents.forEach((componentType) => {
+  requiredComponents.forEach(componentType => {
     if (configContent.includes(`"${componentType}"`)) {
-      console.log(
-        `✅ ${componentType}: Definição encontrada em enhancedBlockRegistry.ts`
-      );
+      console.log(`✅ ${componentType}: Definição encontrada em enhancedBlockRegistry.ts`);
     } else {
-      console.log(
-        `⚠️  ${componentType}: NÃO definido em enhancedBlockRegistry.ts`
-      );
+      console.log(`⚠️  ${componentType}: NÃO definido em enhancedBlockRegistry.ts`);
     }
   });
 } else {
@@ -128,7 +114,7 @@ const etapa1Structure = [
   "8. legal-notice-inline (Aviso legal)",
 ];
 
-etapa1Structure.forEach((item) => {
+etapa1Structure.forEach(item => {
   console.log(`📝 ${item}`);
 });
 
@@ -136,9 +122,8 @@ console.log("\n📊 RESUMO:");
 console.log("==========");
 console.log(
   `✅ Componentes encontrados: ${
-    requiredComponents.filter((type) =>
-      fs.existsSync(path.join(process.cwd(), componentPaths[type]))
-    ).length
+    requiredComponents.filter(type => fs.existsSync(path.join(process.cwd(), componentPaths[type])))
+      .length
   }/${requiredComponents.length}`
 );
 
@@ -149,9 +134,7 @@ if (allComponentsExist) {
   console.log('   2. Carregar a Etapa 1 via botão "Carregar Etapa 1"');
   console.log("   3. Verificar renderização e propriedades");
 } else {
-  console.log(
-    "⚠️  Alguns componentes estão faltando. Verifique os arquivos acima."
-  );
+  console.log("⚠️  Alguns componentes estão faltando. Verifique os arquivos acima.");
 }
 
 console.log("\n✨ Teste concluído!");

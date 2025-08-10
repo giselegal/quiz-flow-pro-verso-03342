@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface QuizOptionBlockProps {
   block: {
@@ -17,11 +17,7 @@ interface QuizOptionBlockProps {
  * - Renderização visual simples de uma opção do quiz para o editor
  * - Sem lógica de seleção/resposta (somente preview no editor)
  */
-const QuizOptionBlock: React.FC<QuizOptionBlockProps> = ({
-  block,
-  isSelected,
-  onClick,
-}) => {
+const QuizOptionBlock: React.FC<QuizOptionBlockProps> = ({ block, isSelected, onClick }) => {
   const props = block?.properties || {};
 
   const label: string = props.label || props.text || "Opção";
@@ -53,23 +49,13 @@ const QuizOptionBlock: React.FC<QuizOptionBlockProps> = ({
   };
 
   return (
-    <div
-      className={baseClasses}
-      style={style}
-      onClick={onClick}
-      data-block-type="quiz-option"
-    >
+    <div className={baseClasses} style={style} onClick={onClick} data-block-type="quiz-option">
       <div className="flex items-center gap-3">
-        <div
-          className="w-5 h-5 rounded-full border border-stone-300 bg-white"
-          aria-hidden
-        />
+        <div className="w-5 h-5 rounded-full border border-stone-300 bg-white" aria-hidden />
         <div className="flex-1">
           <div className={cn("font-medium")}>{label}</div>
           {props.description && (
-            <div className="text-sm text-stone-500 mt-0.5">
-              {props.description}
-            </div>
+            <div className="text-sm text-stone-500 mt-0.5">{props.description}</div>
           )}
         </div>
       </div>

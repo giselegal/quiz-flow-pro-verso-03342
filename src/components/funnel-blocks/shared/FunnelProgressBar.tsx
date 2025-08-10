@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface FunnelProgressBarProps {
   currentStep: number;
@@ -40,7 +40,7 @@ const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
   return (
     <div className={cn("w-full", className)}>
       {/* Barra principal */}
-      <div style={{ backgroundColor: "#E5DDD5" }}>
+      <div style={{ backgroundColor: '#E5DDD5' }}>
         <div
           className={cn(
             "bg-current rounded-full",
@@ -56,7 +56,7 @@ const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
 
       {/* Labels e porcentagem */}
       {(showLabels || showPercentage) && (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           {showLabels && (
             <div className="flex justify-between w-full">
               <span>Etapa {currentStep}</span>

@@ -11,10 +11,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const MyComponent: React.FC<{ title: string; onClick: () => void }> = ({
-  title,
-  onClick,
-}) => {
+const MyComponent: React.FC<{ title: string; onClick: () => void }> = ({ title, onClick }) => {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     console.log("Component mounted");
@@ -22,9 +19,7 @@ const MyComponent: React.FC<{ title: string; onClick: () => void }> = ({
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-center text-lg font-semibold">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-center text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <Button
@@ -60,9 +55,7 @@ const MyComponent: React.FC<{
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle className="text-center text-lg font-semibold">
-          {title}
-        </CardTitle>
+        <CardTitle className="text-center text-lg font-semibold">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <Button
@@ -105,10 +98,7 @@ const MyComponent: React.FC<{
 
 ```json
 {
-  "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@trivago/prettier-plugin-sort-imports"
-  ],
+  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
   "importOrder": ["^react(.*)$", "^@/(.*)$", "^[./]"],
   "importOrderSeparation": true
 }

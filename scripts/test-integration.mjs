@@ -23,9 +23,7 @@ const checkUniversalRenderer = () => {
 
   console.log(`✅ Usa getEnhancedComponent: ${usesRegistry ? "SIM" : "NÃO"}`);
   console.log(`✅ Import do registry: ${hasImport ? "SIM" : "NÃO"}`);
-  console.log(
-    `✅ Removeu imports antigos: ${removedOldImports ? "SIM" : "NÃO"}`
-  );
+  console.log(`✅ Removeu imports antigos: ${removedOldImports ? "SIM" : "NÃO"}`);
 
   return usesRegistry && hasImport && removedOldImports;
 };
@@ -52,8 +50,7 @@ const checkEditorFixed = () => {
 const checkOldFiles = () => {
   console.log("\n📝 Verificando arquivos antigos...");
 
-  const oldRegistryPath =
-    "./src/components/editor/blocks/EnhancedBlockRegistry.tsx";
+  const oldRegistryPath = "./src/components/editor/blocks/EnhancedBlockRegistry.tsx";
   const oldRegistryExists = fs.existsSync(oldRegistryPath);
 
   if (oldRegistryExists) {
@@ -76,9 +73,7 @@ const main = () => {
     const noOldFiles = checkOldFiles();
 
     console.log("\n📊 RESUMO DA INTEGRAÇÃO:");
-    console.log(
-      `🎯 UniversalBlockRenderer atualizado: ${rendererOk ? "SIM" : "NÃO"}`
-    );
+    console.log(`🎯 UniversalBlockRenderer atualizado: ${rendererOk ? "SIM" : "NÃO"}`);
     console.log(`🎯 Editor-fixed atualizado: ${editorOk ? "SIM" : "NÃO"}`);
     console.log(`🎯 Sem arquivos conflitantes: ${noOldFiles ? "SIM" : "NÃO"}`);
 

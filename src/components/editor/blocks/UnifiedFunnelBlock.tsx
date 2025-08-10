@@ -1,7 +1,7 @@
 import React from "react";
-import FunnelHeroSection from "../../../components/funnel/base/FunnelHeroSection";
-import FunnelPainSection from "../../../components/funnel/base/FunnelPainSection";
-import type { BlockComponentProps } from "../../../types/blocks";
+import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
+import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * UnifiedFunnelBlock - Wrapper que usa componentes base do funil real
@@ -25,14 +25,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,9 +73,9 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Configuração do bloco inválida</p>
-        <p style={{ color: "#432818" }}>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>
+        <p style={{ color: '#432818' }}>
           O componente precisa de um objeto 'block' com 'properties' válidas.
         </p>
       </div>
@@ -95,9 +88,7 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
       return (
         <FunnelHeroSection
           title={block.properties.title || "Título do Hero"}
-          description={
-            block.properties.description || "Descrição do hero section"
-          }
+          description={block.properties.description || "Descrição do hero section"}
           ctaText={block.properties.ctaText || "Call to Action"}
           {...block.properties}
           isSelected={isSelected}
@@ -121,9 +112,7 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
     default:
       return (
         <div className="p-4 border-2 border-stone-300 bg-stone-50 rounded-lg">
-          <p className="text-stone-600 font-medium">
-            Tipo de bloco não suportado: {block.type}
-          </p>
+          <p className="text-stone-600 font-medium">Tipo de bloco não suportado: {block.type}</p>
           <p className="text-sm text-yellow-500 mt-1">
             Adicione o suporte para este tipo no UnifiedFunnelBlock.
           </p>

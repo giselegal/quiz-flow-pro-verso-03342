@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ResultPageConfig } from "../types/resultPageConfig";
+import { ResultPageConfig } from "@/types/resultPageConfig";
 
 interface UseQuizResultConfigReturn {
   config: ResultPageConfig;
@@ -8,9 +8,7 @@ interface UseQuizResultConfigReturn {
   resetConfig: () => void;
 }
 
-export const useQuizResultConfig = (
-  category: string
-): UseQuizResultConfigReturn => {
+export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn => {
   const [config, setConfig] = useState<ResultPageConfig>({
     styleType: category,
     header: {
@@ -66,7 +64,7 @@ export const useQuizResultConfig = (
   });
 
   const updateConfig = useCallback((section: string, data: any) => {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       [section]: data,
     }));
@@ -74,10 +72,7 @@ export const useQuizResultConfig = (
 
   const saveConfig = useCallback(async (): Promise<boolean> => {
     try {
-      localStorage.setItem(
-        `quiz_result_config_${category}`,
-        JSON.stringify(config)
-      );
+      localStorage.setItem(`quiz_result_config_${category}`, JSON.stringify(config));
       return true;
     } catch (error) {
       console.error("Error saving config:", error);

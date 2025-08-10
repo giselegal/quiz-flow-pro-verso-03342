@@ -1,5 +1,5 @@
 import React from "react";
-import FileLoadingScreen from "../components/loaders/FileLoadingScreen";
+import FileLoadingScreen from "@/components/loaders/FileLoadingScreen";
 
 const AccessLoaderPage: React.FC = () => {
   const handleFileLoaded = () => {
@@ -12,11 +12,7 @@ const AccessLoaderPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <FileLoadingScreen
-        fileUrl="/admin"
-        onFileLoaded={handleFileLoaded}
-        onError={handleError}
-      />
+      <FileLoadingScreen fileUrl="/admin" onFileLoaded={handleFileLoaded} onError={handleError} />
     </div>
   );
 };

@@ -1,23 +1,23 @@
 "use client";
 
 import React, { lazy, Suspense, useState, useEffect } from "react";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { useToast } from "../../components/ui/use-toast";
-import { LoadingSpinner } from "../../components/ui/loading-spinner";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/components/ui/use-toast";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../../components/ui/carousel";
+} from "@/components/ui/carousel";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "../../components/ui/accordion";
+} from "@/components/ui/accordion";
 import {
   ShoppingCart,
   Heart,
@@ -30,7 +30,7 @@ import {
   Gift,
   Zap,
 } from "lucide-react";
-import { trackButtonClick } from "../../utils/analytics";
+import { trackButtonClick } from "@/utils/analytics";
 
 // Types
 interface StyleResult {
@@ -64,9 +64,7 @@ const getStyleDescription = (styleType: string): string => {
 };
 
 // Lazy load componentes menos críticos
-const Testimonials = lazy(
-  () => import("../../components/quiz-result/sales/Testimonials")
-);
+const Testimonials = lazy(() => import("@/components/quiz-result/sales/Testimonials"));
 
 interface ImprovedQuizResultSalesPageProps {
   primaryStyle: StyleResult;
@@ -74,15 +72,15 @@ interface ImprovedQuizResultSalesPageProps {
   userName?: string;
 }
 
-const ImprovedQuizResultSalesPage: React.FC<
-  ImprovedQuizResultSalesPageProps
-> = ({ primaryStyle, secondaryStyles, userName = "Visitante" }) => {
+const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = ({
+  primaryStyle,
+  secondaryStyles,
+  userName = "Visitante",
+}) => {
   const { toast } = useToast();
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [criticalImagesLoaded, setCriticalImagesLoaded] = useState(false);
-  const [activePaymentTab, setActivePaymentTab] = useState<
-    "parcelado" | "avista"
-  >("parcelado");
+  const [activePaymentTab, setActivePaymentTab] = useState<"parcelado" | "avista">("parcelado");
 
   // Pré-carregar imagens críticas
   useEffect(() => {
@@ -93,7 +91,7 @@ const ImprovedQuizResultSalesPage: React.FC<
     let loadedCount = 0;
     const totalImages = criticalImages.length;
 
-    criticalImages.forEach((src) => {
+    criticalImages.forEach(src => {
       const img = new Image();
       img.src = src;
       img.onload = () => {
@@ -125,8 +123,7 @@ const ImprovedQuizResultSalesPage: React.FC<
     });
 
     // URL do checkout
-    window.location.href =
-      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
   };
 
   // Loading state quando imagens críticas estão carregando
@@ -134,9 +131,7 @@ const ImprovedQuizResultSalesPage: React.FC<
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#fffaf7]">
         <LoadingSpinner size="lg" />
-        <p className="mt-4 text-[#432818]">
-          Carregando seu resultado personalizado...
-        </p>
+        <p className="mt-4 text-[#432818]">Carregando seu resultado personalizado...</p>
       </div>
     );
   }
@@ -155,9 +150,7 @@ const ImprovedQuizResultSalesPage: React.FC<
           />
           <div className="text-center sm:text-right">
             <p className="text-sm text-[#432818]">
-              <span className="font-semibold text-[#aa6b5d]">
-                5 x de R$ 8,83 *
-              </span>
+              <span className="font-semibold text-[#aa6b5d]">5 x de R$ 8,83 *</span>
             </p>
             <p className="text-sm text-[#432818]">Ou R$ 39,90 à vista</p>
           </div>
@@ -174,15 +167,13 @@ const ImprovedQuizResultSalesPage: React.FC<
                 {userName}, seu Estilo é {primaryStyle.category}!
               </h1>
               <p className="text-base sm:text-lg mb-6 text-[#3a3a3a]">
-                Descubra como aplicar seu estilo predominante com clareza e
-                autenticidade no seu dia a dia.
+                Descubra como aplicar seu estilo predominante com clareza e autenticidade no seu dia
+                a dia.
               </p>
 
               {/* Resultado do Estilo */}
               <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm mb-6 border border-[#B89B7A]/10">
-                <h2 className="font-medium text-[#aa6b5d] mb-3">
-                  Seu estilo predominante:
-                </h2>
+                <h2 className="font-medium text-[#aa6b5d] mb-3">Seu estilo predominante:</h2>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#aa6b5d] to-[#B89B7A] flex items-center justify-center text-white text-xl font-bold shadow-md">
@@ -253,8 +244,7 @@ const ImprovedQuizResultSalesPage: React.FC<
               Transforme Seu Estilo Hoje
             </h2>
             <p className="text-base sm:text-lg text-[#432818] max-w-2xl mx-auto">
-              Guia completo personalizado + bônus exclusivos para você aplicar
-              seu estilo na prática
+              Guia completo personalizado + bônus exclusivos para você aplicar seu estilo na prática
             </p>
           </div>
 
@@ -280,22 +270,19 @@ const ImprovedQuizResultSalesPage: React.FC<
                     {[
                       {
                         item: "Guia Completo de Estilo Personalizado",
-                        description:
-                          "Manual exclusivo baseado no seu perfil único",
+                        description: "Manual exclusivo baseado no seu perfil único",
                         value: "R$ 97,00",
                         badge: "PRINCIPAL",
                       },
                       {
                         item: "Bônus: Manual de Peças Estratégicas",
-                        description:
-                          "Descubra as peças-chave do seu guarda-roupa",
+                        description: "Descubra as peças-chave do seu guarda-roupa",
                         value: "R$ 47,00",
                         badge: "BÔNUS",
                       },
                       {
                         item: "Bônus: Guia de Visagismo Facial",
-                        description:
-                          "Cortes e acessórios ideais para seu rosto",
+                        description: "Cortes e acessórios ideais para seu rosto",
                         value: "R$ 31,00",
                         badge: "BÔNUS",
                       },
@@ -313,9 +300,7 @@ const ImprovedQuizResultSalesPage: React.FC<
                               </h4>
                               <span
                                 className={`px-2 py-1 text-xs font-bold rounded-full text-white w-fit ${
-                                  product.badge === "PRINCIPAL"
-                                    ? "bg-[#B89B7A]"
-                                    : "bg-[#aa6b5d]"
+                                  product.badge === "PRINCIPAL" ? "bg-[#B89B7A]" : "bg-[#aa6b5d]"
                                 }`}
                               >
                                 {product.badge}
@@ -337,14 +322,12 @@ const ImprovedQuizResultSalesPage: React.FC<
                     {/* Total */}
                     <div className="border-t-2 border-[#B89B7A]/30 pt-6 mt-6">
                       <div className="flex justify-between items-center text-lg sm:text-xl">
-                        <span className="font-bold text-[#432818]">
-                          Valor Total:
-                        </span>
+                        <span className="font-bold text-[#432818]">Valor Total:</span>
                         <div className="relative">
                           <span className="text-2xl sm:text-3xl font-bold line-through text-[#6B5B4E] opacity-70">
                             R$ 175,00
                           </span>
-                          <div style={{ backgroundColor: "#FAF9F7" }}></div>
+                          <div style={{ backgroundColor: '#FAF9F7' }}></div>
                         </div>
                       </div>
                     </div>
@@ -359,14 +342,10 @@ const ImprovedQuizResultSalesPage: React.FC<
                       {[
                         { key: "parcelado", label: "Parcelado" },
                         { key: "avista", label: "À Vista" },
-                      ].map((tab) => (
+                      ].map(tab => (
                         <button
                           key={tab.key}
-                          onClick={() =>
-                            setActivePaymentTab(
-                              tab.key as "avista" | "parcelado"
-                            )
-                          }
+                          onClick={() => setActivePaymentTab(tab.key as "avista" | "parcelado")}
                           className={`px-4 sm:px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                             activePaymentTab === tab.key
                               ? "bg-white text-[#432818] shadow-sm border border-[#B89B7A]/20"
@@ -384,18 +363,14 @@ const ImprovedQuizResultSalesPage: React.FC<
                     <div className="mb-6">
                       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-4">
                         <div className="text-center">
-                          <p style={{ color: "#8B7355" }}>De</p>
+                          <p style={{ color: '#8B7355' }}>De</p>
                           <p className="text-xl sm:text-2xl line-through text-[#6B5B4E] opacity-70">
                             R$ 175,00
                           </p>
                         </div>
 
                         <div className="hidden sm:block text-[#4CAF50]">
-                          <svg
-                            className="w-8 h-8"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
+                          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                             <path
                               fillRule="evenodd"
                               d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z"
@@ -405,9 +380,7 @@ const ImprovedQuizResultSalesPage: React.FC<
                         </div>
 
                         <div className="text-center">
-                          <p className="text-sm font-medium text-[#aa6b5d] mb-1">
-                            Por apenas
-                          </p>
+                          <p className="text-sm font-medium text-[#aa6b5d] mb-1">Por apenas</p>
                           <div className="flex items-baseline gap-1 justify-center">
                             <span className="text-xl sm:text-2xl font-bold text-[#4CAF50]">
                               5x R$
@@ -431,18 +404,14 @@ const ImprovedQuizResultSalesPage: React.FC<
                         </span>
                         <span className="text-xl">,90</span>
                       </div>
-                      <p className="text-xs sm:text-sm text-[#8F7A6A] mt-1">
-                        pagamento único
-                      </p>
+                      <p className="text-xs sm:text-sm text-[#8F7A6A] mt-1">pagamento único</p>
                     </div>
                   )}
 
                   {/* Badge de Economia - USANDO VERDE PARA CONVERSÃO */}
                   <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-3 rounded-full bg-[#4CAF50] text-white font-bold mb-8 shadow-lg">
                     <Gift className="w-5 h-5" />
-                    <span className="text-sm sm:text-base">
-                      💰 Economia de R$ 135,10 (77% OFF)
-                    </span>
+                    <span className="text-sm sm:text-base">💰 Economia de R$ 135,10 (77% OFF)</span>
                   </div>
 
                   {/* CTA Button - VERDE PARA MÁXIMA CONVERSÃO */}
@@ -497,9 +466,7 @@ const ImprovedQuizResultSalesPage: React.FC<
 
                   {/* Métodos de Pagamento */}
                   <div className="text-center">
-                    <p className="text-sm text-[#8F7A6A] mb-4">
-                      Métodos de pagamento aceitos:
-                    </p>
+                    <p className="text-sm text-[#8F7A6A] mb-4">Métodos de pagamento aceitos:</p>
                     <img
                       src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp"
                       alt="Métodos de pagamento"
@@ -521,8 +488,8 @@ const ImprovedQuizResultSalesPage: React.FC<
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Antes */}
-            <div style={{ borderColor: "#E5DDD5" }}>
-              <h3 style={{ color: "#432818" }}>
+            <div style={{ borderColor: '#E5DDD5' }}>
+              <h3 style={{ color: '#432818' }}>
                 ❌ Quando você não conhece seu estilo...
               </h3>
               <ul className="space-y-3">
@@ -533,7 +500,7 @@ const ImprovedQuizResultSalesPage: React.FC<
                   "Tem dificuldade em criar uma imagem coerente e autêntica",
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <XCircle style={{ color: "#432818" }} />
+                    <XCircle style={{ color: '#432818' }} />
                     <span className="text-sm">{item}</span>
                   </li>
                 ))}
@@ -573,20 +540,17 @@ const ImprovedQuizResultSalesPage: React.FC<
               {[
                 {
                   title: "Guia de Maquiagem por Estilo",
-                  description:
-                    "Descubra as maquiagens que mais combinam com seu estilo",
+                  description: "Descubra as maquiagens que mais combinam com seu estilo",
                   img: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911677/C%C3%B3pia_de_MOCKUPS_15_-_Copia_grstwl.webp",
                 },
                 {
                   title: "Manual de Acessórios Estratégicos",
-                  description:
-                    "Aprenda a usar acessórios para potencializar seus looks",
+                  description: "Aprenda a usar acessórios para potencializar seus looks",
                   img: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp",
                 },
                 {
                   title: "Checklist de Compras Inteligentes",
-                  description:
-                    "Nunca mais compre por impulso com este guia prático",
+                  description: "Nunca mais compre por impulso com este guia prático",
                   img: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp",
                 },
               ].map((bonus, index) => (
@@ -605,9 +569,7 @@ const ImprovedQuizResultSalesPage: React.FC<
                         <h3 className="font-medium text-[#432818] mb-2 text-sm sm:text-base">
                           {bonus.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-[#8F7A6A]">
-                          {bonus.description}
-                        </p>
+                        <p className="text-xs sm:text-sm text-[#8F7A6A]">{bonus.description}</p>
                       </div>
                     </Card>
                   </div>
@@ -627,15 +589,13 @@ const ImprovedQuizResultSalesPage: React.FC<
                 Sobre a Especialista
               </h2>
               <p className="mb-4 text-sm sm:text-base text-[#432818]">
-                Com mais de 10 anos de experiência em consultoria de imagem e
-                estilo pessoal, ajudei centenas de mulheres a descobrirem sua
-                verdadeira essência através das roupas.
+                Com mais de 10 anos de experiência em consultoria de imagem e estilo pessoal, ajudei
+                centenas de mulheres a descobrirem sua verdadeira essência através das roupas.
               </p>
               <p className="text-sm sm:text-base text-[#432818]">
-                Minha missão é ajudar você a construir um guarda-roupa que
-                reflita sua personalidade, valorize seu tipo físico e
-                simplifique sua rotina, permitindo que você se vista com
-                confiança todos os dias.
+                Minha missão é ajudar você a construir um guarda-roupa que reflita sua
+                personalidade, valorize seu tipo físico e simplifique sua rotina, permitindo que
+                você se vista com confiança todos os dias.
               </p>
             </div>
             <div>
@@ -693,9 +653,7 @@ const ImprovedQuizResultSalesPage: React.FC<
                 <AccordionTrigger className="text-left text-[#432818] hover:text-[#aa6b5d]">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-[#8F7A6A]">
-                  {faq.answer}
-                </AccordionContent>
+                <AccordionContent className="text-[#8F7A6A]">{faq.answer}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
@@ -708,8 +666,8 @@ const ImprovedQuizResultSalesPage: React.FC<
               Não Perca Esta Oportunidade
             </h2>
             <p className="text-sm sm:text-base text-[#432818] mb-6">
-              Transforme seu guarda-roupa e sua confiança com um investimento
-              que vale por toda vida.
+              Transforme seu guarda-roupa e sua confiança com um investimento que vale por toda
+              vida.
             </p>
             <Button
               onClick={handleBuyNow}

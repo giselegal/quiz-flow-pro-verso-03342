@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface InlineTextEditorProps {
   value: string;
@@ -35,9 +35,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
     }
   }, [isEditing]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setText(e.target.value);
     onChange?.(e.target.value);
   };
@@ -105,11 +103,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
       ) : (
         <div
           onClick={handleClick}
-          className={cn(
-            "w-full cursor-text",
-            !text && "text-gray-400",
-            className
-          )}
+          className={cn("w-full cursor-text", !text && "text-gray-400", className)}
         >
           {text || placeholder}
         </div>

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Edit3 } from "lucide-react";
 
 interface LoaderInlineBlockProps {
@@ -21,14 +21,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -132,9 +125,7 @@ const LoaderInlineBlock: React.FC<LoaderInlineBlockProps> = ({
         </div>
 
         {/* Description */}
-        <div className="text-[#8F7A6A] font-normal mt-2 text-center text-sm">
-          {description}
-        </div>
+        <div className="text-[#8F7A6A] font-normal mt-2 text-center text-sm">{description}</div>
       </div>
 
       {/* Edit indicator */}

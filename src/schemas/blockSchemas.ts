@@ -7,9 +7,7 @@
 import { z } from "zod";
 
 // Tipos comuns
-const colorSchema = z
-  .string()
-  .regex(/^#[0-9A-F]{6}$/i, "Cor deve estar no formato #RRGGBB");
+const colorSchema = z.string().regex(/^#[0-9A-F]{6}$/i, "Cor deve estar no formato #RRGGBB");
 const urlSchema = z.string().url("URL inválida").or(z.literal(""));
 const positiveNumberSchema = z.number().min(0, "Deve ser um número positivo");
 
@@ -19,10 +17,7 @@ const positiveNumberSchema = z.number().min(0, "Deve ser um número positivo");
 
 export const textBlockSchema = z.object({
   content: z.string().min(1, "Conteúdo é obrigatório"),
-  fontSize: z
-    .number()
-    .min(8, "Tamanho mínimo: 8px")
-    .max(72, "Tamanho máximo: 72px"),
+  fontSize: z.number().min(8, "Tamanho mínimo: 8px").max(72, "Tamanho máximo: 72px"),
   textColor: colorSchema,
   textAlign: z.enum(["left", "center", "right"], {
     errorMap: () => ({ message: "Alinhamento deve ser left, center ou right" }),
@@ -31,20 +26,14 @@ export const textBlockSchema = z.object({
 
 export const richTextBlockSchema = z.object({
   content: z.string().min(1, "Conteúdo é obrigatório"),
-  minHeight: z
-    .number()
-    .min(50, "Altura mínima: 50px")
-    .max(500, "Altura máxima: 500px"),
+  minHeight: z.number().min(50, "Altura mínima: 50px").max(500, "Altura máxima: 500px"),
   placeholder: z.string().optional(),
 });
 
 export const headerBlockSchema = z.object({
   content: z.string().min(1, "Título é obrigatório"),
   level: z.enum(["h1", "h2", "h3", "h4", "h5", "h6"]),
-  fontSize: z
-    .number()
-    .min(12, "Tamanho mínimo: 12px")
-    .max(96, "Tamanho máximo: 96px"),
+  fontSize: z.number().min(12, "Tamanho mínimo: 12px").max(96, "Tamanho máximo: 96px"),
   textColor: colorSchema,
   textAlign: z.enum(["left", "center", "right"]),
   fontWeight: z.enum(["normal", "bold", "lighter", "bolder"]).optional(),
@@ -60,9 +49,7 @@ export const buttonBlockSchema = z.object({
   borderRadius: positiveNumberSchema,
   fullWidth: z.boolean(),
   size: z.enum(["sm", "md", "lg"]).optional(),
-  variant: z
-    .enum(["default", "destructive", "outline", "secondary", "ghost", "link"])
-    .optional(),
+  variant: z.enum(["default", "destructive", "outline", "secondary", "ghost", "link"]).optional(),
 });
 
 export const imageBlockSchema = z.object({
@@ -71,16 +58,11 @@ export const imageBlockSchema = z.object({
   width: z.number().min(1, "Largura deve ser maior que 0").optional(),
   height: z.number().min(1, "Altura deve ser maior que 0").optional(),
   borderRadius: positiveNumberSchema.optional(),
-  objectFit: z
-    .enum(["contain", "cover", "fill", "none", "scale-down"])
-    .optional(),
+  objectFit: z.enum(["contain", "cover", "fill", "none", "scale-down"]).optional(),
 });
 
 export const spacerBlockSchema = z.object({
-  height: z
-    .number()
-    .min(1, "Altura mínima: 1px")
-    .max(200, "Altura máxima: 200px"),
+  height: z.number().min(1, "Altura mínima: 1px").max(200, "Altura máxima: 200px"),
   backgroundColor: z.string().optional(),
   borderStyle: z.enum(["none", "solid", "dashed", "dotted"]),
   borderColor: colorSchema.optional(),
@@ -110,10 +92,7 @@ export const quizStepBlockSchema = z.object({
   // Question
   questionText: z.string().min(1, "Texto da pergunta é obrigatório"),
   questionTextColor: colorSchema,
-  questionTextSize: z
-    .number()
-    .min(12, "Tamanho mínimo: 12px")
-    .max(48, "Tamanho máximo: 48px"),
+  questionTextSize: z.number().min(12, "Tamanho mínimo: 12px").max(48, "Tamanho máximo: 48px"),
   questionTextAlign: z.enum(["left", "center", "right"]),
 
   // Layout
@@ -145,10 +124,7 @@ export const quizStepBlockSchema = z.object({
 
   // Advanced
   componentId: z.string().optional(),
-  maxWidth: z
-    .number()
-    .min(10, "Largura mínima: 10%")
-    .max(100, "Largura máxima: 100%"),
+  maxWidth: z.number().min(10, "Largura mínima: 10%").max(100, "Largura máxima: 100%"),
 });
 
 export const quizIntroBlockSchema = z.object({

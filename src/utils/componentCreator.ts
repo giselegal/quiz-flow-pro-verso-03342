@@ -1,4 +1,4 @@
-import { QuizComponentData, QuizComponentType } from "../types/quizBuilder";
+import { QuizComponentData, QuizComponentType } from "@/types/quizBuilder";
 import { generateId } from "./idGenerator";
 
 export interface ComponentTemplate {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface CountdownTimerProps {
   hours?: number;
@@ -49,10 +49,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
       const updateRemainingTime = () => {
         const now = new Date();
         const target = new Date(endTime);
-        const diff = Math.max(
-          0,
-          Math.floor((target.getTime() - now.getTime()) / 1000)
-        );
+        const diff = Math.max(0, Math.floor((target.getTime() - now.getTime()) / 1000));
 
         const h = Math.floor(diff / 3600);
         const m = Math.floor((diff % 3600) / 60);
@@ -76,7 +73,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
     if (!isRunning || isComplete) return;
 
     const interval = setInterval(() => {
-      setTimeRemaining((prev) => {
+      setTimeRemaining(prev => {
         // Se tudo é zero, a contagem terminou
         if (prev.hours === 0 && prev.minutes === 0 && prev.seconds === 0) {
           clearInterval(interval);
@@ -156,9 +153,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
       {/* Minutos */}
       <div className="flex flex-col">
-        <div className={digitClasses}>
-          {formatNumber(timeRemaining.minutes)}
-        </div>
+        <div className={digitClasses}>{formatNumber(timeRemaining.minutes)}</div>
         {showLabels && <div className={labelClasses}>Min</div>}
       </div>
 
@@ -166,9 +161,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
       {/* Segundos */}
       <div className="flex flex-col">
-        <div className={digitClasses}>
-          {formatNumber(timeRemaining.seconds)}
-        </div>
+        <div className={digitClasses}>{formatNumber(timeRemaining.seconds)}</div>
         {showLabels && <div className={labelClasses}>Seg</div>}
       </div>
     </div>

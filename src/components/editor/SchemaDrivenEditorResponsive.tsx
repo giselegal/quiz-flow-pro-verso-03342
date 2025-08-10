@@ -1,9 +1,5 @@
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "../../components/ui/resizable";
-import { useEditor } from "../../context/EditorContext";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { useEditor } from "@/context/EditorContext";
 import React from "react";
 import { CanvasDropZone } from "./canvas/CanvasDropZone";
 import { PropertyPanel } from "./PropertyPanel";
@@ -14,9 +10,10 @@ interface SchemaDrivenEditorResponsiveProps {
   className?: string;
 }
 
-const SchemaDrivenEditorResponsive: React.FC<
-  SchemaDrivenEditorResponsiveProps
-> = ({ funnelId, className = "" }) => {
+const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({
+  funnelId,
+  className = "",
+}) => {
   const {
     computed: { currentBlocks, selectedBlock },
     selectedBlockId,
@@ -64,10 +61,7 @@ const SchemaDrivenEditorResponsive: React.FC<
 
         {/* Painel de propriedades */}
         <ResizablePanel defaultSize={25}>
-          <PropertyPanel
-            selectedComponent={selectedBlock}
-            onUpdate={handleUpdateSelectedBlock}
-          />
+          <PropertyPanel selectedComponent={selectedBlock} onUpdate={handleUpdateSelectedBlock} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

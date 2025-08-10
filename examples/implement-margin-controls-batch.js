@@ -102,11 +102,7 @@ class MarginControlsImplementer {
 
       if (stat.isDirectory()) {
         results = results.concat(this.findTsxFiles(filePath));
-      } else if (
-        file.endsWith(".tsx") &&
-        !file.includes(".test.") &&
-        !file.includes(".spec.")
-      ) {
+      } else if (file.endsWith(".tsx") && !file.includes(".test.") && !file.includes(".spec.")) {
         results.push(filePath);
       }
     }
@@ -130,9 +126,7 @@ class MarginControlsImplementer {
 
     // Verifica se é um componente React
     analysis.isReactComponent =
-      /export\s+(?:default\s+)?(?:const|function)\s+\w+.*React\.FC|React\.Component/i.test(
-        content
-      );
+      /export\s+(?:default\s+)?(?:const|function)\s+\w+.*React\.FC|React\.Component/i.test(content);
 
     // Verifica se usa BlockComponentProps
     analysis.hasBlockComponentProps = /BlockComponentProps/.test(content);
@@ -153,9 +147,7 @@ class MarginControlsImplementer {
     analysis.needsUpdate =
       analysis.isReactComponent &&
       analysis.hasBlockComponentProps &&
-      (!analysis.hasMarginLeft ||
-        !analysis.hasMarginRight ||
-        !analysis.hasGetMarginClass);
+      (!analysis.hasMarginLeft || !analysis.hasMarginRight || !analysis.hasGetMarginClass);
 
     if (VERBOSE) {
       console.log(`\n📊 Análise: ${path.basename(filePath)}`);
@@ -180,9 +172,7 @@ class MarginControlsImplementer {
       // 1. Adicionar marginLeft e marginRight nas propriedades se ausentes
       if (!analysis.hasMarginLeft || !analysis.hasMarginRight) {
         // Busca o padrão de destructuring de properties
-        const destructuringMatch = content.match(
-          /const\s*{\s*[\s\S]*?}\s*=\s*properties;/
-        );
+        const destructuringMatch = content.match(/const\s*{\s*[\s\S]*?}\s*=\s*properties;/);
 
         if (destructuringMatch) {
           const existingDestructuring = destructuringMatch[0];
@@ -191,9 +181,8 @@ class MarginControlsImplementer {
           if (analysis.hasMarginTop || analysis.hasMarginBottom) {
             // Adiciona marginLeft/Right perto das margens existentes
             if (!analysis.hasMarginLeft) {
-              updatedContent = updatedContent.replace(
-                /marginTop\s*=\s*[^,\n}]+,?/,
-                (match) => (match.includes(",") ? match : match + ",")
+              updatedContent = updatedContent.replace(/marginTop\s*=\s*[^,\n}]+,?/, match =>
+                match.includes(",") ? match : match + ","
               );
 
               updatedContent = updatedContent.replace(
@@ -206,7 +195,7 @@ class MarginControlsImplementer {
             if (!analysis.hasMarginRight) {
               updatedContent = updatedContent.replace(
                 /margin(?:Bottom|Left)\s*=\s*[^,\n}]+,?/,
-                (match) => (match.includes(",") ? match : match + ",")
+                match => (match.includes(",") ? match : match + ",")
               );
 
               updatedContent = updatedContent.replace(
@@ -218,12 +207,8 @@ class MarginControlsImplementer {
           } else {
             // Adiciona todas as margens se não existirem
             const insertPosition = existingDestructuring.lastIndexOf("}");
-            const beforeClosing = existingDestructuring.substring(
-              0,
-              insertPosition
-            );
-            const afterClosing =
-              existingDestructuring.substring(insertPosition);
+            const beforeClosing = existingDestructuring.substring(0, insertPosition);
+            const afterClosing = existingDestructuring.substring(insertPosition);
 
             const newDestructuring =
               beforeClosing +
@@ -232,10 +217,7 @@ class MarginControlsImplementer {
               "\n" +
               afterClosing;
 
-            updatedContent = updatedContent.replace(
-              existingDestructuring,
-              newDestructuring
-            );
+            updatedContent = updatedContent.replace(existingDestructuring, newDestructuring);
             changes.push("Added all margin properties");
           }
         }
@@ -254,10 +236,7 @@ class MarginControlsImplementer {
         let inserted = false;
         for (const pattern of insertPositions) {
           if (pattern.test(updatedContent)) {
-            updatedContent = updatedContent.replace(
-              pattern,
-              `$1\n\n${MARGIN_FUNCTION_TEMPLATE}\n`
-            );
+            updatedContent = updatedContent.replace(pattern, `$1\n\n${MARGIN_FUNCTION_TEMPLATE}\n`);
             changes.push("Added getMarginClass function");
             inserted = true;
             break;
@@ -290,10 +269,7 @@ class MarginControlsImplementer {
           let updatedCnContent = cnContent;
 
           // Remove margens antigas se existirem
-          updatedCnContent = updatedCnContent.replace(
-            /getMarginClass\([^)]+\),?\n?/g,
-            ""
-          );
+          updatedCnContent = updatedCnContent.replace(/getMarginClass\([^)]+\),?\n?/g, "");
 
           // Adiciona as novas margens antes do className no final
           if (updatedCnContent.includes("className")) {
@@ -302,10 +278,7 @@ class MarginControlsImplementer {
               `\n${marginCalls}\n$1`
             );
           } else {
-            updatedCnContent = updatedCnContent.replace(
-              /(\s*\);?\s*)$/,
-              `\n${marginCalls}\n$1`
-            );
+            updatedCnContent = updatedCnContent.replace(/(\s*\);?\s*)$/, `\n${marginCalls}\n$1`);
           }
 
           updatedContent = updatedContent.replace(
@@ -345,9 +318,7 @@ class MarginControlsImplementer {
 
       return formattedContent;
     } catch (error) {
-      console.warn(
-        `⚠️ Prettier formatting failed for ${filePath}: ${error.message}`
-      );
+      console.warn(`⚠️ Prettier formatting failed for ${filePath}: ${error.message}`);
       return content; // Retorna o conteúdo original se Prettier falhar
     }
   }
@@ -365,18 +336,11 @@ class MarginControlsImplementer {
         return;
       }
 
-      const updatedContent = this.implementMarginControls(
-        content,
-        analysis,
-        filePath
-      );
+      const updatedContent = this.implementMarginControls(content, analysis, filePath);
 
       if (updatedContent && !DRY_RUN) {
         // Aplica Prettier antes de salvar
-        const formattedContent = this.formatWithPrettier(
-          updatedContent,
-          filePath
-        );
+        const formattedContent = this.formatWithPrettier(updatedContent, filePath);
 
         fs.writeFileSync(filePath, formattedContent);
         this.processedFiles.push(filePath);
@@ -396,18 +360,14 @@ class MarginControlsImplementer {
 
   // 🚀 Executa o processo completo
   run() {
-    console.log(
-      "🚀 Iniciando implementação de controles de margem em lote...\n"
-    );
+    console.log("🚀 Iniciando implementação de controles de margem em lote...\n");
 
     if (DRY_RUN) {
       console.log("🔍 MODO DRY RUN - Nenhum arquivo será modificado\n");
     }
 
     const tsxFiles = this.findTsxFiles(BLOCKS_DIR);
-    console.log(
-      `📁 Encontrados ${tsxFiles.length} arquivos .tsx em ${BLOCKS_DIR}\n`
-    );
+    console.log(`📁 Encontrados ${tsxFiles.length} arquivos .tsx em ${BLOCKS_DIR}\n`);
 
     // Processa cada arquivo
     for (const filePath of tsxFiles) {
@@ -425,7 +385,7 @@ class MarginControlsImplementer {
 
     if (this.processedFiles.length > 0) {
       console.log("\n🔧 Arquivos modificados:");
-      this.processedFiles.forEach((file) => {
+      this.processedFiles.forEach(file => {
         console.log(`   • ${path.relative(process.cwd(), file)}`);
       });
     }

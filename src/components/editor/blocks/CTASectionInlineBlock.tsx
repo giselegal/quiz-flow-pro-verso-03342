@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { InlineEditableText } from "./InlineEditableText";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ShoppingCart, ArrowDown, Lock } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -11,14 +11,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -125,7 +118,7 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
           <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
             <InlineEditableText
               value={title}
-              onChange={(value) => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange("title", value)}
               placeholder="Título da seção CTA"
               className="text-xl font-medium text-center text-[#aa6b5d]"
             />
@@ -151,11 +144,10 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
             />
             <span
               className="cursor-pointer"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 const newText = prompt("Editar texto do botão:", buttonText);
-                if (newText !== null)
-                  handlePropertyChange("buttonText", newText);
+                if (newText !== null) handlePropertyChange("buttonText", newText);
               }}
             >
               {buttonText}
@@ -170,12 +162,8 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
             <span
               className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
               onClick={() => {
-                const newText = prompt(
-                  "Editar texto de segurança:",
-                  securityText
-                );
-                if (newText !== null)
-                  handlePropertyChange("securityText", newText);
+                const newText = prompt("Editar texto de segurança:", securityText);
+                if (newText !== null) handlePropertyChange("securityText", newText);
               }}
             >
               {securityText}
@@ -183,7 +171,7 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
           </p>
 
           {/* URL Configuration */}
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <span
               className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
               onClick={() => {
@@ -196,18 +184,12 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           {/* Style Configuration */}
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <span
               className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
               onClick={() => {
-                const newStyle = prompt(
-                  "Estilo do botão (green, primary, secondary):",
-                  style
-                );
-                if (
-                  newStyle !== null &&
-                  ["green", "primary", "secondary"].includes(newStyle)
-                ) {
+                const newStyle = prompt("Estilo do botão (green, primary, secondary):", style);
+                if (newStyle !== null && ["green", "primary", "secondary"].includes(newStyle)) {
                   handlePropertyChange("style", newStyle);
                 }
               }}

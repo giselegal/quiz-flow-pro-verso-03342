@@ -18,9 +18,7 @@ export const usePerformanceOptimization = () => {
   const endRenderTracking = useCallback((componentName: string) => {
     if (renderStartTime.current) {
       const renderTime = performance.now() - renderStartTime.current;
-      console.log(
-        `[Performance] ${componentName} rendered in ${renderTime.toFixed(2)}ms`
-      );
+      console.log(`[Performance] ${componentName} rendered in ${renderTime.toFixed(2)}ms`);
     }
   }, []);
 
@@ -104,8 +102,7 @@ export const usePerformanceOptimization = () => {
 
 // Hook for component-level performance optimization
 export const useComponentOptimization = (componentName: string) => {
-  const { startRenderTracking, endRenderTracking } =
-    usePerformanceOptimization();
+  const { startRenderTracking, endRenderTracking } = usePerformanceOptimization();
 
   useEffect(() => {
     startRenderTracking();

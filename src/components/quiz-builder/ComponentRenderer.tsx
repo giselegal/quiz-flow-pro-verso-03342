@@ -1,7 +1,7 @@
 import React from "react";
-import { QuizComponentData } from "../../types/quizBuilder";
-import { Card } from "../../components/ui/card";
-import { cn } from "../../lib/utils";
+import { QuizComponentData } from "@/types/quizBuilder";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface ComponentRendererProps {
   component: QuizComponentData;
@@ -27,9 +27,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
         );
 
       case "text":
-        return (
-          <div className="prose max-w-none">{data.text || "Texto padrão"}</div>
-        );
+        return <div className="prose max-w-none">{data.text || "Texto padrão"}</div>;
 
       case "headline":
         return (
@@ -47,8 +45,8 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             className="max-w-full h-auto rounded"
           />
         ) : (
-          <div style={{ backgroundColor: "#E5DDD5" }}>
-            <p style={{ color: "#8B7355" }}>Imagem não definida</p>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
+            <p style={{ color: '#8B7355' }}>Imagem não definida</p>
           </div>
         );
 
@@ -60,13 +58,11 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
               data.options.map((option: string, index: number) => (
                 <div key={index} className="flex items-center space-x-2">
                   <input type="checkbox" id={`opt-${component.id}-${index}`} />
-                  <label htmlFor={`opt-${component.id}-${index}`}>
-                    {option}
-                  </label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
                 </div>
               ))
             ) : (
-              <div style={{ color: "#8B7355" }}>Opções não definidas</div>
+              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
             )}
           </div>
         );
@@ -83,13 +79,11 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     name={`opt-${component.id}`}
                     id={`opt-${component.id}-${index}`}
                   />
-                  <label htmlFor={`opt-${component.id}-${index}`}>
-                    {option}
-                  </label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
                 </div>
               ))
             ) : (
-              <div style={{ color: "#8B7355" }}>Opções não definidas</div>
+              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
             )}
           </div>
         );
@@ -104,7 +98,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 {Array.from(
                   { length: (data.maxValue || 10) - (data.minValue || 1) + 1 },
                   (_, i) => (
-                    <button key={i} style={{ backgroundColor: "#E5DDD5" }}>
+                    <button key={i} style={{ backgroundColor: '#E5DDD5' }}>
                       {(data.minValue || 1) + i}
                     </button>
                   )
@@ -117,10 +111,8 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
 
       default:
         return (
-          <div style={{ borderColor: "#E5DDD5" }}>
-            <p style={{ color: "#8B7355" }}>
-              Tipo de componente desconhecido: {component.type}
-            </p>
+          <div style={{ borderColor: '#E5DDD5' }}>
+            <p style={{ color: '#8B7355' }}>Tipo de componente desconhecido: {component.type}</p>
           </div>
         );
     }
@@ -129,10 +121,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   return (
     <div
       onClick={onClick}
-      className={cn(
-        "transition-all cursor-pointer",
-        isSelected ? "ring-2 ring-[#B89B7A]" : ""
-      )}
+      className={cn("transition-all cursor-pointer", isSelected ? "ring-2 ring-[#B89B7A]" : "")}
     >
       <Card className="p-4">{renderComponent()}</Card>
     </div>

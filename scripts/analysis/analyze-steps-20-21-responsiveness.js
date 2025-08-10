@@ -227,9 +227,7 @@ const metrics = {
 };
 
 Object.entries(metrics).forEach(([metric, values]) => {
-  console.log(
-    `${metric.padEnd(20)} | ${values.antes.padEnd(8)} → ${values.depois}`
-  );
+  console.log(`${metric.padEnd(20)} | ${values.antes.padEnd(8)} → ${values.depois}`);
 });
 
 console.log("\n🚀 PRÓXIMOS PASSOS:");

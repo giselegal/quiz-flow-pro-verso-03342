@@ -14,20 +14,12 @@ const nameMatches = content.match(/name:\s*['"`]([^'"`]+)['"`]/g);
 const categoryMatches = content.match(/category:\s*['"`]([^'"`]+)['"`]/g);
 
 console.log(`📊 ESTATÍSTICAS BRUTAS:`);
-console.log(
-  `- Total de objetos com 'type:': ${typeMatches ? typeMatches.length : 0}`
-);
-console.log(
-  `- Total de objetos com 'name:': ${nameMatches ? nameMatches.length : 0}`
-);
-console.log(
-  `- Total de objetos com 'category:': ${categoryMatches ? categoryMatches.length : 0}`
-);
+console.log(`- Total de objetos com 'type:': ${typeMatches ? typeMatches.length : 0}`);
+console.log(`- Total de objetos com 'name:': ${nameMatches ? nameMatches.length : 0}`);
+console.log(`- Total de objetos com 'category:': ${categoryMatches ? categoryMatches.length : 0}`);
 
 // Tentar encontrar o array principal
-const arrayMatch = content.match(
-  /export\s+const\s+blockDefinitions[^=]*=\s*\[([\s\S]*)\];?\s*$/
-);
+const arrayMatch = content.match(/export\s+const\s+blockDefinitions[^=]*=\s*\[([\s\S]*)\];?\s*$/);
 
 if (arrayMatch) {
   const arrayContent = arrayMatch[1];
@@ -72,17 +64,13 @@ if (arrayMatch) {
   const categories = Object.keys(byCategory).sort();
   console.log(`\n🏷️ CATEGORIAS (${categories.length}):`);
 
-  categories.forEach((category) => {
-    console.log(
-      `\n📁 ${category.toUpperCase()}: ${byCategory[category].length} componentes`
-    );
-    byCategory[category].slice(0, 5).forEach((block) => {
+  categories.forEach(category => {
+    console.log(`\n📁 ${category.toUpperCase()}: ${byCategory[category].length} componentes`);
+    byCategory[category].slice(0, 5).forEach(block => {
       console.log(`   ${block.index}. ${block.type} - ${block.name}`);
     });
     if (byCategory[category].length > 5) {
-      console.log(
-        `   ... e mais ${byCategory[category].length - 5} componentes`
-      );
+      console.log(`   ... e mais ${byCategory[category].length - 5} componentes`);
     }
   });
 } else {
@@ -90,6 +78,4 @@ if (arrayMatch) {
 }
 
 console.log("\n" + "=".repeat(60));
-console.log(
-  "🔧 VERIFICAÇÃO: O problema pode estar na estrutura do array ou na exportação"
-);
+console.log("🔧 VERIFICAÇÃO: O problema pode estar na estrutura do array ou na exportação");

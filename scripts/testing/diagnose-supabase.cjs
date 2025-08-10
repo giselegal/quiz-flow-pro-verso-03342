@@ -24,21 +24,15 @@ async function diagnoseSupabasePermissions() {
   console.log("💡 SOLUÇÕES DISPONÍVEIS:\n");
 
   console.log("🎯 SOLUÇÃO 1 - MANUAL (RECOMENDADA):");
-  console.log(
-    "   1. Acesse: https://supabase.com/dashboard/project/txqljpitotmcxntprxiu"
-  );
+  console.log("   1. Acesse: https://supabase.com/dashboard/project/txqljpitotmcxntprxiu");
   console.log("   2. Faça login na sua conta");
   console.log('   3. Vá para "SQL Editor"');
-  console.log(
-    '   4. Cole e execute o SQL do arquivo "create-funnel-tables.sql"'
-  );
+  console.log('   4. Cole e execute o SQL do arquivo "create-funnel-tables.sql"');
   console.log('   5. Clique em "Run" para executar\n');
 
   console.log("🔧 SOLUÇÃO 2 - CHAVE DE SERVIÇO:");
   console.log('   1. No Supabase Dashboard, vá em "Settings" > "API"');
-  console.log(
-    '   2. Copie a "service_role key" (⚠️  CUIDADO: muito poderosa!)'
-  );
+  console.log('   2. Copie a "service_role key" (⚠️  CUIDADO: muito poderosa!)');
   console.log('   3. Adicione no .env: SUPABASE_SERVICE_KEY="sua_chave_aqui"');
   console.log("   4. Execute: node create-tables-with-service-key.cjs\n");
 

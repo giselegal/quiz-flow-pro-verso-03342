@@ -215,15 +215,9 @@ action: "submit",       // Dispara evento 'quiz-submit'
 
 ```javascript
 // Monitorar eventos
-window.addEventListener("quiz-navigate", (e) =>
-  console.log("🧭 Navegação:", e.detail)
-);
-window.addEventListener("quiz-submit", (e) =>
-  console.log("📤 Submit:", e.detail)
-);
-window.addEventListener("quiz-input-change", (e) =>
-  console.log("📝 Input:", e.detail)
-);
+window.addEventListener("quiz-navigate", e => console.log("🧭 Navegação:", e.detail));
+window.addEventListener("quiz-submit", e => console.log("📤 Submit:", e.detail));
+window.addEventListener("quiz-input-change", e => console.log("📝 Input:", e.detail));
 ```
 
 ## ✅ CHECKLIST DE REQUISITOS ATENDIDOS

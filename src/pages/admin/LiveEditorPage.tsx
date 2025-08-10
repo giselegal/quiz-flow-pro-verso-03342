@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useLocation } from "wouter";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import LiveQuizEditor from "../../components/live-editor/LiveQuizEditor";
-import { useLiveEditor } from "../../hooks/useLiveEditor";
+import LiveQuizEditor from "@/components/live-editor/LiveQuizEditor";
+import { useLiveEditor } from "@/hooks/useLiveEditor";
 
 const LiveEditorPage: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -29,7 +29,7 @@ const LiveEditorPage: React.FC = () => {
   return (
     <div className="h-screen flex flex-col">
       {/* Header com navegação */}
-      <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
@@ -43,9 +43,7 @@ const LiveEditorPage: React.FC = () => {
 
             <div className="h-6 w-px bg-gray-300" />
 
-            <h1 className="text-xl font-bold text-[#432818]">
-              Editor Visual ao Vivo
-            </h1>
+            <h1 className="text-xl font-bold text-[#432818]">Editor Visual ao Vivo</h1>
           </div>
         </div>
       </div>

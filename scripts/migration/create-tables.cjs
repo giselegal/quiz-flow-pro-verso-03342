@@ -11,10 +11,8 @@ async function createTables() {
 
   try {
     // Criar tabela funnels
-    const { data: funnelsData, error: funnelsError } = await supabase.rpc(
-      "exec_sql",
-      {
-        sql: `
+    const { data: funnelsData, error: funnelsError } = await supabase.rpc("exec_sql", {
+      sql: `
         CREATE TABLE IF NOT EXISTS funnels (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           name TEXT NOT NULL,
@@ -27,8 +25,7 @@ async function createTables() {
           updated_at TIMESTAMPTZ DEFAULT NOW()
         );
       `,
-      }
-    );
+    });
 
     if (funnelsError) {
       console.error("Erro ao criar tabela funnels:", funnelsError);
@@ -42,9 +39,7 @@ async function createTables() {
       if (testError) {
         console.error("Tabela funnels não existe. Erro:", testError);
         console.log("\n=== INSTRUÇÕES PARA CRIAR AS TABELAS ===");
-        console.log(
-          "1. Acesse o Supabase Dashboard: https://supabase.com/dashboard"
-        );
+        console.log("1. Acesse o Supabase Dashboard: https://supabase.com/dashboard");
         console.log("2. Vá para o projeto: txqljpitotmcxntprxiu");
         console.log('3. Clique em "SQL Editor" no menu lateral');
         console.log("4. Cole o seguinte SQL e execute:");
@@ -77,9 +72,7 @@ CREATE TABLE IF NOT EXISTS funnel_pages (
 -- Criar índices
 CREATE INDEX IF NOT EXISTS idx_funnels_user_id ON funnels(user_id);
 CREATE INDEX IF NOT EXISTS idx_funnel_pages_funnel_id ON funnel_pages(funnel_id);`);
-        console.log(
-          "\n5. Após executar o SQL, teste novamente o salvamento do funil."
-        );
+        console.log("\n5. Após executar o SQL, teste novamente o salvamento do funil.");
         return;
       } else {
         console.log("Tabela funnels já existe!");
@@ -89,10 +82,8 @@ CREATE INDEX IF NOT EXISTS idx_funnel_pages_funnel_id ON funnel_pages(funnel_id)
     }
 
     // Criar tabela funnel_pages
-    const { data: pagesData, error: pagesError } = await supabase.rpc(
-      "exec_sql",
-      {
-        sql: `
+    const { data: pagesData, error: pagesError } = await supabase.rpc("exec_sql", {
+      sql: `
         CREATE TABLE IF NOT EXISTS funnel_pages (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           funnel_id UUID NOT NULL REFERENCES funnels(id) ON DELETE CASCADE,
@@ -105,8 +96,7 @@ CREATE INDEX IF NOT EXISTS idx_funnel_pages_funnel_id ON funnel_pages(funnel_id)
           updated_at TIMESTAMPTZ DEFAULT NOW()
         );
       `,
-      }
-    );
+    });
 
     if (pagesError) {
       console.error("Erro ao criar tabela funnel_pages:", pagesError);

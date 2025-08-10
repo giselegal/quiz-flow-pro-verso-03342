@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { BlockEditorProps } from "./types";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,7 +57,7 @@ const CTABlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id={`${block.id}-title`}
           value={block.content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Comece Agora"
         />
@@ -75,7 +68,7 @@ const CTABlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id={`${block.id}-buttonText`}
           value={block.content.buttonText || ""}
-          onChange={(e) => onUpdate({ buttonText: e.target.value })}
+          onChange={e => onUpdate({ buttonText: e.target.value })}
           className="mt-1"
           placeholder="Clique aqui"
         />
@@ -86,7 +79,7 @@ const CTABlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id={`${block.id}-url`}
           value={block.content.url || ""}
-          onChange={(e) => onUpdate({ url: e.target.value })}
+          onChange={e => onUpdate({ url: e.target.value })}
           className="mt-1"
           placeholder="https://..."
         />

@@ -1,16 +1,14 @@
-import { CanvasDropZone } from "../components/editor/canvas/CanvasDropZone";
-import { DndProvider } from "../components/editor/dnd/DndProvider";
-import { DraggableComponentItem } from "../components/editor/dnd/DraggableComponentItem";
-import { Block, BlockType } from "../types/editor";
+import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
+import { DndProvider } from "@/components/editor/dnd/DndProvider";
+import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
+import { Block, BlockType } from "@/types/editor";
 import { Image, Square, Type } from "lucide-react";
 import React from "react";
 
 // Componente de teste para validar drag and drop
 export const DragDropTestPage: React.FC = () => {
   const [blocks, setBlocks] = React.useState<Block[]>([]);
-  const [selectedBlockId, setSelectedBlockId] = React.useState<
-    string | undefined
-  >(undefined);
+  const [selectedBlockId, setSelectedBlockId] = React.useState<string | undefined>(undefined);
 
   // Componentes disponíveis para teste
   const availableComponents = [
@@ -51,14 +49,9 @@ export const DragDropTestPage: React.FC = () => {
       properties: {},
     };
 
-    console.log(
-      "📦 Teste: Adicionando bloco:",
-      newBlock,
-      "na posição:",
-      position
-    );
+    console.log("📦 Teste: Adicionando bloco:", newBlock, "na posição:", position);
 
-    setBlocks((prev) => {
+    setBlocks(prev => {
       if (position !== undefined && position < prev.length) {
         // Inserir na posição específica
         const newBlocks = [...prev];
@@ -78,7 +71,7 @@ export const DragDropTestPage: React.FC = () => {
     // Mapear de volta para o formato Block
     const mappedBlocks: Block[] = newBlocks.map((blockData, index) => {
       // Encontrar o bloco original para manter dados completos
-      const originalBlock = blocks.find((b) => b.id === blockData.id);
+      const originalBlock = blocks.find(b => b.id === blockData.id);
       if (originalBlock) {
         return { ...originalBlock, order: index };
       }
@@ -98,25 +91,21 @@ export const DragDropTestPage: React.FC = () => {
 
   const handleUpdateBlock = (id: string, updates: any) => {
     console.log("✏️ Teste: Atualizando bloco:", id, updates);
-    setBlocks((prev) =>
-      prev.map((block) => (block.id === id ? { ...block, ...updates } : block))
-    );
+    setBlocks(prev => prev.map(block => (block.id === id ? { ...block, ...updates } : block)));
   };
 
   const handleDeleteBlock = (id: string) => {
     console.log("🗑️ Teste: Deletando bloco:", id);
-    setBlocks((prev) => prev.filter((block) => block.id !== id));
+    setBlocks(prev => prev.filter(block => block.id !== id));
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Teste de Drag and Drop
-        </h1>
+        <h1 className="text-3xl font-bold text-center mb-8">Teste de Drag and Drop</h1>
 
         <DndProvider
-          blocks={blocks.map((block) => ({
+          blocks={blocks.map(block => ({
             id: block.id,
             type: block.type,
             properties: block.properties || {},
@@ -133,7 +122,7 @@ export const DragDropTestPage: React.FC = () => {
               <div className="bg-white rounded-lg p-4 shadow-sm border">
                 <h2 className="text-lg font-semibold mb-4">Componentes</h2>
                 <div className="space-y-2">
-                  {availableComponents.map((component) => (
+                  {availableComponents.map(component => (
                     <DraggableComponentItem
                       key={component.type}
                       blockType={component.type}
@@ -157,11 +146,9 @@ export const DragDropTestPage: React.FC = () => {
             {/* Canvas principal */}
             <div className="col-span-9">
               <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <div style={{ backgroundColor: "#FAF9F7" }}>
+                <div style={{ backgroundColor: '#FAF9F7' }}>
                   <h2 className="text-lg font-semibold">Canvas de Teste</h2>
-                  <p style={{ color: "#6B4F43" }}>
-                    Arraste componentes da sidebar para aqui
-                  </p>
+                  <p style={{ color: '#6B4F43' }}>Arraste componentes da sidebar para aqui</p>
                 </div>
 
                 <CanvasDropZone
@@ -182,17 +169,15 @@ export const DragDropTestPage: React.FC = () => {
           {/* Lista de blocos para debug */}
           {blocks.length > 0 && (
             <div className="mt-6 bg-white rounded-lg p-4 shadow-sm border">
-              <h3 className="text-lg font-semibold mb-3">
-                Blocos Criados (Debug)
-              </h3>
+              <h3 className="text-lg font-semibold mb-3">Blocos Criados (Debug)</h3>
               <div className="space-y-2">
                 {blocks.map((block, index) => (
-                  <div key={block.id} style={{ backgroundColor: "#FAF9F7" }}>
+                  <div key={block.id} style={{ backgroundColor: '#FAF9F7' }}>
                     <span className="text-sm font-mono">{index + 1}.</span>
                     <span className="font-medium">{block.type}</span>
-                    <span style={{ color: "#8B7355" }}>{block.id}</span>
+                    <span style={{ color: '#8B7355' }}>{block.id}</span>
                     <button
-                      style={{ color: "#432818" }}
+                      style={{ color: '#432818' }}
                       onClick={() => handleDeleteBlock(block.id)}
                     >
                       Deletar

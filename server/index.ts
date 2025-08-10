@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // Servir arquivos estáticos do build
-app.use(express.static(path.join(__dirname, "../dist")));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -46,8 +46,8 @@ app.use((err: any, req: any, res: any, next: any) => {
 
 // SPA Fallback - CRÍTICO: deve ser o último middleware
 // Qualquer rota que não seja API serve o index.html
-app.get("*", (req, res) => {
-  const indexPath = path.join(__dirname, "../dist/index.html");
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, '../dist/index.html');
   console.log(`🔄 SPA Fallback: ${req.url} → index.html`);
   res.sendFile(indexPath);
 });
@@ -56,8 +56,6 @@ const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(
-    `📁 Serving static files from: ${path.join(__dirname, "../dist")}`
-  );
+  console.log(`📁 Serving static files from: ${path.join(__dirname, '../dist')}`);
   console.log(`🔄 SPA fallback configured for client-side routing`);
 });

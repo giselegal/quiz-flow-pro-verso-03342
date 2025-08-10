@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import { Switch } from "../../components/ui/switch";
-import { Label } from "../../components/ui/label";
-import { Input } from "../../components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   AlertTriangle,
   CheckCircle,
@@ -28,7 +22,7 @@ import {
   X,
   Trash2,
 } from "lucide-react";
-import { toast } from "../../components/ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 interface ABTestMetrics {
   variant: "A" | "B";
@@ -65,11 +59,7 @@ interface AlertConfig {
 
 interface ABTestAlert {
   id: string;
-  type:
-    | "significance_reached"
-    | "sample_size_warning"
-    | "duration_warning"
-    | "conversion_anomaly";
+  type: "significance_reached" | "sample_size_warning" | "duration_warning" | "conversion_anomaly";
   severity: "low" | "medium" | "high";
   title: string;
   message: string;
@@ -144,13 +134,9 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       const newAlerts: ABTestAlert[] = [];
 
       // 1. Verificar significância estatística
-      if (
-        confidenceLevel >= config.significanceThreshold &&
-        significance &&
-        winner !== "tie"
-      ) {
+      if (confidenceLevel >= config.significanceThreshold && significance && winner !== "tie") {
         const existingAlert = alerts.find(
-          (a) => a.type === "significance_reached" && !a.acknowledged
+          a => a.type === "significance_reached" && !a.acknowledged
         );
         if (!existingAlert) {
           newAlerts.push({
@@ -171,9 +157,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       // 2. Verificar tamanho mínimo da amostra
       const totalSample = metrics.A.visitors + metrics.B.visitors;
       if (totalSample < config.minimumSampleSize && totalSample > 10) {
-        const existingAlert = alerts.find(
-          (a) => a.type === "sample_size_warning" && !a.acknowledged
-        );
+        const existingAlert = alerts.find(a => a.type === "sample_size_warning" && !a.acknowledged);
         if (!existingAlert) {
           newAlerts.push({
             id: `sample_${Date.now()}`,
@@ -190,13 +174,9 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       }
 
       // 3. Verificar anomalias de conversão
-      const conversionDiff = Math.abs(
-        metrics.A.conversionRate - metrics.B.conversionRate
-      );
+      const conversionDiff = Math.abs(metrics.A.conversionRate - metrics.B.conversionRate);
       if (conversionDiff > 50 && totalSample > 50) {
-        const existingAlert = alerts.find(
-          (a) => a.type === "conversion_anomaly" && !a.acknowledged
-        );
+        const existingAlert = alerts.find(a => a.type === "conversion_anomaly" && !a.acknowledged);
         if (!existingAlert) {
           newAlerts.push({
             id: `anomaly_${Date.now()}`,
@@ -214,10 +194,10 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
 
       // Adicionar novos alertas
       if (newAlerts.length > 0) {
-        setAlerts((prev) => [...newAlerts, ...prev]);
+        setAlerts(prev => [...newAlerts, ...prev]);
 
         // Mostrar toast para alertas de alta prioridade
-        newAlerts.forEach((alert) => {
+        newAlerts.forEach(alert => {
           if (alert.severity === "high") {
             toast({
               title: alert.title,
@@ -235,15 +215,13 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
   };
 
   const acknowledgeAlert = (alertId: string) => {
-    setAlerts((prev) =>
-      prev.map((alert) =>
-        alert.id === alertId ? { ...alert, acknowledged: true } : alert
-      )
+    setAlerts(prev =>
+      prev.map(alert => (alert.id === alertId ? { ...alert, acknowledged: true } : alert))
     );
   };
 
   const clearAlert = (alertId: string) => {
-    setAlerts((prev) => prev.filter((alert) => alert.id !== alertId));
+    setAlerts(prev => prev.filter(alert => alert.id !== alertId));
   };
 
   const clearAllAlerts = () => {
@@ -263,7 +241,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       case "duration_warning":
         return <Clock className="h-4 w-4 text-[#B89B7A]" />;
       case "conversion_anomaly":
-        return <AlertTriangle style={{ color: "#432818" }} />;
+        return <AlertTriangle style={{ color: '#432818' }} />;
       default:
         return <Bell className="h-4 w-4" />;
     }
@@ -282,8 +260,8 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
     }
   };
 
-  const unacknowledgedAlerts = alerts.filter((alert) => !alert.acknowledged);
-  const acknowledgedAlerts = alerts.filter((alert) => alert.acknowledged);
+  const unacknowledgedAlerts = alerts.filter(alert => !alert.acknowledged);
+  const acknowledgedAlerts = alerts.filter(alert => alert.acknowledged);
 
   return (
     <div className="space-y-6">
@@ -297,19 +275,14 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
                 Sistema de Alertas A/B
               </CardTitle>
               <CardDescription>
-                Monitoramento automático do teste com{" "}
-                {unacknowledgedAlerts.length} alertas ativos
+                Monitoramento automático do teste com {unacknowledgedAlerts.length} alertas ativos
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
               <Badge variant={config.enabled ? "default" : "secondary"}>
                 {config.enabled ? "Ativo" : "Inativo"}
               </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowSettings(!showSettings)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setShowSettings(!showSettings)}>
                 <Settings className="h-4 w-4 mr-2" />
                 Configurações
               </Button>
@@ -325,37 +298,23 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-[#B89B7A]">
-                {alerts.length}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Total de Alertas
-              </div>
+              <div className="text-2xl font-bold text-[#B89B7A]">{alerts.length}</div>
+              <div className="text-sm text-muted-foreground">Total de Alertas</div>
             </div>
             <div className="text-center">
-              <div style={{ color: "#432818" }}>
-                {unacknowledgedAlerts.length}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Não Confirmados
-              </div>
+              <div style={{ color: '#432818' }}>{unacknowledgedAlerts.length}</div>
+              <div className="text-sm text-muted-foreground">Não Confirmados</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
-                {acknowledgedAlerts.length}
-              </div>
+              <div className="text-2xl font-bold text-green-600">{acknowledgedAlerts.length}</div>
               <div className="text-sm text-muted-foreground">Confirmados</div>
             </div>
             <div className="text-center">
-              <div style={{ color: "#6B4F43" }}>
-                {Math.floor(
-                  (new Date().getTime() - lastCheck.getTime()) / 60000
-                )}
+              <div style={{ color: '#6B4F43' }}>
+                {Math.floor((new Date().getTime() - lastCheck.getTime()) / 60000)}
                 min
               </div>
-              <div className="text-sm text-muted-foreground">
-                Última Verificação
-              </div>
+              <div className="text-sm text-muted-foreground">Última Verificação</div>
             </div>
           </div>
         </CardContent>
@@ -366,9 +325,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
         <Card>
           <CardHeader>
             <CardTitle>Configurações de Alertas</CardTitle>
-            <CardDescription>
-              Personalize como e quando os alertas são gerados
-            </CardDescription>
+            <CardDescription>Personalize como e quando os alertas são gerados</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -377,28 +334,22 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
                   <Switch
                     id="alert-enabled"
                     checked={config.enabled}
-                    onCheckedChange={(checked) =>
-                      setConfig((prev) => ({ ...prev, enabled: checked }))
-                    }
+                    onCheckedChange={checked => setConfig(prev => ({ ...prev, enabled: checked }))}
                   />
-                  <Label htmlFor="alert-enabled">
-                    Ativar Sistema de Alertas
-                  </Label>
+                  <Label htmlFor="alert-enabled">Ativar Sistema de Alertas</Label>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="significance-threshold">
-                  Nível de Confiança Mínimo (%)
-                </Label>
+                <Label htmlFor="significance-threshold">Nível de Confiança Mínimo (%)</Label>
                 <Input
                   id="significance-threshold"
                   type="number"
                   min="80"
                   max="99"
                   value={config.significanceThreshold}
-                  onChange={(e) =>
-                    setConfig((prev) => ({
+                  onChange={e =>
+                    setConfig(prev => ({
                       ...prev,
                       significanceThreshold: parseInt(e.target.value),
                     }))
@@ -407,17 +358,15 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="minimum-sample">
-                  Tamanho Mínimo da Amostra
-                </Label>
+                <Label htmlFor="minimum-sample">Tamanho Mínimo da Amostra</Label>
                 <Input
                   id="minimum-sample"
                   type="number"
                   min="50"
                   max="1000"
                   value={config.minimumSampleSize}
-                  onChange={(e) =>
-                    setConfig((prev) => ({
+                  onChange={e =>
+                    setConfig(prev => ({
                       ...prev,
                       minimumSampleSize: parseInt(e.target.value),
                     }))
@@ -433,8 +382,8 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
                   min="7"
                   max="90"
                   value={config.maxDuration}
-                  onChange={(e) =>
-                    setConfig((prev) => ({
+                  onChange={e =>
+                    setConfig(prev => ({
                       ...prev,
                       maxDuration: parseInt(e.target.value),
                     }))
@@ -448,23 +397,21 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
                 <Switch
                   id="email-notifications"
                   checked={config.emailNotifications}
-                  onCheckedChange={(checked) =>
-                    setConfig((prev) => ({
+                  onCheckedChange={checked =>
+                    setConfig(prev => ({
                       ...prev,
                       emailNotifications: checked,
                     }))
                   }
                 />
-                <Label htmlFor="email-notifications">
-                  Notificações por Email
-                </Label>
+                <Label htmlFor="email-notifications">Notificações por Email</Label>
               </div>
               {config.emailNotifications && (
                 <Input
                   placeholder="seu-email@exemplo.com"
                   value={config.emailAddress}
-                  onChange={(e) =>
-                    setConfig((prev) => ({
+                  onChange={e =>
+                    setConfig(prev => ({
                       ...prev,
                       emailAddress: e.target.value,
                     }))
@@ -481,27 +428,20 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle style={{ color: "#432818" }} />
+              <AlertTriangle style={{ color: '#432818' }} />
               Alertas Ativos ({unacknowledgedAlerts.length})
             </CardTitle>
             <CardDescription>Alertas que requerem sua atenção</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {unacknowledgedAlerts.map((alert) => (
-              <Alert
-                key={alert.id}
-                className={getSeverityColor(alert.severity)}
-              >
+            {unacknowledgedAlerts.map(alert => (
+              <Alert key={alert.id} className={getSeverityColor(alert.severity)}>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
                     {getAlertIcon(alert.type)}
                     <div>
-                      <AlertTitle className="text-sm font-medium">
-                        {alert.title}
-                      </AlertTitle>
-                      <AlertDescription className="text-sm mt-1">
-                        {alert.message}
-                      </AlertDescription>
+                      <AlertTitle className="text-sm font-medium">{alert.title}</AlertTitle>
+                      <AlertDescription className="text-sm mt-1">{alert.message}</AlertDescription>
                       <div className="flex items-center gap-2 mt-2">
                         <Badge variant="outline" className="text-xs">
                           {alert.severity.toUpperCase()}
@@ -513,19 +453,11 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => acknowledgeAlert(alert.id)}
-                    >
+                    <Button size="sm" variant="outline" onClick={() => acknowledgeAlert(alert.id)}>
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Confirmar
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => clearAlert(alert.id)}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => clearAlert(alert.id)}>
                       <X className="h-3 w-3" />
                     </Button>
                   </div>
@@ -547,7 +479,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
             <CardDescription>Alertas já confirmados</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            {acknowledgedAlerts.slice(0, 5).map((alert) => (
+            {acknowledgedAlerts.slice(0, 5).map(alert => (
               <div
                 key={alert.id}
                 className="flex items-center justify-between py-2 border-b last:border-b-0"
@@ -581,8 +513,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
               <Bell className="h-12 w-12 mx-auto text-muted-foreground" />
               <h3 className="mt-4 text-lg font-semibold">Nenhum Alerta</h3>
               <p className="text-muted-foreground">
-                O sistema está monitorando seu teste A/B. Alertas aparecerão
-                aqui quando necessário.
+                O sistema está monitorando seu teste A/B. Alertas aparecerão aqui quando necessário.
               </p>
             </div>
           </CardContent>

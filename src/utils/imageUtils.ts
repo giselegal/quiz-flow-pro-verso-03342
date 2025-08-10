@@ -43,9 +43,7 @@ export const optimizeCloudinaryUrl = (
 
   // Verifica se já existem transformações
   const hasTransformations =
-    parts[0].includes("_") ||
-    parts[0].includes(",") ||
-    parts[0].startsWith("f_");
+    parts[0].includes("_") || parts[0].includes(",") || parts[0].startsWith("f_");
 
   // Constrói string de transformação
   let transformations = `f_${settings.format}`;
@@ -131,7 +129,7 @@ export const getResponsiveImageSources = (
   }
 
   const srcSet = sizes
-    .map((size) => {
+    .map(size => {
       const optimizedUrl = optimizeCloudinaryUrl(url, {
         width: size,
         quality: 85,
@@ -167,14 +165,12 @@ export const isImagePreloaded = (url: string): boolean => {
  * Pré-carrega próximas imagens de perguntas
  * @param nextQuestionImages Array de URLs de imagens para a próxima pergunta
  */
-export const preloadNextQuestionImages = (
-  nextQuestionImages: string[]
-): void => {
+export const preloadNextQuestionImages = (nextQuestionImages: string[]): void => {
   if (!nextQuestionImages || nextQuestionImages.length === 0) {
     return;
   }
 
-  nextQuestionImages.forEach((url) => {
+  nextQuestionImages.forEach(url => {
     const optimizedUrl = optimizeCloudinaryUrl(url, {
       quality: 85,
       format: "auto",

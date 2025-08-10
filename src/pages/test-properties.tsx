@@ -1,5 +1,5 @@
-import UniversalPropertiesPanel from "../components/universal";
-import { UnifiedBlock } from "../hooks/useUnifiedProperties";
+import UniversalPropertiesPanel from "@/components/universal";
+import { UnifiedBlock } from "@/hooks/useUnifiedProperties";
 import { useState } from "react";
 
 const TestPropertiesPanel = () => {
@@ -15,7 +15,7 @@ const TestPropertiesPanel = () => {
 
   const handleUpdate = (blockId: string, updates: Record<string, any>) => {
     console.log("🔄 Atualizando bloco:", blockId, updates);
-    setSelectedBlock((prev) => {
+    setSelectedBlock(prev => {
       if (!prev) return null;
       return {
         ...prev,
@@ -30,11 +30,9 @@ const TestPropertiesPanel = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="flex-1 p-8">
-        <h1 className="text-2xl font-bold mb-4">
-          Teste do Painel de Propriedades
-        </h1>
+        <h1 className="text-2xl font-bold mb-4">Teste do Painel de Propriedades</h1>
 
         <div className="mb-6 space-y-4">
           <button
@@ -42,14 +40,10 @@ const TestPropertiesPanel = () => {
               setSelectedBlock({
                 id: "test-text",
                 type: "text-inline",
-                properties: {
-                  content: "Texto teste",
-                  fontSize: 16,
-                  textColor: "#000000",
-                },
+                properties: { content: "Texto teste", fontSize: 16, textColor: "#000000" },
               })
             }
-            style={{ backgroundColor: "#FAF9F7" }}
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             Selecionar Texto
           </button>
@@ -59,11 +53,7 @@ const TestPropertiesPanel = () => {
               setSelectedBlock({
                 id: "test-heading",
                 type: "heading-inline",
-                properties: {
-                  content: "Título teste",
-                  level: "h2",
-                  textAlign: "left",
-                },
+                properties: { content: "Título teste", level: "h2", textAlign: "left" },
               })
             }
             className="bg-green-500 text-white px-4 py-2 rounded mr-2"
@@ -76,21 +66,17 @@ const TestPropertiesPanel = () => {
               setSelectedBlock({
                 id: "test-button",
                 type: "button-inline",
-                properties: {
-                  text: "Botão teste",
-                  variant: "primary",
-                  backgroundColor: "#007bff",
-                },
+                properties: { text: "Botão teste", variant: "primary", backgroundColor: "#007bff" },
               })
             }
-            style={{ backgroundColor: "#FAF9F7" }}
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             Selecionar Botão
           </button>
 
           <button
             onClick={() => setSelectedBlock(null)}
-            style={{ backgroundColor: "#FAF9F7" }}
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             Limpar Seleção
           </button>
@@ -108,7 +94,7 @@ const TestPropertiesPanel = () => {
             <p>
               <strong>Propriedades:</strong>
             </p>
-            <pre style={{ backgroundColor: "#E5DDD5" }}>
+            <pre style={{ backgroundColor: '#E5DDD5' }}>
               {JSON.stringify(selectedBlock.properties, null, 2)}
             </pre>
           </div>

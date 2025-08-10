@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Eye,
   Save,
@@ -10,13 +10,8 @@ import {
   Maximize2,
   Settings,
 } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../../components/ui/tooltip";
-import { cn } from "../../../lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
@@ -38,9 +33,7 @@ export function EditorToolbar({
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
       <div className="flex items-center space-x-2">
-        <h1 className="text-xl font-semibold text-[#432818] mr-4">
-          Editor Visual
-        </h1>
+        <h1 className="text-xl font-semibold text-[#432818] mr-4">Editor Visual</h1>
 
         <TooltipProvider>
           <div className="flex items-center bg-[#FAF9F7] rounded-md p-1">

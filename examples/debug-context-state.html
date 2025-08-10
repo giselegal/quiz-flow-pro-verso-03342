@@ -69,23 +69,16 @@
 
     <div class="status warning">
       <h3>⚡ Teste Rápido</h3>
-      <button class="btn btn-primary" onclick="testEditorFixed()">
-        🧪 Testar /editor-fixed
-      </button>
-      <button class="btn btn-secondary" onclick="testDebugEditor()">
-        🐞 Testar /debug-editor
-      </button>
-      <button class="btn btn-secondary" onclick="checkConsole()">
-        📝 Verificar Console
-      </button>
+      <button class="btn btn-primary" onclick="testEditorFixed()">🧪 Testar /editor-fixed</button>
+      <button class="btn btn-secondary" onclick="testDebugEditor()">🐞 Testar /debug-editor</button>
+      <button class="btn btn-secondary" onclick="checkConsole()">📝 Verificar Console</button>
     </div>
 
     <div id="results"></div>
 
     <script>
       // Atualizar timestamp
-      document.getElementById("timestamp").textContent =
-        new Date().toLocaleString();
+      document.getElementById("timestamp").textContent = new Date().toLocaleString();
       document.getElementById("current-url").textContent = window.location.href;
 
       function addResult(title, content, type = "info") {
@@ -99,20 +92,12 @@
       }
 
       function testEditorFixed() {
-        addResult(
-          "🧪 Testando /editor-fixed",
-          "Redirecionando para /editor-fixed...",
-          "info"
-        );
+        addResult("🧪 Testando /editor-fixed", "Redirecionando para /editor-fixed...", "info");
         window.open("/editor-fixed", "_blank");
       }
 
       function testDebugEditor() {
-        addResult(
-          "🐞 Testando /debug-editor",
-          "Redirecionando para /debug-editor...",
-          "info"
-        );
+        addResult("🐞 Testando /debug-editor", "Redirecionando para /debug-editor...", "info");
         window.open("/debug-editor", "_blank");
       }
 

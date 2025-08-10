@@ -31,7 +31,7 @@ const stepFiles = [
 
 const basePath = "/workspaces/quiz-quest-challenge-verse/src/components/steps";
 
-stepFiles.forEach((fileName) => {
+stepFiles.forEach(fileName => {
   const filePath = path.join(basePath, fileName);
 
   if (!fs.existsSync(filePath)) {
@@ -51,10 +51,7 @@ stepFiles.forEach((fileName) => {
 
   // Padronizar margens pequenas para 0
   content = content.replace(/marginTop:\s*[1-8](?![0-9])/g, "marginTop: 0");
-  content = content.replace(
-    /marginBottom:\s*[1-8](?![0-9])/g,
-    "marginBottom: 0"
-  );
+  content = content.replace(/marginBottom:\s*[1-8](?![0-9])/g, "marginBottom: 0");
 
   // Padronizar spacing
   content = content.replace(/spacing:\s*"normal"/g, 'spacing: "small"');
@@ -62,32 +59,26 @@ stepFiles.forEach((fileName) => {
 
   // Garantir que todos os componentes têm as propriedades necessárias
   // Procurar por blocos properties: { ... } e adicionar propriedades faltantes
-  content = content.replace(
-    /(properties:\s*\{[^}]*?)(,?\s*)\}/gs,
-    (match, props, comma) => {
-      let needsComma = !comma.includes(",");
-      let additions = [];
+  content = content.replace(/(properties:\s*\{[^}]*?)(,?\s*)\}/gs, (match, props, comma) => {
+    let needsComma = !comma.includes(",");
+    let additions = [];
 
-      if (!props.includes("marginTop:")) {
-        additions.push("marginTop: 0");
-      }
-      if (!props.includes("marginBottom:")) {
-        additions.push("marginBottom: 0");
-      }
-      if (!props.includes("spacing:")) {
-        additions.push('spacing: "small"');
-      }
-
-      if (additions.length > 0) {
-        const additionsStr =
-          (needsComma ? "," : "") +
-          "\n        " +
-          additions.join(",\n        ");
-        return props + additionsStr + "\n      }";
-      }
-      return match;
+    if (!props.includes("marginTop:")) {
+      additions.push("marginTop: 0");
     }
-  );
+    if (!props.includes("marginBottom:")) {
+      additions.push("marginBottom: 0");
+    }
+    if (!props.includes("spacing:")) {
+      additions.push('spacing: "small"');
+    }
+
+    if (additions.length > 0) {
+      const additionsStr = (needsComma ? "," : "") + "\n        " + additions.join(",\n        ");
+      return props + additionsStr + "\n      }";
+    }
+    return match;
+  });
 
   fs.writeFileSync(filePath, content, "utf8");
   console.log(`✅ ${fileName} - Corrigido`);

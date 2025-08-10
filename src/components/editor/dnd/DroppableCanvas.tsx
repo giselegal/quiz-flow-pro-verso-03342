@@ -1,4 +1,4 @@
-import { Block } from "../../../types/editor";
+import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
 import React from "react";
 import { generateSemanticId } from "../../../utils/semanticIdGenerator";
@@ -44,17 +44,12 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   });
 
   return (
-    <div
-      ref={setNodeRef}
-      className="w-full h-full p-4 border-2 border-dashed rounded-md bg-white"
-    >
+    <div ref={setNodeRef} className="w-full h-full p-4 border-2 border-dashed rounded-md bg-white">
       {blocks.length === 0 ? (
-        <div className="text-stone-500 text-center">
-          Arraste e solte componentes aqui
-        </div>
+        <div className="text-stone-500 text-center">Arraste e solte componentes aqui</div>
       ) : (
         <div>
-          {blocks.map((block) => (
+          {blocks.map(block => (
             <div key={block.id}>{block.type}</div>
           ))}
         </div>

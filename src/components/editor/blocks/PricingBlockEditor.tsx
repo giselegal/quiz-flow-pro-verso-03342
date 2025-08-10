@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { BlockEditorProps } from "./types";
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,10 +49,7 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const PricingBlockEditor: React.FC<BlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const PricingBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   return (
     <div className="space-y-4">
       <div>
@@ -67,7 +57,7 @@ const PricingBlockEditor: React.FC<BlockEditorProps> = ({
         <Input
           id={`${block.id}-regularPrice`}
           value={block.content.regularPrice || ""}
-          onChange={(e) => onUpdate({ regularPrice: e.target.value })}
+          onChange={e => onUpdate({ regularPrice: e.target.value })}
           className="mt-1"
           placeholder="175,00"
         />
@@ -78,7 +68,7 @@ const PricingBlockEditor: React.FC<BlockEditorProps> = ({
         <Input
           id={`${block.id}-salePrice`}
           value={block.content.salePrice || ""}
-          onChange={(e) => onUpdate({ salePrice: e.target.value })}
+          onChange={e => onUpdate({ salePrice: e.target.value })}
           className="mt-1"
           placeholder="39,00"
         />
@@ -89,7 +79,7 @@ const PricingBlockEditor: React.FC<BlockEditorProps> = ({
         <Input
           id={`${block.id}-buttonText`}
           value={block.content.buttonText || ""}
-          onChange={(e) => onUpdate({ buttonText: e.target.value })}
+          onChange={e => onUpdate({ buttonText: e.target.value })}
           className="mt-1"
           placeholder="Quero Comprar Agora"
         />
@@ -100,7 +90,7 @@ const PricingBlockEditor: React.FC<BlockEditorProps> = ({
         <Input
           id={`${block.id}-ctaUrl`}
           value={block.content.ctaUrl || ""}
-          onChange={(e) => onUpdate({ ctaUrl: e.target.value })}
+          onChange={e => onUpdate({ ctaUrl: e.target.value })}
           className="mt-1"
           placeholder="https://pay.hotmart.com/..."
         />

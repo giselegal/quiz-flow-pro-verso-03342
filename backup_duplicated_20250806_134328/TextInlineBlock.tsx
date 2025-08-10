@@ -77,8 +77,7 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
   const hasSpanTag = rawContent?.includes("<span");
   const hasStrongTag = rawContent?.includes("<strong");
   const hasEmTag = rawContent?.includes("<em");
-  const hasHtmlTags =
-    hasSpanTag || hasStrongTag || hasEmTag || rawContent?.includes("<");
+  const hasHtmlTags = hasSpanTag || hasStrongTag || hasEmTag || rawContent?.includes("<");
 
   console.log("🐛 TextInlineBlock DEBUG COMPLETO:", {
     blockId: block?.id,
@@ -192,10 +191,7 @@ export const TextInlineBlock: React.FC<TextInlineBlockProps> = ({
 
       {/* Text content */}
       {!isEmpty && hasHtmlTags ? (
-        <div
-          className="relative z-10"
-          dangerouslySetInnerHTML={{ __html: text }}
-        />
+        <div className="relative z-10" dangerouslySetInnerHTML={{ __html: text }} />
       ) : (
         !isEmpty && <span className="relative z-10">{text}</span>
       )}

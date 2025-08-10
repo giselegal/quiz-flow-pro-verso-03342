@@ -6,7 +6,12 @@
     "description": "Transição entre questões principais e estratégicas",
     "category": "transition",
     "type": "mainTransition",
-    "tags": ["quiz", "style", "transition", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "transition",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.517Z",
     "updatedAt": "2025-08-10T03:45:03.517Z",
     "author": "giselegal"
@@ -139,7 +144,12 @@
   },
   "analytics": {
     "trackingId": "step-15-transition",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
     "utmParams": true,
     "customEvents": []
   },

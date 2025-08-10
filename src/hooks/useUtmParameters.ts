@@ -77,22 +77,17 @@ export const useUtmParameters = () => {
       const utmParams: UtmParameters = {};
 
       // Parâmetros UTM padrão
-      if (urlParams.has("utm_source"))
-        utmParams.source = urlParams.get("utm_source") || undefined;
-      if (urlParams.has("utm_medium"))
-        utmParams.medium = urlParams.get("utm_medium") || undefined;
+      if (urlParams.has("utm_source")) utmParams.source = urlParams.get("utm_source") || undefined;
+      if (urlParams.has("utm_medium")) utmParams.medium = urlParams.get("utm_medium") || undefined;
       if (urlParams.has("utm_campaign"))
         utmParams.campaign = urlParams.get("utm_campaign") || undefined;
       if (urlParams.has("utm_content"))
         utmParams.content = urlParams.get("utm_content") || undefined;
-      if (urlParams.has("utm_term"))
-        utmParams.term = urlParams.get("utm_term") || undefined;
-      if (urlParams.has("utm_id"))
-        utmParams.id = urlParams.get("utm_id") || undefined;
+      if (urlParams.has("utm_term")) utmParams.term = urlParams.get("utm_term") || undefined;
+      if (urlParams.has("utm_id")) utmParams.id = urlParams.get("utm_id") || undefined;
 
       // Parâmetro específico do Facebook
-      if (urlParams.has("fbclid"))
-        utmParams.fbclid = urlParams.get("fbclid") || undefined;
+      if (urlParams.has("fbclid")) utmParams.fbclid = urlParams.get("fbclid") || undefined;
 
       // Armazenar parâmetros UTM no localStorage para persistência
       if (Object.keys(utmParams).length > 0) {
@@ -144,19 +139,13 @@ export const useUtmParameters = () => {
 
     try {
       const urlObj = new URL(url);
-      if (utmParams.source)
-        urlObj.searchParams.append("utm_source", utmParams.source);
-      if (utmParams.medium)
-        urlObj.searchParams.append("utm_medium", utmParams.medium);
-      if (utmParams.campaign)
-        urlObj.searchParams.append("utm_campaign", utmParams.campaign);
-      if (utmParams.content)
-        urlObj.searchParams.append("utm_content", utmParams.content);
-      if (utmParams.term)
-        urlObj.searchParams.append("utm_term", utmParams.term);
+      if (utmParams.source) urlObj.searchParams.append("utm_source", utmParams.source);
+      if (utmParams.medium) urlObj.searchParams.append("utm_medium", utmParams.medium);
+      if (utmParams.campaign) urlObj.searchParams.append("utm_campaign", utmParams.campaign);
+      if (utmParams.content) urlObj.searchParams.append("utm_content", utmParams.content);
+      if (utmParams.term) urlObj.searchParams.append("utm_term", utmParams.term);
       if (utmParams.id) urlObj.searchParams.append("utm_id", utmParams.id);
-      if (utmParams.fbclid)
-        urlObj.searchParams.append("fbclid", utmParams.fbclid);
+      if (utmParams.fbclid) urlObj.searchParams.append("fbclid", utmParams.fbclid);
 
       return urlObj.toString();
     } catch (error) {

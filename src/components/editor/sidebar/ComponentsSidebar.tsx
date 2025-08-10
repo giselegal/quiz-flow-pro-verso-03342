@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
@@ -12,14 +12,7 @@ export const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -58,9 +51,7 @@ export const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
-  onComponentSelect,
-}) => {
+export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
     { type: "header", label: "Header" },
     { type: "text", label: "Text" },
@@ -77,10 +68,10 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
   ];
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <h3 className="text-lg font-semibold mb-4">Components</h3>
       <div className="space-y-2">
-        {components.map((component) => (
+        {components.map(component => (
           <Button
             key={component.type}
             variant="outline"
@@ -96,3 +87,4 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
 };
 
 export default ComponentsSidebar;
+

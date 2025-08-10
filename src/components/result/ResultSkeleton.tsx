@@ -1,17 +1,16 @@
 import React from "react";
-import { Card } from "../../components/ui/card";
-import { StyleResult } from "../../types/quiz";
-import { styleConfig } from "../../config/styleConfig";
-import OptimizedImage from "../../components/ui/optimized-image";
-import { LoadingSpinner } from "../../components/ui/loading-spinner";
+import { Card } from "@/components/ui/card";
+import { StyleResult } from "@/types/quiz";
+import { styleConfig } from "@/config/styleConfig";
+import OptimizedImage from "@/components/ui/optimized-image";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface ResultSkeletonProps {
   primaryStyle?: StyleResult;
 }
 
 const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
-  const mainImageSrc =
-    primaryStyle && styleConfig[primaryStyle.category]?.image;
+  const mainImageSrc = primaryStyle && styleConfig[primaryStyle.category]?.image;
 
   // Constantes para garantir proporções consistentes em todos os breakpoints
   const IMAGE_ASPECT_RATIO = 4 / 5; // Proporção altura/largura (4:5)
@@ -19,11 +18,7 @@ const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
   const BASE_HEIGHT = Math.round(BASE_WIDTH / IMAGE_ASPECT_RATIO);
 
   return (
-    <div
-      className="min-h-screen bg-[#fffaf7] p-4 md:p-6"
-      aria-busy="true"
-      role="status"
-    >
+    <div className="min-h-screen bg-[#fffaf7] p-4 md:p-6" aria-busy="true" role="status">
       <div className="container mx-auto max-w-4xl">
         {/* Header skeleton with brand logo */}
         <Card
@@ -82,7 +77,7 @@ const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
             </div>
 
             <div className="flex justify-center gap-2 mt-3 sm:mt-4">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3].map(i => (
                 <div
                   key={i}
                   className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${i === 1 ? "bg-[#aa6b5d]/50" : "bg-gray-200"}`}
@@ -94,11 +89,11 @@ const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
 
         {/* Additional sections skeleton */}
         <div className="space-y-6 sm:space-y-8">
-          {[1, 2].map((i) => (
+          {[1, 2].map(i => (
             <Card key={i} className="p-4 sm:p-6 bg-white">
               <div className="w-full h-6 sm:h-8 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse rounded-md mb-4 sm:mb-6" />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-                {[1, 2, 3].map((j) => (
+                {[1, 2, 3].map(j => (
                   <div
                     key={j}
                     className="h-24 sm:h-32 bg-gradient-to-r from-gray-100 to-gray-200 animate-pulse rounded-md"

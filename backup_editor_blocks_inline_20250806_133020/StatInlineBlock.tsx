@@ -1,14 +1,7 @@
 import React from "react";
 import { InlineBlockProps } from "@/types/inlineBlocks";
 import { useInlineBlock } from "@/hooks/useInlineBlock";
-import {
-  TrendingUp,
-  Users,
-  DollarSign,
-  Target,
-  Star,
-  Award,
-} from "lucide-react";
+import { TrendingUp, Users, DollarSign, Target, Star, Award } from "lucide-react";
 
 const StatInlineBlock: React.FC<InlineBlockProps> = ({
   block,
@@ -87,9 +80,7 @@ const StatInlineBlock: React.FC<InlineBlockProps> = ({
           </div>
           <div className="text-sm opacity-75">{label}</div>
           {showTrend && (
-            <div className={`text-xs font-medium mt-1 ${getTrendColor()}`}>
-              {trendValue}
-            </div>
+            <div className={`text-xs font-medium mt-1 ${getTrendColor()}`}>{trendValue}</div>
           )}
         </div>
       </div>

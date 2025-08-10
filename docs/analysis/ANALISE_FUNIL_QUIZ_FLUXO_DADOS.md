@@ -147,10 +147,7 @@ O funil de quiz é composto por 21 etapas definidas no `StepsContext.tsx`, cada 
 
 - Todos os componentes são registrados em `enhancedBlockRegistry.ts`:
   ```typescript
-  export const ENHANCED_BLOCK_REGISTRY: Record<
-    string,
-    React.ComponentType<any>
-  > = {
+  export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
     // ...
     "quiz-results": QuizResultsEditor,
     "quiz-results-block": QuizResultsBlock,

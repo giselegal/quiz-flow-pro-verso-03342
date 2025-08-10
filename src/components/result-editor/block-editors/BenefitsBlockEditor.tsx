@@ -1,8 +1,8 @@
 import React from "react";
-import { Block, FAQItem } from "../../../types/editor";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Block, FAQItem } from "@/types/editor";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Plus, Trash2 } from "lucide-react";
 
 interface BenefitsBlockEditorProps {
@@ -10,10 +10,7 @@ interface BenefitsBlockEditorProps {
   onUpdate: (updates: Partial<Block>) => void;
 }
 
-const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content || {};
   const items = content.items || [];
 
@@ -64,7 +61,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
         <Input
           id="benefits-title"
           value={content.title || ""}
-          onChange={(e) => handleTitleChange(e.target.value)}
+          onChange={e => handleTitleChange(e.target.value)}
           placeholder="Título da seção"
         />
       </div>
@@ -83,14 +80,14 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
             <div key={index} className="flex items-center gap-2">
               <Input
                 value={item}
-                onChange={(e) => handleUpdateItem(index, e.target.value)}
+                onChange={e => handleUpdateItem(index, e.target.value)}
                 placeholder={`Benefício ${index + 1}`}
               />
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => handleRemoveItem(index)}
-                style={{ color: "#432818" }}
+                style={{ color: '#432818' }}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
@@ -99,7 +96,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({
         </div>
 
         {benefitItems.length === 0 && (
-          <p style={{ color: "#8B7355" }}>
+          <p style={{ color: '#8B7355' }}>
             Nenhum benefício adicionado. Clique em "Adicionar" para começar.
           </p>
         )}

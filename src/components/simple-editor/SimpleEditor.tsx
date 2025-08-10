@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Textarea } from "../../components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Save, Palette, Type, Eye, Settings, ArrowLeft } from "lucide-react";
-import { toast } from "../../components/ui/use-toast";
-import { safeLocalStorage } from "../../utils/safeLocalStorage";
+import { toast } from "@/components/ui/use-toast";
+import { safeLocalStorage } from "@/utils/safeLocalStorage";
 import { Link } from "wouter";
 
 interface EditorConfig {
@@ -65,21 +65,21 @@ const SimpleEditor: React.FC = () => {
   };
 
   const atualizarCor = (chave: string, valor: string) => {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       cores: { ...prev.cores, [chave]: valor },
     }));
   };
 
   const atualizarTexto = (chave: string, valor: string) => {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       texto: { ...prev.texto, [chave]: valor },
     }));
   };
 
   const atualizarLayout = (chave: string, valor: any) => {
-    setConfig((prev) => ({
+    setConfig(prev => ({
       ...prev,
       layout: { ...prev.layout, [chave]: valor },
     }));
@@ -108,18 +108,13 @@ const SimpleEditor: React.FC = () => {
           {config.texto.titulo}
         </h1>
 
-        <h2
-          className="text-2xl font-semibold mb-4"
-          style={{ color: config.cores.destaque }}
-        >
+        <h2 className="text-2xl font-semibold mb-4" style={{ color: config.cores.destaque }}>
           {config.texto.subtitulo}
         </h2>
 
         <p className="text-lg mb-6 opacity-90">{config.texto.introducao}</p>
 
-        <p className="text-base mb-8 leading-relaxed">
-          {config.texto.descricao}
-        </p>
+        <p className="text-base mb-8 leading-relaxed">{config.texto.descricao}</p>
 
         <button
           className="px-8 py-4 rounded-lg text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -132,21 +127,18 @@ const SimpleEditor: React.FC = () => {
 
         {/* Exemplo de cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3].map(i => (
             <div
               key={i}
               className="bg-white p-6 rounded-xl shadow-md"
               style={{ borderTop: `4px solid ${config.cores.primaria}` }}
             >
-              <h3
-                className="text-xl font-semibold mb-3"
-                style={{ color: config.cores.primaria }}
-              >
+              <h3 className="text-xl font-semibold mb-3" style={{ color: config.cores.primaria }}>
                 Recurso {i}
               </h3>
-              <p style={{ color: "#6B4F43" }}>
-                Descrição do recurso que demonstra como o editor simples pode
-                criar layouts elegantes.
+              <p style={{ color: '#6B4F43' }}>
+                Descrição do recurso que demonstra como o editor simples pode criar layouts
+                elegantes.
               </p>
             </div>
           ))}
@@ -181,7 +173,7 @@ const SimpleEditor: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       {/* Header */}
       <div className="bg-white border-b p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -189,8 +181,10 @@ const SimpleEditor: React.FC = () => {
             <Link to="/admin" className="text-[#B89B7A] hover:text-[#A38A69]">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 style={{ color: "#432818" }}>Simple Editor</h1>
-            <span style={{ backgroundColor: "#E5DDD5" }}>Modo Simples</span>
+            <h1 style={{ color: '#432818' }}>Simple Editor</h1>
+            <span style={{ backgroundColor: '#E5DDD5' }}>
+              Modo Simples
+            </span>
           </div>
 
           <div className="flex gap-2">
@@ -224,20 +218,18 @@ const SimpleEditor: React.FC = () => {
               <div className="space-y-4">
                 {Object.entries(config.cores).map(([chave, valor]) => (
                   <div key={chave}>
-                    <Label className="capitalize">
-                      {chave.replace(/([A-Z])/g, " $1")}
-                    </Label>
+                    <Label className="capitalize">{chave.replace(/([A-Z])/g, " $1")}</Label>
                     <div className="flex gap-2 mt-1">
                       <Input
                         type="color"
                         value={valor}
-                        onChange={(e) => atualizarCor(chave, e.target.value)}
+                        onChange={e => atualizarCor(chave, e.target.value)}
                         className="w-16"
                       />
                       <Input
                         type="text"
                         value={valor}
-                        onChange={(e) => atualizarCor(chave, e.target.value)}
+                        onChange={e => atualizarCor(chave, e.target.value)}
                         className="flex-1"
                       />
                     </div>
@@ -256,20 +248,18 @@ const SimpleEditor: React.FC = () => {
               <div className="space-y-4">
                 {Object.entries(config.texto).map(([chave, valor]) => (
                   <div key={chave}>
-                    <Label className="capitalize">
-                      {chave.replace(/([A-Z])/g, " $1")}
-                    </Label>
+                    <Label className="capitalize">{chave.replace(/([A-Z])/g, " $1")}</Label>
                     {chave === "descricao" || chave === "introducao" ? (
                       <Textarea
                         value={valor}
-                        onChange={(e) => atualizarTexto(chave, e.target.value)}
+                        onChange={e => atualizarTexto(chave, e.target.value)}
                         className="mt-1"
                         rows={3}
                       />
                     ) : (
                       <Input
                         value={valor}
-                        onChange={(e) => atualizarTexto(chave, e.target.value)}
+                        onChange={e => atualizarTexto(chave, e.target.value)}
                         className="mt-1"
                       />
                     )}
@@ -293,9 +283,7 @@ const SimpleEditor: React.FC = () => {
                     min="1"
                     max="8"
                     value={config.layout.espacamento}
-                    onChange={(e) =>
-                      atualizarLayout("espacamento", Number(e.target.value))
-                    }
+                    onChange={e => atualizarLayout("espacamento", Number(e.target.value))}
                     className="mt-1"
                   />
                 </div>
@@ -304,9 +292,7 @@ const SimpleEditor: React.FC = () => {
                   <Label>Largura Máxima</Label>
                   <select
                     value={config.layout.larguraMaxima}
-                    onChange={(e) =>
-                      atualizarLayout("larguraMaxima", e.target.value)
-                    }
+                    onChange={e => atualizarLayout("larguraMaxima", e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
                   >
                     <option value="max-w-2xl">Pequena (2xl)</option>
@@ -320,9 +306,7 @@ const SimpleEditor: React.FC = () => {
                   <Label>Alinhamento</Label>
                   <select
                     value={config.layout.alinhamento}
-                    onChange={(e) =>
-                      atualizarLayout("alinhamento", e.target.value)
-                    }
+                    onChange={e => atualizarLayout("alinhamento", e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
                   >
                     <option value="left">Esquerda</option>
@@ -340,7 +324,7 @@ const SimpleEditor: React.FC = () => {
               <div className="p-4 border-b">
                 <h3 className="text-lg font-semibold">Preview em Tempo Real</h3>
               </div>
-              <div style={{ backgroundColor: "#E5DDD5" }}>
+              <div style={{ backgroundColor: '#E5DDD5' }}>
                 <ComponentePreview />
               </div>
             </Card>

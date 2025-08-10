@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface ProgressiveImageProps {
   src: string;
@@ -114,14 +114,14 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
       {/* Error fallback */}
       {hasError && (
-        <div style={{ backgroundColor: "#E5DDD5" }}>
-          <span style={{ color: "#8B7355" }}>Imagem indisponível</span>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <span style={{ color: '#8B7355' }}>Imagem indisponível</span>
         </div>
       )}
 
       {/* Loading skeleton when neither image is loaded */}
       {!isLoaded && !isLowQualityLoaded && (
-        <div style={{ backgroundColor: "#E5DDD5" }} />
+        <div style={{ backgroundColor: '#E5DDD5' }} />
       )}
     </div>
   );

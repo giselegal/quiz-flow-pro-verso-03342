@@ -239,9 +239,7 @@ if (totalValid === 21) {
   console.log("\n🎉 PARABÉNS! TODOS OS 21 TEMPLATES ESTÃO CORRETOS!");
   console.log("\n🎯 CARACTERÍSTICAS DOS TEMPLATES:");
   console.log("   ✅ Interfaces TypeScript completas");
-  console.log(
-    "   ✅ Props padronizadas (onNext, onBlockAdd, onAnswer, userAnswers)"
-  );
+  console.log("   ✅ Props padronizadas (onNext, onBlockAdd, onAnswer, userAnswers)");
   console.log("   ✅ Templates com dados e imagens do Cloudinary");
   console.log("   ✅ Sistema de progresso de 0% a 100%");
   console.log("   ✅ Numeração correta das etapas (1 de 21, 2 de 21, etc.)");
@@ -269,7 +267,5 @@ if (totalValid === 21) {
   console.log(`\n⚠️ ${totalInvalid} template(s) precisam de correção.`);
 }
 
-console.log(
-  "\n📍 Localização: /workspaces/quiz-quest-challenge-verse/src/components/steps/"
-);
+console.log("\n📍 Localização: /workspaces/quiz-quest-challenge-verse/src/components/steps/");
 console.log("📅 Data da correção: " + new Date().toLocaleDateString("pt-BR"));

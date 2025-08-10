@@ -1,12 +1,7 @@
 import React from "react";
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Cloud,
   CloudOff,
@@ -19,7 +14,7 @@ import {
   Wifi,
   WifiOff,
 } from "lucide-react";
-import { type AutoSaveState } from "../../../services/schemaDrivenFunnelService";
+import { type AutoSaveState } from "@/services/schemaDrivenFunnelService";
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;
@@ -56,7 +51,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
     }
 
     if (autoSaveState.errorCount > 0) {
-      return <AlertCircle style={{ color: "#432818" }} />;
+      return <AlertCircle style={{ color: '#432818' }} />;
     }
 
     return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -80,9 +75,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
     }
 
     if (autoSaveState.lastSave) {
-      const timeDiff = Math.floor(
-        (Date.now() - autoSaveState.lastSave.getTime()) / 1000
-      );
+      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSave.getTime()) / 1000);
       if (timeDiff < 60) {
         return `Salvo há ${timeDiff}s`;
       } else if (timeDiff < 3600) {
@@ -172,61 +165,41 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
             {getStatusIcon()}
             <span className="text-sm">{getStatusText()}</span>
           </div>
-          <Badge variant={getStatusBadgeVariant()}>
-            {isOnline ? "Online" : "Offline"}
-          </Badge>
+          <Badge variant={getStatusBadgeVariant()}>{isOnline ? "Online" : "Offline"}</Badge>
         </div>
 
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
-          <div style={{ color: "#6B4F43" }}>
-            Auto-save:{" "}
-            {autoSaveState.isEnabled
-              ? `${autoSaveState.interval}s`
-              : "Desabilitado"}
+          <div style={{ color: '#6B4F43' }}>
+            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : "Desabilitado"}
           </div>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onToggleAutoSave}
-            className="h-7 text-xs"
-          >
+          <Button size="sm" variant="outline" onClick={onToggleAutoSave} className="h-7 text-xs">
             {autoSaveState.isEnabled ? "Desabilitar" : "Habilitar"}
           </Button>
         </div>
 
         {/* Informações de erro */}
         {autoSaveState.errorCount > 0 && (
-          <div style={{ color: "#432818" }}>
+          <div style={{ color: '#432818' }}>
             <div className="flex items-center space-x-1">
               <AlertCircle className="w-3 h-3" />
               <span>Falhas no auto-save: {autoSaveState.errorCount}</span>
             </div>
-            <div className="mt-1">
-              Intervalo aumentado para {autoSaveState.interval}s
-            </div>
+            <div className="mt-1">Intervalo aumentado para {autoSaveState.interval}s</div>
           </div>
         )}
 
         {/* Última sincronização */}
         {autoSaveState.lastSave && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <History className="w-3 h-3" />
-            <span>
-              Última sincronização:{" "}
-              {autoSaveState.lastSave.toLocaleTimeString()}
-            </span>
+            <span>Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}</span>
           </div>
         )}
 
         {/* Ações */}
         <div className="flex space-x-2">
-          <Button
-            size="sm"
-            onClick={onManualSave}
-            disabled={isSaving}
-            className="flex-1"
-          >
+          <Button size="sm" onClick={onManualSave} disabled={isSaving} className="flex-1">
             {isSaving ? (
               <>
                 <Loader2 className="w-3 h-3 mr-1 animate-spin" />

@@ -1,42 +1,23 @@
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/popover";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import { Slider } from "../../components/ui/slider";
-import { Switch } from "../../components/ui/switch";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../components/ui/tabs";
-import { Textarea } from "../../components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../components/ui/tooltip";
-import { useSyncedScroll } from "../../hooks/useSyncedScroll";
-import { BlockDefinition, EditableContent } from "../../types/editor";
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { BlockDefinition, EditableContent } from "@/types/editor";
 import {
   CheckCircle,
   GripVertical,
@@ -92,11 +73,7 @@ const OptionsArrayEditor: React.FC<{
     onChange(newOptions);
   };
 
-  const updateOption = (
-    index: number,
-    field: keyof OptionItem,
-    newValue: string | number
-  ) => {
+  const updateOption = (index: number, field: keyof OptionItem, newValue: string | number) => {
     const newOptions = [...value];
     newOptions[index] = { ...newOptions[index], [field]: newValue };
     onChange(newOptions);
@@ -107,10 +84,7 @@ const OptionsArrayEditor: React.FC<{
     const targetIndex = direction === "up" ? index - 1 : index + 1;
 
     if (targetIndex >= 0 && targetIndex < newOptions.length) {
-      [newOptions[index], newOptions[targetIndex]] = [
-        newOptions[targetIndex],
-        newOptions[index],
-      ];
+      [newOptions[index], newOptions[targetIndex]] = [newOptions[targetIndex], newOptions[index]];
       onChange(newOptions);
     }
   };
@@ -118,7 +92,7 @@ const OptionsArrayEditor: React.FC<{
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span style={{ color: "#6B4F43" }}>Opções ({value.length})</span>
+        <span style={{ color: '#6B4F43' }}>Opções ({value.length})</span>
         <Button onClick={addOption} size="sm" variant="outline">
           <Plus className="w-3 h-3 mr-1" />
           Adicionar
@@ -127,13 +101,13 @@ const OptionsArrayEditor: React.FC<{
 
       <div className="space-y-1 max-h-80 overflow-y-auto">
         {value.map((option, index) => (
-          <Card key={option.id} style={{ borderColor: "#E5DDD5" }}>
+          <Card key={option.id} style={{ borderColor: '#E5DDD5' }}>
             <div className="space-y-1">
               {/* Header com controles */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <GripVertical className="w-4 h-4 text-gray-400 cursor-move" />
-                  <span style={{ color: "#6B4F43" }}>Opção {index + 1}</span>
+                  <span style={{ color: '#6B4F43' }}>Opção {index + 1}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Button
@@ -158,7 +132,7 @@ const OptionsArrayEditor: React.FC<{
                     onClick={() => removeOption(index)}
                     size="sm"
                     variant="ghost"
-                    style={{ color: "#432818" }}
+                    style={{ color: '#432818' }}
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>
@@ -171,9 +145,7 @@ const OptionsArrayEditor: React.FC<{
                   <Label className="text-xs">Texto</Label>
                   <Input
                     value={option.text}
-                    onChange={(e) =>
-                      updateOption(index, "text", e.target.value)
-                    }
+                    onChange={e => updateOption(index, "text", e.target.value)}
                     placeholder="Texto da opção"
                     className="text-xs"
                   />
@@ -184,9 +156,7 @@ const OptionsArrayEditor: React.FC<{
                     <Label className="text-xs">Valor</Label>
                     <Input
                       value={option.value}
-                      onChange={(e) =>
-                        updateOption(index, "value", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "value", e.target.value)}
                       placeholder="Valor único"
                       className="text-xs"
                     />
@@ -195,9 +165,7 @@ const OptionsArrayEditor: React.FC<{
                     <Label className="text-xs">Categoria</Label>
                     <Input
                       value={option.category || ""}
-                      onChange={(e) =>
-                        updateOption(index, "category", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "category", e.target.value)}
                       placeholder="Categoria"
                       className="text-xs"
                     />
@@ -210,13 +178,7 @@ const OptionsArrayEditor: React.FC<{
                     <Input
                       type="number"
                       value={option.points || 1}
-                      onChange={(e) =>
-                        updateOption(
-                          index,
-                          "points",
-                          parseInt(e.target.value) || 1
-                        )
-                      }
+                      onChange={e => updateOption(index, "points", parseInt(e.target.value) || 1)}
                       min="1"
                       max="10"
                       className="text-xs"
@@ -226,9 +188,7 @@ const OptionsArrayEditor: React.FC<{
                     <Label className="text-xs">Estilo</Label>
                     <Input
                       value={option.styleCategory || ""}
-                      onChange={(e) =>
-                        updateOption(index, "styleCategory", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "styleCategory", e.target.value)}
                       placeholder="Categoria de estilo"
                       className="text-xs"
                     />
@@ -240,9 +200,7 @@ const OptionsArrayEditor: React.FC<{
                   <div className="flex gap-2">
                     <Input
                       value={option.imageUrl || ""}
-                      onChange={(e) =>
-                        updateOption(index, "imageUrl", e.target.value)
-                      }
+                      onChange={e => updateOption(index, "imageUrl", e.target.value)}
                       placeholder="https://exemplo.com/imagem.jpg"
                       className="text-xs flex-1"
                     />
@@ -264,7 +222,7 @@ const OptionsArrayEditor: React.FC<{
       </div>
 
       {value.length === 0 && (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <p className="text-sm">Nenhuma opção adicionada</p>
           <p className="text-xs text-gray-400 mt-1">
             Clique em "Adicionar" para criar a primeira opção
@@ -308,13 +266,13 @@ const ColorPicker: React.FC<{
         <HexColorPicker color={value || "#ffffff"} onChange={onChange} />
         <Input
           value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           placeholder="#ffffff"
           className="mt-2"
         />
       </PopoverContent>
     </Popover>
-    <span style={{ color: "#8B7355" }}>{value || "Nenhuma cor"}</span>
+    <span style={{ color: '#8B7355' }}>{value || "Nenhuma cor"}</span>
   </div>
 );
 
@@ -325,9 +283,9 @@ const PropertyGroup: React.FC<{
   children: React.ReactNode;
   defaultExpanded?: boolean;
 }> = ({ title, icon, children, defaultExpanded = true }) => (
-  <Card style={{ borderColor: "#E5DDD5" }}>
+  <Card style={{ borderColor: '#E5DDD5' }}>
     <CardHeader className="pb-3">
-      <CardTitle style={{ color: "#6B4F43" }}>
+      <CardTitle style={{ color: '#6B4F43' }}>
         {icon}
         {title}
       </CardTitle>
@@ -345,9 +303,9 @@ const PropertyField: React.FC<{
 }> = ({ label, description, required, children }) => (
   <div className="space-y-2">
     <div className="flex items-center gap-2">
-      <Label style={{ color: "#6B4F43" }}>
+      <Label style={{ color: '#6B4F43' }}>
         {label}
-        {required && <span style={{ color: "#432818" }}>*</span>}
+        {required && <span style={{ color: '#432818' }}>*</span>}
       </Label>
       {description && (
         <TooltipProvider>
@@ -413,7 +371,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Input
             value={currentValue || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             className="text-sm"
           />
@@ -423,7 +381,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Textarea
             value={currentValue || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             rows={property.rows || 3}
             className="text-sm resize-none"
@@ -433,12 +391,10 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       case "boolean":
         return (
           <div className="flex items-center justify-between">
-            <span style={{ color: "#6B4F43" }}>
-              {currentValue ? "Ativado" : "Desativado"}
-            </span>
+            <span style={{ color: '#6B4F43' }}>{currentValue ? "Ativado" : "Desativado"}</span>
             <Switch
               checked={currentValue || false}
-              onCheckedChange={(checked) => handlePropertyChange(key, checked)}
+              onCheckedChange={checked => handlePropertyChange(key, checked)}
             />
           </div>
         );
@@ -447,12 +403,10 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Select
             value={currentValue || property.default}
-            onValueChange={(value) => handlePropertyChange(key, value)}
+            onValueChange={value => handlePropertyChange(key, value)}
           >
             <SelectTrigger className="text-sm">
-              <SelectValue
-                placeholder={`Selecione ${property.label.toLowerCase()}`}
-              />
+              <SelectValue placeholder={`Selecione ${property.label.toLowerCase()}`} />
             </SelectTrigger>
             <SelectContent>
               {property.options?.map((option: any) => (
@@ -469,9 +423,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           <Input
             type="number"
             value={currentValue || ""}
-            onChange={(e) =>
-              handlePropertyChange(key, parseFloat(e.target.value) || 0)
-            }
+            onChange={e => handlePropertyChange(key, parseFloat(e.target.value) || 0)}
             placeholder={property.placeholder || property.label}
             min={property.min}
             max={property.max}
@@ -485,17 +437,15 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           <div className="space-y-2">
             <Slider
               value={[currentValue || property.default || 0]}
-              onValueChange={(value) => handlePropertyChange(key, value[0])}
+              onValueChange={value => handlePropertyChange(key, value[0])}
               max={property.max || 100}
               min={property.min || 0}
               step={property.step || 1}
               className="w-full"
             />
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               <span>{property.min || 0}</span>
-              <span className="font-medium">
-                {currentValue || property.default || 0}
-              </span>
+              <span className="font-medium">{currentValue || property.default || 0}</span>
               <span>{property.max || 100}</span>
             </div>
           </div>
@@ -505,7 +455,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <ColorPicker
             value={currentValue || property.default}
-            onChange={(color) => handlePropertyChange(key, color)}
+            onChange={color => handlePropertyChange(key, color)}
             label={property.label}
           />
         );
@@ -516,7 +466,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           return (
             <OptionsArrayEditor
               value={currentValue || []}
-              onChange={(newOptions) => handlePropertyChange(key, newOptions)}
+              onChange={newOptions => handlePropertyChange(key, newOptions)}
             />
           );
         }
@@ -527,7 +477,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               <Plus className="w-4 h-4 mr-2" />
               Adicionar {property.label}
             </Button>
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               Editor de array genérico (em desenvolvimento)
             </div>
           </div>
@@ -537,7 +487,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         return (
           <Input
             value={currentValue || ""}
-            onChange={(e) => handlePropertyChange(key, e.target.value)}
+            onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.placeholder || property.label}
             className="text-sm"
           />
@@ -570,7 +520,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       {/* 🎨 Header Premium */}
       <div className="p-2 bg-gradient-to-r from-stone-700 to-yellow-700 text-white">
         <div className="flex items-center justify-between">
@@ -594,9 +544,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         </div>
 
         {blockDefinition.description && (
-          <p className="text-sm text-white/90 mt-2">
-            {blockDefinition.description}
-          </p>
+          <p className="text-sm text-white/90 mt-2">{blockDefinition.description}</p>
         )}
       </div>
 
@@ -615,21 +563,13 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </TabsList>
 
           <TabsContent value="properties" className="p-2 space-y-2 mt-0">
-            {renderPropertyGroup(
-              "Geral",
-              <Type className="w-4 h-4" />,
-              categorizedProps.general
-            )}
+            {renderPropertyGroup("Geral", <Type className="w-4 h-4" />, categorizedProps.general)}
             {renderPropertyGroup(
               "Conteúdo",
               <Type className="w-4 h-4" />,
               categorizedProps.content
             )}
-            {renderPropertyGroup(
-              "Layout",
-              <Layout className="w-4 h-4" />,
-              categorizedProps.layout
-            )}
+            {renderPropertyGroup("Layout", <Layout className="w-4 h-4" />, categorizedProps.layout)}
             {renderPropertyGroup(
               "Comportamento",
               <CheckCircle className="w-4 h-4" />,
@@ -657,11 +597,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         </Tabs>
         {/* 🚨 Fallback para propriedades não categorizadas */}
         {Object.keys(blockDefinition.properties).length === 0 && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p className="text-sm font-medium">
-              Nenhuma propriedade disponível
-            </p>
+            <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
             <p className="text-xs text-gray-400 mt-1">
               Este componente não possui propriedades editáveis
             </p>

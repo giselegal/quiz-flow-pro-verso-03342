@@ -1,10 +1,7 @@
-import { cn } from "../../../lib/utils";
-import { Block } from "../../../types/editor";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
@@ -27,8 +24,7 @@ const InterBlockDropZone: React.FC<{
       ref={setNodeRef}
       className={cn(
         "h-3 transition-all duration-200 relative",
-        isOver &&
-          "h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg",
+        isOver && "h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg",
         isActive && !isOver && "h-1 bg-brand/20 rounded-full opacity-50"
       )}
     >
@@ -84,10 +80,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   React.useEffect(() => {
     console.log("🎯 CanvasDropZone: isOver =", isOver, "active =", active?.id);
     if (active?.data.current?.type === "sidebar-component") {
-      console.log(
-        "📦 Arrastando componente da sidebar:",
-        active?.data.current?.blockType
-      );
+      console.log("📦 Arrastando componente da sidebar:", active?.data.current?.blockType);
     } else if (active?.data.current?.type === "canvas-block") {
       console.log("🔄 Reordenando bloco do canvas:", active?.id);
     }
@@ -98,9 +91,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
       ref={setNodeRef}
       className={cn(
         "p-3 min-h-[400px] transition-all duration-200",
-        isOver &&
-          !isPreviewing &&
-          "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
+        isOver && !isPreviewing && "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
         className
       )}
     >
@@ -125,14 +116,12 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
         </div>
       ) : (
         <SortableContext
-          items={blocks.map((block) => block.id)}
+          items={blocks.map(block => block.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-0">
             {/* Drop zone no início - agora aparece para QUALQUER item válido */}
-            {isDraggingAnyValidComponent && (
-              <InterBlockDropZone position={0} isActive={true} />
-            )}
+            {isDraggingAnyValidComponent && <InterBlockDropZone position={0} isActive={true} />}
 
             {blocks.map((block, index) => (
               <React.Fragment key={block.id}>
@@ -140,7 +129,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                   block={block}
                   isSelected={!isPreviewing && selectedBlockId === block.id}
                   onSelect={() => !isPreviewing && onSelectBlock(block.id)}
-                  onUpdate={(updates) => {
+                  onUpdate={updates => {
                     if (!isPreviewing) {
                       onUpdateBlock(block.id, updates);
                     }

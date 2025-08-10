@@ -48,15 +48,13 @@ const ensureMetricsStructure = (metrics: any) => {
     totalVisitors: metrics.totalVisitors ?? defaultMetrics.totalVisitors,
     totalStarts: metrics.totalStarts ?? defaultMetrics.totalStarts,
     totalCompletes: metrics.totalCompletes ?? defaultMetrics.totalCompletes,
-    totalResultViews:
-      metrics.totalResultViews ?? defaultMetrics.totalResultViews,
+    totalResultViews: metrics.totalResultViews ?? defaultMetrics.totalResultViews,
     totalLeads: metrics.totalLeads ?? defaultMetrics.totalLeads,
     totalSales: metrics.totalSales ?? defaultMetrics.totalSales,
     completionRate: metrics.completionRate ?? defaultMetrics.completionRate,
     conversionRate: metrics.conversionRate ?? defaultMetrics.conversionRate,
     salesRate: metrics.salesRate ?? defaultMetrics.salesRate,
-    averageTimeSpent:
-      metrics.averageTimeSpent ?? defaultMetrics.averageTimeSpent,
+    averageTimeSpent: metrics.averageTimeSpent ?? defaultMetrics.averageTimeSpent,
   };
 };
 
@@ -87,17 +85,14 @@ export const resetMetricsCache = () => {
   }
 };
 
-export const filterEventsByTimeRange = (
-  events: any[],
-  timeRange: "7d" | "30d" | "all"
-) => {
+export const filterEventsByTimeRange = (events: any[], timeRange: "7d" | "30d" | "all") => {
   if (timeRange === "all") return events;
 
   const now = Date.now();
   const dayInMs = 24 * 60 * 60 * 1000;
   const timeLimit = timeRange === "7d" ? 7 * dayInMs : 30 * dayInMs;
 
-  return events.filter((event) => {
+  return events.filter(event => {
     const eventTime = event.timestamp ? new Date(event.timestamp).getTime() : 0;
     return now - eventTime <= timeLimit;
   });
@@ -107,7 +102,7 @@ export const filterEventsByTimeRange = (
 const calculateTotalVisitors = (events: any[]) => {
   // Count unique visitors based on user IDs or sessions
   const uniqueUsers = new Set();
-  events.forEach((event) => {
+  events.forEach(event => {
     if (event.userId) uniqueUsers.add(event.userId);
     else if (event.sessionId) uniqueUsers.add(event.sessionId);
   });
@@ -115,26 +110,24 @@ const calculateTotalVisitors = (events: any[]) => {
 };
 
 const countEventsByType = (events: any[], type: string) => {
-  return events.filter((e) => e.type === type).length;
+  return events.filter(e => e.type === type).length;
 };
 
 const calculateCompletionRate = (events: any[]) => {
-  const starts = events.filter((e) => e.type === "quiz_start").length;
-  const completes = events.filter((e) => e.type === "quiz_complete").length;
+  const starts = events.filter(e => e.type === "quiz_start").length;
+  const completes = events.filter(e => e.type === "quiz_complete").length;
   return starts > 0 ? (completes / starts) * 100 : 0;
 };
 
 const calculateConversionRate = (events: any[]) => {
-  const starts = events.filter((e) => e.type === "quiz_start").length;
-  const leads = events.filter((e) => e.type === "lead_generated").length;
+  const starts = events.filter(e => e.type === "quiz_start").length;
+  const leads = events.filter(e => e.type === "lead_generated").length;
   return starts > 0 ? (leads / starts) * 100 : 0;
 };
 
 const calculateSalesRate = (events: any[]) => {
-  const leads = events.filter((e) => e.type === "lead_generated").length;
-  const sales = events.filter(
-    (e) => e.type === "purchase" || e.type === "sale"
-  ).length;
+  const leads = events.filter(e => e.type === "lead_generated").length;
+  const sales = events.filter(e => e.type === "purchase" || e.type === "sale").length;
   return leads > 0 ? (sales / leads) * 100 : 0;
 };
 
@@ -142,7 +135,7 @@ const calculateAverageTimeSpent = (events: any[]) => {
   // Find start and complete pairs for the same user/session
   const sessions: Record<string, { start?: number; complete?: number }> = {};
 
-  events.forEach((event) => {
+  events.forEach(event => {
     const id = event.userId || event.sessionId || "anonymous";
     if (!sessions[id]) sessions[id] = {};
 
@@ -158,7 +151,7 @@ const calculateAverageTimeSpent = (events: any[]) => {
   let totalTime = 0;
   let completedSessions = 0;
 
-  Object.values(sessions).forEach((session) => {
+  Object.values(sessions).forEach(session => {
     if (session.start && session.complete && session.complete > session.start) {
       totalTime += (session.complete - session.start) / 1000; // Convert to seconds
       completedSessions++;
@@ -175,9 +168,7 @@ const calculateAverageTimeSpent = (events: any[]) => {
  */
 export const getUserProgressData = (events: any[]) => {
   // Extract quiz answer events to track progress
-  const answerEvents = events.filter(
-    (event) => event.type === "quiz_answer" || event.question_id
-  );
+  const answerEvents = events.filter(event => event.type === "quiz_answer" || event.question_id);
 
   // Create a map to store aggregated data by question ID
   const questionMap: Record<
@@ -195,11 +186,9 @@ export const getUserProgressData = (events: any[]) => {
   const usersByQuestion: Record<string, Set<string>> = {};
 
   // Process events to calculate progress metrics
-  answerEvents.forEach((event) => {
+  answerEvents.forEach(event => {
     const questionId =
-      event.question_id ||
-      event.questionId ||
-      `Q${Object.keys(questionMap).length + 1}`;
+      event.question_id || event.questionId || `Q${Object.keys(questionMap).length + 1}`;
     const userId = event.userId || event.sessionId || "anonymous";
 
     // Initialize question data if it doesn't exist
@@ -220,7 +209,7 @@ export const getUserProgressData = (events: any[]) => {
   });
 
   // Update unique users counts from sets
-  Object.keys(questionMap).forEach((qId) => {
+  Object.keys(questionMap).forEach(qId => {
     questionMap[qId].uniqueUsers = usersByQuestion[qId].size;
   });
 

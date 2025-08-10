@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Switch } from "../../components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -19,16 +19,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../components/ui/dialog";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../components/ui/tabs";
-import { QuizFunnel, ResultPage, OfferPage } from "../../types/quizResult";
+} from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { QuizFunnel, ResultPage, OfferPage } from "@/types/quizResult";
 import { Copy, BarChart2, PlusCircle, Trash2 } from "lucide-react";
-import { generateId } from "../../utils/idGenerator";
+import { generateId } from "@/utils/idGenerator";
 
 interface ResultPageDuplicatorProps {
   currentFunnel: QuizFunnel;
@@ -115,8 +110,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
           <DialogHeader>
             <DialogTitle>Duplicar Funil</DialogTitle>
             <DialogDescription>
-              Crie uma cópia deste funil com um novo nome. Todos os elementos
-              serão duplicados.
+              Crie uma cópia deste funil com um novo nome. Todos os elementos serão duplicados.
             </DialogDescription>
           </DialogHeader>
 
@@ -127,7 +121,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                 id="funnelName"
                 placeholder="Ex: Funil de Estilo Verão 2023"
                 value={newFunnelName}
-                onChange={(e) => setNewFunnelName(e.target.value)}
+                onChange={e => setNewFunnelName(e.target.value)}
               />
             </div>
           </div>
@@ -147,8 +141,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
           <DialogHeader>
             <DialogTitle>Configurar Teste A/B</DialogTitle>
             <DialogDescription>
-              Configure variantes para testar diferentes versões da sua página
-              de resultados.
+              Configure variantes para testar diferentes versões da sua página de resultados.
             </DialogDescription>
           </DialogHeader>
 
@@ -166,21 +159,15 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
               <div className="space-y-4">
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium">
-                      Variantes
-                    </CardTitle>
+                    <CardTitle className="text-sm font-medium">Variantes</CardTitle>
                     <CardDescription>
-                      Adicione variantes para testar diferentes versões da sua
-                      página.
+                      Adicione variantes para testar diferentes versões da sua página.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
                       {abTestVariants.map((variant, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between"
-                        >
+                        <div key={index} className="flex items-center justify-between">
                           <span className="text-sm">{variant}</span>
                           <Button
                             size="sm"
@@ -196,7 +183,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                         <Input
                           placeholder="Nome da variante"
                           value={newVariantName}
-                          onChange={(e) => setNewVariantName(e.target.value)}
+                          onChange={e => setNewVariantName(e.target.value)}
                           className="flex-1"
                         />
                         <Button size="sm" onClick={handleAddVariant}>
@@ -207,26 +194,18 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                   </CardContent>
                 </Card>
 
-                <div style={{ color: "#8B7355" }}>
-                  <p>
-                    Após salvar, você poderá configurar quais blocos aparecem em
-                    cada variante.
-                  </p>
+                <div style={{ color: '#8B7355' }}>
+                  <p>Após salvar, você poderá configurar quais blocos aparecem em cada variante.</p>
                 </div>
               </div>
             )}
           </div>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsAbTestDialogOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsAbTestDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleSaveAbTestSettings}>
-              Salvar Configurações
-            </Button>
+            <Button onClick={handleSaveAbTestSettings}>Salvar Configurações</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { ENHANCED_BLOCK_REGISTRY } from "../config/enhancedBlockRegistry";
-import { useEditor } from "../context/EditorContext";
+import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
+import { useEditor } from "@/context/EditorContext";
 import { useCallback, useEffect, useState } from "react";
 
 // ============================================================================
@@ -53,9 +53,7 @@ export const useEditorReusableComponents = () => {
     loadAllQuizComponents,
   } = useReusableComponents("editor-quiz");
 
-  const [availableComponents, setAvailableComponents] = useState<
-    EditorComponentType[]
-  >([]);
+  const [availableComponents, setAvailableComponents] = useState<EditorComponentType[]>([]);
 
   // ============================================================================
   // SINCRONIZAR COMPONENTES DO REGISTRY COM SUPABASE
@@ -66,12 +64,11 @@ export const useEditorReusableComponents = () => {
 
     // Iterar sobre o ENHANCED_BLOCK_REGISTRY
     Object.entries(ENHANCED_BLOCK_REGISTRY).forEach(([typeKey, component]) => {
-      const dbComponent = componentTypes.find((ct) => ct.type_key === typeKey);
+      const dbComponent = componentTypes.find(ct => ct.type_key === typeKey);
 
       registryComponents.push({
         type_key: typeKey,
-        display_name:
-          dbComponent?.display_name || formatTypeKeyToDisplayName(typeKey),
+        display_name: dbComponent?.display_name || formatTypeKeyToDisplayName(typeKey),
         category: dbComponent?.category || getCategoryFromTypeKey(typeKey),
         component_path: `/components/registry/${typeKey}`,
         default_properties: dbComponent?.default_properties || {},
@@ -82,7 +79,7 @@ export const useEditorReusableComponents = () => {
     });
 
     // Adicionar componentes do database que não estão no registry (marcados como indisponíveis)
-    componentTypes.forEach((dbComponent) => {
+    componentTypes.forEach(dbComponent => {
       if (!ENHANCED_BLOCK_REGISTRY[dbComponent.type_key]) {
         registryComponents.push({
           type_key: dbComponent.type_key,
@@ -111,21 +108,17 @@ export const useEditorReusableComponents = () => {
   const formatTypeKeyToDisplayName = (typeKey: string): string => {
     return typeKey
       .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
 
   const getCategoryFromTypeKey = (typeKey: string): string => {
-    if (typeKey.includes("text") || typeKey.includes("heading"))
-      return "content";
-    if (typeKey.includes("button") || typeKey.includes("options"))
-      return "interactive";
+    if (typeKey.includes("text") || typeKey.includes("heading")) return "content";
+    if (typeKey.includes("button") || typeKey.includes("options")) return "interactive";
     if (typeKey.includes("image")) return "media";
-    if (typeKey.includes("header") || typeKey.includes("quiz"))
-      return "headers";
+    if (typeKey.includes("header") || typeKey.includes("quiz")) return "headers";
     if (typeKey.includes("form") || typeKey.includes("input")) return "forms";
-    if (typeKey.includes("decorative") || typeKey.includes("divider"))
-      return "visual";
+    if (typeKey.includes("decorative") || typeKey.includes("divider")) return "visual";
     if (typeKey.includes("legal")) return "legal";
     return "other";
   };
@@ -143,9 +136,7 @@ export const useEditorReusableComponents = () => {
     };
   };
 
-  const convertReusableComponentToEditorBlock = (
-    component: EditorComponentInstance
-  ) => {
+  const convertReusableComponentToEditorBlock = (component: EditorComponentInstance) => {
     return {
       id: component.instance_key,
       type: component.component_type,
@@ -167,13 +158,9 @@ export const useEditorReusableComponents = () => {
       customProperties?: Record<string, any>
     ) => {
       try {
-        const componentType = availableComponents.find(
-          (c) => c.type_key === componentTypeKey
-        );
+        const componentType = availableComponents.find(c => c.type_key === componentTypeKey);
         if (!componentType?.is_available) {
-          throw new Error(
-            `Componente ${componentTypeKey} não está disponível no registry`
-          );
+          throw new Error(`Componente ${componentTypeKey} não está disponível no registry`);
         }
 
         // Adicionar ao database via useReusableComponents
@@ -200,10 +187,7 @@ export const useEditorReusableComponents = () => {
         addBlock(editorBlock);
         return dbComponent;
       } catch (error) {
-        console.error(
-          "Erro ao adicionar componente reutilizável ao editor:",
-          error
-        );
+        console.error("Erro ao adicionar componente reutilizável ao editor:", error);
         throw error;
       }
     },
@@ -220,8 +204,7 @@ export const useEditorReusableComponents = () => {
         });
 
         // Atualizar no editor
-        const editorBlock =
-          convertReusableComponentToEditorBlock(updatedComponent);
+        const editorBlock = convertReusableComponentToEditorBlock(updatedComponent);
         updateBlock(editorBlock.id, editorBlock);
 
         return updatedComponent;
@@ -257,40 +240,19 @@ export const useEditorReusableComponents = () => {
     async (templateKey: string, stepNumber: number) => {
       const templates: Record<string, any[]> = {
         "gisele-step-header": [
-          {
-            type: "gisele-header",
-            properties: { progressValue: (stepNumber / 21) * 100 },
-          },
-          {
-            type: "style-question",
-            properties: { content: `Questão ${stepNumber} de 21` },
-          },
+          { type: "gisele-header", properties: { progressValue: (stepNumber / 21) * 100 } },
+          { type: "style-question", properties: { content: `Questão ${stepNumber} de 21` } },
         ],
         "gisele-question-step": [
-          {
-            type: "gisele-header",
-            properties: { progressValue: (stepNumber / 21) * 100 },
-          },
-          {
-            type: "style-question",
-            properties: { content: "SUA PERGUNTA AQUI" },
-          },
+          { type: "gisele-header", properties: { progressValue: (stepNumber / 21) * 100 } },
+          { type: "style-question", properties: { content: "SUA PERGUNTA AQUI" } },
           { type: "style-options-grid", properties: { options: [] } },
           { type: "gisele-button", properties: { text: "Continuar" } },
         ],
         "gisele-input-step": [
-          {
-            type: "gisele-header",
-            properties: { progressValue: (stepNumber / 21) * 100 },
-          },
-          {
-            type: "style-question",
-            properties: { content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?" },
-          },
-          {
-            type: "form-input",
-            properties: { placeholder: "Digite seu nome aqui..." },
-          },
+          { type: "gisele-header", properties: { progressValue: (stepNumber / 21) * 100 } },
+          { type: "style-question", properties: { content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?" } },
+          { type: "form-input", properties: { placeholder: "Digite seu nome aqui..." } },
           { type: "gisele-button", properties: { text: "Continuar" } },
         ],
       };
@@ -317,15 +279,13 @@ export const useEditorReusableComponents = () => {
 
   const getComponentsByCategory = useCallback(
     (category: string) => {
-      return availableComponents.filter(
-        (c) => c.category === category && c.is_available
-      );
+      return availableComponents.filter(c => c.category === category && c.is_available);
     },
     [availableComponents]
   );
 
   const getAvailableCategories = useCallback(() => {
-    const categories = new Set(availableComponents.map((c) => c.category));
+    const categories = new Set(availableComponents.map(c => c.category));
     return Array.from(categories);
   }, [availableComponents]);
 
@@ -335,8 +295,8 @@ export const useEditorReusableComponents = () => {
 
   return {
     // Estados
-    availableComponents: availableComponents.filter((c) => c.is_available),
-    unavailableComponents: availableComponents.filter((c) => !c.is_available),
+    availableComponents: availableComponents.filter(c => c.is_available),
+    unavailableComponents: availableComponents.filter(c => !c.is_available),
     stepComponents,
     loading,
     error,

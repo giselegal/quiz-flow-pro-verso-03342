@@ -63,7 +63,7 @@ let totalEsperados = componentesModernos.length;
 Object.entries(categorias).forEach(([categoria, componentes]) => {
   console.log(`📂 ${categoria.toUpperCase()}:`);
 
-  componentes.forEach((comp) => {
+  componentes.forEach(comp => {
     const regex = new RegExp(`type:\\s*['"]${comp}['"]`, "g");
     const encontrado = regex.test(content);
 
@@ -97,7 +97,7 @@ const caracteristicas = [
 
 let caracteristicasEncontradas = 0;
 
-caracteristicas.forEach((carac) => {
+caracteristicas.forEach(carac => {
   const encontrado = carac.regex.test(content);
   if (encontrado) {
     console.log(`  ✅ ${carac.nome} - Implementado`);
@@ -117,12 +117,8 @@ console.log(
 );
 
 if (totalEncontrados === totalEsperados && caracteristicasEncontradas >= 6) {
-  console.log(
-    "\n🎉 SUCESSO! Todos os componentes modernos foram implementados!"
-  );
-  console.log(
-    "✨ Sistema pronto para construção de páginas dinâmicas de vendas e quizzes!"
-  );
+  console.log("\n🎉 SUCESSO! Todos os componentes modernos foram implementados!");
+  console.log("✨ Sistema pronto para construção de páginas dinâmicas de vendas e quizzes!");
 } else {
   console.log("\n⚠️  Alguns componentes ou características estão faltando.");
   console.log("📝 Verifique a implementação dos componentes marcados com ❌");

@@ -14,14 +14,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -67,10 +60,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   onUpdate,
 }) => {
   return (
-    <div
-      className={`component-renderer ${isSelected ? "selected" : ""}`}
-      onClick={onSelect}
-    >
+    <div className={`component-renderer ${isSelected ? "selected" : ""}`} onClick={onSelect}>
       <div className="p-4 border rounded">
         <p>Componente: {component?.type || "Desconhecido"}</p>
         {/* Implementar renderização real aqui */}

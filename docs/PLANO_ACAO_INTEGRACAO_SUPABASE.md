@@ -101,7 +101,7 @@ import { quizSupabaseService } from "@/services/quizSupabaseService";
 // Modificar função de resposta
 const answerQuestion = useCallback(
   async (questionId: string, optionId: string, sessionId: string) => {
-    setAnswers((prevAnswers) => {
+    setAnswers(prevAnswers => {
       const newAnswer: QuizAnswer = {
         questionId,
         optionId,
@@ -112,12 +112,8 @@ const answerQuestion = useCallback(
     // Salvar resposta no Supabase
     if (sessionId) {
       try {
-        const question = caktoquizQuestions.find(
-          (q: any) => q.id === questionId
-        );
-        const option = question?.options.find(
-          (opt: any) => opt.id === optionId
-        );
+        const question = caktoquizQuestions.find((q: any) => q.id === questionId);
+        const option = question?.options.find((opt: any) => opt.id === optionId);
 
         await quizSupabaseService.saveQuizResponse({
           sessionId,

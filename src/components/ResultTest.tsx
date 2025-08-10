@@ -1,7 +1,7 @@
 import React from "react";
-import { styleConfig } from "../config/styleConfig";
-import { Card } from "../components/ui/card";
-import { Progress } from "../components/ui/progress";
+import { styleConfig } from "@/config/styleConfig";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
 // Dados mock para teste
 const mockResult = {
@@ -42,19 +42,13 @@ const ResultTest: React.FC = () => {
             <h1 className="text-2xl font-bold text-[#432818] mb-4">
               Teste do Componente de Resultado
             </h1>
-            <h2 className="text-xl text-[#aa6b5d] mb-4">
-              Seu Estilo Predominante: {category}
-            </h2>
+            <h2 className="text-xl text-[#aa6b5d] mb-4">Seu Estilo Predominante: {category}</h2>
 
             {/* Barra de progresso */}
             <div className="max-w-md mx-auto mb-6">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-[#8F7A6A]">
-                  Seu estilo predominante
-                </span>
-                <span className="text-[#aa6b5d] font-medium">
-                  {percentage}%
-                </span>
+                <span className="text-sm text-[#8F7A6A]">Seu estilo predominante</span>
+                <span className="text-[#aa6b5d] font-medium">{percentage}%</span>
               </div>
               <Progress value={percentage} className="h-2 bg-[#F3E8E6]" />
             </div>
@@ -72,13 +66,8 @@ const ResultTest: React.FC = () => {
                 </h3>
                 <div className="space-y-2">
                   {mockResult.secondaryStyles.map((style, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between"
-                    >
-                      <span className="text-sm text-[#432818]">
-                        {style.category}
-                      </span>
+                    <div key={index} className="flex items-center justify-between">
+                      <span className="text-sm text-[#432818]">{style.category}</span>
                       <span className="text-sm font-semibold text-[#aa6b5d]">
                         {style.percentage}%
                       </span>
@@ -94,7 +83,7 @@ const ResultTest: React.FC = () => {
                 src={`${image}?q=auto:best&f=auto&w=238`}
                 alt={`Estilo ${category}`}
                 className="w-full h-auto rounded-lg shadow-md"
-                onError={(e) => {
+                onError={e => {
                   console.error("Erro ao carregar imagem:", e);
                   console.log("URL:", `${image}?q=auto:best&f=auto&w=238`);
                 }}
@@ -110,12 +99,9 @@ const ResultTest: React.FC = () => {
               src={`${guideImage}?q=auto:best&f=auto&w=540`}
               alt={`Guia de Estilo ${category}`}
               className="w-full h-auto rounded-lg shadow-md"
-              onError={(e) => {
+              onError={e => {
                 console.error("Erro ao carregar imagem do guia:", e);
-                console.log(
-                  "URL do guia:",
-                  `${guideImage}?q=auto:best&f=auto&w=540`
-                );
+                console.log("URL do guia:", `${guideImage}?q=auto:best&f=auto&w=540`);
               }}
             />
             <div className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12">
@@ -125,7 +111,7 @@ const ResultTest: React.FC = () => {
         </Card>
 
         {/* Debug info */}
-        <Card style={{ backgroundColor: "#E5DDD5" }}>
+        <Card style={{ backgroundColor: '#E5DDD5' }}>
           <h3 className="font-bold mb-2">Debug Info:</h3>
           <pre className="text-xs overflow-auto">
             {JSON.stringify(

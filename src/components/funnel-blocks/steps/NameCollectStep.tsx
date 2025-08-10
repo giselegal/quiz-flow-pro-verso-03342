@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { cn } from "../../../lib/utils";
-import { FunnelStepProps } from "../../../types/funnel";
-import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { cn } from "@/lib/utils";
+import { FunnelStepProps } from "@/types/funnel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 /**
  * NameCollectStep - Etapa 2: Coleta de nome do usuário
@@ -55,17 +55,13 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative rounded-xl shadow-md p-8",
-        backgroundColor,
-        className
-      )}
+      className={cn("relative rounded-xl shadow-md p-8", backgroundColor, className)}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
       <div className="max-w-md mx-auto">
         {/* Numeração da etapa */}
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           Etapa {stepNumber} de {totalSteps}
         </div>
 
@@ -76,9 +72,9 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
           </div>
         )}
 
-        <h2 style={{ color: "#432818" }}>{title}</h2>
+        <h2 style={{ color: '#432818' }}>{title}</h2>
 
-        <p style={{ color: "#6B4F43" }}>{description}</p>
+        <p style={{ color: '#6B4F43' }}>{description}</p>
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -91,11 +87,11 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
                 type="text"
                 placeholder={placeholder}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 className={cn("w-full", error && "border-red-500")}
                 disabled={isEditable}
               />
-              {error && <p style={{ color: "#432818" }}>{error}</p>}
+              {error && <p style={{ color: '#432818' }}>{error}</p>}
             </div>
 
             <Button type="submit" size="lg" className="w-full">

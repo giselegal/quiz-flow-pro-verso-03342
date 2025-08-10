@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
-import { cn } from "../../../lib/utils";
-import { Block } from "../../../types/editor";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
 import { LucideIcon } from "lucide-react";
 
 interface ComponentItemProps {

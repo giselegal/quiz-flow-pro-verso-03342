@@ -91,9 +91,7 @@ function analyzeResponsiveness(content, filePath) {
     const matches = content.match(pattern);
     if (matches) {
       score -= penalty;
-      issues.push(
-        `${description} (${matches.length} ocorrência${matches.length > 1 ? "s" : ""})`
-      );
+      issues.push(`${description} (${matches.length} ocorrência${matches.length > 1 ? "s" : ""})`);
     }
   });
 
@@ -104,7 +102,7 @@ function analyzeResponsiveness(content, filePath) {
     /grid-cols-4/g,
   ];
 
-  multiColumnPatterns.forEach((pattern) => {
+  multiColumnPatterns.forEach(pattern => {
     if (pattern.test(content)) {
       const hasProperBreakpoints = /w-full.*md:w-.*xl:w-/.test(content);
       if (!hasProperBreakpoints) {
@@ -118,9 +116,7 @@ function analyzeResponsiveness(content, filePath) {
     fileName,
     score: Math.max(0, score),
     issues,
-    category: step20Components.includes(fileName.replace("Block", ""))
-      ? "Etapa 20"
-      : "Etapa 21",
+    category: step20Components.includes(fileName.replace("Block", "")) ? "Etapa 20" : "Etapa 21",
   };
 }
 
@@ -145,10 +141,8 @@ function findComponentFiles() {
   if (fs.existsSync(baseDir)) {
     const allFiles = fs.readdirSync(baseDir);
 
-    allComponents.forEach((component) => {
-      const fileName = component.endsWith("Block")
-        ? `${component}.tsx`
-        : `${component}Block.tsx`;
+    allComponents.forEach(component => {
+      const fileName = component.endsWith("Block") ? `${component}.tsx` : `${component}Block.tsx`;
       const altFileName = `${component}.tsx`;
 
       if (allFiles.includes(fileName)) {
@@ -175,19 +169,19 @@ function main() {
   const results = componentFiles.map(analyzeComponent);
 
   // Separar por etapa
-  const step20Results = results.filter((r) => r.category === "Etapa 20");
-  const step21Results = results.filter((r) => r.category === "Etapa 21");
+  const step20Results = results.filter(r => r.category === "Etapa 20");
+  const step21Results = results.filter(r => r.category === "Etapa 21");
 
   // Relatório Etapa 20
   console.log("📊 ETAPA 20 - RESULTADO");
   console.log("=".repeat(50));
 
-  step20Results.forEach((result) => {
+  step20Results.forEach(result => {
     const status = result.score >= 80 ? "✅" : result.score >= 60 ? "⚠️" : "❌";
     console.log(`${status} ${result.fileName} - Score: ${result.score}/100`);
 
     if (result.issues.length > 0) {
-      result.issues.forEach((issue) => {
+      result.issues.forEach(issue => {
         console.log(`   • ${issue}`);
       });
     }
@@ -198,12 +192,12 @@ function main() {
   console.log("📊 ETAPA 21 - OFERTA");
   console.log("=".repeat(50));
 
-  step21Results.forEach((result) => {
+  step21Results.forEach(result => {
     const status = result.score >= 80 ? "✅" : result.score >= 60 ? "⚠️" : "❌";
     console.log(`${status} ${result.fileName} - Score: ${result.score}/100`);
 
     if (result.issues.length > 0) {
-      result.issues.forEach((issue) => {
+      result.issues.forEach(issue => {
         console.log(`   • ${issue}`);
       });
     }
@@ -212,28 +206,22 @@ function main() {
 
   // Resumo
   const step20Average =
-    step20Results.reduce((sum, r) => sum + r.score, 0) / step20Results.length ||
-    0;
+    step20Results.reduce((sum, r) => sum + r.score, 0) / step20Results.length || 0;
   const step21Average =
-    step21Results.reduce((sum, r) => sum + r.score, 0) / step21Results.length ||
-    0;
+    step21Results.reduce((sum, r) => sum + r.score, 0) / step21Results.length || 0;
 
   console.log("📈 RESUMO GERAL");
   console.log("=".repeat(50));
   console.log(`Etapa 20 - Score médio: ${step20Average.toFixed(1)}/100`);
   console.log(`Etapa 21 - Score médio: ${step21Average.toFixed(1)}/100`);
 
-  const problematicComponents = results.filter((r) => r.score < 80);
-  console.log(
-    `\n⚠️  ${problematicComponents.length} componente(s) precisam de ajustes`
-  );
+  const problematicComponents = results.filter(r => r.score < 80);
+  console.log(`\n⚠️  ${problematicComponents.length} componente(s) precisam de ajustes`);
 
   // Recomendações
   console.log("\n💡 RECOMENDAÇÕES PARA MELHORAR RESPONSIVIDADE:");
   console.log("=".repeat(50));
-  console.log(
-    "1. Usar no máximo 2 colunas em telas pequenas (grid-cols-1 md:grid-cols-2)"
-  );
+  console.log("1. Usar no máximo 2 colunas em telas pequenas (grid-cols-1 md:grid-cols-2)");
   console.log("2. Implementar breakpoints progressivos (sm: md: lg: xl:)");
   console.log("3. Evitar larguras fixas grandes (usar % ou rem)");
   console.log("4. Considerar carrossel para múltiplos itens em mobile");

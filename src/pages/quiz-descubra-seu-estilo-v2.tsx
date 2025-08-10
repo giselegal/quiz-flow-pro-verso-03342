@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "../utils/images/preloading";
-import FixedIntroImage from "../components/ui/FixedIntroImage";
+import { preloadCriticalImages } from "@/utils/images/preloading";
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import {
   ChevronRight,
   Check,
@@ -27,7 +27,7 @@ import {
   Flame,
   Eye,
 } from "lucide-react";
-import { trackButtonClick } from "../utils/analytics";
+import { trackButtonClick } from "@/utils/analytics";
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `
@@ -493,7 +493,7 @@ const DramaticCountdown = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime((prevTime) => {
+      setTime(prevTime => {
         if (prevTime.seconds > 0) {
           return { ...prevTime, seconds: prevTime.seconds - 1 };
         } else if (prevTime.minutes > 0) {
@@ -532,9 +532,7 @@ const DramaticCountdown = () => {
           <div>{formatNumber(time.seconds)}</div>
         </div>
       </div>
-      <p className="mt-3 text-sm opacity-90">
-        Não perca esta oportunidade única!
-      </p>
+      <p className="mt-3 text-sm opacity-90">Não perca esta oportunidade única!</p>
     </div>
   );
 };
@@ -587,9 +585,7 @@ const FaqSectionAdvanced = () => {
               onClick={() => toggleItem(index)}
               className="w-full px-6 py-6 text-left flex justify-between items-center hover:bg-[#B89B7A]/10 transition-colors"
             >
-              <span className="font-semibold text-[#432818] text-lg pr-4">
-                {item.question}
-              </span>
+              <span className="font-semibold text-[#432818] text-lg pr-4">{item.question}</span>
               <ChevronRight
                 size={24}
                 className={`text-orange-500 transition-transform duration-300 flex-shrink-0 ${
@@ -599,7 +595,9 @@ const FaqSectionAdvanced = () => {
             </button>
 
             {openItem === index && (
-              <div style={{ color: "#6B4F43" }}>{item.answer}</div>
+              <div style={{ color: '#6B4F43' }}>
+                {item.answer}
+              </div>
             )}
           </div>
         ))}
@@ -637,10 +635,7 @@ const QuizOfferPageV2: React.FC = () => {
     };
   }, []);
 
-  const handleCtaClick = (
-    buttonId: string,
-    action: string = "Comprar Agora"
-  ) => {
+  const handleCtaClick = (buttonId: string, action: string = "Comprar Agora") => {
     trackButtonClick(buttonId, action, "quiz_offer_page_v2");
   };
 
@@ -670,7 +665,7 @@ const QuizOfferPageV2: React.FC = () => {
           />
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">5x R$ 8,83</div>
-            <div style={{ color: "#6B4F43" }}>ou R$ 39,90 à vista</div>
+            <div style={{ color: '#6B4F43' }}>ou R$ 39,90 à vista</div>
           </div>
         </div>
       </header>
@@ -684,9 +679,7 @@ const QuizOfferPageV2: React.FC = () => {
               <div className="social-proof">
                 <div className="flex items-center justify-center gap-3 mb-2">
                   <Crown className="text-yellow-300" size={28} />
-                  <span className="text-xl font-bold">
-                    +5.247 MULHERES TRANSFORMADAS
-                  </span>
+                  <span className="text-xl font-bold">+5.247 MULHERES TRANSFORMADAS</span>
                   <Crown className="text-yellow-300" size={28} />
                 </div>
                 <div className="flex items-center justify-center gap-2">
@@ -707,14 +700,10 @@ const QuizOfferPageV2: React.FC = () => {
 
               {/* Subheadline Mais Persuasiva */}
               <p className="text-body mb-8 max-w-4xl mx-auto">
-                <strong>
-                  Pare de desperdiçar dinheiro em roupas que não combinam!
-                </strong>
+                <strong>Pare de desperdiçar dinheiro em roupas que não combinam!</strong>
                 <br />
                 Descubra seu estilo predominante e tenha um guarda-roupa que{" "}
-                <span style={{ color: "#ff6b6b", fontWeight: "bold" }}>
-                  funciona 100%
-                </span>
+                <span style={{ color: "#ff6b6b", fontWeight: "bold" }}>funciona 100%</span>
               </p>
 
               {/* Hero Video/Image com Destaque */}
@@ -782,32 +771,30 @@ const QuizOfferPageV2: React.FC = () => {
               <div className="before-after">
                 <div className="before-section">
                   <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Eye style={{ color: "#432818" }} size={24} />
+                    <Eye style={{ color: '#432818' }} size={24} />
                     SEM O QUIZ
                   </h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
-                        <strong>Guarda-roupa cheio</strong> mas "nada para
-                        vestir"
+                        <strong>Guarda-roupa cheio</strong> mas "nada para vestir"
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
                         <strong>Compras por impulso</strong> que nunca usa
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
-                        <strong>Dinheiro desperdiçado</strong> em peças que não
-                        combinam
+                        <strong>Dinheiro desperdiçado</strong> em peças que não combinam
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
                         <strong>Baixa autoestima</strong> com a própria imagem
                       </span>
@@ -826,8 +813,7 @@ const QuizOfferPageV2: React.FC = () => {
                     <li className="flex items-start gap-3">
                       <span className="text-green-500 mt-1 text-xl">✓</span>
                       <span>
-                        <strong>Guarda-roupa funcional</strong> onde tudo
-                        combina
+                        <strong>Guarda-roupa funcional</strong> onde tudo combina
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
@@ -868,37 +854,25 @@ const QuizOfferPageV2: React.FC = () => {
             <div className="price-impact animate-slide-up animate-delay-3">
               <div className="price-badge">🔥 OFERTA RELÂMPAGO - 77% OFF</div>
 
-              <h2 className="text-2xl font-bold mb-4">
-                TRANSFORMAÇÃO COMPLETA
-              </h2>
+              <h2 className="text-2xl font-bold mb-4">TRANSFORMAÇÃO COMPLETA</h2>
 
               <div className="grid-impact mb-6">
                 <div className="text-center">
                   <div className="bg-white/20 rounded-2xl p-6 backdrop-blur-sm">
-                    <h3 className="text-lg font-bold mb-2">
-                      📊 Quiz Personalizado
-                    </h3>
-                    <p className="text-sm opacity-90">
-                      Descubra seu estilo único
-                    </p>
+                    <h3 className="text-lg font-bold mb-2">📊 Quiz Personalizado</h3>
+                    <p className="text-sm opacity-90">Descubra seu estilo único</p>
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="bg-white/20 rounded-2xl p-6 backdrop-blur-sm">
                     <h3 className="text-lg font-bold mb-2">📖 Guia Completo</h3>
-                    <p className="text-sm opacity-90">
-                      Para seu estilo específico
-                    </p>
+                    <p className="text-sm opacity-90">Para seu estilo específico</p>
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="bg-white/20 rounded-2xl p-6 backdrop-blur-sm">
-                    <h3 className="text-lg font-bold mb-2">
-                      🎁 Bônus Exclusivos
-                    </h3>
-                    <p className="text-sm opacity-90">
-                      Peças-chave + Visagismo
-                    </p>
+                    <h3 className="text-lg font-bold mb-2">🎁 Bônus Exclusivos</h3>
+                    <p className="text-sm opacity-90">Peças-chave + Visagismo</p>
                   </div>
                 </div>
               </div>
@@ -936,7 +910,7 @@ const QuizOfferPageV2: React.FC = () => {
               <Flame size={32} />
             </button>
 
-            <div style={{ color: "#6B4F43" }}>
+            <div style={{ color: '#6B4F43' }}>
               ⚡ Acesso imediato • 🔒 Pagamento seguro • 🛡️ 7 dias de garantia
             </div>
           </div>

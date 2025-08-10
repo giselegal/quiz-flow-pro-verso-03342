@@ -11,9 +11,7 @@ class MemoryManager {
   }>();
   private intervals = new Set<number>();
   private timeouts = new Set<number>();
-  private observers = new Set<
-    IntersectionObserver | MutationObserver | ResizeObserver
-  >();
+  private observers = new Set<IntersectionObserver | MutationObserver | ResizeObserver>();
 
   static getInstance() {
     if (!MemoryManager.instance) {
@@ -48,9 +46,7 @@ class MemoryManager {
   }
 
   // Registrar observer para cleanup automático
-  addObserver(
-    observer: IntersectionObserver | MutationObserver | ResizeObserver
-  ) {
+  addObserver(observer: IntersectionObserver | MutationObserver | ResizeObserver) {
     this.observers.add(observer);
     return observer;
   }
@@ -64,24 +60,20 @@ class MemoryManager {
     this.eventListeners.clear();
 
     // Limpar intervals
-    this.intervals.forEach((id) => window.clearInterval(id));
+    this.intervals.forEach(id => window.clearInterval(id));
     this.intervals.clear();
 
     // Limpar timeouts
-    this.timeouts.forEach((id) => window.clearTimeout(id));
+    this.timeouts.forEach(id => window.clearTimeout(id));
     this.timeouts.clear();
 
     // Desconectar observers
-    this.observers.forEach((observer) => observer.disconnect());
+    this.observers.forEach(observer => observer.disconnect());
     this.observers.clear();
   }
 
   // Remover item específico
-  removeEventListener(
-    element: Element | Window | Document,
-    event: string,
-    handler: EventListener
-  ) {
+  removeEventListener(element: Element | Window | Document, event: string, handler: EventListener) {
     element.removeEventListener(event, handler);
     this.eventListeners.delete({ element, event, handler });
   }
@@ -114,17 +106,12 @@ export const useMemoryCleanup = () => {
   };
 };
 
-// Hook para weak references with support check
+// Hook para weak references
 export const useWeakRef = <T extends object>(value: T) => {
-  const weakRef = useRef<any>();
+  const weakRef = useRef<WeakRef<T>>();
 
   useEffect(() => {
-    if (typeof globalThis.WeakRef !== 'undefined') {
-      weakRef.current = new globalThis.WeakRef(value);
-    } else {
-      // Fallback for environments without WeakRef support
-      weakRef.current = { deref: () => value };
-    }
+    weakRef.current = new WeakRef(value);
   }, [value]);
 
   const getValue = useCallback(() => {
@@ -144,8 +131,7 @@ export const useMemoryMonitor = (threshold = 50) => {
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
-      const usagePercent =
-        (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
+      const usagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
 
       setMemoryUsage(usagePercent);
       setIsHighUsage(usagePercent > threshold);
@@ -194,9 +180,9 @@ export const useMemoryLeakDetector = () => {
   useEffect(() => {
     if (!("PerformanceObserver" in window)) return;
 
-    const observer = new PerformanceObserver((list) => {
+    const observer = new PerformanceObserver(list => {
       const entries = list.getEntries();
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         if (entry.entryType === "measure" && entry.name.includes("memory")) {
           console.log("Memory measurement:", entry);
         }

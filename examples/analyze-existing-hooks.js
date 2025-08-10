@@ -44,24 +44,19 @@ function analyzeHook(filePath) {
 
     // Detectar funcionalidade principal
     let functionality = "utility";
-    if (content.includes("quiz") || content.includes("Quiz"))
-      functionality = "quiz";
-    else if (content.includes("editor") || content.includes("Editor"))
-      functionality = "editor";
-    else if (content.includes("result") || content.includes("Result"))
-      functionality = "result";
+    if (content.includes("quiz") || content.includes("Quiz")) functionality = "quiz";
+    else if (content.includes("editor") || content.includes("Editor")) functionality = "editor";
+    else if (content.includes("result") || content.includes("Result")) functionality = "result";
     else if (content.includes("supabase") || content.includes("Supabase"))
       functionality = "database";
     else if (content.includes("performance") || content.includes("Performance"))
       functionality = "performance";
     else if (content.includes("animation") || content.includes("Animation"))
       functionality = "animation";
-    else if (content.includes("mobile") || content.includes("Media"))
-      functionality = "responsive";
+    else if (content.includes("mobile") || content.includes("Media")) functionality = "responsive";
 
     // Detectar complexidade
-    const complexity =
-      totalLines > 100 ? "high" : totalLines > 50 ? "medium" : "low";
+    const complexity = totalLines > 100 ? "high" : totalLines > 50 ? "medium" : "low";
 
     // Detectar se está sendo usado
     const isUsed =
@@ -97,7 +92,7 @@ function analyzeAllHooks() {
   const files = fs
     .readdirSync(hooksDir)
     .filter(
-      (file) =>
+      file =>
         (file.endsWith(".ts") || file.endsWith(".tsx")) &&
         !file.includes(".backup") &&
         !file.includes(".test") &&
@@ -116,7 +111,7 @@ function analyzeAllHooks() {
     utility: [],
   };
 
-  files.forEach((file) => {
+  files.forEach(file => {
     const filePath = path.join(hooksDir, file);
     const hookName = file.replace(/\.(ts|tsx)$/, "");
 
@@ -146,17 +141,11 @@ function generateHooksReport(data) {
   Object.entries(data.categories).forEach(([category, hooks]) => {
     if (hooks.length > 0) {
       console.log(`  📁 ${category.toUpperCase()}: ${hooks.length} hooks`);
-      hooks.forEach((hook) => {
+      hooks.forEach(hook => {
         const complexity =
-          hook.complexity === "high"
-            ? "🔴"
-            : hook.complexity === "medium"
-              ? "🟡"
-              : "🟢";
+          hook.complexity === "high" ? "🔴" : hook.complexity === "medium" ? "🟡" : "🟢";
         const usage = hook.isUsed ? "✅" : "⚠️";
-        console.log(
-          `    ${complexity} ${usage} ${hook.name} (${hook.totalLines} linhas)`
-        );
+        console.log(`    ${complexity} ${usage} ${hook.name} (${hook.totalLines} linhas)`);
       });
     }
   });
@@ -169,9 +158,7 @@ function generateHooksReport(data) {
     .slice(0, 10);
 
   complexHooks.forEach(([name, hook]) => {
-    console.log(
-      `  🔴 ${name}: ${hook.totalLines} linhas (${hook.functionality})`
-    );
+    console.log(`  🔴 ${name}: ${hook.totalLines} linhas (${hook.functionality})`);
   });
 
   return data;
@@ -184,36 +171,28 @@ function identifyIntegrationOpportunities(data) {
   // Hooks relacionados ao quiz que podemos aproveitar
   const quizHooks = data.categories.quiz;
   console.log(`\n🧩 HOOKS DE QUIZ (${quizHooks.length}):`);
-  quizHooks.forEach((hook) => {
-    console.log(
-      `  ✅ ${hook.name} - ${hook.functionality} (${hook.totalLines} linhas)`
-    );
+  quizHooks.forEach(hook => {
+    console.log(`  ✅ ${hook.name} - ${hook.functionality} (${hook.totalLines} linhas)`);
   });
 
   // Hooks de editor que podemos integrar
   const editorHooks = data.categories.editor;
   console.log(`\n✏️ HOOKS DE EDITOR (${editorHooks.length}):`);
-  editorHooks.forEach((hook) => {
-    console.log(
-      `  ✅ ${hook.name} - ${hook.functionality} (${hook.totalLines} linhas)`
-    );
+  editorHooks.forEach(hook => {
+    console.log(`  ✅ ${hook.name} - ${hook.functionality} (${hook.totalLines} linhas)`);
   });
 
   // Hooks de performance que podemos usar
   const performanceHooks = data.categories.performance;
   console.log(`\n⚡ HOOKS DE PERFORMANCE (${performanceHooks.length}):`);
-  performanceHooks.forEach((hook) => {
-    console.log(
-      `  ⚡ ${hook.name} - ${hook.functionality} (${hook.totalLines} linhas)`
-    );
+  performanceHooks.forEach(hook => {
+    console.log(`  ⚡ ${hook.name} - ${hook.functionality} (${hook.totalLines} linhas)`);
   });
 
   // Hooks utilitários importantes
-  const utilityHooks = data.categories.utility.filter(
-    (hook) => hook.totalLines > 20
-  );
+  const utilityHooks = data.categories.utility.filter(hook => hook.totalLines > 20);
   console.log(`\n🛠️ HOOKS UTILITÁRIOS IMPORTANTES (${utilityHooks.length}):`);
-  utilityHooks.forEach((hook) => {
+  utilityHooks.forEach(hook => {
     console.log(`  🛠️ ${hook.name} - ${hook.totalLines} linhas`);
   });
 }
@@ -233,7 +212,7 @@ function analyzeSpecificHooks(data) {
     "use-mobile",
   ];
 
-  keyHooks.forEach((hookName) => {
+  keyHooks.forEach(hookName => {
     const hook = data.analysis[hookName];
     if (hook) {
       console.log(`\n📋 ${hookName.toUpperCase()}:`);
@@ -269,7 +248,7 @@ function generateIntegrationPlan(data) {
     { name: "usePerformanceOptimization", reason: "Performance crítica" },
   ];
 
-  criticalHooks.forEach((hook) => {
+  criticalHooks.forEach(hook => {
     const exists = data.analysis[hook.name] ? "✅" : "❌";
     console.log(`  ${exists} ${hook.name} - ${hook.reason}`);
   });
@@ -283,7 +262,7 @@ function generateIntegrationPlan(data) {
     { name: "useKeyboardShortcuts", reason: "UX do editor" },
   ];
 
-  supportHooks.forEach((hook) => {
+  supportHooks.forEach(hook => {
     const exists = data.analysis[hook.name] ? "✅" : "❌";
     console.log(`  ${exists} ${hook.name} - ${hook.reason}`);
   });
@@ -296,10 +275,10 @@ function generateIntegrationPlan(data) {
     { name: "useLoadingState", reason: "Estados de carregamento" },
   ];
 
-  optimizationHooks.forEach((hook) => {
+  optimizationHooks.forEach(hook => {
     const pattern = hook.name.replace("use", "").toLowerCase();
     const hasPattern = Object.values(data.analysis).some(
-      (h) => h.patterns && h.patterns[pattern] > 0
+      h => h.patterns && h.patterns[pattern] > 0
     );
     const status = hasPattern ? "✅" : "❌";
     console.log(`  ${status} ${hook.name} - ${hook.reason}`);
@@ -406,9 +385,7 @@ function generateSummary(data) {
   console.log(`  • Total de hooks analisados: ${data.totalHooks}`);
   console.log(`  • Hooks de quiz: ${data.categories.quiz.length}`);
   console.log(`  • Hooks de editor: ${data.categories.editor.length}`);
-  console.log(
-    `  • Hooks de performance: ${data.categories.performance.length}`
-  );
+  console.log(`  • Hooks de performance: ${data.categories.performance.length}`);
   console.log(`  • Hooks utilitários: ${data.categories.utility.length}`);
 
   const totalLines = Object.values(data.analysis).reduce(

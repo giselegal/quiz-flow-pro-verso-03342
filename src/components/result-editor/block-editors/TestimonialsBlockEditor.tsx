@@ -1,17 +1,14 @@
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Block } from "../../../types/editor";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Block } from "@/types/editor";
 
 interface TestimonialsBlockEditorProps {
   block: Block;
   onUpdate: (content: any) => void;
 }
 
-const TestimonialsBlockEditor: React.FC<TestimonialsBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const TestimonialsBlockEditor: React.FC<TestimonialsBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content;
 
   return (
@@ -21,7 +18,7 @@ const TestimonialsBlockEditor: React.FC<TestimonialsBlockEditorProps> = ({
         <Input
           id="title"
           value={content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           placeholder="O que estão dizendo"
         />
       </div>
@@ -31,11 +28,11 @@ const TestimonialsBlockEditor: React.FC<TestimonialsBlockEditorProps> = ({
         <Input
           id="testimonialsImage"
           value={content.testimonialsImage || ""}
-          onChange={(e) => onUpdate({ testimonialsImage: e.target.value })}
+          onChange={e => onUpdate({ testimonialsImage: e.target.value })}
           placeholder="https://exemplo.com/depoimentos.jpg"
         />
         {content.testimonialsImage && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.testimonialsImage}
               alt="Depoimentos"

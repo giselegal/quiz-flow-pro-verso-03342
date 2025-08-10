@@ -1,14 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
-import {
-  MousePointer2,
-  Edit3,
-  ArrowRight,
-  Download,
-  Play,
-  Star,
-} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from "lucide-react";
 import type { BlockComponentProps } from "../../../types/blocks";
 import { userResponseService } from "../../../services/userResponseService";
 import { trackQuizStart } from "../../../utils/analytics";
@@ -26,14 +19,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -82,7 +68,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ color: "#432818" }}>
+      <div style={{ color: '#432818' }}>
         ⚠️ Erro: Propriedades do bloco não encontradas
       </div>
     );
@@ -123,9 +109,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       // Placeholder - Supabase integration will be implemented later
       console.log("Supabase integration placeholder:", {
         name: userName,
-        utm_source:
-          new URLSearchParams(window.location.search).get("utm_source") ||
-          undefined,
+        utm_source: new URLSearchParams(window.location.search).get("utm_source") || undefined,
       });
 
       console.log("✅ Quiz inicializado no Supabase com sucesso");
@@ -155,9 +139,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     accent: "bg-purple-600 hover:bg-purple-700 text-white border-purple-600",
     outline: "bg-transparent hover:bg-gray-50 text-gray-700 border-gray-300",
     ghost: "bg-transparent hover:bg-gray-50 text-gray-700 border-transparent",
-    custom:
-      customStyles ||
-      "bg-[#B89B7A] hover:bg-[#A08968] text-white border-[#B89B7A]",
+    custom: customStyles || "bg-[#B89B7A] hover:bg-[#A08968] text-white border-[#B89B7A]",
   };
 
   // Tamanhos de botão
@@ -218,14 +200,12 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         type="button"
         disabled={isButtonDisabled}
         className={getResponsiveClasses()}
-        onClick={async (e) => {
+        onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
             // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
             if (text && text.includes("Descobrir meu Estilo")) {
-              const userName =
-                userResponseService.getResponse("intro-name-input") ||
-                "Anônimo";
+              const userName = userResponseService.getResponse("intro-name-input") || "Anônimo";
               console.log("🚀 Iniciando tracking do quiz para:", userName);
 
               // 🚀 INTEGRAÇÃO SUPABASE: Criar usuário e iniciar sessão
@@ -262,21 +242,15 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       >
         {/* Ícone à esquerda */}
         {IconComponent && iconPosition === "left" && (
-          <IconComponent
-            className={cn(iconSizes[size as keyof typeof iconSizes], "mr-2")}
-          />
+          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], "mr-2")} />
         )}
 
         {/* Texto do botão */}
-        <span className="flex-1 text-center truncate">
-          {text || "Clique aqui"}
-        </span>
+        <span className="flex-1 text-center truncate">{text || "Clique aqui"}</span>
 
         {/* Ícone à direita */}
         {IconComponent && iconPosition === "right" && (
-          <IconComponent
-            className={cn(iconSizes[size as keyof typeof iconSizes], "ml-2")}
-          />
+          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], "ml-2")} />
         )}
       </button>
 
@@ -289,7 +263,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Empty state */}
       {!text && (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <MousePointer2 className="w-4 h-4 mr-2" />
           Clique para selecionar e editar no painel
         </div>

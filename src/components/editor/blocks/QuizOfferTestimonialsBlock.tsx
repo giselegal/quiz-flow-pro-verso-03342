@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Star, Users } from "lucide-react";
-import { Card, CardContent } from "../../../components/ui/card";
-import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { Card, CardContent } from "@/components/ui/card";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -11,14 +11,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -117,10 +110,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
     >
       <AnimatedWrapper show={isLoaded}>
         <div className="max-w-6xl mx-auto">
-          <h3
-            className="text-3xl font-bold text-center mb-12"
-            style={{ color: textColor }}
-          >
+          <h3 className="text-3xl font-bold text-center mb-12" style={{ color: textColor }}>
             {title}
           </h3>
 
@@ -130,13 +120,10 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
                 <CardContent className="p-6 text-center">
                   <div className="flex justify-center mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 fill-current text-yellow-400"
-                      />
+                      <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
                     ))}
                   </div>
-                  <p style={{ color: "#6B4F43" }}>"{testimonial.text}"</p>
+                  <p style={{ color: '#6B4F43' }}>"{testimonial.text}"</p>
                   <p className="font-semibold" style={{ color: textColor }}>
                     {testimonial.name}
                   </p>
@@ -147,7 +134,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
 
           {showStats && (
             <div className="text-center mt-8">
-              <div style={{ color: "#6B4F43" }}>
+              <div style={{ color: '#6B4F43' }}>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
                   {totalCustomers}

@@ -50,12 +50,12 @@ const componentDirs = [
 
 const problematicFiles = [];
 
-componentDirs.forEach((dir) => {
+componentDirs.forEach(dir => {
   if (fs.existsSync(dir)) {
     const files = fs.readdirSync(dir);
     files
-      .filter((f) => f.endsWith(".tsx"))
-      .forEach((file) => {
+      .filter(f => f.endsWith(".tsx"))
+      .forEach(file => {
         const filePath = path.join(dir, file);
         const problem = checkFile(filePath);
         if (problem) {
@@ -69,24 +69,18 @@ console.log("🚨 COMPONENTES COM PROBLEMA ENCONTRADOS:\n");
 
 if (problematicFiles.length === 0) {
   console.log("✅ NENHUM PROBLEMA ENCONTRADO!");
-  console.log(
-    "   Todos os componentes que usam getMarginClass definem marginTop corretamente."
-  );
+  console.log("   Todos os componentes que usam getMarginClass definem marginTop corretamente.");
 } else {
   problematicFiles.forEach((problem, index) => {
     console.log(`${index + 1}. ❌ ${problem.file}`);
     console.log(`   ${problem.problem}\n`);
   });
 
-  console.log(
-    `\n📊 TOTAL DE ARQUIVOS PROBLEMÁTICOS: ${problematicFiles.length}`
-  );
+  console.log(`\n📊 TOTAL DE ARQUIVOS PROBLEMÁTICOS: ${problematicFiles.length}`);
 }
 
 console.log("\n🔧 SOLUÇÃO:");
-console.log(
-  "   Para cada arquivo problemático, adicionar na destructuring do style:"
-);
+console.log("   Para cada arquivo problemático, adicionar na destructuring do style:");
 console.log(
   "   const { ..., marginTop = 0, marginBottom = 0, marginLeft = 0, marginRight = 0 } = style;"
 );

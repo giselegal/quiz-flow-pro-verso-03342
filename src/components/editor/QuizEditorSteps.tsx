@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "../../components/ui/card";
+import { Card } from "@/components/ui/card";
 
 interface QuizOption {
   id: string;
@@ -18,9 +18,7 @@ interface QuizEditorStepsProps {
   }>;
 }
 
-export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({
-  questions = [],
-}) => {
+export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = [] }) => {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">Etapas do Quiz</h2>
@@ -35,8 +33,8 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({
           </div>
 
           <div className="space-y-2">
-            {question.options.map((option) => (
-              <div key={option.id} style={{ backgroundColor: "#FAF9F7" }}>
+            {question.options.map(option => (
+              <div key={option.id} style={{ backgroundColor: '#FAF9F7' }}>
                 {option.imageUrl && (
                   <img
                     src={option.imageUrl}
@@ -45,7 +43,7 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({
                   />
                 )}
                 <span className="text-sm">{option.text}</span>
-                <span style={{ color: "#8B7355" }}>{option.styleCategory}</span>
+                <span style={{ color: '#8B7355' }}>{option.styleCategory}</span>
               </div>
             ))}
           </div>
@@ -53,7 +51,7 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({
       ))}
 
       {questions.length === 0 && (
-        <Card style={{ color: "#8B7355" }}>
+        <Card style={{ color: '#8B7355' }}>
           <p>Nenhuma questão configurada ainda</p>
         </Card>
       )}

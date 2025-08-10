@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface InlineEditableTextProps {
   text?: string;
@@ -79,9 +79,7 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     if (!maxLength || newValue.length <= maxLength) {
       setInternalValue(newValue);

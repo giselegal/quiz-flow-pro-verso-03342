@@ -1,23 +1,17 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "../../../utils/inlineComponentUtils";
-import {
-  BRAND_COLORS,
-  TYPOGRAPHY,
-  SPACING,
-  ANIMATIONS,
-  EFFECTS,
-} from "../../../utils/brandDesignSystem";
+} from "@/utils/inlineComponentUtils";
+import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from "@/utils/brandDesignSystem";
 import {
   Play,
   Pause,
@@ -53,14 +47,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -209,12 +196,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Text personalization
-  const personalizedTitle = getPersonalizedText(
-    title,
-    title,
-    username,
-    useUsername
-  );
+  const personalizedTitle = getPersonalizedText(title, title, username, useUsername);
 
   // Extract video ID for YouTube/Vimeo
   const getVideoEmbedUrl = () => {
@@ -308,10 +290,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Video Container */}
           {showPreview ? (
             // Preview/Thumbnail
-            <div
-              className="relative w-full h-full cursor-pointer group"
-              onClick={handlePlay}
-            >
+            <div className="relative w-full h-full cursor-pointer group" onClick={handlePlay}>
               <img
                 src={thumbnailUrl}
                 alt="Video thumbnail"
@@ -333,7 +312,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
               {isEditing && (
                 <div className="absolute top-2 right-2 flex gap-2">
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleVideoUrlChange();
                     }}
@@ -344,14 +323,10 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   </button>
 
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
-                      const newThumbnail = prompt(
-                        "Nova URL da thumbnail:",
-                        thumbnailUrl
-                      );
-                      if (newThumbnail !== null)
-                        handlePropertyChange("thumbnailUrl", newThumbnail);
+                      const newThumbnail = prompt("Nova URL da thumbnail:", thumbnailUrl);
+                      if (newThumbnail !== null) handlePropertyChange("thumbnailUrl", newThumbnail);
                     }}
                     className="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
                     title="Alterar thumbnail"
@@ -402,22 +377,17 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
 
         {/* Video Info */}
-        <div
-          className={cn(
-            "flex flex-col",
-            layout === "horizontal" ? "lg:w-1/3" : "w-full"
-          )}
-        >
+        <div className={cn("flex flex-col", layout === "horizontal" ? "lg:w-1/3" : "w-full")}>
           {/* Title */}
           {showTitle && (
             <div className="mb-2">
               <InlineEditableText
                 value={personalizedTitle}
-                onChange={(value) => handlePropertyChange("title", value)}
+                onChange={value => handlePropertyChange("title", value)}
                 placeholder="Título do vídeo..."
                 fontSize="lg"
                 fontWeight="bold"
-                style={{ color: "#432818" }}
+                style={{ color: '#432818' }}
               />
             </div>
           )}
@@ -427,10 +397,10 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="mb-4">
               <InlineEditableText
                 value={description}
-                onChange={(value) => handlePropertyChange("description", value)}
+                onChange={value => handlePropertyChange("description", value)}
                 placeholder="Descrição do vídeo..."
                 fontSize="sm"
-                style={{ color: "#6B4F43" }}
+                style={{ color: '#6B4F43' }}
                 multiline={true}
                 maxLines={4}
               />
@@ -439,18 +409,16 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Video Settings */}
           {isEditing && (
-            <div style={{ backgroundColor: "#FAF9F7" }}>
-              <h4 style={{ color: "#6B4F43" }}>Configurações</h4>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <h4 style={{ color: '#6B4F43' }}>Configurações</h4>
 
               {/* Video Type */}
               <div>
-                <label style={{ color: "#6B4F43" }}>Tipo de Vídeo</label>
+                <label style={{ color: '#6B4F43' }}>Tipo de Vídeo</label>
                 <select
                   value={videoType}
-                  onChange={(e) =>
-                    handlePropertyChange("videoType", e.target.value)
-                  }
-                  style={{ borderColor: "#E5DDD5" }}
+                  onChange={e => handlePropertyChange("videoType", e.target.value)}
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="youtube">YouTube</option>
                   <option value="vimeo">Vimeo</option>
@@ -461,13 +429,11 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
               {/* Aspect Ratio */}
               <div>
-                <label style={{ color: "#6B4F43" }}>Proporção</label>
+                <label style={{ color: '#6B4F43' }}>Proporção</label>
                 <select
                   value={aspectRatio}
-                  onChange={(e) =>
-                    handlePropertyChange("aspectRatio", e.target.value)
-                  }
-                  style={{ borderColor: "#E5DDD5" }}
+                  onChange={e => handlePropertyChange("aspectRatio", e.target.value)}
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="16:9">16:9 (Widescreen)</option>
                   <option value="4:3">4:3 (Standard)</option>
@@ -481,12 +447,10 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   type="checkbox"
                   id="autoplay"
                   checked={autoplay}
-                  onChange={(e) =>
-                    handlePropertyChange("autoplay", e.target.checked)
-                  }
+                  onChange={e => handlePropertyChange("autoplay", e.target.checked)}
                   className="text-xs"
                 />
-                <label htmlFor="autoplay" style={{ color: "#6B4F43" }}>
+                <label htmlFor="autoplay" style={{ color: '#6B4F43' }}>
                   Reprodução automática
                 </label>
               </div>
@@ -495,7 +459,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Video Stats */}
           <div className="mt-auto pt-3 border-t border-gray-100">
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               <div>Formato: {aspectRatio}</div>
               <div>Tipo: {videoType}</div>
               <div>Status: {isPlaying ? "Reproduzindo" : "Pausado"}</div>

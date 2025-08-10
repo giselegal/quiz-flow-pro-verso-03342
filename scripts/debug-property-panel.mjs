@@ -27,9 +27,7 @@ if (existsSync(editorFixedPath)) {
   const hasUsage = editorContent.includes("<OptimizedPropertiesPanel");
 
   console.log("\n✅ 2. Verificando integração:");
-  console.log(
-    `   - Import OptimizedPropertiesPanel: ${hasImport ? "✅ Sim" : "❌ Não"}`
-  );
+  console.log(`   - Import OptimizedPropertiesPanel: ${hasImport ? "✅ Sim" : "❌ Não"}`);
   console.log(`   - Uso no JSX: ${hasUsage ? "✅ Sim" : "❌ Não"}`);
 }
 

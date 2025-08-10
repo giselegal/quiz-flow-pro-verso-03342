@@ -1,10 +1,10 @@
 import React from "react";
-import { Card } from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
-import { Button } from "../../../components/ui/button";
-import { QuizComponentData } from "../../../types/quizBuilder";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { QuizComponentData } from "@/types/quizBuilder";
 import { Trash2 } from "lucide-react";
 
 interface PropertyPanelProps {
@@ -30,14 +30,10 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
     );
   }
 
-  const component = components.find((c) => c.id === selectedComponentId);
+  const component = components.find(c => c.id === selectedComponentId);
 
   if (!component) {
-    return (
-      <div className="p-4 text-center text-[#432818]/60">
-        Componente não encontrado
-      </div>
-    );
+    return <div className="p-4 text-center text-[#432818]/60">Componente não encontrado</div>;
   }
 
   const data = component.data || {};
@@ -56,7 +52,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
         <Button
           variant="ghost"
           size="sm"
-          style={{ color: "#432818" }}
+          style={{ color: '#432818' }}
           onClick={() => onDelete(selectedComponentId)}
         >
           <Trash2 className="w-4 h-4" />
@@ -70,7 +66,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
             id="title"
             value={data.title || ""}
             placeholder="Digite o título"
-            onChange={(e) => handleUpdate("title", e.target.value)}
+            onChange={e => handleUpdate("title", e.target.value)}
           />
         </div>
 
@@ -80,7 +76,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
             id="subtitle"
             value={data.subtitle || ""}
             placeholder="Digite o subtítulo"
-            onChange={(e) => handleUpdate("subtitle", e.target.value)}
+            onChange={e => handleUpdate("subtitle", e.target.value)}
           />
         </div>
 
@@ -92,7 +88,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               value={data.text || ""}
               placeholder="Digite o texto"
               className="min-h-[100px]"
-              onChange={(e) => handleUpdate("text", e.target.value)}
+              onChange={e => handleUpdate("text", e.target.value)}
             />
           </div>
         )}
@@ -104,7 +100,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
               id="imageUrl"
               value={data.imageUrl || ""}
               placeholder="https://exemplo.com/imagem.jpg"
-              onChange={(e) => handleUpdate("imageUrl", e.target.value)}
+              onChange={e => handleUpdate("imageUrl", e.target.value)}
             />
           </div>
         )}
@@ -118,7 +114,7 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 value={data.question || ""}
                 placeholder="Digite a pergunta"
                 className="min-h-[80px]"
-                onChange={(e) => handleUpdate("question", e.target.value)}
+                onChange={e => handleUpdate("question", e.target.value)}
               />
             </div>
 
@@ -130,13 +126,9 @@ export const PropertyPanel: React.FC<PropertyPanelProps> = ({
                 min="0"
                 max="10"
                 value={data.multiSelect || 0}
-                onChange={(e) =>
-                  handleUpdate("multiSelect", parseInt(e.target.value) || 0)
-                }
+                onChange={e => handleUpdate("multiSelect", parseInt(e.target.value) || 0)}
               />
-              <p className="text-xs text-[#8F7A6A]">
-                0 para escolha única, 1+ para múltipla
-              </p>
+              <p className="text-xs text-[#8F7A6A]">0 para escolha única, 1+ para múltipla</p>
             </div>
           </div>
         )}

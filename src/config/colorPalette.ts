@@ -140,9 +140,7 @@ export class ColorUtils {
    * Busca uma cor na paleta
    */
   static findColor(value: string): ColorOption | undefined {
-    return ALL_COLORS.find(
-      (color) => color.value.toLowerCase() === value.toLowerCase()
-    );
+    return ALL_COLORS.find(color => color.value.toLowerCase() === value.toLowerCase());
   }
 
   /**

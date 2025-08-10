@@ -1,16 +1,7 @@
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "../../../components/ui/resizable";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
-import { EditorProvider } from "../../../context/EditorContext";
-import { useResultPageConfig } from "../../../hooks/useResultPageConfig";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EditorProvider } from "@/context/EditorContext";
+import { useResultPageConfig } from "@/hooks/useResultPageConfig";
 import React, { useState } from "react";
 import { EditorCanvas } from "../canvas/EditorCanvas";
 import PropertiesPanel from "../properties/PropertiesPanel";
@@ -20,12 +11,8 @@ interface UnifiedEditorLayoutProps {
   className?: string;
 }
 
-export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
-  className = "",
-}) => {
-  const [activeTab, setActiveTab] = useState<"quiz" | "result" | "sales">(
-    "result"
-  );
+export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ className = "" }) => {
+  const [activeTab, setActiveTab] = useState<"quiz" | "result" | "sales">("result");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
 
@@ -48,10 +35,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
     }
   };
 
-  const handleReorderBlocks = (
-    sourceIndex: number,
-    destinationIndex: number
-  ) => {
+  const handleReorderBlocks = (sourceIndex: number, destinationIndex: number) => {
     console.log("Blocks reordered:", sourceIndex, destinationIndex);
   };
 
@@ -106,7 +90,7 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
       <div className={`h-screen flex flex-col ${className}`}>
         <Tabs
           value={activeTab}
-          onValueChange={(value) => setActiveTab(value as any)}
+          onValueChange={value => setActiveTab(value as any)}
           className="flex-1"
         >
           <div className="border-b">
@@ -153,17 +137,13 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({
 
           <TabsContent value="quiz" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p style={{ color: "#8B7355" }}>
-                Quiz Editor - Em desenvolvimento
-              </p>
+              <p style={{ color: "#8B7355" }}>Quiz Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
 
           <TabsContent value="sales" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p style={{ color: "#8B7355" }}>
-                Sales Page Editor - Em desenvolvimento
-              </p>
+              <p style={{ color: "#8B7355" }}>Sales Page Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
         </Tabs>

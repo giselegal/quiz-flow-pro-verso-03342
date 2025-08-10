@@ -15,8 +15,7 @@ console.log("=".repeat(70));
 // Leitura dos arquivos principais
 const files = {
   blockRegistry: "client/src/components/editor/blocks/BlockRegistry.tsx",
-  quizQuestionBlock:
-    "client/src/components/editor/blocks/QuizQuestionBlock.tsx",
+  quizQuestionBlock: "client/src/components/editor/blocks/QuizQuestionBlock.tsx",
   dynamicRenderer: "src/components/DynamicBlockRenderer.tsx",
   blockDefinitions: "src/config/blockDefinitions.ts",
 };
@@ -49,12 +48,10 @@ if (results.blockRegistry) {
     "faq-section",
   ];
 
-  quizComponents.forEach((comp) => {
+  quizComponents.forEach(comp => {
     const regex = new RegExp(`['"]\s*${comp}\s*['"]`, "g");
     const found = regex.test(results.blockRegistry);
-    console.log(
-      `  ${found ? "✅" : "❌"} ${comp} - ${found ? "Registrado" : "Não encontrado"}`
-    );
+    console.log(`  ${found ? "✅" : "❌"} ${comp} - ${found ? "Registrado" : "Não encontrado"}`);
   });
 }
 
@@ -96,12 +93,10 @@ if (results.dynamicRenderer) {
     },
   ];
 
-  etapas21.forEach((etapa) => {
+  etapas21.forEach(etapa => {
     const regex = new RegExp(`case\\s+['"]\s*${etapa.component}\s*['"]`, "g");
     const found = regex.test(results.dynamicRenderer);
-    console.log(
-      `  ${found ? "✅" : "❌"} Etapa ${etapa.etapa}: ${etapa.component}`
-    );
+    console.log(`  ${found ? "✅" : "❌"} Etapa ${etapa.etapa}: ${etapa.component}`);
     console.log(`      ${etapa.desc}`);
   });
 }
@@ -143,11 +138,9 @@ if (results.quizQuestionBlock) {
     },
   ];
 
-  logicFeatures.forEach((feature) => {
+  logicFeatures.forEach(feature => {
     const found = feature.regex.test(results.quizQuestionBlock);
-    console.log(
-      `  ${found ? "✅" : "❌"} ${feature.feature} - ${feature.desc}`
-    );
+    console.log(`  ${found ? "✅" : "❌"} ${feature.feature} - ${feature.desc}`);
   });
 }
 
@@ -164,7 +157,7 @@ if (results.quizQuestionBlock) {
     { feature: "Responsive Design", regex: /md:.*lg:/g },
   ];
 
-  visualFeatures.forEach((feature) => {
+  visualFeatures.forEach(feature => {
     const found = feature.regex.test(results.quizQuestionBlock);
     console.log(`  ${found ? "✅" : "❌"} ${feature.feature}`);
   });
@@ -184,7 +177,7 @@ if (results.dynamicRenderer) {
     { feature: "Resultado Personalizado", regex: /userName.*Parabéns/g },
   ];
 
-  resultFeatures.forEach((feature) => {
+  resultFeatures.forEach(feature => {
     const found = feature.regex.test(results.dynamicRenderer);
     console.log(`  ${found ? "✅" : "❌"} ${feature.feature}`);
   });
@@ -202,7 +195,7 @@ if (results.dynamicRenderer) {
     { feature: "Urgency", regex: /77% OFF.*Economia/g },
   ];
 
-  conversionFeatures.forEach((feature) => {
+  conversionFeatures.forEach(feature => {
     const found = feature.regex.test(results.dynamicRenderer);
     console.log(`  ${found ? "✅" : "❌"} ${feature.feature}`);
   });
@@ -229,7 +222,7 @@ if (results.dynamicRenderer) {
   ];
 
   totalEtapas = etapasComponents.length;
-  etapasComponents.forEach((comp) => {
+  etapasComponents.forEach(comp => {
     const regex = new RegExp(`case\\s+['"]\s*${comp}\s*['"]`, "g");
     if (regex.test(results.dynamicRenderer)) etapasImplementadas++;
   });
@@ -245,7 +238,7 @@ if (results.quizQuestionBlock) {
     "isRequired",
   ];
   totalLogica = logicFeatures.length;
-  logicFeatures.forEach((feature) => {
+  logicFeatures.forEach(feature => {
     const regex = new RegExp(feature, "g");
     if (regex.test(results.quizQuestionBlock)) logicaImplementada++;
   });
@@ -259,12 +252,8 @@ console.log(
 );
 
 if (etapasImplementadas === totalEtapas && logicaImplementada >= 5) {
-  console.log(
-    "\n🎉 EXCELENTE! Sistema completo de quiz com 21 etapas implementado!"
-  );
-  console.log(
-    "✨ Todas as funcionalidades de cálculo e resultado estão funcionais!"
-  );
+  console.log("\n🎉 EXCELENTE! Sistema completo de quiz com 21 etapas implementado!");
+  console.log("✨ Todas as funcionalidades de cálculo e resultado estão funcionais!");
 } else {
   console.log("\n⚠️  Algumas funcionalidades precisam de atenção:");
   if (etapasImplementadas < totalEtapas) {
@@ -277,13 +266,9 @@ if (etapasImplementadas === totalEtapas && logicaImplementada >= 5) {
 
 console.log("\n🔧 COMPONENTES COM LÓGICA DE CÁLCULO IDENTIFICADOS:");
 console.log("1. 📊 QuizQuestionBlock - Lógica de seleção e validação");
-console.log(
-  "2. 🎯 quiz-questao-principal - Questões com progress e multiple choice"
-);
+console.log("2. 🎯 quiz-questao-principal - Questões com progress e multiple choice");
 console.log("3. 🧮 quiz-questao-estrategica - Questões para segmentação");
-console.log(
-  "4. 📈 quiz-resultado-completo - Cálculo de compatibilidade e estilo"
-);
+console.log("4. 📈 quiz-resultado-completo - Cálculo de compatibilidade e estilo");
 console.log("5. ⏱️  quiz-transicao-* - Loading states e progress tracking");
 
 console.log("\n📝 RECOMENDAÇÕES:");

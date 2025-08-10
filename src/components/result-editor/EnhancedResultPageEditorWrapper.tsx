@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleResult, QuizFunnel } from "../../types/quiz";
+import { StyleResult, QuizFunnel } from "@/types/quiz";
 import { EnhancedResultPageEditor } from "./EnhancedResultPageEditor";
 
 interface EnhancedResultPageEditorWrapperProps {
@@ -11,7 +11,7 @@ interface EnhancedResultPageEditorWrapperProps {
 
 export const EnhancedResultPageEditorWrapper: React.FC<
   EnhancedResultPageEditorWrapperProps
-> = (props) => {
+> = props => {
   return (
     <EnhancedResultPageEditor
       selectedStyle={props.primaryStyle}

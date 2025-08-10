@@ -90,20 +90,17 @@ class PageConfigService {
    */
   async savePageConfig(config: PageConfig): Promise<boolean> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/page-configs/${config.pageId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...config,
-            lastModified: new Date().toISOString(),
-            version: config.version + 1,
-          }),
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/page-configs/${config.pageId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...config,
+          lastModified: new Date().toISOString(),
+          version: config.version + 1,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to save page config");
@@ -118,10 +115,7 @@ class PageConfigService {
 
       // Fallback para localStorage
       try {
-        localStorage.setItem(
-          `page-config-${config.pageId}`,
-          JSON.stringify(config)
-        );
+        localStorage.setItem(`page-config-${config.pageId}`, JSON.stringify(config));
         this.cache.set(config.pageId, config);
         return true;
       } catch (localError) {
@@ -172,7 +166,7 @@ class PageConfigService {
    * Converter blocos do editor para blocos de configuração
    */
   private convertBlocks(blocks: any[]): ConfigBlock[] {
-    return blocks.map((block) => ({
+    return blocks.map(block => ({
       id: block.id,
       type: block.type,
       order: block.order,

@@ -58,12 +58,8 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
 
   // Função para calcular desconto
   const calculateDiscountPercentage = () => {
-    const original = parseFloat(
-      originalPrice.replace(/[^\d,]/g, "").replace(",", ".")
-    );
-    const current = parseFloat(
-      currentPrice.replace(/[^\d,]/g, "").replace(",", ".")
-    );
+    const original = parseFloat(originalPrice.replace(/[^\d,]/g, "").replace(",", "."));
+    const current = parseFloat(currentPrice.replace(/[^\d,]/g, "").replace(",", "."));
     if (original && current) {
       return Math.round(((original - current) / original) * 100);
     }
@@ -76,8 +72,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
       case "premium":
         return {
           card: "bg-gradient-to-br from-[#432818] via-[#5C3A29] to-[#432818] text-white border-[#B89B7A] shadow-2xl shadow-[#B89B7A]/20",
-          badge:
-            "bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] text-[#432818] shadow-lg",
+          badge: "bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] text-[#432818] shadow-lg",
           price: "text-[#E8D5C4]",
           button:
             "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] hover:from-[#A08967] hover:to-[#B89B7A] text-[#432818] shadow-lg",
@@ -95,8 +90,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
       default:
         return {
           card: "bg-gradient-to-br from-white via-[#FEFCFA] to-[#E8D5C4]/30 border-2 border-[#B89B7A]/40 shadow-xl hover:shadow-2xl",
-          badge:
-            "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] text-white shadow-md",
+          badge: "bg-gradient-to-r from-[#B89B7A] to-[#D4C2A8] text-white shadow-md",
           price: "text-[#432818]",
           button:
             "bg-gradient-to-r from-[#B89B7A] via-[#C8A882] to-[#B89B7A] hover:from-[#A08967] hover:to-[#A08967] text-white shadow-lg hover:shadow-xl",
@@ -149,10 +143,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
           {showBadge && (
             <div className="flex justify-center">
               <Badge
-                className={cn(
-                  variantStyles.badge,
-                  "text-sm font-bold px-3 py-1 animate-pulse"
-                )}
+                className={cn(variantStyles.badge, "text-sm font-bold px-3 py-1 animate-pulse")}
               >
                 <Zap className="w-3 h-3 mr-1" />
                 {calculateDiscountPercentage()}% OFF
@@ -195,7 +186,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
             )}
             contentEditable
             suppressContentEditableWarning
-            onBlur={(e) => onUpdate?.({ title: e.target.textContent })}
+            onBlur={e => onUpdate?.({ title: e.target.textContent })}
           >
             {title}
           </h2>
@@ -208,7 +199,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
             )}
             contentEditable
             suppressContentEditableWarning
-            onBlur={(e) => onUpdate?.({ subtitle: e.target.textContent })}
+            onBlur={e => onUpdate?.({ subtitle: e.target.textContent })}
           >
             {subtitle}
           </p>
@@ -224,9 +215,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
               <span
                 contentEditable
                 suppressContentEditableWarning
-                onBlur={(e) =>
-                  onUpdate?.({ originalPrice: e.target.textContent })
-                }
+                onBlur={e => onUpdate?.({ originalPrice: e.target.textContent })}
               >
                 {originalPrice}
               </span>
@@ -236,18 +225,14 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
               <span
                 contentEditable
                 suppressContentEditableWarning
-                onBlur={(e) =>
-                  onUpdate?.({ currentPrice: e.target.textContent })
-                }
+                onBlur={e => onUpdate?.({ currentPrice: e.target.textContent })}
               >
                 {currentPrice}
               </span>
             </div>
 
             <div className="text-sm opacity-80">
-              <span className="font-medium">
-                Economize {calculateDiscountPercentage()}%
-              </span>
+              <span className="font-medium">Economize {calculateDiscountPercentage()}%</span>
             </div>
           </div>
 
@@ -259,17 +244,13 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
                   <Check
                     className={cn(
                       "w-4 h-4 flex-shrink-0",
-                      variant === "premium"
-                        ? "text-[#B89B7A]"
-                        : "text-[#B89B7A]"
+                      variant === "premium" ? "text-[#B89B7A]" : "text-[#B89B7A]"
                     )}
                   />
                   <span
                     className={cn(
                       "text-sm",
-                      variant === "premium"
-                        ? "text-[#E8D5C4]"
-                        : "text-[#432818]"
+                      variant === "premium" ? "text-[#E8D5C4]" : "text-[#432818]"
                     )}
                   >
                     {feature}
@@ -286,7 +267,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
               variantStyles.button,
               isHovered && "transform scale-105"
             )}
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (buttonUrl && buttonUrl !== "#") {
                 window.open(buttonUrl, "_blank");
@@ -297,7 +278,7 @@ export const PricingCardInlineBlock: React.FC<PricingCardInlineBlockProps> = ({
               <span
                 contentEditable
                 suppressContentEditableWarning
-                onBlur={(e) => onUpdate?.({ buttonText: e.target.textContent })}
+                onBlur={e => onUpdate?.({ buttonText: e.target.textContent })}
               >
                 {buttonText}
               </span>

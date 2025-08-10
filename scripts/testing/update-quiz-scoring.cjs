@@ -11,10 +11,8 @@ let content = fs.readFileSync(filePath, "utf8");
 // Questão 5 - Estampas
 const q5OldPattern =
   /{\s*id:\s*"5([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"5\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(
-  q5OldPattern,
-  (match, letter, text, imageUrl, category) => {
-    return `{ 
+content = content.replace(q5OldPattern, (match, letter, text, imageUrl, category) => {
+  return `{ 
                 id: "5${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -23,16 +21,13 @@ content = content.replace(
                 styleCategory: "${category}",
                 points: 1
               }`;
-  }
-);
+});
 
 // Questão 6 - Casacos
 const q6OldPattern =
   /{\s*id:\s*"6([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"6\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(
-  q6OldPattern,
-  (match, letter, text, imageUrl, category) => {
-    return `{ 
+content = content.replace(q6OldPattern, (match, letter, text, imageUrl, category) => {
+  return `{ 
                 id: "6${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -41,16 +36,13 @@ content = content.replace(
                 styleCategory: "${category}",
                 points: 1
               }`;
-  }
-);
+});
 
 // Questão 7 - Calças
 const q7OldPattern =
   /{\s*id:\s*"7([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"7\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(
-  q7OldPattern,
-  (match, letter, text, imageUrl, category) => {
-    return `{ 
+content = content.replace(q7OldPattern, (match, letter, text, imageUrl, category) => {
+  return `{ 
                 id: "7${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -59,16 +51,13 @@ content = content.replace(
                 styleCategory: "${category}",
                 points: 1
               }`;
-  }
-);
+});
 
 // Questão 8 - Sapatos
 const q8OldPattern =
   /{\s*id:\s*"8([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"8\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(
-  q8OldPattern,
-  (match, letter, text, imageUrl, category) => {
-    return `{ 
+content = content.replace(q8OldPattern, (match, letter, text, imageUrl, category) => {
+  return `{ 
                 id: "8${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -77,16 +66,13 @@ content = content.replace(
                 styleCategory: "${category}",
                 points: 1
               }`;
-  }
-);
+});
 
 // Questão 9 - Acessórios
 const q9OldPattern =
   /{\s*id:\s*"9([a-h])",\s*text:\s*"([^"]+)",\s*imageUrl:\s*"([^"]+)",\s*value:\s*"9\1",\s*category:\s*"([^"]+)"\s*}/g;
-content = content.replace(
-  q9OldPattern,
-  (match, letter, text, imageUrl, category) => {
-    return `{ 
+content = content.replace(q9OldPattern, (match, letter, text, imageUrl, category) => {
+  return `{ 
                 id: "9${letter}", 
                 text: "${text}",
                 imageUrl: "${imageUrl}",
@@ -95,8 +81,7 @@ content = content.replace(
                 styleCategory: "${category}",
                 points: 1
               }`;
-  }
-);
+});
 
 // Questão 10 - Tecidos (sem imagem)
 const q10OldPattern =

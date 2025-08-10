@@ -1,6 +1,6 @@
 import React from "react";
-import { ComponentProps } from "../../../interfaces/quiz";
-import styles from "../../../styles/quiz.module.css";
+import { ComponentProps } from "@/interfaces/quiz";
+import styles from "@/styles/quiz.module.css";
 
 interface BonusItem {
   name: string;
@@ -29,8 +29,7 @@ const QuizBonus: React.FC<QuizBonusProps> = ({
 
   const getTotalValue = () => {
     return items.reduce((total, item) => {
-      const value =
-        parseFloat(item.value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
+      const value = parseFloat(item.value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
       return total + value;
     }, 0);
   };
@@ -43,9 +42,7 @@ const QuizBonus: React.FC<QuizBonusProps> = ({
       <div className={styles.bonusCard}>
         <div className={styles.bonusHeader}>
           <h3 className={styles.bonusTitle}>🎁 {title}</h3>
-          <div className={styles.bonusSubtitle}>
-            Você ganha GRÁTIS ao adquirir hoje:
-          </div>
+          <div className={styles.bonusSubtitle}>Você ganha GRÁTIS ao adquirir hoje:</div>
         </div>
 
         <div className={styles.bonusList}>
@@ -62,9 +59,7 @@ const QuizBonus: React.FC<QuizBonusProps> = ({
 
         <div className={styles.bonusTotal}>
           <div className={styles.totalLabel}>Valor total dos bônus:</div>
-          <div className={styles.totalValue}>
-            R$ {getTotalValue().toFixed(0)}
-          </div>
+          <div className={styles.totalValue}>R$ {getTotalValue().toFixed(0)}</div>
           <div className={styles.totalText}>GRÁTIS para você!</div>
         </div>
       </div>

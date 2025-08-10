@@ -301,10 +301,7 @@ export const OPTIMIZED_STEP_TEMPLATES = {
 };
 
 // Função para gerar etapas dinâmicas baseadas nos templates
-export function generateStepFromTemplate(
-  stepNumber: number,
-  questionData: any = null
-) {
+export function generateStepFromTemplate(stepNumber: number, questionData: any = null) {
   if (stepNumber === 1) {
     return OPTIMIZED_STEP_TEMPLATES.step01;
   }

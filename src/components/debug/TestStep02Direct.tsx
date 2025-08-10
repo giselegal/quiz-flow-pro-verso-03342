@@ -1,11 +1,9 @@
-import { getStep02Template } from "../../components/steps/Step02Template";
+import { getStep02Template } from "@/components/steps/Step02Template";
 import React from "react";
 
 const TestStep02Direct: React.FC = () => {
   const step02Template = getStep02Template();
-  const optionsBlock = step02Template.find(
-    (block) => block.type === "options-grid"
-  );
+  const optionsBlock = step02Template.find(block => block.type === "options-grid");
 
   console.log("🧪 TestStep02Direct:", {
     totalBlocks: step02Template.length,
@@ -20,7 +18,7 @@ const TestStep02Direct: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">Teste Direto Step02</h1>
 
       <div className="space-y-4">
-        <div style={{ backgroundColor: "#FAF9F7" }}>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <h2 className="font-bold">Template Data:</h2>
           <p>Total blocos: {step02Template.length}</p>
           <p>Options block encontrado: {optionsBlock ? "✅ Sim" : "❌ Não"}</p>
@@ -31,9 +29,7 @@ const TestStep02Direct: React.FC = () => {
             <h2 className="font-bold">Options Block:</h2>
             <p>ID: {optionsBlock.id}</p>
             <p>Tipo: {optionsBlock.type}</p>
-            <p>
-              Options length: {optionsBlock.properties?.options?.length || 0}
-            </p>
+            <p>Options length: {optionsBlock.properties?.options?.length || 0}</p>
 
             <div className="mt-4">
               <h3 className="font-semibold">Primeira opção:</h3>
@@ -45,24 +41,22 @@ const TestStep02Direct: React.FC = () => {
         )}
 
         {optionsBlock?.properties?.options && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <h2 className="font-bold">Todas as Opções:</h2>
             <div className="grid grid-cols-2 gap-2 mt-2">
-              {optionsBlock.properties.options.map(
-                (option: any, index: number) => (
-                  <div key={index} className="bg-white p-2 rounded text-sm">
-                    <p>
-                      <strong>ID:</strong> {option.id}
-                    </p>
-                    <p>
-                      <strong>Text:</strong> {option.text?.substring(0, 30)}...
-                    </p>
-                    <p>
-                      <strong>Image:</strong> {option.imageUrl ? "✅" : "❌"}
-                    </p>
-                  </div>
-                )
-              )}
+              {optionsBlock.properties.options.map((option: any, index: number) => (
+                <div key={index} className="bg-white p-2 rounded text-sm">
+                  <p>
+                    <strong>ID:</strong> {option.id}
+                  </p>
+                  <p>
+                    <strong>Text:</strong> {option.text?.substring(0, 30)}...
+                  </p>
+                  <p>
+                    <strong>Image:</strong> {option.imageUrl ? "✅" : "❌"}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         )}

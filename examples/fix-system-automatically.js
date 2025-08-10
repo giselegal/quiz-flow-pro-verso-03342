@@ -580,7 +580,7 @@ function updateBlockDefinitions() {
     let content = fs.readFileSync(blockDefPath, 'utf8');
     
     // Adicionar imports dos novos componentes inline
-    const newImports = `
+    const newImports = \`
 // Inline Components
 import HeadingInline from '@/components/blocks/inline/HeadingInline';
 import TextInline from '@/components/blocks/inline/TextInline';
@@ -588,18 +588,18 @@ import ButtonInline from '@/components/blocks/inline/ButtonInline';
 import DecorativeBarInline from '@/components/blocks/inline/DecorativeBarInline';
 import ImageDisplayInline from '@/components/blocks/inline/ImageDisplayInline';
 import LegalNoticeInline from '@/components/blocks/inline/LegalNoticeInline';
-import FormInput from '@/components/blocks/FormInput';`;
+import FormInput from '@/components/blocks/FormInput';\`;
     
     // Adicionar no início dos imports se não estiver presente
     if (!content.includes('HeadingInline')) {
       const importIndex = content.indexOf('import React');
       if (importIndex !== -1) {
-        content = content.slice(0, importIndex) + newImports + '\n\n' + content.slice(importIndex);
+        content = content.slice(0, importIndex) + newImports + '\\n\\n' + content.slice(importIndex);
       }
     }
     
     // Adicionar definições dos blocos se não existirem
-    const newDefinitions = `
+    const newDefinitions = \`
   'heading-inline': {
     component: HeadingInline,
     label: 'Título Inline',

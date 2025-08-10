@@ -2,7 +2,7 @@
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { ArrowRight, Sparkles } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -103,7 +96,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
           <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-2">
             <InlineEditableText
               value={title}
-              onChange={(value) => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange("title", value)}
               placeholder="Título da transformação"
               className="text-2xl md:text-3xl font-bold text-[#aa6b5d]"
             />
@@ -112,7 +105,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
           <p className="text-[#432818] text-lg">
             <InlineEditableText
               value={subtitle}
-              onChange={(value) => handlePropertyChange("subtitle", value)}
+              onChange={value => handlePropertyChange("subtitle", value)}
               placeholder="Subtítulo da transformação"
               className="text-[#432818] text-lg"
             />
@@ -129,12 +122,10 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
                 alt="Antes"
                 className="w-full h-48 object-cover rounded-lg shadow-md"
               />
-              <div style={{ backgroundColor: "#FAF9F7" }}>
+              <div style={{ backgroundColor: '#FAF9F7' }}>
                 <InlineEditableText
                   value={beforeTitle}
-                  onChange={(value) =>
-                    handlePropertyChange("beforeTitle", value)
-                  }
+                  onChange={value => handlePropertyChange("beforeTitle", value)}
                   placeholder="ANTES"
                   className="text-white text-sm font-bold"
                 />
@@ -144,9 +135,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
             <p className="text-[#432818] text-sm leading-relaxed">
               <InlineEditableText
                 value={beforeDescription}
-                onChange={(value) =>
-                  handlePropertyChange("beforeDescription", value)
-                }
+                onChange={value => handlePropertyChange("beforeDescription", value)}
                 placeholder="Descrição do antes..."
                 className="text-[#432818] text-sm leading-relaxed"
                 multiline
@@ -161,7 +150,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
                 className="w-12 h-12 md:w-16 md:h-16 animate-pulse"
                 style={{ color: arrowColor }}
               />
-              <span style={{ color: "#8B7355" }}>Transformação</span>
+              <span style={{ color: '#8B7355' }}>Transformação</span>
             </div>
           </div>
 
@@ -176,9 +165,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="absolute top-2 left-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                 <InlineEditableText
                   value={afterTitle}
-                  onChange={(value) =>
-                    handlePropertyChange("afterTitle", value)
-                  }
+                  onChange={value => handlePropertyChange("afterTitle", value)}
                   placeholder="DEPOIS"
                   className="text-white text-sm font-bold"
                 />
@@ -188,9 +175,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
             <p className="text-[#432818] text-sm leading-relaxed">
               <InlineEditableText
                 value={afterDescription}
-                onChange={(value) =>
-                  handlePropertyChange("afterDescription", value)
-                }
+                onChange={value => handlePropertyChange("afterDescription", value)}
                 placeholder="Descrição do depois..."
                 className="text-[#432818] text-sm leading-relaxed"
                 multiline

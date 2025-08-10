@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { cn } from "../../../../lib/utils";
-import {
-  Edit3,
-  Eye,
-  Settings,
-  Move,
-  Copy,
-  Trash2,
-  MoreHorizontal,
-} from "lucide-react";
-import type { BlockComponentProps } from "../../../../types/blocks";
+import { cn } from "@/lib/utils";
+import { Edit3, Eye, Settings, Move, Copy, Trash2, MoreHorizontal } from "lucide-react";
+import type { BlockComponentProps } from "@/types/blocks";
 
 interface InlineBaseWrapperProps extends BlockComponentProps {
   children: React.ReactNode;
@@ -32,15 +24,9 @@ interface InlineBaseWrapperProps extends BlockComponentProps {
 
   // 3. RESPONSIVO: Breakpoints e classes adaptativas
   responsive?: {
-    mobile?: Partial<
-      Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">
-    >;
-    tablet?: Partial<
-      Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">
-    >;
-    desktop?: Partial<
-      Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">
-    >;
+    mobile?: Partial<Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">>;
+    tablet?: Partial<Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">>;
+    desktop?: Partial<Pick<InlineBaseWrapperProps, "direction" | "gap" | "justify" | "align">>;
   };
 
   // 4. INLINE (HORIZONTAL): Layout otimizado para componentes lado a lado
@@ -241,34 +227,28 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
     // Responsive overrides
     if (responsive?.mobile) {
-      if (responsive.mobile.gap)
-        classes.push(`sm:${gapClasses[responsive.mobile.gap]}`);
+      if (responsive.mobile.gap) classes.push(`sm:${gapClasses[responsive.mobile.gap]}`);
       if (responsive.mobile.justify)
         classes.push(`sm:${justifyClasses[responsive.mobile.justify]}`);
-      if (responsive.mobile.align)
-        classes.push(`sm:${alignClasses[responsive.mobile.align]}`);
+      if (responsive.mobile.align) classes.push(`sm:${alignClasses[responsive.mobile.align]}`);
       if (responsive.mobile.direction)
         classes.push(`sm:${directionClasses[responsive.mobile.direction]}`);
     }
 
     if (responsive?.tablet) {
-      if (responsive.tablet.gap)
-        classes.push(`md:${gapClasses[responsive.tablet.gap]}`);
+      if (responsive.tablet.gap) classes.push(`md:${gapClasses[responsive.tablet.gap]}`);
       if (responsive.tablet.justify)
         classes.push(`md:${justifyClasses[responsive.tablet.justify]}`);
-      if (responsive.tablet.align)
-        classes.push(`md:${alignClasses[responsive.tablet.align]}`);
+      if (responsive.tablet.align) classes.push(`md:${alignClasses[responsive.tablet.align]}`);
       if (responsive.tablet.direction)
         classes.push(`md:${directionClasses[responsive.tablet.direction]}`);
     }
 
     if (responsive?.desktop) {
-      if (responsive.desktop.gap)
-        classes.push(`lg:${gapClasses[responsive.desktop.gap]}`);
+      if (responsive.desktop.gap) classes.push(`lg:${gapClasses[responsive.desktop.gap]}`);
       if (responsive.desktop.justify)
         classes.push(`lg:${justifyClasses[responsive.desktop.justify]}`);
-      if (responsive.desktop.align)
-        classes.push(`lg:${alignClasses[responsive.desktop.align]}`);
+      if (responsive.desktop.align) classes.push(`lg:${alignClasses[responsive.desktop.align]}`);
       if (responsive.desktop.direction)
         classes.push(`lg:${directionClasses[responsive.desktop.direction]}`);
     }
@@ -277,8 +257,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   };
 
   // Extract properties for block data access
-  const { trackingEnabled = false, useUsername = false } =
-    block.properties || {};
+  const { trackingEnabled = false, useUsername = false } = block.properties || {};
 
   return (
     <div
@@ -303,10 +282,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
         "hover:border-[#B89B7A]/40 hover:bg-[#B89B7A]/10/30",
 
         // Estado selecionado
-        isSelected && [
-          "border-[#B89B7A] bg-[#B89B7A]/10",
-          "shadow-lg shadow-blue-500/20",
-        ],
+        isSelected && ["border-[#B89B7A] bg-[#B89B7A]/10", "shadow-lg shadow-blue-500/20"],
 
         // Estados de erro e loading
         hasError && "border-red-500 bg-red-50",
@@ -339,7 +315,9 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
       {/* 6. UX: Error State */}
       {hasError && errorMessage && (
-        <div style={{ backgroundColor: "#FAF9F7" }}>⚠️ {errorMessage}</div>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
+          ⚠️ {errorMessage}
+        </div>
       )}
 
       {/* Main Content */}
@@ -365,10 +343,10 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
             )}
 
             {/* Control Buttons */}
-            <div style={{ borderColor: "#E5DDD5" }}>
+            <div style={{ borderColor: '#E5DDD5' }}>
               {/* Edit Button */}
               <button
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   handleEdit();
                 }}
@@ -383,52 +361,52 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
               <div className="flex items-center">
                 {onDuplicate && (
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDuplicate();
                     }}
-                    style={{ backgroundColor: "#E5DDD5" }}
+                    style={{ backgroundColor: '#E5DDD5' }}
                     title="Duplicar"
                   >
-                    <Copy style={{ color: "#6B4F43" }} />
+                    <Copy style={{ color: '#6B4F43' }} />
                   </button>
                 )}
 
                 {onMove && (
                   <>
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onMove("up");
                       }}
-                      style={{ backgroundColor: "#E5DDD5" }}
+                      style={{ backgroundColor: '#E5DDD5' }}
                       title="Mover para cima"
                     >
-                      <Move style={{ color: "#6B4F43" }} />
+                      <Move style={{ color: '#6B4F43' }} />
                     </button>
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onMove("down");
                       }}
-                      style={{ backgroundColor: "#E5DDD5" }}
+                      style={{ backgroundColor: '#E5DDD5' }}
                       title="Mover para baixo"
                     >
-                      <Move style={{ color: "#6B4F43" }} />
+                      <Move style={{ color: '#6B4F43' }} />
                     </button>
                   </>
                 )}
 
                 {onDelete && (
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleDelete();
                     }}
                     className="p-1 hover:bg-red-100 transition-colors"
                     title="Deletar"
                   >
-                    <Trash2 style={{ color: "#432818" }} />
+                    <Trash2 style={{ color: '#432818' }} />
                   </button>
                 )}
               </div>

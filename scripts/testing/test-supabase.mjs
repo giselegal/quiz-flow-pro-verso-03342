@@ -19,8 +19,7 @@ try {
   }
 
   // Testar criação de um usuário anônimo
-  const { data: authData, error: authError } =
-    await supabase.auth.signInAnonymously();
+  const { data: authData, error: authError } = await supabase.auth.signInAnonymously();
 
   if (authError) {
     console.error("❌ Erro de autenticação:", authError);

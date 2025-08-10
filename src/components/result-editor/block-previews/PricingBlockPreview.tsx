@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface PricingBlockPreviewProps {
   content: {
@@ -12,24 +12,15 @@ interface PricingBlockPreviewProps {
   };
 }
 
-const PricingBlockPreview: React.FC<PricingBlockPreviewProps> = ({
-  content,
-}) => {
+const PricingBlockPreview: React.FC<PricingBlockPreviewProps> = ({ content }) => {
   return (
-    <div
-      className="text-center space-y-6 p-6 bg-[#fff7f3] rounded-lg"
-      style={content.style}
-    >
+    <div className="text-center space-y-6 p-6 bg-[#fff7f3] rounded-lg" style={content.style}>
       <div className="space-y-2">
         {content.regularPrice && (
-          <p className="text-[#666] line-through">
-            De R$ {content.regularPrice}
-          </p>
+          <p className="text-[#666] line-through">De R$ {content.regularPrice}</p>
         )}
         {content.salePrice && (
-          <p className="text-2xl font-bold text-[#aa6b5d]">
-            Por R$ {content.salePrice}
-          </p>
+          <p className="text-2xl font-bold text-[#aa6b5d]">Por R$ {content.salePrice}</p>
         )}
       </div>
 
@@ -37,9 +28,7 @@ const PricingBlockPreview: React.FC<PricingBlockPreviewProps> = ({
         {content.buttonText || "Comprar Agora"}
       </Button>
 
-      {content.urgencyText && (
-        <p className="text-sm text-[#aa6b5d]">{content.urgencyText}</p>
-      )}
+      {content.urgencyText && <p className="text-sm text-[#aa6b5d]">{content.urgencyText}</p>}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { SlidersHorizontal } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -99,7 +92,7 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
         }}
       >
         <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-          <span style={{ color: "#432818" }}>{displayValue}%</span>
+          <span style={{ color: '#432818' }}>{displayValue}%</span>
         </div>
       </div>
       <p className="text-lg text-[#432818]">
@@ -110,7 +103,7 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
           placeholder="Rótulo do nível"
         />
       </p>
-      <div style={{ color: "#8B7355" }}>Progresso: {displayValue}%</div>
+      <div style={{ color: '#8B7355' }}>Progresso: {displayValue}%</div>
     </div>
   );
 };

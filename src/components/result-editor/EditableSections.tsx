@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { StyleResult } from "../../types/quiz";
-import { Card } from "../../components/ui/card";
-import { ResultPageConfig, OfferContent } from "../../types/resultPageConfig";
+import { StyleResult } from "@/types/quiz";
+import { Card } from "@/components/ui/card";
+import { ResultPageConfig, OfferContent } from "@/types/resultPageConfig";
 import { EditSectionOverlay } from "./EditSectionOverlay";
 import ResultHeader from "../quiz-result/ResultHeader";
 import PrimaryStyleCard from "../quiz-result/PrimaryStyleCard";
@@ -93,7 +93,7 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
         <EditSectionOverlay
           section={activeSection}
           data={getSectionData(config, activeSection)}
-          onSave={(data) => handleSaveSection(activeSection, data)}
+          onSave={data => handleSaveSection(activeSection, data)}
           onCancel={() => setActiveSection(null)}
         />
       )}

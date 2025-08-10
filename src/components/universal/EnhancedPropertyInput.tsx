@@ -4,11 +4,11 @@
  */
 
 import React from "react";
-import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
-import { Label } from "../../components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
-import { usePropertyDebounce } from "../../hooks/usePropertyDebounce";
+import { usePropertyDebounce } from "@/hooks/usePropertyDebounce";
 
 interface EnhancedPropertyInputProps {
   label: string;
@@ -43,22 +43,23 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
     onUpdate: onChange,
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     updateValue(newValue);
   };
 
-  const inputId = `property-${label.toLowerCase().replace(/\s+/g, "-")}`;
+  const inputId = `property-${label.toLowerCase().replace(/\s+/g, '-')}`;
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <Label htmlFor={inputId} style={{ color: "#6B4F43" }}>
+      <Label htmlFor={inputId} style={{ color: '#6B4F43' }}>
         {label}
       </Label>
-
-      <PropertyChangeIndicator isChanging={isChanging} hasChanged={hasChanged}>
+      
+      <PropertyChangeIndicator
+        isChanging={isChanging}
+        hasChanged={hasChanged}
+      >
         {type === "textarea" ? (
           <Textarea
             id={inputId}
@@ -66,7 +67,7 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
             onChange={handleInputChange}
             placeholder={placeholder}
             rows={rows}
-            style={{ boxShadow: "0 0 0 3px rgba(184, 155, 122, 0.5)" }}
+            style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
           />
         ) : (
           <Input
@@ -75,12 +76,14 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
             value={currentValue}
             onChange={handleInputChange}
             placeholder={placeholder}
-            style={{ boxShadow: "0 0 0 3px rgba(184, 155, 122, 0.5)" }}
+            style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
           />
         )}
       </PropertyChangeIndicator>
-
-      {description && <p style={{ color: "#8B7355" }}>{description}</p>}
+      
+      {description && (
+        <p style={{ color: '#8B7355' }}>{description}</p>
+      )}
     </div>
   );
 };

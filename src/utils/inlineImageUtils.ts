@@ -10,10 +10,7 @@
  * @param imageId ID da imagem
  * @returns URL da imagem tiny otimizada para base64
  */
-export const getTinyBase64ImageUrl = (
-  baseUrl: string,
-  imageId: string
-): string => {
+export const getTinyBase64ImageUrl = (baseUrl: string, imageId: string): string => {
   // Configurada para ser extremamente leve - apenas 10px e baixa qualidade
   return `${baseUrl}f_webp,q_1,w_10,h_10,c_limit,e_blur:200/${imageId}.webp`;
 };
@@ -25,9 +22,7 @@ export const getTinyBase64ImageUrl = (
  * @param imageUrl URL da imagem tiny
  * @returns Promise com string base64
  */
-export const loadTinyImageAsBase64 = async (
-  imageUrl: string
-): Promise<string> => {
+export const loadTinyImageAsBase64 = async (imageUrl: string): Promise<string> => {
   try {
     const response = await fetch(imageUrl);
     const blob = await response.blob();

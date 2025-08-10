@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { Progress } from "../../../components/ui/progress";
-import { Button } from "../../../components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 
 interface VerticalCanvasHeaderProps {
@@ -25,14 +25,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -85,8 +78,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
   gap = "1rem",
   className = "",
 }) => {
-  const progressPercentage =
-    progressMax > 0 ? (progressValue / progressMax) * 100 : 0;
+  const progressPercentage = progressMax > 0 ? (progressValue / progressMax) * 100 : 0;
 
   return (
     <header
@@ -97,12 +89,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
         {/* Logo Section */}
         <div className="flex items-center space-x-3">
           {showBackButton && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onBackClick}
-              className="p-2"
-            >
+            <Button variant="ghost" size="sm" onClick={onBackClick} className="p-2">
               <ChevronLeft className="h-4 w-4" />
             </Button>
           )}
@@ -117,7 +104,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
             />
           ) : (
             <div
-              style={{ color: "#8B7355" }}
+              style={{ color: '#8B7355' }}
               style={{ width: logoWidth, height: logoHeight }}
             >
               Logo
@@ -128,7 +115,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
         {/* Progress Section */}
         {showProgress && (
           <div className="flex-1 max-w-md mx-4">
-            <div style={{ color: "#6B4F43" }}>
+            <div style={{ color: '#6B4F43' }}>
               <span>Progresso</span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>

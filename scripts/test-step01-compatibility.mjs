@@ -56,8 +56,7 @@ const Step01Template = [
       alt: "Transforme seu guarda-roupa",
       width: 600,
       height: 400,
-      className:
-        "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+      className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
       textAlign: "text-center",
       marginBottom: 32,
     },
@@ -160,8 +159,8 @@ Step01Template.forEach((block, index) => {
 console.log("\n🔍 VERIFICANDO PROPRIEDADES CONFLITANTES:");
 
 const allProperties = {};
-Step01Template.forEach((block) => {
-  Object.keys(block.properties).forEach((prop) => {
+Step01Template.forEach(block => {
+  Object.keys(block.properties).forEach(prop => {
     if (!allProperties[prop]) {
       allProperties[prop] = [];
     }
@@ -174,13 +173,9 @@ Object.entries(allProperties)
   .sort((a, b) => b[1].length - a[1].length)
   .slice(0, 10)
   .forEach(([prop, types]) => {
-    console.log(
-      `   ${prop}: ${types.length} componentes [${types.join(", ")}]`
-    );
+    console.log(`   ${prop}: ${types.length} componentes [${types.join(", ")}]`);
   });
 
 console.log("\n✅ TESTE DE COMPATIBILIDADE CONCLUÍDO!");
 console.log("📋 Resultado: Step01Template parece estar bem estruturado");
-console.log(
-  "🎯 Próximo passo: Verificar se os componentes renderizam corretamente"
-);
+console.log("🎯 Próximo passo: Verificar se os componentes renderizam corretamente");

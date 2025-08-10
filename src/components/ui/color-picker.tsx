@@ -11,7 +11,7 @@ export function ColorPicker({ value, onChange }: ColorPickerProps) {
     <input
       type="color"
       value={value || "#000000"}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={e => onChange(e.target.value)}
       className="w-8 h-8 rounded cursor-pointer"
     />
   );

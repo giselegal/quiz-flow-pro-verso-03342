@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "../utils/images/preloading";
-import { usePageConfig } from "../hooks/usePageConfig";
-import DynamicBlockRenderer from "../components/DynamicBlockRenderer";
-import FixedIntroImage from "../components/ui/FixedIntroImage";
+import { preloadCriticalImages } from "@/utils/images/preloading";
+import { usePageConfig } from "@/hooks/usePageConfig";
+import DynamicBlockRenderer from "@/components/DynamicBlockRenderer";
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import {
   ChevronRight,
   Check,
@@ -23,7 +23,7 @@ import {
   ArrowDown,
   Hourglass,
 } from "lucide-react";
-import { trackButtonClick } from "../utils/analytics";
+import { trackButtonClick } from "@/utils/analytics";
 
 // CSS simplificado e otimizado
 const customStyles = `
@@ -151,7 +151,7 @@ const CountdownTimer = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime((prevTime) => {
+      setTime(prevTime => {
         if (prevTime.seconds > 0) {
           return { ...prevTime, seconds: prevTime.seconds - 1 };
         } else if (prevTime.minutes > 0) {
@@ -257,11 +257,9 @@ const FaqSectionNew = () => {
           >
             <button
               onClick={() => toggleItem(index)}
-              style={{ backgroundColor: "#FAF9F7" }}
+              style={{ backgroundColor: '#FAF9F7' }}
             >
-              <span className="font-medium text-[#432818] text-lg">
-                {item.question}
-              </span>
+              <span className="font-medium text-[#432818] text-lg">{item.question}</span>
               <ChevronRight
                 size={24}
                 className={`text-[#B89B7A] transition-transform duration-300 ${openItem === index ? "transform rotate-90" : ""}`}
@@ -269,7 +267,9 @@ const FaqSectionNew = () => {
             </button>
 
             {openItem === index && (
-              <div style={{ color: "#6B4F43" }}>{item.answer}</div>
+              <div style={{ color: '#6B4F43' }}>
+                {item.answer}
+              </div>
             )}
           </div>
         ))}
@@ -285,13 +285,7 @@ const SectionTitle: React.FC<{
   size?: "lg" | "xl";
   className?: string;
   variant?: "primary" | "secondary" | "simple";
-}> = ({
-  children,
-  subtitle,
-  size = "xl",
-  className = "",
-  variant = "simple",
-}) => (
+}> = ({ children, subtitle, size = "xl", className = "", variant = "simple" }) => (
   <div className={`text-center mb-16 animate-fade-in-up ${className}`}>
     {/* Decoração superior - APENAS para títulos principais */}
     {variant === "primary" && (
@@ -315,17 +309,14 @@ const SectionTitle: React.FC<{
 
     {/* Subtítulo opcional */}
     {subtitle && (
-      <p className="text-xl text-brand-medium font-inter max-w-3xl mx-auto">
-        {subtitle}
-      </p>
+      <p className="text-xl text-brand-medium font-inter max-w-3xl mx-auto">{subtitle}</p>
     )}
   </div>
 );
 
 const QuizOfferPage: React.FC = () => {
   // Integração com o editor visual
-  const { config: pageConfig, loading: configLoading } =
-    usePageConfig("quiz-offer-page");
+  const { config: pageConfig, loading: configLoading } = usePageConfig("quiz-offer-page");
 
   const testimonials = [
     {
@@ -342,10 +333,7 @@ const QuizOfferPage: React.FC = () => {
 
   const renderStars = (num: number) => {
     return Array.from({ length: 5 }, (_, index: number) => (
-      <span
-        key={index}
-        className={index < num ? "text-yellow-400" : "text-gray-300"}
-      >
+      <span key={index} className={index < num ? "text-yellow-400" : "text-gray-300"}>
         ★
       </span>
     ));
@@ -396,10 +384,7 @@ const QuizOfferPage: React.FC = () => {
     };
   }, []);
 
-  const handleCtaClick = (
-    buttonId: string,
-    action: string = "Comprar Agora"
-  ) => {
+  const handleCtaClick = (buttonId: string, action: string = "Comprar Agora") => {
     trackButtonClick(buttonId, action, "quiz_offer_page");
   };
 
@@ -407,10 +392,7 @@ const QuizOfferPage: React.FC = () => {
    * Renderiza um componente com configurações do editor se disponível,
    * caso contrário renderiza o componente original
    */
-  const renderConfigurableComponent = (
-    blockId: string,
-    originalComponent: React.ReactNode
-  ) => {
+  const renderConfigurableComponent = (blockId: string, originalComponent: React.ReactNode) => {
     if (pageConfig && !configLoading) {
       return (
         <DynamicBlockRenderer
@@ -457,7 +439,7 @@ const QuizOfferPage: React.FC = () => {
               {/* Badge credibilidade */}
               <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
                 <Award size={18} className="text-green-600" />
-                <span style={{ color: "#6B4F43" }}>
+                <span style={{ color: '#6B4F43' }}>
                   3000+ mulheres transformadas
                 </span>
               </div>
@@ -467,8 +449,7 @@ const QuizOfferPage: React.FC = () => {
                 className="text-hierarchy-1 text-[var(--text-dark)] mb-6"
                 style={{ fontFamily: "Playfair Display, serif" }}
               >
-                Etapa 21:{" "}
-                <span className="text-[var(--primary)]">Oferta Exclusiva</span>
+                Etapa 21: <span className="text-[var(--primary)]">Oferta Exclusiva</span>
                 <br />
                 Para Seu Estilo!
               </h1>
@@ -534,8 +515,7 @@ const QuizOfferPage: React.FC = () => {
                   </h2>
                   <div className="space-y-4 text-body text-[var(--text-medium)]">
                     <p>
-                      <strong>Guarda-roupa cheio</strong> mas nunca tem o que
-                      vestir?
+                      <strong>Guarda-roupa cheio</strong> mas nunca tem o que vestir?
                     </p>
                     <p>
                       <strong>Compra peças</strong> que nunca combinam com nada?
@@ -588,8 +568,7 @@ const QuizOfferPage: React.FC = () => {
 
               <p className="text-body text-[var(--text-medium)] mb-8 max-w-2xl mx-auto">
                 Método preciso para identificar seu estilo entre os{" "}
-                <strong>7 estilos universais</strong> + guia personalizado
-                completo.
+                <strong>7 estilos universais</strong> + guia personalizado completo.
               </p>
 
               <button
@@ -642,9 +621,7 @@ const QuizOfferPage: React.FC = () => {
                   <h3 className="text-hierarchy-3 text-[var(--text-dark)] mb-2">
                     Guia Personalizado
                   </h3>
-                  <p className="text-sm text-[var(--text-medium)]">
-                    Para seu estilo específico
-                  </p>
+                  <p className="text-sm text-[var(--text-medium)]">Para seu estilo específico</p>
                 </div>
                 <div className="text-center">
                   <div className="aspect-[4/5] bg-white rounded-lg mb-3 flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
@@ -659,9 +636,7 @@ const QuizOfferPage: React.FC = () => {
                   <h3 className="text-hierarchy-3 text-[var(--text-dark)] mb-2">
                     Bônus: Peças-Chave
                   </h3>
-                  <p className="text-sm text-[var(--text-medium)]">
-                    Guarda-roupa funcional
-                  </p>
+                  <p className="text-sm text-[var(--text-medium)]">Guarda-roupa funcional</p>
                 </div>
                 <div className="text-center">
                   <div className="aspect-[4/5] bg-white rounded-lg mb-3 flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
@@ -676,17 +651,13 @@ const QuizOfferPage: React.FC = () => {
                   <h3 className="text-hierarchy-3 text-[var(--text-dark)] mb-2">
                     Bônus: Visagismo
                   </h3>
-                  <p className="text-sm text-[var(--text-medium)]">
-                    Valorize seus traços
-                  </p>
+                  <p className="text-sm text-[var(--text-medium)]">Valorize seus traços</p>
                 </div>
               </div>
 
               {/* Preço FOCADO */}
               <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-8 text-white text-center mb-8">
-                <p className="text-sm opacity-90 mb-2">
-                  Oferta por tempo limitado
-                </p>
+                <p className="text-sm opacity-90 mb-2">Oferta por tempo limitado</p>
                 <div className="mb-4">
                   <span className="text-sm">5x de</span>
                   <span className="text-4xl font-bold mx-2">R$ 8,83</span>
@@ -694,9 +665,7 @@ const QuizOfferPage: React.FC = () => {
                 <p className="text-lg">
                   ou à vista <strong>R$ 39,90</strong>
                 </p>
-                <p className="text-sm mt-2 opacity-75">
-                  77% OFF - Economia de R$ 135,10
-                </p>
+                <p className="text-sm mt-2 opacity-75">77% OFF - Economia de R$ 135,10</p>
               </div>
 
               {/* CTA Final */}
@@ -737,8 +706,8 @@ const QuizOfferPage: React.FC = () => {
                 7 Dias de Garantia
               </h2>
               <p className="text-body text-[var(--text-medium)] max-w-2xl mx-auto">
-                Se não ficar satisfeita, devolvemos{" "}
-                <strong>100% do seu dinheiro</strong>. Sem perguntas.
+                Se não ficar satisfeita, devolvemos <strong>100% do seu dinheiro</strong>. Sem
+                perguntas.
               </p>
             </div>
           </div>

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import Testimonials from "../../../components/quiz-result/sales/Testimonials";
+import Testimonials from "@/components/quiz-result/sales/Testimonials";
 
 /**
  * BLOCO EDITÁVEL: Grid de Depoimentos
@@ -53,14 +53,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGlobalLoading } from "../../hooks/useGlobalLoading";
+import { useGlobalLoading } from "@/hooks/useGlobalLoading";
 import { LoadingSpinner } from "./loading-spinner";
 
 export const GlobalLoadingOverlay: React.FC = () => {
@@ -25,9 +25,7 @@ export const GlobalLoadingOverlay: React.FC = () => {
               <LoadingSpinner size="lg" />
 
               {state.message && (
-                <p className="text-sm text-muted-foreground text-center">
-                  {state.message}
-                </p>
+                <p className="text-sm text-muted-foreground text-center">{state.message}</p>
               )}
 
               {typeof state.progress === "number" && (

@@ -3,9 +3,9 @@ import {
   QuizComponentData,
   QuizComponentType,
   QuizStage,
-} from "../types/quizBuilder";
-import { generateId } from "../utils/idGenerator";
-import { ResultPageConfig } from "../types/resultPageConfig";
+} from "@/types/quizBuilder";
+import { generateId } from "@/utils/idGenerator";
+import { ResultPageConfig } from "@/types/resultPageConfig";
 
 // Function to create a basic quiz builder state with initial stages
 export const generateInitialStages = () => {
@@ -176,19 +176,13 @@ export const createBuilderStateFromQuiz = (
     },
   ];
 
-  const components = [
-    ...welcomeComponents,
-    ...questionComponents,
-    ...resultComponents,
-  ];
+  const components = [...welcomeComponents, ...questionComponents, ...resultComponents];
 
   return { stages, components };
 };
 
 // Add function to convert ResultPageConfig to QuizBuilderState
-export const createBuilderStateFromResultPage = (
-  config: ResultPageConfig
-): QuizBuilderState => {
+export const createBuilderStateFromResultPage = (config: ResultPageConfig): QuizBuilderState => {
   const resultStageId = generateId();
 
   const stage: QuizStage = {

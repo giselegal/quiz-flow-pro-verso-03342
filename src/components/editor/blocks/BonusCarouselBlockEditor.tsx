@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Button } from "../../../components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
 import { BlockEditorProps } from "./types";
 
@@ -12,14 +12,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -58,10 +51,7 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   const bonusImages = block.content.bonusImages || [];
 
   const addImage = () => {
@@ -74,11 +64,7 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({
     onUpdate({ bonusImages: newImages });
   };
 
-  const updateImage = (
-    index: number,
-    field: "url" | "alt" | "title",
-    value: string
-  ) => {
+  const updateImage = (index: number, field: "url" | "alt" | "title", value: string) => {
     const newImages = bonusImages.map((img: any, i: number) =>
       i === index ? { ...img, [field]: value } : img
     );
@@ -92,7 +78,7 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({
         <Input
           id={`${block.id}-title`}
           value={block.content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Você recebe também:"
         />
@@ -101,17 +87,14 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({
       <div className="space-y-4">
         <Label>Imagens dos Bônus</Label>
         {bonusImages.map((image: any, index: number) => (
-          <div
-            key={index}
-            className="space-y-2 p-4 border rounded-lg bg-[#FAF9F7]"
-          >
+          <div key={index} className="space-y-2 p-4 border rounded-lg bg-[#FAF9F7]">
             <div className="flex justify-between items-center">
               <Label>Bônus {index + 1}</Label>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => removeImage(index)}
-                style={{ color: "#432818" }}
+                style={{ color: '#432818' }}
               >
                 <Trash className="w-4 h-4" />
               </Button>
@@ -119,21 +102,21 @@ const BonusCarouselBlockEditor: React.FC<BlockEditorProps> = ({
 
             <Input
               value={image.url}
-              onChange={(e) => updateImage(index, "url", e.target.value)}
+              onChange={e => updateImage(index, "url", e.target.value)}
               placeholder="URL da imagem"
               className="mt-1"
             />
 
             <Input
               value={image.title || ""}
-              onChange={(e) => updateImage(index, "title", e.target.value)}
+              onChange={e => updateImage(index, "title", e.target.value)}
               placeholder="Título do bônus"
               className="mt-1"
             />
 
             <Input
               value={image.alt}
-              onChange={(e) => updateImage(index, "alt", e.target.value)}
+              onChange={e => updateImage(index, "alt", e.target.value)}
               placeholder="Texto alternativo"
               className="mt-1"
             />

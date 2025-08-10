@@ -34,11 +34,11 @@ const testEmptyEvent = () => {
 };
 
 // Adicionar listeners para debug
-window.addEventListener("quiz-input-change", (e) => {
+window.addEventListener("quiz-input-change", e => {
   console.log("📥 Evento recebido - quiz-input-change:", e.detail);
 });
 
-window.addEventListener("step01-button-state-change", (e) => {
+window.addEventListener("step01-button-state-change", e => {
   console.log("🎯 Evento recebido - step01-button-state-change:", e.detail);
 });
 

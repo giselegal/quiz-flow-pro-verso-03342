@@ -5,21 +5,11 @@
  */
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../components/ui/collapsible";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface PropertyGroupProps {
   title: string;
@@ -47,9 +37,7 @@ export function PropertyGroup({
       <Card className={cn("mb-4", className)}>
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium">{title}</CardTitle>
-          {description && (
-            <CardDescription className="text-xs">{description}</CardDescription>
-          )}
+          {description && <CardDescription className="text-xs">{description}</CardDescription>}
         </CardHeader>
         <CardContent className="space-y-4">{children}</CardContent>
       </Card>
@@ -60,7 +48,7 @@ export function PropertyGroup({
     <Card className={cn("mb-4", className)}>
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
         <CollapsibleTrigger asChild>
-          <CardHeader style={{ backgroundColor: "#FAF9F7" }}>
+          <CardHeader style={{ backgroundColor: '#FAF9F7' }}>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
@@ -72,9 +60,7 @@ export function PropertyGroup({
                   {title}
                 </CardTitle>
                 {description && (
-                  <CardDescription className="text-xs mt-1">
-                    {description}
-                  </CardDescription>
+                  <CardDescription className="text-xs mt-1">{description}</CardDescription>
                 )}
               </div>
             </div>
@@ -113,14 +99,12 @@ export function PropertyField({
       <div className="space-y-1">
         <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           {label}
-          {required && <span style={{ color: "#432818" }}>*</span>}
+          {required && <span style={{ color: '#432818' }}>*</span>}
         </label>
-        {description && (
-          <p className="text-xs text-muted-foreground">{description}</p>
-        )}
+        {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </div>
       {children}
-      {error && <p style={{ color: "#432818" }}>{error}</p>}
+      {error && <p style={{ color: '#432818' }}>{error}</p>}
     </div>
   );
 }
@@ -134,14 +118,10 @@ interface PropertySectionProps {
   className?: string;
 }
 
-export function PropertySection({
-  title,
-  children,
-  className,
-}: PropertySectionProps) {
+export function PropertySection({ title, children, className }: PropertySectionProps) {
   return (
     <div className={cn("space-y-3", className)}>
-      <h4 style={{ borderColor: "#E5DDD5" }}>{title}</h4>
+      <h4 style={{ borderColor: '#E5DDD5' }}>{title}</h4>
       <div className="space-y-3">{children}</div>
     </div>
   );

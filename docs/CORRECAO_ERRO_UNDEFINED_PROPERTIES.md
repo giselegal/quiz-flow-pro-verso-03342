@@ -62,7 +62,7 @@ const getPropertiesByCategory = useCallback(
     if (!properties || !Array.isArray(properties)) {
       return [];
     }
-    return properties.filter((prop) => prop.category === category);
+    return properties.filter(prop => prop.category === category);
   },
   [properties]
 );

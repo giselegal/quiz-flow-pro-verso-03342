@@ -13,15 +13,13 @@ function testeDashboardCriacaoFunil() {
     console.log("✅ Localização atual:", window.location.pathname);
 
     // Verificar se componentes do dashboard existem
-    const templates = document.querySelectorAll(
-      '[class*="template"], [class*="Card"]'
-    );
+    const templates = document.querySelectorAll('[class*="template"], [class*="Card"]');
     console.log("✅ Templates encontrados:", templates.length);
 
     // Verificar botões de criação
     const createButtons = document.querySelectorAll("button");
     const templateButtons = Array.from(createButtons).filter(
-      (btn) =>
+      btn =>
         btn.textContent?.includes("Template") ||
         btn.textContent?.includes("Usar") ||
         btn.textContent?.includes("Duplicar") ||
@@ -59,19 +57,12 @@ function testeEditorComponentesPropriedades() {
     console.log("✅ No editor:", isOnEditor);
 
     // Verificar sidebars
-    const sidebars = document.querySelectorAll(
-      '[class*="sidebar"], [class*="panel"]'
-    );
+    const sidebars = document.querySelectorAll('[class*="sidebar"], [class*="panel"]');
     console.log("✅ Sidebars encontradas:", sidebars.length);
 
     // Verificar canvas principal
-    const canvas = document.querySelector(
-      '[class*="canvas"], [class*="preview"], main'
-    );
-    console.log(
-      "✅ Canvas principal:",
-      canvas ? "Encontrado" : "Não encontrado"
-    );
+    const canvas = document.querySelector('[class*="canvas"], [class*="preview"], main');
+    console.log("✅ Canvas principal:", canvas ? "Encontrado" : "Não encontrado");
 
     // Verificar componentes disponíveis
     const components = document.querySelectorAll(
@@ -88,13 +79,8 @@ function testeEditorComponentesPropriedades() {
     });
 
     // Verificar área de propriedades
-    const propertiesPanel = document.querySelector(
-      '[class*="properties"], [class*="config"]'
-    );
-    console.log(
-      "✅ Painel de propriedades:",
-      propertiesPanel ? "Encontrado" : "Não encontrado"
-    );
+    const propertiesPanel = document.querySelector('[class*="properties"], [class*="config"]');
+    console.log("✅ Painel de propriedades:", propertiesPanel ? "Encontrado" : "Não encontrado");
 
     if (isOnEditor && canvas && components.length > 0) {
       console.log("✅ Editor tem interface completa para edição");
@@ -144,10 +130,7 @@ function teste21EtapasResponsividade() {
     const isTablet = screenWidth >= 768 && screenWidth < 1024;
     const isDesktop = screenWidth >= 1024;
 
-    console.log(
-      "✅ Dispositivo detectado:",
-      isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop"
-    );
+    console.log("✅ Dispositivo detectado:", isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop");
 
     // Verificar se elementos se adaptam
     const responsiveElements = document.querySelectorAll(
@@ -179,17 +162,14 @@ function testeSalvamentoPersistencia() {
     // Verificar localStorage
     const localStorageKeys = Object.keys(localStorage);
     const funnelKeys = localStorageKeys.filter(
-      (key) =>
-        key.includes("funnel") ||
-        key.includes("schema") ||
-        key.includes("editor")
+      key => key.includes("funnel") || key.includes("schema") || key.includes("editor")
     );
     console.log("✅ Chaves no localStorage:", funnelKeys.length);
-    funnelKeys.forEach((key) => console.log(`   - ${key}`));
+    funnelKeys.forEach(key => console.log(`   - ${key}`));
 
     // Verificar botões de salvamento
     const saveButtons = Array.from(document.querySelectorAll("button")).filter(
-      (btn) =>
+      btn =>
         btn.textContent?.includes("Salvar") ||
         btn.textContent?.includes("Save") ||
         btn.textContent?.includes("Publicar")
@@ -212,12 +192,8 @@ function testeSalvamentoPersistencia() {
 
     // Verificar funções globais de salvamento
     const hasSaveFunction =
-      typeof window.forceSave === "function" ||
-      typeof window.saveFunnel === "function";
-    console.log(
-      "✅ Funções de salvamento:",
-      hasSaveFunction ? "Disponíveis" : "Não encontradas"
-    );
+      typeof window.forceSave === "function" || typeof window.saveFunnel === "function";
+    console.log("✅ Funções de salvamento:", hasSaveFunction ? "Disponíveis" : "Não encontradas");
 
     if (saveButtons.length > 0 && (hasSavedData || funnelKeys.length > 0)) {
       console.log("✅ Sistema de salvamento está operacional");
@@ -241,9 +217,7 @@ function testeFuncionalidadesAvancadas() {
 
   try {
     // Verificar barra superior com funcionalidades
-    const advancedButtons = Array.from(
-      document.querySelectorAll("button")
-    ).filter((btn) => {
+    const advancedButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
       const text = btn.textContent?.toLowerCase() || "";
       return (
         text.includes("template") ||
@@ -267,9 +241,7 @@ function testeFuncionalidadesAvancadas() {
     console.log("✅ Modais disponíveis:", modals.length);
 
     // Verificar undo/redo
-    const undoRedoButtons = Array.from(
-      document.querySelectorAll("button")
-    ).filter((btn) => {
+    const undoRedoButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
       const text = btn.textContent?.toLowerCase() || "";
       return (
         text.includes("desfazer") ||
@@ -324,22 +296,14 @@ function executarTodosOsTestes() {
   });
 
   console.log("=".repeat(50));
-  console.log(
-    `📈 SUCESSO: ${testesPassaram}/${totalTestes} (${porcentagemSucesso}%)`
-  );
+  console.log(`📈 SUCESSO: ${testesPassaram}/${totalTestes} (${porcentagemSucesso}%)`);
 
   if (porcentagemSucesso >= 80) {
-    console.log(
-      "🎉 SISTEMA APROVADO! Todas as funcionalidades principais estão operacionais."
-    );
+    console.log("🎉 SISTEMA APROVADO! Todas as funcionalidades principais estão operacionais.");
   } else if (porcentagemSucesso >= 60) {
-    console.log(
-      "⚠️ SISTEMA PARCIALMENTE FUNCIONAL. Algumas melhorias são necessárias."
-    );
+    console.log("⚠️ SISTEMA PARCIALMENTE FUNCIONAL. Algumas melhorias são necessárias.");
   } else {
-    console.log(
-      "❌ SISTEMA REQUER ATENÇÃO. Várias funcionalidades precisam de correção."
-    );
+    console.log("❌ SISTEMA REQUER ATENÇÃO. Várias funcionalidades precisam de correção.");
   }
 
   console.log("\n💡 DICAS PARA PRÓXIMOS PASSOS:");
@@ -359,6 +323,4 @@ if (typeof window !== "undefined") {
 
 // Disponibilizar globalmente para uso manual
 window.testarSistema = executarTodosOsTestes;
-console.log(
-  '💡 Execute "testarSistema()" a qualquer momento para repetir os testes.'
-);
+console.log('💡 Execute "testarSistema()" a qualquer momento para repetir os testes.');

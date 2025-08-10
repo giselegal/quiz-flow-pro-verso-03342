@@ -1,7 +1,7 @@
-import { getOptimizedContainerClasses } from "../../config/containerConfig";
+import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from "react";
-import { cn } from "../../lib/utils";
-import { StyleResult } from "../../types/quiz";
+import { cn } from "@/lib/utils";
+import { StyleResult } from "@/types/quiz";
 
 interface PrimaryStyleDisplayProps {
   primaryStyle: StyleResult;
@@ -18,8 +18,7 @@ const PrimaryStyleDisplay: React.FC<PrimaryStyleDisplayProps> = ({
     const configs = {
       natural: {
         title: "Natural",
-        description:
-          "Você valoriza o conforto e a praticidade no seu dia a dia.",
+        description: "Você valoriza o conforto e a praticidade no seu dia a dia.",
         colors: ["#8B7355", "#A0956C", "#6B5B73"],
         image:
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp",
@@ -75,9 +74,7 @@ const PrimaryStyleDisplay: React.FC<PrimaryStyleDisplayProps> = ({
       },
     };
 
-    return (
-      configs[category.toLowerCase() as keyof typeof configs] || configs.natural
-    );
+    return configs[category.toLowerCase() as keyof typeof configs] || configs.natural;
   };
 
   const config = getStyleConfig(primaryStyle.category);
@@ -98,9 +95,7 @@ const PrimaryStyleDisplay: React.FC<PrimaryStyleDisplayProps> = ({
           </span>
         </div>
 
-        <h2 className="text-3xl font-bold text-[#432818] mb-3">
-          {config.title}
-        </h2>
+        <h2 className="text-3xl font-bold text-[#432818] mb-3">{config.title}</h2>
 
         <div className="w-16 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full mb-4" />
 
@@ -136,9 +131,7 @@ const PrimaryStyleDisplay: React.FC<PrimaryStyleDisplayProps> = ({
         <div className="inline-flex items-center px-6 py-3 bg-white/70 backdrop-blur-sm rounded-full border border-[#B89B7A]/20 shadow-sm">
           <span className="text-sm font-medium text-[#432818]">
             Compatibilidade:{" "}
-            <span className="font-bold">
-              {Math.round(primaryStyle.percentage)}%
-            </span>
+            <span className="font-bold">{Math.round(primaryStyle.percentage)}%</span>
           </span>
         </div>
       </div>

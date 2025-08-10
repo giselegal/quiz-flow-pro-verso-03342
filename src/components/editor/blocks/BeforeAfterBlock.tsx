@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 
 interface BeforeAfterBlockProps {
@@ -15,14 +15,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -114,19 +107,8 @@ const BeforeAfterBlock: React.FC<BeforeAfterBlockProps> = ({
               {beforeItems.map((item, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="mt-1 w-3 h-3 sm:w-4 sm:h-4 flex items-center justify-center flex-shrink-0">
-                    <svg
-                      width="16"
-                      height="16"
-                      fill="none"
-                      className="w-3 h-3 sm:w-4 sm:h-4"
-                    >
-                      <circle
-                        cx="8"
-                        cy="8"
-                        r="7"
-                        stroke="#B89B7A"
-                        strokeWidth="1.5"
-                      />
+                    <svg width="16" height="16" fill="none" className="w-3 h-3 sm:w-4 sm:h-4">
+                      <circle cx="8" cy="8" r="7" stroke="#B89B7A" strokeWidth="1.5" />
                       <path
                         d="M5.5 8.5l2 2 3-4"
                         stroke="#B89B7A"

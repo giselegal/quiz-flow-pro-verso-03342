@@ -51,10 +51,7 @@
   <body>
     <div class="test-container">
       <h1>🧪 Teste de Renderização de Componentes</h1>
-      <p>
-        Verificando se todos os componentes inline estão renderizando
-        corretamente...
-      </p>
+      <p>Verificando se todos os componentes inline estão renderizando corretamente...</p>
 
       <div class="component-test">
         <div class="component-title">
@@ -177,7 +174,7 @@
         let html = "";
         let successCount = 0;
 
-        results.forEach((result) => {
+        results.forEach(result => {
           const statusClass = result.success ? "success" : "error";
           const statusText = result.success ? "✅ OK" : `❌ ${result.error}`;
           successCount += result.success ? 1 : 0;

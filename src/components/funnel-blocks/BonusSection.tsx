@@ -1,8 +1,8 @@
-import { getOptimizedContainerClasses } from "../../config/containerConfig";
+import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React from "react";
-import { Card } from "../../components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Gift, Star } from "lucide-react";
-import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import { DeviceView, StyleProps } from "./types";
 
 interface BonusItem {
@@ -55,17 +55,12 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
   style,
   customStyles,
 }) => {
-  const {
-    disabled: animationsDisabled,
-    duration = 400,
-    staggerDelay = 200,
-  } = animationConfig;
+  const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
   const isLowPerformance = deviceView === "mobile";
 
   const getGridColumns = () => {
     if (deviceView === "mobile") return "grid-cols-1";
-    if (deviceView === "tablet")
-      return columns > 2 ? "grid-cols-2" : `grid-cols-${columns}`;
+    if (deviceView === "tablet") return columns > 2 ? "grid-cols-2" : `grid-cols-${columns}`;
     return `grid-cols-${Math.min(columns, bonuses.length)}`;
   };
 
@@ -82,20 +77,12 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
 
   return (
     <div className={`py-10 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
-          {title}
-        </h2>
-        {subtitle && (
-          <p className="text-center text-[#3a3a3a] mb-6 max-w-md mx-auto">
-            {subtitle}
-          </p>
-        )}
+        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
+        {subtitle && <p className="text-center text-[#3a3a3a] mb-6 max-w-md mx-auto">{subtitle}</p>}
         <div className="elegant-divider w-32 mx-auto"></div>
       </div>
 
@@ -105,18 +92,14 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
           {bonuses.map((bonus, index) => (
             <AnimatedWrapper
               key={bonus.id}
-              animation={
-                animationsDisabled || isLowPerformance ? "none" : "fade"
-              }
+              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
               show={true}
               duration={duration}
               delay={staggerDelay * index}
             >
               <Card
                 className={`p-4 bg-white shadow-sm hover:shadow-md transition-all duration-300 border-0 cursor-pointer transform-3d hover:scale-[1.02] ${
-                  bonus.isHighlighted
-                    ? "ring-2 ring-[#B89B7A] ring-opacity-50"
-                    : ""
+                  bonus.isHighlighted ? "ring-2 ring-[#B89B7A] ring-opacity-50" : ""
                 } ${layout === "carousel" ? "min-w-[280px] snap-start" : ""}`}
                 onClick={() => onBonusClick?.(bonus)}
               >
@@ -149,12 +132,8 @@ export const BonusSection: React.FC<BonusSectionProps> = ({
 
                 {/* Content */}
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-[#432818] mb-2">
-                    {bonus.title}
-                  </h3>
-                  <p className="text-sm text-[#6B4F43] leading-relaxed mb-3">
-                    {bonus.description}
-                  </p>
+                  <h3 className="text-lg font-semibold text-[#432818] mb-2">{bonus.title}</h3>
+                  <p className="text-sm text-[#6B4F43] leading-relaxed mb-3">{bonus.description}</p>
 
                   {/* Value */}
                   {bonus.value && (

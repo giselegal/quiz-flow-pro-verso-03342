@@ -1,30 +1,25 @@
-import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { ScrollArea } from "../../components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import { Switch } from "../../components/ui/switch";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../components/ui/tabs";
-import { Textarea } from "../../components/ui/textarea";
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
   CarouselBlock,
   CTABlock,
   ResultPageBlock,
   StyleResultBlock,
   TestimonialBlock,
-} from "../../types/quizResult";
+} from "@/types/quizResult";
 import { Copy, PlusCircle, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -47,9 +42,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState("content");
 
-  const handleContentChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     onUpdate({
       ...block,
       content: e.target.value,
@@ -101,9 +94,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="styleCategory">Categoria de Estilo</Label>
         <Select
           value={styleBlock.styleCategory}
-          onValueChange={(value) =>
-            onUpdate({ ...styleBlock, styleCategory: value })
-          }
+          onValueChange={value => onUpdate({ ...styleBlock, styleCategory: value })}
         >
           <SelectTrigger id="styleCategory">
             <SelectValue placeholder="Selecione a categoria" />
@@ -129,9 +120,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
           min="0"
           max="100"
           value={styleBlock.percentage || 0}
-          onChange={(e) =>
-            onUpdate({ ...styleBlock, percentage: Number(e.target.value) })
-          }
+          onChange={e => onUpdate({ ...styleBlock, percentage: Number(e.target.value) })}
         />
       </div>
 
@@ -140,9 +129,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Textarea
           id="description"
           value={styleBlock.description || ""}
-          onChange={(e) =>
-            onUpdate({ ...styleBlock, description: e.target.value })
-          }
+          onChange={e => onUpdate({ ...styleBlock, description: e.target.value })}
           rows={4}
         />
       </div>
@@ -156,9 +143,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="buttonText"
           value={ctaBlock.buttonText}
-          onChange={(e) =>
-            onUpdate({ ...ctaBlock, buttonText: e.target.value })
-          }
+          onChange={e => onUpdate({ ...ctaBlock, buttonText: e.target.value })}
         />
       </div>
 
@@ -167,7 +152,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="url"
           value={ctaBlock.url}
-          onChange={(e) => onUpdate({ ...ctaBlock, url: e.target.value })}
+          onChange={e => onUpdate({ ...ctaBlock, url: e.target.value })}
         />
       </div>
 
@@ -176,7 +161,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="pixelId"
           value={ctaBlock.pixelId || ""}
-          onChange={(e) => onUpdate({ ...ctaBlock, pixelId: e.target.value })}
+          onChange={e => onUpdate({ ...ctaBlock, pixelId: e.target.value })}
         />
       </div>
 
@@ -188,15 +173,11 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             type="color"
             className="w-12 h-10 p-1"
             value={ctaBlock.backgroundColor || "#000000"}
-            onChange={(e) =>
-              onUpdate({ ...ctaBlock, backgroundColor: e.target.value })
-            }
+            onChange={e => onUpdate({ ...ctaBlock, backgroundColor: e.target.value })}
           />
           <Input
             value={ctaBlock.backgroundColor || "#000000"}
-            onChange={(e) =>
-              onUpdate({ ...ctaBlock, backgroundColor: e.target.value })
-            }
+            onChange={e => onUpdate({ ...ctaBlock, backgroundColor: e.target.value })}
             className="flex-1"
           />
         </div>
@@ -210,15 +191,11 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             type="color"
             className="w-12 h-10 p-1"
             value={ctaBlock.textColor || "#ffffff"}
-            onChange={(e) =>
-              onUpdate({ ...ctaBlock, textColor: e.target.value })
-            }
+            onChange={e => onUpdate({ ...ctaBlock, textColor: e.target.value })}
           />
           <Input
             value={ctaBlock.textColor || "#ffffff"}
-            onChange={(e) =>
-              onUpdate({ ...ctaBlock, textColor: e.target.value })
-            }
+            onChange={e => onUpdate({ ...ctaBlock, textColor: e.target.value })}
             className="flex-1"
           />
         </div>
@@ -243,9 +220,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="author"
           value={testimonialBlock.author}
-          onChange={(e) =>
-            onUpdate({ ...testimonialBlock, author: e.target.value })
-          }
+          onChange={e => onUpdate({ ...testimonialBlock, author: e.target.value })}
         />
       </div>
 
@@ -254,9 +229,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Input
           id="authorImage"
           value={testimonialBlock.authorImage || ""}
-          onChange={(e) =>
-            onUpdate({ ...testimonialBlock, authorImage: e.target.value })
-          }
+          onChange={e => onUpdate({ ...testimonialBlock, authorImage: e.target.value })}
         />
       </div>
 
@@ -268,9 +241,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
           min="1"
           max="5"
           value={testimonialBlock.rating || 5}
-          onChange={(e) =>
-            onUpdate({ ...testimonialBlock, rating: Number(e.target.value) })
-          }
+          onChange={e => onUpdate({ ...testimonialBlock, rating: Number(e.target.value) })}
         />
       </div>
     </div>
@@ -328,11 +299,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
               <Card key={item.id} className="p-4">
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="text-sm font-medium">Item {index + 1}</h4>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => removeCarouselItem(index)}
-                  >
+                  <Button size="sm" variant="ghost" onClick={() => removeCarouselItem(index)}>
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
@@ -343,9 +310,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                     <Input
                       id={`item-${index}-image`}
                       value={item.imageUrl}
-                      onChange={(e) =>
-                        updateCarouselItem(index, "imageUrl", e.target.value)
-                      }
+                      onChange={e => updateCarouselItem(index, "imageUrl", e.target.value)}
                     />
                   </div>
 
@@ -354,9 +319,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                     <Input
                       id={`item-${index}-caption`}
                       value={item.caption || ""}
-                      onChange={(e) =>
-                        updateCarouselItem(index, "caption", e.target.value)
-                      }
+                      onChange={e => updateCarouselItem(index, "caption", e.target.value)}
                     />
                   </div>
                 </div>
@@ -372,12 +335,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="content">Conteúdo</Label>
-        <Textarea
-          id="content"
-          value={block.content}
-          onChange={handleContentChange}
-          rows={6}
-        />
+        <Textarea id="content" value={block.content} onChange={handleContentChange} rows={6} />
       </div>
 
       {block.type === "image" && (
@@ -386,7 +344,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
           <Input
             id="imageUrl"
             value={block.imageUrl || ""}
-            onChange={(e) => onUpdate({ ...block, imageUrl: e.target.value })}
+            onChange={e => onUpdate({ ...block, imageUrl: e.target.value })}
           />
         </div>
       )}
@@ -433,7 +391,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todas as variantes</SelectItem>
-                    {abTestVariants.map((variant) => (
+                    {abTestVariants.map(variant => (
                       <SelectItem key={variant} value={variant}>
                         {variant}
                       </SelectItem>

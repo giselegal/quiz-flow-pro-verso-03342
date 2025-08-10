@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { QuizStage, QuizComponentData } from "../../../types/quizBuilder";
-import { Button } from "../../../components/ui/button";
-import { QuizContainer } from "../../../components/quiz/QuizContainer";
+import { QuizStage, QuizComponentData } from "@/types/quizBuilder";
+import { Button } from "@/components/ui/button";
+import { QuizContainer } from "@/components/quiz/QuizContainer";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { StyleResult } from "../../../types/quiz";
+import { StyleResult } from "@/types/quiz";
 import ResultPreview from "./ResultPreview";
 import StagePreview from "./StagePreview";
 
@@ -16,11 +16,7 @@ interface QuizPreviewProps {
   } | null;
 }
 
-const QuizPreview: React.FC<QuizPreviewProps> = ({
-  stages,
-  components,
-  previewResult,
-}) => {
+const QuizPreview: React.FC<QuizPreviewProps> = ({ stages, components, previewResult }) => {
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
   const [showingResult, setShowingResult] = useState(false);
 
@@ -38,13 +34,13 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
 
   const handleNext = () => {
     if (currentStageIndex < sortedStages.length - 1) {
-      setCurrentStageIndex((prev) => prev + 1);
+      setCurrentStageIndex(prev => prev + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentStageIndex > 0) {
-      setCurrentStageIndex((prev) => prev - 1);
+      setCurrentStageIndex(prev => prev - 1);
     }
   };
 
@@ -54,16 +50,13 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   };
 
   const totalStages = sortedStages.length;
-  const progressPercent =
-    totalStages > 1 ? (currentStageIndex / (totalStages - 1)) * 100 : 0;
+  const progressPercent = totalStages > 1 ? (currentStageIndex / (totalStages - 1)) * 100 : 0;
 
   if (stages.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
-          <p style={{ color: "#8B7355" }}>
-            Nenhuma etapa adicionada ao quiz ainda.
-          </p>
+          <p style={{ color: '#8B7355' }}>Nenhuma etapa adicionada ao quiz ainda.</p>
           <p className="text-gray-400 text-sm">
             Adicione etapas no modo editor para visualizar aqui.
           </p>
@@ -91,7 +84,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
   }
 
   const stageComponents = components
-    .filter((c) => c.stageId === currentStage?.id)
+    .filter(c => c.stageId === currentStage?.id)
     .sort((a, b) => a.order - b.order);
 
   return (
@@ -101,7 +94,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
           <h2 className="text-lg font-medium text-[#432818]">
             Prévia: {currentStage?.title || "Etapa sem título"}
           </h2>
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             Etapa {currentStageIndex + 1} de {sortedStages.length}
           </div>
         </div>
@@ -109,10 +102,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({
         <StagePreview stage={currentStage} components={stageComponents} />
 
         <div className="w-full h-1 bg-[#B89B7A]/20 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-[#B89B7A]"
-            style={{ width: `${progressPercent}%` }}
-          ></div>
+          <div className="h-full bg-[#B89B7A]" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="flex justify-between pt-4">

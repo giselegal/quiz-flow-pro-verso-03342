@@ -91,9 +91,7 @@ function QuizBuilder() {
 ```typescript
 // Duplicar pergunta bem-sucedida para outros quizzes
 const duplicateSuccessfulComponent = async () => {
-  const bestPerformingQuestion = stepComponents[6].find(
-    (c) => c.component_type === "style-question"
-  );
+  const bestPerformingQuestion = stepComponents[6].find(c => c.component_type === "style-question");
 
   // Usar em novo quiz
   await duplicateComponent(bestPerformingQuestion.id, 3);

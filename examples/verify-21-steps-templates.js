@@ -41,7 +41,7 @@ console.log("📁 Verificando arquivos existentes:");
 const existingFiles = [];
 const missingFiles = [];
 
-expectedFiles.forEach((file) => {
+expectedFiles.forEach(file => {
   const filePath = path.join(stepsDir, file);
   if (fs.existsSync(filePath)) {
     existingFiles.push(file);
@@ -59,16 +59,14 @@ console.log("🔍 Analisando conteúdo dos templates existentes:\n");
 
 const templateData = {};
 
-existingFiles.forEach((file) => {
+existingFiles.forEach(file => {
   const filePath = path.join(stepsDir, file);
   try {
     const content = fs.readFileSync(filePath, "utf8");
 
     // Extrair informações básicas
-    const hasTemplate =
-      content.includes("Template") || content.includes("getStep");
-    const hasImages =
-      content.includes("cloudinary") || content.includes("https://");
+    const hasTemplate = content.includes("Template") || content.includes("getStep");
+    const hasImages = content.includes("cloudinary") || content.includes("https://");
     const hasProps = content.includes("Props") || content.includes("interface");
     const hasExport = content.includes("export");
     const lineCount = content.split("\n").length;
@@ -108,9 +106,7 @@ if (fs.existsSync(step20ResultPath)) {
   try {
     const content = fs.readFileSync(step20ResultPath, "utf8");
     console.log(`   📏 ${content.split("\n").length} linhas`);
-    console.log(
-      `   ${content.includes("Result") ? "✅" : "❌"} Componente Result`
-    );
+    console.log(`   ${content.includes("Result") ? "✅" : "❌"} Componente Result`);
   } catch (error) {
     console.log(`❌ Erro ao ler Step20Result.tsx: ${error.message}`);
   }
@@ -125,21 +121,16 @@ console.log(`❌ Arquivos faltando: ${missingFiles.length}/21`);
 
 if (missingFiles.length > 0) {
   console.log("\n🚨 ARQUIVOS FALTANDO:");
-  missingFiles.forEach((file) => console.log(`   - ${file}`));
+  missingFiles.forEach(file => console.log(`   - ${file}`));
 }
 
 // Análise de qualidade dos templates
 const completeTemplates = Object.entries(templateData).filter(
-  ([file, data]) =>
-    data.hasTemplate && data.hasImages && data.hasProps && data.blockCount > 0
+  ([file, data]) => data.hasTemplate && data.hasImages && data.hasProps && data.blockCount > 0
 );
 
 const incompleteTemplates = Object.entries(templateData).filter(
-  ([file, data]) =>
-    !data.hasTemplate ||
-    !data.hasImages ||
-    !data.hasProps ||
-    data.blockCount === 0
+  ([file, data]) => !data.hasTemplate || !data.hasImages || !data.hasProps || data.blockCount === 0
 );
 
 console.log(`\n✅ Templates completos: ${completeTemplates.length}`);
@@ -152,8 +143,7 @@ if (incompleteTemplates.length > 0) {
     if (!data.hasTemplate) console.log(`      - Falta função template`);
     if (!data.hasImages) console.log(`      - Falta imagens`);
     if (!data.hasProps) console.log(`      - Falta props/interface`);
-    if (data.blockCount === 0)
-      console.log(`      - Falta blocos de componentes`);
+    if (data.blockCount === 0) console.log(`      - Falta blocos de componentes`);
   });
 }
 

@@ -27,10 +27,7 @@ const BenefitsInlineBlock: React.FC<BenefitsInlineBlockProps> = ({
 }) => {
   return (
     <div className={cn("w-full py-6", className)} {...props}>
-      <h3
-        className="text-xl font-semibold mb-4 text-center"
-        style={{ color: titleColor }}
-      >
+      <h3 className="text-xl font-semibold mb-4 text-center" style={{ color: titleColor }}>
         {title}
       </h3>
 
@@ -43,10 +40,7 @@ const BenefitsInlineBlock: React.FC<BenefitsInlineBlockProps> = ({
             >
               <Check className="w-3 h-3 text-white" strokeWidth={3} />
             </div>
-            <span
-              className="text-sm leading-relaxed"
-              style={{ color: textColor }}
-            >
+            <span className="text-sm leading-relaxed" style={{ color: textColor }}>
               {benefit}
             </span>
           </div>

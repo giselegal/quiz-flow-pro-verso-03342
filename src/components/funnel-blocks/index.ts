@@ -24,13 +24,10 @@ export { StyleGuideViewer } from "./shared/StyleGuideViewer";
 export { default as OfferCard } from "./shared/OfferCard";
 
 // Editor components
-export {
-  default as FunnelConfigProvider,
-  useFunnelConfig,
-} from "./editor/FunnelConfigProvider";
+export { default as FunnelConfigProvider, useFunnelConfig } from "./editor/FunnelConfigProvider";
 
 // Hooks
 export { useFunnelNavigation } from "./hooks/useFunnelNavigation";
 
 // Tipos
-export * from "../../types/funnel";
+export * from "@/types/funnel";

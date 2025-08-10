@@ -1,7 +1,7 @@
 // src/components/editor/quiz/QuizBlockRegistry.tsx
 // Registro e mapeamento dos blocos específicos do quiz
 
-import { IntroBlock } from "../../../components/steps/step01/IntroBlock";
+import { IntroBlock } from "@/components/steps/step01/IntroBlock";
 import React from "react";
 import { QuizIntroHeaderBlock } from "./QuizIntroHeaderBlock";
 import { QuizQuestionBlock } from "./QuizQuestionBlock";
@@ -21,8 +21,7 @@ export const QUIZ_BLOCK_COMPONENTS = {
 
 // Função para renderizar componentes do quiz
 export const renderQuizBlock = (type: string, props: any) => {
-  const Component =
-    QUIZ_BLOCK_COMPONENTS[type as keyof typeof QUIZ_BLOCK_COMPONENTS];
+  const Component = QUIZ_BLOCK_COMPONENTS[type as keyof typeof QUIZ_BLOCK_COMPONENTS];
 
   if (Component) {
     return React.createElement(Component as any, props);
@@ -41,10 +40,7 @@ export const renderQuizBlock = (type: string, props: any) => {
 
 // Verificar se um tipo é um bloco de quiz
 export const isQuizBlock = (type: string): boolean => {
-  return (
-    type.startsWith("quiz-") ||
-    Object.keys(QUIZ_BLOCK_COMPONENTS).includes(type)
-  );
+  return type.startsWith("quiz-") || Object.keys(QUIZ_BLOCK_COMPONENTS).includes(type);
 };
 
 // Obter informações do bloco de quiz

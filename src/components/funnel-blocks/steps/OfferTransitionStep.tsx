@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
-import { FunnelStepProps } from "../../../types/funnel";
+import { Button } from "@/components/ui/button";
+import { FunnelStepProps } from "@/types/funnel";
 
 interface OfferTransitionStepProps extends FunnelStepProps {
   data?: {
@@ -16,10 +16,7 @@ interface OfferTransitionStepProps extends FunnelStepProps {
   };
 }
 
-const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({
-  data,
-  onNext,
-}) => {
+const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({ data, onNext }) => {
   const {
     title = "Agora que você conhece seu estilo...",
     subtitle = "É hora de colocá-lo em prática!",
@@ -52,9 +49,7 @@ const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({
 
         {/* Result Summary */}
         <div className="bg-white rounded-lg p-8 mb-12 border-2 border-[#B89B7A] max-w-2xl mx-auto">
-          <p className="text-[#8F7A6A] text-lg leading-relaxed">
-            {resultSummary}
-          </p>
+          <p className="text-[#8F7A6A] text-lg leading-relaxed">{resultSummary}</p>
         </div>
 
         {/* Benefits Grid */}
@@ -66,11 +61,7 @@ const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({
             >
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-[#B89B7A] rounded-full flex items-center justify-center flex-shrink-0">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -79,9 +70,7 @@ const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[#432818] text-xl mb-2">
-                    {benefit.title}
-                  </h3>
+                  <h3 className="font-bold text-[#432818] text-xl mb-2">{benefit.title}</h3>
                   <p className="text-[#8F7A6A]">{benefit.description}</p>
                 </div>
               </div>
@@ -96,8 +85,7 @@ const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({
           </h2>
 
           <p className="text-[#8F7A6A] text-lg mb-8">
-            Temos uma solução especial que vai transformar completamente sua
-            relação com a moda...
+            Temos uma solução especial que vai transformar completamente sua relação com a moda...
           </p>
         </div>
 
@@ -110,9 +98,7 @@ const OfferTransitionStep: React.FC<OfferTransitionStepProps> = ({
           {ctaText}
         </Button>
 
-        <p className="text-[#8F7A6A] mt-4 text-sm">
-          Clique para descobrir nossa solução exclusiva
-        </p>
+        <p className="text-[#8F7A6A] mt-4 text-sm">Clique para descobrir nossa solução exclusiva</p>
 
         {/* Visual Elements */}
         <div className="mt-12 flex justify-center space-x-4">

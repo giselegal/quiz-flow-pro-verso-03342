@@ -18,12 +18,7 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
   onSelect,
 }) => {
   const properties = block.properties || {};
-  const {
-    type = "spinner",
-    size = "medium",
-    color = "#B89B7A",
-    duration = 3000,
-  } = properties;
+  const { type = "spinner", size = "medium", color = "#B89B7A", duration = 3000 } = properties;
 
   const handleClick = () => {
     onSelect?.();
@@ -42,10 +37,7 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderSpinner = () => (
     <div
-      className={cn(
-        "animate-spin rounded-full border-2 border-gray-300",
-        getSizeClass(size)
-      )}
+      className={cn("animate-spin rounded-full border-2 border-gray-300", getSizeClass(size))}
       style={{
         borderTopColor: color,
         animationDuration: `${duration / 1000}s`,
@@ -55,16 +47,12 @@ const LoadingAnimationBlock: React.FC<LoadingAnimationProps> = ({
 
   const renderDots = () => (
     <div className="flex space-x-1">
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2].map(i => (
         <div
           key={i}
           className={cn(
             "rounded-full animate-pulse",
-            size === "small"
-              ? "w-2 h-2"
-              : size === "large"
-                ? "w-4 h-4"
-                : "w-3 h-3"
+            size === "small" ? "w-2 h-2" : size === "large" ? "w-4 h-4" : "w-3 h-3"
           )}
           style={{
             backgroundColor: color,

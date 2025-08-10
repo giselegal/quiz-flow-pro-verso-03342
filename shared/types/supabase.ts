@@ -13,10 +13,7 @@ export interface Database {
       };
       quizzes: {
         Row: Quiz;
-        Insert: Omit<
-          Quiz,
-          "id" | "created_at" | "updated_at" | "view_count" | "completion_count"
-        >;
+        Insert: Omit<Quiz, "id" | "created_at" | "updated_at" | "view_count" | "completion_count">;
         Update: Partial<Omit<Quiz, "id" | "created_at" | "updated_at">>;
       };
       questions: {
@@ -36,10 +33,7 @@ export interface Database {
       };
       quiz_templates: {
         Row: QuizTemplate;
-        Insert: Omit<
-          QuizTemplate,
-          "id" | "created_at" | "updated_at" | "usage_count"
-        >;
+        Insert: Omit<QuizTemplate, "id" | "created_at" | "updated_at" | "usage_count">;
         Update: Partial<Omit<QuizTemplate, "id" | "created_at" | "updated_at">>;
       };
       quiz_categories: {
@@ -289,14 +283,12 @@ export interface QuizLeaderboard {
 // TIPOS PARA O EDITOR
 // =============================================================================
 
-export interface EditorQuiz
-  extends Omit<Quiz, "author_id" | "created_at" | "updated_at"> {
+export interface EditorQuiz extends Omit<Quiz, "author_id" | "created_at" | "updated_at"> {
   questions: EditorQuestion[];
   author?: Profile;
 }
 
-export interface EditorQuestion
-  extends Omit<Question, "quiz_id" | "created_at"> {
+export interface EditorQuestion extends Omit<Question, "quiz_id" | "created_at"> {
   tempId?: string; // Para perguntas ainda não salvas
 }
 
@@ -415,12 +407,7 @@ export interface QuizFilters {
   is_public?: boolean;
   author_id?: string;
   search?: string;
-  sort_by?:
-    | "created_at"
-    | "updated_at"
-    | "title"
-    | "view_count"
-    | "completion_count";
+  sort_by?: "created_at" | "updated_at" | "title" | "view_count" | "completion_count";
   sort_order?: "asc" | "desc";
   limit?: number;
   offset?: number;

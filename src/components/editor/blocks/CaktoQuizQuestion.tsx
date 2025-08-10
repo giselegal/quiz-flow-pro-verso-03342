@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { QuizQuestionBlock } from "./QuizQuestionBlock";
-import { EditableContent } from "../../../types/editor";
+import { EditableContent } from "@/types/editor";
 
 interface CaktoQuizQuestionProps {
   content?: EditableContent;
@@ -12,7 +12,7 @@ interface CaktoQuizQuestionProps {
   className?: string;
 }
 
-export const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = (props) => {
+export const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = props => {
   return <QuizQuestionBlock {...props} />;
 };
 

@@ -1,21 +1,10 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Label } from "../../components/ui/label";
-import { Button } from "../../components/ui/button";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../components/ui/tabs";
-import { Input } from "../../components/ui/input";
-import { Textarea } from "../../components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export const FacebookAdsTab = () => {
   // Exemplo de URL do quiz com parâmetros UTM
@@ -33,29 +22,19 @@ export const FacebookAdsTab = () => {
       <Card>
         <CardHeader>
           <CardTitle>Configuração de Ads do Facebook</CardTitle>
-          <CardDescription>
-            Configure parâmetros UTM para seus anúncios do Facebook
-          </CardDescription>
+          <CardDescription>Configure parâmetros UTM para seus anúncios do Facebook</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label>URL do Quiz com Parâmetros UTM</Label>
             <div className="flex space-x-2">
-              <Input
-                value={exampleUrl}
-                readOnly
-                className="flex-grow font-mono text-xs"
-              />
-              <Button
-                onClick={() => navigator.clipboard.writeText(exampleUrl)}
-                variant="outline"
-              >
+              <Input value={exampleUrl} readOnly className="flex-grow font-mono text-xs" />
+              <Button onClick={() => navigator.clipboard.writeText(exampleUrl)} variant="outline">
                 Copiar
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Esta URL inclui parâmetros UTM para rastreamento de campanhas do
-              Facebook.
+              Esta URL inclui parâmetros UTM para rastreamento de campanhas do Facebook.
             </p>
           </div>
 
@@ -68,14 +47,11 @@ export const FacebookAdsTab = () => {
 
             <TabsContent value="structure" className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-sm font-semibold">
-                  Estrutura Recomendada para Parâmetros UTM
-                </h3>
+                <h3 className="text-sm font-semibold">Estrutura Recomendada para Parâmetros UTM</h3>
                 <div className="rounded-md bg-muted p-4">
                   <ul className="list-disc ml-4 space-y-2 text-sm">
                     <li>
-                      <strong>utm_source</strong>: facebook, instagram,
-                      messenger
+                      <strong>utm_source</strong>: facebook, instagram, messenger
                     </li>
                     <li>
                       <strong>utm_medium</strong>: cpc, social, banner, stories
@@ -97,9 +73,7 @@ export const FacebookAdsTab = () => {
             <TabsContent value="examples" className="space-y-4">
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-semibold mb-2">
-                    Campanha de Reconhecimento
-                  </h3>
+                  <h3 className="text-sm font-semibold mb-2">Campanha de Reconhecimento</h3>
                   <Input
                     value={`${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.awareness}&utm_content=carousel_1`}
                     readOnly
@@ -119,9 +93,7 @@ export const FacebookAdsTab = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold mb-2">
-                    Campanha de Consideração
-                  </h3>
+                  <h3 className="text-sm font-semibold mb-2">Campanha de Consideração</h3>
                   <Input
                     value={`${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.consideration}&utm_content=video_ad`}
                     readOnly
@@ -141,9 +113,7 @@ export const FacebookAdsTab = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold mb-2">
-                    Campanha de Conversão
-                  </h3>
+                  <h3 className="text-sm font-semibold mb-2">Campanha de Conversão</h3>
                   <Input
                     value={`${window.location.origin}?utm_source=facebook&utm_medium=cpc&utm_campaign=${campaignExamples.conversion}&utm_content=image_ad`}
                     readOnly
@@ -190,10 +160,7 @@ export const FacebookAdsTab = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="utm_term">UTM Term (opcional)</Label>
-                  <Input
-                    id="utm_term"
-                    placeholder="Palavras-chave (opcional)"
-                  />
+                  <Input id="utm_term" placeholder="Palavras-chave (opcional)" />
                 </div>
 
                 <div className="space-y-2">
@@ -207,9 +174,7 @@ export const FacebookAdsTab = () => {
                   />
                 </div>
 
-                <Button className="bg-[#B89B7A] hover:bg-[#A38A69]">
-                  Gerar e Copiar URL
-                </Button>
+                <Button className="bg-[#B89B7A] hover:bg-[#A38A69]">Gerar e Copiar URL</Button>
               </div>
             </TabsContent>
           </Tabs>
@@ -219,38 +184,27 @@ export const FacebookAdsTab = () => {
       <Card>
         <CardHeader>
           <CardTitle>Pixel do Facebook e Parâmetros UTM</CardTitle>
-          <CardDescription>
-            Como o Facebook Pixel usa os parâmetros UTM
-          </CardDescription>
+          <CardDescription>Como o Facebook Pixel usa os parâmetros UTM</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-sm space-y-4">
             <p>
-              Quando os parâmetros UTM estão presentes na URL, o Facebook Pixel
-              automaticamente:
+              Quando os parâmetros UTM estão presentes na URL, o Facebook Pixel automaticamente:
             </p>
 
             <ol className="list-decimal ml-5 space-y-2">
               <li>Associa a conversão à campanha e anúncio específicos</li>
-              <li>
-                Melhora a atribuição de conversões no Facebook Ads Manager
-              </li>
-              <li>
-                Otimiza automaticamente seus anúncios para melhor performance
-              </li>
-              <li>
-                Permite criar públicos personalizados baseados em campanhas
-                específicas
-              </li>
+              <li>Melhora a atribuição de conversões no Facebook Ads Manager</li>
+              <li>Otimiza automaticamente seus anúncios para melhor performance</li>
+              <li>Permite criar públicos personalizados baseados em campanhas específicas</li>
             </ol>
 
             <div className="rounded-md bg-muted p-4 mt-4">
               <h4 className="font-medium mb-2">Dica:</h4>
               <p className="text-xs">
-                Para verificar se os parâmetros UTM estão sendo corretamente
-                capturados, visite a página de Analytics do admin e selecione a
-                aba "UTM". Lá você poderá ver todas as fontes de tráfego e suas
-                respectivas conversões.
+                Para verificar se os parâmetros UTM estão sendo corretamente capturados, visite a
+                página de Analytics do admin e selecione a aba "UTM". Lá você poderá ver todas as
+                fontes de tráfego e suas respectivas conversões.
               </p>
             </div>
           </div>

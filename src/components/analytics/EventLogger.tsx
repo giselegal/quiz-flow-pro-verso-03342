@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Trash2,
   RefreshCcw,
@@ -99,18 +93,14 @@ export const EventLogger: React.FC = () => {
     }
   };
 
-  const filteredEvents = filter
-    ? events.filter((event) => event.type === filter)
-    : events;
+  const filteredEvents = filter ? events.filter(event => event.type === filter) : events;
 
   return (
     <Card className="border-border/40 shadow-sm">
       <CardHeader className="pb-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <CardTitle className="text-base">
-              Log de Eventos Facebook Pixel
-            </CardTitle>
+            <CardTitle className="text-base">Log de Eventos Facebook Pixel</CardTitle>
             <CardDescription className="text-xs mt-0.5">
               Eventos enviados para o Facebook Pixel
             </CardDescription>
@@ -199,18 +189,14 @@ export const EventLogger: React.FC = () => {
         <div className="space-y-2">
           {filteredEvents.length === 0 ? (
             <div className="text-center py-8 text-sm text-muted-foreground">
-              {filter
-                ? `Nenhum evento "${filter}" registrado`
-                : "Nenhum evento registrado"}
+              {filter ? `Nenhum evento "${filter}" registrado` : "Nenhum evento registrado"}
             </div>
           ) : (
             filteredEvents.map((event, index) => (
               <div key={index} className="text-xs border rounded-md p-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <div
-                      className={`rounded-full p-1.5 ${getEventColor(event.type)}`}
-                    >
+                    <div className={`rounded-full p-1.5 ${getEventColor(event.type)}`}>
                       {getEventIcon(event.type)}
                     </div>
                     <div>

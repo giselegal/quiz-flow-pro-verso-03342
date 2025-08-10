@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CanvasConfiguration {
   steps: any[];
@@ -21,18 +16,18 @@ export const CanvasConfigurationTesterFixed: React.FC = () => {
   const [testResults, setTestResults] = useState<string[]>([]);
 
   const updateConfiguration = (updates: Partial<CanvasConfiguration>) => {
-    setConfiguration((prev) => ({ ...prev, ...updates }));
+    setConfiguration(prev => ({ ...prev, ...updates }));
   };
 
   const addComponent = (component: any) => {
-    setConfiguration((prev) => ({
+    setConfiguration(prev => ({
       ...prev,
       components: [...prev.components, component],
     }));
   };
 
   const removeComponent = (index: number) => {
-    setConfiguration((prev) => ({
+    setConfiguration(prev => ({
       ...prev,
       components: prev.components.filter((_, i) => i !== index),
     }));
@@ -40,25 +35,18 @@ export const CanvasConfigurationTesterFixed: React.FC = () => {
 
   const validateAllSteps = () => {
     const isValid = configuration.steps.length > 0;
-    setTestResults((prev) => [
-      ...prev,
-      `Validation: ${isValid ? "PASS" : "FAIL"}`,
-    ]);
+    setTestResults(prev => [...prev, `Validation: ${isValid ? "PASS" : "FAIL"}`]);
     return { isValid, errors: isValid ? [] : ["No steps configured"] };
   };
 
   const runTest = (testName: string) => {
     try {
-      setTestResults((prev) => [...prev, `${testName}: Started`]);
+      setTestResults(prev => [...prev, `${testName}: Started`]);
       validateAllSteps();
-      setTestResults((prev) => [...prev, `${testName}: Completed`]);
+      setTestResults(prev => [...prev, `${testName}: Completed`]);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      setTestResults((prev) => [
-        ...prev,
-        `${testName}: Error - ${errorMessage}`,
-      ]);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      setTestResults(prev => [...prev, `${testName}: Error - ${errorMessage}`]);
     }
   };
 
@@ -70,23 +58,15 @@ export const CanvasConfigurationTesterFixed: React.FC = () => {
       <CardContent>
         <div className="space-y-4">
           <div className="flex gap-2">
-            <Button onClick={() => runTest("Step 20 Test")}>
-              Test Step 20
-            </Button>
-            <Button onClick={() => runTest("Step 21 Test")}>
-              Test Step 21
-            </Button>
-            <Button onClick={() => validateAllSteps()}>
-              Validate All Steps
-            </Button>
+            <Button onClick={() => runTest("Step 20 Test")}>Test Step 20</Button>
+            <Button onClick={() => runTest("Step 21 Test")}>Test Step 21</Button>
+            <Button onClick={() => validateAllSteps()}>Validate All Steps</Button>
           </div>
 
           <div>
             <h4 className="font-medium">Configuration Status:</h4>
             <p className="text-sm">Steps: {configuration.steps.length}</p>
-            <p className="text-sm">
-              Components: {configuration.components.length}
-            </p>
+            <p className="text-sm">Components: {configuration.components.length}</p>
           </div>
 
           <div>

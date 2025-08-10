@@ -1,6 +1,6 @@
 import React from "react";
-import { ComponentProps } from "../../../interfaces/quiz";
-import styles from "../../../styles/quiz.module.css";
+import { ComponentProps } from "@/interfaces/quiz";
+import styles from "@/styles/quiz.module.css";
 
 interface QuizPriceProps extends ComponentProps {
   price?: string;
@@ -52,9 +52,7 @@ const QuizPrice: React.FC<QuizPriceProps> = ({
             </span>
           </div>
 
-          {installments && (
-            <div className={styles.installments}>ou {installments}</div>
-          )}
+          {installments && <div className={styles.installments}>ou {installments}</div>}
         </div>
 
         <div className={styles.priceFeatures}>

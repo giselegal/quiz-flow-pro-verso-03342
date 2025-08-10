@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";
 import { Shield, AlertCircle, Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "../ui/alert";
@@ -56,9 +50,7 @@ const AdminLogin: React.FC = () => {
             <Shield className="h-12 w-12 text-[#B89B7A]" />
           </div>
           <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
-          <CardDescription>
-            Acesso restrito ao painel administrativo
-          </CardDescription>
+          <CardDescription>Acesso restrito ao painel administrativo</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -68,7 +60,7 @@ const AdminLogin: React.FC = () => {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 placeholder="admin@exemplo.com"
                 required
                 autoComplete="username"
@@ -82,7 +74,7 @@ const AdminLogin: React.FC = () => {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
@@ -97,11 +89,7 @@ const AdminLogin: React.FC = () => {
               </Alert>
             )}
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isSubmitting || !email || !password}
-            >
+            <Button type="submit" className="w-full" disabled={isSubmitting || !email || !password}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -114,9 +102,7 @@ const AdminLogin: React.FC = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Apenas administradores autorizados
-            </p>
+            <p className="text-sm text-muted-foreground">Apenas administradores autorizados</p>
           </div>
         </CardContent>
       </Card>

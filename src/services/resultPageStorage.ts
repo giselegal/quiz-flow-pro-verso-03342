@@ -1,4 +1,4 @@
-import { ResultPageConfig } from "../types/resultPageConfig";
+import { ResultPageConfig } from "@/types/resultPageConfig";
 
 const STORAGE_KEY_PREFIX = "result_page_config_";
 

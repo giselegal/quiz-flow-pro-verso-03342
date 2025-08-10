@@ -13,14 +13,11 @@ console.log("🔍 TESTE DE DEBUG - ETAPA 2");
 function testStep2Template() {
   // Verificar se existe EditorContext
   const editorDiv =
-    document.querySelector('[data-step="2"]') ||
-    document.querySelector(".editor-canvas");
+    document.querySelector('[data-step="2"]') || document.querySelector(".editor-canvas");
   console.log("Editor div encontrado:", !!editorDiv);
 
   // Verificar se há blocos options-grid
-  const optionsGrids = document.querySelectorAll(
-    '[data-block-id*="step02-clothing-options"]'
-  );
+  const optionsGrids = document.querySelectorAll('[data-block-id*="step02-clothing-options"]');
   console.log("Blocos options-grid encontrados:", optionsGrids.length);
 
   // Verificar se há mensagens de debug
@@ -34,9 +31,7 @@ function testStep2Template() {
   }
 
   // Verificar se há logs no console
-  console.log(
-    "Verifique os logs de 'EditorOptionsGridBlock' e 'QuizOptionsGridBlock' acima"
-  );
+  console.log("Verifique os logs de 'EditorOptionsGridBlock' e 'QuizOptionsGridBlock' acima");
 }
 
 // Executar teste após 2 segundos para dar tempo do React carregar

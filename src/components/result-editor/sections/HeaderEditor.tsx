@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Switch } from "../../../components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 interface HeaderEditorProps {
   content: {
@@ -34,14 +34,10 @@ export const HeaderEditor: React.FC<HeaderEditorProps> = ({
             <Input
               id="logo"
               value={content.logo || ""}
-              onChange={(e) => onUpdate({ ...content, logo: e.target.value })}
+              onChange={e => onUpdate({ ...content, logo: e.target.value })}
             />
             {content.logo && (
-              <img
-                src={content.logo}
-                alt="Preview do logo"
-                className="h-12 object-contain mt-2"
-              />
+              <img src={content.logo} alt="Preview do logo" className="h-12 object-contain mt-2" />
             )}
           </div>
 
@@ -50,9 +46,7 @@ export const HeaderEditor: React.FC<HeaderEditorProps> = ({
             <Input
               id="logoAlt"
               value={content.logoAlt || ""}
-              onChange={(e) =>
-                onUpdate({ ...content, logoAlt: e.target.value })
-              }
+              onChange={e => onUpdate({ ...content, logoAlt: e.target.value })}
             />
           </div>
 
@@ -61,7 +55,7 @@ export const HeaderEditor: React.FC<HeaderEditorProps> = ({
             <Input
               id="title"
               value={content.title || ""}
-              onChange={(e) => onUpdate({ ...content, title: e.target.value })}
+              onChange={e => onUpdate({ ...content, title: e.target.value })}
             />
           </div>
         </>

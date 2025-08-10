@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import React from "react";
 import QuizOptionsGridBlock from "./QuizOptionsGridBlock";
 
@@ -27,9 +27,7 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
     content: (block as any).content, // Verificar se há content também
     hasOptions: !!block.properties?.options,
     hasContentOptions: !!(block as any).content?.options,
-    optionsLength: Array.isArray(block.properties?.options)
-      ? block.properties.options.length
-      : 0,
+    optionsLength: Array.isArray(block.properties?.options) ? block.properties.options.length : 0,
     contentOptionsLength: Array.isArray((block as any).content?.options)
       ? (block as any).content.options.length
       : 0,
@@ -50,9 +48,7 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
     (!finalProperties.options || finalProperties.options.length === 0) &&
     (block as any).content?.options
   ) {
-    console.log(
-      "🔧 EditorOptionsGridBlock: Usando content.options ao invés de properties.options"
-    );
+    console.log("🔧 EditorOptionsGridBlock: Usando content.options ao invés de properties.options");
     finalProperties = {
       ...finalProperties,
       ...(block as any).content,

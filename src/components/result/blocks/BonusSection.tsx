@@ -8,22 +8,14 @@ const BonusSection = () => (
     <div className="grid md:grid-cols-2 gap-6">
       <div className="text-center">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-3">
-          <h4 className="font-semibold text-[#432818] mb-2">
-            Peças-Chave do Seu Estilo
-          </h4>
-          <p className="text-sm text-[#8F7A6A]">
-            Guia completo das peças essenciais
-          </p>
+          <h4 className="font-semibold text-[#432818] mb-2">Peças-Chave do Seu Estilo</h4>
+          <p className="text-sm text-[#8F7A6A]">Guia completo das peças essenciais</p>
         </div>
       </div>
       <div className="text-center">
         <div className="bg-white p-4 rounded-lg shadow-sm mb-3">
-          <h4 className="font-semibold text-[#432818] mb-2">
-            Visagismo Facial
-          </h4>
-          <p className="text-sm text-[#8F7A6A]">
-            Maquiagem ideal para seu rosto
-          </p>
+          <h4 className="font-semibold text-[#432818] mb-2">Visagismo Facial</h4>
+          <p className="text-sm text-[#8F7A6A]">Maquiagem ideal para seu rosto</p>
         </div>
       </div>
     </div>

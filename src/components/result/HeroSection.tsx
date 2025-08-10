@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 interface HeroSectionProps {
@@ -12,20 +12,13 @@ interface HeroSectionProps {
   };
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({
-  title,
-  subtitle,
-  image,
-  cta,
-}) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ title, subtitle, image, cta }) => {
   return (
     <section className="py-12 px-4 bg-gradient-to-b from-[#FAF9F7] to-white">
       <div className="container mx-auto">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl font-playfair text-[#432818]">
-              {title}
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-playfair text-[#432818]">{title}</h1>
             <p className="text-xl text-[#8F7A6A]">{subtitle}</p>
             <Button
               size="lg"
@@ -38,11 +31,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
           {image && (
             <div className="relative">
-              <img
-                src={image}
-                alt="Hero Image"
-                className="rounded-lg shadow-lg"
-              />
+              <img src={image} alt="Hero Image" className="rounded-lg shadow-lg" />
             </div>
           )}
         </div>

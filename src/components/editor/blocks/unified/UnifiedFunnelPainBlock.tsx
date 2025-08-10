@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import FunnelPainSection from "../../../../components/funnel/base/FunnelPainSection";
+import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
 
 // Interface local para máxima independência
 interface Block {
@@ -31,14 +31,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -109,8 +102,7 @@ const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
 
   const props = {
     title: block.properties.title || "Você Reconhece Esses Problemas?",
-    subtitle:
-      block.properties.subtitle || "Não se preocupe, você não está sozinho(a).",
+    subtitle: block.properties.subtitle || "Não se preocupe, você não está sozinho(a).",
     description: block.properties.description,
     conclusion:
       block.properties.conclusion ||
@@ -119,8 +111,7 @@ const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
     backgroundColor: block.properties.backgroundColor || "#ffffff",
     textColor: block.properties.textColor || "#432818",
     primaryColor: block.properties.primaryColor || "#B89B7A",
-    cardBorderColor:
-      block.properties.cardBorderColor || "rgba(184, 155, 122, 0.2)",
+    cardBorderColor: block.properties.cardBorderColor || "rgba(184, 155, 122, 0.2)",
     columns: (parseInt(block.properties.columns) || 4) as 1 | 2 | 3 | 4,
 
     // Props específicas do editor

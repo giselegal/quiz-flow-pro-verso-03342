@@ -13,7 +13,7 @@ import {
   BlockType,
   validateBlockData,
   safeValidateBlockData,
-} from "../schemas/blockSchemas";
+} from "@/schemas/blockSchemas";
 
 export interface Block {
   id: string;
@@ -76,7 +76,7 @@ export function useBlockForm(
   useEffect(() => {
     if (!block || !onUpdate) return;
 
-    const subscription = watch((values) => {
+    const subscription = watch(values => {
       const timer = setTimeout(() => {
         if (isDirty) {
           onUpdate({
@@ -119,10 +119,7 @@ export function useBlockForm(
   const validateBlock = useCallback(() => {
     if (!block) return false;
 
-    const result = safeValidateBlockData(
-      block.type as BlockType,
-      form.getValues()
-    );
+    const result = safeValidateBlockData(block.type as BlockType, form.getValues());
 
     return result.success;
   }, [block, form]);
@@ -130,12 +127,7 @@ export function useBlockForm(
   // Converte erros do formulário para formato simples
   const flatErrors = Object.entries(errors).reduce(
     (acc, [key, error]) => {
-      if (
-        error &&
-        typeof error === "object" &&
-        "message" in error &&
-        error.message
-      ) {
+      if (error && typeof error === "object" && "message" in error && error.message) {
         acc[key] = error.message as string;
       }
       return acc;
@@ -184,7 +176,7 @@ export function useArrayFieldForm<T extends Record<string, any>>(
   useEffect(() => {
     if (!onUpdate) return;
 
-    const subscription = watch((values) => {
+    const subscription = watch(values => {
       const timer = setTimeout(() => {
         if (values.items) {
           onUpdate({ items: values.items as T[] });
@@ -269,18 +261,13 @@ export function useBlockValidation(block: Block | null) {
   const validateNow = useCallback(() => {
     if (!block) return { isValid: false, errors: [] };
 
-    const result = safeValidateBlockData(
-      block.type as BlockType,
-      block.properties
-    );
+    const result = safeValidateBlockData(block.type as BlockType, block.properties);
 
     if (result.success) {
       return { isValid: true, errors: [] };
     } else {
       const errors =
-        "errors" in result.error
-          ? result.error.errors
-          : [{ message: result.error.message }];
+        "errors" in result.error ? result.error.errors : [{ message: result.error.message }];
       return {
         isValid: false,
         errors,
@@ -294,9 +281,7 @@ export function useBlockValidation(block: Block | null) {
 /**
  * Helper para criar valores padrão de um bloco
  */
-export function getDefaultBlockValues(
-  blockType: BlockType
-): Record<string, any> {
+export function getDefaultBlockValues(blockType: BlockType): Record<string, any> {
   const schema = blockSchemas[blockType];
   if (!schema) return {};
 

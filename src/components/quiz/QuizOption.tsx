@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../lib/utils";
-import { QuizOption as QuizOptionType } from "../../types/quiz";
-import { highlightStrategicWords } from "../../utils/textHighlight";
+import { cn } from "@/lib/utils";
+import { QuizOption as QuizOptionType } from "@/types/quiz";
+import { highlightStrategicWords } from "@/utils/textHighlight";
 import { QuizOptionImage } from "./QuizOptionImage";
-import { useIsMobile } from "../../hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Check } from "lucide-react";
 import { RippleEffect, PulseEffect } from "../effects/InteractionEffects";
 import { ParticleSystem } from "../effects/ParticleSystem";
@@ -29,8 +29,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
   isStrategicOption = false, // Padrão para false
 }) => {
   const isMobile = useIsMobile();
-  const is3DQuestion =
-    option.imageUrl?.includes("sapatos") || option.imageUrl?.includes("calca");
+  const is3DQuestion = option.imageUrl?.includes("sapatos") || option.imageUrl?.includes("calca");
   const optionRef = useRef<HTMLDivElement>(null);
 
   // Estados para efeitos encantadores
@@ -92,9 +91,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
       // Aplicar mudança visual imediatamente para feedback instantâneo
       if (optionRef.current) {
         if (type === "text") {
-          optionRef.current.style.borderColor = isSelected
-            ? "#B89B7A"
-            : "#b29670";
+          optionRef.current.style.borderColor = isSelected ? "#B89B7A" : "#b29670";
 
           // Efeito visual adicional para opções estratégicas
           if (isStrategicOption && !isSelected) {
@@ -147,9 +144,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
           type === "text" &&
             cn(
               "p-4 border transition-all duration-300",
-              isHovered &&
-                !isSelected &&
-                "border-[#B89B7A] bg-[#B89B7A]/5 shadow-lg"
+              isHovered && !isSelected && "border-[#B89B7A] bg-[#B89B7A]/5 shadow-lg"
             ),
 
           // Para opções de imagem - SEM borda na coluna
@@ -182,9 +177,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
                   "leading-relaxed text-[#432818]",
                   isMobile ? "text-[0.9rem]" : "text-sm sm:text-base",
                   isStrategicOption && "text-[1.1rem] sm:text-lg", // Maior para opções estratégicas texto
-                  !isStrategicOption &&
-                    ".text-only-question & " &&
-                    "text-[1rem] sm:text-lg" // Maior para opções só texto
+                  !isStrategicOption && ".text-only-question & " && "text-[1rem] sm:text-lg" // Maior para opções só texto
                 )
           )}
         >

@@ -1,17 +1,12 @@
-import { DraggableComponentItem } from "../../components/editor/dnd/DraggableComponentItem";
-import { Badge } from "../../components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { generateBlockDefinitions } from "../../config/enhancedBlockRegistry";
-import { QUIZ_CONFIGURATION } from "../../config/quizConfiguration";
-import { useEditor } from "../../context/EditorContext";
-import { useSyncedScroll } from "../../hooks/useSyncedScroll";
-import { BlockDefinition } from "../../types/editor";
+import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { useEditor } from "@/context/EditorContext";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { BlockDefinition } from "@/types/editor";
 import {
   ChevronDown,
   ChevronRight,
@@ -38,14 +33,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -84,14 +72,10 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const EnhancedComponentsSidebar: React.FC<
-  EnhancedComponentsSidebarProps
-> = () => {
+const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedCategories, setExpandedCategories] = useState<
-    Record<string, boolean>
-  >({
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     "Questões do Quiz": true,
     Quiz: true,
     Interativo: true,
@@ -247,15 +231,9 @@ const EnhancedComponentsSidebar: React.FC<
     const stepBlocks = QUIZ_CONFIGURATION.steps.map((step, index) => ({
       type: `quiz-${step.type}`,
       name: `${step.title}`,
-      description:
-        step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
+      description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
       category: "Questões do Quiz",
-      icon:
-        step.type === "questions"
-          ? HelpCircle
-          : step.type === "result"
-            ? Trophy
-            : Settings,
+      icon: step.type === "questions" ? HelpCircle : step.type === "result" ? Trophy : Settings,
       component: "QuizQuestionBlock" as any,
       properties: {
         stepIndex: {
@@ -363,25 +341,21 @@ const EnhancedComponentsSidebar: React.FC<
   };
 
   // Obter todas as definições de blocos do registry validado + blocos do quiz
-  const allBlocks = [
-    ...generateQuizBlocks(),
-    decorativeBarBlock,
-    ...generateBlockDefinitions(),
-  ];
+  const allBlocks = [...generateQuizBlocks(), decorativeBarBlock, ...generateBlockDefinitions()];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories((prev) => ({
+    setExpandedCategories(prev => ({
       ...prev,
       [category]: !prev[category],
     }));
   };
 
   // Filtrar blocos baseado na busca
-  const filteredBlocks = allBlocks.filter((block) => {
+  const filteredBlocks = allBlocks.filter(block => {
     const matchesSearch =
       !searchQuery ||
       block.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -461,7 +435,7 @@ const EnhancedComponentsSidebar: React.FC<
     "Outros",
   ];
 
-  const orderedCategories = categoryOrder.filter((cat) => groupedBlocks[cat]);
+  const orderedCategories = categoryOrder.filter(cat => groupedBlocks[cat]);
 
   return (
     <Card className="h-full flex flex-col">
@@ -472,20 +446,17 @@ const EnhancedComponentsSidebar: React.FC<
           <Input
             placeholder="Buscar componentes..."
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             className="pl-8"
           />
         </div>
       </CardHeader>
 
       <CardContent className="flex-1 overflow-hidden">
-        <div
-          ref={scrollRef}
-          className="h-full overflow-y-auto overflow-x-hidden"
-        >
+        <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden">
           {/* Categories */}
           <div className="space-y-1 p-0">
-            {orderedCategories.map((category) => (
+            {orderedCategories.map(category => (
               <div key={category} className="space-y-1">
                 {/* Category Header */}
                 <div
@@ -498,12 +469,9 @@ const EnhancedComponentsSidebar: React.FC<
                     ) : (
                       <ChevronRight className="h-4 w-4" />
                     )}
-                    {React.createElement(
-                      categoryIcons[category] || GripVertical,
-                      {
-                        className: "h-4 w-4 text-primary",
-                      }
-                    )}
+                    {React.createElement(categoryIcons[category] || GripVertical, {
+                      className: "h-4 w-4 text-primary",
+                    })}
                     <span className="text-sm font-medium">{category}</span>
                   </div>
                   <Badge variant="secondary" className="text-xs">
@@ -514,7 +482,7 @@ const EnhancedComponentsSidebar: React.FC<
                 {/* Category Components */}
                 {expandedCategories[category] && (
                   <div className="pl-4 space-y-1">
-                    {groupedBlocks[category].map((block) => (
+                    {groupedBlocks[category].map(block => (
                       <DraggableComponentItem
                         key={block.type}
                         blockType={block.type}

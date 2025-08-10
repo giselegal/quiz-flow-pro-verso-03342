@@ -23,8 +23,7 @@ export const getStep01Template = () => {
 
         // ✨ TEXTOS CONFIGURÁVEIS (do JSON meta)
         title: "Quiz Estilo Pessoal - Template Completo",
-        subtitle:
-          "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda",
+        subtitle: "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda",
         description: "Versão 1.2.3 - by Gisele Legal",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
@@ -123,8 +122,7 @@ export const getStep01Template = () => {
       type: "text-inline",
       properties: {
         // ✨ CONTEÚDO (do JSON)
-        content:
-          "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+        content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
         text: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
@@ -170,8 +168,7 @@ export const getStep01Template = () => {
         height: 400,
 
         // ✨ CONFIGURAÇÕES DE ESTILO (baseado no JSON design.card)
-        className:
-          "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+        className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
         borderRadius: 16, // do JSON design.card.borderRadius
         shadow: true, // do JSON design.card.shadow
         objectFit: "cover",
@@ -192,8 +189,7 @@ export const getStep01Template = () => {
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileWidth: 350,
         mobileHeight: 280,
-        mobileClassName:
-          "object-cover w-full h-72 rounded-lg mx-auto shadow-md",
+        mobileClassName: "object-cover w-full h-72 rounded-lg mx-auto shadow-md",
 
         // ✨ CONFIGURAÇÕES DE EFEITOS
         hoverEffect: true,

@@ -199,16 +199,8 @@ export const RespostaHooks = () => {
   return (
     <div>
       <h2>Formulário</h2>
-      <input
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-        placeholder="Nome"
-      />
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
+      <input value={nome} onChange={e => setNome(e.target.value)} placeholder="Nome" />
+      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
       <button onClick={handleSubmit} disabled={!isEmailValid}>
         Enviar
       </button>
@@ -224,12 +216,12 @@ const useCounter = (initialValue = 0) => {
 
   // useCallback + Tab
   const increment = React.useCallback(() => {
-    setCount((prev) => prev + 1);
+    setCount(prev => prev + 1);
   }, []);
 
   // useCallback + Tab
   const decrement = React.useCallback(() => {
-    setCount((prev) => prev - 1);
+    setCount(prev => prev - 1);
   }, []);
 
   return { count, increment, decrement };
@@ -356,7 +348,7 @@ export const QuizCard = ({ question, options, onSelect }: QuizCardProps) => {
     <div className="quiz-card">
       <h3>{question}</h3>
       <div className="options">
-        {options.map((option) => (
+        {options.map(option => (
           <button
             key={option}
             onClick={() => handleClick(option)}

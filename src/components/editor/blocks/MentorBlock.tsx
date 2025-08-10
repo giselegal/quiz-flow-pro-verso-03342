@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Award, Users, BookOpen } from "lucide-react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
@@ -14,14 +14,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,10 +64,8 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>
-          Erro: Bloco não encontrado ou propriedades indefinidas
-        </p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
@@ -115,9 +106,7 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
     <div
       className={cn(
         "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected
-          ? "border-[#B89B7A] bg-[#B89B7A]/10"
-          : "border-gray-300 bg-white",
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
         "cursor-pointer hover:border-gray-400 transition-colors",
         className,
         // Margens universais com controles deslizantes
@@ -150,14 +139,11 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
 
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-4">
-                    {title}
-                  </h2>
+                  <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-4">{title}</h2>
                   <p className="text-[#432818] leading-relaxed">
-                    Especialista em consultoria de imagem e estilo pessoal,
-                    Gisele Galvão dedica sua carreira a ajudar mulheres a
-                    descobrirem e expressarem sua autenticidade através do
-                    vestir.
+                    Especialista em consultoria de imagem e estilo pessoal, Gisele Galvão dedica sua
+                    carreira a ajudar mulheres a descobrirem e expressarem sua autenticidade através
+                    do vestir.
                   </p>
                 </div>
 
@@ -172,9 +158,7 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
                           <div className="w-10 h-10 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white">
                             {credential.icon}
                           </div>
-                          <span className="text-[#432818] font-medium">
-                            {credential.text}
-                          </span>
+                          <span className="text-[#432818] font-medium">{credential.text}</span>
                         </div>
                       ))}
                     </div>
@@ -183,13 +167,11 @@ const MentorBlock: React.FC<MentorBlockProps> = ({
 
                 <div className="bg-[#f9f4ef] p-4 rounded-lg border border-[#B89B7A]/10">
                   <p className="text-sm text-[#432818] italic">
-                    "Minha missão é mostrar para cada mulher que ela já possui
-                    tudo o que precisa para ser elegante. Só precisamos
-                    despertar essa essência única que existe dentro de você."
+                    "Minha missão é mostrar para cada mulher que ela já possui tudo o que precisa
+                    para ser elegante. Só precisamos despertar essa essência única que existe dentro
+                    de você."
                   </p>
-                  <p className="text-right text-[#aa6b5d] font-medium mt-2">
-                    - Gisele Galvão
-                  </p>
+                  <p className="text-right text-[#aa6b5d] font-medium mt-2">- Gisele Galvão</p>
                 </div>
               </div>
             </div>

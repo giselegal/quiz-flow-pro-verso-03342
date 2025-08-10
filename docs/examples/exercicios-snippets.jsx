@@ -41,13 +41,13 @@ const ContadorExercicio = () => {
 
   // 3. useCallback + Tab (duas vezes)
   const increment = React.useCallback(() => {
-    setCount((prev) => prev + 1);
+    setCount(prev => prev + 1);
     // 4. clg + Tab
     console.log("Incrementado:", count + 1);
   }, [count]);
 
   const decrement = React.useCallback(() => {
-    setCount((prev) => prev - 1);
+    setCount(prev => prev - 1);
     // clg + Tab
     console.log("Decrementado:", count - 1);
   }, [count]);
@@ -94,10 +94,10 @@ const FormularioExercicio = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   // useCallback + Tab
-  const handleChange = React.useCallback((e) => {
+  const handleChange = React.useCallback(e => {
     // dob + Tab
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
@@ -124,14 +124,14 @@ const FormularioExercicio = () => {
 
   // useCallback + Tab
   const handleSubmit = React.useCallback(
-    async (e) => {
+    async e => {
       e.preventDefault();
       setIsSubmitting(true);
 
       // try + Tab
       try {
         // Simular envio
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
         // clg + Tab
         console.log("Formulário enviado:", formData);
         alert("Formulário enviado com sucesso!");
@@ -215,13 +215,11 @@ const ListaComFiltro = () => {
   // useMemo + Tab
   const produtosFiltrados = React.useMemo(() => {
     if (!filtro) return produtos;
-    return produtos.filter((produto) =>
-      produto.nome.toLowerCase().includes(filtro.toLowerCase())
-    );
+    return produtos.filter(produto => produto.nome.toLowerCase().includes(filtro.toLowerCase()));
   }, [produtos, filtro]);
 
   // useCallback + Tab
-  const handleFilterChange = React.useCallback((e) => {
+  const handleFilterChange = React.useCallback(e => {
     setFiltro(e.target.value);
   }, []);
 
@@ -237,7 +235,7 @@ const ListaComFiltro = () => {
       <p>Mostrando {produtosFiltrados.length} produtos</p>
 
       <ul>
-        {produtosFiltrados.map((produto) => (
+        {produtosFiltrados.map(produto => (
           <li key={produto.id}>
             {produto.nome} - {produto.categoria}
           </li>
@@ -278,7 +276,7 @@ const useTimer = (initialSeconds = 0) => {
 
     if (isRunning) {
       interval = setInterval(() => {
-        setSeconds((prev) => prev + 1);
+        setSeconds(prev => prev + 1);
       }, 1000);
     } else {
       clearInterval(interval);
@@ -366,14 +364,10 @@ const ThemeProvider = ({ children }) => {
 
   // useCallback + Tab
   const toggleTheme = React.useCallback(() => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme(prev => (prev === "light" ? "dark" : "light"));
   }, []);
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 // Hook personalizado
@@ -394,9 +388,7 @@ const ThemedComponent = React.memo(() => {
   return (
     <div className={`theme-${theme}`}>
       <h2>Tema atual: {theme}</h2>
-      <button onClick={toggleTheme}>
-        Alternar para {theme === "light" ? "dark" : "light"}
-      </button>
+      <button onClick={toggleTheme}>Alternar para {theme === "light" ? "dark" : "light"}</button>
     </div>
   );
 });
@@ -447,14 +439,12 @@ const QuizProvider = ({ children }) => {
   });
 
   // useCallback + Tab
-  const updateQuizState = React.useCallback((updates) => {
-    setQuizState((prev) => ({ ...prev, ...updates }));
+  const updateQuizState = React.useCallback(updates => {
+    setQuizState(prev => ({ ...prev, ...updates }));
   }, []);
 
   return (
-    <QuizContext.Provider value={{ quizState, updateQuizState }}>
-      {children}
-    </QuizContext.Provider>
+    <QuizContext.Provider value={{ quizState, updateQuizState }}>{children}</QuizContext.Provider>
   );
 };
 
@@ -480,7 +470,7 @@ const QuizQuestion = React.memo(() => {
 
   // useCallback + Tab
   const handleAnswer = React.useCallback(
-    (answerIndex) => {
+    answerIndex => {
       const isCorrect = answerIndex === questions[currentQuestion].correct;
       const newAnswers = [
         ...answers,

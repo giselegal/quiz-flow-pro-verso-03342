@@ -1,10 +1,7 @@
 // API Handler para Webhook Hotmart
 // Este arquivo deve ser usado como referência para configurar o endpoint webhook
 
-import {
-  hotmartWebhookManager,
-  HotmartWebhookData,
-} from "../utils/hotmartWebhook";
+import { hotmartWebhookManager, HotmartWebhookData } from "../utils/hotmartWebhook";
 
 /**
  * IMPORTANTE: Para aplicações SPA (Single Page Application) como esta,
@@ -21,9 +18,7 @@ import {
 
 // Exemplo de implementação para Vercel Serverless Functions
 // Arquivo: /api/webhook/hotmart.ts (se usando Vercel)
-export async function handleHotmartWebhook(
-  request: Request
-): Promise<Response> {
+export async function handleHotmartWebhook(request: Request): Promise<Response> {
   try {
     // Verificar método HTTP
     if (request.method !== "POST") {
@@ -91,7 +86,7 @@ export const expressWebhookHandler = (req: any, res: any) => {
       .then(() => {
         console.log("[Hotmart Webhook] Processado com sucesso");
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("[Hotmart Webhook] Erro no processamento:", error);
       });
 

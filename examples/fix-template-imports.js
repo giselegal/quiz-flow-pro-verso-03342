@@ -18,7 +18,7 @@ function fixTemplate(filePath) {
   let fixed = false;
 
   // Remover imports problemáticos
-  problematicImports.forEach((importLine) => {
+  problematicImports.forEach(importLine => {
     if (content.includes(importLine)) {
       content = content.replace(importLine + "\n", "");
       fixed = true;
@@ -58,7 +58,7 @@ const templateFiles = [
 console.log("🚀 Iniciando correção dos templates...\n");
 
 let fixedCount = 0;
-templateFiles.forEach((fileName) => {
+templateFiles.forEach(fileName => {
   const filePath = path.join(templatesDir, fileName);
   if (fs.existsSync(filePath)) {
     if (fixTemplate(filePath)) {

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Shield, ShoppingCart, Lock, ArrowDown } from "lucide-react";
 
 interface AdvancedCTABlockProps {
@@ -17,14 +17,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -73,8 +66,7 @@ const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const handleCTAClick = () => {
-    window.location.href =
-      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
   };
 
   return (
@@ -90,9 +82,7 @@ const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
       )}
     >
       <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
-        <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">
-          {mainText}
-        </h3>
+        <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">{mainText}</h3>
         <div className="flex justify-center">
           <ArrowDown className="w-8 h-8 text-[#B89B7A] animate-bounce" />
         </div>

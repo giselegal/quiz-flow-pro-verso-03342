@@ -28,8 +28,7 @@ export const styleDiscoveryTemplate: FunnelTemplate = {
     {
       type: "FunnelHeroBlock",
       properties: {
-        title:
-          "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
+        title: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
         description:
           "Descubra seu Estilo e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         ctaText: "Descobrir Meu Estilo - 5x R$ 8,83",
@@ -57,8 +56,7 @@ export const styleDiscoveryTemplate: FunnelTemplate = {
         painPoints: [
           {
             title: "Problemas de autoestima",
-            description:
-              "Você se sente insegura com sua imagem e não sabe como melhorar",
+            description: "Você se sente insegura com sua imagem e não sabe como melhorar",
             icon: "Heart",
           },
           {
@@ -68,8 +66,7 @@ export const styleDiscoveryTemplate: FunnelTemplate = {
           },
           {
             title: "Perda de tempo",
-            description:
-              "Demora horas para se arrumar e ainda não fica satisfeita",
+            description: "Demora horas para se arrumar e ainda não fica satisfeita",
             icon: "Clock",
           },
           {
@@ -214,17 +211,15 @@ export const funnelTemplates: FunnelTemplate[] = [
 
 // 🔍 HELPERS PARA BUSCA E FILTRO
 export const getTemplatesByCategory = (category: string): FunnelTemplate[] => {
-  return funnelTemplates.filter((template) => template.category === category);
+  return funnelTemplates.filter(template => template.category === category);
 };
 
 export const getTemplateById = (id: string): FunnelTemplate | undefined => {
-  return funnelTemplates.find((template) => template.id === id);
+  return funnelTemplates.find(template => template.id === id);
 };
 
 export const getAllCategories = (): string[] => {
-  return Array.from(
-    new Set(funnelTemplates.map((template) => template.category))
-  );
+  return Array.from(new Set(funnelTemplates.map(template => template.category)));
 };
 
 /**
@@ -232,11 +227,8 @@ export const getAllCategories = (): string[] => {
  *
  * Aplica um template a uma página, criando blocos com IDs únicos
  */
-export const applyTemplate = (
-  template: FunnelTemplate,
-  generateId: () => string
-) => {
-  return template.blocks.map((blockData) => ({
+export const applyTemplate = (template: FunnelTemplate, generateId: () => string) => {
+  return template.blocks.map(blockData => ({
     id: generateId(),
     type: blockData.type,
     properties: { ...blockData.properties },

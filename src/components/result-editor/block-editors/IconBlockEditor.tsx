@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Block } from "../../../types/editor";
-import { Card } from "../../../components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
-import { ColorPicker } from "../../../components/result-editor/ColorPicker";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Block } from "@/types/editor";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ColorPicker } from "@/components/result-editor/ColorPicker";
 import StyleEditor from "../style-editors/StyleEditor";
 
 // Lista de ícones disponíveis
@@ -46,10 +41,7 @@ interface IconBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const IconBlockEditor: React.FC<IconBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content || {
     icon: "✓",
     size: "48px",
@@ -60,7 +52,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
 
   const filteredIcons = searchTerm
     ? availableIcons.filter(
-        (item) =>
+        item =>
           item.name.includes(searchTerm) ||
           item.label.toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -85,13 +77,13 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
               <Input
                 id="iconSearch"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 placeholder="Digite para buscar..."
               />
             </div>
 
             <div className="grid grid-cols-5 gap-2 max-h-[200px] overflow-y-auto p-2 border rounded-md">
-              {filteredIcons.map((item) => (
+              {filteredIcons.map(item => (
                 <div
                   key={item.name}
                   className={`cursor-pointer p-2 text-center text-2xl hover:bg-gray-100 rounded ${content.icon === item.name ? "bg-gray-200" : ""}`}
@@ -105,7 +97,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="iconText">Ícone selecionado</Label>
-              <div style={{ backgroundColor: "#FAF9F7" }}>
+              <div style={{ backgroundColor: '#FAF9F7' }}>
                 <span
                   style={{
                     fontSize: content.size || "48px",
@@ -124,7 +116,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
               <Input
                 id="iconSize"
                 value={content.size || "48px"}
-                onChange={(e) => onUpdate({ ...content, size: e.target.value })}
+                onChange={e => onUpdate({ ...content, size: e.target.value })}
                 placeholder="ex: 48px ou 3rem"
               />
             </div>
@@ -133,7 +125,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
               <Label htmlFor="iconColor">Cor do Ícone</Label>
               <ColorPicker
                 color={content.color || "#B89B7A"}
-                onChange={(color) => onUpdate({ ...content, color })}
+                onChange={color => onUpdate({ ...content, color })}
               />
             </div>
 
@@ -142,9 +134,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
               <Input
                 id="iconTitle"
                 value={content.title || ""}
-                onChange={(e) =>
-                  onUpdate({ ...content, title: e.target.value })
-                }
+                onChange={e => onUpdate({ ...content, title: e.target.value })}
                 placeholder="Texto que aparece ao lado ou abaixo do ícone"
               />
             </div>
@@ -155,14 +145,10 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
                 id="iconPosition"
                 className="w-full p-2 border rounded"
                 value={content.position || "right"}
-                onChange={(e) =>
+                onChange={e =>
                   onUpdate({
                     ...content,
-                    position: e.target.value as
-                      | "top"
-                      | "right"
-                      | "bottom"
-                      | "left",
+                    position: e.target.value as "top" | "right" | "bottom" | "left",
                   })
                 }
               >
@@ -180,7 +166,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({
         <Label>Estilo do Container</Label>
         <StyleEditor
           style={content.style || {}}
-          onUpdate={(style) => onUpdate({ ...content, style })}
+          onUpdate={style => onUpdate({ ...content, style })}
         />
       </div>
     </div>

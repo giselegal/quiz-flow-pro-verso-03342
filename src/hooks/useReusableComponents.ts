@@ -52,9 +52,7 @@ export interface StepComponent {
 
 export const useReusableComponents = (quizId?: string) => {
   const [componentTypes, setComponentTypes] = useState<ComponentType[]>([]);
-  const [stepComponents, setStepComponents] = useState<
-    Record<number, StepComponent[]>
-  >({});
+  const [stepComponents, setStepComponents] = useState<Record<number, StepComponent[]>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,8 +60,7 @@ export const useReusableComponents = (quizId?: string) => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-  const supabase =
-    supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+  const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
   // ============================================================================
   // CARREGAR TIPOS DE COMPONENTES DISPONÍVEIS
@@ -89,11 +86,7 @@ export const useReusableComponents = (quizId?: string) => {
       if (error) throw error;
       setComponentTypes(data || []);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Erro ao carregar tipos de componentes"
-      );
+      setError(err instanceof Error ? err.message : "Erro ao carregar tipos de componentes");
     } finally {
       setLoading(false);
     }
@@ -110,7 +103,7 @@ export const useReusableComponents = (quizId?: string) => {
       try {
         setLoading(true);
         if (!supabase) {
-          setStepComponents((prev) => ({ ...prev, [stepNumber]: [] }));
+          setStepComponents(prev => ({ ...prev, [stepNumber]: [] }));
           return [];
         }
         const { data, error } = await supabase!
@@ -123,18 +116,14 @@ export const useReusableComponents = (quizId?: string) => {
 
         if (error) throw error;
 
-        setStepComponents((prev) => ({
+        setStepComponents(prev => ({
           ...prev,
           [stepNumber]: data || [],
         }));
 
         return data || [];
       } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Erro ao carregar componentes da etapa"
-        );
+        setError(err instanceof Error ? err.message : "Erro ao carregar componentes da etapa");
         return [];
       } finally {
         setLoading(false);
@@ -167,7 +156,7 @@ export const useReusableComponents = (quizId?: string) => {
 
       // Agrupar por etapa
       const groupedComponents: Record<number, StepComponent[]> = {};
-      (data || []).forEach((component) => {
+      (data || []).forEach(component => {
         if (!groupedComponents[component.step_number]) {
           groupedComponents[component.step_number] = [];
         }
@@ -177,11 +166,7 @@ export const useReusableComponents = (quizId?: string) => {
       setStepComponents(groupedComponents);
       return groupedComponents;
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Erro ao carregar componentes do quiz"
-      );
+      setError(err instanceof Error ? err.message : "Erro ao carregar componentes do quiz");
       return {};
     } finally {
       setLoading(false);
@@ -234,9 +219,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data;
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Erro ao adicionar componente"
-        );
+        setError(err instanceof Error ? err.message : "Erro ao adicionar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -252,9 +235,7 @@ export const useReusableComponents = (quizId?: string) => {
   const updateComponent = useCallback(
     async (
       instanceId: string,
-      updates: Partial<
-        Pick<ComponentInstance, "properties" | "custom_styling" | "is_active">
-      >
+      updates: Partial<Pick<ComponentInstance, "properties" | "custom_styling" | "is_active">>
     ) => {
       try {
         setLoading(true);
@@ -279,9 +260,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data;
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Erro ao atualizar componente"
-        );
+        setError(err instanceof Error ? err.message : "Erro ao atualizar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -315,9 +294,7 @@ export const useReusableComponents = (quizId?: string) => {
         // Recarregar componentes da etapa
         await loadStepComponents(stepNumber);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Erro ao reordenar componentes"
-        );
+        setError(err instanceof Error ? err.message : "Erro ao reordenar componentes");
         throw err;
       } finally {
         setLoading(false);
@@ -346,10 +323,7 @@ export const useReusableComponents = (quizId?: string) => {
           .eq("id", instanceId)
           .single();
 
-        const { error } = await supabase!
-          .from("component_instances")
-          .delete()
-          .eq("id", instanceId);
+        const { error } = await supabase!.from("component_instances").delete().eq("id", instanceId);
 
         if (error) throw error;
 
@@ -358,9 +332,7 @@ export const useReusableComponents = (quizId?: string) => {
           await loadStepComponents(componentData.step_number);
         }
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Erro ao deletar componente"
-        );
+        setError(err instanceof Error ? err.message : "Erro ao deletar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -416,9 +388,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data;
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Erro ao duplicar componente"
-        );
+        setError(err instanceof Error ? err.message : "Erro ao duplicar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -467,7 +437,7 @@ export const useReusableComponents = (quizId?: string) => {
     getComponentsByType: (typeKey: string) =>
       Object.values(stepComponents)
         .flat()
-        .filter((comp) => comp.component_type === typeKey),
+        .filter(comp => comp.component_type === typeKey),
 
     clearError: () => setError(null),
   };

@@ -1,11 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { DragEndEvent } from "@dnd-kit/core";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
 import { SortableItem } from "./SortableItem";
 import ComponentRenderer from "./ComponentRenderer";
 
@@ -65,8 +61,8 @@ export default function EditorCanvas({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      const oldIndex = components.findIndex((item) => item.id === active.id);
-      const newIndex = components.findIndex((item) => item.id === over.id);
+      const oldIndex = components.findIndex(item => item.id === active.id);
+      const newIndex = components.findIndex(item => item.id === over.id);
       onChange(arrayMove(components, oldIndex, newIndex));
     }
   };
@@ -76,9 +72,7 @@ export default function EditorCanvas({
   };
 
   const handleComponentDelete = (componentId: string) => {
-    const updatedComponents = components.filter(
-      (comp) => comp.id !== componentId
-    );
+    const updatedComponents = components.filter(comp => comp.id !== componentId);
     onChange(updatedComponents);
 
     if (selectedComponent?.id === componentId) {
@@ -92,9 +86,7 @@ export default function EditorCanvas({
       id: `comp-${Date.now()}`,
       props: { ...component.props },
     };
-    const componentIndex = components.findIndex(
-      (comp) => comp.id === component.id
-    );
+    const componentIndex = components.findIndex(comp => comp.id === component.id);
     const newComponents = [...components];
     newComponents.splice(componentIndex + 1, 0, duplicatedComponent);
     onChange(newComponents);
@@ -102,31 +94,23 @@ export default function EditorCanvas({
   };
 
   return (
-    <div style={{ borderColor: "#E5DDD5" }}>
+    <div style={{ borderColor: '#E5DDD5' }}>
       {components.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center text-gray-400">
           <div className="mb-4 text-6xl">🎨</div>
           <h3 className="mb-2 text-lg font-medium">Canvas Vazio</h3>
           <p className="text-center">
-            Arraste componentes da paleta lateral para começar a construir sua
-            página
+            Arraste componentes da paleta lateral para começar a construir sua página
           </p>
           <div className="mt-4 text-sm">
-            💡 Dica: Comece com um título para dar boas-vindas aos seus
-            visitantes
+            💡 Dica: Comece com um título para dar boas-vindas aos seus visitantes
           </div>
         </div>
       ) : (
-        <DndContext
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={components.map((c) => c.id)}
-            strategy={verticalListSortingStrategy}
-          >
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={components.map(c => c.id)} strategy={verticalListSortingStrategy}>
             <div className="space-y-4">
-              {components.map((component) => (
+              {components.map(component => (
                 <SortableItem
                   key={component.id}
                   id={component.id}

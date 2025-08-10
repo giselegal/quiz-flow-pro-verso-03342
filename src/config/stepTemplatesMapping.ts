@@ -1,30 +1,28 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos
 
-// Test import para verificar se o alias está funcionando
-
 // Importações dos templates de cada etapa (arquivos .tsx)
-import { getStep01Template } from "../components/steps/Step01Template";
-import { getStep02Template } from "../components/steps/Step02Template";
-import { getStep03Template } from "../components/steps/Step03Template";
-import { getStep04Template } from "../components/steps/Step04Template";
-import { getStep05Template } from "../components/steps/Step05Template";
-import { getStep06Template } from "../components/steps/Step06Template";
-import { getStep07Template } from "../components/steps/Step07Template";
-import { getStep08Template } from "../components/steps/Step08Template";
-import { getStep09Template } from "../components/steps/Step09Template";
-import { getStep10Template } from "../components/steps/Step10Template";
-import { getStep11Template } from "../components/steps/Step11Template";
-import { getStep12Template } from "../components/steps/Step12Template";
-import { getStep13Template } from "../components/steps/Step13Template";
-import { getStep14Template } from "../components/steps/Step14Template";
-import { getStep15Template } from "../components/steps/Step15Template";
-import { getStep16Template } from "../components/steps/Step16Template";
-import { getStep17Template } from "../components/steps/Step17Template";
-import { getStep18Template } from "../components/steps/Step18Template";
-import { getStep19Template } from "../components/steps/Step19Template";
-import { getStep20Template } from "../components/steps/Step20Template";
-import { getStep21Template } from "../components/steps/Step21Template";
+import { getStep01Template } from "@/components/steps/Step01Template";
+import { getStep02Template } from "@/components/steps/Step02Template";
+import { getStep03Template } from "@/components/steps/Step03Template";
+import { getStep04Template } from "@/components/steps/Step04Template";
+import { getStep05Template } from "@/components/steps/Step05Template";
+import { getStep06Template } from "@/components/steps/Step06Template";
+import { getStep07Template } from "@/components/steps/Step07Template";
+import { getStep08Template } from "@/components/steps/Step08Template";
+import { getStep09Template } from "@/components/steps/Step09Template";
+import { getStep10Template } from "@/components/steps/Step10Template";
+import { getStep11Template } from "@/components/steps/Step11Template";
+import { getStep12Template } from "@/components/steps/Step12Template";
+import { getStep13Template } from "@/components/steps/Step13Template";
+import { getStep14Template } from "@/components/steps/Step14Template";
+import { getStep15Template } from "@/components/steps/Step15Template";
+import { getStep16Template } from "@/components/steps/Step16Template";
+import { getStep17Template } from "@/components/steps/Step17Template";
+import { getStep18Template } from "@/components/steps/Step18Template";
+import { getStep19Template } from "@/components/steps/Step19Template";
+import { getStep20Template } from "@/components/steps/Step20Template";
+import { getStep21Template } from "@/components/steps/Step21Template";
 
 // Importar a configuração completa do quiz
 import { QUIZ_CONFIGURATION } from "./quizConfiguration";
@@ -172,10 +170,8 @@ export const STEP_TEMPLATES: StepTemplate[] = [
 ];
 
 // 🔧 UTILITÁRIOS
-export const getTemplateByStep = (
-  stepNumber: number
-): StepTemplate | undefined => {
-  return STEP_TEMPLATES.find((template) => template.stepNumber === stepNumber);
+export const getTemplateByStep = (stepNumber: number): StepTemplate | undefined => {
+  return STEP_TEMPLATES.find(template => template.stepNumber === stepNumber);
 };
 
 export const getTotalSteps = (): number => {
@@ -183,22 +179,12 @@ export const getTotalSteps = (): number => {
 };
 
 // 📊 ESTATÍSTICAS
-// Export missing function
-export const getStepTemplate = (stepNumber: number) => {
-  const template = getTemplateByStep(stepNumber);
-  return template ? template.templateFunction() : [];
-};
-
 export const getTemplateStats = () => {
   return {
     totalTemplates: STEP_TEMPLATES.length,
-    questionSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Pergunta"))
-      .length,
-    strategicSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Estratégica"))
-      .length,
-    transitionSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Transição"))
-      .length,
-    resultSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Resultado"))
-      .length,
+    questionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Pergunta")).length,
+    strategicSteps: STEP_TEMPLATES.filter(t => t.name.includes("Estratégica")).length,
+    transitionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Transição")).length,
+    resultSteps: STEP_TEMPLATES.filter(t => t.name.includes("Resultado")).length,
   };
 };

@@ -16,14 +16,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -133,8 +126,7 @@ export const RichTextBlock: React.FC<RichTextBlockProps> = ({
     return tmp.textContent || tmp.innerText || "";
   };
 
-  const isEmpty =
-    !currentContent || stripHtml(currentContent).trim().length === 0;
+  const isEmpty = !currentContent || stripHtml(currentContent).trim().length === 0;
 
   return (
     <div

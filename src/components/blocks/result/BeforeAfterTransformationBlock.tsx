@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import BeforeAfterTransformation from "../../../components/result/BeforeAfterTransformation";
+import BeforeAfterTransformation from "@/components/result/BeforeAfterTransformation";
 
 /**
  * BLOCO EDITÁVEL: Transformação Antes e Depois
@@ -44,14 +44,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -90,9 +83,7 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const BeforeAfterTransformationBlock: React.FC<
-  BeforeAfterTransformationBlockProps
-> = ({
+const BeforeAfterTransformationBlock: React.FC<BeforeAfterTransformationBlockProps> = ({
   blockId = "before-after-transformation",
   title = "Sua Transformação Começa Agora",
   beforeTitle = "Antes",

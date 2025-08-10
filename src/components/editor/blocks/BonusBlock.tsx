@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Gift } from "lucide-react";
 
 interface BonusBlockProps {
@@ -15,14 +15,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -98,12 +91,10 @@ const BonusBlock: React.FC<BonusBlockProps> = ({
         getMarginClass(marginRight, "right")
       )}
     >
-      <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] text-center mb-2">
-        {title}
-      </h2>
+      <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] text-center mb-2">{title}</h2>
       <p className="text-center text-[#432818] mb-6 max-w-md mx-auto">
-        Além do guia principal, você receberá estas ferramentas complementares
-        para potencializar sua jornada de transformação:
+        Além do guia principal, você receberá estas ferramentas complementares para potencializar
+        sua jornada de transformação:
       </p>
       <div className="w-32 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full mb-8"></div>
 
@@ -132,17 +123,13 @@ const BonusBlock: React.FC<BonusBlockProps> = ({
                 {bonus.title}
               </h3>
 
-              <p className="text-[#432818] text-sm leading-relaxed mb-3">
-                {bonus.description}
-              </p>
+              <p className="text-[#432818] text-sm leading-relaxed mb-3">{bonus.description}</p>
 
               <div className="flex justify-between items-center">
                 <span className="text-xs text-[#8F7A6A] bg-[#f9f4ef] px-3 py-1 rounded-full">
                   Valor: {bonus.value}
                 </span>
-                <span className="text-[#B89B7A] font-semibold text-sm">
-                  🎁 GRÁTIS
-                </span>
+                <span className="text-[#B89B7A] font-semibold text-sm">🎁 GRÁTIS</span>
               </div>
             </div>
           ))}

@@ -11,15 +11,12 @@ function splitPascal(str: string) {
 }
 
 const blocksDir = path.resolve(__dirname, "../src/components/editor/blocks");
-const outFile = path.resolve(
-  __dirname,
-  "../src/config/generatedBlockDefinitions.ts"
-);
+const outFile = path.resolve(__dirname, "../src/config/generatedBlockDefinitions.ts");
 
 // Read all files ending with Block.tsx
-const files = fs.readdirSync(blocksDir).filter((f) => f.endsWith("Block.tsx"));
+const files = fs.readdirSync(blocksDir).filter(f => f.endsWith("Block.tsx"));
 
-const definitions: BlockDefinition[] = files.map((file) => {
+const definitions: BlockDefinition[] = files.map(file => {
   const nameWithoutExt = file.replace(".tsx", "");
   const type = pascalToKebab(nameWithoutExt.replace(/Block$/, ""));
   const name = splitPascal(nameWithoutExt.replace(/Block$/, ""));
@@ -40,8 +37,4 @@ export const generatedBlockDefinitions: BlockDefinition[] = ${JSON.stringify(def
 `;
 
 fs.writeFileSync(outFile, content);
-console.log(
-  "generatedBlockDefinitions.ts updated with",
-  definitions.length,
-  "blocks"
-);
+console.log("generatedBlockDefinitions.ts updated with", definitions.length, "blocks");

@@ -28,25 +28,17 @@ console.log(`   - Suporte a 'select': ${hasSelectValidation ? "✅" : "❌"}`);
 console.log(`   - Validação z.enum: ${hasEnumValidation ? "✅" : "❌"}`);
 
 // 2. Verificar se renderPropertyInput foi corrigido
-const hasRangeRender =
-  content.includes('case "range":') && content.includes("<Slider");
-const hasSelectRender =
-  content.includes('case "select":') && content.includes("<Select");
+const hasRangeRender = content.includes('case "range":') && content.includes("<Slider");
+const hasSelectRender = content.includes('case "select":') && content.includes("<Select");
 const hasValueProp = content.includes('value={field.value || ""}');
 
 console.log("\n✅ 2. Renderização renderPropertyInput:");
-console.log(
-  `   - Renderização 'range' com Slider: ${hasRangeRender ? "✅" : "❌"}`
-);
-console.log(
-  `   - Renderização 'select' com Select: ${hasSelectRender ? "✅" : "❌"}`
-);
+console.log(`   - Renderização 'range' com Slider: ${hasRangeRender ? "✅" : "❌"}`);
+console.log(`   - Renderização 'select' com Select: ${hasSelectRender ? "✅" : "❌"}`);
 console.log(`   - Props value controlados: ${hasValueProp ? "✅" : "❌"}`);
 
 // 3. Verificar se o debug foi adicionado
-const hasDebugLogs = content.includes(
-  'console.log("🎯 OptimizedPropertiesPanel RENDERIZADO:"'
-);
+const hasDebugLogs = content.includes('console.log("🎯 OptimizedPropertiesPanel RENDERIZADO:"');
 
 console.log("\n✅ 3. Debug e Logs:");
 console.log(`   - Logs de debug adicionados: ${hasDebugLogs ? "✅" : "❌"}`);
@@ -56,12 +48,8 @@ const hasCorrectCallback = content.includes("[control, errors]");
 const noWatchedValues = !content.includes("[control, watchedValues]");
 
 console.log("\n✅ 4. Otimizações useCallback:");
-console.log(
-  `   - Dependências corretas [control, errors]: ${hasCorrectCallback ? "✅" : "❌"}`
-);
-console.log(
-  `   - Removido watchedValues das deps: ${noWatchedValues ? "✅" : "❌"}`
-);
+console.log(`   - Dependências corretas [control, errors]: ${hasCorrectCallback ? "✅" : "❌"}`);
+console.log(`   - Removido watchedValues das deps: ${noWatchedValues ? "✅" : "❌"}`);
 
 // 5. Resumo geral
 const allCorrect =
@@ -78,9 +66,7 @@ const allCorrect =
 console.log("\n🎯 RESUMO FINAL:");
 if (allCorrect) {
   console.log("✅ TODAS AS CORREÇÕES APLICADAS COM SUCESSO!");
-  console.log(
-    "   O OptimizedPropertiesPanel agora deve funcionar corretamente."
-  );
+  console.log("   O OptimizedPropertiesPanel agora deve funcionar corretamente.");
 } else {
   console.log("❌ ALGUMAS CORREÇÕES AINDA PRECISAM SER APLICADAS");
 }

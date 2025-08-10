@@ -69,10 +69,7 @@ export class MigrationService {
       // Verificar cada tabela
       for (const table of expectedTables) {
         try {
-          const { data, error } = await supabase
-            .from(table)
-            .select("*")
-            .limit(1);
+          const { data, error } = await supabase.from(table).select("*").limit(1);
 
           if (!error) {
             tablesCreated.push(table);
@@ -208,14 +205,9 @@ export class MigrationService {
         const query = essentialQueries[i];
 
         try {
-          console.log(
-            `⚡ Executando query ${i + 1}/${essentialQueries.length}`
-          );
+          console.log(`⚡ Executando query ${i + 1}/${essentialQueries.length}`);
 
-          const { error } = await supabase
-            .from("_query")
-            .select("*")
-            .eq("sql", query);
+          const { error } = await supabase.from("_query").select("*").eq("sql", query);
 
           // Como não temos rpc personalizado, vamos tentar criar tabelas diretamente
           if (query.includes("CREATE TABLE")) {
@@ -229,9 +221,7 @@ export class MigrationService {
       }
 
       result.success = result.errors.length === 0;
-      result.message = result.success
-        ? "Migração preparada"
-        : "Alguns erros encontrados";
+      result.message = result.success ? "Migração preparada" : "Alguns erros encontrados";
     } catch (error: any) {
       console.error("❌ Erro na migração direta:", error);
       result.success = false;
@@ -267,10 +257,7 @@ export class MigrationService {
           type_key: "result-card",
           display_name: "Card de Resultado",
           category: "result",
-          default_properties: {
-            title: "Resultado",
-            description: "Descrição do resultado",
-          },
+          default_properties: { title: "Resultado", description: "Descrição do resultado" },
         },
       ];
 

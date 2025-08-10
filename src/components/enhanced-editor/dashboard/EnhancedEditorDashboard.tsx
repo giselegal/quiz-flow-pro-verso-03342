@@ -1,22 +1,8 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
-import {
-  BarChart3,
-  Users,
-  TrendingUp,
-  Eye,
-  Edit3,
-  Copy,
-  Trash2,
-  Plus,
-} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from "lucide-react";
 
 interface DashboardStats {
   totalFunnels: number;
@@ -82,9 +68,7 @@ const DEFAULT_FUNNELS: FunnelSummary[] = [
   },
 ];
 
-export const EnhancedEditorDashboard: React.FC<
-  EnhancedEditorDashboardProps
-> = ({
+export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = ({
   stats = DEFAULT_STATS,
   funnels = DEFAULT_FUNNELS,
   onCreateFunnel,
@@ -122,17 +106,14 @@ export const EnhancedEditorDashboard: React.FC<
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: "#432818" }}>Dashboard de Funis</h1>
-          <p style={{ color: "#6B4F43" }}>Gerencie seus funis de conversão</p>
+          <h1 style={{ color: '#432818' }}>Dashboard de Funis</h1>
+          <p style={{ color: '#6B4F43' }}>Gerencie seus funis de conversão</p>
         </div>
-        <Button
-          onClick={onCreateFunnel}
-          className="bg-[#B89B7A] hover:bg-[#A38A69]"
-        >
+        <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
           <Plus className="w-4 h-4 mr-2" />
           Criar Funil
         </Button>
@@ -142,7 +123,7 @@ export const EnhancedEditorDashboard: React.FC<
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Total de Funis</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Total de Funis</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -154,41 +135,35 @@ export const EnhancedEditorDashboard: React.FC<
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Visualizações</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Visualizações</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
               <Eye className="w-4 h-4 text-[#B89B7A] mr-2" />
-              <span className="text-2xl font-bold">
-                {stats.totalViews.toLocaleString()}
-              </span>
+              <span className="text-2xl font-bold">{stats.totalViews.toLocaleString()}</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>
-              Taxa de Conversão
-            </CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Taxa de Conversão</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
               <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
-              <span className="text-2xl font-bold">
-                {stats.conversionRate}%
-              </span>
+              <span className="text-2xl font-bold">{stats.conversionRate}%</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Usuários Ativos</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Usuários Ativos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Users style={{ color: "#B89B7A" }} />
+              <Users style={{ color: '#B89B7A' }} />
               <span className="text-2xl font-bold">{stats.activeUsers}</span>
             </div>
           </CardContent>
@@ -202,7 +177,7 @@ export const EnhancedEditorDashboard: React.FC<
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {funnels.map((funnel) => (
+            {funnels.map(funnel => (
               <div
                 key={funnel.id}
                 className={`p-4 border rounded-lg transition-all cursor-pointer hover:shadow-md ${
@@ -215,14 +190,14 @@ export const EnhancedEditorDashboard: React.FC<
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 style={{ color: "#432818" }}>{funnel.title}</h3>
+                      <h3 style={{ color: '#432818' }}>{funnel.title}</h3>
                       <Badge className={getStatusColor(funnel.status)}>
                         {getStatusLabel(funnel.status)}
                       </Badge>
                     </div>
-                    <p style={{ color: "#6B4F43" }}>{funnel.description}</p>
+                    <p style={{ color: '#6B4F43' }}>{funnel.description}</p>
 
-                    <div style={{ color: "#8B7355" }}>
+                    <div style={{ color: '#8B7355' }}>
                       <span>{funnel.views} visualizações</span>
                       <span>{funnel.conversions} conversões</span>
                       <span>Modificado {funnel.lastModified}</span>
@@ -233,7 +208,7 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onPreviewFunnel?.(funnel.id);
                       }}
@@ -243,7 +218,7 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onEditFunnel?.(funnel.id);
                       }}
@@ -253,7 +228,7 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onDuplicateFunnel?.(funnel.id);
                       }}
@@ -263,8 +238,8 @@ export const EnhancedEditorDashboard: React.FC<
                     <Button
                       size="sm"
                       variant="ghost"
-                      style={{ color: "#432818" }}
-                      onClick={(e) => {
+                      style={{ color: '#432818' }}
+                      onClick={e => {
                         e.stopPropagation();
                         onDeleteFunnel?.(funnel.id);
                       }}

@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
-import Logo from "../../../components/ui/logo";
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/ui/logo";
 import { motion } from "framer-motion";
 import {
   Save,
@@ -13,7 +13,7 @@ import {
   Monitor,
   LayoutGrid,
 } from "lucide-react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
@@ -194,7 +194,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <Button
           onClick={onSave}
           size="sm"
-          style={{ backgroundColor: "#FAF9F7" }}
+          style={{ backgroundColor: '#FAF9F7' }}
         >
           <Save className="mr-2 h-4 w-4" />
           Salvar

@@ -21,10 +21,7 @@ export const correctedSchemaDrivenFunnelService = {
     };
   },
 
-  async updateFunnel(
-    id: string,
-    updates: any
-  ): Promise<SchemaDrivenFunnelData | null> {
+  async updateFunnel(id: string, updates: any): Promise<SchemaDrivenFunnelData | null> {
     console.log("Would update funnel:", id, updates);
     return null;
   },

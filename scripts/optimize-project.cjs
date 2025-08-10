@@ -14,20 +14,13 @@ const duplicates = [];
 function checkDuplicates(dir, basePath = "") {
   const items = fs.readdirSync(dir, { withFileTypes: true });
 
-  items.forEach((item) => {
+  items.forEach(item => {
     const fullPath = path.join(dir, item.name);
     const relativePath = path.join(basePath, item.name);
 
-    if (
-      item.isDirectory() &&
-      !item.name.startsWith(".") &&
-      item.name !== "node_modules"
-    ) {
+    if (item.isDirectory() && !item.name.startsWith(".") && item.name !== "node_modules") {
       checkDuplicates(fullPath, relativePath);
-    } else if (
-      item.isFile() &&
-      (item.name.endsWith(".tsx") || item.name.endsWith(".ts"))
-    ) {
+    } else if (item.isFile() && (item.name.endsWith(".tsx") || item.name.endsWith(".ts"))) {
       try {
         const content = fs.readFileSync(fullPath, "utf8");
         const contentHash = content.slice(0, 200); // Hash simples
@@ -52,10 +45,8 @@ if (fs.existsSync("src")) {
 }
 
 if (duplicates.length > 0) {
-  console.log(
-    `⚠️  Encontrados ${duplicates.length} possíveis arquivos duplicados:`
-  );
-  duplicates.slice(0, 5).forEach((dup) => {
+  console.log(`⚠️  Encontrados ${duplicates.length} possíveis arquivos duplicados:`);
+  duplicates.slice(0, 5).forEach(dup => {
     console.log(`   - ${dup.duplicate} (similar a ${dup.original})`);
   });
 } else {
@@ -71,32 +62,23 @@ let unusedImports = 0;
 function checkImports(dir) {
   const items = fs.readdirSync(dir, { withFileTypes: true });
 
-  items.forEach((item) => {
+  items.forEach(item => {
     const fullPath = path.join(dir, item.name);
 
-    if (
-      item.isDirectory() &&
-      !item.name.startsWith(".") &&
-      item.name !== "node_modules"
-    ) {
+    if (item.isDirectory() && !item.name.startsWith(".") && item.name !== "node_modules") {
       checkImports(fullPath);
-    } else if (
-      item.isFile() &&
-      (item.name.endsWith(".tsx") || item.name.endsWith(".ts"))
-    ) {
+    } else if (item.isFile() && (item.name.endsWith(".tsx") || item.name.endsWith(".ts"))) {
       try {
         const content = fs.readFileSync(fullPath, "utf8");
         const imports = content.match(/^import .* from .*/gm) || [];
         totalImports += imports.length;
 
         // Verificação simples de imports não utilizados
-        imports.forEach((importLine) => {
+        imports.forEach(importLine => {
           const match = importLine.match(/import\s+{([^}]+)}/);
           if (match) {
-            const importedItems = match[1]
-              .split(",")
-              .map((item) => item.trim());
-            importedItems.forEach((item) => {
+            const importedItems = match[1].split(",").map(item => item.trim());
+            importedItems.forEach(item => {
               if (!content.includes(item.replace(/\s+as\s+\w+/, ""))) {
                 unusedImports++;
               }
@@ -128,6 +110,6 @@ const recommendations = [
 ];
 
 console.log("\n💡 Recomendações de otimização:");
-recommendations.forEach((rec) => console.log(`   ${rec}`));
+recommendations.forEach(rec => console.log(`   ${rec}`));
 
 console.log("\n✅ Análise de otimização concluída");

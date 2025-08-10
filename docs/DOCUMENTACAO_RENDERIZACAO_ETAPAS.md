@@ -64,17 +64,13 @@ const [stages, setStages] = useState<FunnelStage[]>(() => {
               <span className="font-medium text-sm">Etapa {stage.order}</span>
 
               {/* 📝 NOME/DESCRIÇÃO */}
-              <p className="text-xs text-muted-foreground">
-                {stage.name || stage.description}
-              </p>
+              <p className="text-xs text-muted-foreground">{stage.name || stage.description}</p>
 
               {/* 🟢 INDICADOR DE ATIVA */}
               {activeStageId === stage.id && (
                 <div className="flex items-center gap-1 mt-1">
                   <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-purple-600 font-medium">
-                    ATIVA
-                  </span>
+                  <span className="text-xs text-purple-600 font-medium">ATIVA</span>
                 </div>
               )}
             </div>
@@ -105,12 +101,8 @@ const { currentBlocks } = useEditor(); // Blocos da etapa selecionada
   {currentBlocks.length === 0 ? (
     // 📭 ETAPA VAZIA
     <div className="flex flex-col items-center justify-center h-full text-center">
-      <h3 className="text-lg font-medium text-stone-600 mb-2">
-        Etapa {activeStageId} - Vazia
-      </h3>
-      <p className="text-stone-500 mb-4">
-        Adicione componentes usando a barra lateral
-      </p>
+      <h3 className="text-lg font-medium text-stone-600 mb-2">Etapa {activeStageId} - Vazia</h3>
+      <p className="text-stone-500 mb-4">Adicione componentes usando a barra lateral</p>
     </div>
   ) : (
     // 🎯 BLOCOS DA ETAPA
@@ -134,9 +126,7 @@ const { currentBlocks } = useEditor(); // Blocos da etapa selecionada
               block={block}
               isSelected={selectedBlockId === block.id}
               onClick={() => setSelectedBlockId(block.id)}
-              onPropertyChange={(key, value) =>
-                updateBlock(block.id, { [key]: value })
-              }
+              onPropertyChange={(key, value) => updateBlock(block.id, { [key]: value })}
             />
           </div>
         )

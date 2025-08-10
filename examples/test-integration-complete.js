@@ -45,13 +45,12 @@ function testBlockDefinitionsIntegration() {
   let integrationScore = 0;
   const results = {};
 
-  requiredComponents.forEach((component) => {
-    const hasDefinition =
-      content.includes(`'${component}'`) || content.includes(`"${component}"`);
+  requiredComponents.forEach(component => {
+    const hasDefinition = content.includes(`'${component}'`) || content.includes(`"${component}"`);
     const hasImport = content.includes(
       component
         .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join("")
     );
 
@@ -93,8 +92,7 @@ function testUnifiedPropertiesEnhancement() {
 
   // Verificar helper function
   const hasHelper = content.includes("getInlineComponentProperties");
-  const hasInlineTypes =
-    content.includes("heading-inline") && content.includes("text-inline");
+  const hasInlineTypes = content.includes("heading-inline") && content.includes("text-inline");
   const hasInlineDefaults = content.includes("inlineDefaults");
 
   let score = 0;
@@ -102,13 +100,9 @@ function testUnifiedPropertiesEnhancement() {
   if (hasInlineTypes) score += 30;
   if (hasInlineDefaults) score += 20;
 
-  console.log(
-    `  ${hasHelper ? "✅" : "❌"} Helper function getInlineComponentProperties`
-  );
+  console.log(`  ${hasHelper ? "✅" : "❌"} Helper function getInlineComponentProperties`);
   console.log(`  ${hasInlineTypes ? "✅" : "❌"} Tipos inline definidos`);
-  console.log(
-    `  ${hasInlineDefaults ? "✅" : "❌"} Defaults inline configurados`
-  );
+  console.log(`  ${hasInlineDefaults ? "✅" : "❌"} Defaults inline configurados`);
   console.log(`  📊 Score: ${score}%`);
 
   return {
@@ -139,9 +133,7 @@ function testEditorContextUpgrade() {
   if (hasLoadFunction) score += 40;
   if (hasMetadata) score += 20;
 
-  console.log(
-    `  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`
-  );
+  console.log(`  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`);
   console.log(`  ${hasLoadFunction ? "✅" : "❌"} Função loadOptimizedSteps`);
   console.log(`  ${hasMetadata ? "✅" : "❌"} Metadata de otimização`);
   console.log(`  📊 Score: ${score}%`);
@@ -184,7 +176,7 @@ function testOptimizedLoaderCreation() {
   ];
 
   let score = 0;
-  features.forEach((feature) => {
+  features.forEach(feature => {
     if (feature.present) {
       score += Math.round(100 / features.length);
       console.log(`  ✅ ${feature.name}`);
@@ -231,21 +223,13 @@ function testPerformanceEnhancements() {
   console.log(`  ${hasMemoization ? "✅" : "❌"} Memoização de props`);
   console.log(`  ${hasHOC ? "✅" : "❌"} HOC otimizado`);
   console.log(`  ${hasStepUtils ? "✅" : "❌"} Utilitários de etapas`);
-  console.log(
-    `  ${hasIntersectionObserver ? "✅" : "❌"} Intersection Observer`
-  );
+  console.log(`  ${hasIntersectionObserver ? "✅" : "❌"} Intersection Observer`);
   console.log(`  📊 Score: ${score}%`);
 
   return {
     passed: score >= 70,
     score,
-    details: {
-      hasMobileOpt,
-      hasMemoization,
-      hasHOC,
-      hasStepUtils,
-      hasIntersectionObserver,
-    },
+    details: { hasMobileOpt, hasMemoization, hasHOC, hasStepUtils, hasIntersectionObserver },
   };
 }
 
@@ -277,12 +261,8 @@ function testTypeDefinitionsUpdate() {
   console.log(`  ${hasDecorativeBar ? "✅" : "❌"} Tipo decorative-bar-inline`);
   console.log(`  ${hasFormInput ? "✅" : "❌"} Tipo form-input`);
   console.log(`  ${hasLegalNotice ? "✅" : "❌"} Tipo legal-notice-inline`);
-  console.log(
-    `  ${hasOptimizedConfig ? "✅" : "❌"} Interface OptimizedEditorConfig`
-  );
-  console.log(
-    `  ${hasOptimizedState ? "✅" : "❌"} Interface OptimizedSystemState`
-  );
+  console.log(`  ${hasOptimizedConfig ? "✅" : "❌"} Interface OptimizedEditorConfig`);
+  console.log(`  ${hasOptimizedState ? "✅" : "❌"} Interface OptimizedSystemState`);
   console.log(`  📊 Score: ${score}%`);
 
   return {
@@ -320,19 +300,16 @@ function testInlineComponentsExistence() {
   let score = 0;
   const results = {};
 
-  requiredComponents.forEach((component) => {
+  requiredComponents.forEach(component => {
     const componentPath = path.join(inlineDir, component);
     const exists = fs.existsSync(componentPath);
 
     if (exists) {
       // Verificar se o componente tem conteúdo válido
       const content = fs.readFileSync(componentPath, "utf8");
-      const hasExport =
-        content.includes("export default") || content.includes("export const");
+      const hasExport = content.includes("export default") || content.includes("export const");
       const hasProps =
-        content.includes("interface") ||
-        content.includes("type") ||
-        content.includes("props");
+        content.includes("interface") || content.includes("type") || content.includes("props");
 
       if (hasExport && hasProps) {
         score += Math.round(100 / requiredComponents.length);
@@ -368,12 +345,7 @@ function testExistingHooksCompatibility() {
     return false;
   }
 
-  const essentialHooks = [
-    "useUnifiedProperties.ts",
-    "useEditor.ts",
-    "useQuiz.ts",
-    "useHistory.ts",
-  ];
+  const essentialHooks = ["useUnifiedProperties.ts", "useEditor.ts", "useQuiz.ts", "useHistory.ts"];
 
   const bonusHooks = [
     "useAutoSave.ts",
@@ -386,7 +358,7 @@ function testExistingHooksCompatibility() {
   let bonusScore = 0;
 
   console.log("  📋 Hooks essenciais:");
-  essentialHooks.forEach((hook) => {
+  essentialHooks.forEach(hook => {
     const hookPath = path.join(hooksDir, hook);
     const exists = fs.existsSync(hookPath);
 
@@ -399,7 +371,7 @@ function testExistingHooksCompatibility() {
   });
 
   console.log("  🎁 Hooks opcionais:");
-  bonusHooks.forEach((hook) => {
+  bonusHooks.forEach(hook => {
     const hookPath = path.join(hooksDir, hook);
     const exists = fs.existsSync(hookPath);
 
@@ -438,7 +410,7 @@ function generateTestReport(results) {
   let totalScore = 0;
   let scoreCount = 0;
 
-  Object.values(results).forEach((result) => {
+  Object.values(results).forEach(result => {
     if (result.passed) {
       testResults.passedTests++;
     } else {
@@ -454,8 +426,7 @@ function generateTestReport(results) {
     }
   });
 
-  testResults.averageScore =
-    scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
+  testResults.averageScore = scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
 
   if (testResults.averageScore >= 90) {
     testResults.overallStatus = "excellent";
@@ -490,12 +461,8 @@ function displayTestSummary(testReport) {
     `\n${statusEmoji[testReport.overallStatus]} STATUS GERAL: ${testReport.overallStatus.toUpperCase()}`
   );
   console.log(`📊 SCORE MÉDIO: ${testReport.averageScore}%`);
-  console.log(
-    `✅ TESTES APROVADOS: ${testReport.passedTests}/${testReport.totalTests}`
-  );
-  console.log(
-    `❌ TESTES FALHARAM: ${testReport.failedTests}/${testReport.totalTests}`
-  );
+  console.log(`✅ TESTES APROVADOS: ${testReport.passedTests}/${testReport.totalTests}`);
+  console.log(`❌ TESTES FALHARAM: ${testReport.failedTests}/${testReport.totalTests}`);
 
   console.log("\n📋 DETALHES POR TESTE:");
 

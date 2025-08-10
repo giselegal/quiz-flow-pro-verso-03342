@@ -1,12 +1,5 @@
-import { cn } from "../../../lib/utils";
-import {
-  ArrowRight,
-  Download,
-  Edit3,
-  MousePointer2,
-  Play,
-  Star,
-} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { userResponseService } from "../../../services/userResponseService";
 import type { BlockComponentProps } from "../../../types/blocks";
@@ -27,14 +20,7 @@ const getMarginClass = (
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -83,15 +69,15 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }
 
   if (!block.properties) {
     return (
-      <div style={{ color: "#432818" }}>
+      <div style={{ color: '#432818' }}>
         ⚠️ Erro: Propriedades do bloco não encontradas
       </div>
     );
@@ -155,9 +141,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       // Placeholder - Supabase integration will be implemented later
       console.log("Supabase integration placeholder:", {
         name: userName,
-        utm_source:
-          new URLSearchParams(window.location.search).get("utm_source") ||
-          undefined,
+        utm_source: new URLSearchParams(window.location.search).get("utm_source") || undefined,
       });
 
       console.log("✅ Quiz inicializado no Supabase com sucesso");
@@ -204,20 +188,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       };
     }
     if (shadowType !== "none" && shadowColor !== "#000000") {
-      const intensity =
-        shadowType === "small" ? "20" : shadowType === "medium" ? "30" : "40";
-      const blur =
-        shadowType === "small"
-          ? "6px"
-          : shadowType === "medium"
-            ? "10px"
-            : "15px";
-      const offset =
-        shadowType === "small"
-          ? "2px"
-          : shadowType === "medium"
-            ? "4px"
-            : "6px";
+      const intensity = shadowType === "small" ? "20" : shadowType === "medium" ? "30" : "40";
+      const blur = shadowType === "small" ? "6px" : shadowType === "medium" ? "10px" : "15px";
+      const offset = shadowType === "small" ? "2px" : shadowType === "medium" ? "4px" : "6px";
       return {
         boxShadow: `0 ${offset} ${blur} ${shadowColor}${intensity}`,
       };
@@ -298,8 +271,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     };
 
     const selectedStyle =
-      predefinedStyles[variant as keyof typeof predefinedStyles] ||
-      predefinedStyles.secondary;
+      predefinedStyles[variant as keyof typeof predefinedStyles] || predefinedStyles.secondary;
 
     // Aplicar gradiente se necessário
     if (effectType === "gradient") {
@@ -380,7 +352,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         disabled={isButtonDisabled}
         className={getResponsiveClasses()}
         style={getButtonStyles()}
-        onClick={async (e) => {
+        onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
             // Ação baseada na configuração
@@ -397,9 +369,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
             // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
             if (text && text.includes("Descobrir meu Estilo")) {
-              const userName =
-                userResponseService.getResponse("intro-name-input") ||
-                "Anônimo";
+              const userName = userResponseService.getResponse("intro-name-input") || "Anônimo";
               console.log("🚀 Iniciando tracking do quiz para:", userName);
 
               // 🚀 INTEGRAÇÃO SUPABASE: Criar usuário e iniciar sessão
@@ -438,10 +408,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Ícone à esquerda */}
         {IconComponent && iconPosition === "left" && (
           <IconComponent
-            className={cn(
-              iconSizes[size as keyof typeof iconSizes],
-              "mr-2 relative z-10"
-            )}
+            className={cn(iconSizes[size as keyof typeof iconSizes], "mr-2 relative z-10")}
           />
         )}
 
@@ -453,10 +420,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Ícone à direita */}
         {IconComponent && iconPosition === "right" && (
           <IconComponent
-            className={cn(
-              iconSizes[size as keyof typeof iconSizes],
-              "ml-2 relative z-10"
-            )}
+            className={cn(iconSizes[size as keyof typeof iconSizes], "ml-2 relative z-10")}
           />
         )}
       </button>
@@ -470,7 +434,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Empty state */}
       {!text && (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <MousePointer2 className="w-4 h-4 mr-2" />
           Clique para selecionar e editar no painel
         </div>

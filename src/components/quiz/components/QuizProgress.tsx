@@ -1,5 +1,5 @@
 import React from "react";
-import quizStyles from "../../../styles/quiz.module.css";
+import quizStyles from "@/styles/quiz.module.css";
 
 interface QuizProgressProps {
   value?: number;
@@ -44,13 +44,10 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
   };
 
   return (
-    <div
-      style={containerStyle}
-      className={`${quizStyles.quizProgress} ${className}`}
-    >
+    <div style={containerStyle} className={`${quizStyles.quizProgress} ${className}`}>
       {showPercentage && (
         <div className="flex justify-between items-center mb-2">
-          <span style={{ color: "#6B4F43" }}>Progresso</span>
+          <span style={{ color: '#6B4F43' }}>Progresso</span>
           <span className="text-sm font-bold" style={{ color }}>
             {Math.round(percentage)}%
           </span>

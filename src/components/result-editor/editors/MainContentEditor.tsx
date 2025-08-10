@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface MainContentEditorProps {
   content: {
@@ -12,10 +12,7 @@ interface MainContentEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const MainContentEditor: React.FC<MainContentEditorProps> = ({
-  content,
-  onUpdate,
-}) => {
+const MainContentEditor: React.FC<MainContentEditorProps> = ({ content, onUpdate }) => {
   const handleChange = (key: string, value: any) => {
     onUpdate({
       ...content,
@@ -30,7 +27,7 @@ const MainContentEditor: React.FC<MainContentEditorProps> = ({
         <Textarea
           id="description"
           value={content.description || ""}
-          onChange={(e) => handleChange("description", e.target.value)}
+          onChange={e => handleChange("description", e.target.value)}
           placeholder="Descrição personalizada para o estilo predominante"
           rows={5}
         />
@@ -41,19 +38,19 @@ const MainContentEditor: React.FC<MainContentEditorProps> = ({
         <Input
           id="customImage"
           value={content.customImage || ""}
-          onChange={(e) => handleChange("customImage", e.target.value)}
+          onChange={e => handleChange("customImage", e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
         />
 
         {content.customImage && (
           <div className="mt-2">
             <p className="text-sm text-[#8F7A6A] mb-1">Pré-visualização:</p>
-            <div style={{ backgroundColor: "#FAF9F7" }}>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
               <img
                 src={content.customImage}
                 alt="Imagem do estilo"
                 className="h-40 object-contain mx-auto"
-                onError={(e) => {
+                onError={e => {
                   (e.target as HTMLImageElement).src =
                     "https://placehold.co/400x300?text=Imagem+Inválida";
                 }}

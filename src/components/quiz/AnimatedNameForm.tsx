@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "../../components/ui/input";
-import { cn } from "../../lib/utils";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface AnimatedNameFormProps {
   onSubmit: (name: string) => void;
@@ -34,17 +34,14 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
       noValidate
     >
       <div>
-        <label
-          htmlFor="name"
-          className="block text-xs font-semibold text-[#432818] mb-1.5"
-        >
+        <label htmlFor="name" className="block text-xs font-semibold text-[#432818] mb-1.5">
           NOME
         </label>
         <Input
           id="name"
           placeholder="Digite seu nome"
           value={nome}
-          onChange={(e) => setNome(e.target.value)}
+          onChange={e => setNome(e.target.value)}
           onBlur={() => setTouched(true)}
           className={cn(
             "w-full p-2.5 bg-[#FEFEFE] rounded-md transition-all duration-200",
@@ -64,7 +61,7 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
           {showError && (
             <motion.p
               id="name-error"
-              style={{ color: "#432818" }}
+              style={{ color: '#432818' }}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -100,7 +97,7 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
         </span>
       </motion.button>
 
-      <p style={{ color: "#8B7355" }}>
+      <p style={{ color: '#8B7355' }}>
         Ao clicar, você concorda com nossa{" "}
         <a
           href="#"

@@ -1,4 +1,4 @@
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
@@ -151,8 +151,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
       // Verifica se o evento é para este botão
       if (
         buttonId === block?.id ||
-        (block?.id === "cta-button-modular" &&
-          buttonId === "cta-button-modular")
+        (block?.id === "cta-button-modular" && buttonId === "cta-button-modular")
       ) {
         setButtonState({
           dynamicDisabled: disabled || false,
@@ -197,10 +196,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
         "step01-button-state-change",
         handleButtonStateChange as EventListener
       );
-      window.addEventListener(
-        "quiz-input-change",
-        handleInputValidation as EventListener
-      );
+      window.addEventListener("quiz-input-change", handleInputValidation as EventListener);
     }
 
     return () => {
@@ -208,10 +204,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
         "step01-button-state-change",
         handleButtonStateChange as EventListener
       );
-      window.removeEventListener(
-        "quiz-input-change",
-        handleInputValidation as EventListener
-      );
+      window.removeEventListener("quiz-input-change", handleInputValidation as EventListener);
     };
   }, [block?.id, conditionalActivation, validationTarget]);
 
@@ -229,9 +222,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
 
   // ✨ CLASSES RESPONSIVAS BASEADAS NAS PROPRIEDADES
   const getResponsiveClasses = () => {
-    const mobileClass = mobileSize
-      ? sizeClasses[mobileSize as keyof typeof sizeClasses]
-      : "";
+    const mobileClass = mobileSize ? sizeClasses[mobileSize as keyof typeof sizeClasses] : "";
     const tabletClass = tabletSize
       ? `md:${sizeClasses[tabletSize as keyof typeof sizeClasses]}`
       : "";
@@ -250,9 +241,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
       return `${paddingTop || ""} ${paddingRight || ""} ${paddingBottom || ""} ${paddingLeft || ""}`.trim();
     }
     return (
-      getResponsiveClasses() ||
-      sizeClasses[size as keyof typeof sizeClasses] ||
-      sizeClasses.large
+      getResponsiveClasses() || sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large
     );
   };
 
@@ -269,20 +258,10 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   };
 
   // Função para converter margens numéricas em classes Tailwind
-  const getMarginClass = (
-    value: number,
-    type: "top" | "bottom" | "left" | "right"
-  ): string => {
+  const getMarginClass = (value: number, type: "top" | "bottom" | "left" | "right"): string => {
     if (!value || value === 0) return "";
 
-    const prefix =
-      type === "top"
-        ? "mt"
-        : type === "bottom"
-          ? "mb"
-          : type === "left"
-            ? "ml"
-            : "mr";
+    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
     // Converter pixels em unidades Tailwind (aproximadamente)
     if (value <= 4) return `${prefix}-1`;
@@ -304,9 +283,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     disabled ||
     loading ||
     (conditionalActivation &&
-      (requiresValidInput ||
-        buttonState.dynamicDisabled ||
-        buttonState.dynamicRequiresValidInput));
+      (requiresValidInput || buttonState.dynamicDisabled || buttonState.dynamicRequiresValidInput));
 
   // ✅ HANDLER DE CLIQUE COM NAVEGAÇÃO E AÇÕES
   const handleButtonClick = async () => {
@@ -429,18 +406,13 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           borderWidth && `border-[${borderWidth}]`,
 
           // ✨ EFEITOS E ANIMAÇÕES
-          hoverEffect &&
-            !isButtonDisabled &&
-            "hover:shadow-xl hover:scale-105 active:scale-95",
+          hoverEffect && !isButtonDisabled && "hover:shadow-xl hover:scale-105 active:scale-95",
           clickEffect && !isButtonDisabled && "active:scale-95",
-          glowEffect &&
-            !isButtonDisabled &&
-            "hover:shadow-2xl hover:shadow-current/25",
+          glowEffect && !isButtonDisabled && "hover:shadow-2xl hover:shadow-current/25",
 
           // ✨ TRANSIÇÕES
           `duration-${animationDuration?.replace("ms", "") || "300"}`,
-          transitionEasing &&
-            `ease-${transitionEasing.replace("ease-", "") || "in-out"}`,
+          transitionEasing && `ease-${transitionEasing.replace("ease-", "") || "in-out"}`,
 
           // ✨ ESTADOS RESPONSIVOS
           isButtonDisabled && "opacity-50 cursor-not-allowed",
@@ -483,13 +455,13 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           // ✨ SOMBRAS CUSTOMIZÁVEIS
           boxShadow: boxShadow && !isButtonDisabled ? boxShadow : undefined,
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!isButtonDisabled && hoverBackgroundColor) {
             e.currentTarget.style.backgroundColor = hoverBackgroundColor;
             e.currentTarget.style.color = hoverTextColor || textColor;
           }
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={e => {
           if (!isButtonDisabled) {
             e.currentTarget.style.backgroundColor = backgroundColor;
             e.currentTarget.style.color = textColor;
@@ -503,11 +475,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           </div>
         ) : (
           <span className="flex items-center gap-2">
-            {label && (
-              <span className="text-xs uppercase tracking-wide opacity-75">
-                {label}
-              </span>
-            )}
+            {label && <span className="text-xs uppercase tracking-wide opacity-75">{label}</span>}
             {text}
           </span>
         )}

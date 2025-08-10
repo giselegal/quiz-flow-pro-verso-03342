@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 /**
  * BLOCO EDITÁVEL: Call-to-Action Final
@@ -49,14 +49,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -141,13 +134,11 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
           {title}
         </h2>
 
-        {subtitle && (
-          <h3 className="text-xl md:text-2xl text-[#6B5B73] mb-6">
-            {subtitle}
-          </h3>
-        )}
+        {subtitle && <h3 className="text-xl md:text-2xl text-[#6B5B73] mb-6">{subtitle}</h3>}
 
-        {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+        {description && (
+          <p style={{ color: '#6B4F43' }}>{description}</p>
+        )}
 
         <Button
           onClick={handleClick}
@@ -163,11 +154,8 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
           {buttonText}
         </Button>
 
-        <div style={{ color: "#8B7355" }}>
-          <p>
-            ✅ Acesso imediato • ✅ Garantia de 7 dias • ✅ Suporte
-            especializado
-          </p>
+        <div style={{ color: '#8B7355' }}>
+          <p>✅ Acesso imediato • ✅ Garantia de 7 dias • ✅ Suporte especializado</p>
         </div>
       </div>
     </div>

@@ -1,11 +1,7 @@
-import { Progress } from "../../../components/ui/progress";
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
-import {
-  isValidBlock,
-  logBlockDebug,
-  safeGetBlockProperties,
-} from "../../../utils/blockUtils";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
+import { isValidBlock, logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
 import { Award, TrendingUp } from "lucide-react";
 import React from "react";
 
@@ -14,6 +10,7 @@ import React from "react";
  * Card compacto de resultado de quiz
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
+
 
 const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -24,7 +21,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   // 🛡️ Validação e logging de debug
   if (!isValidBlock(block)) {
     console.error("❌ ResultCardInlineBlock: Bloco inválido recebido", block);
-    return <div style={{ color: "#432818" }}>Erro: Bloco inválido</div>;
+    return <div style={{ color: '#432818' }}>Erro: Bloco inválido</div>;
   }
 
   logBlockDebug("ResultCardInlineBlock", block);
@@ -87,8 +84,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         className
       )}
       style={{
-        backgroundColor:
-          backgroundColor === "white" ? undefined : backgroundColor,
+        backgroundColor: backgroundColor === "white" ? undefined : backgroundColor,
       }}
       onClick={onClick}
     >
@@ -103,10 +99,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
             style={{ backgroundColor: `${accentColor}20` }}
           >
             <Award
-              className={cn(
-                "text-current",
-                iconSizes[size as keyof typeof iconSizes]
-              )}
+              className={cn("text-current", iconSizes[size as keyof typeof iconSizes])}
               style={{ color: accentColor }}
             />
           </div>
@@ -115,36 +108,30 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         {showProgress && (
           <div className="text-right">
             <div
-              className={cn(
-                "font-bold",
-                titleSizes[size as keyof typeof titleSizes]
-              )}
+              className={cn("font-bold", titleSizes[size as keyof typeof titleSizes])}
               style={{ color: accentColor }}
             >
               {percentage}%
             </div>
-            <div style={{ color: "#8B7355" }}>Compatibilidade</div>
+            <div style={{ color: '#8B7355' }}>Compatibilidade</div>
           </div>
         )}
       </div>
 
       {/* Nome do estilo */}
       <h3
-        className={cn(
-          "font-bold mb-3 text-gray-900",
-          titleSizes[size as keyof typeof titleSizes]
-        )}
+        className={cn("font-bold mb-3 text-gray-900", titleSizes[size as keyof typeof titleSizes])}
       >
         Estilo {styleName}
       </h3>
 
       {/* Descrição */}
-      <p style={{ color: "#6B4F43" }}>{description}</p>
+      <p style={{ color: '#6B4F43' }}>{description}</p>
 
       {/* Barra de progresso */}
       {showProgress && (
         <div className="space-y-2">
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <span>Compatibilidade</span>
             <span>{percentage}%</span>
           </div>
@@ -161,7 +148,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Indicador de tendência */}
       <div className="flex items-center justify-center mt-4 pt-3 border-t border-gray-100">
         <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
-        <span style={{ color: "#8B7355" }}>Tendência em alta</span>
+        <span style={{ color: '#8B7355' }}>Tendência em alta</span>
       </div>
     </div>
   );

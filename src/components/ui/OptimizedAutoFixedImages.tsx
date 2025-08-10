@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { fixBlurryImages } from "../../utils/enhancedFixBlurryImages";
+import { fixBlurryImages } from "@/utils/enhancedFixBlurryImages";
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;
@@ -51,7 +51,7 @@ const OptimizedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     let mutationCount = 0;
 
     // Observador de mutações mais eficiente
-    const observer = new MutationObserver((mutations) => {
+    const observer = new MutationObserver(mutations => {
       // Incrementar contador para limitar frequência de correções
       mutationCount++;
 

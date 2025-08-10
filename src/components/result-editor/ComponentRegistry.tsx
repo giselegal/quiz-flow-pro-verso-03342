@@ -31,10 +31,9 @@ export const componentRegistry: ComponentRegistryItem[] = [
   // Registry básico para resolver erros
 ];
 
-export const getAvailableComponents = (context?: any, filter?: any) =>
-  componentRegistry;
+export const getAvailableComponents = (context?: any, filter?: any) => componentRegistry;
 export const getComponentsByCategory = (category: string) =>
-  componentRegistry.filter((c) => c.category === category);
+  componentRegistry.filter(c => c.category === category);
 
 export default {
   COMPONENT_CATEGORIES,

@@ -74,10 +74,10 @@ export const useQuizConfig = () => {
 
     const questions: QuizQuestion[] = [];
 
-    config.pages.forEach((page) => {
+    config.pages.forEach(page => {
       if (page.type === "question" && page.components) {
         // Procura por componentes de questão
-        page.components.forEach((component) => {
+        page.components.forEach(component => {
           if (component.type === "options" && component.data?.options) {
             const question: QuizQuestion = {
               id: page.id,
@@ -99,23 +99,17 @@ export const useQuizConfig = () => {
 
   // Busca uma página específica por tipo
   const getPageByType = (type: string) => {
-    return quizConfig?.pages?.find((page) => page.type === type) || null;
+    return quizConfig?.pages?.find(page => page.type === type) || null;
   };
 
   // Busca componentes de uma página por tipo
   const getComponentsByType = (pageType: string, componentType: string) => {
     const page = getPageByType(pageType);
-    return (
-      page?.components?.filter((comp) => comp.type === componentType) || []
-    );
+    return page?.components?.filter(comp => comp.type === componentType) || [];
   };
 
   // Busca texto de um componente específico
-  const getComponentText = (
-    pageType: string,
-    componentType: string,
-    defaultText = ""
-  ) => {
+  const getComponentText = (pageType: string, componentType: string, defaultText = "") => {
     const components = getComponentsByType(pageType, componentType);
     return components[0]?.data?.text || defaultText;
   };

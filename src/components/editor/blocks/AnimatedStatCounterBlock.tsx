@@ -1,17 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
-import {
-  Users,
-  TrendingUp,
-  Heart,
-  Clock,
-  Star,
-  Award,
-  Target,
-  Zap,
-  BarChart3,
-} from "lucide-react";
+import { Users, TrendingUp, Heart, Clock, Star, Award, Target, Zap, BarChart3 } from "lucide-react";
 
 /**
  * AnimatedStatCounterBlock - Contador animado para estatísticas
@@ -24,14 +14,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,7 +63,7 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ color: "#432818" }}>
+      <div style={{ color: '#432818' }}>
         ⚠️ Erro: Propriedades do bloco não encontradas
       </div>
     );
@@ -145,8 +128,7 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
     },
   };
 
-  const colors =
-    colorSchemes[colorScheme as keyof typeof colorSchemes] || colorSchemes.blue;
+  const colors = colorSchemes[colorScheme as keyof typeof colorSchemes] || colorSchemes.blue;
 
   // Tamanhos
   const sizes = {

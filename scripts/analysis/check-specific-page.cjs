@@ -1,10 +1,7 @@
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
-const supabase = createClient(
-  process.env.REACT_APP_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
 async function checkSpecificPage() {
   try {
@@ -21,10 +18,7 @@ async function checkSpecificPage() {
       return;
     }
 
-    console.log(
-      '📋 Páginas encontradas com ID "etapa-1-intro":',
-      pages?.length || 0
-    );
+    console.log('📋 Páginas encontradas com ID "etapa-1-intro":', pages?.length || 0);
 
     if (pages && pages.length > 0) {
       pages.forEach((page, index) => {
@@ -42,9 +36,7 @@ async function checkSpecificPage() {
 
         for (let i = 1; i < pages.length; i++) {
           const page = pages[i];
-          console.log(
-            `   Deletando página ${i + 1}: funnel_id=${page.funnel_id}`
-          );
+          console.log(`   Deletando página ${i + 1}: funnel_id=${page.funnel_id}`);
 
           const { error: deleteError } = await supabase
             .from("funnel_pages")
@@ -72,9 +64,7 @@ async function checkSpecificPage() {
       .eq("id", "etapa-1-intro");
 
     console.log("\n📊 Resultado final:");
-    console.log(
-      `   Páginas restantes com ID "etapa-1-intro": ${remainingPages?.length || 0}`
-    );
+    console.log(`   Páginas restantes com ID "etapa-1-intro": ${remainingPages?.length || 0}`);
   } catch (error) {
     console.error("❌ Erro durante a verificação:", error);
   }

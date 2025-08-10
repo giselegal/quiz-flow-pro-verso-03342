@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useMemo, useCallback } from "react";
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * HeadingInlineBlock - Componente de título responsivo
@@ -16,14 +16,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -164,13 +157,11 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
         // Largura máxima e centralização
         "max-w-full mx-auto",
         // Padding responsivo
-        paddingClasses[padding as keyof typeof paddingClasses] ||
-          paddingClasses.medium,
+        paddingClasses[padding as keyof typeof paddingClasses] || paddingClasses.medium,
         // Background
         backgroundColor !== "transparent" && backgroundColor,
         // Alinhamento
-        alignmentClasses[alignment as keyof typeof alignmentClasses] ||
-          alignmentClasses.center,
+        alignmentClasses[alignment as keyof typeof alignmentClasses] || alignmentClasses.center,
         // Estados visuais
         "transition-all duration-200",
         isSelected && "ring-2 ring-[#B89B7A] bg-[#B89B7A]/10",
@@ -190,11 +181,9 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
         <TitleComponent
           className={cn(
             // Tamanho responsivo
-            titleSizeClasses[titleSize as keyof typeof titleSizeClasses] ||
-              titleSizeClasses.large,
+            titleSizeClasses[titleSize as keyof typeof titleSizeClasses] || titleSizeClasses.large,
             // Tema de cor
-            themeClasses[theme as keyof typeof themeClasses] ||
-              themeClasses.primary,
+            themeClasses[theme as keyof typeof themeClasses] || themeClasses.primary,
             // Cor personalizada se especificada
             textColor !== "text-gray-900" && textColor,
             // Tipografia
@@ -211,9 +200,8 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
           <p
             className={cn(
               // Tamanho responsivo
-              subtitleSizeClasses[
-                subtitleSize as keyof typeof subtitleSizeClasses
-              ] || subtitleSizeClasses.medium,
+              subtitleSizeClasses[subtitleSize as keyof typeof subtitleSizeClasses] ||
+                subtitleSizeClasses.medium,
               // Cor do subtítulo
               "text-gray-600",
               // Tipografia
@@ -236,24 +224,13 @@ export default HeadingInlineBlock;
 // ES7+ Type exports para reutilização
 export type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 export type HeadingSize = "small" | "medium" | "large" | "xlarge";
-export type HeadingTheme =
-  | "primary"
-  | "secondary"
-  | "accent"
-  | "dark"
-  | "light";
+export type HeadingTheme = "primary" | "secondary" | "accent" | "dark" | "light";
 export type HeadingAlignment = "left" | "center" | "right";
 
 // ES7+ Const assertions para arrays readonly
 export const HEADING_LEVELS = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
 export const HEADING_SIZES = ["small", "medium", "large", "xlarge"] as const;
-export const HEADING_THEMES = [
-  "primary",
-  "secondary",
-  "accent",
-  "dark",
-  "light",
-] as const;
+export const HEADING_THEMES = ["primary", "secondary", "accent", "dark", "light"] as const;
 
 // ES7+ Factory function com advanced TypeScript features
 export const createHeadingBlock = (
@@ -283,8 +260,5 @@ export const formatHeadingText = (
 ): string => {
   if (!username) return text;
   // ES7+ String methods com fallback
-  return text.replace(
-    new RegExp(pattern.replace(/[{}]/g, "\\$&"), "g"),
-    username
-  );
+  return text.replace(new RegExp(pattern.replace(/[{}]/g, "\\$&"), "g"), username);
 };

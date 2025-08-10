@@ -15,13 +15,7 @@ export interface StepWithContainerProps {
   stepId: number;
   containerWidth?: "full" | "large" | "medium" | "small";
   containerPosition?: "left" | "center" | "right";
-  spacing?:
-    | "none"
-    | "small"
-    | "compact"
-    | "normal"
-    | "comfortable"
-    | "spacious";
+  spacing?: "none" | "small" | "compact" | "normal" | "comfortable" | "spacious";
   backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   enableMobileOptimizations?: boolean;
   enablePerformanceOptimizations?: boolean;
@@ -62,12 +56,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
       // Grid sempre full no mobile
       gridColumns: "full" as const,
     };
-  }, [
-    isMobile,
-    enableMobileOptimizations,
-    containerProps.containerWidth,
-    containerProps.spacing,
-  ]);
+  }, [isMobile, enableMobileOptimizations, containerProps.containerWidth, containerProps.spacing]);
 
   // ⚡ Classes otimizadas com base no dispositivo
   const optimizedContainerProps = useMemo(
@@ -78,9 +67,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
     [containerProps, mobileOptimizations]
   );
 
-  const { containerClasses, inlineStyles } = useContainerProperties(
-    optimizedContainerProps
-  );
+  const { containerClasses, inlineStyles } = useContainerProperties(optimizedContainerProps);
 
   // 🎯 Performance optimizations
   const performanceOptimizations = useMemo(() => {
@@ -113,22 +100,13 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
     () => ({
       stepId,
       isMobile,
-      hasContainerOptimizations:
-        Object.keys(optimizedContainerProps).length > 0,
+      hasContainerOptimizations: Object.keys(optimizedContainerProps).length > 0,
       hasMobileOptimizations: Object.keys(mobileOptimizations).length > 0,
-      hasPerformanceOptimizations:
-        Object.keys(performanceOptimizations).length > 0,
+      hasPerformanceOptimizations: Object.keys(performanceOptimizations).length > 0,
       totalOptimizations:
-        Object.keys(mobileOptimizations).length +
-        Object.keys(performanceOptimizations).length,
+        Object.keys(mobileOptimizations).length + Object.keys(performanceOptimizations).length,
     }),
-    [
-      stepId,
-      isMobile,
-      optimizedContainerProps,
-      mobileOptimizations,
-      performanceOptimizations,
-    ]
+    [stepId, isMobile, optimizedContainerProps, mobileOptimizations, performanceOptimizations]
   );
 
   return {

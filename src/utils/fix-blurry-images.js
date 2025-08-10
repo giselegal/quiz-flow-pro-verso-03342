@@ -17,10 +17,7 @@ function getHighQualityUrl(url) {
 
   try {
     // Se não for uma URL do Cloudinary, retornar sem alterações
-    if (
-      !url.includes("cloudinary.com") &&
-      !url.includes("res.cloudinary.com")
-    ) {
+    if (!url.includes("cloudinary.com") && !url.includes("res.cloudinary.com")) {
       return url;
     }
 
@@ -100,13 +97,7 @@ function fixBlurryImage(img) {
 
       // Remover classes e estilos de embaçamento
       img.style.filter = "none";
-      img.classList.remove(
-        "blur",
-        "placeholder",
-        "blur-up",
-        "lazy-load",
-        "loading"
-      );
+      img.classList.remove("blur", "placeholder", "blur-up", "lazy-load", "loading");
 
       // Desativar lazy loading para imagens críticas visíveis
       if (img.loading === "lazy" && isInViewport(img)) {
@@ -146,8 +137,7 @@ function isInViewport(element) {
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
-    rect.bottom <=
-      (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
@@ -159,7 +149,7 @@ function fixAllBlurryImages() {
   const images = document.querySelectorAll("img");
   let fixedCount = 0;
 
-  images.forEach((img) => {
+  images.forEach(img => {
     // Verificar se a imagem está com erro
     if (img.complete && (img.naturalWidth === 0 || img.naturalHeight === 0)) {
       handleImageError(img);
@@ -258,16 +248,16 @@ function getSimplifiedCloudinaryUrl(url) {
  */
 function setupImageObserver() {
   // Criar um MutationObserver para detectar novas imagens
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
         // Se for uma imagem
         if (node.nodeName === "IMG") {
           fixBlurryImage(node);
         }
         // Se contiver imagens
         else if (node.querySelectorAll) {
-          node.querySelectorAll("img").forEach((img) => {
+          node.querySelectorAll("img").forEach(img => {
             fixBlurryImage(img);
           });
         }
@@ -290,10 +280,7 @@ function setupImageObserver() {
 function preventBlurryPlaceholders() {
   try {
     // Interceptar o método Image.prototype.src
-    const originalSet = Object.getOwnPropertyDescriptor(
-      Image.prototype,
-      "src"
-    ).set;
+    const originalSet = Object.getOwnPropertyDescriptor(Image.prototype, "src").set;
 
     // Substituir pelo nosso método que melhora as URLs
     Object.defineProperty(Image.prototype, "src", {
@@ -315,7 +302,7 @@ function preventBlurryPlaceholders() {
             // Melhorar cada URL no srcset
             const newSrcset = srcset
               .split(",")
-              .map((src) => {
+              .map(src => {
                 const [url, descriptor] = src.trim().split(/\s+/);
                 return `${getHighQualityUrl(url)} ${descriptor || ""}`.trim();
               })
@@ -365,9 +352,7 @@ function preventBlurryPlaceholders() {
     setTimeout(() => {
       const additionalFixed = fixAllBlurryImages();
       if (DEBUG_MODE || additionalFixed > 0) {
-        console.log(
-          `🔄 Corrigidas mais ${additionalFixed} imagens em uma segunda verificação`
-        );
+        console.log(`🔄 Corrigidas mais ${additionalFixed} imagens em uma segunda verificação`);
       }
     }, 1500);
 
@@ -376,9 +361,7 @@ function preventBlurryPlaceholders() {
       setTimeout(() => {
         const focusFixed = fixAllBlurryImages();
         if (DEBUG_MODE && focusFixed > 0) {
-          console.log(
-            `👁️ Corrigidas ${focusFixed} imagens após retorno à página`
-          );
+          console.log(`👁️ Corrigidas ${focusFixed} imagens após retorno à página`);
         }
       }, 100);
     });
@@ -388,9 +371,7 @@ function preventBlurryPlaceholders() {
       setTimeout(() => {
         const loadFixed = fixAllBlurryImages();
         if (DEBUG_MODE && loadFixed > 0) {
-          console.log(
-            `📦 Corrigidas ${loadFixed} imagens após carregamento completo`
-          );
+          console.log(`📦 Corrigidas ${loadFixed} imagens após carregamento completo`);
         }
       }, 300);
     });

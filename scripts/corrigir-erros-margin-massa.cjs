@@ -151,9 +151,7 @@ function fixMarginVariables(filePath) {
     if (!wasFixed) {
       // Tenta encontrar outras variações
       if (content.includes("} = style")) {
-        console.log(
-          `⚠️  Padrão não reconhecido em: ${path.basename(filePath)}`
-        );
+        console.log(`⚠️  Padrão não reconhecido em: ${path.basename(filePath)}`);
         console.log("    Manual fix needed");
         return false;
       }
@@ -167,9 +165,7 @@ function fixMarginVariables(filePath) {
 
     return false;
   } catch (error) {
-    console.log(
-      `❌ Erro ao corrigir ${path.basename(filePath)}: ${error.message}`
-    );
+    console.log(`❌ Erro ao corrigir ${path.basename(filePath)}: ${error.message}`);
     return false;
   }
 }
@@ -179,9 +175,7 @@ const batchSize = 10;
 let successCount = 0;
 let failureCount = 0;
 
-console.log(
-  `📊 Processando ${problematicFiles.length} arquivos em lotes de ${batchSize}...\n`
-);
+console.log(`📊 Processando ${problematicFiles.length} arquivos em lotes de ${batchSize}...\n`);
 
 for (let i = 0; i < problematicFiles.length; i += batchSize) {
   const batch = problematicFiles.slice(i, i + batchSize);
@@ -206,12 +200,8 @@ console.log(`❌ Falhas: ${failureCount}`);
 console.log(`📊 Total: ${successCount + failureCount}`);
 
 if (successCount > 0) {
-  console.log(
-    `\n🎉 ${successCount} componentes foram corrigidos automaticamente!`
-  );
-  console.log(
-    `\n⚠️  Recomendação: Teste o build para verificar se não há problemas:`
-  );
+  console.log(`\n🎉 ${successCount} componentes foram corrigidos automaticamente!`);
+  console.log(`\n⚠️  Recomendação: Teste o build para verificar se não há problemas:`);
   console.log(`   npm run build`);
 }
 

@@ -16,7 +16,7 @@ export { default as DeprecatedPropertiesPanel } from "./EnhancedUniversalPropert
 /**
  * 🎯 COMPONENTES RECOMENDADOS:
  *
- * import { EnhancedUniversalPropertiesPanel } from "../../../components/universal";
+ * import { EnhancedUniversalPropertiesPanel } from "@/components/universal";
  * ou
- * import EnhancedUniversalPropertiesPanel from "../../../components/universal";
+ * import EnhancedUniversalPropertiesPanel from "@/components/universal";
  */

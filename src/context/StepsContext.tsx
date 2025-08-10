@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 
 // Interface simplificada para etapas
 export interface QuizStep {
@@ -247,9 +241,7 @@ const initialQuiz21Steps: QuizStep[] = [
 ];
 
 // Provider Component
-export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Recuperar estado salvo ou usar o padrão
   const getSavedSteps = () => {
     try {
@@ -262,9 +254,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const [steps, setSteps] = useState<QuizStep[]>(getSavedSteps);
-  const [selectedStepId, setSelectedStepId] = useState<string | null>(
-    "etapa-1"
-  );
+  const [selectedStepId, setSelectedStepId] = useState<string | null>("etapa-1");
 
   // Salvar etapas no localStorage quando mudarem
   useEffect(() => {
@@ -282,20 +272,13 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
       type: "custom",
       description: `Etapa personalizada ${steps.length + 1}`,
     };
-    setSteps((prev) => [...prev, newStep]);
+    setSteps(prev => [...prev, newStep]);
   }, [steps.length]);
 
   // Atualizar etapa
-  const updateStep = useCallback(
-    (stepId: string, updates: Partial<QuizStep>) => {
-      setSteps((prev) =>
-        prev.map((step) =>
-          step.id === stepId ? { ...step, ...updates } : step
-        )
-      );
-    },
-    []
-  );
+  const updateStep = useCallback((stepId: string, updates: Partial<QuizStep>) => {
+    setSteps(prev => prev.map(step => (step.id === stepId ? { ...step, ...updates } : step)));
+  }, []);
 
   // Excluir etapa
   const deleteStep = useCallback(
@@ -305,11 +288,11 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
-      setSteps((prev) => prev.filter((step) => step.id !== stepId));
+      setSteps(prev => prev.filter(step => step.id !== stepId));
 
       if (selectedStepId === stepId) {
         // Selecionar a etapa anterior ou a primeira se não houver anterior
-        const currentIndex = steps.findIndex((step) => step.id === stepId);
+        const currentIndex = steps.findIndex(step => step.id === stepId);
         const newSelectedIndex = Math.max(0, currentIndex - 1);
         setSelectedStepId(steps[newSelectedIndex].id);
       }
@@ -320,7 +303,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Duplicar etapa
   const duplicateStep = useCallback(
     (stepId: string) => {
-      const stepToDuplicate = steps.find((step) => step.id === stepId);
+      const stepToDuplicate = steps.find(step => step.id === stepId);
       if (stepToDuplicate) {
         const newStep: QuizStep = {
           ...stepToDuplicate,
@@ -329,7 +312,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
           isActive: false,
           blocksCount: 0, // Blocos seriam duplicados em outra etapa do processo
         };
-        setSteps((prev) => [...prev, newStep]);
+        setSteps(prev => [...prev, newStep]);
       }
     },
     [steps]
@@ -338,8 +321,8 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Reordenar etapas
   const reorderStep = useCallback(
     (draggedId: string, targetId: string) => {
-      const draggedIndex = steps.findIndex((step) => step.id === draggedId);
-      const targetIndex = steps.findIndex((step) => step.id === targetId);
+      const draggedIndex = steps.findIndex(step => step.id === draggedId);
+      const targetIndex = steps.findIndex(step => step.id === targetId);
 
       if (draggedIndex === -1 || targetIndex === -1) return;
 
@@ -365,8 +348,8 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
     // Aqui você poderia ter uma lógica para pegar os blocos do template
     // e depois atualizaria a contagem de blocos da etapa
 
-    setSteps((prev) =>
-      prev.map((step) =>
+    setSteps(prev =>
+      prev.map(step =>
         step.id === stepId
           ? { ...step, blocksCount: step.blocksCount + 3 } // Suponha que adicionamos 3 blocos
           : step
@@ -377,7 +360,7 @@ export const StepsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Obter etapa por ID
   const getStepById = useCallback(
     (stepId: string) => {
-      return steps.find((step) => step.id === stepId);
+      return steps.find(step => step.id === stepId);
     },
     [steps]
   );

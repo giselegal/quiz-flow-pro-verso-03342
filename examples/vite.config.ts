@@ -4,9 +4,10 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), mode === "development" && componentTagger()].filter(
-    Boolean
-  ),
+  plugins: [
+    react(),
+    mode === "development" && componentTagger()
+  ].filter(Boolean),
   define: {
     // Suppress TypeScript errors in development
     __DEV__: mode === "development",
@@ -42,7 +43,7 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1000, // Aumentar limite para 1MB
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
+        manualChunks: id => {
           // 📦 CHUNKING SUPER OTIMIZADO V2
 
           // React Core (separar react e react-dom)
@@ -76,10 +77,7 @@ export default defineConfig(({ mode }) => ({
           }
 
           // Blocks - dividir por categoria específica
-          if (
-            id.includes("blocks/inline/Quiz") ||
-            id.includes("QuizInlineBlock")
-          ) {
+          if (id.includes("blocks/inline/Quiz") || id.includes("QuizInlineBlock")) {
             return "blocks-quiz-inline";
           }
           if (id.includes("blocks/inline/") && !id.includes("Quiz")) {
@@ -189,11 +187,7 @@ export default defineConfig(({ mode }) => ({
               return "charts";
             }
             // Utilities
-            if (
-              id.includes("lodash") ||
-              id.includes("date-fns") ||
-              id.includes("clsx")
-            ) {
+            if (id.includes("lodash") || id.includes("date-fns") || id.includes("clsx")) {
               return "utilities";
             }
             // Fallback para outras libraries
@@ -201,7 +195,7 @@ export default defineConfig(({ mode }) => ({
           }
         },
         // Configurações adicionais para otimização
-        chunkFileNames: (chunkInfo) => {
+        chunkFileNames: chunkInfo => {
           const facadeModuleId = chunkInfo.facadeModuleId
             ? chunkInfo.facadeModuleId.split("/").pop()
             : "chunk";
@@ -220,9 +214,9 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 4096, // Inline assets menores que 4KB
   },
   esbuild: {
-    logOverride: {
+    logOverride: { 
       "this-is-undefined-in-esm": "silent",
-      "direct-eval": "silent",
+      "direct-eval": "silent"
     },
     target: "es2020",
     tsconfigRaw: `{
@@ -233,6 +227,6 @@ export default defineConfig(({ mode }) => ({
         "noUnusedLocals": false,
         "noUnusedParameters": false
       }
-    }`,
+    }`
   },
 }));

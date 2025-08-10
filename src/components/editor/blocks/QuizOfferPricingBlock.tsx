@@ -1,10 +1,10 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Gift, CheckCircle, Sparkles, Shield } from "lucide-react";
-import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
-import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -12,14 +12,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -124,23 +117,15 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div className="space-y-2">
-                <div style={{ color: "#6B4F43" }}>12x de apenas</div>
-                <div
-                  className="text-4xl md:text-5xl font-bold"
-                  style={{ color: accentColor }}
-                >
+                <div style={{ color: '#6B4F43' }}>12x de apenas</div>
+                <div className="text-4xl md:text-5xl font-bold" style={{ color: accentColor }}>
                   {installmentPrice}
                 </div>
-                <div
-                  className="text-2xl font-semibold"
-                  style={{ color: textColor }}
-                >
+                <div className="text-2xl font-semibold" style={{ color: textColor }}>
                   ou {fullPrice} à vista
                 </div>
-                <div style={{ color: "#8B7355" }}>De {originalPrice}</div>
-                <div className="text-xl font-bold text-green-600">
-                  {savings}
-                </div>
+                <div style={{ color: '#8B7355' }}>De {originalPrice}</div>
+                <div className="text-xl font-bold text-green-600">{savings}</div>
               </div>
             </CardHeader>
 
@@ -148,10 +133,7 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
               <div className="grid md:grid-cols-2 gap-8">
                 {/* Benefits */}
                 <div>
-                  <h3
-                    className="text-2xl font-semibold mb-6"
-                    style={{ color: textColor }}
-                  >
+                  <h3 className="text-2xl font-semibold mb-6" style={{ color: textColor }}>
                     O que você vai receber:
                   </h3>
                   <div className="space-y-4">
@@ -161,7 +143,7 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
                           className="w-6 h-6 mt-0.5 flex-shrink-0"
                           style={{ color: accentColor }}
                         />
-                        <span style={{ color: "#6B4F43" }}>{benefit}</span>
+                        <span style={{ color: '#6B4F43' }}>{benefit}</span>
                       </div>
                     ))}
                   </div>
@@ -177,12 +159,10 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
                       color: "white",
                       border: "none",
                     }}
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       if (ctaUrl.startsWith("#")) {
-                        document
-                          .querySelector(ctaUrl)
-                          ?.scrollIntoView({ behavior: "smooth" });
+                        document.querySelector(ctaUrl)?.scrollIntoView({ behavior: "smooth" });
                       } else {
                         window.open(ctaUrl, "_blank");
                       }

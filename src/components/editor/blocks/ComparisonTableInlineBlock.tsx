@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { Check, X } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -9,14 +9,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -92,9 +85,7 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
         ${className}
       `}
     >
-      <h3 className="text-xl font-bold text-center mb-4 text-brand-dark">
-        {title}
-      </h3>
+      <h3 className="text-xl font-bold text-center mb-4 text-brand-dark">{title}</h3>
 
       <div className="w-full overflow-x-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -111,12 +102,8 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
               `}
             >
               <div className="text-center mb-4">
-                <h4 className="text-lg font-semibold text-brand-dark mb-2">
-                  {item.name}
-                </h4>
-                <div className="text-2xl font-bold text-[#B89B7A]">
-                  {item.price}
-                </div>
+                <h4 className="text-lg font-semibold text-brand-dark mb-2">{item.name}</h4>
+                <div className="text-2xl font-bold text-[#B89B7A]">{item.price}</div>
               </div>
 
               <ul className="space-y-2">

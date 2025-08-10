@@ -3,23 +3,11 @@
  * Interface para executar migrações via browser
  */
 
-import { Alert, AlertDescription } from "../../components/ui/alert";
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import {
-  AlertTriangle,
-  CheckCircle,
-  Play,
-  RefreshCw,
-  XCircle,
-} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertTriangle, CheckCircle, Play, RefreshCw, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface MigrationStatus {
@@ -40,8 +28,7 @@ interface MigrationResult {
 export function MigrationPanel() {
   const [status, setStatus] = useState<MigrationStatus | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [migrationResult, setMigrationResult] =
-    useState<MigrationResult | null>(null);
+  const [migrationResult, setMigrationResult] = useState<MigrationResult | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
 
   // Carregar status inicial
@@ -107,15 +94,8 @@ export function MigrationPanel() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">🚀 Migração do Schema</h1>
-        <Button
-          onClick={checkStatus}
-          disabled={isLoading}
-          variant="outline"
-          size="sm"
-        >
-          <RefreshCw
-            className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-          />
+        <Button onClick={checkStatus} disabled={isLoading} variant="outline" size="sm">
+          <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
           Atualizar Status
         </Button>
       </div>
@@ -137,9 +117,7 @@ export function MigrationPanel() {
               </Badge>
             )}
           </CardTitle>
-          <CardDescription>
-            Status atual das tabelas do banco de dados
-          </CardDescription>
+          <CardDescription>Status atual das tabelas do banco de dados</CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
@@ -156,12 +134,8 @@ export function MigrationPanel() {
                     ✅ Tabelas Existentes ({status.tablesCreated.length})
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {status.tablesCreated.map((table) => (
-                      <Badge
-                        key={table}
-                        variant="default"
-                        style={{ backgroundColor: "#E5DDD5" }}
-                      >
+                    {status.tablesCreated.map(table => (
+                      <Badge key={table} variant="default" style={{ backgroundColor: '#E5DDD5' }}>
                         {table}
                       </Badge>
                     ))}
@@ -172,16 +146,12 @@ export function MigrationPanel() {
               {/* Tabelas Ausentes */}
               {status.missingTables.length > 0 && (
                 <div>
-                  <h4 style={{ color: "#432818" }}>
+                  <h4 style={{ color: '#432818' }}>
                     ❌ Tabelas Ausentes ({status.missingTables.length})
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {status.missingTables.map((table) => (
-                      <Badge
-                        key={table}
-                        variant="destructive"
-                        className="bg-red-100 text-red-800"
-                      >
+                    {status.missingTables.map(table => (
+                      <Badge key={table} variant="destructive" className="bg-red-100 text-red-800">
                         {table}
                       </Badge>
                     ))}
@@ -212,20 +182,11 @@ export function MigrationPanel() {
         <Card>
           <CardHeader>
             <CardTitle>⚡ Executar Migração</CardTitle>
-            <CardDescription>
-              Execute a migração para criar as tabelas ausentes
-            </CardDescription>
+            <CardDescription>Execute a migração para criar as tabelas ausentes</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button
-              onClick={executeMigration}
-              disabled={isExecuting}
-              className="w-full"
-              size="lg"
-            >
-              <Play
-                className={`w-4 h-4 mr-2 ${isExecuting ? "animate-pulse" : ""}`}
-              />
+            <Button onClick={executeMigration} disabled={isExecuting} className="w-full" size="lg">
+              <Play className={`w-4 h-4 mr-2 ${isExecuting ? "animate-pulse" : ""}`} />
               {isExecuting ? "Executando Migração..." : "Executar Migração"}
             </Button>
           </CardContent>
@@ -251,16 +212,11 @@ export function MigrationPanel() {
               )}
             </CardTitle>
             <CardDescription>
-              {migrationResult.timestamp &&
-                new Date(migrationResult.timestamp).toLocaleString()}
+              {migrationResult.timestamp && new Date(migrationResult.timestamp).toLocaleString()}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert
-              className={
-                migrationResult.success ? "border-green-200" : "border-red-200"
-              }
-            >
+            <Alert className={migrationResult.success ? "border-green-200" : "border-red-200"}>
               <AlertDescription>{migrationResult.message}</AlertDescription>
             </Alert>
 
@@ -272,7 +228,7 @@ export function MigrationPanel() {
                 </h4>
                 <div className="bg-green-50 p-3 rounded-md">
                   {migrationResult.executed.map((item, index) => (
-                    <div key={index} style={{ color: "#6B4F43" }}>
+                    <div key={index} style={{ color: '#6B4F43' }}>
                       • {item}
                     </div>
                   ))}
@@ -283,10 +239,10 @@ export function MigrationPanel() {
             {/* Erros */}
             {migrationResult.errors.length > 0 && (
               <div>
-                <h4 style={{ color: "#432818" }}>
+                <h4 style={{ color: '#432818' }}>
                   ❌ Erros ({migrationResult.errors.length})
                 </h4>
-                <div style={{ backgroundColor: "#FAF9F7" }}>
+                <div style={{ backgroundColor: '#FAF9F7' }}>
                   {migrationResult.errors.map((error, index) => (
                     <div key={index} className="text-sm text-red-700">
                       • {error}
@@ -309,12 +265,11 @@ export function MigrationPanel() {
             • <strong>Schema:</strong> 002_complete_quiz_schema.sql
           </div>
           <div>
-            • <strong>Tabelas principais:</strong> component_types,
-            component_instances, component_presets
+            • <strong>Tabelas principais:</strong> component_types, component_instances,
+            component_presets
           </div>
           <div>
-            • <strong>Funcionalidades:</strong> IDs semânticos, RLS policies,
-            triggers automáticos
+            • <strong>Funcionalidades:</strong> IDs semânticos, RLS policies, triggers automáticos
           </div>
           <div>
             • <strong>API:</strong> /api/admin/migrate (GET/POST)

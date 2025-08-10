@@ -1,5 +1,5 @@
 import React from "react";
-import { QuizComponentData } from "../../types/quizBuilder";
+import { QuizComponentData } from "@/types/quizBuilder";
 import ComponentRenderer from "./ComponentRenderer";
 
 interface PreviewPanelProps {
@@ -16,7 +16,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   return (
     <div className="h-full overflow-auto p-4">
       <div className="space-y-4">
-        {components.map((component) => (
+        {components.map(component => (
           <ComponentRenderer
             key={component.id}
             component={component}
@@ -26,7 +26,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         ))}
 
         {components.length === 0 && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <p>Nenhum componente adicionado ainda</p>
           </div>
         )}

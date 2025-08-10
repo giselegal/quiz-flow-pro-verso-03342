@@ -1,9 +1,9 @@
-import { Button } from "../../../components/ui/button";
-import { Card } from "../../../components/ui/card";
-import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
-import { useContainerProperties } from "../../../hooks/useContainerProperties";
-import { cn } from "../../../lib/utils";
-import { Block } from "../../../types/editor";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2 } from "lucide-react";
@@ -26,14 +26,7 @@ const getMarginClass = (
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,8 +73,9 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onDelete,
 }) => {
   // 🔧 Integrar propriedades de container diretamente
-  const { containerClasses, inlineStyles, processedProperties } =
-    useContainerProperties(block.properties);
+  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
+    block.properties
+  );
 
   console.log("🔧 SortableBlockWrapper - processedProperties:", {
     blockId: block.id,
@@ -103,14 +97,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
   const Component = getBlockComponent(block.type);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
       type: "canvas-block", // TIPO CRUCIAL que o DndProvider espera
@@ -156,8 +143,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     return (
       <div ref={setNodeRef} style={style} className="my-1">
         {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) */}
-        <Card style={{ borderColor: "#B89B7A" }}>
-          <div style={{ color: "#432818" }}>
+        <Card style={{ borderColor: '#B89B7A' }}>
+          <div style={{ color: '#432818' }}>
             <p>Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
           </div>
@@ -185,9 +172,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
         style={{
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
           backgroundColor:
-            containerBackgroundColor === "transparent"
-              ? "transparent"
-              : containerBackgroundColor,
+            containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
         }}
       >
         {/* Drag handle and controls - only show on hover */}
@@ -205,8 +190,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            style={{ color: "#432818" }}
-            onClick={(e) => {
+            style={{ color: '#432818' }}
+            onClick={e => {
               e.stopPropagation();
               onDelete();
             }}

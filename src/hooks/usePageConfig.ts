@@ -25,11 +25,8 @@ export const usePageConfig = (pageType: string) => {
   }, [pageType]);
 
   const updateConfig = (updates: Partial<PageConfig>) => {
-    setConfig((prev) => ({ ...prev, ...updates }));
-    localStorage.setItem(
-      `page_config_${pageType}`,
-      JSON.stringify({ ...config, ...updates })
-    );
+    setConfig(prev => ({ ...prev, ...updates }));
+    localStorage.setItem(`page_config_${pageType}`, JSON.stringify({ ...config, ...updates }));
   };
 
   return {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import AdminLayout from "../../components/admin/AdminLayout";
-import QuizEditor from "../../components/quiz-editor/QuizEditor";
-import { LoadingState } from "../../components/ui/loading-state";
-import { getTemplateById } from "../../services/templates/templateService";
-import { QuizTemplate } from "../../types/quizTemplate";
+import AdminLayout from "@/components/admin/AdminLayout";
+import QuizEditor from "@/components/quiz-editor/QuizEditor";
+import { LoadingState } from "@/components/ui/loading-state";
+import { getTemplateById } from "@/services/templates/templateService";
+import { QuizTemplate } from "@/types/quizTemplate";
 
 interface QuizEditorPageProps {
   templateId?: string;
@@ -51,7 +51,7 @@ const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
     return (
       <AdminLayout>
         <div className="p-6">
-          <p style={{ color: "#432818" }}>{error}</p>
+          <p style={{ color: '#432818' }}>{error}</p>
         </div>
       </AdminLayout>
     );

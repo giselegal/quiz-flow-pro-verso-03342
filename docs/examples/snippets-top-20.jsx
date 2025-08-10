@@ -155,11 +155,11 @@ const useQuizState = () => {
   const [isCompleted, setIsCompleted] = React.useState(false);
 
   const nextQuestion = React.useCallback(() => {
-    setCurrentQuestion((prev) => prev + 1);
+    setCurrentQuestion(prev => prev + 1);
   }, []);
 
-  const saveAnswer = React.useCallback((answer) => {
-    setAnswers((prev) => [...prev, answer]);
+  const saveAnswer = React.useCallback(answer => {
+    setAnswers(prev => [...prev, answer]);
   }, []);
 
   return {
@@ -207,14 +207,12 @@ const QuizProvider = ({ children }) => {
     isCompleted: false,
   });
 
-  const updateQuizData = React.useCallback((updates) => {
-    setQuizData((prev) => ({ ...prev, ...updates }));
+  const updateQuizData = React.useCallback(updates => {
+    setQuizData(prev => ({ ...prev, ...updates }));
   }, []);
 
   return (
-    <QuizContext.Provider value={{ quizData, updateQuizData }}>
-      {children}
-    </QuizContext.Provider>
+    <QuizContext.Provider value={{ quizData, updateQuizData }}>{children}</QuizContext.Provider>
   );
 };
 
@@ -231,7 +229,7 @@ const useLocalStorage = (key, initialValue) => {
   });
 
   const setValue = React.useCallback(
-    (value) => {
+    value => {
       try {
         setStoredValue(value);
         window.localStorage.setItem(key, JSON.stringify(value));
@@ -258,7 +256,7 @@ const LoadingSpinner = ({ message = "Carregando..." }) => {
 
 // 📝 TEMPLATE: Hook para Fetch de Dados
 // Digite: uch + Tab e personalize:
-const useFetch = (url) => {
+const useFetch = url => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);

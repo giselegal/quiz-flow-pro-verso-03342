@@ -1,4 +1,4 @@
-import { ComponentCategories, ComponentType } from "../interfaces/editor";
+import { ComponentCategories, ComponentType } from "@/interfaces/editor";
 import {
   Type,
   Image as ImageIcon,
@@ -371,6 +371,6 @@ export const COMPONENT_CATEGORIES: ComponentCategories = {
   },
 };
 
-export const ALL_COMPONENTS: ComponentType[] = Object.values(
-  COMPONENT_CATEGORIES
-).flatMap((category) => category.components);
+export const ALL_COMPONENTS: ComponentType[] = Object.values(COMPONENT_CATEGORIES).flatMap(
+  category => category.components
+);

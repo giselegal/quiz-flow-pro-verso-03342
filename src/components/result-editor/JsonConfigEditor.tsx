@@ -1,25 +1,17 @@
 import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../../components/ui/dialog";
-import { Textarea } from "../../components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { Download, Upload, Save } from "lucide-react";
-import { exportProjectAsJson } from "../../utils/exportUtils";
-import { useToast } from "../../components/ui/use-toast";
+import { exportProjectAsJson } from "@/utils/exportUtils";
+import { useToast } from "@/components/ui/use-toast";
 
 interface JsonConfigEditorProps {
   config: any;
   onUpdate: (newConfig: any) => void;
 }
 
-export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({
-  config,
-  onUpdate,
-}) => {
+export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({ config, onUpdate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [jsonText, setJsonText] = useState("");
   const { toast } = useToast();
@@ -56,7 +48,7 @@ export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         try {
           const content = e.target?.result as string;
           const parsedConfig = JSON.parse(content);
@@ -114,7 +106,7 @@ export const JsonConfigEditor: React.FC<JsonConfigEditorProps> = ({
           <div className="space-y-4">
             <Textarea
               value={jsonText}
-              onChange={(e) => setJsonText(e.target.value)}
+              onChange={e => setJsonText(e.target.value)}
               className="min-h-[400px] font-mono text-sm"
             />
 

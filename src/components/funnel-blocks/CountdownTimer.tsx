@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Clock, Zap, AlertCircle, TrendingUp } from "lucide-react";
-import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import { DeviceView, StyleProps } from "./types";
 
 interface CountdownTimerProps extends StyleProps {
@@ -76,9 +76,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   // Calculate target timestamp
   const getTargetTimestamp = () => {
     if (targetDate) {
-      return typeof targetDate === "string"
-        ? new Date(targetDate).getTime()
-        : targetDate;
+      return typeof targetDate === "string" ? new Date(targetDate).getTime() : targetDate;
     }
     return Date.now() + durationMinutes * 60 * 1000;
   };
@@ -99,9 +97,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
       }
 
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      );
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
@@ -163,13 +159,11 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
         ];
       default:
         const units = [];
-        if (timeLeft.days > 0)
-          units.push({ value: timeLeft.days, label: "dias" });
+        if (timeLeft.days > 0) units.push({ value: timeLeft.days, label: "dias" });
         if (timeLeft.hours > 0 || timeLeft.days > 0)
           units.push({ value: timeLeft.hours, label: "horas" });
         units.push({ value: timeLeft.minutes, label: "minutos" });
-        if (format === "full")
-          units.push({ value: timeLeft.seconds, label: "segundos" });
+        if (format === "full") units.push({ value: timeLeft.seconds, label: "segundos" });
         return units;
     }
   };
@@ -187,11 +181,9 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
           >
             {formatNumber(value)}
           </div>
-          {showLabels && <div style={{ color: "#6B4F43" }}>{label}</div>}
+          {showLabels && <div style={{ color: '#6B4F43' }}>{label}</div>}
         </div>
-        {!isLast && (
-          <div className={`mx-2 text-xl font-bold ${colors.text}`}>:</div>
-        )}
+        {!isLast && <div className={`mx-2 text-xl font-bold ${colors.text}`}>:</div>}
       </div>
     );
   };
@@ -199,15 +191,12 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   if (isExpired) {
     return (
       <div className={`py-8 ${className || ""}`} style={style}>
-        {customStyles && (
-          <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-        )}
-        <Card style={{ borderColor: "#E5DDD5" }}>
-          <AlertCircle style={{ color: "#8B7355" }} />
-          <h3 style={{ color: "#6B4F43" }}>Tempo Esgotado</h3>
-          <p style={{ color: "#6B4F43" }}>
-            Esta oferta especial expirou. Entre em contato para verificar novas
-            oportunidades.
+        {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
+        <Card style={{ borderColor: '#E5DDD5' }}>
+          <AlertCircle style={{ color: '#8B7355' }} />
+          <h3 style={{ color: '#6B4F43' }}>Tempo Esgotado</h3>
+          <p style={{ color: '#6B4F43' }}>
+            Esta oferta especial expirou. Entre em contato para verificar novas oportunidades.
           </p>
         </Card>
       </div>
@@ -216,9 +205,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
   return (
     <div className={`py-8 ${className || ""}`} style={style}>
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       <AnimatedWrapper animation="fade" show={true} duration={400}>
         <Card

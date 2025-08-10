@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -107,6 +107,7 @@
     <meta name="theme-color" content="#B89B7A" />
     <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
 
+
     <!-- Vite irá injetar os assets corretos no build -->
     <script type="module" src="/src/main.tsx"></script>
 
@@ -166,6 +167,7 @@
         font-family: "Playfair Display", serif;
       }
     </style>
+
   </head>
   <body>
     <noscript
@@ -179,16 +181,13 @@
     <script>
       // Unregister any existing service workers to avoid caching/fetch conflicts
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.getRegistrations().then((regs) => {
+        navigator.serviceWorker.getRegistrations().then(regs => {
           for (const reg of regs) {
             reg.unregister().catch(() => {});
           }
         });
         if (typeof caches !== "undefined") {
-          caches
-            .keys()
-            .then((keys) => keys.forEach((k) => caches.delete(k)))
-            .catch(() => {});
+          caches.keys().then(keys => keys.forEach(k => caches.delete(k))).catch(() => {});
         }
       }
     </script>

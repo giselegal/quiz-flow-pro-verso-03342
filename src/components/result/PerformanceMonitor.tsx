@@ -30,12 +30,8 @@ const PerformanceMonitor: React.FC = () => {
     const pageLoadTime = Date.now();
 
     // Verifica se há informações sobre pré-carregamento
-    const preloadedResults =
-      localStorage.getItem("preloadedResults") === "true";
-    const quizCompletedAt = parseInt(
-      localStorage.getItem("quizCompletedAt") || "0",
-      10
-    );
+    const preloadedResults = localStorage.getItem("preloadedResults") === "true";
+    const quizCompletedAt = parseInt(localStorage.getItem("quizCompletedAt") || "0", 10);
 
     // Aguarda até que a página esteja completamente carregada para coletar métricas
     window.addEventListener("load", () => {
@@ -43,21 +39,15 @@ const PerformanceMonitor: React.FC = () => {
       const resultPageLoadTime = loadCompleteTime - pageLoadTime;
 
       // Cálculo de métricas adicionais
-      const quizToResultTime = quizCompletedAt
-        ? pageLoadTime - quizCompletedAt
-        : null;
-      const totalLoadTime = quizCompletedAt
-        ? loadCompleteTime - quizCompletedAt
-        : null;
+      const quizToResultTime = quizCompletedAt ? pageLoadTime - quizCompletedAt : null;
+      const totalLoadTime = quizCompletedAt ? loadCompleteTime - quizCompletedAt : null;
 
       // Benefício estimado do pré-carregamento (baseado em dados históricos)
       const avgLoadTimeWithoutPreload = 3200; // ms
       const preloadBenefit =
         preloadedResults && totalLoadTime
           ? Math.round(
-              ((avgLoadTimeWithoutPreload - totalLoadTime) /
-                avgLoadTimeWithoutPreload) *
-                100
+              ((avgLoadTimeWithoutPreload - totalLoadTime) / avgLoadTimeWithoutPreload) * 100
             )
           : null;
 
@@ -72,17 +62,11 @@ const PerformanceMonitor: React.FC = () => {
 
       // Registra em analytics (simulado com console.log)
       console.log("===== MÉTRICAS DE DESEMPENHO =====");
-      console.log(
-        `Pré-carregamento ativo: ${preloadedResults ? "Sim" : "Não"}`
-      );
+      console.log(`Pré-carregamento ativo: ${preloadedResults ? "Sim" : "Não"}`);
       console.log(`Tempo de carregamento da página: ${resultPageLoadTime}ms`);
-      console.log(
-        `Tempo total (fim do quiz até carregamento): ${totalLoadTime}ms`
-      );
+      console.log(`Tempo total (fim do quiz até carregamento): ${totalLoadTime}ms`);
       if (preloadBenefit) {
-        console.log(
-          `Benefício estimado do pré-carregamento: ${preloadBenefit}%`
-        );
+        console.log(`Benefício estimado do pré-carregamento: ${preloadBenefit}%`);
       }
       console.log("===============================");
 

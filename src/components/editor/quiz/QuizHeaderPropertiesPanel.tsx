@@ -1,31 +1,21 @@
 // src/components/editor/quiz/QuizHeaderPropertiesPanel.tsx
 // Painel de propriedades específico para o cabeçalho do quiz
 
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../components/ui/select";
-import { Slider } from "../../../components/ui/slider";
-import { Switch } from "../../../components/ui/switch";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlignCenter,
   AlignLeft,
@@ -79,20 +69,19 @@ const ColorPicker: React.FC<{
             const input = document.createElement("input");
             input.type = "color";
             input.value = value;
-            input.onchange = (e) =>
-              onChange((e.target as HTMLInputElement).value);
+            input.onchange = e => onChange((e.target as HTMLInputElement).value);
             input.click();
           }}
         />
         <Input
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           className="text-xs h-8"
           style={{ borderColor: "#E5DDD5" }}
         />
       </div>
       <div className="grid grid-cols-6 gap-1">
-        {presetColors.map((color) => (
+        {presetColors.map(color => (
           <button
             key={color}
             className="w-6 h-6 rounded border hover:scale-110 transition-transform"
@@ -110,9 +99,10 @@ interface QuizHeaderPropertiesPanelProps {
   onUpdate?: (blockId: string, updates: Record<string, any>) => void;
 }
 
-export const QuizHeaderPropertiesPanel: React.FC<
-  QuizHeaderPropertiesPanelProps
-> = ({ selectedBlock, onUpdate }) => {
+export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps> = ({
+  selectedBlock,
+  onUpdate,
+}) => {
   const [activeTab, setActiveTab] = useState("general");
 
   const properties = selectedBlock?.properties || {};
@@ -127,10 +117,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
   };
 
   return (
-    <div
-      className="h-full flex flex-col"
-      style={{ backgroundColor: "#FEFEFE" }}
-    >
+    <div className="h-full flex flex-col" style={{ backgroundColor: "#FEFEFE" }}>
       <div className="border-b p-3" style={{ borderColor: "#E5DDD5" }}>
         <div className="flex items-center gap-2">
           <div
@@ -146,11 +133,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
       </div>
 
       <div className="flex-1 overflow-auto p-3">
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="space-y-4"
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="grid w-full grid-cols-4 h-8">
             <TabsTrigger value="general" className="text-xs">
               <Eye className="h-3 w-3 mr-1" />
@@ -184,9 +167,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </Label>
                   <Switch
                     checked={properties.enabled !== false}
-                    onCheckedChange={(checked) =>
-                      handlePropertyUpdate("enabled", checked)
-                    }
+                    onCheckedChange={checked => handlePropertyUpdate("enabled", checked)}
                   />
                 </div>
 
@@ -196,9 +177,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </Label>
                   <Switch
                     checked={properties.showLogo !== false}
-                    onCheckedChange={(checked) =>
-                      handlePropertyUpdate("showLogo", checked)
-                    }
+                    onCheckedChange={checked => handlePropertyUpdate("showLogo", checked)}
                   />
                 </div>
 
@@ -208,9 +187,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </Label>
                   <Switch
                     checked={properties.showDecorativeBar !== false}
-                    onCheckedChange={(checked) =>
-                      handlePropertyUpdate("showDecorativeBar", checked)
-                    }
+                    onCheckedChange={checked => handlePropertyUpdate("showDecorativeBar", checked)}
                   />
                 </div>
               </CardContent>
@@ -234,18 +211,13 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </div>
                   <Slider
                     value={[properties.scale || 100]}
-                    onValueChange={([value]) =>
-                      handlePropertyUpdate("scale", value)
-                    }
+                    onValueChange={([value]) => handlePropertyUpdate("scale", value)}
                     min={50}
                     max={110}
                     step={5}
                     className="w-full"
                   />
-                  <div
-                    className="flex justify-between text-xs"
-                    style={{ color: "#6B4F43" }}
-                  >
+                  <div className="flex justify-between text-xs" style={{ color: "#6B4F43" }}>
                     <span>50%</span>
                     <span>100%</span>
                     <span>110%</span>
@@ -270,9 +242,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   <div className="flex gap-2 mt-1">
                     <Input
                       value={properties.logoUrl || ""}
-                      onChange={(e) =>
-                        handlePropertyUpdate("logoUrl", e.target.value)
-                      }
+                      onChange={e => handlePropertyUpdate("logoUrl", e.target.value)}
                       placeholder="https://..."
                       className="text-xs"
                       style={{ borderColor: "#E5DDD5" }}
@@ -293,9 +263,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </Label>
                   <Input
                     value={properties.logoAlt || "Logo"}
-                    onChange={(e) =>
-                      handlePropertyUpdate("logoAlt", e.target.value)
-                    }
+                    onChange={e => handlePropertyUpdate("logoAlt", e.target.value)}
                     className="text-xs mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -312,9 +280,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </div>
                   <Slider
                     value={[properties.logoSize || 100]}
-                    onValueChange={([value]) =>
-                      handlePropertyUpdate("logoSize", value)
-                    }
+                    onValueChange={([value]) => handlePropertyUpdate("logoSize", value)}
                     min={50}
                     max={200}
                     step={10}
@@ -324,10 +290,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
 
                 {/* Preview da logo */}
                 {properties.logoUrl && (
-                  <div
-                    className="mt-3 p-2 border rounded"
-                    style={{ borderColor: "#E5DDD5" }}
-                  >
+                  <div className="mt-3 p-2 border rounded" style={{ borderColor: "#E5DDD5" }}>
                     <div className="text-xs mb-2" style={{ color: "#6B4F43" }}>
                       Preview:
                     </div>
@@ -356,7 +319,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
               <CardContent className="space-y-3">
                 <ColorPicker
                   value={properties.barColor || "#B89B7A"}
-                  onChange={(color) => handlePropertyUpdate("barColor", color)}
+                  onChange={color => handlePropertyUpdate("barColor", color)}
                   label="Cor da Barra"
                 />
 
@@ -371,9 +334,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </div>
                   <Slider
                     value={[properties.barHeight || 4]}
-                    onValueChange={([value]) =>
-                      handlePropertyUpdate("barHeight", value)
-                    }
+                    onValueChange={([value]) => handlePropertyUpdate("barHeight", value)}
                     min={1}
                     max={10}
                     step={1}
@@ -387,9 +348,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </Label>
                   <Select
                     value={properties.barPosition || "bottom"}
-                    onValueChange={(value) =>
-                      handlePropertyUpdate("barPosition", value)
-                    }
+                    onValueChange={value => handlePropertyUpdate("barPosition", value)}
                   >
                     <SelectTrigger className="text-xs h-8 mt-1">
                       <SelectValue />
@@ -413,9 +372,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
               <CardContent className="space-y-3">
                 <ColorPicker
                   value={properties.backgroundColor || "transparent"}
-                  onChange={(color) =>
-                    handlePropertyUpdate("backgroundColor", color)
-                  }
+                  onChange={color => handlePropertyUpdate("backgroundColor", color)}
                   label="Cor de Fundo"
                 />
 
@@ -430,9 +387,7 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </div>
                   <Slider
                     value={[properties.backgroundOpacity || 100]}
-                    onValueChange={([value]) =>
-                      handlePropertyUpdate("backgroundOpacity", value)
-                    }
+                    onValueChange={([value]) => handlePropertyUpdate("backgroundOpacity", value)}
                     min={0}
                     max={100}
                     step={5}
@@ -457,48 +412,33 @@ export const QuizHeaderPropertiesPanel: React.FC<
                   </Label>
                   <div className="grid grid-cols-3 gap-2 mt-2">
                     <Button
-                      variant={
-                        properties.alignment === "left" ? "default" : "outline"
-                      }
+                      variant={properties.alignment === "left" ? "default" : "outline"}
                       size="sm"
                       onClick={() => handlePropertyUpdate("alignment", "left")}
                       className="text-xs"
                       style={{
                         backgroundColor:
-                          properties.alignment === "left"
-                            ? "#B89B7A"
-                            : "transparent",
+                          properties.alignment === "left" ? "#B89B7A" : "transparent",
                         borderColor: "#B89B7A",
-                        color:
-                          properties.alignment === "left"
-                            ? "#FEFEFE"
-                            : "#B89B7A",
+                        color: properties.alignment === "left" ? "#FEFEFE" : "#B89B7A",
                       }}
                     >
                       <AlignLeft className="h-3 w-3 mr-1" />
                       Esq.
                     </Button>
                     <Button
-                      variant={
-                        properties.alignment === "center"
-                          ? "default"
-                          : "outline"
-                      }
+                      variant={properties.alignment === "center" ? "default" : "outline"}
                       size="sm"
-                      onClick={() =>
-                        handlePropertyUpdate("alignment", "center")
-                      }
+                      onClick={() => handlePropertyUpdate("alignment", "center")}
                       className="text-xs"
                       style={{
                         backgroundColor:
-                          properties.alignment === "center" ||
-                          !properties.alignment
+                          properties.alignment === "center" || !properties.alignment
                             ? "#B89B7A"
                             : "transparent",
                         borderColor: "#B89B7A",
                         color:
-                          properties.alignment === "center" ||
-                          !properties.alignment
+                          properties.alignment === "center" || !properties.alignment
                             ? "#FEFEFE"
                             : "#B89B7A",
                       }}
@@ -507,22 +447,15 @@ export const QuizHeaderPropertiesPanel: React.FC<
                       Centro
                     </Button>
                     <Button
-                      variant={
-                        properties.alignment === "right" ? "default" : "outline"
-                      }
+                      variant={properties.alignment === "right" ? "default" : "outline"}
                       size="sm"
                       onClick={() => handlePropertyUpdate("alignment", "right")}
                       className="text-xs"
                       style={{
                         backgroundColor:
-                          properties.alignment === "right"
-                            ? "#B89B7A"
-                            : "transparent",
+                          properties.alignment === "right" ? "#B89B7A" : "transparent",
                         borderColor: "#B89B7A",
-                        color:
-                          properties.alignment === "right"
-                            ? "#FEFEFE"
-                            : "#B89B7A",
+                        color: properties.alignment === "right" ? "#FEFEFE" : "#B89B7A",
                       }}
                     >
                       <AlignRight className="h-3 w-3 mr-1" />

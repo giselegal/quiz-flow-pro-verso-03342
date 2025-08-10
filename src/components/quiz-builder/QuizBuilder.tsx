@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-import { useUnifiedProperties } from "../../hooks/useUnifiedProperties";
-import {
-  ResizablePanelGroup,
-  ResizablePanel,
-  ResizableHandle,
-} from "../../components/ui/resizable";
-import { Button } from "../../components/ui/button";
-import { useQuizBuilder } from "../../hooks/useQuizBuilder";
-import { useEditor } from "../../hooks/useEditor";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { Button } from "@/components/ui/button";
+import { useQuizBuilder } from "@/hooks/useQuizBuilder";
+import { useEditor } from "@/hooks/useEditor";
 import { ComponentsSidebar } from "./ComponentsSidebar";
 import BuilderLayout from "./components/BuilderLayout";
 import { StagesPanel } from "./StagesPanel";
 import { PropertiesPanel } from "./PropertiesPanel";
-import { QuizComponentType, QuizComponentData } from "../../types/quizBuilder";
-import { StyleResult, StyleType } from "../../types/quiz";
+import { QuizComponentType, QuizComponentData } from "@/types/quizBuilder";
+import { StyleResult, StyleType } from "@/types/quiz";
 
 const QuizBuilder: React.FC = () => {
   const {
@@ -84,10 +80,8 @@ const QuizBuilder: React.FC = () => {
     secondaryStyles: mockSecondaryStyles,
   };
 
-  const activeStage = stages.find((stage) => stage.id === activeStageId);
-  const stageComponents = components.filter(
-    (c: QuizComponentData) => c.stageId === activeStageId
-  );
+  const activeStage = stages.find(stage => stage.id === activeStageId);
+  const stageComponents = components.filter((c: QuizComponentData) => c.stageId === activeStageId);
 
   const handleComponentAdd = (type: QuizComponentType) => {
     if (!activeStageId) {
@@ -98,10 +92,7 @@ const QuizBuilder: React.FC = () => {
     addComponent(type);
   };
 
-  const handleComponentUpdate = (
-    id: string,
-    updates: Partial<QuizComponentData>
-  ) => {
+  const handleComponentUpdate = (id: string, updates: Partial<QuizComponentData>) => {
     updateComponent(id, updates);
   };
 
@@ -126,7 +117,7 @@ const QuizBuilder: React.FC = () => {
 
   // Safely handle editor blocks
   const handleBlockOperations = () => {
-    blocks.forEach((block) => {
+    blocks.forEach(block => {
       const content = block.content || {};
       const title = content?.title || "";
       const text = content?.text || "";
@@ -143,13 +134,9 @@ const QuizBuilder: React.FC = () => {
       <div className="bg-white border-b border-[#B89B7A]/20 p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-playfair text-[#432818]">
-              Quiz Builder
-            </h1>
+            <h1 className="text-2xl font-playfair text-[#432818]">Quiz Builder</h1>
             {activeStage && (
-              <p className="text-sm text-[#8F7A6A] mt-1">
-                Editando: {activeStage.title}
-              </p>
+              <p className="text-sm text-[#8F7A6A] mt-1">Editando: {activeStage.title}</p>
             )}
           </div>
           <div className="flex gap-2">

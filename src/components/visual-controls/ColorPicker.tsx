@@ -1,11 +1,7 @@
-import { Button } from "../../components/ui/button";
-import { Label } from "../../components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../components/ui/popover";
-import { cn } from "../../lib/utils";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 
 interface ColorPickerProps {
@@ -64,9 +60,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   backgroundColor: isTransparent ? "transparent" : value,
                 }}
               />
-              <span className="text-sm">
-                {isTransparent ? "Transparente" : displayValue}
-              </span>
+              <span className="text-sm">{isTransparent ? "Transparente" : displayValue}</span>
             </div>
           </Button>
         </PopoverTrigger>
@@ -74,9 +68,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         <PopoverContent className="w-64 p-4">
           <div className="space-y-4">
             <div>
-              <Label className="text-sm font-medium mb-2 block">
-                Cores Pré-definidas
-              </Label>
+              <Label className="text-sm font-medium mb-2 block">Cores Pré-definidas</Label>
               <div className="grid grid-cols-4 gap-2">
                 {presetColors.map(({ color, name }) => (
                   <button
@@ -100,9 +92,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
             {allowTransparent && (
               <div>
-                <Label className="text-sm font-medium mb-2 block">
-                  Transparente
-                </Label>
+                <Label className="text-sm font-medium mb-2 block">Transparente</Label>
                 <button
                   onClick={() => {
                     onChange("transparent");
@@ -110,28 +100,24 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   }}
                   className={cn(
                     "w-full h-10 rounded border-2 border-dashed hover:bg-gray-50 transition-colors flex items-center justify-center",
-                    value === "transparent"
-                      ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                      : "border-gray-300"
+                    value === "transparent" ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300"
                   )}
                 >
-                  <span style={{ color: "#6B4F43" }}>Sem cor de fundo</span>
+                  <span style={{ color: '#6B4F43' }}>Sem cor de fundo</span>
                 </button>
               </div>
             )}
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">
-                Cor Personalizada
-              </Label>
+              <Label className="text-sm font-medium mb-2 block">Cor Personalizada</Label>
               <input
                 type="color"
                 value={isTransparent ? "#432818" : value}
-                onChange={(e) => {
+                onChange={e => {
                   onChange(e.target.value);
                   setIsOpen(false);
                 }}
-                style={{ borderColor: "#E5DDD5" }}
+                style={{ borderColor: '#E5DDD5' }}
               />
             </div>
           </div>

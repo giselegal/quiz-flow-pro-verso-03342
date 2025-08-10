@@ -1,10 +1,8 @@
-import type { Database } from "../integrations/supabase/types";
+import type { Database } from "@/integrations/supabase/types";
 import { createClient } from "@supabase/supabase-js";
 
 // Configuração segura para SSR
-const supabaseUrl =
-  import.meta.env.VITE_SUPABASE_URL ||
-  "https://inabgbgrgzfxgkbdaush.supabase.co";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://inabgbgrgzfxgkbdaush.supabase.co";
 const supabaseKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluYWJnYmdyZ3pmeGdrYmRhdXNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNjM1MTcsImV4cCI6MjA2NzgzOTUxN30.RftMKxnqV09nWIVAbJIWMTS-JxiVDOhPZneAXuocGfU";

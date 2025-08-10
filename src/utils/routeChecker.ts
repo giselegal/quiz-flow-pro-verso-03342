@@ -28,7 +28,7 @@ export function checkMainRoutes(): RouteCheckResult {
     { path: "/quiz-descubra-seu-estilo", name: "Página do Quiz Completo" },
   ];
 
-  const results: RouteStatus[] = mainRoutes.map((route) => {
+  const results: RouteStatus[] = mainRoutes.map(route => {
     // Criar o URL completo
     const baseUrl = window.location.origin;
     const fullUrl = new URL(route.path, baseUrl).href;
@@ -42,18 +42,16 @@ export function checkMainRoutes(): RouteCheckResult {
 
   // Verificar a rota atual
   const currentPath = window.location.pathname;
-  results.forEach((route) => {
+  results.forEach(route => {
     if (currentPath === route.path) {
       route.status = "carregada";
-      console.log(
-        `✅ Rota atual: ${route.name} (${route.path}) - carregada com sucesso`
-      );
+      console.log(`✅ Rota atual: ${route.name} (${route.path}) - carregada com sucesso`);
     }
   });
 
   // Exibir informações detalhadas
   console.log("📊 Status das rotas principais:");
-  results.forEach((route) => {
+  results.forEach(route => {
     console.log(
       `${route.status === "carregada" ? "✅" : "⏳"} ${route.name}: ${route.fullUrl} - ${route.status}`
     );
@@ -90,19 +88,13 @@ export function testMainRoutes(doRealNavigation: boolean = false): void {
   }
 
   if (doRealNavigation) {
-    console.warn(
-      "⚠️ Teste de navegação real ativado - o navegador irá mudar de página."
-    );
+    console.warn("⚠️ Teste de navegação real ativado - o navegador irá mudar de página.");
 
     // Testar a primeira rota que não seja a atual
-    const routeToTest = result.routes.find(
-      (r) => r.path !== result.currentRoute
-    );
+    const routeToTest = result.routes.find(r => r.path !== result.currentRoute);
 
     if (routeToTest) {
-      console.log(
-        `🔄 Navegando para ${routeToTest.name} (${routeToTest.path})...`
-      );
+      console.log(`🔄 Navegando para ${routeToTest.name} (${routeToTest.path})...`);
 
       // Usar história do navegador para não realizar reload completo
       window.history.pushState({}, "", routeToTest.path);
@@ -111,12 +103,8 @@ export function testMainRoutes(doRealNavigation: boolean = false): void {
       window.dispatchEvent(new Event("popstate"));
     }
   } else {
-    console.log(
-      "ℹ️ Teste de navegação em modo simulação - sem mudança de página."
-    );
-    console.log(
-      "ℹ️ Para realizar navegação real, execute: testMainRoutes(true)"
-    );
+    console.log("ℹ️ Teste de navegação em modo simulação - sem mudança de página.");
+    console.log("ℹ️ Para realizar navegação real, execute: testMainRoutes(true)");
   }
 }
 

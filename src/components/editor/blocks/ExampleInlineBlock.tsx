@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
@@ -11,14 +11,8 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "../../../utils/inlineComponentUtils";
-import {
-  BRAND_COLORS,
-  TYPOGRAPHY,
-  SPACING,
-  ANIMATIONS,
-  EFFECTS,
-} from "../../../utils/brandDesignSystem";
+} from "@/utils/inlineComponentUtils";
+import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from "@/utils/brandDesignSystem";
 import { Star, TrendingUp, Users, Award, ChevronRight } from "lucide-react";
 
 /**
@@ -43,14 +37,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -142,7 +129,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   const handleClick = () => {
-    setClickCount((prev) => prev + 1);
+    setClickCount(prev => prev + 1);
     setLastInteraction(Date.now());
 
     // 5. TRACKING: Event tracking
@@ -217,13 +204,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
       )}
       // 1. REUTILIZÁVEL: Props flexíveis de layout
       gap={spacing === "tight" ? "sm" : spacing === "loose" ? "lg" : "md"}
-      justify={
-        alignment === "left"
-          ? "start"
-          : alignment === "right"
-            ? "end"
-            : "center"
-      }
+      justify={alignment === "left" ? "start" : alignment === "right" ? "end" : "center"}
       align="center"
       direction={layout === "vertical" ? "col" : "row"}
       wrap={responsiveLayout}
@@ -245,9 +226,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
       }}
       // 4. INLINE: Dimensões otimizadas
       minHeight="4rem"
-      maxWidth={
-        size === "small" ? "20rem" : size === "large" ? "40rem" : "30rem"
-      }
+      maxWidth={size === "small" ? "20rem" : size === "large" ? "40rem" : "30rem"}
       // 5. TRACKING: Dados de analytics
       trackingData={{
         componentName: "ExampleInlineBlock",
@@ -268,7 +247,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
       onEdit={() => console.log("Edit triggered")}
       onDuplicate={() => console.log("Duplicate triggered")}
       onDelete={() => console.log("Delete triggered")}
-      onMove={(direction) => console.log("Move triggered:", direction)}
+      onMove={direction => console.log("Move triggered:", direction)}
     >
       <div
         className={cn(
@@ -286,32 +265,20 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
       >
         {/* Icon */}
         {showIcon && (
-          <div
-            className={cn(
-              "flex-shrink-0 mr-3",
-              layout === "vertical" && "mb-2 mr-0"
-            )}
-          >
+          <div className={cn("flex-shrink-0 mr-3", layout === "vertical" && "mb-2 mr-0")}>
             {getIcon()}
           </div>
         )}
 
         {/* Content */}
-        <div
-          className={cn(
-            "flex-1",
-            layout === "vertical" ? "text-center" : "text-left"
-          )}
-        >
+        <div className={cn("flex-1", layout === "vertical" ? "text-center" : "text-left")}>
           {/* Title */}
           <div className="font-semibold mb-1">
             <InlineEditableText
               value={personalizedTitle}
-              onChange={(value) => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange("title", value)}
               placeholder="Título do componente..."
-              fontSize={
-                size === "large" ? "lg" : size === "small" ? "sm" : "base"
-              }
+              fontSize={size === "large" ? "lg" : size === "small" ? "sm" : "base"}
               fontWeight="semibold"
               textAlign={layout === "vertical" ? "center" : "left"}
               className="bg-transparent outline-none"
@@ -322,7 +289,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="opacity-90">
             <InlineEditableText
               value={description}
-              onChange={(value) => handlePropertyChange("description", value)}
+              onChange={value => handlePropertyChange("description", value)}
               placeholder="Descrição do componente..."
               fontSize="sm"
               textAlign={layout === "vertical" ? "center" : "left"}
@@ -337,9 +304,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="mt-2 flex items-center text-xs opacity-75">
               <span>Cliques: {clickCount}</span>
               <span className="mx-2">•</span>
-              <span>
-                Última interação: {lastInteraction > 0 ? "agora" : "nunca"}
-              </span>
+              <span>Última interação: {lastInteraction > 0 ? "agora" : "nunca"}</span>
             </div>
           )}
         </div>
@@ -347,7 +312,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Action Button */}
         <div className="flex-shrink-0 ml-3">
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               handleConversion();
             }}

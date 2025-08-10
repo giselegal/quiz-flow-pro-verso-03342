@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "../../../components/ui/card";
-import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { Card, CardContent } from "@/components/ui/card";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -81,8 +74,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
       },
       {
         question: "Posso usar em qualquer idade?",
-        answer:
-          "Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.",
+        answer: "Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.",
       },
     ],
   } = block?.properties || {};
@@ -113,10 +105,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
     >
       <AnimatedWrapper show={isLoaded}>
         <div className="max-w-4xl mx-auto">
-          <h3
-            className="text-3xl font-bold text-center mb-12"
-            style={{ color: textColor }}
-          >
+          <h3 className="text-3xl font-bold text-center mb-12" style={{ color: textColor }}>
             {title}
           </h3>
 
@@ -124,13 +113,10 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
             {faqItems.map((item: any, index: number) => (
               <Card key={index} className="shadow-lg border-0">
                 <CardContent className="p-6">
-                  <h4
-                    className="text-xl font-semibold mb-3"
-                    style={{ color: textColor }}
-                  >
+                  <h4 className="text-xl font-semibold mb-3" style={{ color: textColor }}>
                     {item.question}
                   </h4>
-                  <p style={{ color: "#6B4F43" }}>{item.answer}</p>
+                  <p style={{ color: '#6B4F43' }}>{item.answer}</p>
                 </CardContent>
               </Card>
             ))}

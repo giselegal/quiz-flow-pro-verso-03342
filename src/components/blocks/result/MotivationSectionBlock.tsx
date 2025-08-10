@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import MotivationSection from "../../../components/result/MotivationSection";
+import MotivationSection from "@/components/result/MotivationSection";
 
 /**
  * BLOCO EDITÁVEL: Seção de Motivação
@@ -44,14 +44,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {

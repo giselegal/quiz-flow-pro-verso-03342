@@ -6,13 +6,13 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Button } from "../../../components/ui/button";
-import { Switch } from "../../../components/ui/switch";
-import { Badge } from "../../../components/ui/badge";
-import { toast } from "../../../components/ui/use-toast";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "@/components/ui/use-toast";
 
 interface GoogleAnalyticsCardProps {
   initialId?: string;
@@ -24,8 +24,7 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
   initialEnabled = false,
 }) => {
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState(initialId);
-  const [googleAnalyticsEnabled, setGoogleAnalyticsEnabled] =
-    useState(initialEnabled);
+  const [googleAnalyticsEnabled, setGoogleAnalyticsEnabled] = useState(initialEnabled);
 
   const handleSaveGoogleAnalytics = () => {
     try {
@@ -33,14 +32,12 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
       localStorage.setItem("ga_enabled", String(googleAnalyticsEnabled));
       toast({
         title: "Google Analytics settings saved",
-        description:
-          "Your Google Analytics integration settings have been updated.",
+        description: "Your Google Analytics integration settings have been updated.",
       });
     } catch (error) {
       toast({
         title: "Error saving settings",
-        description:
-          "There was an error saving your settings. Please try again.",
+        description: "There was an error saving your settings. Please try again.",
         variant: "destructive",
       });
     }
@@ -49,8 +46,7 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
   const handleTestConnection = () => {
     toast({
       title: "Testing Google Analytics connection",
-      description:
-        "Connection test initiated. Please check the console for results.",
+      description: "Connection test initiated. Please check the console for results.",
     });
     console.log("Testing connection to Google Analytics...");
   };
@@ -77,11 +73,10 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
             id="ga-id"
             placeholder="G-XXXXXXXXXX"
             value={googleAnalyticsId}
-            onChange={(e) => setGoogleAnalyticsId(e.target.value)}
+            onChange={e => setGoogleAnalyticsId(e.target.value)}
           />
           <p className="text-sm text-muted-foreground">
-            Found in your Google Analytics property settings under "Data
-            Streams"
+            Found in your Google Analytics property settings under "Data Streams"
           </p>
         </div>
 

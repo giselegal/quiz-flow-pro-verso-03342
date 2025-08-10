@@ -1,6 +1,6 @@
 import React from "react";
-import { ComponentProps } from "../../../interfaces/quiz";
-import styles from "../../../styles/quiz.module.css";
+import { ComponentProps } from "@/interfaces/quiz";
+import styles from "@/styles/quiz.module.css";
 
 interface QuizGuaranteeProps extends ComponentProps {
   title?: string;

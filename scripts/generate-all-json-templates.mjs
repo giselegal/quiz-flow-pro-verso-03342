@@ -4,12 +4,7 @@ import path from "path";
 
 // 📋 Configuração das 21 etapas
 const STEPS_CONFIG = [
-  {
-    step: 1,
-    name: "Introdução",
-    description: "Página inicial do quiz",
-    category: "intro",
-  },
+  { step: 1, name: "Introdução", description: "Página inicial do quiz", category: "intro" },
   {
     step: 2,
     name: "Q1 - Roupa Favorita",
@@ -100,30 +95,10 @@ const STEPS_CONFIG = [
     description: "Página de carregamento do resultado",
     category: "processing",
   },
-  {
-    step: 17,
-    name: "Resultado 1",
-    description: "Primeira tela de resultado",
-    category: "result",
-  },
-  {
-    step: 18,
-    name: "Resultado 2",
-    description: "Segunda tela de resultado",
-    category: "result",
-  },
-  {
-    step: 19,
-    name: "Resultado 3",
-    description: "Terceira tela de resultado",
-    category: "result",
-  },
-  {
-    step: 20,
-    name: "Lead Capture",
-    description: "Coleta de dados para contato",
-    category: "lead",
-  },
+  { step: 17, name: "Resultado 1", description: "Primeira tela de resultado", category: "result" },
+  { step: 18, name: "Resultado 2", description: "Segunda tela de resultado", category: "result" },
+  { step: 19, name: "Resultado 3", description: "Terceira tela de resultado", category: "result" },
+  { step: 20, name: "Lead Capture", description: "Coleta de dados para contato", category: "lead" },
   {
     step: 21,
     name: "Oferta Final",
@@ -381,10 +356,8 @@ const getTemplateBlocks = (step, config) => {
         position: 2,
         properties: {
           title: "Estilo Elegante",
-          description:
-            "Você tem preferência por peças clássicas e refinadas...",
-          imageUrl:
-            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+          description: "Você tem preferência por peças clássicas e refinadas...",
+          imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
           containerWidth: "full",
           spacing: "small",
         },
@@ -464,13 +437,8 @@ const getTemplateBlocks = (step, config) => {
           title: "Consultoria de Estilo Personalizada",
           originalPrice: "R$ 497",
           discountPrice: "R$ 297",
-          description:
-            "Consultoria completa com análise personalizada do seu estilo",
-          features: [
-            "Análise completa",
-            "Guia personalizado",
-            "Suporte por 30 dias",
-          ],
+          description: "Consultoria completa com análise personalizada do seu estilo",
+          features: ["Análise completa", "Guia personalizado", "Suporte por 30 dias"],
           containerWidth: "full",
           spacing: "small",
         },
@@ -504,8 +472,7 @@ function generateOptionsForStep(step) {
     {
       id: `${step}a`,
       text: "Opção A - Descrição personalizada",
-      imageUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+      imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
       value: `${step}a`,
       category: "Natural",
       points: 1,
@@ -513,8 +480,7 @@ function generateOptionsForStep(step) {
     {
       id: `${step}b`,
       text: "Opção B - Descrição personalizada",
-      imageUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+      imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
       value: `${step}b`,
       category: "Clássico",
       points: 2,
@@ -522,8 +488,7 @@ function generateOptionsForStep(step) {
     {
       id: `${step}c`,
       text: "Opção C - Descrição personalizada",
-      imageUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+      imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
       value: `${step}c`,
       category: "Contemporâneo",
       points: 2,
@@ -531,8 +496,7 @@ function generateOptionsForStep(step) {
     {
       id: `${step}d`,
       text: "Opção D - Descrição personalizada",
-      imageUrl:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+      imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
       value: `${step}d`,
       category: "Elegante",
       points: 3,
@@ -582,9 +546,7 @@ async function generateAllTemplates() {
 
     fs.writeFileSync(filepath, JSON.stringify(template, null, 2));
 
-    console.log(
-      `✅ ${filename} - ${stepConfig.name} (${template.blocks.length} blocos)`
-    );
+    console.log(`✅ ${filename} - ${stepConfig.name} (${template.blocks.length} blocos)`);
   }
 
   console.log(`\n🎉 21 templates JSON criados com sucesso em ${templatesDir}/`);

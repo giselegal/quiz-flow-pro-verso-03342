@@ -246,15 +246,15 @@ function main() {
   // Buscar todos os arquivos de template
   const templateFiles = fs
     .readdirSync(templatesDir)
-    .filter((file) => file.match(/^Step\d+Template\.tsx$/))
-    .map((file) => path.join(templatesDir, file));
+    .filter(file => file.match(/^Step\d+Template\.tsx$/))
+    .map(file => path.join(templatesDir, file));
 
   console.log(`📁 Encontrados ${templateFiles.length} arquivos de template\n`);
 
   let convertedCount = 0;
 
   // Converter cada arquivo
-  templateFiles.forEach((filePath) => {
+  templateFiles.forEach(filePath => {
     if (convertTemplateFile(filePath)) {
       convertedCount++;
     }

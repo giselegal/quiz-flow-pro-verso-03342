@@ -6,8 +6,7 @@ export async function testSupabaseIntegration() {
 
   try {
     // Teste 1: Inicializar sessão
-    const sessionId =
-      await userResponseService.initializeSession("test-funnel-id");
+    const sessionId = await userResponseService.initializeSession("test-funnel-id");
     console.log("✅ Sessão inicializada:", sessionId);
 
     // Teste 2: Salvar nome do usuário
@@ -43,6 +42,4 @@ export async function testSupabaseIntegration() {
 // Para testar manualmente no console:
 // window.testSupabaseIntegration = testSupabaseIntegration;
 
-console.log(
-  "📦 Script de teste carregado. Use testSupabaseIntegration() para testar."
-);
+console.log("📦 Script de teste carregado. Use testSupabaseIntegration() para testar.");

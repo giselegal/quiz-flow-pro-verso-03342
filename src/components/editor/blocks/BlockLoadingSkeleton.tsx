@@ -7,14 +7,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,7 +49,7 @@ const getMarginClass = (value, type) => {
 const BlockLoadingSkeleton: React.FC = () => {
   return (
     <div className="animate-pulse">
-      <div style={{ backgroundColor: "#E5DDD5" }}>
+      <div style={{ backgroundColor: '#E5DDD5' }}>
         <div className="h-4 bg-gray-300 rounded w-3/4"></div>
         <div className="space-y-2">
           <div className="h-3 bg-gray-300 rounded"></div>

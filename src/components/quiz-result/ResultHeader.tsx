@@ -1,4 +1,4 @@
-import { StepTemplateIds } from "../../utils/semanticIdGenerator";
+import { StepTemplateIds } from "@/utils/semanticIdGenerator";
 import { motion } from "framer-motion";
 import React from "react";
 import Logo from "../ui/logo";
@@ -8,10 +8,7 @@ interface ResultHeaderProps {
   customTitle?: string;
 }
 
-const ResultHeader: React.FC<ResultHeaderProps> = ({
-  userName,
-  customTitle,
-}) => {
+const ResultHeader: React.FC<ResultHeaderProps> = ({ userName, customTitle }) => {
   // 🎯 SISTEMA 1: ID Semântico para componente de resultado
   const componentId = StepTemplateIds.result.header(userName);
 

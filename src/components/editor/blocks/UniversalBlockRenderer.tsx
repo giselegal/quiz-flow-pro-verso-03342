@@ -1,7 +1,7 @@
-import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
-import { useContainerProperties } from "../../../hooks/useContainerProperties";
-import { cn } from "../../../lib/utils";
-import { Block } from "../../../types/editor";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { useContainerProperties } from "@/hooks/useContainerProperties";
+import { cn } from "@/lib/utils";
+import { Block } from "@/types/editor";
 import React from "react";
 
 export interface UniversalBlockRendererProps {
@@ -28,14 +28,7 @@ const getMarginClass = (
 
   if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -84,8 +77,9 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   const Component = getBlockComponent(block.type);
 
   // Processar propriedades de container usando o hook
-  const { containerClasses, inlineStyles, processedProperties } =
-    useContainerProperties(block.properties);
+  const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
+    block.properties
+  );
 
   // Log para debug das propriedades de container (apenas em desenvolvimento)
   if (
@@ -145,7 +139,10 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     console.error(`Erro ao renderizar bloco ${block.type}:`, error);
 
     return (
-      <div style={{ borderColor: "#B89B7A" }} onClick={onClick}>
+      <div
+        style={{ borderColor: '#B89B7A' }}
+        onClick={onClick}
+      >
         <p>Erro ao renderizar: {block.type}</p>
         <p className="text-xs mt-1">
           {error instanceof Error ? error.message : "Erro desconhecido"}

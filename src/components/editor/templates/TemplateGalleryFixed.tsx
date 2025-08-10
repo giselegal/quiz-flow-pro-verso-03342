@@ -1,5 +1,5 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,29 +8,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../../../components/ui/dialog";
+} from "@/components/ui/dialog";
 import React, { useState } from "react";
 // Update the import path below if your Input component is located elsewhere, for example:
 import { Input } from "../../ui/input";
 // Or, if using a library like 'shadcn/ui':
 // import { Input } from 'shadcn-ui';
-import { Badge } from "../../../components/ui/badge";
-import { Label } from "../../../components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../components/ui/select";
-import { Textarea } from "../../../components/ui/textarea";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../../components/ui/tooltip";
-import { BlockData } from "../../../types/blocks";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { BlockData } from "@/types/blocks";
 import {
   Clock,
   Copy,
@@ -69,9 +64,7 @@ interface Template {
 interface TemplateGalleryProps {
   onApplyTemplate: (template: Template) => void;
   currentBlocks: BlockData[];
-  onSaveAsTemplate?: (
-    template: Omit<Template, "id" | "createdAt" | "updatedAt">
-  ) => void;
+  onSaveAsTemplate?: (template: Omit<Template, "id" | "createdAt" | "updatedAt">) => void;
 }
 
 // Templates predefinidos
@@ -117,8 +110,7 @@ const PREDEFINED_TEMPLATES: Template[] = [
         id: "intro-subtitle",
         type: "text-inline",
         properties: {
-          content:
-            "Um quiz personalizado para descobrir qual estilo combina mais com você",
+          content: "Um quiz personalizado para descobrir qual estilo combina mais com você",
           textAlign: "center",
           color: "#6B4F43",
         },
@@ -280,9 +272,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   const [templates, setTemplates] = useState<Template[]>(PREDEFINED_TEMPLATES);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<
-    "name" | "created" | "downloads" | "rating"
-  >("created");
+  const [sortBy, setSortBy] = useState<"name" | "created" | "downloads" | "rating">("created");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
@@ -299,16 +289,13 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
   });
 
   // Filtrar templates
-  const filteredTemplates = templates.filter((template) => {
+  const filteredTemplates = templates.filter(template => {
     const matchesSearch =
       template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      template.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    const matchesCategory =
-      selectedCategory === "all" || template.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || template.category === selectedCategory;
     const matchesFavorites = !showFavoritesOnly || template.isFavorite;
 
     return matchesSearch && matchesCategory && matchesFavorites;
@@ -365,7 +352,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       updatedAt: new Date(),
     };
 
-    setTemplates((prev) => [...prev, newTemplateWithId]);
+    setTemplates(prev => [...prev, newTemplateWithId]);
     setShowCreateDialog(false);
     setNewTemplate({
       name: "",
@@ -378,11 +365,9 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 
   // Toggle favorito
   const toggleFavorite = (templateId: string) => {
-    setTemplates((prev) =>
-      prev.map((template) =>
-        template.id === templateId
-          ? { ...template, isFavorite: !template.isFavorite }
-          : template
+    setTemplates(prev =>
+      prev.map(template =>
+        template.id === templateId ? { ...template, isFavorite: !template.isFavorite } : template
       )
     );
   };
@@ -400,12 +385,12 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       downloads: 0,
     };
 
-    setTemplates((prev) => [...prev, duplicated]);
+    setTemplates(prev => [...prev, duplicated]);
   };
 
   // Deletar template
   const deleteTemplate = (templateId: string) => {
-    setTemplates((prev) => prev.filter((t) => t.id !== templateId));
+    setTemplates(prev => prev.filter(t => t.id !== templateId));
   };
 
   return (
@@ -413,10 +398,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 style={{ color: "#432818" }}>Galeria de Templates</h2>
-          <p style={{ color: "#6B4F43" }}>
-            Escolha um template ou crie o seu próprio
-          </p>
+          <h2 style={{ color: '#432818' }}>Galeria de Templates</h2>
+          <p style={{ color: '#6B4F43' }}>Escolha um template ou crie o seu próprio</p>
         </div>
 
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -440,12 +423,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Input
                   id="template-name"
                   value={newTemplate.name}
-                  onChange={(e) =>
-                    setNewTemplate((prev) => ({
-                      ...prev,
-                      name: e.target.value,
-                    }))
-                  }
+                  onChange={e => setNewTemplate(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Ex: Meu Quiz Personalizado"
                 />
               </div>
@@ -455,12 +433,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Textarea
                   id="template-description"
                   value={newTemplate.description}
-                  onChange={(e) =>
-                    setNewTemplate((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
+                  onChange={e => setNewTemplate(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Descreva o propósito deste template..."
                   rows={3}
                 />
@@ -471,7 +444,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Select
                   value={newTemplate.category}
                   onValueChange={(value: Template["category"]) =>
-                    setNewTemplate((prev) => ({ ...prev, category: value }))
+                    setNewTemplate(prev => ({ ...prev, category: value }))
                   }
                 >
                   <SelectTrigger>
@@ -488,16 +461,10 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             </div>
 
             <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setShowCreateDialog(false)}
-              >
+              <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
                 Cancelar
               </Button>
-              <Button
-                onClick={handleSaveTemplate}
-                disabled={!newTemplate.name.trim()}
-              >
+              <Button onClick={handleSaveTemplate} disabled={!newTemplate.name.trim()}>
                 Salvar Template
               </Button>
             </DialogFooter>
@@ -512,7 +479,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           <Input
             placeholder="Buscar templates..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -530,10 +497,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
           </SelectContent>
         </Select>
 
-        <Select
-          value={sortBy}
-          onValueChange={(value: typeof sortBy) => setSortBy(value)}
-        >
+        <Select value={sortBy} onValueChange={(value: typeof sortBy) => setSortBy(value)}>
           <SelectTrigger className="w-40">
             <SelectValue />
           </SelectTrigger>
@@ -552,9 +516,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Button
                   variant={sortOrder === "desc" ? "default" : "outline"}
                   size="sm"
-                  onClick={() =>
-                    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-                  }
+                  onClick={() => setSortOrder(prev => (prev === "asc" ? "desc" : "asc"))}
                 >
                   {sortOrder === "desc" ? (
                     <SortDesc className="w-4 h-4" />
@@ -563,9 +525,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                   )}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                {sortOrder === "desc" ? "Decrescente" : "Crescente"}
-              </TooltipContent>
+              <TooltipContent>{sortOrder === "desc" ? "Decrescente" : "Crescente"}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
@@ -575,11 +535,9 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Button
                   variant={showFavoritesOnly ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setShowFavoritesOnly((prev) => !prev)}
+                  onClick={() => setShowFavoritesOnly(prev => !prev)}
                 >
-                  <Heart
-                    className={`w-4 h-4 ${showFavoritesOnly ? "fill-current" : ""}`}
-                  />
+                  <Heart className={`w-4 h-4 ${showFavoritesOnly ? "fill-current" : ""}`} />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Apenas Favoritos</TooltipContent>
@@ -592,9 +550,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 <Button
                   variant={viewMode === "grid" ? "default" : "outline"}
                   size="sm"
-                  onClick={() =>
-                    setViewMode((prev) => (prev === "grid" ? "list" : "grid"))
-                  }
+                  onClick={() => setViewMode(prev => (prev === "grid" ? "list" : "grid"))}
                 >
                   {viewMode === "grid" ? (
                     <Grid className="w-4 h-4" />
@@ -604,9 +560,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {viewMode === "grid"
-                  ? "Visualização em Grade"
-                  : "Visualização em Lista"}
+                {viewMode === "grid" ? "Visualização em Grade" : "Visualização em Lista"}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -616,12 +570,10 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {/* Grid/Lista de Templates */}
       <div
         className={
-          viewMode === "grid"
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            : "space-y-4"
+          viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"
         }
       >
-        {sortedTemplates.map((template) => (
+        {sortedTemplates.map(template => (
           <div
             key={template.id}
             className={`bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${
@@ -640,7 +592,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             {/* Conteúdo */}
             <div className="p-4 flex-1">
               <div className="flex items-start justify-between mb-2">
-                <h3 style={{ color: "#432818" }}>{template.name}</h3>
+                <h3 style={{ color: '#432818' }}>{template.name}</h3>
                 <div className="flex items-center gap-1 ml-2">
                   <TooltipProvider>
                     <Tooltip>
@@ -653,30 +605,26 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                         >
                           <Heart
                             className={`w-3 h-3 ${
-                              template.isFavorite
-                                ? "fill-current text-red-500"
-                                : "text-gray-400"
+                              template.isFavorite ? "fill-current text-red-500" : "text-gray-400"
                             }`}
                           />
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>
-                        {template.isFavorite
-                          ? "Remover dos Favoritos"
-                          : "Adicionar aos Favoritos"}
+                        {template.isFavorite ? "Remover dos Favoritos" : "Adicionar aos Favoritos"}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </div>
               </div>
 
-              <p style={{ color: "#6B4F43" }}>{template.description}</p>
+              <p style={{ color: '#6B4F43' }}>{template.description}</p>
 
               <div className="flex flex-wrap gap-1 mb-3">
                 <Badge variant="secondary" className="text-xs">
                   {template.category}
                 </Badge>
-                {template.tags.slice(0, 2).map((tag) => (
+                {template.tags.slice(0, 2).map(tag => (
                   <Badge key={tag} variant="outline" className="text-xs">
                     {tag}
                   </Badge>
@@ -689,7 +637,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               </div>
 
               {/* Metadados */}
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 <div className="flex items-center gap-2">
                   {template.rating && (
                     <div className="flex items-center gap-1">
@@ -712,11 +660,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 
               {/* Ações */}
               <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  onClick={() => handleApplyTemplate(template)}
-                  className="flex-1"
-                >
+                <Button size="sm" onClick={() => handleApplyTemplate(template)} className="flex-1">
                   <Eye className="w-3 h-3 mr-1" />
                   Aplicar
                 </Button>
@@ -762,8 +706,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {sortedTemplates.length === 0 && (
         <div className="text-center py-12">
           <LayoutTemplate className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 style={{ color: "#432818" }}>Nenhum template encontrado</h3>
-          <p style={{ color: "#6B4F43" }}>
+          <h3 style={{ color: '#432818' }}>Nenhum template encontrado</h3>
+          <p style={{ color: '#6B4F43' }}>
             {searchTerm || selectedCategory !== "all" || showFavoritesOnly
               ? "Tente ajustar os filtros de busca"
               : "Crie seu primeiro template personalizado"}

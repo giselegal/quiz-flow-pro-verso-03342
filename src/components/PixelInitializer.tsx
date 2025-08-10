@@ -1,8 +1,8 @@
 "use client";
 // Facebook Pixel Initializer Component
 import { useEffect } from "react";
-import { loadFacebookPixel } from "../utils/facebookPixel";
-import { trackPageView } from "../utils/analytics";
+import { loadFacebookPixel } from "@/utils/facebookPixel";
+import { trackPageView } from "@/utils/analytics";
 
 interface PixelInitializerProps {
   pageType?: "quiz" | "result" | "offer" | "other";

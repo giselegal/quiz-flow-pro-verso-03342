@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Textarea } from "../../../components/ui/textarea";
-import { Label } from "../../../components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { BlockEditorProps } from "./types";
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -11,14 +11,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -57,10 +50,7 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const GuaranteeBlockEditor: React.FC<BlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const GuaranteeBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   return (
     <div className="space-y-4">
       <div>
@@ -68,7 +58,7 @@ const GuaranteeBlockEditor: React.FC<BlockEditorProps> = ({
         <Input
           id={`${block.id}-title`}
           value={block.content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Garantia de 7 Dias"
         />
@@ -79,7 +69,7 @@ const GuaranteeBlockEditor: React.FC<BlockEditorProps> = ({
         <Textarea
           id={`${block.id}-text`}
           value={block.content.text || ""}
-          onChange={(e) => onUpdate({ text: e.target.value })}
+          onChange={e => onUpdate({ text: e.target.value })}
           className="mt-1"
           rows={4}
           placeholder="Se você não ficar 100% satisfeita com o conteúdo nos primeiros 7 dias, devolvemos seu dinheiro integralmente, sem burocracia."

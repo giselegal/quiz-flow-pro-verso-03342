@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { BlockEditorProps } from "./types";
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,7 +57,7 @@ const ImageBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id={`${block.id}-imageUrl`}
           value={block.content.imageUrl || ""}
-          onChange={(e) => onUpdate({ imageUrl: e.target.value })}
+          onChange={e => onUpdate({ imageUrl: e.target.value })}
           className="mt-1"
         />
       </div>
@@ -74,7 +67,7 @@ const ImageBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id={`${block.id}-imageAlt`}
           value={block.content.imageAlt || ""}
-          onChange={(e) => onUpdate({ imageAlt: e.target.value })}
+          onChange={e => onUpdate({ imageAlt: e.target.value })}
           className="mt-1"
         />
       </div>

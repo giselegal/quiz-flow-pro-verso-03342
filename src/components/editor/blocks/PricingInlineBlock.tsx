@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
@@ -11,7 +11,7 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "../../../utils/inlineComponentUtils";
+} from "@/utils/inlineComponentUtils";
 import { Crown, Star, TrendingUp, CheckCircle, Sparkles } from "lucide-react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -20,14 +20,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -128,19 +121,9 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const personalizedTitle = getPersonalizedText(
-    title,
-    usernamePattern,
-    username,
-    useUsername
-  );
+  const personalizedTitle = getPersonalizedText(title, usernamePattern, username, useUsername);
 
-  const personalizedBadge = getPersonalizedText(
-    badge,
-    badge,
-    username,
-    useUsername
-  );
+  const personalizedBadge = getPersonalizedText(badge, badge, username, useUsername);
 
   return (
     <InlineBaseWrapper
@@ -170,7 +153,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="w-full bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] flex items-center justify-center py-2">
             <InlineEditableText
               value={personalizedBadge}
-              onChange={(value) => handlePropertyChange("badge", value)}
+              onChange={value => handlePropertyChange("badge", value)}
               placeholder="Badge do plano..."
               fontSize="sm"
               fontWeight="bold"
@@ -189,7 +172,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
             <div>
               <InlineEditableText
                 value={personalizedTitle}
-                onChange={(value) => handlePropertyChange("title", value)}
+                onChange={value => handlePropertyChange("title", value)}
                 placeholder="Título do plano..."
                 fontSize="xl"
                 fontWeight="bold"
@@ -206,9 +189,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                 <div className="mb-1">
                   <InlineEditableText
                     value={discount}
-                    onChange={(value) =>
-                      handlePropertyChange("discount", value)
-                    }
+                    onChange={value => handlePropertyChange("discount", value)}
                     placeholder="Desconto..."
                     fontSize="xs"
                     fontWeight="medium"
@@ -222,7 +203,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="flex items-center justify-end gap-2">
                 <InlineEditableText
                   value={price}
-                  onChange={(value) => handlePropertyChange("price", value)}
+                  onChange={value => handlePropertyChange("price", value)}
                   placeholder="R$ 39,90"
                   fontSize="xl"
                   fontWeight="bold"
@@ -233,9 +214,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                 {showOriginalPrice && originalPrice && (
                   <InlineEditableText
                     value={originalPrice}
-                    onChange={(value) =>
-                      handlePropertyChange("originalPrice", value)
-                    }
+                    onChange={value => handlePropertyChange("originalPrice", value)}
                     placeholder="R$ 47,00"
                     fontSize="sm"
                     textAlign="right"
@@ -248,7 +227,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="mt-1">
                 <InlineEditableText
                   value={period}
-                  onChange={(value) => handlePropertyChange("period", value)}
+                  onChange={value => handlePropertyChange("period", value)}
                   placeholder="Período..."
                   fontSize="xs"
                   textAlign="right"

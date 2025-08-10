@@ -5,7 +5,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../../components/ui/carousel";
+} from "@/components/ui/carousel";
 
 interface Bonus {
   title: string;
@@ -22,17 +22,12 @@ export const BonusCarousel: React.FC<BonusCarouselProps> = ({ bonuses }) => {
   return (
     <section className="py-12 px-4 bg-white">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-playfair text-[#432818] text-center mb-8">
-          Bônus Exclusivos
-        </h2>
+        <h2 className="text-3xl font-playfair text-[#432818] text-center mb-8">Bônus Exclusivos</h2>
 
         <Carousel className="max-w-5xl mx-auto">
           <CarouselContent>
-            {bonuses.map((bonus) => (
-              <CarouselItem
-                key={bonus.order}
-                className="md:basis-1/2 lg:basis-1/3"
-              >
+            {bonuses.map(bonus => (
+              <CarouselItem key={bonus.order} className="md:basis-1/2 lg:basis-1/3">
                 <div className="p-4">
                   <div className="bg-[#FAF9F7] rounded-lg p-4 space-y-4">
                     <img

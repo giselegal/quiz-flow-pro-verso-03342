@@ -1,23 +1,10 @@
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { ScrollArea } from "../../../components/ui/scroll-area";
-import { QuizFunnel, SimplePage } from "../../../interfaces/quiz";
-import styles from "../../../styles/editor.module.css";
-import {
-  ArrowDown,
-  ArrowUp,
-  Copy,
-  FolderTree,
-  MoreVertical,
-  Plus,
-  Trash2,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { QuizFunnel, SimplePage } from "@/interfaces/quiz";
+import styles from "@/styles/editor.module.css";
+import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { generateSemanticId } from "../../../utils/semanticIdGenerator";
 
@@ -54,7 +41,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
   ];
 
   const getPageTypeInfo = (type: string) => {
-    return pageTypes.find((pt) => pt.value === type) || pageTypes[1];
+    return pageTypes.find(pt => pt.value === type) || pageTypes[1];
   };
 
   const handleCreatePage = () => {
@@ -65,12 +52,9 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
         identifier: "page",
         index: Math.floor(Math.random() * 1000),
       }),
-      title:
-        newPageData.title || `Nova ${getPageTypeInfo(newPageData.type).label}`,
+      title: newPageData.title || `Nova ${getPageTypeInfo(newPageData.type).label}`,
       type: newPageData.type,
-      progress: Math.round(
-        (funnel.pages.length / (funnel.pages.length + 1)) * 100
-      ),
+      progress: Math.round((funnel.pages.length / (funnel.pages.length + 1)) * 100),
       showHeader: true,
       showProgress: true,
       components: [],
@@ -116,7 +100,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
         index: Math.floor(Math.random() * 1000),
       }),
       title: `${originalPage.title} (Cópia)`,
-      components: originalPage.components.map((comp) => ({
+      components: originalPage.components.map(comp => ({
         ...comp,
         id: `${comp.id}_copy_${Date.now()}`,
       })),
@@ -172,10 +156,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
     onPageSelect(pageIndex + 1);
   };
 
-  const handlePageUpdate = (
-    pageIndex: number,
-    updates: Partial<SimplePage>
-  ) => {
+  const handlePageUpdate = (pageIndex: number, updates: Partial<SimplePage>) => {
     const updatedPages = funnel.pages.map((page, index) =>
       index === pageIndex ? { ...page, ...updates } : page
     );
@@ -195,11 +176,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
           <FolderTree className="h-5 w-5" />
           Estrutura do Funil
         </h2>
-        <Button
-          size="sm"
-          onClick={() => setIsCreatingPage(true)}
-          className={styles.addButton}
-        >
+        <Button size="sm" onClick={() => setIsCreatingPage(true)} className={styles.addButton}>
           <Plus className="h-4 w-4" />
           Nova Página
         </Button>
@@ -220,9 +197,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                 >
                   <CardHeader className={styles.pageCardHeader}>
                     <div className={styles.pageInfo}>
-                      <div
-                        className={`${styles.pageTypeIcon} bg-${pageTypeInfo.color}-100`}
-                      >
+                      <div className={`${styles.pageTypeIcon} bg-${pageTypeInfo.color}-100`}>
                         {pageTypeInfo.icon}
                       </div>
                       <div className={styles.pageDetails}>
@@ -245,11 +220,9 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
-                          setShowPageSettings(
-                            showPageSettings === page.id ? null : page.id
-                          );
+                          setShowPageSettings(showPageSettings === page.id ? null : page.id);
                         }}
                       >
                         <MoreVertical className="h-4 w-4" />
@@ -265,9 +238,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                           <input
                             type="text"
                             value={page.title}
-                            onChange={(e) =>
-                              handlePageUpdate(index, { title: e.target.value })
-                            }
+                            onChange={e => handlePageUpdate(index, { title: e.target.value })}
                             className={styles.settingInput}
                           />
                         </div>
@@ -276,14 +247,14 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                           <label>Tipo</label>
                           <select
                             value={page.type}
-                            onChange={(e) =>
+                            onChange={e =>
                               handlePageUpdate(index, {
                                 type: e.target.value as SimplePage["type"],
                               })
                             }
                             className={styles.settingSelect}
                           >
-                            {pageTypes.map((type) => (
+                            {pageTypes.map(type => (
                               <option key={type.value} value={type.value}>
                                 {type.icon} {type.label}
                               </option>
@@ -296,7 +267,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                             <input
                               type="checkbox"
                               checked={page.showHeader}
-                              onChange={(e) =>
+                              onChange={e =>
                                 handlePageUpdate(index, {
                                   showHeader: e.target.checked,
                                 })
@@ -311,7 +282,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                             <input
                               type="checkbox"
                               checked={page.showProgress}
-                              onChange={(e) =>
+                              onChange={e =>
                                 handlePageUpdate(index, {
                                   showProgress: e.target.checked,
                                 })
@@ -354,7 +325,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                           size="sm"
                           onClick={() => handleDeletePage(index)}
                           disabled={funnel.pages.length <= 1}
-                          style={{ color: "#432818" }}
+                          style={{ color: '#432818' }}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -384,8 +355,8 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                 <input
                   type="text"
                   value={newPageData.title}
-                  onChange={(e) =>
-                    setNewPageData((prev) => ({
+                  onChange={e =>
+                    setNewPageData(prev => ({
                       ...prev,
                       title: e.target.value,
                     }))
@@ -399,15 +370,15 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                 <label>Tipo de Página</label>
                 <select
                   value={newPageData.type}
-                  onChange={(e) =>
-                    setNewPageData((prev) => ({
+                  onChange={e =>
+                    setNewPageData(prev => ({
                       ...prev,
                       type: e.target.value as SimplePage["type"],
                     }))
                   }
                   className={styles.formSelect}
                 >
-                  {pageTypes.map((type) => (
+                  {pageTypes.map(type => (
                     <option key={type.value} value={type.value}>
                       {type.icon} {type.label}
                     </option>
@@ -416,10 +387,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
               </div>
 
               <div className={styles.formActions}>
-                <Button
-                  variant="ghost"
-                  onClick={() => setIsCreatingPage(false)}
-                >
+                <Button variant="ghost" onClick={() => setIsCreatingPage(false)}>
                   Cancelar
                 </Button>
                 <Button onClick={handleCreatePage}>Criar Página</Button>
@@ -438,10 +406,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
           <div className={styles.stat}>
             <span className={styles.statLabel}>Componentes</span>
             <span className={styles.statValue}>
-              {funnel.pages.reduce(
-                (total, page) => total + page.components.length,
-                0
-              )}
+              {funnel.pages.reduce((total, page) => total + page.components.length, 0)}
             </span>
           </div>
         </div>

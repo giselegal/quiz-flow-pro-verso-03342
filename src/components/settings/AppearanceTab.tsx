@@ -1,17 +1,11 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
-import { Button } from "../../components/ui/button";
-import { ImageUploader } from "../../components/ui/image-uploader";
-import { toast } from "../../components/ui/use-toast";
-import { useGlobalStyles } from "../../hooks/useGlobalStyles";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ImageUploader } from "@/components/ui/image-uploader";
+import { toast } from "@/components/ui/use-toast";
+import { useGlobalStyles } from "@/hooks/useGlobalStyles";
 
 export const AppearanceTab: React.FC = () => {
   const { globalStyles, updateGlobalStyles } = useGlobalStyles();
@@ -20,9 +14,7 @@ export const AppearanceTab: React.FC = () => {
     <Card>
       <CardHeader>
         <CardTitle>Global Appearance</CardTitle>
-        <CardDescription>
-          Customize the global appearance of your site
-        </CardDescription>
+        <CardDescription>Customize the global appearance of your site</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
@@ -31,9 +23,7 @@ export const AppearanceTab: React.FC = () => {
             id="backgroundColor"
             type="color"
             value={globalStyles.backgroundColor || "#fff"}
-            onChange={(e) =>
-              updateGlobalStyles({ backgroundColor: e.target.value })
-            }
+            onChange={e => updateGlobalStyles({ backgroundColor: e.target.value })}
             className="h-10 w-20"
           />
         </div>
@@ -44,7 +34,7 @@ export const AppearanceTab: React.FC = () => {
             id="textColor"
             type="color"
             value={globalStyles.textColor || "#432818"}
-            onChange={(e) => updateGlobalStyles({ textColor: e.target.value })}
+            onChange={e => updateGlobalStyles({ textColor: e.target.value })}
             className="h-10 w-20"
           />
         </div>
@@ -53,7 +43,7 @@ export const AppearanceTab: React.FC = () => {
           <Label htmlFor="logo">Logo</Label>
           <ImageUploader
             currentImage={globalStyles.logo}
-            onImageUpload={(url) => updateGlobalStyles({ logo: url })}
+            onImageUpload={url => updateGlobalStyles({ logo: url })}
           />
         </div>
 
@@ -62,8 +52,7 @@ export const AppearanceTab: React.FC = () => {
           onClick={() => {
             toast({
               title: "Settings saved",
-              description:
-                "Appearance settings have been updated successfully.",
+              description: "Appearance settings have been updated successfully.",
             });
           }}
         >

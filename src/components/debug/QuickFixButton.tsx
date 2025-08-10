@@ -17,9 +17,7 @@ const QuickFixButton = () => {
       const blurryImages = document.querySelectorAll(
         'img[src*="e_blur"], img.blur, img.placeholder'
       );
-      const introImages = document.querySelectorAll(
-        '.quiz-intro img, [data-section="intro"] img'
-      );
+      const introImages = document.querySelectorAll('.quiz-intro img, [data-section="intro"] img');
 
       if (blurryImages.length > 0 || introImages.length > 0) {
         setShowButton(true);

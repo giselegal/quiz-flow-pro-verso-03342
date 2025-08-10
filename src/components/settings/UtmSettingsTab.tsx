@@ -6,14 +6,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Button } from "../../components/ui/button";
-import { Label } from "../../components/ui/label";
-import { Separator } from "../../components/ui/separator";
-import { useUtmParameters } from "../../hooks/useUtmParameters";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { useUtmParameters } from "@/hooks/useUtmParameters";
 import { CopyIcon, CheckCircleIcon, ArrowRightIcon } from "lucide-react";
-import { useToast } from "../../components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export const UtmSettingsTab: React.FC = () => {
   const { domainBase, setBaseDomain, generateUtmLink } = useUtmParameters();
@@ -90,8 +90,7 @@ export const UtmSettingsTab: React.FC = () => {
         <CardHeader>
           <CardTitle>Configurações de UTM</CardTitle>
           <CardDescription>
-            Configure seus parâmetros UTM para rastreamento de campanhas de
-            marketing.
+            Configure seus parâmetros UTM para rastreamento de campanhas de marketing.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -102,7 +101,7 @@ export const UtmSettingsTab: React.FC = () => {
                 <Input
                   id="domain"
                   value={domain}
-                  onChange={(e) => setDomain(e.target.value)}
+                  onChange={e => setDomain(e.target.value)}
                   placeholder="ex: giselegalvao.com.br"
                 />
                 <Button onClick={handleSaveDomain} size="sm">
@@ -110,8 +109,7 @@ export const UtmSettingsTab: React.FC = () => {
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                Este domínio será usado como base para gerar URLs com parâmetros
-                UTM.
+                Este domínio será usado como base para gerar URLs com parâmetros UTM.
               </p>
             </div>
 
@@ -128,11 +126,7 @@ export const UtmSettingsTab: React.FC = () => {
                   <div key={key} className="p-3 bg-muted rounded-md">
                     <div className="flex justify-between items-center mb-1">
                       <span className="font-medium capitalize">{key}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleCopyLink(link)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => handleCopyLink(link)}>
                         <CopyIcon className="h-4 w-4 mr-1" /> Copiar
                       </Button>
                     </div>
@@ -145,8 +139,8 @@ export const UtmSettingsTab: React.FC = () => {
         </CardContent>
         <CardFooter>
           <p className="text-xs text-muted-foreground">
-            Os parâmetros UTM ajudam a rastrear de onde vêm seus visitantes e
-            como eles interagem com seu site.
+            Os parâmetros UTM ajudam a rastrear de onde vêm seus visitantes e como eles interagem
+            com seu site.
           </p>
         </CardFooter>
       </Card>
@@ -167,8 +161,8 @@ export const UtmSettingsTab: React.FC = () => {
               <div>
                 <h4 className="font-medium">Adicione UTMs aos seus links</h4>
                 <p className="text-sm text-muted-foreground">
-                  Use os parâmetros UTM em todos os seus canais de marketing
-                  para rastrear a origem do tráfego.
+                  Use os parâmetros UTM em todos os seus canais de marketing para rastrear a origem
+                  do tráfego.
                 </p>
               </div>
             </div>
@@ -180,8 +174,8 @@ export const UtmSettingsTab: React.FC = () => {
               <div>
                 <h4 className="font-medium">Monitore os resultados</h4>
                 <p className="text-sm text-muted-foreground">
-                  Acompanhe o desempenho das diferentes campanhas na guia
-                  "Campanhas UTM" do Analytics.
+                  Acompanhe o desempenho das diferentes campanhas na guia "Campanhas UTM" do
+                  Analytics.
                 </p>
               </div>
             </div>
@@ -193,8 +187,8 @@ export const UtmSettingsTab: React.FC = () => {
               <div>
                 <h4 className="font-medium">Ajuste suas estratégias</h4>
                 <p className="text-sm text-muted-foreground">
-                  Use os insights obtidos para ajustar suas campanhas de
-                  marketing e maximizar a conversão.
+                  Use os insights obtidos para ajustar suas campanhas de marketing e maximizar a
+                  conversão.
                 </p>
               </div>
             </div>

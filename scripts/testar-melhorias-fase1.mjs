@@ -72,7 +72,7 @@ let allTestsPassed = true;
 
 // 1. Verificar se todos os componentes foram criados
 console.log("\\n1. VERIFICANDO COMPONENTES CRIADOS:");
-COMPONENTS_TO_CHECK.forEach((component) => {
+COMPONENTS_TO_CHECK.forEach(component => {
   if (fs.existsSync(component.path)) {
     console.log(`✅ ${component.name} - OK`);
 
@@ -98,10 +98,7 @@ console.log("\\n2. VERIFICANDO DEPENDÊNCIAS:");
 const packageJsonPath = "package.json";
 if (fs.existsSync(packageJsonPath)) {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-  const dependencies = {
-    ...packageJson.dependencies,
-    ...packageJson.devDependencies,
-  };
+  const dependencies = { ...packageJson.dependencies, ...packageJson.devDependencies };
 
   const requiredDeps = [
     "@radix-ui/react-tooltip",
@@ -113,7 +110,7 @@ if (fs.existsSync(packageJsonPath)) {
   ];
 
   let depsOk = true;
-  requiredDeps.forEach((dep) => {
+  requiredDeps.forEach(dep => {
     if (dependencies[dep]) {
       console.log(`✅ ${dep} - Instalado`);
     } else {
@@ -142,11 +139,9 @@ if (fs.existsSync(registryPath)) {
   console.log("✅ Registry de componentes - OK");
 
   const registryContent = fs.readFileSync(registryPath, "utf8");
-  const hasNewComponents = [
-    "result-style-card",
-    "bonus-showcase",
-    "loading-animation",
-  ].every((comp) => registryContent.includes(comp));
+  const hasNewComponents = ["result-style-card", "bonus-showcase", "loading-animation"].every(
+    comp => registryContent.includes(comp)
+  );
 
   if (hasNewComponents) {
     console.log("✅ Novos componentes registrados");
@@ -161,9 +156,7 @@ if (fs.existsSync(registryPath)) {
 // Verificar templates JSON
 const templatesDir = "src/config/templates";
 if (fs.existsSync(templatesDir)) {
-  const templates = fs
-    .readdirSync(templatesDir)
-    .filter((f) => f.endsWith(".json"));
+  const templates = fs.readdirSync(templatesDir).filter(f => f.endsWith(".json"));
   console.log(`✅ Templates JSON - ${templates.length} encontrados`);
 } else {
   console.log("❌ Diretório de templates não encontrado");
@@ -191,7 +184,7 @@ const advancedFeatures = [
   },
 ];
 
-advancedFeatures.forEach((feature) => {
+advancedFeatures.forEach(feature => {
   if (feature.check()) {
     console.log(`✅ ${feature.name} - OK`);
   } else {
@@ -211,7 +204,7 @@ const expectedDirs = [
   "src/components/editor/history",
 ];
 
-expectedDirs.forEach((dir) => {
+expectedDirs.forEach(dir => {
   if (fs.existsSync(dir)) {
     console.log(`✅ ${dir} - OK`);
   } else {
@@ -225,9 +218,7 @@ console.log("\\n" + "=".repeat(70));
 console.log("📊 RESUMO DAS MELHORIAS IMPLEMENTADAS:");
 
 if (allTestsPassed) {
-  console.log(
-    "\\n🎉 SUCESSO! Todas as melhorias da Fase 1 foram implementadas!"
-  );
+  console.log("\\n🎉 SUCESSO! Todas as melhorias da Fase 1 foram implementadas!");
   console.log("\\n✅ FUNCIONALIDADES ADICIONADAS:");
   console.log("   🎨 Painel de propriedades organizado por categorias");
   console.log("   📱 Preview responsivo com device frames");

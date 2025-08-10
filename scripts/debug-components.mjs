@@ -20,15 +20,13 @@ const config = Object.freeze({
 
 // 🔧 ES7+ Utility Functions with advanced features
 const extractMatches = (content, pattern) =>
-  [...content.matchAll(pattern)].map((match) => match[1] || match[0]);
+  [...content.matchAll(pattern)].map(match => match[1] || match[0]);
 
-const analyzeBlockDefinitions = (content) => {
-  const categories = [
-    ...new Set(extractMatches(content, config.patterns.categories)),
-  ];
+const analyzeBlockDefinitions = content => {
+  const categories = [...new Set(extractMatches(content, config.patterns.categories))];
   const types = extractMatches(content, config.patterns.types);
   const names = extractMatches(content, config.patterns.names);
-  const inlineTypes = types.filter((type) => type.includes("inline"));
+  const inlineTypes = types.filter(type => type.includes("inline"));
 
   // ES7+ Object composition with computed properties
   return {
@@ -39,7 +37,7 @@ const analyzeBlockDefinitions = (content) => {
       isInline: type.includes("inline"),
       category:
         categories.find(
-          (cat) =>
+          cat =>
             content.includes(`type: '${type}'`) &&
             content
               .substring(
@@ -75,17 +73,11 @@ const analyzeComponentDefinitions = async () => {
 
     // 📊 Results Display with ES7+ destructuring
     console.log("\n📂 CATEGORIAS DETECTADAS:");
-    analysis.categories.forEach(({ id, name }) =>
-      console.log(`  ${id}. ${name}`)
-    );
+    analysis.categories.forEach(({ id, name }) => console.log(`  ${id}. ${name}`));
 
-    console.log(
-      `\n⚡ COMPONENTES INLINE (${analysis.inlineTypes.length} encontrados):`
-    );
+    console.log(`\n⚡ COMPONENTES INLINE (${analysis.inlineTypes.length} encontrados):`);
     analysis.inlineTypes.length > 0
-      ? analysis.inlineTypes.forEach((type, i) =>
-          console.log(`  ${i + 1}. ${type}`)
-        )
+      ? analysis.inlineTypes.forEach((type, i) => console.log(`  ${i + 1}. ${type}`))
       : console.log("  ❌ Nenhum componente inline encontrado!");
 
     console.log(`\n📈 ESTATÍSTICAS:`);
@@ -96,14 +88,12 @@ const analyzeComponentDefinitions = async () => {
 
     // 🔎 Specific Search for pricing-inline with ES7+ includes
     const hasPricingInline = content.includes("'pricing-inline'");
-    console.log(
-      `\n💰 PRICING-INLINE: ${hasPricingInline ? "✅ Encontrado" : "❌ Não encontrado"}`
-    );
+    console.log(`\n💰 PRICING-INLINE: ${hasPricingInline ? "✅ Encontrado" : "❌ Não encontrado"}`);
 
     // 🎯 Enhanced Analysis: Show inline components by category
     console.log(`\n🎯 COMPONENTES INLINE POR CATEGORIA:`);
     const inlineByCategory = analysis.components
-      .filter((comp) => comp.isInline)
+      .filter(comp => comp.isInline)
       .reduce((acc, comp) => {
         acc[comp.category] = [...(acc[comp.category] || []), comp];
         return acc;
@@ -111,9 +101,7 @@ const analyzeComponentDefinitions = async () => {
 
     Object.entries(inlineByCategory).forEach(([category, components]) => {
       console.log(`  📁 ${category}:`);
-      components.forEach((comp) =>
-        console.log(`    • ${comp.name} (${comp.type})`)
-      );
+      components.forEach(comp => console.log(`    • ${comp.name} (${comp.type})`));
     });
 
     // 🌟 Success Summary

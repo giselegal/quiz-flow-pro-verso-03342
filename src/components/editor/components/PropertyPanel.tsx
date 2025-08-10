@@ -2,31 +2,20 @@ import React from "react";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 
 interface PropertyPanelProps {
   selectedComponent: any | null;
   onChange: (updatedComponent: any) => void;
 }
 
-export default function PropertyPanel({
-  selectedComponent,
-  onChange,
-}: PropertyPanelProps) {
+export default function PropertyPanel({ selectedComponent, onChange }: PropertyPanelProps) {
   if (!selectedComponent) {
     return (
-      <div style={{ color: "#8B7355" }}>
+      <div style={{ color: '#8B7355' }}>
         <div className="mb-4 text-4xl">🎯</div>
         <h3 className="mb-2 font-medium">Propriedades</h3>
-        <p className="text-sm">
-          Selecione um componente para editar suas propriedades
-        </p>
+        <p className="text-sm">Selecione um componente para editar suas propriedades</p>
       </div>
     );
   }
@@ -48,7 +37,7 @@ export default function PropertyPanel({
 
       <div>
         <Label htmlFor="component-type">Tipo</Label>
-        <div style={{ backgroundColor: "#FAF9F7" }}>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           {selectedComponent.type || "Componente"}
         </div>
       </div>
@@ -59,9 +48,7 @@ export default function PropertyPanel({
           id="component-id"
           type="text"
           value={selectedComponent.id || ""}
-          onChange={(e) =>
-            onChange({ ...selectedComponent, id: e.target.value })
-          }
+          onChange={e => onChange({ ...selectedComponent, id: e.target.value })}
           placeholder="ID único do componente"
         />
       </div>
@@ -75,7 +62,7 @@ export default function PropertyPanel({
           <Textarea
             id="component-text"
             value={selectedComponent.props?.text || ""}
-            onChange={(e) => updateProperty("text", e.target.value)}
+            onChange={e => updateProperty("text", e.target.value)}
             placeholder="Digite o texto aqui"
           />
         </div>
@@ -87,7 +74,7 @@ export default function PropertyPanel({
           <Label htmlFor="heading-level">Nível do Título</Label>
           <Select
             value={selectedComponent.props?.level?.toString() || "1"}
-            onValueChange={(value) => updateProperty("level", parseInt(value))}
+            onValueChange={value => updateProperty("level", parseInt(value))}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o nível" />
@@ -108,7 +95,7 @@ export default function PropertyPanel({
           <Label htmlFor="button-variant">Estilo do Botão</Label>
           <Select
             value={selectedComponent.props?.variant || "primary"}
-            onValueChange={(value) => updateProperty("variant", value)}
+            onValueChange={value => updateProperty("variant", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o estilo" />
@@ -132,7 +119,7 @@ export default function PropertyPanel({
               id="image-src"
               type="url"
               value={selectedComponent.props?.src || ""}
-              onChange={(e) => updateProperty("src", e.target.value)}
+              onChange={e => updateProperty("src", e.target.value)}
               placeholder="https://exemplo.com/imagem.jpg"
             />
           </div>
@@ -142,7 +129,7 @@ export default function PropertyPanel({
               id="image-alt"
               type="text"
               value={selectedComponent.props?.alt || ""}
-              onChange={(e) => updateProperty("alt", e.target.value)}
+              onChange={e => updateProperty("alt", e.target.value)}
               placeholder="Descrição da imagem"
             />
           </div>

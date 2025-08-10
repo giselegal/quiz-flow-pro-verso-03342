@@ -1,6 +1,6 @@
 import React from "react";
 import FunnelProgressBar from "../shared/FunnelProgressBar";
-import { CountdownTimer } from "../../../components/ui/countdown-timer";
+import { CountdownTimer } from "@/components/ui/countdown-timer";
 
 interface OfferPageStepProps {
   stepNumber?: number;
@@ -40,17 +40,13 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
-        <FunnelProgressBar
-          currentStep={stepNumber}
-          totalSteps={totalSteps}
-          className="mb-8"
-        />
+        <FunnelProgressBar currentStep={stepNumber} totalSteps={totalSteps} className="mb-8" />
 
         <div className="bg-white rounded-lg shadow-xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 style={{ color: "#432818" }}>{title}</h1>
-            <p style={{ color: "#6B4F43" }}>{subtitle}</p>
+            <h1 style={{ color: '#432818' }}>{title}</h1>
+            <p style={{ color: '#6B4F43' }}>{subtitle}</p>
           </div>
 
           {/* Countdown Timer */}
@@ -66,9 +62,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
           {/* Features */}
           {features.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4">
-                O que você vai receber:
-              </h2>
+              <h2 className="text-2xl font-semibold mb-4">O que você vai receber:</h2>
               <ul className="space-y-3">
                 {features.map((feature, index) => (
                   <li key={index} className="flex items-center">
@@ -84,7 +78,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
           <div className="text-center mb-8">
             {price.original && price.discounted && (
               <div className="mb-4">
-                <span style={{ color: "#8B7355" }}>
+                <span style={{ color: '#8B7355' }}>
                   {price.currency || "R$"} {price.original}
                 </span>
                 <span className="text-4xl font-bold text-green-600">
@@ -97,7 +91,10 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
           {/* Action Buttons */}
           <div className="flex justify-between">
             {onBack && (
-              <button onClick={onBack} style={{ borderColor: "#E5DDD5" }}>
+              <button
+                onClick={onBack}
+                style={{ borderColor: '#E5DDD5' }}
+              >
                 Voltar
               </button>
             )}

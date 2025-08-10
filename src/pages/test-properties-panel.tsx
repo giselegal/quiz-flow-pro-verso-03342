@@ -1,4 +1,4 @@
-import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
+import { EnhancedUniversalPropertiesPanel } from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import React, { useState } from "react";
 
 const TestPropertiesPanel = () => {
@@ -28,16 +28,14 @@ const TestPropertiesPanel = () => {
   };
 
   return (
-    <div style={{ backgroundColor: "#E5DDD5" }}>
+    <div style={{ backgroundColor: '#E5DDD5' }}>
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">
-          Teste do Painel de Propriedades
-        </h1>
+        <h1 className="text-2xl font-bold mb-6">Teste do Painel de Propriedades</h1>
 
         <div className="mb-6 space-x-4">
           <button
             onClick={() => setIsVisible(!isVisible)}
-            style={{ backgroundColor: "#B89B7A" }}
+            style={{ backgroundColor: '#B89B7A' }}
           >
             {isVisible ? "Esconder" : "Mostrar"} Painel
           </button>
@@ -47,11 +45,7 @@ const TestPropertiesPanel = () => {
               setSelectedBlock({
                 id: "test-text",
                 type: "text",
-                properties: {
-                  content: "Novo texto",
-                  fontSize: 20,
-                  textColor: "#000000",
-                },
+                properties: { content: "Novo texto", fontSize: 20, textColor: "#000000" },
               })
             }
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -67,7 +61,7 @@ const TestPropertiesPanel = () => {
                 properties: { content: "Título teste", level: "h1" },
               })
             }
-            style={{ backgroundColor: "#FAF9F7" }}
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             Bloco Título
           </button>
@@ -88,7 +82,7 @@ const TestPropertiesPanel = () => {
 
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h2 className="text-lg font-semibold mb-3">Bloco Selecionado:</h2>
-          <pre style={{ backgroundColor: "#E5DDD5" }}>
+          <pre style={{ backgroundColor: '#E5DDD5' }}>
             {JSON.stringify(selectedBlock, null, 2)}
           </pre>
         </div>
@@ -97,17 +91,14 @@ const TestPropertiesPanel = () => {
           <div className="flex gap-6">
             <div className="flex-1">
               <div className="bg-white p-6 rounded-lg shadow">
-                <h2 className="text-lg font-semibold mb-4">
-                  Área de Visualização
-                </h2>
+                <h2 className="text-lg font-semibold mb-4">Área de Visualização</h2>
                 {selectedBlock && (
-                  <div style={{ borderColor: "#E5DDD5" }}>
+                  <div style={{ borderColor: '#E5DDD5' }}>
                     {selectedBlock.type === "text" && (
                       <p
                         style={{
                           fontSize: `${selectedBlock.properties?.fontSize || 16}px`,
-                          color:
-                            selectedBlock.properties?.textColor || "#000000",
+                          color: selectedBlock.properties?.textColor || "#000000",
                         }}
                       >
                         {selectedBlock.properties?.content || "Texto padrão"}
@@ -127,8 +118,7 @@ const TestPropertiesPanel = () => {
                             : "bg-gray-200 text-gray-800"
                         }`}
                         style={{
-                          backgroundColor:
-                            selectedBlock.properties?.backgroundColor,
+                          backgroundColor: selectedBlock.properties?.backgroundColor,
                         }}
                       >
                         {selectedBlock.properties?.text || "Botão"}

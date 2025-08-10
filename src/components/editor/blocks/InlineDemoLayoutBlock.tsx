@@ -1,16 +1,16 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "../../../utils/inlineComponentUtils";
+} from "@/utils/inlineComponentUtils";
 import {
   Layout,
   Monitor,
@@ -41,14 +41,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -105,9 +98,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
     trackingEnabled = true,
   } = block?.properties || {};
 
-  const [activeDevice, setActiveDevice] = useState<
-    "mobile" | "tablet" | "desktop"
-  >("desktop");
+  const [activeDevice, setActiveDevice] = useState<"mobile" | "tablet" | "desktop">("desktop");
 
   useEffect(() => {
     if (trackingEnabled) {
@@ -183,20 +174,20 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
             <Layout className="w-5 h-5 text-[#B89B7A]" />
             <InlineEditableText
               value={title}
-              onChange={(value) => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange("title", value)}
               placeholder="Título da demonstração..."
               fontSize="xl"
               fontWeight="bold"
-              style={{ color: "#432818" }}
+              style={{ color: '#432818' }}
             />
           </div>
 
           <InlineEditableText
             value={subtitle}
-            onChange={(value) => handlePropertyChange("subtitle", value)}
+            onChange={value => handlePropertyChange("subtitle", value)}
             placeholder="Subtítulo explicativo..."
             fontSize="sm"
-            style={{ color: "#6B4F43" }}
+            style={{ color: '#6B4F43' }}
             multiline={true}
             maxLines={2}
           />
@@ -204,10 +195,10 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
 
         {/* Device Preview Controls */}
         {showDevicePreview && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
-            <span style={{ color: "#6B4F43" }}>Preview:</span>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
+            <span style={{ color: '#6B4F43' }}>Preview:</span>
 
-            {["mobile", "tablet", "desktop"].map((device) => (
+            {["mobile", "tablet", "desktop"].map(device => (
               <button
                 key={device}
                 onClick={() => setActiveDevice(device as any)}
@@ -230,15 +221,13 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         {/* Configuration */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-[#B89B7A]/10 rounded-lg">
           <div>
-            <label style={{ color: "#6B4F43" }}>Items</label>
+            <label style={{ color: '#6B4F43' }}>Items</label>
             <select
               value={itemCount}
-              onChange={(e) =>
-                handlePropertyChange("itemCount", parseInt(e.target.value))
-              }
-              style={{ borderColor: "#E5DDD5" }}
+              onChange={e => handlePropertyChange("itemCount", parseInt(e.target.value))}
+              style={{ borderColor: '#E5DDD5' }}
             >
-              {[1, 2, 3, 4, 5, 6].map((n) => (
+              {[1, 2, 3, 4, 5, 6].map(n => (
                 <option key={n} value={n}>
                   {n} items
                 </option>
@@ -247,11 +236,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div>
-            <label style={{ color: "#6B4F43" }}>Gap</label>
+            <label style={{ color: '#6B4F43' }}>Gap</label>
             <select
               value={gap}
-              onChange={(e) => handlePropertyChange("gap", e.target.value)}
-              style={{ borderColor: "#E5DDD5" }}
+              onChange={e => handlePropertyChange("gap", e.target.value)}
+              style={{ borderColor: '#E5DDD5' }}
             >
               <option value="sm">Pequeno</option>
               <option value="md">Médio</option>
@@ -260,13 +249,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div>
-            <label style={{ color: "#6B4F43" }}>Breakpoint</label>
+            <label style={{ color: '#6B4F43' }}>Breakpoint</label>
             <select
               value={breakpoint}
-              onChange={(e) =>
-                handlePropertyChange("breakpoint", e.target.value)
-              }
-              style={{ borderColor: "#E5DDD5" }}
+              onChange={e => handlePropertyChange("breakpoint", e.target.value)}
+              style={{ borderColor: '#E5DDD5' }}
             >
               <option value="sm">sm</option>
               <option value="md">md</option>
@@ -283,16 +270,16 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           )}
         >
           <div className="mb-4 flex items-center justify-between">
-            <h3 style={{ color: "#6B4F43" }}>
+            <h3 style={{ color: '#6B4F43' }}>
               Preview {activeDevice} ({itemCount} items)
             </h3>
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               Gap: {gap} | Breakpoint: {breakpoint}
             </div>
           </div>
 
           <div className={getResponsiveClasses()}>
-            {demoItems.map((item) => (
+            {demoItems.map(item => (
               <div
                 key={item.id}
                 className={cn(
@@ -305,9 +292,9 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
                 }}
               >
                 <div className="space-y-2">
-                  <div style={{ color: "#432818" }}>{item.title}</div>
-                  <div style={{ color: "#6B4F43" }}>{item.content}</div>
-                  <div style={{ color: "#8B7355" }}>
+                  <div style={{ color: '#432818' }}>{item.title}</div>
+                  <div style={{ color: '#6B4F43' }}>{item.content}</div>
+                  <div style={{ color: '#8B7355' }}>
                     <Eye className="w-3 h-3" />
                     <span>Inline Block</span>
                   </div>
@@ -336,7 +323,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
               <Grid className="w-4 h-4" />
               Vantagens
             </h4>
-            <ul style={{ color: "#6B4F43" }}>
+            <ul style={{ color: '#6B4F43' }}>
               <li>• Componentes lado a lado</li>
               <li>• Responsividade nativa</li>
               <li>• Distribuição inteligente</li>

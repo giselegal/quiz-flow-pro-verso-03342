@@ -20,10 +20,7 @@ interface FixedIntroImageProps {
  * Transforma qualquer URL do Cloudinary em uma versão de alta qualidade
  */
 function getHighQualityUrl(url: string): string {
-  if (
-    !url ||
-    (!url.includes("cloudinary.com") && !url.includes("res.cloudinary.com"))
-  ) {
+  if (!url || (!url.includes("cloudinary.com") && !url.includes("res.cloudinary.com"))) {
     return url;
   }
 
@@ -83,14 +80,9 @@ const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
   const paddingBottom = `${aspectRatio * 100}%`;
 
   return (
-    <div
-      className={`relative overflow-hidden ${className}`}
-      style={{ paddingBottom }}
-    >
+    <div className={`relative overflow-hidden ${className}`} style={{ paddingBottom }}>
       {/* Placeholder de cor sólida enquanto a imagem carrega */}
-      {!imageLoaded && (
-        <div className="absolute inset-0 bg-[#F8F5F0] animate-pulse" />
-      )}
+      {!imageLoaded && <div className="absolute inset-0 bg-[#F8F5F0] animate-pulse" />}
 
       <img
         src={highQualitySrc}
@@ -105,11 +97,7 @@ const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
         onLoad={() => {
           setImageLoaded(true);
           // Reportar LCP carregado
-          if (
-            priority &&
-            typeof window !== "undefined" &&
-            "performance" in window
-          ) {
+          if (priority && typeof window !== "undefined" && "performance" in window) {
             window.performance.mark("lcp-image-loaded");
           }
         }}

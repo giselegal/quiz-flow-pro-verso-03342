@@ -3,8 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const filePath =
-  "/workspaces/quiz-quest-challenge-verse/src/data/realQuizTemplates.ts";
+const filePath = "/workspaces/quiz-quest-challenge-verse/src/data/realQuizTemplates.ts";
 
 // Função para converter uma questão da estrutura components para blocks
 function convertQuestionToBlocks(questionContent, questionNumber, progress) {
@@ -15,9 +14,7 @@ function convertQuestionToBlocks(questionContent, questionNumber, progress) {
   const multiSelectMatch = questionContent.match(/multiSelect:\s*(\d+)/);
 
   if (!idMatch || !titleMatch) {
-    console.log(
-      `Não foi possível extrair dados básicos da questão ${questionNumber}`
-    );
+    console.log(`Não foi possível extrair dados básicos da questão ${questionNumber}`);
     return questionContent;
   }
 
@@ -27,9 +24,7 @@ function convertQuestionToBlocks(questionContent, questionNumber, progress) {
   const multiSelect = multiSelectMatch ? parseInt(multiSelectMatch[1]) : 1;
 
   // Extrair opções
-  const optionsMatch = questionContent.match(
-    /options:\s*\[(.*?)\]\s*}\s*}\s*]/s
-  );
+  const optionsMatch = questionContent.match(/options:\s*\[(.*?)\]\s*}\s*}\s*]/s);
   if (!optionsMatch) {
     console.log(`Não foi possível extrair opções da questão ${questionNumber}`);
     return questionContent;
@@ -58,7 +53,7 @@ function convertQuestionToBlocks(questionContent, questionNumber, progress) {
   }
 
   // Determinar se tem imagens
-  const hasImages = options.some((opt) => opt.imageUrl);
+  const hasImages = options.some(opt => opt.imageUrl);
 
   // Construir nova estrutura
   const newStructure = `    // QUESTÃO ${questionNumber}: ${title}
@@ -114,7 +109,7 @@ function convertQuestionToBlocks(questionContent, questionNumber, progress) {
           properties: {
             options: [
 ${options
-  .map((opt) => {
+  .map(opt => {
     const optionStr = `              { 
                 id: "${opt.id}", 
                 text: "${opt.text}",${opt.imageUrl ? `\n                imageUrl: "${opt.imageUrl}",` : ""}
@@ -171,26 +166,22 @@ const questions = [
   {
     number: 6,
     progress: 60,
-    pattern:
-      /\/\/ QUESTÃO 6:.*?(?=\/\/ QUESTÃO 7:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
+    pattern: /\/\/ QUESTÃO 6:.*?(?=\/\/ QUESTÃO 7:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
   },
   {
     number: 7,
     progress: 70,
-    pattern:
-      /\/\/ QUESTÃO 7:.*?(?=\/\/ QUESTÃO 8:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
+    pattern: /\/\/ QUESTÃO 7:.*?(?=\/\/ QUESTÃO 8:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
   },
   {
     number: 8,
     progress: 80,
-    pattern:
-      /\/\/ QUESTÃO 8:.*?(?=\/\/ QUESTÃO 9:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
+    pattern: /\/\/ QUESTÃO 8:.*?(?=\/\/ QUESTÃO 9:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
   },
   {
     number: 9,
     progress: 90,
-    pattern:
-      /\/\/ QUESTÃO 9:.*?(?=\/\/ QUESTÃO 10:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
+    pattern: /\/\/ QUESTÃO 9:.*?(?=\/\/ QUESTÃO 10:|\/\/ QUESTÃO ESTRATÉGICA|$)/s,
   },
   {
     number: 10,
@@ -205,16 +196,9 @@ questions.forEach(({ number, progress, pattern }) => {
   const match = updatedContent.match(pattern);
   if (match) {
     const originalQuestion = match[0];
-    const convertedQuestion = convertQuestionToBlocks(
-      originalQuestion,
-      number,
-      progress
-    );
+    const convertedQuestion = convertQuestionToBlocks(originalQuestion, number, progress);
     if (convertedQuestion !== originalQuestion) {
-      updatedContent = updatedContent.replace(
-        originalQuestion,
-        convertedQuestion
-      );
+      updatedContent = updatedContent.replace(originalQuestion, convertedQuestion);
       console.log(`✅ Questão ${number} convertida com sucesso`);
     } else {
       console.log(`⚠️  Questão ${number} não pôde ser convertida`);

@@ -4,7 +4,7 @@
 // =====================================================================
 
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { AlertTriangle, Info } from "lucide-react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
@@ -19,14 +19,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -102,9 +95,7 @@ const FallbackBlock: React.FC<BlockComponentProps & { blockType?: string }> = ({
           <AlertTriangle className="w-6 h-6 text-stone-600" />
         </div>
         <div className="flex-grow">
-          <h4 className="text-sm font-semibold text-stone-700 mb-1">
-            Componente não encontrado
-          </h4>
+          <h4 className="text-sm font-semibold text-stone-700 mb-1">Componente não encontrado</h4>
           <p className="text-xs text-stone-700 mb-2">
             Tipo:{" "}
             <code className="bg-stone-200 px-1 rounded">

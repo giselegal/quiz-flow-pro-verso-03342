@@ -3,7 +3,7 @@ const plugin = {
   name: "prettier-plugin-component-props",
 
   // Organizar props por categoria
-  organizeProps: (props) => {
+  organizeProps: props => {
     const categories = {
       data: ["block", "blockDefinition", "data", "content"],
       events: ["onClick", "onUpdateBlock", "onChange", "onClose"],
@@ -18,9 +18,7 @@ const plugin = {
       const categoryB = getCategoryForProp(b, categories);
 
       if (categoryA !== categoryB) {
-        return (
-          categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB)
-        );
+        return categoryOrder.indexOf(categoryA) - categoryOrder.indexOf(categoryB);
       }
 
       return a.name.localeCompare(b.name);

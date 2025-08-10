@@ -18,9 +18,7 @@ const testEditorIntegration = () => {
     });
 
     // Verificar se há 21 etapas visíveis
-    const stageElements = document.querySelectorAll(
-      '[class*="stage"], [data-stage]'
-    );
+    const stageElements = document.querySelectorAll('[class*="stage"], [data-stage]');
     console.log(`📊 Etapas visíveis: ${stageElements.length}`);
 
     if (stageElements.length >= 21) {

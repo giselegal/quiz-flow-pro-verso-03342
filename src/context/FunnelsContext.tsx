@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 
 interface FunnelStep {
@@ -349,22 +343,13 @@ const FUNNEL_TEMPLATES: Record<
   },
 };
 
-export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
-  children,
-  debug = true,
-}) => {
-  const [currentFunnelId, setCurrentFunnelId] =
-    useState<string>("funil-21-etapas");
+export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debug = true }) => {
+  const [currentFunnelId, setCurrentFunnelId] = useState<string>("funil-21-etapas");
   // ✅ FASE 1: Inicialização imediata com dados pré-carregados
   const [steps, setSteps] = useState<FunnelStep[]>(() => {
     const initialTemplate = FUNNEL_TEMPLATES["funil-21-etapas"];
-    console.log(
-      "🚀 FunnelsContext: Inicialização IMEDIATA com template completo"
-    );
-    console.log(
-      "📊 Steps carregadas na inicialização:",
-      initialTemplate.defaultSteps.length
-    );
+    console.log("🚀 FunnelsContext: Inicialização IMEDIATA com template completo");
+    console.log("📊 Steps carregadas na inicialização:", initialTemplate.defaultSteps.length);
     return initialTemplate.defaultSteps;
   });
   const [loading, setLoading] = useState(false);
@@ -372,12 +357,9 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
   const [renderCount, setRenderCount] = useState(0);
 
   const getTemplate = useCallback((templateId: string) => {
-    const template =
-      FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
+    const template = FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
     if (!template) {
-      console.warn(
-        `Template ${templateId} não encontrado. Usando template padrão.`
-      );
+      console.warn(`Template ${templateId} não encontrado. Usando template padrão.`);
       return FUNNEL_TEMPLATES["quiz-vazio"];
     }
     return template;
@@ -386,7 +368,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
   // ✅ FASE 2: Debug visual melhorado + controle de re-renders
   useEffect(() => {
     const timestamp = new Date().toLocaleTimeString();
-    setRenderCount((prev) => prev + 1);
+    setRenderCount(prev => prev + 1);
 
     if (FUNNEL_TEMPLATES[currentFunnelId]) {
       const template = FUNNEL_TEMPLATES[currentFunnelId];
@@ -394,15 +376,9 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
       // ✅ FASE 3: Fallback robusto - só atualiza se realmente necessário
       if (steps.length === 0 || steps[0]?.id !== template.defaultSteps[0]?.id) {
         setSteps(template.defaultSteps);
-        console.log(
-          `🔄 [${timestamp}] FunnelsContext: Atualizando template:`,
-          currentFunnelId
-        );
+        console.log(`🔄 [${timestamp}] FunnelsContext: Atualizando template:`, currentFunnelId);
       } else {
-        console.log(
-          `✅ [${timestamp}] FunnelsContext: Template já carregado:`,
-          currentFunnelId
-        );
+        console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, currentFunnelId);
       }
 
       console.log(
@@ -411,17 +387,11 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
       );
       console.log(
         `🎯 [${timestamp}] Dados das steps:`,
-        template.defaultSteps.map((s) => s.name)
+        template.defaultSteps.map(s => s.name)
       );
     } else {
-      console.error(
-        `❌ [${timestamp}] FunnelsContext: Template não encontrado:`,
-        currentFunnelId
-      );
-      console.log(
-        `📁 [${timestamp}] Templates disponíveis:`,
-        Object.keys(FUNNEL_TEMPLATES)
-      );
+      console.error(`❌ [${timestamp}] FunnelsContext: Template não encontrado:`, currentFunnelId);
+      console.log(`📁 [${timestamp}] Templates disponíveis:`, Object.keys(FUNNEL_TEMPLATES));
 
       // ✅ FASE 3: Fallback para template padrão
       const fallbackTemplate = FUNNEL_TEMPLATES["funil-21-etapas"];
@@ -432,11 +402,10 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
 
   const updateFunnelStep = useCallback(
     (stepId: string, updates: any) => {
-      const template =
-        FUNNEL_TEMPLATES[currentFunnelId as keyof typeof FUNNEL_TEMPLATES];
+      const template = FUNNEL_TEMPLATES[currentFunnelId as keyof typeof FUNNEL_TEMPLATES];
       if (!template) return;
 
-      setSteps((currentSteps) => {
+      setSteps(currentSteps => {
         return currentSteps.map((step: any) => {
           if (step.id === stepId) {
             return { ...step, ...updates };
@@ -449,7 +418,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
   );
 
   const addStepBlock = useCallback((stepId: string, blockData: any) => {
-    setSteps((currentSteps) => {
+    setSteps(currentSteps => {
       return currentSteps.map((step: any) => {
         if (step.id === stepId) {
           return {
@@ -512,11 +481,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({
     error,
   };
 
-  return (
-    <FunnelsContext.Provider value={contextValue}>
-      {children}
-    </FunnelsContext.Provider>
-  );
+  return <FunnelsContext.Provider value={contextValue}>{children}</FunnelsContext.Provider>;
 };
 
 export const useFunnels = (): FunnelsContextType => {

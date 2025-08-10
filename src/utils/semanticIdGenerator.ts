@@ -63,10 +63,7 @@ export function generateQuizComponentId(
 /**
  * Gera ID para questões e opções
  */
-export function generateQuestionId(
-  questionNumber: number,
-  questionType: string = "style"
-): string {
+export function generateQuestionId(questionNumber: number, questionType: string = "style"): string {
   return generateSemanticId({
     context: "quiz",
     type: "question",
@@ -93,11 +90,7 @@ export function generateOptionId(
 /**
  * Gera ID para blocos de editor
  */
-export function generateBlockId(
-  stageId: string,
-  blockType: string,
-  order?: number
-): string {
+export function generateBlockId(stageId: string, blockType: string, order?: number): string {
   const identifier = order ? `${blockType}-${order}` : blockType;
 
   return generateSemanticId({
@@ -125,10 +118,7 @@ export function generateResultId(userId: string, resultType: string): string {
 /**
  * Duplica ID mantendo semântica e evitando conflitos
  */
-export function duplicateSemanticId(
-  originalId: string,
-  context: DuplicationContext
-): string {
+export function duplicateSemanticId(originalId: string, context: DuplicationContext): string {
   const { newContext, copyNumber = 1, preserveType } = context;
 
   // Parse do ID original
@@ -156,10 +146,7 @@ export function duplicateSemanticId(
 /**
  * Gera próximo ID em sequência
  */
-export function generateNextSequenceId(
-  baseId: string,
-  existingIds: string[]
-): string {
+export function generateNextSequenceId(baseId: string, existingIds: string[]): string {
   const baseParts = baseId.split("-");
   const baseWithoutNumber = baseParts.slice(0, -1).join("-");
 
@@ -179,10 +166,7 @@ export function generateNextSequenceId(
 /**
  * Converte ID timestamp para semântico
  */
-export function convertTimestampToSemantic(
-  timestampId: string,
-  config: SemanticIdConfig
-): string {
+export function convertTimestampToSemantic(timestampId: string, config: SemanticIdConfig): string {
   // Detectar padrões timestamp
   if (timestampId.includes("Date.now()") || /\d{13}/.test(timestampId)) {
     console.warn(`🔄 Convertendo timestamp ID: ${timestampId}`);
@@ -224,7 +208,7 @@ export function migrateIdMapping(
 export function isSemanticId(id: string): boolean {
   // ID semântico deve ter pelo menos 3 partes separadas por hífen
   const parts = id.split("-");
-  return parts.length >= 3 && !parts.some((part) => /^\d{10,}$/.test(part));
+  return parts.length >= 3 && !parts.some(part => /^\d{10,}$/.test(part));
 }
 
 /**
@@ -277,18 +261,15 @@ export const QuizStyleIds = {
 
   options: {
     classic: (questionNum: number) => generateOptionId(questionNum, "classic"),
-    romantic: (questionNum: number) =>
-      generateOptionId(questionNum, "romantic"),
+    romantic: (questionNum: number) => generateOptionId(questionNum, "romantic"),
     modern: (questionNum: number) => generateOptionId(questionNum, "modern"),
-    creative: (questionNum: number) =>
-      generateOptionId(questionNum, "creative"),
+    creative: (questionNum: number) => generateOptionId(questionNum, "creative"),
   },
 
   results: {
     primary: (userId: string) => generateResultId(userId, "primary-style"),
     secondary: (userId: string) => generateResultId(userId, "secondary-styles"),
-    calculation: (userId: string) =>
-      generateResultId(userId, "calculation-data"),
+    calculation: (userId: string) => generateResultId(userId, "calculation-data"),
   },
 };
 

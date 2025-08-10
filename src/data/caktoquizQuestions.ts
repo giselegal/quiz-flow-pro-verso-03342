@@ -1,4 +1,4 @@
-import { QuizQuestion } from "../types/quiz";
+import { QuizQuestion } from "@/types/quiz";
 
 // Simplified quiz questions array for CaktoQuiz
 export const caktoquizQuestions: QuizQuestion[] = [

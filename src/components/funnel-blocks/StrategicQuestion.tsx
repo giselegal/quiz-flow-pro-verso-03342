@@ -1,9 +1,9 @@
-import { getOptimizedContainerClasses } from "../../config/containerConfig";
+import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useState } from "react";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Heart, ArrowRight, CheckCircle } from "lucide-react";
-import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import { DeviceView, StyleProps, QuestionOption } from "./types";
 
 interface StrategicQuestionProps extends StyleProps {
@@ -54,14 +54,8 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
   style,
   customStyles,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<QuestionOption | null>(
-    null
-  );
-  const {
-    disabled: animationsDisabled,
-    duration = 400,
-    staggerDelay = 100,
-  } = animationConfig;
+  const [selectedOption, setSelectedOption] = useState<QuestionOption | null>(null);
+  const { disabled: animationsDisabled, duration = 400, staggerDelay = 100 } = animationConfig;
   const isLowPerformance = deviceView === "mobile";
 
   const handleOptionSelect = (option: QuestionOption) => {
@@ -76,9 +70,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
       className={`min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-[#fffbf7] to-[#f9f4ef] ${className || ""}`}
       style={style}
     >
-      {customStyles && (
-        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
-      )}
+      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       <div className="max-w-3xl mx-auto w-full">
         <AnimatedWrapper
@@ -95,8 +87,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <Heart className="w-5 h-5 text-[#B89B7A]" />
                     <span className="text-sm text-[#8B7355] font-medium">
-                      Questão Estratégica {questionNumber} de{" "}
-                      {totalStrategicQuestions}
+                      Questão Estratégica {questionNumber} de {totalStrategicQuestions}
                     </span>
                   </div>
 
@@ -128,9 +119,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
               {options.map((option, index) => (
                 <AnimatedWrapper
                   key={option.id}
-                  animation={
-                    animationsDisabled || isLowPerformance ? "none" : "fade"
-                  }
+                  animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
                   show={true}
                   duration={duration}
                   delay={staggerDelay * index}
@@ -161,9 +150,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
                       <div className="flex-1">
                         <p
                           className={`text-[#432818] leading-relaxed ${
-                            selectedOption?.id === option.id
-                              ? "font-medium"
-                              : ""
+                            selectedOption?.id === option.id ? "font-medium" : ""
                           }`}
                         >
                           {option.text}
@@ -212,9 +199,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
             {/* Help text */}
             {required && !selectedOption && (
               <div className="text-center mt-4">
-                <p className="text-xs text-[#8B7355]">
-                  Selecione uma opção para continuar
-                </p>
+                <p className="text-xs text-[#8B7355]">Selecione uma opção para continuar</p>
               </div>
             )}
           </Card>

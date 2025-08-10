@@ -1,7 +1,7 @@
 import React from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { QuizComponentData } from "../../../types/quizBuilder";
+import { QuizComponentData } from "@/types/quizBuilder";
 import ComponentRenderer from "./ComponentRenderer";
 
 interface DraggableComponentProps {
@@ -46,13 +46,7 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="relative"
-    >
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="relative">
       <ComponentRenderer
         component={component}
         isSelected={isSelected}

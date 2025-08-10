@@ -140,9 +140,7 @@ export const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
     margin: layoutProps.margin || "0 4px",
     transition: "all 0.3s ease",
     cursor: onClick ? "pointer" : "default",
-    transform: isHovered
-      ? "translateY(-1px) scale(1.05)"
-      : "translateY(0) scale(1)",
+    transform: isHovered ? "translateY(-1px) scale(1.05)" : "translateY(0) scale(1)",
     ...variantStyles,
     ...(styleProps.glow && {
       boxShadow: `${variantStyles.boxShadow || "0 2px 8px rgba(184, 155, 122, 0.3)"}, 0 0 20px rgba(184, 155, 122, 0.2)`,

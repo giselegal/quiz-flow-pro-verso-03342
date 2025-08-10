@@ -1,28 +1,12 @@
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Separator } from "../../../components/ui/separator";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../../../components/ui/tooltip";
-import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
-import { cn } from "../../../lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { cn } from "@/lib/utils";
 import {
   BarChart3,
   Clock,
@@ -186,10 +170,7 @@ const COMPONENT_CATEGORIES = {
   },
 };
 
-const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
-  onAddBlock,
-  className,
-}) => {
+const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, className }) => {
   const [activeCategory, setActiveCategory] = useState("quiz");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -198,15 +179,13 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
     if (!searchTerm) return null;
 
     const filtered: any[] = [];
-    Object.values(COMPONENT_CATEGORIES).forEach((category) => {
-      category.components.forEach((component) => {
-        const matchesName = component.name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+    Object.values(COMPONENT_CATEGORIES).forEach(category => {
+      category.components.forEach(component => {
+        const matchesName = component.name.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesDescription = component.description
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
-        const matchesTags = component.tags.some((tag) =>
+        const matchesTags = component.tags.some(tag =>
           tag.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
@@ -223,10 +202,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
     onAddBlock?.(blockType);
   };
 
-  const renderComponentCard = (
-    component: any,
-    showCategory: boolean = false
-  ) => {
+  const renderComponentCard = (component: any, showCategory: boolean = false) => {
     const Icon = component.icon;
     const isAvailable = getBlockComponent(component.type) !== null;
 
@@ -251,17 +227,11 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                   )}
                 >
                   <Icon
-                    className={cn(
-                      "w-4 h-4",
-                      isAvailable ? "text-[#B89B7A]" : "text-gray-400"
-                    )}
+                    className={cn("w-4 h-4", isAvailable ? "text-[#B89B7A]" : "text-gray-400")}
                   />
                 </div>
                 {component.featured && (
-                  <Badge
-                    variant="secondary"
-                    style={{ backgroundColor: "#E5DDD5" }}
-                  >
+                  <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
                     ⭐ Popular
                   </Badge>
                 )}
@@ -274,7 +244,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                       size="sm"
                       variant="ghost"
                       className="text-[#B89B7A] hover:bg-[#B89B7A]/10"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         handleAddBlock(component.type);
                       }}
@@ -301,7 +271,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                 {component.name}
               </h3>
 
-              <p style={{ color: "#6B4F43" }}>{component.description}</p>
+              <p style={{ color: '#6B4F43' }}>{component.description}</p>
 
               {showCategory && (
                 <Badge variant="outline" className="text-xs">
@@ -311,7 +281,10 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
 
               <div className="flex flex-wrap gap-1 mt-2">
                 {component.tags.slice(0, 3).map((tag: string) => (
-                  <span key={tag} style={{ color: "#6B4F43" }}>
+                  <span
+                    key={tag}
+                    style={{ color: '#6B4F43' }}
+                  >
                     {tag}
                   </span>
                 ))}
@@ -330,9 +303,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
           <Grid3X3 className="w-5 h-5" />
           Biblioteca de Componentes
         </CardTitle>
-        <CardDescription>
-          Arraste ou clique para adicionar componentes
-        </CardDescription>
+        <CardDescription>Arraste ou clique para adicionar componentes</CardDescription>
 
         {/* Busca de componentes */}
         <div className="relative">
@@ -340,7 +311,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
           <Input
             placeholder="Buscar componentes..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
           />
         </div>
@@ -351,31 +322,21 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
           // Modo de busca
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 {filteredComponents.length} componentes encontrados
               </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSearchTerm("")}
-              >
+              <Button variant="ghost" size="sm" onClick={() => setSearchTerm("")}>
                 Limpar
               </Button>
             </div>
 
             <div className="grid gap-3">
-              {filteredComponents.map((component) =>
-                renderComponentCard(component, true)
-              )}
+              {filteredComponents.map(component => renderComponentCard(component, true))}
             </div>
           </div>
         ) : (
           // Modo de categorias
-          <Tabs
-            value={activeCategory}
-            onValueChange={setActiveCategory}
-            className="h-full"
-          >
+          <Tabs value={activeCategory} onValueChange={setActiveCategory} className="h-full">
             <TabsList className="grid w-full grid-cols-2 mb-4">
               {Object.entries(COMPONENT_CATEGORIES)
                 .slice(0, 2)
@@ -384,16 +345,10 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                   const componentCount = category.components.length;
 
                   return (
-                    <TabsTrigger
-                      key={key}
-                      value={key}
-                      className="flex items-center gap-1 text-xs"
-                    >
+                    <TabsTrigger key={key} value={key} className="flex items-center gap-1 text-xs">
                       <Icon className="w-3 h-3" />
                       {category.label}
-                      <span className="ml-1 text-[#B89B7A]">
-                        ({componentCount})
-                      </span>
+                      <span className="ml-1 text-[#B89B7A]">({componentCount})</span>
                     </TabsTrigger>
                   );
                 })}
@@ -424,26 +379,19 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
               <TabsContent key={key} value={key} className="space-y-4">
                 <div className="mb-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <category.icon
-                      className="w-4 h-4"
-                      style={{ color: category.color }}
-                    />
-                    <h3 className="font-medium text-[#432818]">
-                      {category.label}
-                    </h3>
+                    <category.icon className="w-4 h-4" style={{ color: category.color }} />
+                    <h3 className="font-medium text-[#432818]">{category.label}</h3>
                     <Badge variant="secondary" className="text-xs">
                       {category.components.length}
                     </Badge>
                   </div>
-                  <p style={{ color: "#6B4F43" }}>{category.description}</p>
+                  <p style={{ color: '#6B4F43' }}>{category.description}</p>
                 </div>
 
                 <Separator className="bg-[#B89B7A]/20" />
 
                 <div className="grid gap-3">
-                  {category.components.map((component) =>
-                    renderComponentCard(component)
-                  )}
+                  {category.components.map(component => renderComponentCard(component))}
                 </div>
               </TabsContent>
             ))}
@@ -452,8 +400,8 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
       </CardContent>
 
       {/* Rodapé com estatísticas */}
-      <div style={{ backgroundColor: "#FAF9F7" }}>
-        <div style={{ color: "#6B4F43" }}>
+      <div style={{ backgroundColor: '#FAF9F7' }}>
+        <div style={{ color: '#6B4F43' }}>
           {Object.values(COMPONENT_CATEGORIES).reduce(
             (total, cat) => total + cat.components.length,
             0

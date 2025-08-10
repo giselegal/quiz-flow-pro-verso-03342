@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import React from "react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -10,14 +10,7 @@ const getMarginClass = (
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -67,10 +60,8 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>
-          Erro: Bloco LegalNotice não encontrado
-        </p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco LegalNotice não encontrado</p>
       </div>
     );
   }
@@ -107,8 +98,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Estilos CSS dinâmicos
   const containerStyles: React.CSSProperties = {
-    backgroundColor:
-      backgroundColor === "transparent" ? "transparent" : backgroundColor,
+    backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
     textAlign: textAlign as "left" | "center" | "right",
     padding: "24px 16px",
   };
@@ -161,11 +151,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
             display: "flex",
             flexWrap: "wrap",
             justifyContent:
-              textAlign === "left"
-                ? "flex-start"
-                : textAlign === "right"
-                  ? "flex-end"
-                  : "center",
+              textAlign === "left" ? "flex-start" : textAlign === "right" ? "flex-end" : "center",
             gap: "16px",
             alignItems: "center",
           }}
@@ -174,11 +160,11 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
             href="#privacy"
             style={linkStyles}
             className="hover:underline"
-            onClick={(e) => e.stopPropagation()}
-            onMouseEnter={(e) => {
+            onClick={e => e.stopPropagation()}
+            onMouseEnter={e => {
               e.currentTarget.style.textDecoration = "underline";
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={e => {
               e.currentTarget.style.textDecoration = "none";
             }}
           >
@@ -189,11 +175,11 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
             href="#terms"
             style={linkStyles}
             className="hover:underline"
-            onClick={(e) => e.stopPropagation()}
-            onMouseEnter={(e) => {
+            onClick={e => e.stopPropagation()}
+            onMouseEnter={e => {
               e.currentTarget.style.textDecoration = "underline";
             }}
-            onMouseLeave={(e) => {
+            onMouseLeave={e => {
               e.currentTarget.style.textDecoration = "none";
             }}
           >

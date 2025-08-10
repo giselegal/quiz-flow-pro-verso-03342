@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
@@ -12,7 +12,7 @@ import {
   RESPONSIVE_PATTERNS,
   getThemeClasses,
   INLINE_ANIMATIONS,
-} from "../../../utils/inlineComponentUtils";
+} from "@/utils/inlineComponentUtils";
 import {
   BRAND_COLORS,
   TYPOGRAPHY,
@@ -20,7 +20,7 @@ import {
   ANIMATIONS,
   EFFECTS,
   RESPONSIVE_PATTERNS as BRAND_RESPONSIVE,
-} from "../../../utils/brandDesignSystem";
+} from "@/utils/brandDesignSystem";
 import {
   ArrowRight,
   ShoppingCart,
@@ -38,14 +38,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -166,19 +159,9 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const personalizedText = getPersonalizedText(
-    text,
-    usernamePattern,
-    username,
-    useUsername
-  );
+  const personalizedText = getPersonalizedText(text, usernamePattern, username, useUsername);
 
-  const personalizedButtonText = getPersonalizedText(
-    buttonText,
-    buttonText,
-    username,
-    useUsername
-  );
+  const personalizedButtonText = getPersonalizedText(buttonText, buttonText, username, useUsername);
 
   const styleClasses = {
     primary:
@@ -215,8 +198,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
           SPACING.padding.md,
           ANIMATIONS.transition,
           "hover:shadow-lg hover:scale-105",
-          styleClasses[buttonStyle as keyof typeof styleClasses] ||
-            styleClasses.brand
+          styleClasses[buttonStyle as keyof typeof styleClasses] || styleClasses.brand
         )}
         onClick={handleClick}
         onMouseEnter={() => setIsHovered(true)}
@@ -225,11 +207,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Icon */}
         {showIcon && (
           <div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              getIcon()
-            )}
+            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : getIcon()}
           </div>
         )}
 
@@ -237,7 +215,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="flex-1 min-w-0">
           <InlineEditableText
             value={personalizedText}
-            onChange={(value) => handlePropertyChange("text", value)}
+            onChange={value => handlePropertyChange("text", value)}
             placeholder="Texto principal do CTA..."
             fontSize="sm"
             fontWeight="medium"
@@ -246,7 +224,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
 
           <InlineEditableText
             value={personalizedButtonText}
-            onChange={(value) => handlePropertyChange("buttonText", value)}
+            onChange={value => handlePropertyChange("buttonText", value)}
             placeholder="Texto do botão..."
             fontSize="lg"
             fontWeight="bold"
@@ -259,7 +237,7 @@ const CTAInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="flex-shrink-0 text-right">
             <InlineEditableText
               value={price}
-              onChange={(value) => handlePropertyChange("price", value)}
+              onChange={value => handlePropertyChange("price", value)}
               placeholder="R$ 97,00"
               fontSize="lg"
               fontWeight="bold"

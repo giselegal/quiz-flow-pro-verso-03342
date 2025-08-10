@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Badge } from "../../../components/ui/badge";
-import { Progress } from "../../../components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { InlineEditableText } from "./InlineEditableText";
-import { useDynamicData } from "../../../hooks/useDynamicData";
+import { useDynamicData } from "@/hooks/useDynamicData";
 import {
   TrendingUp,
   Users,
@@ -26,7 +21,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import type { BlockComponentProps, BlockData } from "../../../types/blocks";
+import type { BlockComponentProps, BlockData } from "@/types/blocks";
 
 interface Stat {
   id: string;
@@ -71,14 +66,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -197,9 +185,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
     },
   ];
 
-  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>(
-    {}
-  );
+  const [animatedValues, setAnimatedValues] = useState<Record<string, number>>({});
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -210,7 +196,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
   // Animate numbers on mount
   useEffect(() => {
     if (animateNumbers) {
-      stats.forEach((stat) => {
+      stats.forEach(stat => {
         if (stat.isAnimated) {
           let current = 0;
           const target = stat.value;
@@ -221,13 +207,13 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
               current = target;
               clearInterval(timer);
             }
-            setAnimatedValues((prev) => ({
+            setAnimatedValues(prev => ({
               ...prev,
               [stat.id]: current,
             }));
           }, 20);
         } else {
-          setAnimatedValues((prev) => ({
+          setAnimatedValues(prev => ({
             ...prev,
             [stat.id]: stat.value,
           }));
@@ -235,7 +221,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
       });
     } else {
       const initialValues: Record<string, number> = {};
-      stats.forEach((stat) => {
+      stats.forEach(stat => {
         initialValues[stat.id] = stat.value;
       });
       setAnimatedValues(initialValues);
@@ -337,20 +323,15 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
 
           <CardContent className="space-y-3">
             <div>
-              <div
-                className="text-3xl font-bold mb-1"
-                style={{ color: stat.color || accentColor }}
-              >
+              <div className="text-3xl font-bold mb-1" style={{ color: stat.color || accentColor }}>
                 {stat.prefix}
                 {formatNumber(currentValue, isDecimal)}
                 {stat.suffix}
               </div>
-              <CardTitle style={{ color: "#432818" }}>{stat.label}</CardTitle>
+              <CardTitle style={{ color: '#432818' }}>{stat.label}</CardTitle>
             </div>
 
-            {stat.description && (
-              <p style={{ color: "#6B4F43" }}>{stat.description}</p>
-            )}
+            {stat.description && <p style={{ color: '#6B4F43' }}>{stat.description}</p>}
 
             {showProgress && stat.isPercentage && (
               <div className="space-y-2">
@@ -363,7 +344,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
                     } as any
                   }
                 />
-                <div style={{ color: "#8B7355" }}>
+                <div style={{ color: '#8B7355' }}>
                   <span>0%</span>
                   <span>100%</span>
                 </div>
@@ -371,7 +352,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             )}
 
             {showTrends && stat.changeLabel && stat.change && (
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 <Badge variant="outline" className="text-xs">
                   {stat.changeLabel}
                 </Badge>
@@ -404,12 +385,8 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
         data-block-type={block.type}
       >
         <TrendingUp className="w-16 h-16 mb-4 opacity-50" />
-        <p className="text-center text-lg font-medium mb-2">
-          Nenhuma estatística configurada
-        </p>
-        <p className="text-center">
-          Configure as métricas no painel de propriedades.
-        </p>
+        <p className="text-center text-lg font-medium mb-2">Nenhuma estatística configurada</p>
+        <p className="text-center">Configure as métricas no painel de propriedades.</p>
       </div>
     );
   }
@@ -433,9 +410,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               <InlineEditableText
                 value={title}
-                onChange={(value: string) =>
-                  handlePropertyChange("title", value)
-                }
+                onChange={(value: string) => handlePropertyChange("title", value)}
                 className="inline-block"
                 placeholder="Título das estatísticas"
               />
@@ -444,9 +419,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
               <p className="text-lg text-opacity-80 max-w-3xl mx-auto">
                 <InlineEditableText
                   value={subtitle}
-                  onChange={(value: string) =>
-                    handlePropertyChange("subtitle", value)
-                  }
+                  onChange={(value: string) => handlePropertyChange("subtitle", value)}
                   className="inline-block"
                   placeholder="Subtítulo das estatísticas"
                 />
@@ -471,7 +444,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
         </div>
 
         {/* Trust indicators */}
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-green-500" />
             <span>Dados atualizados em tempo real</span>
@@ -481,7 +454,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             <span>Empresa certificada</span>
           </div>
           <div className="flex items-center gap-2">
-            <Heart style={{ color: "#432818" }} />
+            <Heart style={{ color: '#432818' }} />
             <span>Mais de 10 anos de experiência</span>
           </div>
         </div>
@@ -490,9 +463,8 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
       {isEditing && (
         <div className="mt-8 p-4 bg-[#FAF9F7] border border-[#B89B7A]/20 rounded-md">
           <p className="text-sm text-[#8F7A6A]">
-            Modo de edição: {stats.length} estatística(s) • Layout: {layout} •
-            Colunas: {columns} •{animateNumbers && "Animações ativas"} • Estilo:{" "}
-            {cardStyle}
+            Modo de edição: {stats.length} estatística(s) • Layout: {layout} • Colunas: {columns} •
+            {animateNumbers && "Animações ativas"} • Estilo: {cardStyle}
           </p>
         </div>
       )}

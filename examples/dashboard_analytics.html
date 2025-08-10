@@ -148,24 +148,12 @@
         <h2>🎯 Controles de API</h2>
         <p>Clique nos botões abaixo para carregar diferentes tipos de dados:</p>
         <div class="button-grid">
-          <button class="button" onclick="loadQuizResults()">
-            🎯 Resultados Quiz
-          </button>
-          <button class="button" onclick="loadConversionEvents()">
-            📊 Eventos Conversão
-          </button>
-          <button class="button" onclick="loadHotmartPurchases()">
-            💰 Vendas Hotmart
-          </button>
-          <button class="button" onclick="loadUtmAnalytics()">
-            📈 Analytics UTM
-          </button>
-          <button class="button" onclick="loadParticipants()">
-            👥 Participantes
-          </button>
-          <button class="button" onclick="testAllAPIs()">
-            🚀 Testar Todas APIs
-          </button>
+          <button class="button" onclick="loadQuizResults()">🎯 Resultados Quiz</button>
+          <button class="button" onclick="loadConversionEvents()">📊 Eventos Conversão</button>
+          <button class="button" onclick="loadHotmartPurchases()">💰 Vendas Hotmart</button>
+          <button class="button" onclick="loadUtmAnalytics()">📈 Analytics UTM</button>
+          <button class="button" onclick="loadParticipants()">👥 Participantes</button>
+          <button class="button" onclick="testAllAPIs()">🚀 Testar Todas APIs</button>
         </div>
       </div>
 
@@ -176,29 +164,15 @@
         <div class="data-content">
           <div id="results" class="loading">
             <h3>🎯 Bem-vindo ao Dashboard!</h3>
-            <p>
-              Para começar, clique em um dos botões acima para carregar os
-              dados.
-            </p>
+            <p>Para começar, clique em um dos botões acima para carregar os dados.</p>
             <br />
             <p><strong>URLs das APIs disponíveis:</strong></p>
-            <ul
-              style="text-align: left; display: inline-block; margin-top: 10px"
-            >
-              <li>
-                <code>GET /api/quiz-results</code> - Respostas dos quizzes
-              </li>
-              <li>
-                <code>GET /api/conversion-events</code> - Eventos de conversão
-              </li>
-              <li>
-                <code>GET /api/hotmart-purchases</code> - Vendas confirmadas
-              </li>
+            <ul style="text-align: left; display: inline-block; margin-top: 10px">
+              <li><code>GET /api/quiz-results</code> - Respostas dos quizzes</li>
+              <li><code>GET /api/conversion-events</code> - Eventos de conversão</li>
+              <li><code>GET /api/hotmart-purchases</code> - Vendas confirmadas</li>
               <li><code>GET /api/utm-analytics</code> - Dados de tráfego</li>
-              <li>
-                <code>GET /api/quiz-participants</code> - Dados dos
-                participantes
-              </li>
+              <li><code>GET /api/quiz-participants</code> - Dados dos participantes</li>
             </ul>
           </div>
         </div>
@@ -215,8 +189,7 @@
       async function loadData(endpoint, title, emoji) {
         try {
           titleDiv.textContent = `${emoji} ${title}`;
-          resultsDiv.innerHTML =
-            '<div class="loading">⏳ Carregando dados...</div>';
+          resultsDiv.innerHTML = '<div class="loading">⏳ Carregando dados...</div>';
 
           const response = await fetch(`${BASE_URL}${endpoint}`);
 
@@ -276,11 +249,7 @@
 
         // Estatísticas específicas por tipo
         if (title.includes("Quiz")) {
-          const styles = [
-            ...new Set(
-              data.map((item) => item.predominantStyle).filter(Boolean)
-            ),
-          ];
+          const styles = [...new Set(data.map(item => item.predominantStyle).filter(Boolean))];
           statsHtml += `
                     <div class="stat-card">
                         <div class="stat-number">${styles.length}</div>
@@ -288,9 +257,7 @@
                     </div>
                 `;
         } else if (title.includes("Eventos")) {
-          const types = [
-            ...new Set(data.map((item) => item.eventType).filter(Boolean)),
-          ];
+          const types = [...new Set(data.map(item => item.eventType).filter(Boolean))];
           statsHtml += `
                     <div class="stat-card">
                         <div class="stat-number">${types.length}</div>
@@ -298,10 +265,7 @@
                     </div>
                 `;
         } else if (title.includes("Vendas")) {
-          const total = data.reduce(
-            (sum, item) => sum + (parseFloat(item.amount) || 0),
-            0
-          );
+          const total = data.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
           statsHtml += `
                     <div class="stat-card">
                         <div class="stat-number">R$ ${total.toFixed(2)}</div>
@@ -312,9 +276,7 @@
 
         // Data do último registro
         if (data.length > 0 && data[0].createdAt) {
-          const lastDate = new Date(data[0].createdAt).toLocaleDateString(
-            "pt-BR"
-          );
+          const lastDate = new Date(data[0].createdAt).toLocaleDateString("pt-BR");
           statsHtml += `
                     <div class="stat-card">
                         <div class="stat-number">${lastDate}</div>
@@ -351,8 +313,7 @@
       // Função para testar todas as APIs
       async function testAllAPIs() {
         titleDiv.textContent = "🚀 Testando Todas as APIs";
-        resultsDiv.innerHTML =
-          '<div class="loading">🔄 Testando todas as APIs...</div>';
+        resultsDiv.innerHTML = '<div class="loading">🔄 Testando todas as APIs...</div>';
 
         const apis = [
           { endpoint: "/quiz-results", name: "Quiz Results" },
@@ -390,11 +351,10 @@
         }
 
         // Exibir resultados do teste
-        let html =
-          '<div class="success">🧪 <strong>Teste Completo das APIs</strong></div>';
+        let html = '<div class="success">🧪 <strong>Teste Completo das APIs</strong></div>';
         html += '<div class="stats">';
 
-        results.forEach((result) => {
+        results.forEach(result => {
           html += `
                     <div class="stat-card">
                         <div class="stat-number">${result.status}</div>
@@ -423,10 +383,7 @@
             console.warn("⚠️ API respondeu mas com erro:", response.status);
           }
         } catch (error) {
-          console.warn(
-            "⚠️ Não foi possível conectar com a API:",
-            error.message
-          );
+          console.warn("⚠️ Não foi possível conectar com a API:", error.message);
         }
       }
 

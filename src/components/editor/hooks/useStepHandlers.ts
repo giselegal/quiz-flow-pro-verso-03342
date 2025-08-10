@@ -28,19 +28,15 @@ export const useStepHandlers = (
 
       // 🔧 CORREÇÃO: Carregar automaticamente o conteúdo da etapa selecionada
       // Verificar se a etapa já tem blocos, se não tiver, popular automaticamente
-      const selectedStep = steps.find((step) => step.id === stepId);
+      const selectedStep = steps.find(step => step.id === stepId);
       if (selectedStep && selectedStep.blocksCount === 0) {
-        console.log(
-          `📝 Etapa ${stepId} está vazia, populando automaticamente...`
-        );
+        console.log(`📝 Etapa ${stepId} está vazia, populando automaticamente...`);
         // Carregar conteúdo da etapa automaticamente
         setTimeout(() => {
           handlePopulateStep(stepId);
         }, 100);
       } else {
-        console.log(
-          `✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`
-        );
+        console.log(`✅ Etapa ${stepId} já tem ${selectedStep?.blocksCount || 0} blocos`);
       }
     },
     [steps, setSelectedStepId, setSelectedBlockId, handlePopulateStep]
@@ -61,16 +57,12 @@ export const useStepHandlers = (
       type: "custom",
       description: `Etapa personalizada ${steps.length + 1}`,
     };
-    setSteps((prev) => [...prev, newStep]);
+    setSteps(prev => [...prev, newStep]);
   }, [steps.length, setSteps]);
 
   const handleStepUpdate = useCallback(
     (stepId: string, updates: Partial<QuizStep>) => {
-      setSteps((prev) =>
-        prev.map((step) =>
-          step.id === stepId ? { ...step, ...updates } : step
-        )
-      );
+      setSteps(prev => prev.map(step => (step.id === stepId ? { ...step, ...updates } : step)));
     },
     [setSteps]
   );
@@ -83,7 +75,7 @@ export const useStepHandlers = (
       }
 
       if (confirm("Tem certeza que deseja excluir esta etapa?")) {
-        setSteps((prev) => prev.filter((step) => step.id !== stepId));
+        setSteps(prev => prev.filter(step => step.id !== stepId));
         if (selectedStepId === stepId) {
           setSelectedStepId(steps[0]?.id || "");
         }
@@ -94,7 +86,7 @@ export const useStepHandlers = (
 
   const handleStepDuplicate = useCallback(
     (stepId: string) => {
-      const stepToDuplicate = steps.find((step) => step.id === stepId);
+      const stepToDuplicate = steps.find(step => step.id === stepId);
       if (stepToDuplicate) {
         const newStep: QuizStep = {
           ...stepToDuplicate,
@@ -107,19 +99,16 @@ export const useStepHandlers = (
           name: `${stepToDuplicate.name} (Cópia)`,
           order: steps.length + 1,
         };
-        setSteps((prev) => [...prev, newStep]);
+        setSteps(prev => [...prev, newStep]);
       }
     },
     [steps, setSteps]
   );
 
-  const handleStepReorder = useCallback(
-    (draggedId: string, targetId: string) => {
-      // TODO: Implement drag and drop reordering
-      console.log("Reorder step", draggedId, "to", targetId);
-    },
-    []
-  );
+  const handleStepReorder = useCallback((draggedId: string, targetId: string) => {
+    // TODO: Implement drag and drop reordering
+    console.log("Reorder step", draggedId, "to", targetId);
+  }, []);
 
   return {
     handleStepSelect,

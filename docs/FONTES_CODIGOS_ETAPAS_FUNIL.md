@@ -246,15 +246,7 @@ export interface FunnelStage {
   id: string;
   name: string;
   order: number;
-  type:
-    | "intro"
-    | "question"
-    | "transition"
-    | "processing"
-    | "result"
-    | "lead"
-    | "offer"
-    | "final";
+  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
   description?: string;
   isActive?: boolean;
   metadata?: {

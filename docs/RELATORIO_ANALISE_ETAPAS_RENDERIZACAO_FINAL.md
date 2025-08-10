@@ -57,13 +57,8 @@ useEffect(() => {
 #### **Solução B: Debug Aprimorado**
 
 ```typescript
-console.log(
-  `🔥 [${timestamp}] FunnelStagesPanel - RENDER #${renderCount + 1} INICIADO`
-);
-console.log(
-  `🔍 [${timestamp}] FunnelStagesPanel - Stages:`,
-  stages?.length || 0
-);
+console.log(`🔥 [${timestamp}] FunnelStagesPanel - RENDER #${renderCount + 1} INICIADO`);
+console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages:`, stages?.length || 0);
 console.log(`🔍 [${timestamp}] FunnelStagesPanel - Stages Array:`, stages);
 ```
 

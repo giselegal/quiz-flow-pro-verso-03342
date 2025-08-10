@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { QuizOption } from "../../types/quiz";
-import { Card, CardContent } from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
+import { QuizOption } from "@/types/quiz";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
-import { Button } from "../../components/ui/button";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { GripVertical, Image, Trash2 } from "lucide-react";
 
 interface QuestionOptionEditorProps {
@@ -40,8 +40,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
   index,
 }) => {
   const letterOptions = ["A", "B", "C", "D", "E", "F", "G", "H"];
-  const letter =
-    index < letterOptions.length ? letterOptions[index] : `#${index + 1}`;
+  const letter = index < letterOptions.length ? letterOptions[index] : `#${index + 1}`;
 
   const handleChange = (field: keyof QuizOption, value: any) => {
     onUpdate({
@@ -61,32 +60,26 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
           <div className="grid gap-4 flex-1">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="md:col-span-2">
-                <Label htmlFor={`option-text-${option.id}`}>
-                  Texto da opção
-                </Label>
+                <Label htmlFor={`option-text-${option.id}`}>Texto da opção</Label>
                 <Input
                   id={`option-text-${option.id}`}
                   value={option.text}
-                  onChange={(e) => handleChange("text", e.target.value)}
+                  onChange={e => handleChange("text", e.target.value)}
                   placeholder="Digite o texto da opção"
                 />
               </div>
 
               <div>
-                <Label htmlFor={`option-category-${option.id}`}>
-                  Categoria de Estilo
-                </Label>
+                <Label htmlFor={`option-category-${option.id}`}>Categoria de Estilo</Label>
                 <Select
                   value={option.styleCategory}
-                  onValueChange={(value: any) =>
-                    handleChange("styleCategory", value)
-                  }
+                  onValueChange={(value: any) => handleChange("styleCategory", value)}
                 >
                   <SelectTrigger id={`option-category-${option.id}`}>
                     <SelectValue placeholder="Selecione a categoria" />
                   </SelectTrigger>
                   <SelectContent>
-                    {styleCategories.map((category) => (
+                    {styleCategories.map(category => (
                       <SelectItem key={category.value} value={category.value}>
                         {category.label}
                       </SelectItem>
@@ -98,22 +91,15 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
 
             {(questionType === "image" || questionType === "both") && (
               <div>
-                <Label htmlFor={`option-image-${option.id}`}>
-                  URL da imagem
-                </Label>
+                <Label htmlFor={`option-image-${option.id}`}>URL da imagem</Label>
                 <div className="flex gap-2">
                   <Input
                     id={`option-image-${option.id}`}
                     value={option.imageUrl || ""}
-                    onChange={(e) => handleChange("imageUrl", e.target.value)}
+                    onChange={e => handleChange("imageUrl", e.target.value)}
                     placeholder="https://exemplo.com/imagem.jpg"
                   />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    className="flex-shrink-0"
-                  >
+                  <Button type="button" variant="outline" size="icon" className="flex-shrink-0">
                     <Image className="h-4 w-4" />
                   </Button>
                 </div>
@@ -123,7 +109,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                       src={option.imageUrl}
                       alt={option.text}
                       className="w-full h-auto object-cover"
-                      onError={(e) => {
+                      onError={e => {
                         (e.target as HTMLImageElement).src =
                           "https://placehold.co/100x100?text=Erro";
                       }}
@@ -140,14 +126,9 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                 </Label>
                 <Select
                   value={String(option.points)}
-                  onValueChange={(value) =>
-                    handleChange("points", parseInt(value))
-                  }
+                  onValueChange={value => handleChange("points", parseInt(value))}
                 >
-                  <SelectTrigger
-                    id={`option-points-${option.id}`}
-                    className="w-16"
-                  >
+                  <SelectTrigger id={`option-points-${option.id}`} className="w-16">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -165,7 +146,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                 type="button"
                 variant="ghost"
                 onClick={onDelete}
-                style={{ color: "#432818" }}
+                style={{ color: '#432818' }}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>

@@ -1,5 +1,5 @@
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
 import React from "react";
 
 interface HeadingProperties {
@@ -104,7 +104,7 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
       }}
       contentEditable={isSelected}
       suppressContentEditableWarning
-      onBlur={(e) => handlePropertyUpdate("text", e.target.textContent || "")}
+      onBlur={e => handlePropertyUpdate("text", e.target.textContent || "")}
       onClick={onClick}
     >
       {text}

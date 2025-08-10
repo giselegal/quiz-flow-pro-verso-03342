@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { Mic } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -9,14 +9,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -63,11 +56,7 @@ const AudioBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = "",
 }) => {
-  const {
-    audioUrl = "",
-    autoplay = false,
-    controls = true,
-  } = block?.properties || {};
+  const { audioUrl = "", autoplay = false, controls = true } = block?.properties || {};
 
   return (
     <div
@@ -90,7 +79,7 @@ const AudioBlock: React.FC<BlockComponentProps> = ({
           Seu navegador não suporta o elemento de áudio.
         </audio>
       ) : (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <Mic className="w-12 h-12 mb-4 opacity-50" />
           <p>Adicione uma URL de áudio nas propriedades.</p>
         </div>

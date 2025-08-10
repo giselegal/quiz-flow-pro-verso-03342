@@ -33,55 +33,42 @@ export const analyzeImageUrl = (url: string) => {
       result.transformations = transforms;
 
       // Extract format information
-      const formatTransform = transforms.find((t) => t.startsWith("f_"));
+      const formatTransform = transforms.find(t => t.startsWith("f_"));
       if (formatTransform) {
         result.format = formatTransform.replace("f_", "");
       } else {
-        result.suggestions.push(
-          "Add f_auto parameter for automatic format optimization"
-        );
+        result.suggestions.push("Add f_auto parameter for automatic format optimization");
       }
 
       // Extract quality information
-      const qualityTransform = transforms.find((t) => t.startsWith("q_"));
+      const qualityTransform = transforms.find(t => t.startsWith("q_"));
       if (qualityTransform) {
         result.quality = qualityTransform.replace("q_", "");
 
         // Check if quality is too high
-        if (
-          result.quality !== "auto" &&
-          parseInt(result.quality as string, 10) > 85
-        ) {
+        if (result.quality !== "auto" && parseInt(result.quality as string, 10) > 85) {
           result.suggestions.push(
             "Consider using q_auto or reducing quality to 85 for better performance"
           );
         }
       } else {
-        result.suggestions.push(
-          "Add q_auto parameter for automatic quality optimization"
-        );
+        result.suggestions.push("Add q_auto parameter for automatic quality optimization");
       }
 
       // Extract width information
-      const widthTransform = transforms.find((t) => t.startsWith("w_"));
+      const widthTransform = transforms.find(t => t.startsWith("w_"));
       if (widthTransform) {
         result.width = widthTransform.replace("w_", "");
       } else {
-        result.suggestions.push(
-          "Add width parameter to avoid loading unnecessarily large images"
-        );
+        result.suggestions.push("Add width parameter to avoid loading unnecessarily large images");
       }
 
       // Check for other optimal parameters
-      if (!transforms.some((t) => t.startsWith("dpr_"))) {
-        result.suggestions.push(
-          "Add dpr_auto for responsive device pixel ratio handling"
-        );
+      if (!transforms.some(t => t.startsWith("dpr_"))) {
+        result.suggestions.push("Add dpr_auto for responsive device pixel ratio handling");
       }
     } else {
-      result.suggestions.push(
-        "No transformations found in URL. Add optimization parameters."
-      );
+      result.suggestions.push("No transformations found in URL. Add optimization parameters.");
     }
   } else {
     // Not a Cloudinary URL

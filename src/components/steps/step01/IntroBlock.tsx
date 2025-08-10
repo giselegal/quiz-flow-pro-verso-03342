@@ -1,12 +1,12 @@
 // src/components/steps/step01/IntroBlock.tsx
 // Componente principal da etapa 1 - Introdução baseada no JSON
 
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
-import { Card } from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { QUIZ_CONFIGURATION } from "../../../config/quizConfiguration";
-import { BlockComponentProps } from "../../../types/blocks";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { BlockComponentProps } from "@/types/blocks";
 import React, { useEffect, useState } from "react";
 
 export const IntroBlock: React.FC<BlockComponentProps> = ({
@@ -26,8 +26,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
 
   // Configuração padrão baseada no JSON
   const introStep =
-    QUIZ_CONFIGURATION.steps.find((step) => step.type === "intro") ||
-    QUIZ_CONFIGURATION.steps[0];
+    QUIZ_CONFIGURATION.steps.find(step => step.type === "intro") || QUIZ_CONFIGURATION.steps[0];
 
   // Extrair propriedades com valores padrão do JSON
   const {
@@ -62,14 +61,9 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
   const containerStyle: React.CSSProperties = {
     transform: `scale(${scale / 100})`,
     transformOrigin:
-      alignment === "left"
-        ? "left center"
-        : alignment === "right"
-          ? "right center"
-          : "center",
+      alignment === "left" ? "left center" : alignment === "right" ? "right center" : "center",
     textAlign: alignment,
-    backgroundColor:
-      backgroundColor === "transparent" ? "transparent" : backgroundColor,
+    backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
     opacity: backgroundOpacity / 100,
     padding: "32px",
     minHeight: "600px",
@@ -129,7 +123,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
                 borderRadius: QUIZ_CONFIGURATION.design.card.borderRadius,
                 boxShadow: QUIZ_CONFIGURATION.design.card.shadow,
               }}
-              onError={(e) => {
+              onError={e => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
               }}
@@ -169,13 +163,11 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
               )}
               <Input
                 value={userName}
-                onChange={(e) => handleInputChange(e.target.value)}
+                onChange={e => handleInputChange(e.target.value)}
                 placeholder={inputPlaceholder}
                 className={`text-base p-3 ${!isValid && userName.length > 0 ? "border-red-400" : ""}`}
                 style={{
-                  borderColor: isValid
-                    ? QUIZ_CONFIGURATION.design.primaryColor + "50"
-                    : "#ef4444",
+                  borderColor: isValid ? QUIZ_CONFIGURATION.design.primaryColor + "50" : "#ef4444",
                   fontSize: "16px", // Evita zoom no iOS
                 }}
                 required={required}
@@ -199,19 +191,13 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
                 className="w-full p-3 text-base font-medium transition-all duration-200"
                 style={{
                   background:
-                    isValid && userName
-                      ? QUIZ_CONFIGURATION.design.button.background
-                      : "#d1d5db",
+                    isValid && userName ? QUIZ_CONFIGURATION.design.button.background : "#d1d5db",
                   color: QUIZ_CONFIGURATION.design.button.textColor,
                   borderRadius: QUIZ_CONFIGURATION.design.button.borderRadius,
-                  boxShadow:
-                    isValid && userName
-                      ? QUIZ_CONFIGURATION.design.button.shadow
-                      : "none",
+                  boxShadow: isValid && userName ? QUIZ_CONFIGURATION.design.button.shadow : "none",
                 }}
               >
-                {buttonText ||
-                  `Continuar ${userName ? `como ${userName}` : ""}`}
+                {buttonText || `Continuar ${userName ? `como ${userName}` : ""}`}
               </Button>
             </div>
 
@@ -247,8 +233,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
               Bloco de Introdução - Etapa 1
             </Badge>
             <div className="text-xs mt-2" style={{ color: "#6B4F43" }}>
-              {title} •{" "}
-              {userName ? `Usuário: ${userName}` : "Nome não preenchido"}
+              {title} • {userName ? `Usuário: ${userName}` : "Nome não preenchido"}
             </div>
           </div>
         </div>

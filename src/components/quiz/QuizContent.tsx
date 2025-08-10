@@ -1,6 +1,6 @@
 import React from "react";
 import QuizQuestion from "../QuizQuestion";
-import { UserResponse } from "../../types/quiz";
+import { UserResponse } from "@/types/quiz";
 import { QuizHeader } from "./QuizHeader";
 import { StrategicQuestions } from "./StrategicQuestions";
 
@@ -29,9 +29,7 @@ export const QuizContent: React.FC<QuizContentProps> = ({
   const userName = user?.userName || localStorage.getItem("userName") || "";
 
   // Determine the required selections based on question type
-  const requiredSelections = showingStrategicQuestions
-    ? 1
-    : currentQuestion?.multiSelect || 3;
+  const requiredSelections = showingStrategicQuestions ? 1 : currentQuestion?.multiSelect || 3;
 
   // Check if we have enough selections to proceed
   const canProceed = currentAnswers?.length === requiredSelections;

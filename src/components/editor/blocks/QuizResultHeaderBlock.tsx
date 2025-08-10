@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Award } from "lucide-react";
-import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -115,15 +108,12 @@ const QuizResultHeaderBlock: React.FC<BlockComponentProps> = ({
           )}
 
           {/* Title */}
-          <h1
-            className="text-3xl md:text-4xl font-bold mb-2"
-            style={{ color: textColor }}
-          >
+          <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: textColor }}>
             {formattedTitle}
           </h1>
 
           {/* Subtitle */}
-          <p style={{ color: "#6B4F43" }}>{subtitle}</p>
+          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
         </div>
       </AnimatedWrapper>
     </div>

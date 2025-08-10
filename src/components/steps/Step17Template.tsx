@@ -68,8 +68,7 @@ export const getStep17Template = () => {
         alt: "Finalizando sua Análise...",
         width: 500,
         height: 350,
-        className:
-          "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
+        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
         textAlign: "text-center",
         marginBottom: 32,
         spacing: "small",
@@ -82,8 +81,7 @@ export const getStep17Template = () => {
       id: "transition-description-step17",
       type: "text-inline",
       properties: {
-        content:
-          "Estamos cruzando todos os dados para criar seu perfil de estilo personalizado.",
+        content: "Estamos cruzando todos os dados para criar seu perfil de estilo personalizado.",
         fontSize: "text-lg",
         textAlign: "text-center",
         color: "#432818",
@@ -95,3 +93,4 @@ export const getStep17Template = () => {
     },
   ];
 };
+

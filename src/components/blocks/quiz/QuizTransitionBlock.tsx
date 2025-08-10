@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ChevronRight, Sparkles, ArrowRight } from "lucide-react";
-import { useQuizTracking } from "../../../hooks/useQuizTracking";
+import { useQuizTracking } from "@/hooks/useQuizTracking";
 
 /**
  * QuizTransitionBlock - Componente de transição do quiz 100% reutilizável e editável
@@ -78,14 +78,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -150,8 +143,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 }) => {
   const [animationActive, setAnimationActive] = useState(false);
   const [showContent, setShowContent] = useState(false);
-  const { trackUIInteraction, trackCTAClick, trackLoadingState } =
-    useQuizTracking();
+  const { trackUIInteraction, trackCTAClick, trackLoadingState } = useQuizTracking();
 
   useEffect(() => {
     // Track visualização da transição
@@ -215,11 +207,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
       case "celebration":
         return (
           <div className="relative">
-            <div
-              className={`text-6xl ${animationActive ? "animate-bounce" : ""}`}
-            >
-              🎉
-            </div>
+            <div className={`text-6xl ${animationActive ? "animate-bounce" : ""}`}>🎉</div>
             {animationActive && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-16 h-16 border-4 border-[#B89B7A] border-t-transparent rounded-full animate-spin"></div>
@@ -230,7 +218,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 
       case "progress":
         return (
-          <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className={`h-full bg-[#B89B7A] rounded-full transition-all duration-1000 ${
                 animationActive ? "w-full" : "w-0"
@@ -306,29 +294,21 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         {/* Conteúdo */}
         <div
           className={`space-y-4 max-w-2xl mx-auto transition-all duration-500 ${
-            showContent
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
+            showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
           {/* Título */}
           {title && (
-            <h2 className="text-3xl md:text-4xl font-bold text-[#432818] font-playfair">
-              {title}
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#432818] font-playfair">{title}</h2>
           )}
 
           {/* Subtítulo */}
           {subtitle && (
-            <h3 className="text-xl md:text-2xl font-semibold text-[#6B5B73]">
-              {subtitle}
-            </h3>
+            <h3 className="text-xl md:text-2xl font-semibold text-[#6B5B73]">{subtitle}</h3>
           )}
 
           {/* Mensagem */}
-          {message && (
-            <p className="text-lg text-[#6B5B73] leading-relaxed">{message}</p>
-          )}
+          {message && <p className="text-lg text-[#6B5B73] leading-relaxed">{message}</p>}
         </div>
 
         {/* Botão Continuar */}

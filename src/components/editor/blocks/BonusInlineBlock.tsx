@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Gift, Edit3 } from "lucide-react";
 
 interface BonusInlineBlockProps {
@@ -20,14 +20,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -104,7 +97,7 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
         <div className="flex items-center justify-between">
           <h4
             className="font-semibold text-green-800 text-sm truncate"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
                 const newTitle = prompt("Novo título do bônus:", title);
@@ -116,7 +109,7 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
           </h4>
           <span
             className="text-green-600 font-bold text-sm ml-2"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
                 const newValue = prompt("Novo valor:", value);
@@ -129,22 +122,19 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
         </div>
 
         <p
-          style={{ color: "#6B4F43" }}
-          onClick={(e) => {
+          style={{ color: '#6B4F43' }}
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newDescription = prompt("Nova descrição:", description);
-              if (newDescription !== null)
-                onPropertyChange("description", newDescription);
+              if (newDescription !== null) onPropertyChange("description", newDescription);
             }
           }}
         >
           {description}
         </p>
 
-        <div className="text-xs text-green-600 font-medium mt-1">
-          GRÁTIS para você!
-        </div>
+        <div className="text-xs text-green-600 font-medium mt-1">GRÁTIS para você!</div>
       </div>
 
       {/* Edit indicator */}

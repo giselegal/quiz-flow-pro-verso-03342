@@ -1,15 +1,10 @@
 // 🚀 EDITOR AVANÇADO - Integração Completa das Funcionalidades da Fase 2
-import { Badge } from "../../components/ui/badge";
-import { Button } from "../../components/ui/button";
-import { Separator } from "../../components/ui/separator";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../components/ui/tabs";
-import { TooltipProvider } from "../../components/ui/tooltip";
-import { BlockData } from "../../types/blocks";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { BlockData } from "@/types/blocks";
 import {
   Clock,
   Eye,
@@ -82,9 +77,9 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
     zoom: 100,
   });
 
-  const [activeTab, setActiveTab] = useState<
-    "design" | "blocks" | "templates" | "settings"
-  >("design");
+  const [activeTab, setActiveTab] = useState<"design" | "blocks" | "templates" | "settings">(
+    "design"
+  );
   const [showPropertiesPanel, setShowPropertiesPanel] = useState(true);
   const [showComponentsPanel, setShowComponentsPanel] = useState(true);
   const [editorHistory, setEditorHistory] = useState<any[]>([]);
@@ -92,27 +87,22 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
 
   // Handlers de blocos
   const handleBlockSelect = useCallback((blockId: string) => {
-    setEditorState((prev) => ({
+    setEditorState(prev => ({
       ...prev,
       selectedBlockId: blockId,
     }));
   }, []);
 
-  const handleBlockUpdate = useCallback(
-    (blockId: string, updates: Partial<BlockData>) => {
-      setEditorState((prev) => ({
-        ...prev,
-        blocks: prev.blocks.map((block) =>
-          block.id === blockId ? { ...block, ...updates } : block
-        ),
-      }));
-      setIsDirty(true);
-    },
-    []
-  );
+  const handleBlockUpdate = useCallback((blockId: string, updates: Partial<BlockData>) => {
+    setEditorState(prev => ({
+      ...prev,
+      blocks: prev.blocks.map(block => (block.id === blockId ? { ...block, ...updates } : block)),
+    }));
+    setIsDirty(true);
+  }, []);
 
   const handleBlockAdd = useCallback((newBlock: BlockData) => {
-    setEditorState((prev) => ({
+    setEditorState(prev => ({
       ...prev,
       blocks: [...prev.blocks, { ...newBlock, order: prev.blocks.length }],
     }));
@@ -120,17 +110,16 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
   }, []);
 
   const handleBlockDelete = useCallback((blockId: string) => {
-    setEditorState((prev) => ({
+    setEditorState(prev => ({
       ...prev,
-      blocks: prev.blocks.filter((block) => block.id !== blockId),
-      selectedBlockId:
-        prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
+      blocks: prev.blocks.filter(block => block.id !== blockId),
+      selectedBlockId: prev.selectedBlockId === blockId ? null : prev.selectedBlockId,
     }));
     setIsDirty(true);
   }, []);
 
   const handleBlockReorder = useCallback((newBlocks: BlockData[]) => {
-    setEditorState((prev) => ({
+    setEditorState(prev => ({
       ...prev,
       blocks: newBlocks.map((block, index) => ({ ...block, order: index })),
     }));
@@ -138,28 +127,22 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
   }, []);
 
   // Handlers de dispositivo e visualização
-  const handleDeviceChange = useCallback(
-    (device: "desktop" | "tablet" | "mobile") => {
-      setEditorState((prev) => ({ ...prev, selectedDevice: device }));
-    },
-    []
-  );
+  const handleDeviceChange = useCallback((device: "desktop" | "tablet" | "mobile") => {
+    setEditorState(prev => ({ ...prev, selectedDevice: device }));
+  }, []);
 
   const togglePreviewMode = useCallback(() => {
-    setEditorState((prev) => ({ ...prev, isPreviewMode: !prev.isPreviewMode }));
+    setEditorState(prev => ({ ...prev, isPreviewMode: !prev.isPreviewMode }));
   }, []);
 
   const handleZoomChange = useCallback((zoom: number) => {
-    const clampedZoom = Math.max(
-      EDITOR_SETTINGS.minZoom,
-      Math.min(EDITOR_SETTINGS.maxZoom, zoom)
-    );
-    setEditorState((prev) => ({ ...prev, zoom: clampedZoom }));
+    const clampedZoom = Math.max(EDITOR_SETTINGS.minZoom, Math.min(EDITOR_SETTINGS.maxZoom, zoom));
+    setEditorState(prev => ({ ...prev, zoom: clampedZoom }));
   }, []);
 
   // Handlers de templates
   const handleApplyTemplate = useCallback((template: any) => {
-    setEditorState((prev) => ({
+    setEditorState(prev => ({
       ...prev,
       blocks: template.blocks.map((block: BlockData, index: number) => ({
         ...block,
@@ -201,9 +184,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
 
   // Block selecionado
   const selectedBlock = editorState.selectedBlockId
-    ? editorState.blocks.find(
-        (block) => block.id === editorState.selectedBlockId
-      )
+    ? editorState.blocks.find(block => block.id === editorState.selectedBlockId)
     : null;
 
   return (
@@ -211,13 +192,13 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
       <div className={`flex h-screen bg-gray-50 ${className}`}>
         {/* Sidebar Esquerda - Componentes e Templates */}
         {showComponentsPanel && (
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <Tabs
               value={activeTab}
-              onValueChange={(value) => setActiveTab(value as any)}
+              onValueChange={value => setActiveTab(value as any)}
               className="flex-1"
             >
-              <div style={{ borderColor: "#E5DDD5" }}>
+              <div style={{ borderColor: '#E5DDD5' }}>
                 <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="design" className="text-xs">
                     <Layout className="w-3 h-3 mr-1" />
@@ -284,10 +265,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
                         variant={editorState.showGrid ? "default" : "outline"}
                         size="sm"
                         onClick={() =>
-                          setEditorState((prev) => ({
-                            ...prev,
-                            showGrid: !prev.showGrid,
-                          }))
+                          setEditorState(prev => ({ ...prev, showGrid: !prev.showGrid }))
                         }
                       >
                         <Grid className="w-3 h-3" />
@@ -300,10 +278,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
                         variant={editorState.showRulers ? "default" : "outline"}
                         size="sm"
                         onClick={() =>
-                          setEditorState((prev) => ({
-                            ...prev,
-                            showRulers: !prev.showRulers,
-                          }))
+                          setEditorState(prev => ({ ...prev, showRulers: !prev.showRulers }))
                         }
                       >
                         <Move className="w-3 h-3" />
@@ -316,26 +291,18 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            handleZoomChange(editorState.zoom - 25)
-                          }
+                          onClick={() => handleZoomChange(editorState.zoom - 25)}
                           disabled={editorState.zoom <= EDITOR_SETTINGS.minZoom}
                         >
                           -
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleZoomChange(100)}
-                        >
+                        <Button variant="outline" size="sm" onClick={() => handleZoomChange(100)}>
                           100%
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            handleZoomChange(editorState.zoom + 25)
-                          }
+                          onClick={() => handleZoomChange(editorState.zoom + 25)}
                           disabled={editorState.zoom >= EDITOR_SETTINGS.maxZoom}
                         >
                           +
@@ -349,7 +316,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
                   <EditorHistory
                     blocks={editorState.blocks}
                     onBlocksChange={(blocks: BlockData[]) =>
-                      setEditorState((prev) => ({ ...prev, blocks }))
+                      setEditorState(prev => ({ ...prev, blocks }))
                     }
                   />
                 </div>
@@ -361,7 +328,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
         {/* Área Central - Canvas */}
         <div className="flex-1 flex flex-col">
           {/* Toolbar Superior */}
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button
@@ -376,33 +343,21 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
 
                 <div className="flex items-center gap-1">
                   <Button
-                    variant={
-                      editorState.selectedDevice === "desktop"
-                        ? "default"
-                        : "outline"
-                    }
+                    variant={editorState.selectedDevice === "desktop" ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleDeviceChange("desktop")}
                   >
                     <Monitor className="w-4 h-4" />
                   </Button>
                   <Button
-                    variant={
-                      editorState.selectedDevice === "tablet"
-                        ? "default"
-                        : "outline"
-                    }
+                    variant={editorState.selectedDevice === "tablet" ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleDeviceChange("tablet")}
                   >
                     <Tablet className="w-4 h-4" />
                   </Button>
                   <Button
-                    variant={
-                      editorState.selectedDevice === "mobile"
-                        ? "default"
-                        : "outline"
-                    }
+                    variant={editorState.selectedDevice === "mobile" ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleDeviceChange("mobile")}
                   >
@@ -467,10 +422,10 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
 
         {/* Painel Direito - Propriedades */}
         {showPropertiesPanel && (
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <EnhancedPropertiesPanel
               selectedBlock={selectedBlock}
-              onUpdate={(updates) => {
+              onUpdate={updates => {
                 if (selectedBlock) {
                   handleBlockUpdate(selectedBlock.id, updates);
                 }

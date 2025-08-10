@@ -102,12 +102,7 @@ case "button-inline":
 .button-shine::before {
   content: "";
   position: absolute;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   transition: left 0.7s ease-in-out;
 }
 

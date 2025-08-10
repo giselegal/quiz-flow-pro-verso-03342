@@ -1,15 +1,13 @@
-import { cn } from "../../../lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
-import {
-  logBlockDebug,
-  safeGetBlockProperties,
-} from "../../../utils/blockUtils";
+import { cn } from "@/lib/utils";
+import type { BlockComponentProps } from "@/types/blocks";
+import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
 import { ShoppingCart } from "lucide-react";
 import React from "react";
 
 /**
  * QuizOfferCTAInlineBlock - CTA da oferta do quiz
  */
+
 
 const QuizOfferCTAInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -39,7 +37,7 @@ const QuizOfferCTAInlineBlock: React.FC<BlockComponentProps> = ({
         <ShoppingCart className="w-5 h-5" />
         <span>{buttonText}</span>
       </button>
-      <p style={{ color: "#6B4F43" }}>{subText}</p>
+      <p style={{ color: '#6B4F43' }}>{subText}</p>
     </div>
   );
 };

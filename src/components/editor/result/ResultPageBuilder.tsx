@@ -1,10 +1,6 @@
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "../../../components/ui/resizable";
-import { useEditor } from "../../../hooks/useEditor";
-import { StyleResult } from "../../../types/quiz";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { useEditor } from "@/hooks/useEditor";
+import { StyleResult } from "@/types/quiz";
 import React from "react";
 import ComponentsSidebar from "../sidebar/ComponentsSidebar";
 import { PreviewPanel } from "./PreviewPanel";
@@ -14,20 +10,14 @@ interface ResultPageBuilderProps {
   primaryStyle: StyleResult;
 }
 
-export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({
-  primaryStyle,
-}) => {
+export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
   const { config, addBlock, updateBlock, deleteBlock } = useEditor();
-  const [selectedComponent, setSelectedComponent] = React.useState<
-    string | null
-  >(null);
+  const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
       <div className="border-b bg-white p-4">
-        <h1 className="text-2xl font-playfair text-[#432818]">
-          Editor da Página de Resultados
-        </h1>
+        <h1 className="text-2xl font-playfair text-[#432818]">Editor da Página de Resultados</h1>
       </div>
 
       <ResizablePanelGroup direction="horizontal" className="flex-1">
@@ -59,7 +49,7 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({
           <PropertiesPanel
             selectedComponentId={selectedComponent}
             onClose={() => setSelectedComponent(null)}
-            onUpdate={(content) => {
+            onUpdate={content => {
               if (selectedComponent) {
                 updateBlock(selectedComponent, content);
               }

@@ -1,7 +1,7 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
-import { FunnelStepProps } from "../../../types/funnel";
-import { Button } from "../../../components/ui/button";
+import { cn } from "@/lib/utils";
+import { FunnelStepProps } from "@/types/funnel";
+import { Button } from "@/components/ui/button";
 
 /**
  * QuizIntroStep - Etapa 3: Introdução às perguntas do quiz
@@ -33,23 +33,20 @@ export const QuizIntroStep: React.FC<FunnelStepProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative flex flex-col bg-white rounded-xl shadow-md p-6",
-        className
-      )}
+      className={cn("relative flex flex-col bg-white rounded-xl shadow-md p-6", className)}
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
       <div className="flex flex-col md:flex-row gap-8 items-center">
         {/* Lado esquerdo - Texto */}
         <div className="flex-1 space-y-6">
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             Etapa {stepNumber} de {totalSteps}
           </div>
 
-          <h2 style={{ color: "#432818" }}>{title}</h2>
+          <h2 style={{ color: '#432818' }}>{title}</h2>
 
-          <p style={{ color: "#6B4F43" }}>{description}</p>
+          <p style={{ color: '#6B4F43' }}>{description}</p>
 
           {/* Lista de bullets */}
           <ul className="space-y-3">

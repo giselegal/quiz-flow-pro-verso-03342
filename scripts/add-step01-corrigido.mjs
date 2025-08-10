@@ -1,8 +1,6 @@
 import fs from "fs";
 
-const blocksData = JSON.parse(
-  fs.readFileSync("step01-blocks-corrigido.json", "utf8")
-);
+const blocksData = JSON.parse(fs.readFileSync("step01-blocks-corrigido.json", "utf8"));
 
 console.log("🔧 IMPLEMENTANDO ETAPA 1 CORRIGIDA");
 console.log("==================================");
@@ -30,7 +28,7 @@ const summary = {
   step: 1,
   name: "Introdução - Corrigida",
   blocksCount: blocksData.length,
-  blocksUsed: blocksData.map((b) => b.type),
+  blocksUsed: blocksData.map(b => b.type),
   componentsFixed: [
     "quiz-intro-header → image + text",
     "decorative-bar → divider",
@@ -41,10 +39,7 @@ const summary = {
   timestamp: new Date().toISOString(),
 };
 
-fs.writeFileSync(
-  "step01-corrigida-summary.json",
-  JSON.stringify(summary, null, 2)
-);
+fs.writeFileSync("step01-corrigida-summary.json", JSON.stringify(summary, null, 2));
 console.log("");
 console.log("💾 Resumo salvo em: step01-corrigida-summary.json");
 console.log("");

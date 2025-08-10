@@ -100,9 +100,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
     "flex-shrink-0 flex-grow-0 relative",
     // Centralização quando necessária
-    textAlign === "center" || textAlign === "text-center"
-      ? "mx-auto flex justify-center"
-      : "",
+    textAlign === "center" || textAlign === "text-center" ? "mx-auto flex justify-center" : "",
     // Usar classes customizadas ou responsivo modular
     customClassName || sizeClasses[size as keyof typeof sizeClasses],
     // Estados do editor
@@ -147,9 +145,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Badge flutuante */}
         {showBadge && badgeText && (
           <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
-            <span className="text-sm font-medium text-[#432818]">
-              {badgeText}
-            </span>
+            <span className="text-sm font-medium text-[#432818]">{badgeText}</span>
           </div>
         )}
       </div>

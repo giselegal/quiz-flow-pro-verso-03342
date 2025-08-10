@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { EditableContent } from "../../../types/editor";
+import { EditableContent } from "@/types/editor";
 
 interface SpacerBlockProps {
   content: EditableContent;
@@ -15,14 +15,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -69,9 +62,7 @@ const SpacerBlock: React.FC<SpacerBlockProps> = ({
 }) => {
   // Convert height to string if it's a number
   const height =
-    typeof content.height === "number"
-      ? `${content.height}px`
-      : content.height || "40px";
+    typeof content.height === "number" ? `${content.height}px` : content.height || "40px";
 
   return (
     <div

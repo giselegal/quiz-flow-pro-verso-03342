@@ -67,42 +67,40 @@ export function migrateQuizData(quizData: {
 }): typeof quizData {
   console.log("🔄 Iniciando migração de quiz data...");
 
-  const migratedQuestions = quizData.questions.map(
-    (question, questionIndex) => {
-      // Gerar ID semântico para questão
-      const questionId =
-        question.id && isSemanticId(question.id)
-          ? question.id
+  const migratedQuestions = quizData.questions.map((question, questionIndex) => {
+    // Gerar ID semântico para questão
+    const questionId =
+      question.id && isSemanticId(question.id)
+        ? question.id
+        : generateSemanticId({
+            context: "quiz",
+            type: "question",
+            identifier: `q${questionIndex + 1}`,
+          });
+
+    // Migrar opções
+    const migratedOptions = question.options.map((option, optionIndex) => {
+      const optionId =
+        option.id && isSemanticId(option.id)
+          ? option.id
           : generateSemanticId({
               context: "quiz",
-              type: "question",
-              identifier: `q${questionIndex + 1}`,
+              type: "option",
+              identifier: `q${questionIndex + 1}-option-${optionIndex + 1}`,
             });
 
-      // Migrar opções
-      const migratedOptions = question.options.map((option, optionIndex) => {
-        const optionId =
-          option.id && isSemanticId(option.id)
-            ? option.id
-            : generateSemanticId({
-                context: "quiz",
-                type: "option",
-                identifier: `q${questionIndex + 1}-option-${optionIndex + 1}`,
-              });
-
-        return {
-          ...option,
-          id: optionId,
-        };
-      });
-
       return {
-        ...question,
-        id: questionId,
-        options: migratedOptions,
+        ...option,
+        id: optionId,
       };
-    }
-  );
+    });
+
+    return {
+      ...question,
+      id: questionId,
+      options: migratedOptions,
+    };
+  });
 
   return {
     ...quizData,
@@ -191,16 +189,14 @@ export function migrateQuizResults(results: {
 
   // Migrar estilos secundários
   if (migratedResult.secondaryStyles) {
-    migratedResult.secondaryStyles = migratedResult.secondaryStyles.map(
-      (style, index) => ({
-        ...style,
-        id: generateSemanticId({
-          context: "result",
-          type: "secondary-style",
-          identifier: `${results.userId}-${index + 1}`,
-        }),
-      })
-    );
+    migratedResult.secondaryStyles = migratedResult.secondaryStyles.map((style, index) => ({
+      ...style,
+      id: generateSemanticId({
+        context: "result",
+        type: "secondary-style",
+        identifier: `${results.userId}-${index + 1}`,
+      }),
+    }));
   }
 
   // Migrar dados de cálculo
@@ -304,7 +300,7 @@ export function validateMigration(data: any): {
       }
     }
 
-    Object.keys(obj).forEach((key) => {
+    Object.keys(obj).forEach(key => {
       if (typeof obj[key] === "object") {
         analyzeObject(obj[key], path ? `${path}.${key}` : key);
       }
@@ -347,7 +343,7 @@ ${
   validation.issues.length > 0
     ? `
 ⚠️ PROBLEMAS ENCONTRADOS:
-${validation.issues.map((issue) => `• ${issue}`).join("\n")}
+${validation.issues.map(issue => `• ${issue}`).join("\n")}
 `
     : "🎉 NENHUM PROBLEMA ENCONTRADO!"
 }

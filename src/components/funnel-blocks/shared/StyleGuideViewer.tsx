@@ -1,13 +1,11 @@
 import React from "react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface StyleGuideViewerProps {
   className?: string;
 }
 
-export const StyleGuideViewer: React.FC<StyleGuideViewerProps> = ({
-  className,
-}) => {
+export const StyleGuideViewer: React.FC<StyleGuideViewerProps> = ({ className }) => {
   return (
     <div className={className}>
       <div className="p-6">

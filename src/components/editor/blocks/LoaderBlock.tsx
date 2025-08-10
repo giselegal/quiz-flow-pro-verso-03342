@@ -2,7 +2,7 @@
 import React from "react";
 import { LoaderCircle, RotateCcw } from "lucide-react";
 import { InlineEditableText } from "./InlineEditableText";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -10,14 +10,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,11 +57,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = "",
 }) => {
-  const {
-    message = "Carregando...",
-    type = "spinning",
-    duration = 4000,
-  } = block?.properties || {};
+  const { message = "Carregando...", type = "spinning", duration = 4000 } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -108,9 +97,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
       break;
     case "spinning":
     default:
-      loaderContent = (
-        <RotateCcw className="h-10 w-10 animate-spin text-[#B89B7A]" />
-      );
+      loaderContent = <RotateCcw className="h-10 w-10 animate-spin text-[#B89B7A]" />;
       break;
   }
 
@@ -135,9 +122,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
             placeholder="Mensagem de carregamento"
           />
         </span>
-        {duration && (
-          <div style={{ color: "#8B7355" }}>Duração: {duration / 1000}s</div>
-        )}
+        {duration && <div style={{ color: '#8B7355' }}>Duração: {duration / 1000}s</div>}
       </div>
 
       {/* Keyframes para as animações */}

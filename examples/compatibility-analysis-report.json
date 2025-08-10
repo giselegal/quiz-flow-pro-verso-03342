@@ -21,12 +21,7 @@
     },
     "hooks": {
       "compatible": true,
-      "foundEssential": [
-        "useUnifiedProperties.ts",
-        "useEditor.ts",
-        "useQuiz.ts",
-        "useHistory.ts"
-      ],
+      "foundEssential": ["useUnifiedProperties.ts", "useEditor.ts", "useQuiz.ts", "useHistory.ts"],
       "foundOptional": [
         "useKeyboardShortcuts.ts",
         "usePerformanceOptimization.ts",

@@ -54,7 +54,7 @@ const ExemploHooks = () => {
 
   // useCallback - Digite "useCallback" + Tab
   const handleClick = React.useCallback(() => {
-    setCount((prev) => prev + 1);
+    setCount(prev => prev + 1);
   }, []);
 
   // useMemo - Digite "useMemo" + Tab
@@ -201,11 +201,11 @@ const useCounter = (initialValue = 0) => {
   const [count, setCount] = React.useState(initialValue);
 
   const increment = React.useCallback(() => {
-    setCount((prev) => prev + 1);
+    setCount(prev => prev + 1);
   }, []);
 
   const decrement = React.useCallback(() => {
-    setCount((prev) => prev - 1);
+    setCount(prev => prev - 1);
   }, []);
 
   const reset = React.useCallback(() => {
@@ -222,14 +222,10 @@ const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = React.useState("light");
 
   const toggleTheme = React.useCallback(() => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+    setTheme(prev => (prev === "light" ? "dark" : "light"));
   }, []);
 
-  return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 // 12. useReducer Example
@@ -333,11 +329,11 @@ const QuizComponent = () => {
   const [isCompleted, setIsCompleted] = React.useState(false);
 
   const handleAnswer = React.useCallback(
-    (answer) => {
-      setAnswers((prev) => [...prev, answer]);
+    answer => {
+      setAnswers(prev => [...prev, answer]);
 
       if (currentQuestion < questions.length - 1) {
-        setCurrentQuestion((prev) => prev + 1);
+        setCurrentQuestion(prev => prev + 1);
       } else {
         setIsCompleted(true);
       }
@@ -361,15 +357,15 @@ const useQuizState = () => {
   const [userAnswers, setUserAnswers] = React.useState([]);
 
   const nextQuestion = React.useCallback(() => {
-    setCurrentIndex((prev) => prev + 1);
+    setCurrentIndex(prev => prev + 1);
   }, []);
 
   const previousQuestion = React.useCallback(() => {
-    setCurrentIndex((prev) => prev - 1);
+    setCurrentIndex(prev => prev - 1);
   }, []);
 
-  const saveAnswer = React.useCallback((answer) => {
-    setUserAnswers((prev) => [...prev, answer]);
+  const saveAnswer = React.useCallback(answer => {
+    setUserAnswers(prev => [...prev, answer]);
   }, []);
 
   return {

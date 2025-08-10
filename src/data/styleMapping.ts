@@ -1,4 +1,4 @@
-import type { QuizOption, StyleType } from "../types/quiz";
+import type { QuizOption, StyleType } from "@/types/quiz";
 
 // Mapeamento exato das opções A-H para os estilos
 // Baseado no sistema original do CaktoQuiz
@@ -45,9 +45,7 @@ export const createQuizOption = (
 
 // Helper para validar se todos os estilos têm pelo menos uma opção
 export const validateStyleCoverage = (options: QuizOption[]): boolean => {
-  const stylesInOptions = new Set(
-    options.map((opt) => opt.style).filter(Boolean)
-  );
+  const stylesInOptions = new Set(options.map(opt => opt.style).filter(Boolean));
   const allStyles = new Set(Object.values(OPTION_TO_STYLE_MAPPING));
 
   return stylesInOptions.size === allStyles.size;

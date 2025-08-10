@@ -1,25 +1,20 @@
-import { supabase } from "../integrations/supabase/client";
-import type { Database } from "../integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 
 // Type definitions
 type QuizUser = Database["public"]["Tables"]["quiz_users"]["Row"];
 type QuizSession = Database["public"]["Tables"]["quiz_sessions"]["Row"];
-type QuizStepResponse =
-  Database["public"]["Tables"]["quiz_step_responses"]["Row"];
+type QuizStepResponse = Database["public"]["Tables"]["quiz_step_responses"]["Row"];
 type QuizResult = Database["public"]["Tables"]["quiz_results"]["Row"];
 type QuizAnalytics = Database["public"]["Tables"]["quiz_analytics"]["Row"];
 type QuizConversion = Database["public"]["Tables"]["quiz_conversions"]["Row"];
 
 type InsertQuizUser = Database["public"]["Tables"]["quiz_users"]["Insert"];
-type InsertQuizSession =
-  Database["public"]["Tables"]["quiz_sessions"]["Insert"];
-type InsertQuizStepResponse =
-  Database["public"]["Tables"]["quiz_step_responses"]["Insert"];
+type InsertQuizSession = Database["public"]["Tables"]["quiz_sessions"]["Insert"];
+type InsertQuizStepResponse = Database["public"]["Tables"]["quiz_step_responses"]["Insert"];
 type InsertQuizResult = Database["public"]["Tables"]["quiz_results"]["Insert"];
-type InsertQuizAnalytics =
-  Database["public"]["Tables"]["quiz_analytics"]["Insert"];
-type InsertQuizConversion =
-  Database["public"]["Tables"]["quiz_conversions"]["Insert"];
+type InsertQuizAnalytics = Database["public"]["Tables"]["quiz_analytics"]["Insert"];
+type InsertQuizConversion = Database["public"]["Tables"]["quiz_conversions"]["Insert"];
 
 export interface QuizParticipant {
   id: string;
@@ -63,8 +58,7 @@ export interface QuizResponse {
   metadata?: any;
 }
 
-const generateSessionId = () =>
-  `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+const generateSessionId = () => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 export const quizSupabaseService = {
   // ========== USER MANAGEMENT ==========
@@ -118,9 +112,7 @@ export const quizSupabaseService = {
     }
   },
 
-  async getQuizUserBySessionId(
-    sessionId: string
-  ): Promise<QuizParticipant | null> {
+  async getQuizUserBySessionId(sessionId: string): Promise<QuizParticipant | null> {
     try {
       const { data, error } = await supabase
         .from("quiz_users")
@@ -187,9 +179,7 @@ export const quizSupabaseService = {
         score: data.score || 0,
         maxScore: data.max_score || 0,
         startedAt: new Date(data.started_at!),
-        completedAt: data.completed_at
-          ? new Date(data.completed_at)
-          : undefined,
+        completedAt: data.completed_at ? new Date(data.completed_at) : undefined,
         lastActivity: new Date(data.last_activity!),
         metadata: data.metadata,
       };
@@ -213,18 +203,13 @@ export const quizSupabaseService = {
       const updateData: any = {};
 
       if (updates.status !== undefined) updateData.status = updates.status;
-      if (updates.currentStep !== undefined)
-        updateData.current_step = updates.currentStep;
+      if (updates.currentStep !== undefined) updateData.current_step = updates.currentStep;
       if (updates.score !== undefined) updateData.score = updates.score;
       if (updates.completedAt !== undefined)
         updateData.completed_at = updates.completedAt.toISOString();
-      if (updates.metadata !== undefined)
-        updateData.metadata = updates.metadata;
+      if (updates.metadata !== undefined) updateData.metadata = updates.metadata;
 
-      const { error } = await supabase
-        .from("quiz_sessions")
-        .update(updateData)
-        .eq("id", sessionId);
+      const { error } = await supabase.from("quiz_sessions").update(updateData).eq("id", sessionId);
 
       if (error) throw error;
       return true;
@@ -255,9 +240,7 @@ export const quizSupabaseService = {
         score: data.score || 0,
         maxScore: data.max_score || 0,
         startedAt: new Date(data.started_at!),
-        completedAt: data.completed_at
-          ? new Date(data.completed_at)
-          : undefined,
+        completedAt: data.completed_at ? new Date(data.completed_at) : undefined,
         lastActivity: new Date(data.last_activity!),
         metadata: data.metadata,
       };
@@ -329,7 +312,7 @@ export const quizSupabaseService = {
 
       if (error) throw error;
 
-      return (data || []).map((response) => ({
+      return (data || []).map(response => ({
         id: response.id,
         sessionId: response.session_id,
         stepNumber: response.step_number,
@@ -416,9 +399,7 @@ export const quizSupabaseService = {
         user_id: eventData.userId,
       };
 
-      const { error } = await supabase
-        .from("quiz_analytics")
-        .insert([insertData]);
+      const { error } = await supabase.from("quiz_analytics").insert([insertData]);
 
       if (error) throw error;
     } catch (error) {
@@ -514,8 +495,7 @@ export const getQuizAnalytics = async (funnelId: string) => {
     if (error) throw error;
 
     const totalSessions = sessions?.length || 0;
-    const completedSessions =
-      sessions?.filter((s) => s.status === "completed").length || 0;
+    const completedSessions = sessions?.filter(s => s.status === "completed").length || 0;
     const averageScore = sessions?.length
       ? sessions.reduce((acc, s) => acc + (s.score || 0), 0) / sessions.length
       : 0;
@@ -523,9 +503,7 @@ export const getQuizAnalytics = async (funnelId: string) => {
     return {
       totalResponses: totalSessions,
       averageScore: Math.round(averageScore * 100) / 100,
-      completionRate: totalSessions
-        ? Math.round((completedSessions / totalSessions) * 100)
-        : 0,
+      completionRate: totalSessions ? Math.round((completedSessions / totalSessions) * 100) : 0,
     };
   } catch (error) {
     console.error("Erro ao buscar analytics:", error);

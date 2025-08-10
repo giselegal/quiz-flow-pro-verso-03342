@@ -23,7 +23,7 @@ interface MyCustomBlockProps {
     left: number;
     right: number;
   };
-
+  
   // Propriedades do sistema
   id?: string;
   isSelected?: boolean;
@@ -109,198 +109,198 @@ export default MyCustomBlock;
 
 ```typescript
 // src/config/enhancedBlockRegistry.tsx
-import { Star, Layers } from "lucide-react";
-import MyCustomBlock from "@/components/blocks/custom/MyCustomBlock";
+import { Star, Layers } from 'lucide-react';
+import MyCustomBlock from '@/components/blocks/custom/MyCustomBlock';
 
 export const blockRegistry = {
   // ... outros componentes ...
-
+  
   myCustomBlock: {
     // Identificação
-    type: "MyCustomBlock",
-    name: "Bloco Customizado",
-    description: "Um bloco personalizável com título, descrição e ícone",
-    category: "custom",
+    type: 'MyCustomBlock',
+    name: 'Bloco Customizado',
+    description: 'Um bloco personalizável com título, descrição e ícone',
+    category: 'custom',
     icon: Star,
-
+    
     // Componente React
     component: MyCustomBlock,
-
+    
     // Propriedades padrão (serão aplicadas quando o componente for criado)
     defaultProps: {
-      title: "Título do Bloco",
-      description: "Descrição detalhada do conteúdo do bloco.",
-      backgroundColor: "#FFFFFF",
-      textColor: "#432818",
+      title: 'Título do Bloco',
+      description: 'Descrição detalhada do conteúdo do bloco.',
+      backgroundColor: '#FFFFFF',
+      textColor: '#432818',
       borderRadius: 8,
       showIcon: true,
-      iconPosition: "left",
+      iconPosition: 'left',
       padding: {
         top: 20,
         bottom: 20,
         left: 24,
-        right: 24,
-      },
+        right: 24
+      }
     },
-
+    
     // Configuração das propriedades editáveis
     properties: {
       // Grupo: Conteúdo
       title: {
-        type: "string",
-        label: "Título Principal",
-        default: "Título do Bloco",
-        category: "content",
+        type: 'string',
+        label: 'Título Principal',
+        default: 'Título do Bloco',
+        category: 'content',
         validation: {
           required: true,
-          maxLength: 100,
+          maxLength: 100
         },
-        description: "Texto principal do bloco",
+        description: 'Texto principal do bloco'
       },
-
+      
       description: {
-        type: "textarea",
-        label: "Descrição",
-        default: "Descrição detalhada do conteúdo do bloco.",
-        category: "content",
+        type: 'textarea',
+        label: 'Descrição',
+        default: 'Descrição detalhada do conteúdo do bloco.',
+        category: 'content',
         validation: {
-          maxLength: 500,
+          maxLength: 500
         },
         rows: 3,
-        description: "Texto secundário do bloco",
+        description: 'Texto secundário do bloco'
       },
-
+      
       // Grupo: Aparência
       backgroundColor: {
-        type: "color",
-        label: "Cor de Fundo",
-        default: "#FFFFFF",
-        category: "appearance",
-        description: "Define a cor de fundo do bloco",
+        type: 'color',
+        label: 'Cor de Fundo',
+        default: '#FFFFFF',
+        category: 'appearance',
+        description: 'Define a cor de fundo do bloco'
       },
-
+      
       textColor: {
-        type: "color",
-        label: "Cor do Texto",
-        default: "#432818",
-        category: "appearance",
-        description: "Define a cor do texto do bloco",
+        type: 'color',
+        label: 'Cor do Texto',
+        default: '#432818',
+        category: 'appearance',
+        description: 'Define a cor do texto do bloco'
       },
-
+      
       borderRadius: {
-        type: "range",
-        label: "Bordas Arredondadas",
+        type: 'range',
+        label: 'Bordas Arredondadas',
         min: 0,
         max: 50,
         step: 1,
         default: 8,
-        unit: "px",
-        category: "appearance",
-        description: "Controla o arredondamento das bordas",
+        unit: 'px',
+        category: 'appearance',
+        description: 'Controla o arredondamento das bordas'
       },
-
+      
       // Grupo: Layout
       showIcon: {
-        type: "boolean",
-        label: "Mostrar Ícone",
+        type: 'boolean',
+        label: 'Mostrar Ícone',
         default: true,
-        category: "layout",
-        description: "Controla se o ícone será exibido",
+        category: 'layout',
+        description: 'Controla se o ícone será exibido'
       },
-
+      
       iconPosition: {
-        type: "select",
-        label: "Posição do Ícone",
+        type: 'select',
+        label: 'Posição do Ícone',
         options: [
-          { value: "left", label: "Esquerda" },
-          { value: "right", label: "Direita" },
-          { value: "top", label: "Acima" },
+          { value: 'left', label: 'Esquerda' },
+          { value: 'right', label: 'Direita' },
+          { value: 'top', label: 'Acima' }
         ],
-        default: "left",
-        category: "layout",
+        default: 'left',
+        category: 'layout',
         dependsOn: { showIcon: true }, // Só aparece se showIcon for true
-        description: "Define onde o ícone será posicionado",
+        description: 'Define onde o ícone será posicionado'
       },
-
+      
       // Grupo: Espaçamento
-      "padding.top": {
-        type: "range",
-        label: "Espaçamento Superior",
+      'padding.top': {
+        type: 'range',
+        label: 'Espaçamento Superior',
         min: 0,
         max: 100,
         step: 4,
         default: 20,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing'
       },
-
-      "padding.bottom": {
-        type: "range",
-        label: "Espaçamento Inferior",
+      
+      'padding.bottom': {
+        type: 'range',
+        label: 'Espaçamento Inferior',
         min: 0,
         max: 100,
         step: 4,
         default: 20,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing'
       },
-
-      "padding.left": {
-        type: "range",
-        label: "Espaçamento Esquerdo",
+      
+      'padding.left': {
+        type: 'range',
+        label: 'Espaçamento Esquerdo',
         min: 0,
         max: 100,
         step: 4,
         default: 24,
-        unit: "px",
-        category: "spacing",
+        unit: 'px',
+        category: 'spacing'
       },
-
-      "padding.right": {
-        type: "range",
-        label: "Espaçamento Direito",
+      
+      'padding.right': {
+        type: 'range',
+        label: 'Espaçamento Direito',
         min: 0,
         max: 100,
         step: 4,
         default: 24,
-        unit: "px",
-        category: "spacing",
-      },
+        unit: 'px',
+        category: 'spacing'
+      }
     },
-
+    
     // Configurações avançadas
     advanced: {
       // Responsividade
       responsive: {
-        breakpoints: ["sm", "md", "lg", "xl"],
-        properties: ["padding", "fontSize", "borderRadius"],
+        breakpoints: ['sm', 'md', 'lg', 'xl'],
+        properties: ['padding', 'fontSize', 'borderRadius']
       },
-
+      
       // Animações
       animations: {
         hover: {
           scale: 1.02,
-          duration: 200,
+          duration: 200
         },
         appear: {
           fadeIn: true,
-          duration: 500,
-        },
+          duration: 500
+        }
       },
-
+      
       // Validações customizadas
       customValidations: [
         {
-          property: "title",
+          property: 'title',
           rule: (value: string) => value.length > 0,
-          message: "Título não pode estar vazio",
-        },
+          message: 'Título não pode estar vazio'
+        }
       ],
-
+      
       // Preview modes
-      previewModes: ["desktop", "tablet", "mobile"],
-    },
-  },
+      previewModes: ['desktop', 'tablet', 'mobile']
+    }
+  }
 };
 ```
 
@@ -317,7 +317,7 @@ const PropertiesPanel = () => {
         <Star className="w-5 h-5" />
         Bloco Customizado - Propriedades
       </h3>
-
+      
       {/* Tabs por categoria */}
       <div className="property-tabs">
         <Tab id="content">📝 Conteúdo</Tab>
@@ -325,12 +325,12 @@ const PropertiesPanel = () => {
         <Tab id="layout">📐 Layout</Tab>
         <Tab id="spacing">📏 Espaçamento</Tab>
       </div>
-
+      
       {/* Tab: Conteúdo */}
       <TabContent id="content">
         <PropertyGroup>
           <label>Título Principal</label>
-          <Input
+          <Input 
             value={properties.title}
             onChange={(value) => updateProperty('title', value)}
             maxLength={100}
@@ -338,10 +338,10 @@ const PropertiesPanel = () => {
           />
           <small>Texto principal do bloco</small>
         </PropertyGroup>
-
+        
         <PropertyGroup>
           <label>Descrição</label>
-          <Textarea
+          <Textarea 
             value={properties.description}
             onChange={(value) => updateProperty('description', value)}
             rows={3}
@@ -350,30 +350,30 @@ const PropertiesPanel = () => {
           <small>Texto secundário do bloco</small>
         </PropertyGroup>
       </TabContent>
-
+      
       {/* Tab: Aparência */}
       <TabContent id="appearance">
         <PropertyGroup>
           <label>Cor de Fundo</label>
-          <ColorPicker
+          <ColorPicker 
             value={properties.backgroundColor}
             onChange={(color) => updateProperty('backgroundColor', color)}
           />
           <small>Define a cor de fundo do bloco</small>
         </PropertyGroup>
-
+        
         <PropertyGroup>
           <label>Cor do Texto</label>
-          <ColorPicker
+          <ColorPicker 
             value={properties.textColor}
             onChange={(color) => updateProperty('textColor', color)}
           />
           <small>Define a cor do texto do bloco</small>
         </PropertyGroup>
-
+        
         <PropertyGroup>
           <label>Bordas Arredondadas</label>
-          <RangeSlider
+          <RangeSlider 
             value={properties.borderRadius}
             min={0}
             max={50}
@@ -384,22 +384,22 @@ const PropertiesPanel = () => {
           <small>Controla o arredondamento das bordas</small>
         </PropertyGroup>
       </TabContent>
-
+      
       {/* Tab: Layout */}
       <TabContent id="layout">
         <PropertyGroup>
           <label>Mostrar Ícone</label>
-          <Switch
+          <Switch 
             checked={properties.showIcon}
             onChange={(checked) => updateProperty('showIcon', checked)}
           />
           <small>Controla se o ícone será exibido</small>
         </PropertyGroup>
-
+        
         {properties.showIcon && (
           <PropertyGroup>
             <label>Posição do Ícone</label>
-            <Select
+            <Select 
               value={properties.iconPosition}
               onChange={(value) => updateProperty('iconPosition', value)}
               options={[
@@ -412,13 +412,13 @@ const PropertiesPanel = () => {
           </PropertyGroup>
         )}
       </TabContent>
-
+      
       {/* Tab: Espaçamento */}
       <TabContent id="spacing">
         <div className="spacing-grid">
           <PropertyGroup>
             <label>Superior</label>
-            <RangeSlider
+            <RangeSlider 
               value={properties.padding.top}
               min={0}
               max={100}
@@ -427,10 +427,10 @@ const PropertiesPanel = () => {
               onChange={(value) => updateProperty('padding.top', value)}
             />
           </PropertyGroup>
-
+          
           <PropertyGroup>
             <label>Inferior</label>
-            <RangeSlider
+            <RangeSlider 
               value={properties.padding.bottom}
               min={0}
               max={100}
@@ -439,10 +439,10 @@ const PropertiesPanel = () => {
               onChange={(value) => updateProperty('padding.bottom', value)}
             />
           </PropertyGroup>
-
+          
           <PropertyGroup>
             <label>Esquerdo</label>
-            <RangeSlider
+            <RangeSlider 
               value={properties.padding.left}
               min={0}
               max={100}
@@ -451,10 +451,10 @@ const PropertiesPanel = () => {
               onChange={(value) => updateProperty('padding.left', value)}
             />
           </PropertyGroup>
-
+          
           <PropertyGroup>
             <label>Direito</label>
-            <RangeSlider
+            <RangeSlider 
               value={properties.padding.right}
               min={0}
               max={100}
@@ -465,7 +465,7 @@ const PropertiesPanel = () => {
           </PropertyGroup>
         </div>
       </TabContent>
-
+      
       {/* Botões de ação */}
       <div className="panel-actions">
         <Button variant="outline" onClick={resetToDefaults}>
@@ -500,7 +500,7 @@ const PropertiesPanel = () => {
    }
 
 3. Canvas renderiza o componente:
-   <MyCustomBlock
+   <MyCustomBlock 
      {...newBlock.properties}
      id={newBlock.id}
      isSelected={selectedBlockId === newBlock.id}
@@ -516,7 +516,7 @@ const PropertiesPanel = () => {
 
 6. Usuário altera propriedade:
    updateProperty('title', 'Novo título')
-
+   
 7. Canvas re-renderiza automaticamente:
    <MyCustomBlock title="Novo título" {...otherProps} />
 ```
@@ -524,7 +524,6 @@ const PropertiesPanel = () => {
 ## 🎯 Tipos de Controles Suportados
 
 ### 📝 Controles de Texto
-
 ```typescript
 // Input simples
 title: {
@@ -551,7 +550,6 @@ content: {
 ```
 
 ### 🎨 Controles Visuais
-
 ```typescript
 // Color picker
 color: {
@@ -578,7 +576,6 @@ image: {
 ```
 
 ### 📏 Controles Numéricos
-
 ```typescript
 // Range slider
 fontSize: {
@@ -609,7 +606,6 @@ margin: {
 ```
 
 ### 🔘 Controles de Seleção
-
 ```typescript
 // Dropdown select
 alignment: {
@@ -642,7 +638,6 @@ tags: {
 ```
 
 ### 🔗 Controles Condicionais
-
 ```typescript
 // Propriedades dependentes
 showButton: {
@@ -676,10 +671,9 @@ Com essa implementação, temos um sistema onde:
 ✅ **Validações funcionam** sem código extra  
 ✅ **Preview em tempo real** automaticamente  
 ✅ **Propriedades são persistidas** automaticamente  
-✅ **Sistema é completamente tipado** (TypeScript)
+✅ **Sistema é completamente tipado** (TypeScript)  
 
 **O desenvolvedor só precisa:**
-
 1. Criar o componente React
 2. Definir no registry com propriedades
 3. Pronto! O painel funciona automaticamente

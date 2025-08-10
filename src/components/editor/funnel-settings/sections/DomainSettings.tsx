@@ -1,48 +1,30 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../../components/ui/card";
-import { Input } from "../../../../components/ui/input";
-import { Label } from "../../../../components/ui/label";
-import { Button } from "../../../../components/ui/button";
-import { Switch } from "../../../../components/ui/switch";
-import { Badge } from "../../../../components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../../../components/ui/select";
-import { useToast } from "../../../../hooks/use-toast";
-import { DomainSettings as DomainSettingsType } from "../../../../types/funnelSettings";
-import {
-  Plus,
-  Trash2,
-  CheckCircle,
-  XCircle,
-  Globe,
-  Shield,
-} from "lucide-react";
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { DomainSettings as DomainSettingsType } from "@/types/funnelSettings";
+import { Plus, Trash2, CheckCircle, XCircle, Globe, Shield } from "lucide-react";
 
 interface DomainSettingsProps {
   settings: DomainSettingsType;
   onUpdate: (settings: Partial<DomainSettingsType>) => void;
 }
 
-export const DomainSettings: React.FC<DomainSettingsProps> = ({
-  settings,
-  onUpdate,
-}) => {
+export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpdate }) => {
   const { toast } = useToast();
   const [verifyingDomain, setVerifyingDomain] = useState(false);
-  const [domainStatus, setDomainStatus] = useState<
-    "pending" | "verified" | "error"
-  >("pending");
+  const [domainStatus, setDomainStatus] = useState<"pending" | "verified" | "error">("pending");
 
   const verifyDomain = async () => {
     if (!settings.customDomain) return;
@@ -50,7 +32,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
     setVerifyingDomain(true);
     try {
       // Simular verificação DNS
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       setDomainStatus("verified");
       toast({
         title: "Domínio verificado",
@@ -60,8 +42,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
       setDomainStatus("error");
       toast({
         title: "Erro na verificação",
-        description:
-          "Não foi possível verificar o domínio. Verifique as configurações DNS.",
+        description: "Não foi possível verificar o domínio. Verifique as configurações DNS.",
         variant: "destructive",
       });
     } finally {
@@ -97,9 +78,9 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
       case "verified":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "error":
-        return <XCircle style={{ color: "#432818" }} />;
+        return <XCircle style={{ color: '#432818' }} />;
       default:
-        return <Globe style={{ color: "#8B7355" }} />;
+        return <Globe style={{ color: '#8B7355' }} />;
     }
   };
 
@@ -122,9 +103,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
             <Globe className="w-5 h-5" />
             <span>Domínio Personalizado</span>
           </CardTitle>
-          <CardDescription>
-            Configure um domínio personalizado para seu funil
-          </CardDescription>
+          <CardDescription>Configure um domínio personalizado para seu funil</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
@@ -133,7 +112,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
               <Input
                 id="customDomain"
                 value={settings.customDomain}
-                onChange={(e) => onUpdate({ customDomain: e.target.value })}
+                onChange={e => onUpdate({ customDomain: e.target.value })}
                 placeholder="meudominio.com"
               />
               <Button
@@ -146,9 +125,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
             </div>
             <div className="flex items-center space-x-2">
               {getDomainStatusIcon()}
-              <span className="text-sm text-muted-foreground">
-                Status: {getDomainStatusText()}
-              </span>
+              <span className="text-sm text-muted-foreground">Status: {getDomainStatusText()}</span>
             </div>
           </div>
 
@@ -157,7 +134,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
             <Input
               id="subdomain"
               value={settings.subdomain}
-              onChange={(e) => onUpdate({ subdomain: e.target.value })}
+              onChange={e => onUpdate({ subdomain: e.target.value })}
               placeholder="funil.meudominio.com"
             />
             <p className="text-sm text-muted-foreground">
@@ -168,9 +145,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
           {settings.customDomain && (
             <Card className="bg-[#B89B7A]/10 border-[#B89B7A]/30">
               <CardContent className="pt-4">
-                <h4 className="font-medium mb-2">
-                  Configurações DNS Necessárias
-                </h4>
+                <h4 className="font-medium mb-2">Configurações DNS Necessárias</h4>
                 <div className="space-y-2 text-sm">
                   <div className="bg-white p-2 rounded border font-mono">
                     <strong>Tipo:</strong> A<br />
@@ -189,8 +164,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Adicione esses registros no painel de controle do seu provedor
-                  de domínio
+                  Adicione esses registros no painel de controle do seu provedor de domínio
                 </p>
               </CardContent>
             </Card>
@@ -204,24 +178,19 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
             <Shield className="w-5 h-5" />
             <span>Certificado SSL</span>
           </CardTitle>
-          <CardDescription>
-            Configure a segurança HTTPS para seu domínio
-          </CardDescription>
+          <CardDescription>Configure a segurança HTTPS para seu domínio</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
             <Switch
               id="enableSSL"
               checked={settings.enableSSL}
-              onCheckedChange={(checked) => onUpdate({ enableSSL: checked })}
+              onCheckedChange={checked => onUpdate({ enableSSL: checked })}
             />
-            <Label htmlFor="enableSSL">
-              Habilitar certificado SSL automático
-            </Label>
+            <Label htmlFor="enableSSL">Habilitar certificado SSL automático</Label>
           </div>
           <p className="text-sm text-muted-foreground">
-            O certificado SSL será configurado automaticamente após a
-            verificação do domínio
+            O certificado SSL será configurado automaticamente após a verificação do domínio
           </p>
         </CardContent>
       </Card>
@@ -235,9 +204,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
               Adicionar
             </Button>
           </CardTitle>
-          <CardDescription>
-            Configure redirecionamentos automáticos de URLs
-          </CardDescription>
+          <CardDescription>Configure redirecionamentos automáticos de URLs</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {settings.redirects.length === 0 ? (
@@ -253,9 +220,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
                       <Label>De</Label>
                       <Input
                         value={redirect.from}
-                        onChange={(e) =>
-                          updateRedirect(index, { from: e.target.value })
-                        }
+                        onChange={e => updateRedirect(index, { from: e.target.value })}
                         placeholder="/pagina-antiga"
                       />
                     </div>
@@ -263,9 +228,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
                       <Label>Para</Label>
                       <Input
                         value={redirect.to}
-                        onChange={(e) =>
-                          updateRedirect(index, { to: e.target.value })
-                        }
+                        onChange={e => updateRedirect(index, { to: e.target.value })}
                         placeholder="/nova-pagina"
                       />
                     </div>
@@ -273,9 +236,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
                       <Label>Tipo</Label>
                       <Select
                         value={redirect.type}
-                        onValueChange={(value) =>
-                          updateRedirect(index, { type: value })
-                        }
+                        onValueChange={value => updateRedirect(index, { type: value })}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -286,11 +247,7 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({
                         </SelectContent>
                       </Select>
                     </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeRedirect(index)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => removeRedirect(index)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>

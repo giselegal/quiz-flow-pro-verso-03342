@@ -11,7 +11,7 @@ import {
   Home,
   Layers,
 } from "lucide-react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 const sidebarItems = [
   {
@@ -68,7 +68,7 @@ export function AdminSidebar() {
       </div>
 
       <nav className="px-4 space-y-2">
-        {sidebarItems.map((item) => {
+        {sidebarItems.map(item => {
           const Icon = item.icon;
           const isActive = location === item.href;
 
@@ -78,9 +78,7 @@ export function AdminSidebar() {
               href={item.href}
               className={cn(
                 "flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors",
-                isActive
-                  ? "bg-[#B89B7A] text-white"
-                  : "text-[#432818] hover:bg-[#F5F2E9]"
+                isActive ? "bg-[#B89B7A] text-white" : "text-[#432818] hover:bg-[#F5F2E9]"
               )}
             >
               <div className="flex items-center gap-3">
@@ -88,12 +86,7 @@ export function AdminSidebar() {
                 <span className="font-medium">{item.title}</span>
               </div>
               {item.description && (
-                <span
-                  className={cn(
-                    "text-xs ml-8",
-                    isActive ? "text-white/70" : "text-[#8F7A6A]"
-                  )}
-                >
+                <span className={cn("text-xs ml-8", isActive ? "text-white/70" : "text-[#8F7A6A]")}>
                   {item.description}
                 </span>
               )}

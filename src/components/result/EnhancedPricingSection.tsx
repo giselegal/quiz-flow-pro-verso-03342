@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   ShoppingCart,
   Clock,
@@ -15,7 +15,7 @@ import {
   Gift,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { trackButtonClick } from "../../utils/analytics";
+import { trackButtonClick } from "@/utils/analytics";
 
 // Design tokens otimizados
 const tokens = {
@@ -57,13 +57,9 @@ interface EnhancedPricingSectionProps {
   className?: string;
 }
 
-const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
-  className = "",
-}) => {
+const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ className = "" }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [activeTab, setActiveTab] = useState<"avista" | "parcelado">(
-    "parcelado"
-  );
+  const [activeTab, setActiveTab] = useState<"avista" | "parcelado">("parcelado");
 
   const handleCTAClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -72,20 +68,12 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
     if ((window as any).ctaClickProcessing) return;
     (window as any).ctaClickProcessing = true;
 
-    trackButtonClick(
-      "checkout_button",
-      "Enhanced Pricing CTA",
-      "pricing_section"
-    );
+    trackButtonClick("checkout_button", "Enhanced Pricing CTA", "pricing_section");
 
     if (window.innerWidth >= 768) {
-      window.open(
-        "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "_blank"
-      );
+      window.open("https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912", "_blank");
     } else {
-      window.location.href =
-        "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+      window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
     }
 
     setTimeout(() => {
@@ -112,8 +100,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
           Investimento Especial
         </h2>
         <p className="text-lg md:text-xl text-[#8F7A6A] max-w-2xl mx-auto">
-          Transforme seu estilo com um investimento que vale por uma vida
-          inteira de confiança
+          Transforme seu estilo com um investimento que vale por uma vida inteira de confiança
         </p>
       </motion.div>
 
@@ -217,9 +204,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                       <CheckCircle className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-1">
-                          <h4 className="font-bold text-[#432818]">
-                            {product.item}
-                          </h4>
+                          <h4 className="font-bold text-[#432818]">{product.item}</h4>
                           <span
                             className="px-2 py-1 text-xs font-bold rounded-full text-white"
                             style={{
@@ -232,9 +217,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                             {product.badge}
                           </span>
                         </div>
-                        <p className="text-sm text-[#8F7A6A]">
-                          {product.description}
-                        </p>
+                        <p className="text-sm text-[#8F7A6A]">{product.description}</p>
                       </div>
                     </div>
                     <div className="mt-3 md:mt-0 md:ml-4">
@@ -258,9 +241,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                   transition={{ duration: 0.5, delay: 0.7 }}
                 >
                   <div className="flex justify-between items-center text-xl md:text-2xl">
-                    <span className="font-bold text-[#432818]">
-                      Valor Total:
-                    </span>
+                    <span className="font-bold text-[#432818]">Valor Total:</span>
                     <div className="relative">
                       <span
                         className="text-3xl font-bold line-through opacity-60"
@@ -269,7 +250,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                         R$ 175,00
                       </span>
                       <motion.div
-                        style={{ backgroundColor: "#FAF9F7" }}
+                        style={{ backgroundColor: '#FAF9F7' }}
                         initial={{ width: 0 }}
                         whileInView={{ width: "100%" }}
                         viewport={{ once: true }}
@@ -292,17 +273,16 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
               {/* Tabs de Pagamento */}
               <div className="flex justify-center mb-6">
                 <div
-                  style={{ backgroundColor: tokens.colors.backgroundAccent || "#E5DDD5" }}
+                  style={{ backgroundColor: '#E5DDD5' }}
+                  style={{ backgroundColor: tokens.colors.backgroundAccent }}
                 >
                   {[
                     { key: "parcelado", label: "Parcelado" },
                     { key: "avista", label: "À Vista" },
-                  ].map((tab) => (
+                  ].map(tab => (
                     <button
                       key={tab.key}
-                      onClick={() =>
-                        setActiveTab(tab.key as "avista" | "parcelado")
-                      }
+                      onClick={() => setActiveTab(tab.key as "avista" | "parcelado")}
                       className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                         activeTab === tab.key
                           ? "bg-white text-[#432818] shadow-sm"
@@ -328,7 +308,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                   >
                     <div className="flex items-center justify-center gap-6 mb-4">
                       <div className="text-center">
-                        <p style={{ color: "#8B7355" }}>De</p>
+                        <p style={{ color: '#8B7355' }}>De</p>
                         <p
                           className="text-2xl md:text-3xl line-through"
                           style={{ color: tokens.colors.textMuted }}
@@ -360,9 +340,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                             8,83
                           </span>
                         </div>
-                        <p className="text-sm text-[#8F7A6A] mt-1">
-                          sem juros no cartão
-                        </p>
+                        <p className="text-sm text-[#8F7A6A] mt-1">sem juros no cartão</p>
                       </div>
                     </div>
                   </motion.div>
@@ -385,9 +363,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                       </span>
                       <span className="text-2xl">,90</span>
                     </div>
-                    <p className="text-sm text-[#8F7A6A] mt-1">
-                      pagamento único
-                    </p>
+                    <p className="text-sm text-[#8F7A6A] mt-1">pagamento único</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -411,10 +387,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.6 }}
             >
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   onClick={handleCTAClick}
                   onMouseEnter={() => setIsHovered(true)}
@@ -422,9 +395,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
                   className="w-full md:w-auto text-white font-bold py-6 px-12 rounded-xl text-lg md:text-xl shadow-lg transition-all duration-300"
                   style={{
                     background: `linear-gradient(135deg, ${tokens.colors.accent}, ${tokens.colors.accentDark})`,
-                    boxShadow: isHovered
-                      ? tokens.shadows.cta
-                      : tokens.shadows.lg,
+                    boxShadow: isHovered ? tokens.shadows.cta : tokens.shadows.lg,
                     transform: isHovered ? "translateY(-2px)" : "translateY(0)",
                   }}
                 >
@@ -495,9 +466,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 1 }}
             >
-              <p className="text-sm text-[#8F7A6A] mb-4">
-                Métodos de pagamento aceitos:
-              </p>
+              <p className="text-sm text-[#8F7A6A] mb-4">Métodos de pagamento aceitos:</p>
               <img
                 src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp"
                 alt="Métodos de pagamento"

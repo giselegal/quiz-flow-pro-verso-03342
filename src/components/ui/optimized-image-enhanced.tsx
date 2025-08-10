@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface OptimizedImageProps {
   src: string;
@@ -56,7 +56,7 @@ export const OptimizedImageEnhanced: React.FC<OptimizedImageProps> = ({
   };
 
   const srcSet = [320, 640, 768, 1024, 1280]
-    .map((size) => `${getOptimizedSrc(size)} ${size}w`)
+    .map(size => `${getOptimizedSrc(size)} ${size}w`)
     .join(", ");
 
   return (

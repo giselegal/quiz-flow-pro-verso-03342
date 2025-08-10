@@ -6,18 +6,12 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 
 // ===== 1. COMPONENTE DE PERGUNTA (usando rafce) =====
-const QuizQuestion = ({
-  question,
-  options,
-  onAnswer,
-  currentIndex,
-  totalQuestions,
-}) => {
+const QuizQuestion = ({ question, options, onAnswer, currentIndex, totalQuestions }) => {
   // useState para resposta selecionada
   const [selectedAnswer, setSelectedAnswer] = React.useState(null);
 
   // useCallback para otimizar performance
-  const handleAnswerSelect = React.useCallback((answer) => {
+  const handleAnswerSelect = React.useCallback(answer => {
     setSelectedAnswer(answer);
   }, []);
 
@@ -64,21 +58,15 @@ const QuizQuestion = ({
         ))}
       </div>
 
-      <Button
-        onClick={handleSubmitAnswer}
-        disabled={!selectedAnswer}
-        className="w-full"
-      >
-        {currentIndex < totalQuestions - 1
-          ? "Próxima Pergunta"
-          : "Finalizar Quiz"}
+      <Button onClick={handleSubmitAnswer} disabled={!selectedAnswer} className="w-full">
+        {currentIndex < totalQuestions - 1 ? "Próxima Pergunta" : "Finalizar Quiz"}
       </Button>
     </Card>
   );
 };
 
 // ===== 2. HOOK PERSONALIZADO PARA QUIZ (usando uch) =====
-const useQuizLogic = (questions) => {
+const useQuizLogic = questions => {
   // useState para índice atual
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
 
@@ -90,7 +78,7 @@ const useQuizLogic = (questions) => {
 
   // useCallback para próxima pergunta
   const nextQuestion = React.useCallback(() => {
-    setCurrentQuestionIndex((prev) => {
+    setCurrentQuestionIndex(prev => {
       const newIndex = prev + 1;
       if (newIndex >= questions.length) {
         setQuizStatus("completed");
@@ -102,13 +90,13 @@ const useQuizLogic = (questions) => {
 
   // useCallback para pergunta anterior
   const previousQuestion = React.useCallback(() => {
-    setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
+    setCurrentQuestionIndex(prev => Math.max(0, prev - 1));
   }, []);
 
   // useCallback para salvar resposta
   const saveAnswer = React.useCallback(
-    (answer) => {
-      setAnswers((prev) => {
+    answer => {
+      setAnswers(prev => {
         const newAnswers = [...prev];
         newAnswers[currentQuestionIndex] = answer;
         return newAnswers;
@@ -250,7 +238,7 @@ const QuizApp = () => {
 
   // useCallback para lidar com resposta
   const handleAnswer = React.useCallback(
-    (answer) => {
+    answer => {
       saveAnswer(answer);
     },
     [saveAnswer]
@@ -258,13 +246,7 @@ const QuizApp = () => {
 
   // Renderização condicional baseada no status
   if (quizStatus === "completed") {
-    return (
-      <QuizResult
-        answers={answers}
-        questions={questions}
-        onRestart={resetQuiz}
-      />
-    );
+    return <QuizResult answers={answers} questions={questions} onRestart={resetQuiz} />;
   }
 
   return (
@@ -297,10 +279,9 @@ const useLocalStorage = (key, initialValue) => {
 
   // useCallback para salvar valor
   const setValue = React.useCallback(
-    (value) => {
+    value => {
       try {
-        const valueToStore =
-          value instanceof Function ? value(storedValue) : value;
+        const valueToStore = value instanceof Function ? value(storedValue) : value;
         setStoredValue(valueToStore);
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       } catch (error) {
@@ -324,7 +305,7 @@ const LoadingSpinner = ({ message = "Carregando..." }) => {
 };
 
 // ===== 7. HOOK PARA FETCH DE DADOS (usando uch) =====
-const useFetch = (url) => {
+const useFetch = url => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
@@ -372,15 +353,11 @@ class QuizErrorBoundary extends React.Component {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <Card className="p-8 max-w-md mx-auto text-center">
-            <h2 className="text-2xl font-bold text-red-600 mb-4">
-              Ops! Algo deu errado
-            </h2>
+            <h2 className="text-2xl font-bold text-red-600 mb-4">Ops! Algo deu errado</h2>
             <p className="text-gray-600 mb-6">
               Ocorreu um erro inesperado. Por favor, recarregue a página.
             </p>
-            <Button onClick={() => window.location.reload()}>
-              Recarregar Página
-            </Button>
+            <Button onClick={() => window.location.reload()}>Recarregar Página</Button>
           </Card>
         </div>
       );

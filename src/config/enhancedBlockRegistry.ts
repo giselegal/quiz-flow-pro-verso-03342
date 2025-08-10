@@ -48,12 +48,9 @@ import { IntroBlock } from "../components/steps/step01/IntroBlock";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
-export const ENHANCED_BLOCK_REGISTRY: Record<
-  string,
-  React.ComponentType<any>
-> = {
+export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // ✅ COMPONENTES PRINCIPAIS DO QUIZ
-
+  
   // Text and Content
   "text-inline": TextInlineBlock,
   "heading-inline": HeadingInlineBlock,
@@ -90,7 +87,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<
 
   // ✅ NOVOS COMPONENTES ESPECÍFICOS DO QUIZ
   "result-style-card": ResultStyleCardBlock, // step-21
-  "bonus-showcase": BonusShowcaseBlock, // ofertas especiais
+  "bonus-showcase": BonusShowcaseBlock,     // ofertas especiais
   "loading-animation": LoadingAnimationBlock, // transições
 
   // ✅ COMPONENTES LEGACY (COMPATIBILIDADE)
@@ -103,20 +100,18 @@ export const ENHANCED_BLOCK_REGISTRY: Record<
 
   // ✅ FALLBACKS PARA TIPOS NÃO IMPLEMENTADOS
   // Estes são tipos estruturais dos JSONs, não componentes visuais
-  question: TextInlineBlock, // Fallback para tipo "question"
-  strategicQuestion: TextInlineBlock, // Fallback para tipo "strategicQuestion"
-  mainTransition: TextInlineBlock, // Fallback para tipo "mainTransition"
-  result: QuizResultsEditor, // Fallback para tipo "result"
-  intro: IntroBlock, // Fallback para tipo "intro"
-  progress: QuizProgressBlock, // Fallback para tipo "progress"
+  question: TextInlineBlock,              // Fallback para tipo "question"
+  strategicQuestion: TextInlineBlock,     // Fallback para tipo "strategicQuestion" 
+  mainTransition: TextInlineBlock,        // Fallback para tipo "mainTransition"
+  result: QuizResultsEditor,              // Fallback para tipo "result"
+  intro: IntroBlock,                      // Fallback para tipo "intro"
+  progress: QuizProgressBlock,            // Fallback para tipo "progress"
 };
 
 /**
  * Obter componente por tipo (com fallbacks inteligentes)
  */
-export const getBlockComponent = (
-  type: string
-): React.ComponentType<any> | null => {
+export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
   // Primeiro: buscar componente direto
   let component = ENHANCED_BLOCK_REGISTRY[type];
 
@@ -128,25 +123,25 @@ export const getBlockComponent = (
   // Segundo: tentar fallbacks inteligentes
   const fallbacks: Record<string, string> = {
     // Mapeamentos alternativos comuns
-    text: "text-inline",
-    heading: "heading-inline",
-    image: "image-display-inline",
-    button: "button-inline",
+    "text": "text-inline",
+    "heading": "heading-inline", 
+    "image": "image-display-inline",
+    "button": "button-inline",
     "decorative-bar": "decorative-bar-inline",
     "legal-notice": "legal-notice-inline",
-
+    
     // Quiz específicos
     "quiz-header": "quiz-intro-header",
-    intro: "step01-intro",
-    form: "form-input",
-    options: "options-grid",
-
+    "intro": "step01-intro",
+    "form": "form-input",
+    "options": "options-grid",
+    
     // Tipos estruturais → componentes visuais
-    question: "text-inline",
-    strategicQuestion: "options-grid",
-    mainTransition: "text-inline",
-    result: "quiz-results",
-    progress: "quiz-progress",
+    "question": "text-inline",
+    "strategicQuestion": "options-grid",
+    "mainTransition": "text-inline",
+    "result": "quiz-results",
+    "progress": "quiz-progress"
   };
 
   const fallbackType = fallbacks[type];
@@ -159,51 +154,30 @@ export const getBlockComponent = (
   }
 
   // Terceiro: fallback genérico baseado em categoria
-  if (
-    type.includes("text") ||
-    type.includes("title") ||
-    type.includes("content")
-  ) {
+  if (type.includes("text") || type.includes("title") || type.includes("content")) {
     console.log(`📝 Fallback genérico: ${type} → text-inline`);
     return ENHANCED_BLOCK_REGISTRY["text-inline"];
   }
-
-  if (
-    type.includes("button") ||
-    type.includes("cta") ||
-    type.includes("action")
-  ) {
+  
+  if (type.includes("button") || type.includes("cta") || type.includes("action")) {
     console.log(`🔘 Fallback genérico: ${type} → button-inline`);
     return ENHANCED_BLOCK_REGISTRY["button-inline"];
   }
 
-  if (
-    type.includes("image") ||
-    type.includes("photo") ||
-    type.includes("picture")
-  ) {
+  if (type.includes("image") || type.includes("photo") || type.includes("picture")) {
     console.log(`🖼️ Fallback genérico: ${type} → image-display-inline`);
     return ENHANCED_BLOCK_REGISTRY["image-display-inline"];
   }
 
-  if (
-    type.includes("quiz") ||
-    type.includes("question") ||
-    type.includes("option")
-  ) {
+  if (type.includes("quiz") || type.includes("question") || type.includes("option")) {
     console.log(`❓ Fallback genérico: ${type} → options-grid`);
     return ENHANCED_BLOCK_REGISTRY["options-grid"];
   }
 
   // Último: fallback final para texto
-  console.warn(
-    `⚠️ Componente não encontrado, usando fallback final: ${type} → text-inline`
-  );
-  console.log(
-    "📋 Componentes disponíveis:",
-    Object.keys(ENHANCED_BLOCK_REGISTRY)
-  );
-
+  console.warn(`⚠️ Componente não encontrado, usando fallback final: ${type} → text-inline`);
+  console.log("📋 Componentes disponíveis:", Object.keys(ENHANCED_BLOCK_REGISTRY));
+  
   return ENHANCED_BLOCK_REGISTRY["text-inline"] || null;
 };
 
@@ -294,7 +268,7 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
  */
 export const getBlockDefinition = (type: string) => {
   const definitions = generateBlockDefinitions();
-  return definitions.find((def) => def.type === type) || null;
+  return definitions.find(def => def.type === type) || null;
 };
 
 /**
@@ -303,9 +277,7 @@ export const getBlockDefinition = (type: string) => {
 export const getRegistryStats = () => {
   const types = Object.keys(ENHANCED_BLOCK_REGISTRY);
   const definitions = generateBlockDefinitions();
-  const categories = Array.from(
-    new Set(definitions.map((def) => def.category))
-  );
+  const categories = Array.from(new Set(definitions.map(def => def.category)));
 
   return {
     totalBlocks: types.length,

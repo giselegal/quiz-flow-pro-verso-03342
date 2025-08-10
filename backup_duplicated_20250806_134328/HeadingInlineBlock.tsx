@@ -20,8 +20,7 @@ export const HeadingInlineBlock: React.FC<HeadingInlineBlockProps> = ({
 }) => {
   const properties = safeGetBlockProperties(block);
   // CORREÇÃO: Aceitar content (string) OU text/title
-  const text =
-    properties.content || properties.text || properties.title || "Título";
+  const text = properties.content || properties.text || properties.title || "Título";
   const level = properties.level || "h1";
   const textAlign = properties.textAlign || "center";
   const color = properties.color || "#432818";

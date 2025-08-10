@@ -1,5 +1,5 @@
 import React from "react";
-import quizStyles from "../../../styles/quiz.module.css";
+import quizStyles from "@/styles/quiz.module.css";
 
 interface QuizTitleProps {
   text?: string;
@@ -25,8 +25,7 @@ const QuizTitle: React.FC<QuizTitleProps> = ({
   const style: React.CSSProperties = {
     textAlign: alignment,
     color,
-    fontSize:
-      fontSize || (level === 1 ? "2rem" : level === 2 ? "1.5rem" : "1.25rem"),
+    fontSize: fontSize || (level === 1 ? "2rem" : level === 2 ? "1.5rem" : "1.25rem"),
     fontWeight: fontWeight || "bold",
     margin: "0 0 1rem 0",
     lineHeight: 1.2,

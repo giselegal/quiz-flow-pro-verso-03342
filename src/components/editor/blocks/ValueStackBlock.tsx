@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 
 interface ValueStackBlockProps {
@@ -15,14 +15,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -164,12 +157,8 @@ const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
                   </div>
 
                   <div className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white p-4 sm:p-5 md:p-6 rounded-lg">
-                    <div className="text-xs sm:text-sm opacity-90 mb-2">
-                      Seu investimento hoje:
-                    </div>
-                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-                      R$ 97,00
-                    </div>
+                    <div className="text-xs sm:text-sm opacity-90 mb-2">Seu investimento hoje:</div>
+                    <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">R$ 97,00</div>
                     <div className="text-xs sm:text-sm opacity-90 leading-relaxed">
                       Economize R$ {(totalValue - 97).toLocaleString("pt-BR")}
                       ,00 (mais de 75% de desconto)

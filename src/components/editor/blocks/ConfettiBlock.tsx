@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useRef } from "react";
 import { Sparkles } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -9,14 +9,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -93,12 +86,8 @@ const ConfettiBlock: React.FC<BlockComponentProps> = ({
       data-block-type={block.type}
     >
       <Sparkles className="w-16 h-16 mx-auto text-brand mb-4 animate-pulse" />
-      <p className="text-lg text-brand-dark font-semibold">
-        🎉 Efeito de Confete! 🎉
-      </p>
-      <p className="text-sm text-stone-600 mt-2">
-        (Visível na página publicada ou ao simular)
-      </p>
+      <p className="text-lg text-brand-dark font-semibold">🎉 Efeito de Confete! 🎉</p>
+      <p className="text-sm text-stone-600 mt-2">(Visível na página publicada ou ao simular)</p>
       <div className="text-xs text-stone-500 mt-2">
         Partículas: {particleCount} | Duração: {duration / 1000}s
       </div>

@@ -30,7 +30,7 @@ export const preloadCriticalImages = (
   const total = imageUrls.length;
 
   // Create optimized URLs for preloading
-  const optimizedUrls = imageUrls.map((url) => {
+  const optimizedUrls = imageUrls.map(url => {
     if (!url.includes("cloudinary.com")) return url;
 
     // Extract base URL parts
@@ -49,9 +49,7 @@ export const preloadCriticalImages = (
       if (loaded === total) {
         const endTime = performance.now();
         const loadTime = (endTime - startTime) / 1000;
-        console.log(
-          `[Preload] All ${total} critical images loaded in ${loadTime.toFixed(2)}s`
-        );
+        console.log(`[Preload] All ${total} critical images loaded in ${loadTime.toFixed(2)}s`);
 
         if (onComplete) onComplete();
         resolve();
@@ -68,7 +66,7 @@ export const preloadCriticalImages = (
     }, timeout);
 
     // Load images in parallel
-    optimizedUrls.forEach((url) => {
+    optimizedUrls.forEach(url => {
       // Create a new image element
       const img = new Image();
 
@@ -81,11 +79,8 @@ export const preloadCriticalImages = (
       };
 
       // Handle loading error
-      img.onerror = (err) => {
-        console.error(
-          `[Preload] Failed to preload image: ${url.substring(0, 50)}...`,
-          err
-        );
+      img.onerror = err => {
+        console.error(`[Preload] Failed to preload image: ${url.substring(0, 50)}...`, err);
         updateProgress(); // Still count as processed
         if (loaded === total) {
           clearTimeout(timeoutId);
@@ -103,10 +98,7 @@ export const preloadCriticalImages = (
  * @param imageUrl The URL of the LCP image
  * @param options Preload options
  */
-export const preloadLCPImage = (
-  imageUrl: string,
-  options: PreloadOptions = {}
-): Promise<void> => {
+export const preloadLCPImage = (imageUrl: string, options: PreloadOptions = {}): Promise<void> => {
   // Higher quality and priority for LCP image
   const lcpOptions: PreloadOptions = {
     quality: 95,

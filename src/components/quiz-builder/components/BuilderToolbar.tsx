@@ -1,6 +1,6 @@
 import React from "react";
-import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";
-import { Button } from "../../../components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import {
   Save,
   Eye,
@@ -41,7 +41,7 @@ const BuilderToolbar: React.FC<BuilderToolbarProps> = ({
 
         <Tabs
           value={activeView}
-          onValueChange={(v) => onViewChange(v as "editor" | "preview")}
+          onValueChange={v => onViewChange(v as "editor" | "preview")}
           className="w-auto"
         >
           <TabsList className="bg-[#333333]">
@@ -117,11 +117,7 @@ const BuilderToolbar: React.FC<BuilderToolbarProps> = ({
           Salvar
         </Button>
 
-        <Button
-          variant="default"
-          size="sm"
-          className="bg-[#6E59A5] hover:bg-[#5D48A0] text-white"
-        >
+        <Button variant="default" size="sm" className="bg-[#6E59A5] hover:bg-[#5D48A0] text-white">
           <Share2 className="w-4 h-4 mr-2" />
           Publicar
         </Button>

@@ -1,22 +1,22 @@
-import { BlockDefinition } from "../types/editor";
+import { BlockDefinition } from "@/types/editor";
 import { AlignLeft, Heading, Image, Minus, Square, Type } from "lucide-react";
 
 // Import real components instead of placeholder
-import ImageDisplayInlineBlock from "../components/blocks/inline/ImageDisplayInlineBlock";
-// import StyleCardInlineBlock from "../components/blocks/inline/StyleCardInlineBlock";
-import QuizOptionsGridBlock from "../components/blocks/quiz/QuizOptionsGridBlock";
-import BadgeInlineBlock from "../components/editor/blocks/BadgeInlineBlock";
-import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
-import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
-import FormInputBlock from "../components/editor/blocks/FormInputBlock";
-import HeadingInlineBlock from "../components/editor/blocks/HeadingInlineBlock";
-import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
-import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
-import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
-import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
-import SpacerInlineBlock from "../components/editor/blocks/SpacerInlineBlock";
-import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
-import TextInlineBlock from "../components/editor/blocks/TextInlineBlock";
+import ImageDisplayInlineBlock from "@/components/blocks/inline/ImageDisplayInlineBlock";
+// import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
+import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
+import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
+import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
+import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
+import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
+import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
+import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
+import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
+import QuizProgressBlock from "@/components/editor/blocks/QuizProgressBlock";
+import QuizResultsEditor from "@/components/editor/blocks/QuizResultsEditor";
+import SpacerInlineBlock from "@/components/editor/blocks/SpacerInlineBlock";
+import StyleResultsEditor from "@/components/editor/blocks/StyleResultsEditor";
+import TextInlineBlock from "@/components/editor/blocks/TextInlineBlock";
 
 export const blockDefinitions: BlockDefinition[] = [
   {
@@ -246,10 +246,7 @@ export const blockDefinitions: BlockDefinition[] = [
         label: "Família da Fonte",
         options: [
           { value: "Inter, sans-serif", label: "Inter (Sans-serif)" },
-          {
-            value: "Playfair Display, serif",
-            label: "Playfair Display (Serif)",
-          },
+          { value: "Playfair Display, serif", label: "Playfair Display (Serif)" },
           { value: "Georgia, serif", label: "Georgia (Serif)" },
           { value: "Arial, sans-serif", label: "Arial (Sans-serif)" },
         ],
@@ -828,8 +825,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "form-input",
     name: "Campo de Formulário",
-    description:
-      "Componente campo de formulário com propriedades configuráveis",
+    description: "Componente campo de formulário com propriedades configuráveis",
     category: "Form",
     icon: Type,
     component: FormInputBlock,
@@ -1032,8 +1028,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "options-grid",
     name: "Grade de Opções",
-    description:
-      "Componente grade de opções com propriedades configuráveis completas",
+    description: "Componente grade de opções com propriedades configuráveis completas",
     category: "Quiz",
     icon: Type,
     component: QuizOptionsGridBlock,
@@ -1550,8 +1545,7 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "style-results",
     name: "Resultados de Estilo",
-    description:
-      "Componente resultados de estilo com propriedades configuráveis",
+    description: "Componente resultados de estilo com propriedades configuráveis",
     category: "Quiz",
     icon: Type,
     component: StyleResultsEditor,
@@ -1928,16 +1922,16 @@ export const blockDefinitions: BlockDefinition[] = [
 
 export const getCategories = (): string[] => {
   const categories = new Set<string>();
-  blockDefinitions.forEach((block) => {
+  blockDefinitions.forEach(block => {
     categories.add(block.category);
   });
   return Array.from(categories);
 };
 
 export const getBlocksByCategory = (category: string): BlockDefinition[] => {
-  return blockDefinitions.filter((block) => block.category === category);
+  return blockDefinitions.filter(block => block.category === category);
 };
 
 export const getBlockByType = (type: string): BlockDefinition | undefined => {
-  return blockDefinitions.find((block) => block.type === type);
+  return blockDefinitions.find(block => block.type === type);
 };

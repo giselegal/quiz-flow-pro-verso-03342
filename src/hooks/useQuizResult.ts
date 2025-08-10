@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleResult } from "../types/quiz";
+import { StyleResult } from "@/types/quiz";
 
 export const useQuizResult = () => {
   const [primaryStyle, setPrimaryStyle] = useState<StyleResult | null>(null);

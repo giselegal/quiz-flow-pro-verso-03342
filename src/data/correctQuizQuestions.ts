@@ -14,64 +14,56 @@ export const CORRECT_QUIZ_QUESTIONS = [
       {
         id: "1a",
         text: "Conforto, leveza e praticidade no vestir",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
         styleCategory: "Natural",
         points: 1,
       },
       {
         id: "1b",
         text: "Discrição, caimento clássico e sobriedade",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
         styleCategory: "Clássico",
         points: 1,
       },
       {
         id: "1c",
         text: "Praticidade com um toque de estilo atual",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
         styleCategory: "Contemporâneo",
         points: 1,
       },
       {
         id: "1d",
         text: "Sofisticação em looks estruturados e refinados",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_mjrfcl.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_mjrfcl.webp",
         styleCategory: "Elegante",
         points: 1,
       },
       {
         id: "1e",
         text: "Delicadeza em tecidos suaves e fluidos",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
         styleCategory: "Romântico",
         points: 1,
       },
       {
         id: "1f",
         text: "Sensualidade com destaque para o corpo",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
         styleCategory: "Sexy",
         points: 1,
       },
       {
         id: "1g",
         text: "Impacto visual com peças estruturadas e assimétricas",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
         styleCategory: "Dramático",
         points: 1,
       },
       {
         id: "1h",
         text: "Mix criativo com formas ousadas e originais",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
         styleCategory: "Criativo",
         points: 1,
       },
@@ -146,64 +138,56 @@ export const CORRECT_QUIZ_QUESTIONS = [
       {
         id: "3a",
         text: "Visual leve, despojado e natural",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
         styleCategory: "Natural",
         points: 1,
       },
       {
         id: "3b",
         text: "Visual clássico e tradicional",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
         styleCategory: "Clássico",
         points: 1,
       },
       {
         id: "3c",
         text: "Visual casual com toque atual",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
         styleCategory: "Contemporâneo",
         points: 1,
       },
       {
         id: "3d",
         text: "Visual refinado e imponente",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
         styleCategory: "Elegante",
         points: 1,
       },
       {
         id: "3e",
         text: "Visual romântico, feminino e delicado",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
         styleCategory: "Romântico",
         points: 1,
       },
       {
         id: "3f",
         text: "Visual sensual, com saia justa e decote",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
         styleCategory: "Sexy",
         points: 1,
       },
       {
         id: "3g",
         text: "Visual marcante e urbano (jeans + jaqueta)",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
         styleCategory: "Dramático",
         points: 1,
       },
       {
         id: "3h",
         text: "Visual criativo, colorido e ousado",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
         styleCategory: "Criativo",
         points: 1,
       },
@@ -278,64 +262,56 @@ export const CORRECT_QUIZ_QUESTIONS = [
       {
         id: "5a",
         text: "Estampas clean, com poucas informações",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
         styleCategory: "Natural",
         points: 1,
       },
       {
         id: "5b",
         text: "Estampas clássicas e atemporais",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
         styleCategory: "Clássico",
         points: 1,
       },
       {
         id: "5c",
         text: "Atemporais, mas que tenham uma pegada de atual e moderna",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
         styleCategory: "Contemporâneo",
         points: 1,
       },
       {
         id: "5d",
         text: "Estampas clássicas e atemporais, mas sofisticadas",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
         styleCategory: "Elegante",
         points: 1,
       },
       {
         id: "5e",
         text: "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
         styleCategory: "Romântico",
         points: 1,
       },
       {
         id: "5f",
         text: "Estampas de animal print, como onça, zebra e cobra",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
         styleCategory: "Sexy",
         points: 1,
       },
       {
         id: "5g",
         text: "Estampas geométricas, abstratas e exageradas como grandes poás",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
         styleCategory: "Dramático",
         points: 1,
       },
       {
         id: "5h",
         text: "Estampas diferentes do usual, como africanas, xadrez grandes",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
         styleCategory: "Criativo",
         points: 1,
       },
@@ -352,64 +328,56 @@ export const CORRECT_QUIZ_QUESTIONS = [
       {
         id: "6a",
         text: "Cardigã bege confortável e casual",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
         styleCategory: "Natural",
         points: 1,
       },
       {
         id: "6b",
         text: "Blazer clássico e elegante",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735374/30_lbfjk5.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735374/30_lbfjk5.webp",
         styleCategory: "Clássico",
         points: 1,
       },
       {
         id: "6c",
         text: "Blazer moderno e atual",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735375/31_d6xo3f.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735375/31_d6xo3f.webp",
         styleCategory: "Contemporâneo",
         points: 1,
       },
       {
         id: "6d",
         text: "Casaco elegante e sofisticado",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735376/32_dxhxon.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735376/32_dxhxon.webp",
         styleCategory: "Elegante",
         points: 1,
       },
       {
         id: "6e",
         text: "Casaco rosa romântico e delicado",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_ejhsra.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_ejhsra.webp",
         styleCategory: "Romântico",
         points: 1,
       },
       {
         id: "6f",
         text: "Jaqueta vinho de couro estilosa",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
         styleCategory: "Sexy",
         points: 1,
       },
       {
         id: "6g",
         text: "Jaqueta preta estilo rocker",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
         styleCategory: "Dramático",
         points: 1,
       },
       {
         id: "6h",
         text: "Casaco estampado criativo e colorido",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
         styleCategory: "Criativo",
         points: 1,
       },
@@ -426,64 +394,56 @@ export const CORRECT_QUIZ_QUESTIONS = [
       {
         id: "7a",
         text: "Calça jeans clara e confortável",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735418/39_wlkzbo.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735418/39_wlkzbo.webp",
         styleCategory: "Natural",
         points: 1,
       },
       {
         id: "7b",
         text: "Calça social clássica e elegante",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
         styleCategory: "Clássico",
         points: 1,
       },
       {
         id: "7c",
         text: "Jeans reto e básico",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
         styleCategory: "Contemporâneo",
         points: 1,
       },
       {
         id: "7d",
         text: "Calça reta bege de tecido",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
         styleCategory: "Elegante",
         points: 1,
       },
       {
         id: "7e",
         text: "Calça ampla rosa alfaiatada",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
         styleCategory: "Romântico",
         points: 1,
       },
       {
         id: "7f",
         text: "Legging preta de couro",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
         styleCategory: "Sexy",
         points: 1,
       },
       {
         id: "7g",
         text: "Calça reta preta de couro",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
         styleCategory: "Dramático",
         points: 1,
       },
       {
         id: "7h",
         text: "Calça estampada floral leve e ampla",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
         styleCategory: "Criativo",
         points: 1,
       },
@@ -500,64 +460,56 @@ export const CORRECT_QUIZ_QUESTIONS = [
       {
         id: "8a",
         text: "Tênis nude casual e confortável",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
         styleCategory: "Natural",
         points: 1,
       },
       {
         id: "8b",
         text: "Scarpin nude de salto baixo",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
         styleCategory: "Clássico",
         points: 1,
       },
       {
         id: "8c",
         text: "Sandália dourada com salto bloco",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
         styleCategory: "Contemporâneo",
         points: 1,
       },
       {
         id: "8d",
         text: "Scarpin nude salto alto e fino",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
         styleCategory: "Elegante",
         points: 1,
       },
       {
         id: "8e",
         text: "Sandália anabela off white",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
         styleCategory: "Romântico",
         points: 1,
       },
       {
         id: "8f",
         text: "Sandália rosa de tiras finas",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
         styleCategory: "Sexy",
         points: 1,
       },
       {
         id: "8g",
         text: "Scarpin preto moderno com vinil transparente",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
         styleCategory: "Dramático",
         points: 1,
       },
       {
         id: "8h",
         text: "Scarpin colorido estampado",
-        imageUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
+        imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
         styleCategory: "Criativo",
         points: 1,
       },

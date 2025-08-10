@@ -209,13 +209,11 @@ export const VALIDATION_CONFIG = {
   },
   styles: {
     error: {
-      container:
-        "mt-2 sm:mt-3 p-2 sm:p-3 bg-red-50 border border-red-200 rounded-md",
+      container: "mt-2 sm:mt-3 p-2 sm:p-3 bg-red-50 border border-red-200 rounded-md",
       text: "text-sm sm:text-base text-red-600",
     },
     info: {
-      container:
-        "mt-2 sm:mt-3 p-2 sm:p-3 bg-[#FAF9F7] border border-[#B89B7A]/20 rounded-md",
+      container: "mt-2 sm:mt-3 p-2 sm:p-3 bg-[#FAF9F7] border border-[#B89B7A]/20 rounded-md",
       text: "text-sm sm:text-base text-[#8F7A6A]",
     },
   },
@@ -292,9 +290,7 @@ export class OptionsGridUtils {
    * Detecta automaticamente se as opções contêm imagens
    */
   static hasImages(options: OptionItem[]): boolean {
-    return options.some(
-      (option) => option.imageUrl && option.imageUrl.trim() !== ""
-    );
+    return options.some(option => option.imageUrl && option.imageUrl.trim() !== "");
   }
 
   /**
@@ -322,9 +318,7 @@ export class OptionsGridUtils {
    * Retorna a configuração de aspecto do card
    */
   static getCardAspectConfig(hasImage: boolean) {
-    return hasImage
-      ? CARD_ASPECT_CONFIG.withImages
-      : CARD_ASPECT_CONFIG.textOnly;
+    return hasImage ? CARD_ASPECT_CONFIG.withImages : CARD_ASPECT_CONFIG.textOnly;
   }
 
   /**
@@ -394,10 +388,7 @@ export class OptionsGridUtils {
     const optimizations = {
       mobile: {
         columns: Math.min(baseConfig.columns, 2) as 1 | 2 | 3 | 4,
-        imageSize:
-          baseConfig.imageSize === "large"
-            ? ("medium" as const)
-            : baseConfig.imageSize,
+        imageSize: baseConfig.imageSize === "large" ? ("medium" as const) : baseConfig.imageSize,
         gridGap: Math.max(8, baseConfig.gridGap - 4),
       },
       tablet: {

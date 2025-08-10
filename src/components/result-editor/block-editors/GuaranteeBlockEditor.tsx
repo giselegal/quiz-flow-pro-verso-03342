@@ -1,18 +1,15 @@
 import React from "react";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
-import { Block } from "../../../types/editor";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Block } from "@/types/editor";
 
 interface GuaranteeBlockEditorProps {
   block: Block;
   onUpdate: (content: any) => void;
 }
 
-const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({
-  block,
-  onUpdate,
-}) => {
+const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({ block, onUpdate }) => {
   const content = block.content;
 
   return (
@@ -22,7 +19,7 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({
         <Input
           id="title"
           value={content.title || ""}
-          onChange={(e) => onUpdate({ title: e.target.value })}
+          onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Garantia de 7 dias"
         />
       </div>
@@ -33,7 +30,7 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({
           id="text"
           rows={3}
           value={content.text || ""}
-          onChange={(e) => onUpdate({ text: e.target.value })}
+          onChange={e => onUpdate({ text: e.target.value })}
           placeholder="Se você não ficar 100% satisfeita com o conteúdo nos primeiros 7 dias, devolvemos seu dinheiro integralmente, sem burocracia."
         />
       </div>
@@ -43,11 +40,11 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({
         <Input
           id="image"
           value={content.image || ""}
-          onChange={(e) => onUpdate({ image: e.target.value })}
+          onChange={e => onUpdate({ image: e.target.value })}
           placeholder="https://exemplo.com/garantia.jpg"
         />
         {content.image && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.image}
               alt="Imagem de garantia"

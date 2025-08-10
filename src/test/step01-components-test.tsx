@@ -1,20 +1,13 @@
 // Teste dos componentes Step 1 - Verificação de integração
 // src/test/step01-components-test.tsx
 
-import { IntroBlock } from "../components/steps/step01/IntroBlock";
-import { IntroPropertiesPanel } from "../components/steps/step01/IntroPropertiesPanel";
+import { IntroBlock } from "@/components/steps/step01/IntroBlock";
+import { IntroPropertiesPanel } from "@/components/steps/step01/IntroPropertiesPanel";
 
 // Mock data para teste
 const mockBlock = {
   id: "test-intro-block",
   type: "step01-intro",
-  block: {
-    id: "test-intro-block",
-    type: "step01-intro",
-    properties: {},
-    content: {},
-    order: 0,
-  },
   properties: {
     title: "Bem-vindo ao Quiz de Estilo Pessoal",
     descriptionTop: "Descubra seu estilo único",
@@ -44,19 +37,14 @@ export const Step01ComponentsTest = () => {
       <div>
         <h2 className="text-xl font-bold mb-4">IntroBlock Component</h2>
         <div className="border rounded-lg p-4">
-          <IntroBlock id={mockBlock.id} block={mockBlock.block} properties={mockBlock.properties} />
+          <IntroBlock id={mockBlock.id} properties={mockBlock.properties} />
         </div>
       </div>
 
       <div>
-        <h2 className="text-xl font-bold mb-4">
-          IntroPropertiesPanel Component
-        </h2>
+        <h2 className="text-xl font-bold mb-4">IntroPropertiesPanel Component</h2>
         <div className="border rounded-lg p-4 w-80">
-          <IntroPropertiesPanel
-            selectedBlock={mockBlock}
-            onUpdate={mockOnUpdate}
-          />
+          <IntroPropertiesPanel selectedBlock={mockBlock} onUpdate={mockOnUpdate} />
         </div>
       </div>
     </div>

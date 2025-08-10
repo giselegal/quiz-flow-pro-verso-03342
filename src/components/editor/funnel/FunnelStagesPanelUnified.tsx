@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
-import { ScrollArea } from "../../../components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, GripVertical, Eye, Settings, Copy, Trash2 } from "lucide-react";
-import { cn } from "../../../lib/utils";
-import { useEditor } from "../../../context/EditorContext";
+import { cn } from "@/lib/utils";
+import { useEditor } from "@/context/EditorContext";
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -71,11 +66,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   };
 
   // ✅ HANDLER PARA ACTIONS DOS BOTÕES
-  const handleActionClick = (
-    action: string,
-    stageId: string,
-    e: React.MouseEvent
-  ) => {
+  const handleActionClick = (action: string, stageId: string, e: React.MouseEvent) => {
     console.log("🚨 ACTION CLICK RECEBIDO:", action, stageId);
 
     e.preventDefault();
@@ -105,24 +96,19 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
   // ✅ VALIDAÇÃO: VERIFICAR SE HÁ ETAPAS
   if (!stages || stages.length === 0) {
-    console.warn(
-      `⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada!`
-    );
+    console.warn(`⚠️ [${timestamp}] FunnelStagesPanel - PROBLEMA: Nenhuma etapa encontrada!`);
     return (
       <Card
-        className={cn(
-          "h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200",
-          className
-        )}
+        className={cn("h-full flex flex-col min-h-[400px] bg-red-50/50 border-red-200", className)}
       >
         <CardHeader className="flex-shrink-0 pb-3 bg-red-100/50">
           <CardTitle className="text-lg font-semibold text-red-700 flex items-center gap-2">
-            <div style={{ backgroundColor: "#FAF9F7" }}></div>
+            <div style={{ backgroundColor: '#FAF9F7' }}></div>
             ⚠️ Erro nas Etapas
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-4">
-          <div style={{ color: "#432818" }}>
+          <div style={{ color: '#432818' }}>
             <div className="text-center space-y-4">
               <div className="text-4xl animate-bounce">🚨</div>
               <p className="font-medium">Etapas não carregaram</p>
@@ -130,7 +116,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               <Button
                 onClick={() => window.location.reload()}
                 variant="outline"
-                style={{ borderColor: "#B89B7A" }}
+                style={{ borderColor: '#B89B7A' }}
               >
                 🔄 Recarregar
               </Button>
@@ -153,10 +139,9 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         className
       )}
     >
-      <CardHeader style={{ backgroundColor: "#E5DDD5" }}>
+      <CardHeader style={{ backgroundColor: '#E5DDD5' }}>
         <CardTitle className="text-lg font-semibold text-green-800 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-          ✅ Etapas do Funil
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>✅ Etapas do Funil
           <span className="ml-auto text-sm bg-green-200 text-green-800 px-2 py-1 rounded font-bold">
             {stageCount}/21 etapas
           </span>
@@ -180,14 +165,14 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                       ? "border-purple-500 bg-[#B89B7A]/10 shadow-md ring-2 ring-purple-200"
                       : "border-gray-300 bg-white hover:bg-gray-50"
                   )}
-                  onClick={(e) => {
+                  onClick={e => {
                     console.log("🚨 CLICK DIRETO NO DIV - StageID:", stage.id);
                     console.log("🚨 Current activeStageId:", activeStageId);
                     handleStageClick(stage.id, e);
                   }}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => {
+                  onKeyDown={e => {
                     if (e.key === "Enter" || e.key === " ") {
                       handleStageClick(stage.id);
                     }
@@ -201,19 +186,13 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                           <span
                             className={cn(
                               "font-medium text-sm",
-                              activeStageId === stage.id
-                                ? "text-[#A38A69]"
-                                : "text-foreground"
+                              activeStageId === stage.id ? "text-[#A38A69]" : "text-foreground"
                             )}
                           >
                             Etapa {stage.order}
                           </span>
                           <Badge
-                            variant={
-                              activeStageId === stage.id
-                                ? "default"
-                                : "secondary"
-                            }
+                            variant={activeStageId === stage.id ? "default" : "secondary"}
                             className="text-xs"
                           >
                             {stage.metadata?.blocksCount || 0} blocos
@@ -226,9 +205,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         {activeStageId === stage.id && (
                           <div className="flex items-center gap-1 mt-1">
                             <div className="w-2 h-2 bg-[#B89B7A]/100 rounded-full animate-pulse"></div>
-                            <span className="text-xs text-[#B89B7A] font-medium">
-                              ATIVA
-                            </span>
+                            <span className="text-xs text-[#B89B7A] font-medium">ATIVA</span>
                           </div>
                         )}
                       </div>
@@ -240,7 +217,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={(e) => handleActionClick("view", stage.id, e)}
+                        onClick={e => handleActionClick("view", stage.id, e)}
                         title="Visualizar etapa"
                       >
                         <Eye className="w-3 h-3" />
@@ -249,9 +226,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={(e) =>
-                          handleActionClick("settings", stage.id, e)
-                        }
+                        onClick={e => handleActionClick("settings", stage.id, e)}
                         title="Configurações"
                       >
                         <Settings className="w-3 h-3" />
@@ -260,7 +235,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-background/80"
-                        onClick={(e) => handleActionClick("copy", stage.id, e)}
+                        onClick={e => handleActionClick("copy", stage.id, e)}
                         title="Copiar etapa"
                       >
                         <Copy className="w-3 h-3" />
@@ -269,9 +244,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         variant="ghost"
                         size="sm"
                         className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                        onClick={(e) =>
-                          handleActionClick("delete", stage.id, e)
-                        }
+                        onClick={e => handleActionClick("delete", stage.id, e)}
                         title="Excluir etapa"
                       >
                         <Trash2 className="w-3 h-3" />

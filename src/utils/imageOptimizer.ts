@@ -8,10 +8,7 @@
  * @param quality Quality level (1-100)
  * @returns Optimized image URL
  */
-export function optimizeImageQuality(
-  url: string,
-  quality: number = 85
-): string {
+export function optimizeImageQuality(url: string, quality: number = 85): string {
   if (!url) return url;
 
   try {
@@ -39,11 +36,7 @@ export function optimizeImageQuality(
  * @param height Desired height
  * @returns Resized image URL
  */
-export function resizeImage(
-  url: string,
-  width: number,
-  height?: number
-): string {
+export function resizeImage(url: string, width: number, height?: number): string {
   if (!url) return url;
 
   try {

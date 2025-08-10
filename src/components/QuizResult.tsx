@@ -1,5 +1,5 @@
-import { useAuth } from "../context/AuthContext";
-import { QuizResult as QuizResultType } from "../hooks/useQuizResults";
+import { useAuth } from "@/context/AuthContext";
+import { QuizResult as QuizResultType } from "@/hooks/useQuizResults";
 import React from "react";
 
 interface QuizResultProps {
@@ -26,23 +26,20 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
       {result ? (
         <div className="space-y-4">
-          <div style={{ color: "#6B4F43" }}>Seu resultado: {result.title}</div>
+          <div style={{ color: '#6B4F43' }}>
+            Seu resultado: {result.title}
+          </div>
 
           {showExplanation && result.description && (
-            <div style={{ color: "#6B4F43" }}>{result.description}</div>
+            <div style={{ color: '#6B4F43' }}>{result.description}</div>
           )}
 
           {showCategoryScores && Object.keys(categoryScores).length > 0 && (
             <div className="category-scores mt-6">
-              <h3 className="text-lg font-medium mb-2">
-                Pontuação por categoria:
-              </h3>
+              <h3 className="text-lg font-medium mb-2">Pontuação por categoria:</h3>
               <div className="grid gap-2">
                 {Object.entries(categoryScores).map(([category, score]) => (
-                  <div
-                    key={category}
-                    className="flex justify-between items-center"
-                  >
+                  <div key={category} className="flex justify-between items-center">
                     <span className="font-medium">{category}:</span>
                     <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded">
                       {String(score)} pontos
@@ -54,7 +51,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
           )}
         </div>
       ) : (
-        <p style={{ color: "#432818" }}>Resultado não disponível</p>
+        <p style={{ color: '#432818' }}>Resultado não disponível</p>
       )}
     </div>
   );

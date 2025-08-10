@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Clock } from "lucide-react";
-import { Button } from "../../../components/ui/button";
-import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { Button } from "@/components/ui/button";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
@@ -11,14 +11,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -104,13 +97,10 @@ const QuizOfferFinalCTABlock: React.FC<BlockComponentProps> = ({
     >
       <AnimatedWrapper show={isLoaded}>
         <div className="max-w-4xl mx-auto">
-          <h3
-            className="text-3xl md:text-4xl font-bold mb-6"
-            style={{ color: textColor }}
-          >
+          <h3 className="text-3xl md:text-4xl font-bold mb-6" style={{ color: textColor }}>
             {title}
           </h3>
-          <p style={{ color: "#6B4F43" }}>{subtitle}</p>
+          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
 
           <Button
             size="lg"
@@ -120,12 +110,10 @@ const QuizOfferFinalCTABlock: React.FC<BlockComponentProps> = ({
               color: "white",
               border: "none",
             }}
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (ctaUrl.startsWith("#")) {
-                document
-                  .querySelector(ctaUrl)
-                  ?.scrollIntoView({ behavior: "smooth" });
+                document.querySelector(ctaUrl)?.scrollIntoView({ behavior: "smooth" });
               } else {
                 window.open(ctaUrl, "_blank");
               }
@@ -135,7 +123,7 @@ const QuizOfferFinalCTABlock: React.FC<BlockComponentProps> = ({
             {ctaText}
           </Button>
 
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <Clock className="w-4 h-4" />
             {urgencyText}
           </div>

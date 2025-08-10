@@ -1,7 +1,7 @@
 import React from "react";
-import { Textarea } from "../../../components/ui/textarea";
-import { Label } from "../../../components/ui/label";
-import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BlockEditorProps } from "./types";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -10,14 +10,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,7 +57,7 @@ const TextBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Textarea
           id={`${block.id}-text`}
           value={block.content.text || ""}
-          onChange={(e) => onUpdate({ text: e.target.value })}
+          onChange={e => onUpdate({ text: e.target.value })}
           className="mt-1"
           rows={5}
         />
@@ -74,7 +67,7 @@ const TextBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Label>Alinhamento</Label>
         <RadioGroup
           value={block.content.alignment || "left"}
-          onValueChange={(value) => onUpdate({ alignment: value })}
+          onValueChange={value => onUpdate({ alignment: value })}
           className="flex space-x-4 mt-1"
         >
           <div className="flex items-center space-x-2">

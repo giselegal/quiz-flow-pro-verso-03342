@@ -4,12 +4,7 @@ const ComponenteAntes = () => (
     block={{
       id: "test",
       type: "button",
-      content: {
-        text: "Click me",
-        color: "blue",
-        size: "large",
-        disabled: false,
-      },
+      content: { text: "Click me", color: "blue", size: "large", disabled: false },
     }}
     blockDefinition={getBlockDefinition("button")}
     onUpdateBlock={(id, updates) => {

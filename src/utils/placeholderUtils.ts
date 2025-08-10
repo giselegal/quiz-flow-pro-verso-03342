@@ -37,10 +37,7 @@ export const generatePlaceholderText = (length: number = 50): string => {
   return result.join(" ");
 };
 
-export const generatePlaceholderImage = (
-  width: number = 400,
-  height: number = 300
-): string => {
+export const generatePlaceholderImage = (width: number = 400, height: number = 300): string => {
   return `https://via.placeholder.com/${width}x${height}`;
 };
 

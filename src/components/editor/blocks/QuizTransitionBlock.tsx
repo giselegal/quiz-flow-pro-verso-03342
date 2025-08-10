@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "../../../lib/utils";
-import { Button } from "../../../components/ui/button";
-import { Badge } from "../../../components/ui/badge";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface QuizTransitionBlockProps {
   block: {
@@ -29,14 +29,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -85,10 +78,8 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>
-          Erro: Bloco não encontrado ou propriedades indefinidas
-        </p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
@@ -106,9 +97,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
     <div
       className={cn(
         "relative w-full min-h-[350px] p-8 rounded-lg border-2 border-dashed",
-        isSelected
-          ? "border-[#B89B7A] bg-[#B89B7A]/10"
-          : "border-gray-300 bg-white",
+        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
         "cursor-pointer hover:border-gray-400 transition-colors",
         className,
         // Margens universais com controles deslizantes
@@ -129,10 +118,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         <div className="text-6xl mb-6">{icon}</div>
 
         {/* Title */}
-        <h2
-          className="text-2xl md:text-3xl font-bold mb-4"
-          style={{ color: textColor }}
-        >
+        <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: textColor }}>
           {title}
         </h2>
 
@@ -142,11 +128,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
         </p>
 
         {/* CTA Button */}
-        <Button
-          size="lg"
-          className="px-8 py-3 bg-primary hover:bg-primary/90"
-          disabled={disabled}
-        >
+        <Button size="lg" className="px-8 py-3 bg-primary hover:bg-primary/90" disabled={disabled}>
           {buttonText}
         </Button>
       </div>

@@ -6,7 +6,12 @@
     "description": "Página de entrada com captura de nome",
     "category": "intro",
     "type": "intro",
-    "tags": ["quiz", "style", "intro", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "intro",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.511Z",
     "updatedAt": "2025-08-10T03:45:03.511Z",
     "author": "giselegal"
@@ -186,7 +191,12 @@
   },
   "analytics": {
     "trackingId": "step-01-intro",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
     "utmParams": true,
     "customEvents": []
   },

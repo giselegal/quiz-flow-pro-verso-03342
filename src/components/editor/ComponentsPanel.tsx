@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { blockDefinitions } from "../../config/blockDefinitions";
+import { blockDefinitions } from "@/config/blockDefinitions";
 
 interface ComponentsPanelProps {
   onAddComponent: (type: string) => void;
@@ -12,14 +12,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -58,25 +51,23 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ComponentsPanel: React.FC<ComponentsPanelProps> = ({
-  onAddComponent,
-}) => {
+const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => {
   return (
-    <div style={{ borderColor: "#E5DDD5" }}>
-      <h3 style={{ color: "#432818" }}>Componentes</h3>
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <h3 style={{ color: '#432818' }}>Componentes</h3>
       <div className="space-y-2">
-        {blockDefinitions.map((block) => {
+        {blockDefinitions.map(block => {
           const IconComponent = block.icon;
           return (
             <button
               key={block.type}
               onClick={() => onAddComponent(block.type)}
-              style={{ borderColor: "#E5DDD5" }}
+              style={{ borderColor: '#E5DDD5' }}
             >
               <IconComponent size={20} />
               <div>
-                <div style={{ color: "#432818" }}>{block.name}</div>
-                <div style={{ color: "#8B7355" }}>{block.description}</div>
+                <div style={{ color: '#432818' }}>{block.name}</div>
+                <div style={{ color: '#8B7355' }}>{block.description}</div>
               </div>
             </button>
           );

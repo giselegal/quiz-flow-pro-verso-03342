@@ -15,19 +15,19 @@ export default defineConfig({
     },
   },
   esbuild: {
-    target: "es2015",
+    target: 'es2015',
     // Ignorar erros TypeScript temporariamente
-    logOverride: { "this-is-undefined-in-esm": "silent" },
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
   build: {
     // Configurações para build mesmo com erros TS
     rollupOptions: {
       onwarn(warning, warn) {
         // Ignorar warnings específicos
-        if (warning.code === "UNRESOLVED_IMPORT") return;
-        if (warning.code === "THIS_IS_UNDEFINED") return;
+        if (warning.code === 'UNRESOLVED_IMPORT') return;
+        if (warning.code === 'THIS_IS_UNDEFINED') return;
         warn(warning);
-      },
-    },
-  },
+      }
+    }
+  }
 });

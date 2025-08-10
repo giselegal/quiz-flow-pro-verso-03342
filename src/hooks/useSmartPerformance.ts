@@ -88,14 +88,11 @@ export const useSmartPerformance = (
     return () => {
       const renderTime = performance.now() - renderStartRef.current;
 
-      setMetrics((prev) => {
-        const newRenderTimes = [...renderTimesRef.current, renderTime].slice(
-          -10
-        ); // Manter últimas 10
+      setMetrics(prev => {
+        const newRenderTimes = [...renderTimesRef.current, renderTime].slice(-10); // Manter últimas 10
         renderTimesRef.current = newRenderTimes;
 
-        const avgRenderTime =
-          newRenderTimes.reduce((a, b) => a + b, 0) / newRenderTimes.length;
+        const avgRenderTime = newRenderTimes.reduce((a, b) => a + b, 0) / newRenderTimes.length;
 
         return {
           ...prev,
@@ -115,7 +112,7 @@ export const useSmartPerformance = (
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setMetrics((prev) => ({
+        setMetrics(prev => ({
           ...prev,
           isVisible: entry.isIntersecting,
         }));
@@ -220,11 +217,7 @@ export const useOptimizedQuizStep = (
     enableAnimations?: boolean;
   }
 ) => {
-  const {
-    preloadNext = true,
-    trackProgress = true,
-    enableAnimations = true,
-  } = options || {};
+  const { preloadNext = true, trackProgress = true, enableAnimations = true } = options || {};
 
   const smartPerf = useSmartPerformance(`quiz-step-${stepId}`, {
     trackMetrics: trackProgress,
@@ -244,7 +237,7 @@ export const useOptimizedQuizStep = (
 
       try {
         // Simular preload (aqui você pode implementar o preload real)
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
         setPreloadComplete(true);
       } catch (error) {
         console.warn(`Erro no preload do step ${stepId + 1}:`, error);
@@ -317,8 +310,7 @@ export const useOptimizedInlineComponent = (componentType: string) => {
     (props: any) => {
       return smartPerf.optimizeProps({
         ...props,
-        className:
-          `${props.className || ""} ${smartPerf.optimizedClasses}`.trim(),
+        className: `${props.className || ""} ${smartPerf.optimizedClasses}`.trim(),
       });
     },
     [smartPerf]

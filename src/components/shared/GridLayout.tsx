@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 
 type GridColumns = 1 | 2 | 3 | 4 | 5 | 6;
 type GridGap = "xs" | "sm" | "md" | "lg" | "xl";
@@ -34,9 +34,5 @@ export const GridLayout: React.FC<GridLayoutProps> = ({
     xl: "gap-8",
   };
 
-  return (
-    <div className={cn("grid", colsMap[columns], gapMap[gap], className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("grid", colsMap[columns], gapMap[gap], className)}>{children}</div>;
 };

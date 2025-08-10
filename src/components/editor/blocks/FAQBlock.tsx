@@ -10,16 +10,12 @@ import {
   CheckCircle,
   Info,
 } from "lucide-react";
-import type {
-  BlockComponentProps,
-  FAQBlock,
-  FAQItem,
-} from "../../../types/blocks";
-import { Card, CardContent } from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Badge } from "../../../components/ui/badge";
+import type { BlockComponentProps, FAQBlock, FAQItem } from "@/types/blocks";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 
 interface FAQBlockProps extends BlockComponentProps {
   block: FAQBlock;
@@ -31,14 +27,7 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -177,12 +166,10 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
     let styleClasses = "";
     switch (cardStyle) {
       case "classic":
-        styleClasses =
-          "bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md";
+        styleClasses = "bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md";
         break;
       case "flat":
-        styleClasses =
-          "bg-transparent border-b border-gray-200 rounded-none hover:bg-gray-50";
+        styleClasses = "bg-transparent border-b border-gray-200 rounded-none hover:bg-gray-50";
         break;
       case "classic":
         styleClasses =
@@ -203,26 +190,20 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
   };
 
   // Filter FAQs based on search and category
-  const filteredFAQs = faqs.filter((faq) => {
+  const filteredFAQs = faqs.filter(faq => {
     const matchesSearch =
       searchTerm === "" ||
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (faq.tags &&
-        faq.tags.some((tag) =>
-          tag.toLowerCase().includes(searchTerm.toLowerCase())
-        ));
+      (faq.tags && faq.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())));
 
-    const matchesCategory =
-      selectedCategory === "all" || faq.category === selectedCategory;
+    const matchesCategory = selectedCategory === "all" || faq.category === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
 
   // Get unique categories
-  const categories = Array.from(
-    new Set(faqs.map((faq) => faq.category).filter(Boolean))
-  );
+  const categories = Array.from(new Set(faqs.map(faq => faq.category).filter(Boolean)));
 
   const renderFAQItem = (faq: FAQItem, index: number) => {
     const isOpen = openItems.has(faq.id);
@@ -262,17 +243,14 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                   </div>
 
                   {faq.category && showCategories && (
-                    <Badge variant="secondary" style={{ color: "#6B4F43" }}>
+                    <Badge variant="secondary" style={{ color: '#6B4F43' }}>
                       {faq.category}
                     </Badge>
                   )}
                 </div>
 
                 <div className="flex-shrink-0">
-                  <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
+                  <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
                     <ChevronDown className="w-5 h-5 text-gray-400" />
                   </motion.div>
                 </div>
@@ -290,7 +268,9 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                 >
                   <div className="px-4 md:px-6 pb-4 md:pb-6">
                     <div className="border-t border-gray-100 pt-4">
-                      <p style={{ color: "#6B4F43" }}>{faq.answer}</p>
+                      <p style={{ color: '#6B4F43' }}>
+                        {faq.answer}
+                      </p>
 
                       {faq.tags && faq.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-4">
@@ -330,9 +310,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
         data-block-type={block.type}
       >
         <HelpCircle className="w-12 h-12 mb-4 opacity-50" />
-        <p className="text-center">
-          Configure as perguntas frequentes no painel de propriedades.
-        </p>
+        <p className="text-center">Configure as perguntas frequentes no painel de propriedades.</p>
       </div>
     );
   }
@@ -362,12 +340,10 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
             />
           </h2>
           {subtitle && (
-            <p style={{ color: "#6B4F43" }}>
+            <p style={{ color: '#6B4F43' }}>
               <InlineEditableText
                 value={subtitle}
-                onChange={(value: string) =>
-                  handlePropertyChange("subtitle", value)
-                }
+                onChange={(value: string) => handlePropertyChange("subtitle", value)}
                 className="inline-block"
                 placeholder="Subtítulo do FAQ"
               />
@@ -387,9 +363,9 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                 type="text"
                 placeholder={searchPlaceholder}
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ borderColor: "#E5DDD5" }}
-                onClick={(e) => e.stopPropagation()}
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{ borderColor: '#E5DDD5' }}
+                onClick={e => e.stopPropagation()}
               />
             </div>
           )}
@@ -404,14 +380,14 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                     ? "bg-[#B89B7A] text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 )}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   setSelectedCategory("all");
                 }}
               >
                 Todas
               </button>
-              {categories.map((category) => (
+              {categories.map(category => (
                 <button
                   key={category}
                   className={cn(
@@ -420,7 +396,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                       ? "bg-[#B89B7A] text-white"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   )}
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     setSelectedCategory(category || "all");
                   }}
@@ -442,12 +418,10 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
         ) : (
           <div className="text-center py-12">
             <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p style={{ color: "#8B7355" }}>
-              Nenhuma pergunta encontrada para "{searchTerm}"
-            </p>
+            <p style={{ color: '#8B7355' }}>Nenhuma pergunta encontrada para "{searchTerm}"</p>
             <button
               className="mt-4 text-[#B89B7A] hover:underline"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 setSearchTerm("");
                 setSelectedCategory("all");
@@ -461,7 +435,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
 
       {/* Stats */}
       <div className="max-w-4xl mx-auto mt-8 text-center">
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <div className="flex items-center gap-1">
             <MessageSquare className="w-4 h-4" />
             <span>{filteredFAQs.length} pergunta(s)</span>

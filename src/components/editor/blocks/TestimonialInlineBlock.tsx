@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../../../lib/utils";
+import { cn } from "@/lib/utils";
 import { Quote, Star, Edit3 } from "lucide-react";
 
 interface TestimonialInlineBlockProps {
@@ -20,14 +20,7 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix =
-    type === "top"
-      ? "mt"
-      : type === "bottom"
-        ? "mb"
-        : type === "left"
-          ? "ml"
-          : "mr";
+  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -118,7 +111,7 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
         {/* Testimonial Text */}
         <p
           className="text-sm text-[#432818] mb-2 line-clamp-3 italic"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
               const newText = prompt("Novo depoimento:", text);
@@ -133,7 +126,7 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
         <div className="text-xs text-[#8F7A6A]">
           <span
             className="font-medium"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
                 const newName = prompt("Novo nome:", authorName);
@@ -147,12 +140,11 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
             <>
               <span className="mx-1">•</span>
               <span
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   if (onPropertyChange && !disabled) {
                     const newRole = prompt("Novo cargo/descrição:", authorRole);
-                    if (newRole !== null)
-                      onPropertyChange("authorRole", newRole);
+                    if (newRole !== null) onPropertyChange("authorRole", newRole);
                   }
                 }}
               >

@@ -1,25 +1,15 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Input } from "../../../components/ui/input";
-import { Label } from "../../../components/ui/label";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../../../components/ui/tabs";
-import { styleConfig } from "../../../data/styleConfig";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { styleConfig } from "@/data/styleConfig";
 import React, { useState } from "react";
 import StyleResultsEditor from "./StyleResultsEditor";
 
 interface FinalStepEditorProps {
-  stepConfig?: {
-    stepNumber?: number;
-    title?: string;
+  stepConfig: {
+    stepNumber: number;
+    title: string;
     subtitle?: string;
     styleResult?: {
       selectedStyle: string;
@@ -30,17 +20,11 @@ interface FinalStepEditorProps {
   onChange: (config: any) => void;
 }
 
-const FinalStepEditor: React.FC<FinalStepEditorProps> = ({
-  stepConfig,
-  onChange,
-}) => {
+const FinalStepEditor: React.FC<FinalStepEditorProps> = ({ stepConfig, onChange }) => {
   const [activeTab, setActiveTab] = useState("general");
 
   // ✅ CORREÇÃO: Validação e valores padrão mais robustos
-  console.log("🎯 FinalStepEditor recebeu:", {
-    stepConfig,
-    onChange: !!onChange,
-  });
+  console.log("🎯 FinalStepEditor recebeu:", { stepConfig, onChange: !!onChange });
 
   const safeStepConfig = stepConfig || {};
   const {
@@ -55,9 +39,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({
   } = safeStepConfig;
 
   // ✅ CORREÇÃO: Função para atualizar com validação
-  const updateConfig = (
-    updates: Partial<FinalStepEditorProps["stepConfig"]>
-  ) => {
+  const updateConfig = (updates: Partial<FinalStepEditorProps["stepConfig"]>) => {
     console.log("🚀 FinalStepEditor.updateConfig chamado:", {
       updates,
       currentConfig: safeStepConfig,
@@ -86,11 +68,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({
 
   return (
     <div className="space-y-6">
-      <Tabs
-        defaultValue="general"
-        value={activeTab}
-        onValueChange={setActiveTab}
-      >
+      <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full">
           <TabsTrigger value="general" className="flex-1">
             Geral
@@ -112,9 +90,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({
                   id="step-number"
                   type="number"
                   value={stepNumber}
-                  onChange={(e) =>
-                    updateConfig({ stepNumber: Number(e.target.value) })
-                  }
+                  onChange={e => updateConfig({ stepNumber: Number(e.target.value) })}
                 />
               </div>
 
@@ -123,7 +99,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({
                 <Input
                   id="step-title"
                   value={title}
-                  onChange={(e) => updateConfig({ title: e.target.value })}
+                  onChange={e => updateConfig({ title: e.target.value })}
                 />
               </div>
 
@@ -132,7 +108,7 @@ const FinalStepEditor: React.FC<FinalStepEditorProps> = ({
                 <Input
                   id="step-subtitle"
                   value={subtitle}
-                  onChange={(e) => updateConfig({ subtitle: e.target.value })}
+                  onChange={e => updateConfig({ subtitle: e.target.value })}
                 />
               </div>
             </CardContent>

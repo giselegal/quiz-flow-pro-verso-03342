@@ -1,22 +1,14 @@
 import { useEffect, useCallback } from "react";
-import { useScrollSync } from "../context/ScrollSyncContext";
+import { useScrollSync } from "@/context/ScrollSyncContext";
 
 interface UseSyncedScrollOptions {
   source: "canvas" | "components" | "properties";
   enabled?: boolean;
 }
 
-export const useSyncedScroll = ({
-  source,
-  enabled = true,
-}: UseSyncedScrollOptions) => {
-  const {
-    canvasScrollRef,
-    componentsScrollRef,
-    propertiesScrollRef,
-    syncScroll,
-    isScrolling,
-  } = useScrollSync();
+export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptions) => {
+  const { canvasScrollRef, componentsScrollRef, propertiesScrollRef, syncScroll, isScrolling } =
+    useScrollSync();
 
   const getScrollRef = () => {
     switch (source) {
