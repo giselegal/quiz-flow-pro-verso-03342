@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import { Type } from "lucide-react";
+import React, { useState } from "react";
 
 // Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
@@ -16,10 +16,9 @@ import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlo
 
 // Context & Hooks
 import { useEditor } from "@/context/EditorContext";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePropertyHistory } from "@/hooks/usePropertyHistory";
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
