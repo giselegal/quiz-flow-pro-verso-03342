@@ -1,31 +1,29 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Palette, 
-  Type, 
-  Settings, 
-  Eye, 
-  Trash2, 
-  Copy, 
-  RotateCcw, 
+import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import type { BlockData } from "@/types/blocks";
+import {
+  Copy,
+  Eye,
   Info,
   Monitor,
+  Palette,
+  RotateCcw,
+  Settings,
   Smartphone,
-  Tablet
+  Tablet,
+  Trash2,
+  Type,
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
+import React, { useState } from "react";
 
 interface EnhancedPropertiesPanelProps {
   selectedBlock?: BlockData | null;
@@ -34,8 +32,8 @@ interface EnhancedPropertiesPanelProps {
   onDuplicate?: () => void;
   onReset?: () => void;
   onClose?: () => void;
-  previewMode?: 'desktop' | 'tablet' | 'mobile';
-  onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
+  previewMode?: "desktop" | "tablet" | "mobile";
+  onPreviewModeChange?: (mode: "desktop" | "tablet" | "mobile") => void;
 }
 
 // Definições de propriedades por categoria
@@ -45,50 +43,90 @@ const PROPERTY_CATEGORIES = {
     label: "Visual",
     description: "Cores, tipografia e estilo",
     properties: [
-      'backgroundColor', 'color', 'primaryColor', 'secondaryColor', 'accentColor',
-      'borderColor', 'borderWidth', 'borderRadius', 'shadow', 'gradient'
-    ]
+      "backgroundColor",
+      "color",
+      "primaryColor",
+      "secondaryColor",
+      "accentColor",
+      "borderColor",
+      "borderWidth",
+      "borderRadius",
+      "shadow",
+      "gradient",
+    ],
   },
   content: {
     icon: Type,
     label: "Conteúdo",
     description: "Texto, imagens e mídia",
     properties: [
-      'content', 'text', 'title', 'description', 'imageUrl', 'logoUrl',
-      'placeholder', 'label', 'value', 'options'
-    ]
+      "content",
+      "text",
+      "title",
+      "description",
+      "imageUrl",
+      "logoUrl",
+      "placeholder",
+      "label",
+      "value",
+      "options",
+    ],
   },
   layout: {
     icon: Settings,
     label: "Layout",
     description: "Tamanho, espaçamento e posição",
     properties: [
-      'width', 'height', 'padding', 'margin', 'marginTop', 'marginBottom',
-      'marginLeft', 'marginRight', 'spacing', 'gap', 'columns', 'alignment'
-    ]
+      "width",
+      "height",
+      "padding",
+      "margin",
+      "marginTop",
+      "marginBottom",
+      "marginLeft",
+      "marginRight",
+      "spacing",
+      "gap",
+      "columns",
+      "alignment",
+    ],
   },
   behavior: {
     icon: Settings,
     label: "Comportamento",
     description: "Interatividade e funcionalidade",
     properties: [
-      'onClick', 'href', 'target', 'validation', 'required', 'disabled',
-      'multiSelect', 'maxSelections', 'minSelections', 'animation'
-    ]
-  }
+      "onClick",
+      "href",
+      "target",
+      "validation",
+      "required",
+      "disabled",
+      "multiSelect",
+      "maxSelections",
+      "minSelections",
+      "animation",
+    ],
+  },
 };
 
 // Mapeamento de tipos de propriedades
 const getPropertyType = (key: string, value: any): string => {
-  if (typeof value === 'boolean') return 'boolean';
-  if (typeof value === 'number') return 'number';
-  if (key.toLowerCase().includes('color')) return 'color';
-  if (key.toLowerCase().includes('url') || key.toLowerCase().includes('href')) return 'url';
-  if (key === 'options' || Array.isArray(value)) return 'array';
-  if (key.toLowerCase().includes('margin') || key.toLowerCase().includes('padding')) return 'spacing';
-  if (key.toLowerCase().includes('size') || key.toLowerCase().includes('width') || key.toLowerCase().includes('height')) return 'size';
-  if (value && typeof value === 'string' && value.length > 50) return 'textarea';
-  return 'string';
+  if (typeof value === "boolean") return "boolean";
+  if (typeof value === "number") return "number";
+  if (key.toLowerCase().includes("color")) return "color";
+  if (key.toLowerCase().includes("url") || key.toLowerCase().includes("href")) return "url";
+  if (key === "options" || Array.isArray(value)) return "array";
+  if (key.toLowerCase().includes("margin") || key.toLowerCase().includes("padding"))
+    return "spacing";
+  if (
+    key.toLowerCase().includes("size") ||
+    key.toLowerCase().includes("width") ||
+    key.toLowerCase().includes("height")
+  )
+    return "size";
+  if (value && typeof value === "string" && value.length > 50) return "textarea";
+  return "string";
 };
 
 const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
@@ -98,11 +136,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   onDuplicate,
   onReset,
   onClose,
-  previewMode = 'desktop',
+  previewMode = "desktop",
   onPreviewModeChange,
 }) => {
-  const [activeTab, setActiveTab] = useState('visual');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState("visual");
+  const [searchTerm, setSearchTerm] = useState("");
 
   if (!selectedBlock) {
     return (
@@ -112,9 +150,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             <Eye className="w-8 h-8 text-[#B89B7A]" />
           </div>
           <CardTitle className="text-[#432818]">Nenhum Bloco Selecionado</CardTitle>
-          <CardDescription>
-            Selecione um bloco no editor para ver suas propriedades
-          </CardDescription>
+          <CardDescription>Selecione um bloco no editor para ver suas propriedades</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -125,8 +161,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       onUpdate({
         properties: {
           ...selectedBlock.properties,
-          [key]: value
-        }
+          [key]: value,
+        },
       });
     }
   };
@@ -138,7 +174,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       content: [],
       layout: [],
       behavior: [],
-      other: []
+      other: [],
     };
 
     if (selectedBlock.properties) {
@@ -163,10 +199,10 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   // Renderizar controle baseado no tipo da propriedade
   const renderPropertyControl = (key: string, value: any) => {
     const type = getPropertyType(key, value);
-    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
 
     switch (type) {
-      case 'boolean':
+      case "boolean":
         return (
           <div key={key} className="flex items-center justify-between">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -175,12 +211,12 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             <Switch
               id={key}
               checked={value || false}
-              onCheckedChange={(checked) => updateProperty(key, checked)}
+              onCheckedChange={checked => updateProperty(key, checked)}
             />
           </div>
         );
 
-      case 'color':
+      case "color":
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -190,13 +226,13 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               <Input
                 id={key}
                 type="color"
-                value={value || '#000000'}
-                onChange={(e) => updateProperty(key, e.target.value)}
+                value={value || "#000000"}
+                onChange={e => updateProperty(key, e.target.value)}
                 className="w-12 h-10 border-[#B89B7A]/30 cursor-pointer"
               />
               <Input
-                value={value || '#000000'}
-                onChange={(e) => updateProperty(key, e.target.value)}
+                value={value || "#000000"}
+                onChange={e => updateProperty(key, e.target.value)}
                 className="flex-1 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
                 placeholder="#000000"
               />
@@ -204,9 +240,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         );
 
-      case 'number':
-      case 'spacing':
-      case 'size':
+      case "number":
+      case "spacing":
+      case "size":
         return (
           <div key={key} className="space-y-2">
             <div className="flex justify-between">
@@ -214,20 +250,21 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 {label}
               </Label>
               <span className="text-[#B89B7A] text-sm font-mono">
-                {value || 0}{type === 'spacing' || type === 'size' ? 'px' : ''}
+                {value || 0}
+                {type === "spacing" || type === "size" ? "px" : ""}
               </span>
             </div>
             <Slider
               value={[value || 0]}
-              onValueChange={(values) => updateProperty(key, values[0])}
-              max={type === 'spacing' ? 100 : type === 'size' ? 500 : 1000}
+              onValueChange={values => updateProperty(key, values[0])}
+              max={type === "spacing" ? 100 : type === "size" ? 500 : 1000}
               step={1}
               className="w-full"
             />
           </div>
         );
 
-      case 'textarea':
+      case "textarea":
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -235,8 +272,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             </Label>
             <Textarea
               id={key}
-              value={value || ''}
-              onChange={(e) => updateProperty(key, e.target.value)}
+              value={value || ""}
+              onChange={e => updateProperty(key, e.target.value)}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20 min-h-[80px]"
               placeholder={`Digite o ${label.toLowerCase()}...`}
             />
@@ -251,8 +288,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             </Label>
             <Input
               id={key}
-              value={value || ''}
-              onChange={(e) => updateProperty(key, e.target.value)}
+              value={value || ""}
+              onChange={e => updateProperty(key, e.target.value)}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
               placeholder={`Digite o ${label.toLowerCase()}...`}
             />
@@ -262,8 +299,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   };
 
   const organizedProperties = organizeProperties();
-  const filteredProperties = searchTerm 
-    ? Object.entries(selectedBlock.properties || {}).filter(([key]) => 
+  const filteredProperties = searchTerm
+    ? Object.entries(selectedBlock.properties || {}).filter(([key]) =>
         key.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : null;
@@ -293,10 +330,8 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               </Button>
             )}
           </div>
-          
-          <CardTitle className="text-lg text-[#432818]">
-            Propriedades do Bloco
-          </CardTitle>
+
+          <CardTitle className="text-lg text-[#432818]">Propriedades do Bloco</CardTitle>
 
           {/* Controles de preview e ações */}
           <div className="flex items-center gap-2 pt-2">
@@ -305,9 +340,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === 'desktop' ? 'default' : 'ghost'}
+                      variant={previewMode === "desktop" ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => onPreviewModeChange?.('desktop')}
+                      onClick={() => onPreviewModeChange?.("desktop")}
                       className="px-2"
                     >
                       <Monitor className="w-4 h-4" />
@@ -316,14 +351,14 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                   <TooltipContent>Desktop</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              
+
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === 'tablet' ? 'default' : 'ghost'}
+                      variant={previewMode === "tablet" ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => onPreviewModeChange?.('tablet')}
+                      onClick={() => onPreviewModeChange?.("tablet")}
                       className="px-2"
                     >
                       <Tablet className="w-4 h-4" />
@@ -337,9 +372,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === 'mobile' ? 'default' : 'ghost'}
+                      variant={previewMode === "mobile" ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => onPreviewModeChange?.('mobile')}
+                      onClick={() => onPreviewModeChange?.("mobile")}
                       className="px-2"
                     >
                       <Smartphone className="w-4 h-4" />
@@ -376,7 +411,12 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               {onDelete && (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="ghost" size="sm" onClick={onDelete} className="text-red-500 hover:text-red-700">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={onDelete}
+                      className="text-red-500 hover:text-red-700"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
@@ -391,7 +431,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             <Input
               placeholder="Buscar propriedades..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
             />
           </div>
@@ -404,9 +444,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               <p className="text-sm text-gray-600">
                 {filteredProperties.length} propriedades encontradas
               </p>
-              {filteredProperties.map(([key, value]) => 
-                renderPropertyControl(key, value)
-              )}
+              {filteredProperties.map(([key, value]) => renderPropertyControl(key, value))}
             </div>
           ) : (
             // Modo de categorias
@@ -415,14 +453,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 {Object.entries(PROPERTY_CATEGORIES).map(([key, category]) => {
                   const Icon = category.icon;
                   const count = organizedProperties[key]?.length || 0;
-                  
+
                   return (
-                    <TabsTrigger 
-                      key={key} 
-                      value={key} 
-                      className="relative"
-                      disabled={count === 0}
-                    >
+                    <TabsTrigger key={key} value={key} className="relative" disabled={count === 0}>
                       <Icon className="w-4 h-4" />
                       {count > 0 && (
                         <span className="absolute -top-1 -right-1 bg-[#B89B7A] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -443,12 +476,12 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                     </h3>
                     <p className="text-sm text-gray-600">{category.description}</p>
                   </div>
-                  
+
                   <Separator className="bg-[#B89B7A]/20" />
 
                   {organizedProperties[key]?.length > 0 ? (
                     <div className="space-y-4">
-                      {organizedProperties[key].map(propertyKey => 
+                      {organizedProperties[key].map(propertyKey =>
                         renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey])
                       )}
                     </div>
@@ -468,11 +501,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                     <h3 className="font-medium text-[#432818]">Outras Propriedades</h3>
                     <p className="text-sm text-gray-600">Propriedades específicas do componente</p>
                   </div>
-                  
+
                   <Separator className="bg-[#B89B7A]/20" />
 
                   <div className="space-y-4">
-                    {organizedProperties.other.map(propertyKey => 
+                    {organizedProperties.other.map(propertyKey =>
                       renderPropertyControl(propertyKey, selectedBlock.properties?.[propertyKey])
                     )}
                   </div>

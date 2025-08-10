@@ -1,22 +1,14 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Undo2, 
-  Redo2, 
-  Save, 
-  AlertCircle, 
-  CheckCircle, 
-  Clock,
-  History
-} from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { BlockData } from "@/types/blocks";
+import { AlertCircle, CheckCircle, Clock, History, Redo2, Save, Undo2 } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface EditorAction {
-  type: 'add' | 'update' | 'delete' | 'move';
+  type: "add" | "update" | "delete" | "move";
   blockId: string;
   previousState?: BlockData;
   newState?: BlockData;
@@ -42,7 +34,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
   onBlocksChange,
   onSave,
   autoSave = true,
-  className
+  className,
 }) => {
   const [history, setHistory] = useState<EditorAction[]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -51,9 +43,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
   const [validationResult, setValidationResult] = useState<ValidationResult>({
     isValid: true,
     warnings: [],
-    errors: []
+    errors: [],
   });
-  
+
   const previousBlocksRef = useRef<BlockData[]>(blocks);
   const autoSaveTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -67,32 +59,32 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       if (!block.id) {
         errors.push(`Bloco sem ID encontrado`);
       }
-      
+
       if (!block.type) {
         errors.push(`Bloco ${block.id} sem tipo definido`);
       }
 
       // Validações específicas por tipo
-      if (block.type === 'options-grid') {
+      if (block.type === "options-grid") {
         const options = block.properties?.options;
         if (!options || !Array.isArray(options) || options.length === 0) {
           warnings.push(`Grade de opções ${block.id} está vazia`);
         }
       }
 
-      if (block.type === 'text-inline' || block.type === 'heading-inline') {
+      if (block.type === "text-inline" || block.type === "heading-inline") {
         if (!block.properties?.content) {
           warnings.push(`Bloco de texto ${block.id} está vazio`);
         }
       }
 
-      if (block.type === 'image-display-inline') {
+      if (block.type === "image-display-inline") {
         if (!block.properties?.imageUrl) {
           warnings.push(`Bloco de imagem ${block.id} sem URL`);
         }
       }
 
-      if (block.type === 'button-inline') {
+      if (block.type === "button-inline") {
         if (!block.properties?.text) {
           warnings.push(`Botão ${block.id} sem texto`);
         }
@@ -105,27 +97,30 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
     return {
       isValid: errors.length === 0,
       warnings,
-      errors
+      errors,
     };
   }, []);
 
   // Adicionar ação ao histórico
-  const addToHistory = useCallback((action: Omit<EditorAction, 'timestamp'>) => {
-    const newAction: EditorAction = {
-      ...action,
-      timestamp: Date.now()
-    };
+  const addToHistory = useCallback(
+    (action: Omit<EditorAction, "timestamp">) => {
+      const newAction: EditorAction = {
+        ...action,
+        timestamp: Date.now(),
+      };
 
-    setHistory(prev => {
-      const newHistory = prev.slice(0, currentIndex + 1);
-      newHistory.push(newAction);
-      
-      // Limitar histórico a 50 ações
-      return newHistory.slice(-50);
-    });
-    
-    setCurrentIndex(prev => Math.min(prev + 1, 49));
-  }, [currentIndex]);
+      setHistory(prev => {
+        const newHistory = prev.slice(0, currentIndex + 1);
+        newHistory.push(newAction);
+
+        // Limitar histórico a 50 ações
+        return newHistory.slice(-50);
+      });
+
+      setCurrentIndex(prev => Math.min(prev + 1, 49));
+    },
+    [currentIndex]
+  );
 
   // Detectar mudanças nos blocos
   useEffect(() => {
@@ -141,9 +136,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       currentBlocks.forEach(block => {
         if (!previousIds.has(block.id)) {
           addToHistory({
-            type: 'add',
+            type: "add",
             blockId: block.id,
-            newState: block
+            newState: block,
           });
         }
       });
@@ -152,9 +147,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
       previousBlocks.forEach(block => {
         if (!currentIds.has(block.id)) {
           addToHistory({
-            type: 'delete',
+            type: "delete",
             blockId: block.id,
-            previousState: block
+            previousState: block,
           });
         }
       });
@@ -164,19 +159,19 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         const previousBlock = previousBlocks.find(b => b.id === currentBlock.id);
         if (previousBlock && JSON.stringify(currentBlock) !== JSON.stringify(previousBlock)) {
           addToHistory({
-            type: 'update',
+            type: "update",
             blockId: currentBlock.id,
             previousState: previousBlock,
-            newState: currentBlock
+            newState: currentBlock,
           });
         }
       });
 
       previousBlocksRef.current = currentBlocks;
-      
+
       // Validar após mudança
       setValidationResult(validateBlocks(currentBlocks));
-      
+
       // Auto-save
       if (autoSave) {
         if (autoSaveTimeoutRef.current) {
@@ -199,15 +194,15 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
     let newBlocks = [...blocks];
 
     switch (action.type) {
-      case 'add':
+      case "add":
         newBlocks = newBlocks.filter(b => b.id !== action.blockId);
         break;
-      case 'delete':
+      case "delete":
         if (action.previousState) {
           newBlocks.push(action.previousState);
         }
         break;
-      case 'update':
+      case "update":
         if (action.previousState) {
           const index = newBlocks.findIndex(b => b.id === action.blockId);
           if (index !== -1) {
@@ -229,15 +224,15 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
     let newBlocks = [...blocks];
 
     switch (action.type) {
-      case 'add':
+      case "add":
         if (action.newState) {
           newBlocks.push(action.newState);
         }
         break;
-      case 'delete':
+      case "delete":
         newBlocks = newBlocks.filter(b => b.id !== action.blockId);
         break;
-      case 'update':
+      case "update":
         if (action.newState) {
           const index = newBlocks.findIndex(b => b.id === action.blockId);
           if (index !== -1) {
@@ -253,37 +248,37 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
 
   const handleSave = async () => {
     if (!onSave) return;
-    
+
     setIsSaving(true);
     try {
       await onSave();
       setLastSaved(Date.now());
     } catch (error) {
-      console.error('Erro ao salvar:', error);
+      console.error("Erro ao salvar:", error);
     } finally {
       setIsSaving(false);
     }
   };
 
   const getLastActionDescription = () => {
-    if (history.length === 0) return 'Nenhuma ação';
-    
+    if (history.length === 0) return "Nenhuma ação";
+
     const lastAction = history[history.length - 1];
     const timeAgo = Math.floor((Date.now() - lastAction.timestamp) / 1000);
-    
-    let description = '';
+
+    let description = "";
     switch (lastAction.type) {
-      case 'add':
-        description = 'Bloco adicionado';
+      case "add":
+        description = "Bloco adicionado";
         break;
-      case 'delete':
-        description = 'Bloco removido';
+      case "delete":
+        description = "Bloco removido";
         break;
-      case 'update':
-        description = 'Bloco atualizado';
+      case "update":
+        description = "Bloco atualizado";
         break;
-      case 'move':
-        description = 'Bloco movido';
+      case "move":
+        description = "Bloco movido";
         break;
     }
 
@@ -318,7 +313,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
             </TooltipTrigger>
             <TooltipContent>Desfazer (Ctrl+Z)</TooltipContent>
           </Tooltip>
-          
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -350,7 +345,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
                   <div className="max-w-xs">
                     <p className="font-medium mb-1">Erros:</p>
                     {validationResult.errors.map((error, i) => (
-                      <p key={i} className="text-sm">• {error}</p>
+                      <p key={i} className="text-sm">
+                        • {error}
+                      </p>
                     ))}
                   </div>
                 </TooltipContent>
@@ -373,7 +370,9 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
                   <div className="max-w-xs">
                     <p className="font-medium mb-1">Avisos:</p>
                     {validationResult.warnings.map((warning, i) => (
-                      <p key={i} className="text-sm">• {warning}</p>
+                      <p key={i} className="text-sm">
+                        • {warning}
+                      </p>
                     ))}
                   </div>
                 </TooltipContent>
@@ -406,7 +405,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
                 className="border-[#B89B7A]/30 hover:border-[#B89B7A]"
               >
                 <Save className={cn("w-4 h-4 mr-1", isSaving && "animate-pulse")} />
-                {isSaving ? 'Salvando...' : 'Salvar'}
+                {isSaving ? "Salvando..." : "Salvar"}
               </Button>
 
               <Tooltip>

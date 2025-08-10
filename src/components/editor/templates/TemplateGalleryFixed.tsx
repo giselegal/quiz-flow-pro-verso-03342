@@ -1,5 +1,4 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+import React, { useState } from "react";
+// Update the import path below if your Input component is located elsewhere, for example:
+import { Input } from "../../ui/input";
+// Or, if using a library like 'shadcn/ui':
+// import { Input } from 'shadcn-ui';
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -38,7 +42,6 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
-import React, { useState } from "react";
 
 // Tipos do Template
 interface Template {

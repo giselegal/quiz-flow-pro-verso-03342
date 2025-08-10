@@ -1,44 +1,34 @@
-import React, { useState, useCallback } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { cn } from "@/lib/utils";
+import type { BlockData } from "@/types/blocks";
 import {
-  DndContext,
   closestCenter,
+  defaultDropAnimationSideEffects,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  DropAnimation,
   KeyboardSensor,
+  MeasuringStrategy,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
-  DragStartEvent,
-  DragOverlay,
-  MeasuringStrategy,
-  DropAnimation,
-  defaultDropAnimationSideEffects,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
   useSortable,
-} from '@dnd-kit/sortable';
-import {
-  CSS,
-} from '@dnd-kit/utilities';
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  GripVertical,
-  Eye,
-  Copy,
-  Trash2,
-  Plus,
-  Settings,
-  Move3D
-} from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Copy, Eye, GripVertical, Move3D, Plus, Trash2 } from "lucide-react";
+import React, { useCallback, useState } from "react";
 
 interface DraggableBlockProps {
   block: BlockData;
@@ -67,19 +57,12 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   isOverlay,
   onSelect,
   onDuplicate,
-  onDelete
+  onDelete,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
-      type: 'Block',
+      type: "Block",
       block,
     },
   });
@@ -93,42 +76,48 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
     onSelect?.(block.id);
   }, [onSelect, block.id]);
 
-  const handleDuplicate = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDuplicate?.(block.id);
-  }, [onDuplicate, block.id]);
+  const handleDuplicate = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onDuplicate?.(block.id);
+    },
+    [onDuplicate, block.id]
+  );
 
-  const handleDelete = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete?.(block.id);
-  }, [onDelete, block.id]);
+  const handleDelete = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onDelete?.(block.id);
+    },
+    [onDelete, block.id]
+  );
 
   // Simular preview do bloco baseado no tipo
   const renderBlockPreview = () => {
     const component = getBlockComponent(block.type);
-    
+
     switch (block.type) {
-      case 'text-inline':
-      case 'heading-inline':
+      case "text-inline":
+      case "heading-inline":
         return (
           <div className="space-y-2">
             <div className="h-3 bg-gray-300 rounded w-3/4"></div>
             <div className="h-3 bg-gray-200 rounded w-1/2"></div>
           </div>
         );
-      case 'image-display-inline':
+      case "image-display-inline":
         return (
           <div className="h-16 bg-gray-200 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
             <span className="text-gray-500 text-xs">📷 Imagem</span>
           </div>
         );
-      case 'button-inline':
+      case "button-inline":
         return (
           <div className="bg-[#B89B7A] text-white px-4 py-2 rounded text-center text-sm">
-            {block.properties?.text || 'Botão'}
+            {block.properties?.text || "Botão"}
           </div>
         );
-      case 'options-grid':
+      case "options-grid":
         return (
           <div className="grid grid-cols-2 gap-2">
             {[1, 2, 3, 4].map(i => (
@@ -155,7 +144,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
         isOverlay && "rotate-3 scale-105 shadow-2xl"
       )}
     >
-      <Card 
+      <Card
         className={cn(
           "cursor-pointer transition-all duration-200 hover:shadow-md",
           isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2 bg-[#B89B7A]/5" : "hover:bg-gray-50",
@@ -181,8 +170,8 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
               </div>
 
               {/* Block Type Badge */}
-              <Badge 
-                variant="outline" 
+              <Badge
+                variant="outline"
                 className={cn(
                   "text-xs",
                   isSelected ? "bg-[#B89B7A] text-white border-[#B89B7A]" : ""
@@ -195,15 +184,20 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
               {getBlockComponent(block.type) ? (
                 <div className="w-2 h-2 bg-green-500 rounded-full" title="Componente disponível" />
               ) : (
-                <div className="w-2 h-2 bg-red-500 rounded-full" title="Componente não encontrado" />
+                <div
+                  className="w-2 h-2 bg-red-500 rounded-full"
+                  title="Componente não encontrado"
+                />
               )}
             </div>
 
             {/* Actions */}
-            <div className={cn(
-              "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity",
-              isSelected && "opacity-100"
-            )}>
+            <div
+              className={cn(
+                "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity",
+                isSelected && "opacity-100"
+              )}
+            >
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -243,7 +237,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
           {/* Preview do conteúdo do bloco */}
           <div className="space-y-2">
             {renderBlockPreview()}
-            
+
             {/* Informações adicionais */}
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span>ID: {block.id.slice(-8)}</span>
@@ -267,7 +261,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
   onBlockDuplicate,
   onBlockDelete,
   onAddNewBlock,
-  className
+  className,
 }) => {
   const [activeId, setActiveId] = useState<string | null>(null);
   const sensors = useSensors(
@@ -285,23 +279,26 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
     setActiveId(event.active.id as string);
   }, []);
 
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
 
-    if (active.id !== over?.id) {
-      const oldIndex = blocks.findIndex(block => block.id === active.id);
-      const newIndex = blocks.findIndex(block => block.id === over?.id);
+      if (active.id !== over?.id) {
+        const oldIndex = blocks.findIndex(block => block.id === active.id);
+        const newIndex = blocks.findIndex(block => block.id === over?.id);
 
-      const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex).map((block, index) => ({
-        ...block,
-        position: index
-      }));
+        const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex).map((block, index) => ({
+          ...block,
+          position: index,
+        }));
 
-      onBlocksReorder(reorderedBlocks);
-    }
+        onBlocksReorder(reorderedBlocks);
+      }
 
-    setActiveId(null);
-  }, [blocks, onBlocksReorder]);
+      setActiveId(null);
+    },
+    [blocks, onBlocksReorder]
+  );
 
   const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -322,19 +319,13 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <Move3D className="w-5 h-5 text-[#B89B7A]" />
-            <h3 className="text-lg font-medium text-[#432818]">
-              Editor de Blocos
-            </h3>
+            <h3 className="text-lg font-medium text-[#432818]">Editor de Blocos</h3>
             <Badge variant="secondary" className="bg-[#B89B7A]/10 text-[#432818]">
               {blocks.length} blocos
             </Badge>
           </div>
 
-          <Button
-            onClick={onAddNewBlock}
-            size="sm"
-            className="bg-[#B89B7A] hover:bg-[#B89B7A]/90"
-          >
+          <Button onClick={onAddNewBlock} size="sm" className="bg-[#B89B7A] hover:bg-[#B89B7A]/90">
             <Plus className="w-4 h-4 mr-1" />
             Novo Bloco
           </Button>
@@ -358,7 +349,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
               strategy={verticalListSortingStrategy}
             >
               <div className="space-y-3">
-                {blocks.map((block) => (
+                {blocks.map(block => (
                   <DraggableBlock
                     key={block.id}
                     block={block}
@@ -373,12 +364,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
 
             {/* Overlay durante drag */}
             <DragOverlay dropAnimation={dropAnimation}>
-              {activeBlock ? (
-                <DraggableBlock
-                  block={activeBlock}
-                  isOverlay
-                />
-              ) : null}
+              {activeBlock ? <DraggableBlock block={activeBlock} isOverlay /> : null}
             </DragOverlay>
           </DndContext>
 
@@ -389,10 +375,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
                 <Move3D className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium">Nenhum bloco adicionado</p>
                 <p className="text-sm mb-4">Adicione blocos para começar a editar</p>
-                <Button
-                  onClick={onAddNewBlock}
-                  className="bg-[#B89B7A] hover:bg-[#B89B7A]/90"
-                >
+                <Button onClick={onAddNewBlock} className="bg-[#B89B7A] hover:bg-[#B89B7A]/90">
                   <Plus className="w-4 h-4 mr-1" />
                   Adicionar Primeiro Bloco
                 </Button>

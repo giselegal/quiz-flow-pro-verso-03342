@@ -1,27 +1,18 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Separator } from "@/components/ui/separator";
-import { 
-  PanelLeft,
-  PanelRight,
-  Settings,
-  Eye,
-  Save,
-  FileText,
-  Layers
-} from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { FileText, Layers, PanelLeft, PanelRight } from "lucide-react";
+import React, { useCallback, useMemo, useState } from "react";
 
 // Importar nossos novos componentes
-import EnhancedPropertiesPanel from "./properties/EnhancedPropertiesPanel";
-import ResponsivePreview from "./preview/ResponsivePreview";
-import ComponentsLibrary from "./sidebar/ComponentsLibrary";
-import EditorHistory from "./history/EditorHistory";
 import type { BlockData } from "@/types/blocks";
+import EditorHistory from "./history/EditorHistory";
+import ResponsivePreview from "./preview/ResponsivePreview";
+import EnhancedPropertiesPanel from "./properties/EnhancedPropertiesPanel";
+import ComponentsLibrary from "./sidebar/ComponentsLibrary";
 
 interface ImprovedEditorProps {
   initialBlocks?: BlockData[];
@@ -38,54 +29,61 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
   onBlocksChange,
   className,
   title = "Editor de Quiz",
-  stepNumber
+  stepNumber,
 }) => {
   const [blocks, setBlocks] = useState<BlockData[]>(initialBlocks);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
   const [rightPanelVisible, setRightPanelVisible] = useState(true);
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
   // Bloco selecionado
-  const selectedBlock = useMemo(() => 
-    blocks.find(block => block.id === selectedBlockId) || null,
+  const selectedBlock = useMemo(
+    () => blocks.find(block => block.id === selectedBlockId) || null,
     [blocks, selectedBlockId]
   );
 
   // Handlers
-  const handleBlocksChange = useCallback((newBlocks: BlockData[]) => {
-    setBlocks(newBlocks);
-    onBlocksChange?.(newBlocks);
-  }, [onBlocksChange]);
+  const handleBlocksChange = useCallback(
+    (newBlocks: BlockData[]) => {
+      setBlocks(newBlocks);
+      onBlocksChange?.(newBlocks);
+    },
+    [onBlocksChange]
+  );
 
   const handleBlockSelect = useCallback((blockId: string) => {
     setSelectedBlockId(blockId);
   }, []);
 
-  const handleBlockUpdate = useCallback((updates: Partial<BlockData>) => {
-    if (!selectedBlockId) return;
+  const handleBlockUpdate = useCallback(
+    (updates: Partial<BlockData>) => {
+      if (!selectedBlockId) return;
 
-    const newBlocks = blocks.map(block =>
-      block.id === selectedBlockId
-        ? { ...block, ...updates }
-        : block
-    );
+      const newBlocks = blocks.map(block =>
+        block.id === selectedBlockId ? { ...block, ...updates } : block
+      );
 
-    handleBlocksChange(newBlocks);
-  }, [selectedBlockId, blocks, handleBlocksChange]);
+      handleBlocksChange(newBlocks);
+    },
+    [selectedBlockId, blocks, handleBlocksChange]
+  );
 
-  const handleAddBlock = useCallback((blockType: string) => {
-    const newBlock: BlockData = {
-      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      type: blockType,
-      properties: {},
-      position: blocks.length
-    };
+  const handleAddBlock = useCallback(
+    (blockType: string) => {
+      const newBlock: BlockData = {
+        id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: blockType,
+        properties: {},
+        position: blocks.length,
+      };
 
-    const newBlocks = [...blocks, newBlock];
-    handleBlocksChange(newBlocks);
-    setSelectedBlockId(newBlock.id);
-  }, [blocks, handleBlocksChange]);
+      const newBlocks = [...blocks, newBlock];
+      handleBlocksChange(newBlocks);
+      setSelectedBlockId(newBlock.id);
+    },
+    [blocks, handleBlocksChange]
+  );
 
   const handleBlockDelete = useCallback(() => {
     if (!selectedBlockId) return;
@@ -101,7 +99,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
     const duplicatedBlock: BlockData = {
       ...selectedBlock,
       id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      position: blocks.length
+      position: blocks.length,
     };
 
     const newBlocks = [...blocks, duplicatedBlock];
@@ -113,9 +111,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
     if (!selectedBlockId) return;
 
     const newBlocks = blocks.map(block =>
-      block.id === selectedBlockId
-        ? { ...block, properties: {} }
-        : block
+      block.id === selectedBlockId ? { ...block, properties: {} } : block
     );
 
     handleBlocksChange(newBlocks);
@@ -141,9 +137,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                 </div>
                 <div>
                   <h1 className="text-xl font-semibold text-[#432818]">{title}</h1>
-                  {stepNumber && (
-                    <p className="text-sm text-gray-600">Etapa {stepNumber}</p>
-                  )}
+                  {stepNumber && <p className="text-sm text-gray-600">Etapa {stepNumber}</p>}
                 </div>
               </div>
 
@@ -188,7 +182,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {leftPanelVisible ? 'Ocultar' : 'Mostrar'} Biblioteca
+                    {leftPanelVisible ? "Ocultar" : "Mostrar"} Biblioteca
                   </TooltipContent>
                 </Tooltip>
 
@@ -203,7 +197,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {rightPanelVisible ? 'Ocultar' : 'Mostrar'} Propriedades
+                    {rightPanelVisible ? "Ocultar" : "Mostrar"} Propriedades
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -219,9 +213,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
               <>
                 <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
                   <div className="h-full p-4">
-                    <ComponentsLibrary
-                      onAddBlock={handleAddBlock}
-                    />
+                    <ComponentsLibrary onAddBlock={handleAddBlock} />
                   </div>
                 </ResizablePanel>
                 <ResizableHandle className="w-1 bg-[#B89B7A]/20 hover:bg-[#B89B7A]/40 transition-colors" />
@@ -267,7 +259,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div className="flex items-center gap-4">
               <span>
-                {blocks.length} {blocks.length === 1 ? 'bloco' : 'blocos'}
+                {blocks.length} {blocks.length === 1 ? "bloco" : "blocos"}
               </span>
               {selectedBlock && (
                 <>
@@ -276,7 +268,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                 </>
               )}
             </div>
-            
+
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />

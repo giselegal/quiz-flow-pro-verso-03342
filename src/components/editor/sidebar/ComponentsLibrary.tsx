@@ -1,27 +1,27 @@
-import React, { useState, useMemo } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Search,
-  Plus,
-  Type,
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import { cn } from "@/lib/utils";
+import {
+  BarChart3,
+  Clock,
+  Grid3X3,
   Image,
   MousePointer,
-  Grid3X3,
-  BarChart3,
-  Settings,
   Palette,
+  Plus,
+  Search,
+  Settings,
   Star,
-  Clock,
-  Zap
+  Type,
+  Zap,
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import React, { useMemo, useState } from "react";
 
 interface ComponentsLibraryProps {
   onAddBlock?: (blockType: string) => void;
@@ -42,7 +42,7 @@ const COMPONENT_CATEGORIES = {
         description: "Grid com opções selecionáveis",
         icon: Grid3X3,
         featured: true,
-        tags: ["quiz", "seleção", "grid"]
+        tags: ["quiz", "seleção", "grid"],
       },
       {
         type: "quiz-progress",
@@ -50,7 +50,7 @@ const COMPONENT_CATEGORIES = {
         description: "Barra de progresso visual",
         icon: BarChart3,
         featured: true,
-        tags: ["progresso", "navegação"]
+        tags: ["progresso", "navegação"],
       },
       {
         type: "result-style-card",
@@ -58,23 +58,23 @@ const COMPONENT_CATEGORIES = {
         description: "Exibe resultado calculado",
         icon: Star,
         featured: true,
-        tags: ["resultado", "estilo"]
+        tags: ["resultado", "estilo"],
       },
       {
         type: "bonus-showcase",
         name: "Vitrine de Bônus",
         description: "Grid de bônus e ofertas",
         icon: Zap,
-        tags: ["bônus", "oferta", "conversão"]
+        tags: ["bônus", "oferta", "conversão"],
       },
       {
         type: "loading-animation",
         name: "Animação Loading",
         description: "Animações de transição",
         icon: Clock,
-        tags: ["loading", "transição"]
-      }
-    ]
+        tags: ["loading", "transição"],
+      },
+    ],
   },
   content: {
     label: "Conteúdo",
@@ -88,7 +88,7 @@ const COMPONENT_CATEGORIES = {
         description: "Texto formatado",
         icon: Type,
         featured: true,
-        tags: ["texto", "conteúdo"]
+        tags: ["texto", "conteúdo"],
       },
       {
         type: "heading-inline",
@@ -96,9 +96,9 @@ const COMPONENT_CATEGORIES = {
         description: "Títulos e subtítulos",
         icon: Type,
         featured: true,
-        tags: ["título", "heading"]
-      }
-    ]
+        tags: ["título", "heading"],
+      },
+    ],
   },
   interactive: {
     label: "Interativo",
@@ -112,16 +112,16 @@ const COMPONENT_CATEGORIES = {
         description: "Botão clicável",
         icon: MousePointer,
         featured: true,
-        tags: ["botão", "CTA", "ação"]
+        tags: ["botão", "CTA", "ação"],
       },
       {
         type: "form-input",
         name: "Campo de Formulário",
         description: "Input para captura de dados",
         icon: Settings,
-        tags: ["formulário", "input", "dados"]
-      }
-    ]
+        tags: ["formulário", "input", "dados"],
+      },
+    ],
   },
   media: {
     label: "Mídia",
@@ -135,9 +135,9 @@ const COMPONENT_CATEGORIES = {
         description: "Exibir imagens",
         icon: Image,
         featured: true,
-        tags: ["imagem", "mídia"]
-      }
-    ]
+        tags: ["imagem", "mídia"],
+      },
+    ],
   },
   layout: {
     label: "Layout",
@@ -150,50 +150,51 @@ const COMPONENT_CATEGORIES = {
         name: "Espaçador",
         description: "Controla espaçamento",
         icon: Settings,
-        tags: ["espaço", "layout"]
+        tags: ["espaço", "layout"],
       },
       {
         type: "divider",
         name: "Divisor",
         description: "Linha divisória",
         icon: Settings,
-        tags: ["divisor", "separador"]
+        tags: ["divisor", "separador"],
       },
       {
         type: "decorative-bar-inline",
         name: "Barra Decorativa",
         description: "Elemento visual decorativo",
         icon: Palette,
-        tags: ["decoração", "visual"]
-      }
-    ]
-  }
+        tags: ["decoração", "visual"],
+      },
+    ],
+  },
 };
 
-const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
-  onAddBlock,
-  className
-}) => {
-  const [activeCategory, setActiveCategory] = useState('quiz');
-  const [searchTerm, setSearchTerm] = useState('');
+const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, className }) => {
+  const [activeCategory, setActiveCategory] = useState("quiz");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Filtrar componentes baseado na busca
   const filteredComponents = useMemo(() => {
     if (!searchTerm) return null;
-    
+
     const filtered: any[] = [];
     Object.values(COMPONENT_CATEGORIES).forEach(category => {
       category.components.forEach(component => {
         const matchesName = component.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesDescription = component.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesTags = component.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-        
+        const matchesDescription = component.description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const matchesTags = component.tags.some(tag =>
+          tag.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
         if (matchesName || matchesDescription || matchesTags) {
           filtered.push({ ...component, category: category.label });
         }
       });
     });
-    
+
     return filtered;
   }, [searchTerm]);
 
@@ -204,14 +205,14 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
   const renderComponentCard = (component: any, showCategory: boolean = false) => {
     const Icon = component.icon;
     const isAvailable = getBlockComponent(component.type) !== null;
-    
+
     return (
       <TooltipProvider key={component.type}>
-        <Card 
+        <Card
           className={cn(
             "cursor-pointer transition-all duration-200 hover:shadow-md border-2",
-            isAvailable 
-              ? "hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5" 
+            isAvailable
+              ? "hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5"
               : "opacity-60 cursor-not-allowed border-gray-200"
           )}
           onClick={() => isAvailable && handleAddBlock(component.type)}
@@ -219,14 +220,15 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
           <CardContent className="p-4">
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className={cn(
-                  "w-8 h-8 rounded-lg flex items-center justify-center",
-                  isAvailable ? "bg-[#B89B7A]/10" : "bg-gray-100"
-                )}>
-                  <Icon className={cn(
-                    "w-4 h-4",
-                    isAvailable ? "text-[#B89B7A]" : "text-gray-400"
-                  )} />
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-lg flex items-center justify-center",
+                    isAvailable ? "bg-[#B89B7A]/10" : "bg-gray-100"
+                  )}
+                >
+                  <Icon
+                    className={cn("w-4 h-4", isAvailable ? "text-[#B89B7A]" : "text-gray-400")}
+                  />
                 </div>
                 {component.featured && (
                   <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 text-xs">
@@ -234,15 +236,15 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                   </Badge>
                 )}
               </div>
-              
+
               {isAvailable ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="ghost"
                       className="text-[#B89B7A] hover:bg-[#B89B7A]/10"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         handleAddBlock(component.type);
                       }}
@@ -258,28 +260,28 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                 </Badge>
               )}
             </div>
-            
+
             <div className="space-y-2">
-              <h3 className={cn(
-                "font-medium text-sm",
-                isAvailable ? "text-[#432818]" : "text-gray-500"
-              )}>
+              <h3
+                className={cn(
+                  "font-medium text-sm",
+                  isAvailable ? "text-[#432818]" : "text-gray-500"
+                )}
+              >
                 {component.name}
               </h3>
-              
-              <p className="text-xs text-gray-600 line-clamp-2">
-                {component.description}
-              </p>
-              
+
+              <p className="text-xs text-gray-600 line-clamp-2">{component.description}</p>
+
               {showCategory && (
                 <Badge variant="outline" className="text-xs">
                   {component.category}
                 </Badge>
               )}
-              
+
               <div className="flex flex-wrap gap-1 mt-2">
                 {component.tags.slice(0, 3).map((tag: string) => (
-                  <span 
+                  <span
                     key={tag}
                     className="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded"
                   >
@@ -301,17 +303,15 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
           <Grid3X3 className="w-5 h-5" />
           Biblioteca de Componentes
         </CardTitle>
-        <CardDescription>
-          Arraste ou clique para adicionar componentes
-        </CardDescription>
-        
+        <CardDescription>Arraste ou clique para adicionar componentes</CardDescription>
+
         {/* Busca de componentes */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
             placeholder="Buscar componentes..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-10 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
           />
         </div>
@@ -325,60 +325,54 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
               <p className="text-sm text-gray-600">
                 {filteredComponents.length} componentes encontrados
               </p>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setSearchTerm('')}
-              >
+              <Button variant="ghost" size="sm" onClick={() => setSearchTerm("")}>
                 Limpar
               </Button>
             </div>
-            
+
             <div className="grid gap-3">
-              {filteredComponents.map(component => 
-                renderComponentCard(component, true)
-              )}
+              {filteredComponents.map(component => renderComponentCard(component, true))}
             </div>
           </div>
         ) : (
           // Modo de categorias
           <Tabs value={activeCategory} onValueChange={setActiveCategory} className="h-full">
             <TabsList className="grid w-full grid-cols-2 mb-4">
-              {Object.entries(COMPONENT_CATEGORIES).slice(0, 2).map(([key, category]) => {
-                const Icon = category.icon;
-                const componentCount = category.components.length;
-                
-                return (
-                  <TabsTrigger 
-                    key={key} 
-                    value={key} 
-                    className="flex items-center gap-1 text-xs"
-                  >
-                    <Icon className="w-3 h-3" />
-                    {category.label}
-                    <span className="ml-1 text-[#B89B7A]">({componentCount})</span>
-                  </TabsTrigger>
-                );
-              })}
+              {Object.entries(COMPONENT_CATEGORIES)
+                .slice(0, 2)
+                .map(([key, category]) => {
+                  const Icon = category.icon;
+                  const componentCount = category.components.length;
+
+                  return (
+                    <TabsTrigger key={key} value={key} className="flex items-center gap-1 text-xs">
+                      <Icon className="w-3 h-3" />
+                      {category.label}
+                      <span className="ml-1 text-[#B89B7A]">({componentCount})</span>
+                    </TabsTrigger>
+                  );
+                })}
             </TabsList>
-            
+
             <div className="grid grid-cols-3 gap-1 mb-4">
-              {Object.entries(COMPONENT_CATEGORIES).slice(2).map(([key, category]) => {
-                const Icon = category.icon;
-                
-                return (
-                  <Button
-                    key={key}
-                    variant={activeCategory === key ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setActiveCategory(key)}
-                    className="text-xs p-2 h-auto flex flex-col gap-1"
-                  >
-                    <Icon className="w-3 h-3" />
-                    {category.label}
-                  </Button>
-                );
-              })}
+              {Object.entries(COMPONENT_CATEGORIES)
+                .slice(2)
+                .map(([key, category]) => {
+                  const Icon = category.icon;
+
+                  return (
+                    <Button
+                      key={key}
+                      variant={activeCategory === key ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setActiveCategory(key)}
+                      className="text-xs p-2 h-auto flex flex-col gap-1"
+                    >
+                      <Icon className="w-3 h-3" />
+                      {category.label}
+                    </Button>
+                  );
+                })}
             </div>
 
             {Object.entries(COMPONENT_CATEGORIES).map(([key, category]) => (
@@ -393,24 +387,26 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({
                   </div>
                   <p className="text-sm text-gray-600">{category.description}</p>
                 </div>
-                
+
                 <Separator className="bg-[#B89B7A]/20" />
-                
+
                 <div className="grid gap-3">
-                  {category.components.map(component => 
-                    renderComponentCard(component)
-                  )}
+                  {category.components.map(component => renderComponentCard(component))}
                 </div>
               </TabsContent>
             ))}
           </Tabs>
         )}
       </CardContent>
-      
+
       {/* Rodapé com estatísticas */}
       <div className="px-4 py-2 border-t bg-gray-50">
         <div className="text-xs text-gray-600 text-center">
-          {Object.values(COMPONENT_CATEGORIES).reduce((total, cat) => total + cat.components.length, 0)} componentes disponíveis
+          {Object.values(COMPONENT_CATEGORIES).reduce(
+            (total, cat) => total + cat.components.length,
+            0
+          )}{" "}
+          componentes disponíveis
         </div>
       </div>
     </Card>
