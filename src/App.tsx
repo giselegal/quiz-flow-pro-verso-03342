@@ -1,29 +1,43 @@
 import ErrorBoundary from "@/components/common/ErrorBoundary";
-import DebugStep02 from "@/components/debug/DebugStep02";
-import TestAllTemplates from "@/components/debug/TestAllTemplates";
-import TestOptionsRendering from "@/components/debug/TestOptionsRendering";
-import TestStep02Direct from "@/components/debug/TestStep02Direct";
 import { Toaster } from "@/components/ui/toaster";
 import { AdminAuthProvider } from "@/context/AdminAuthContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { EditorProvider } from "@/context/EditorContext";
 import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
-import DebugEditorContext from "@/pages/debug-editor";
-import EditorPage from "@/pages/editor-fixed";
-import TemplatesIA from "@/pages/TemplatesIA";
-import TestButton from "@/pages/test-button";
-import TestPropertiesPanel from "@/pages/test-properties";
+import { lazy, Suspense } from "react";
 import { Route, Router, Switch } from "wouter";
-import MigrationPanel from "./components/admin/MigrationPanel";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import PixelInitializer from "./components/PixelInitializer";
-import QuizPageUser from "./components/QuizPageUser";
-import DashboardPage from "./pages/admin/DashboardPage";
-import AuthPage from "./pages/AuthPage";
-import FunnelsPage from "./pages/FunnelsPage";
-import Home from "./pages/Home";
-import { ResultConfigPage } from "./pages/ResultConfigPage";
-import ResultPage from "./pages/ResultPage";
+
+// Lazy load das páginas principais para code splitting
+const Home = lazy(() => import("./pages/Home"));
+const AuthPage = lazy(() => import("./pages/AuthPage"));
+const EditorPage = lazy(() => import("./pages/editor-fixed"));
+const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
+const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
+const ResultPage = lazy(() => import("./pages/ResultPage"));
+const ResultConfigPage = lazy(() => import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage })));
+const QuizPageUser = lazy(() => import("./components/QuizPageUser"));
+
+// Lazy load das páginas admin
+const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
+const MigrationPanel = lazy(() => import("./components/admin/MigrationPanel"));
+
+// Lazy load das páginas de debug (apenas em desenvolvimento)
+const DebugEditorContext = lazy(() => import("./pages/debug-editor"));
+const TestButton = lazy(() => import("./pages/test-button"));
+const TestPropertiesPanel = lazy(() => import("./pages/test-properties"));
+const DebugStep02 = lazy(() => import("./components/debug/DebugStep02"));
+const TestAllTemplates = lazy(() => import("./components/debug/TestAllTemplates"));
+const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRendering"));
+const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
+
+// Loading component
+const PageLoading = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+  </div>
+);
 
 function App() {
   console.log("🔧 DEBUG: App component iniciado");
@@ -57,33 +71,39 @@ function App() {
                 {/* Editor Fixed Route - rota principal do editor */}
                 <Route path="/editor-fixed">
                   {() => (
-                    <ErrorBoundary>
-                      <EditorProvider>
-                        <ScrollSyncProvider>
-                          <EditorPage />
-                        </ScrollSyncProvider>
-                      </EditorProvider>
-                    </ErrorBoundary>
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <ScrollSyncProvider>
+                            <EditorPage />
+                          </ScrollSyncProvider>
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
                   )}
                 </Route>
 
                 {/* Templates IA Route */}
                 <Route path="/templatesia">
                   {() => (
-                    <ErrorBoundary>
-                      <TemplatesIA />
-                    </ErrorBoundary>
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <TemplatesIA />
+                      </ErrorBoundary>
+                    </Suspense>
                   )}
                 </Route>
 
                 {/* Debug Editor Route */}
                 <Route path="/debug-editor">
                   {() => (
-                    <ErrorBoundary>
-                      <EditorProvider>
-                        <DebugEditorContext />
-                      </EditorProvider>
-                    </ErrorBoundary>
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <DebugEditorContext />
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
                   )}
                 </Route>
 

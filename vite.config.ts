@@ -18,12 +18,97 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['wouter'],
-          ui: ['lucide-react'],
+        manualChunks: (id) => {
+          // Vendor libraries
+          if (id.includes('node_modules')) {
+            // React ecosystem
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            
+            // UI libraries
+            if (id.includes('lucide-react') || id.includes('radix') || id.includes('@radix-ui')) {
+              return 'ui-vendor';
+            }
+            
+            // Router
+            if (id.includes('wouter')) {
+              return 'router-vendor';
+            }
+            
+            // Form libraries
+            if (id.includes('react-hook-form') || id.includes('zod')) {
+              return 'forms-vendor';
+            }
+            
+            // Animation libraries
+            if (id.includes('framer-motion')) {
+              return 'animation-vendor';
+            }
+            
+            // Other vendor packages
+            return 'vendor';
+          }
+          
+          // Application chunks
+          if (id.includes('src/pages/')) {
+            // Editor pages
+            if (id.includes('editor') || id.includes('Editor')) {
+              return 'editor-pages';
+            }
+            
+            // Admin pages
+            if (id.includes('admin') || id.includes('Admin')) {
+              return 'admin-pages';
+            }
+            
+            // Quiz pages
+            if (id.includes('quiz') || id.includes('Quiz')) {
+              return 'quiz-pages';
+            }
+            
+            // Other pages
+            return 'app-pages';
+          }
+          
+          // Components
+          if (id.includes('src/components/')) {
+            // Editor components
+            if (id.includes('editor') || id.includes('Editor')) {
+              return 'editor-components';
+            }
+            
+            // UI components
+            if (id.includes('ui/')) {
+              return 'ui-components';
+            }
+            
+            // Auth components
+            if (id.includes('auth') || id.includes('Auth')) {
+              return 'auth-components';
+            }
+            
+            // Quiz components
+            if (id.includes('quiz') || id.includes('Quiz')) {
+              return 'quiz-components';
+            }
+            
+            // Other components
+            return 'app-components';
+          }
+          
+          // Context and hooks
+          if (id.includes('src/context/') || id.includes('src/hooks/')) {
+            return 'app-context';
+          }
+          
+          // Utils and configs
+          if (id.includes('src/utils/') || id.includes('src/config/')) {
+            return 'app-utils';
+          }
         },
       },
     },

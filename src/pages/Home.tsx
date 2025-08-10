@@ -18,7 +18,11 @@ const Home: React.FC = () => {
   }, [user, loading, setLocation]);
 
   const handleStartQuiz = () => {
-    setLocation("/editor-fixed");
+    if (user) {
+      setLocation("/editor-fixed");
+    } else {
+      setLocation("/auth");
+    }
   };
 
   if (loading) {
