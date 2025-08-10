@@ -1,0 +1,31 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-19",
+    "name": "Step 19 - Resultados Finais",
+    "description": "Resultados finais",
+    "category": "results",
+    "tags": ["results"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "results-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Resultados finais",
+        "fontSize": "text-xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}

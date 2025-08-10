@@ -1,0 +1,31 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-11",
+    "name": "Step 11 - Pergunta",
+    "description": "Pergunta da etapa 11",
+    "category": "question",
+    "tags": ["question"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "q-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Pergunta da etapa 11",
+        "fontSize": "text-xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-16",
+    "name": "Step 16 - Processamento",
+    "description": "Processando respostas",
+    "category": "processing",
+    "tags": ["processing"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "processing-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Processando suas respostas...",
+        "fontSize": "text-xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}

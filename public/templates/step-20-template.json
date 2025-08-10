@@ -1,0 +1,31 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-20",
+    "name": "Step 20 - Lead",
+    "description": "Coleta de dados",
+    "category": "lead",
+    "tags": ["lead"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "lead-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Deixe seus dados para receber o resultado",
+        "fontSize": "text-xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}

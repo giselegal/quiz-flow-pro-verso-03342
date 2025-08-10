@@ -1,0 +1,31 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-21",
+    "name": "Step 21 - Oferta",
+    "description": "Oferta especial",
+    "category": "offer",
+    "tags": ["offer"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "offer-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Oferta especial para você",
+        "fontSize": "text-xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}
