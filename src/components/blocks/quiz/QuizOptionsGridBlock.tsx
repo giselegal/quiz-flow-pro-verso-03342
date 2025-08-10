@@ -128,6 +128,15 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
+  // 🔍 DEBUG DETALHADO - LOG DE TODAS AS PROPRIEDADES
+  console.log("🔍 QuizOptionsGridBlock DEBUG COMPLETO:", {
+    id,
+    properties,
+    optionsFromProperties: properties?.options,
+    propertiesKeys: properties ? Object.keys(properties) : [],
+    allProps: { properties, id, onPropertyChange, ...props },
+  });
+
   // Extrair as opções - pode ser array de objetos ou string
   const parseOptions = (options: any) => {
     console.log("QuizOptionsGridBlock - parseOptions input:", options);

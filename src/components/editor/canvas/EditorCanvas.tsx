@@ -71,9 +71,18 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
       );
     }
 
+    // 🔧 CORREÇÃO CRÍTICA: Passar properties diretamente para QuizOptionsGridBlock
+    const componentProps = {
+      id: block.id,
+      properties: block.properties,
+      isSelected: false,
+      // Manter compatibilidade com outros componentes que esperam block
+      block: block,
+    };
+
     return (
       <div className={cn("transition-all duration-200", containerClasses)} style={inlineStyles}>
-        <Component block={block} isSelected={false} />
+        <Component {...componentProps} />
       </div>
     );
   };
