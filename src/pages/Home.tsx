@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
 import { LogoutButton } from "@/components/auth/LogoutButton";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { 
-  ArrowRight, 
-  BarChart3, 
-  Zap, 
-  Target, 
-  Users, 
-  TrendingUp,
-  Sparkles,
+import {
+  ArrowRight,
+  BarChart3,
+  Heart,
   Layout,
   MousePointer,
-  Heart
+  Sparkles,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
+import React, { useEffect } from "react";
+import { useLocation } from "wouter";
 
 const Home: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -65,13 +65,18 @@ const Home: React.FC = () => {
                 <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                   QuizFlow
                 </h1>
-                <p className="text-xs text-slate-500 font-medium">Simplifique • Interaja • Converta</p>
+                <p className="text-xs text-slate-500 font-medium">
+                  Simplifique • Interaja • Converta
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2 text-sm text-slate-600">
                 <Users className="h-4 w-4" />
-                <span>Olá, <span className="font-semibold text-slate-800">{user?.name || user?.email}</span></span>
+                <span>
+                  Olá,{" "}
+                  <span className="font-semibold text-slate-800">{user?.name || user?.email}</span>
+                </span>
               </div>
               <LogoutButton />
             </div>
@@ -86,7 +91,7 @@ const Home: React.FC = () => {
           <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br from-indigo-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
           <div className="absolute -bottom-40 -left-32 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-indigo-600/20 rounded-full blur-3xl"></div>
         </div>
-        
+
         <div className="relative container mx-auto px-6 py-20">
           <div className="max-w-4xl mx-auto text-center space-y-8">
             {/* Título principal */}
@@ -95,7 +100,7 @@ const Home: React.FC = () => {
                 <Sparkles className="h-4 w-4" />
                 <span>Revolucione sua estratégia de conversão</span>
               </div>
-              
+
               <h1 className="text-5xl sm:text-7xl font-bold tracking-tight">
                 <span className="bg-gradient-to-r from-slate-900 via-indigo-900 to-purple-800 bg-clip-text text-transparent">
                   Quiz
@@ -104,18 +109,20 @@ const Home: React.FC = () => {
                   Flow
                 </span>
               </h1>
-              
+
               <p className="text-xl sm:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                A plataforma definitiva para criar <span className="font-semibold text-indigo-600">funis inteligentes</span>, 
-                aumentar <span className="font-semibold text-purple-600">engajamento</span> e 
-                maximizar <span className="font-semibold text-indigo-600">conversões</span> através de quizzes interativos.
+                A plataforma definitiva para criar{" "}
+                <span className="font-semibold text-indigo-600">funis inteligentes</span>, aumentar{" "}
+                <span className="font-semibold text-purple-600">engajamento</span> e maximizar{" "}
+                <span className="font-semibold text-indigo-600">conversões</span> através de quizzes
+                interativos.
               </p>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handleStartQuiz}
                 className="group bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-lg font-semibold"
               >
@@ -123,10 +130,10 @@ const Home: React.FC = () => {
                 Criar Meu Quiz
                 <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              
-              <Button 
-                variant="outline" 
-                size="lg" 
+
+              <Button
+                variant="outline"
+                size="lg"
                 onClick={() => setLocation("/admin/funis")}
                 className="border-slate-300 hover:border-indigo-300 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 px-8 py-4 text-lg font-semibold transition-all duration-300"
               >
@@ -162,7 +169,8 @@ const Home: React.FC = () => {
               Por que QuizFlow é diferente?
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Nossa plataforma combina simplicidade visual com poder técnico para criar experiências únicas
+              Nossa plataforma combina simplicidade visual com poder técnico para criar experiências
+              únicas
             </p>
           </div>
 
@@ -176,7 +184,8 @@ const Home: React.FC = () => {
                 Interface Intuitiva
               </h3>
               <p className="text-slate-600 text-center leading-relaxed">
-                Editor visual drag & drop com templates profissionais. Crie quizzes sofisticados sem conhecimento técnico.
+                Editor visual drag & drop com templates profissionais. Crie quizzes sofisticados sem
+                conhecimento técnico.
               </p>
             </div>
 
@@ -189,7 +198,8 @@ const Home: React.FC = () => {
                 Funis Inteligentes
               </h3>
               <p className="text-slate-600 text-center leading-relaxed">
-                Lógica avançada de segmentação que qualifica leads automaticamente e direciona para ofertas personalizadas.
+                Lógica avançada de segmentação que qualifica leads automaticamente e direciona para
+                ofertas personalizadas.
               </p>
             </div>
 
@@ -202,7 +212,8 @@ const Home: React.FC = () => {
                 Analytics Avançado
               </h3>
               <p className="text-slate-600 text-center leading-relaxed">
-                Dashboards em tempo real com insights acionáveis sobre performance, conversões e ROI dos seus funis.
+                Dashboards em tempo real com insights acionáveis sobre performance, conversões e ROI
+                dos seus funis.
               </p>
             </div>
           </div>
@@ -217,9 +228,10 @@ const Home: React.FC = () => {
               Pronto para revolucionar suas conversões?
             </h2>
             <p className="text-xl text-indigo-100 mb-8 leading-relaxed">
-              Junte-se a milhares de empresas que já simplificaram seus funis e aumentaram suas vendas com QuizFlow.
+              Junte-se a milhares de empresas que já simplificaram seus funis e aumentaram suas
+              vendas com QuizFlow.
             </p>
-            <Button 
+            <Button
               size="lg"
               onClick={handleStartQuiz}
               className="bg-white text-indigo-600 hover:bg-slate-50 shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-4 text-lg font-semibold group"
