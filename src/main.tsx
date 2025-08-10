@@ -8,6 +8,16 @@ import "./index.css";
 import { cleanupConsoleWarnings } from "./utils/development";
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
+// Adiciona tipagem para import.meta.env
+interface ImportMetaEnv {
+  DEV: boolean;
+  [key: string]: any;
+}
+
+interface ImportMeta {
+  env: ImportMetaEnv;
+}
+
 // 🧹 Inicializar limpeza de avisos do console em desenvolvimento
 if (import.meta.env.DEV) {
   cleanupConsoleWarnings();
