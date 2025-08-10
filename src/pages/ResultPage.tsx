@@ -3,7 +3,7 @@ import { useRoute } from "wouter";
 
 const ResultPage: React.FC = () => {
   const [match, params] = useRoute("/resultado/:resultId");
-  const resultId = params?.resultId;
+  const resultId = params?.resultId || "";
 
   return (
     <div style={{ backgroundColor: "#FAF9F7" }}>

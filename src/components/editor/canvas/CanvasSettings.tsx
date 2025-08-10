@@ -160,8 +160,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
             <Label className="text-sm font-medium">Preview</Label>
             <div style={{ borderColor: "#E5DDD5" }}>
               <div
-                style={{ borderColor: "#E5DDD5" }}
-                style={{ backgroundColor: backgroundColor }}
+                style={{ borderColor: "#E5DDD5", backgroundColor: backgroundColor }}
               >
                 {backgroundColor === "transparent" && (
                   <div

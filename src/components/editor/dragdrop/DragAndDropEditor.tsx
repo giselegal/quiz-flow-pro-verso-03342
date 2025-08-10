@@ -307,7 +307,8 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
         const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex).map(
           (block, index) => ({
             ...block,
-            position: index,
+            order: index,
+            position: block.position || { x: 0, y: index * 100 },
           })
         );
 

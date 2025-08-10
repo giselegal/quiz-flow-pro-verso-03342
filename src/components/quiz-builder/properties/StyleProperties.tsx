@@ -19,8 +19,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
         <Label htmlFor="backgroundColor">Cor de Fundo</Label>
         <div className="flex gap-2">
           <div
-            style={{ borderColor: "#E5DDD5" }}
-            style={{ backgroundColor: style.backgroundColor || "transparent" }}
+            style={{ borderColor: "#E5DDD5", backgroundColor: style.backgroundColor || "transparent" }}
           />
           <Input
             id="backgroundColor"
@@ -37,8 +36,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({
         <Label htmlFor="textColor">Cor do Texto</Label>
         <div className="flex gap-2">
           <div
-            style={{ borderColor: "#E5DDD5" }}
-            style={{ backgroundColor: style.textColor || "#000000" }}
+            style={{ borderColor: "#E5DDD5", backgroundColor: style.textColor || "#000000" }}
           />
           <Input
             id="textColor"

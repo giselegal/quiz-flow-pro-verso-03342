@@ -7,6 +7,12 @@ export interface BlockData {
   properties: Record<string, any>;
   content: Record<string, any>;
   order: number;
+  position?: {
+    x: number;
+    y: number;
+  };
+  settings?: any;
+  style?: any;
 }
 
 export interface BlockDefinition {

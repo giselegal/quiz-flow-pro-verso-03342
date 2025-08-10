@@ -28,7 +28,7 @@ import EnhancedEditor from "../../components/editor/EnhancedEditor";
 // Componente de integração para a página de edição
 const EditorPage: React.FC = () => {
   const [match, params] = useRoute("/admin/funis/:funnelId/editor");
-  const funnelId = params?.funnelId;
+  const funnelId = params?.funnelId || "";
 
   // Verificar se a rota está correta
   if (!match || !funnelId) {

@@ -86,7 +86,9 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
         id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: blockType,
         properties: {},
-        position: blocks.length,
+        content: {},
+        order: blocks.length,
+        position: { x: 0, y: blocks.length * 100 },
       };
 
       const newBlocks = [...blocks, newBlock];
@@ -110,7 +112,8 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
     const duplicatedBlock: BlockData = {
       ...selectedBlock,
       id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      position: blocks.length,
+      position: { x: selectedBlock.position?.x || 0, y: (selectedBlock.position?.y || 0) + 100 },
+      order: blocks.length,
     };
 
     const newBlocks = [...blocks, duplicatedBlock];

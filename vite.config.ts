@@ -15,6 +15,7 @@ export default defineConfig({
       "@/config": path.resolve(__dirname, "./src/config"),
       "@/context": path.resolve(__dirname, "./src/context"),
       "@/types": path.resolve(__dirname, "./src/types"),
+      "@shared": path.resolve(__dirname, "./shared"),
     },
     extensions: [".mjs", ".js", ".mts", ".ts", ".jsx", ".tsx", ".json"],
     dedupe: ["react", "react-dom"],

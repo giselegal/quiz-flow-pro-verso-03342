@@ -8,6 +8,13 @@ import { IntroPropertiesPanel } from "../components/steps/step01/IntroProperties
 const mockBlock = {
   id: "test-intro-block",
   type: "step01-intro",
+  block: {
+    id: "test-intro-block",
+    type: "step01-intro",
+    properties: {},
+    content: {},
+    order: 0,
+  },
   properties: {
     title: "Bem-vindo ao Quiz de Estilo Pessoal",
     descriptionTop: "Descubra seu estilo único",
@@ -37,7 +44,7 @@ export const Step01ComponentsTest = () => {
       <div>
         <h2 className="text-xl font-bold mb-4">IntroBlock Component</h2>
         <div className="border rounded-lg p-4">
-          <IntroBlock id={mockBlock.id} properties={mockBlock.properties} />
+          <IntroBlock id={mockBlock.id} block={mockBlock.block} properties={mockBlock.properties} />
         </div>
       </div>
 

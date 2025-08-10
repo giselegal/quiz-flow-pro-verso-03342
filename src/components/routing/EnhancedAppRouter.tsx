@@ -208,20 +208,23 @@ export const EnhancedAppRouter: React.FC = () => {
 
               {/* Rota para Analytics */}
               <Route path="/admin/funis/:funnelId/analytics">
-                {({ funnelId }) => (
-                  <div className="p-6">
-                    <h1 className="text-2xl font-bold mb-4">
-                      Analytics - Funil {funnelId}
-                    </h1>
-                    <div className="bg-white p-8 rounded-lg shadow-sm border text-center">
-                      <p style={{ color: "#6B4F43" }}>
-                        Dashboard de Analytics será carregado aqui
-                      </p>
-                      <p style={{ color: "#8B7355" }}>
-                        Componente: AdvancedAnalytics para funil {funnelId}
-                      </p>
+                {(params) => {
+                  const funnelId = params?.funnelId || "";
+                  return (
+                    <div className="p-6">
+                      <h1 className="text-2xl font-bold mb-4">
+                        Analytics - Funil {funnelId}
+                      </h1>
+                      <div className="bg-white p-8 rounded-lg shadow-sm border text-center">
+                        <p style={{ color: "#6B4F43" }}>
+                          Dashboard de Analytics será carregado aqui
+                        </p>
+                        <p style={{ color: "#8B7355" }}>
+                          Componente: AdvancedAnalytics para funil {funnelId}
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  );
                 )}
               </Route>
 
@@ -230,10 +233,13 @@ export const EnhancedAppRouter: React.FC = () => {
 
               {/* Rota de exemplo direto do editor */}
               <Route path="/enhanced-editor/:funnelId">
-                {({ funnelId }) => (
-                  <Suspense fallback={<PageLoader />}>
-                    <EnhancedEditor funnelId={funnelId} />
-                  </Suspense>
+                {(params) => {
+                  const funnelId = params?.funnelId || "";
+                  return (
+                    <Suspense fallback={<PageLoader />}>
+                      <EnhancedEditor funnelId={funnelId} />
+                    </Suspense>
+                  );
                 )}
               </Route>
 

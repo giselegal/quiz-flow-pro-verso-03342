@@ -183,6 +183,12 @@ export const getTotalSteps = (): number => {
 };
 
 // 📊 ESTATÍSTICAS
+// Export missing function
+export const getStepTemplate = (stepNumber: number) => {
+  const template = getTemplateByStep(stepNumber);
+  return template ? template.templateFunction() : [];
+};
+
 export const getTemplateStats = () => {
   return {
     totalTemplates: STEP_TEMPLATES.length,

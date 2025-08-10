@@ -114,12 +114,17 @@ export const useMemoryCleanup = () => {
   };
 };
 
-// Hook para weak references
+// Hook para weak references with support check
 export const useWeakRef = <T extends object>(value: T) => {
-  const weakRef = useRef<WeakRef<T>>();
+  const weakRef = useRef<any>();
 
   useEffect(() => {
-    weakRef.current = new WeakRef(value);
+    if (typeof globalThis.WeakRef !== 'undefined') {
+      weakRef.current = new globalThis.WeakRef(value);
+    } else {
+      // Fallback for environments without WeakRef support
+      weakRef.current = { deref: () => value };
+    }
   }, [value]);
 
   const getValue = useCallback(() => {

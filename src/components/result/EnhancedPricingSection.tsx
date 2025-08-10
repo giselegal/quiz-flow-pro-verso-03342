@@ -292,8 +292,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({
               {/* Tabs de Pagamento */}
               <div className="flex justify-center mb-6">
                 <div
-                  style={{ backgroundColor: "#E5DDD5" }}
-                  style={{ backgroundColor: tokens.colors.backgroundAccent }}
+                  style={{ backgroundColor: tokens.colors.backgroundAccent || "#E5DDD5" }}
                 >
                   {[
                     { key: "parcelado", label: "Parcelado" },

@@ -4,7 +4,7 @@ import { useRoute } from "wouter";
 
 const SchemaDrivenEditorPage: React.FC = () => {
   const [match, params = {}] = useRoute("/editor/:id");
-  const funnelId = params.id ?? "";
+  const funnelId = params?.id ?? "";
 
   return (
     <div className="h-screen w-full overflow-hidden bg-gray-50">

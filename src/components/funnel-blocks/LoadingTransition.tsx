@@ -138,8 +138,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
         return (
           <div className={`${baseClasses} w-16 h-16`}>
             <div
-              style={{ borderColor: "#E5DDD5" }}
-              style={{ borderTopColor: progressColor }}
+              style={{ borderColor: "#E5DDD5", borderTopColor: progressColor }}
             />
           </div>
         );

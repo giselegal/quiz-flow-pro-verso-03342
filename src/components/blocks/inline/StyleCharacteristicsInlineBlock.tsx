@@ -49,8 +49,7 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
           {styleData.colors.map((color: string, index: number) => (
             <div
               key={index}
-              style={{ borderColor: "#E5DDD5" }}
-              style={{ backgroundColor: color }}
+              style={{ borderColor: "#E5DDD5", backgroundColor: color }}
               title={color}
             />
           ))}

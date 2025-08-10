@@ -17,9 +17,9 @@ import React, { useState } from "react";
 import StyleResultsEditor from "./StyleResultsEditor";
 
 interface FinalStepEditorProps {
-  stepConfig: {
-    stepNumber: number;
-    title: string;
+  stepConfig?: {
+    stepNumber?: number;
+    title?: string;
     subtitle?: string;
     styleResult?: {
       selectedStyle: string;
