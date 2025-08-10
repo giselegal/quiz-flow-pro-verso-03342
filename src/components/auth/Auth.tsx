@@ -28,7 +28,7 @@ export const Auth: React.FC = () => {
           <div className="relative mx-auto w-24 h-24 mb-6">
             <div className="absolute inset-0 bg-brand/20 rounded-full animate-pulse"></div>
             <div className="absolute inset-2 bg-brand/30 rounded-full"></div>
-            
+
             <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl border-3 border-brand">
               <img
                 src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
@@ -43,7 +43,8 @@ export const Auth: React.FC = () => {
               {isLogin ? "Bem-vindo de volta" : "Junte-se a nós"}
             </h1>
             <p className="text-lg font-medium text-gray-700">
-              Acesse sua conta <span className="font-bold text-brand">QuizFlow</span>
+              Acesse sua conta{" "}
+              <span className="font-bold text-brand">QuizFlow</span>
             </p>
             <p className="text-sm text-gray-600">
               Plataforma oficial de conversão digital
@@ -53,14 +54,17 @@ export const Auth: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2 text-brand-dark">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium mb-2 text-brand-dark"
+            >
               Email
             </label>
             <Input
               id="email"
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="seu@email.com"
               required
               autoComplete="email"
@@ -69,14 +73,17 @@ export const Auth: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2 text-brand-dark">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium mb-2 text-brand-dark"
+            >
               Senha
             </label>
             <Input
               id="password"
               type="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
               autoComplete="current-password"
@@ -84,8 +91,8 @@ export const Auth: React.FC = () => {
             />
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full bg-brand text-white font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:bg-brand/90"
           >
             {isLogin ? "Entrar na Plataforma" : "Criar Minha Conta"}
@@ -98,9 +105,11 @@ export const Auth: React.FC = () => {
             onClick={() => setIsLogin(!isLogin)}
             className="text-sm font-medium text-brand hover:underline transition-colors"
           >
-            {isLogin ? "Não tem conta? Criar uma gratuita" : "Já tem conta? Entrar agora"}
+            {isLogin
+              ? "Não tem conta? Criar uma gratuita"
+              : "Já tem conta? Entrar agora"}
           </button>
-          
+
           <div className="flex items-center justify-center space-x-4 my-6">
             <div className="h-px w-12 bg-gray-300"></div>
             <div className="w-2 h-2 bg-brand rounded-full"></div>
@@ -115,36 +124,53 @@ export const Auth: React.FC = () => {
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-1 h-1 bg-brand rounded-full"></div>
                 <p className="text-xs text-gray-500">
-                  Powered by <span className="font-semibold">Gisele Galvão</span>
+                  Powered by{" "}
+                  <span className="font-semibold">Gisele Galvão</span>
                 </p>
                 <div className="w-1 h-1 bg-brand rounded-full"></div>
               </div>
             </div>
-            
+
             <div className="pt-4 border-t border-gray-200 space-y-2">
               <div className="flex items-center justify-center space-x-1">
-                <div className="w-3 h-3 flex items-center justify-center bg-brand rounded-full text-xs font-bold text-white">©</div>
+                <div className="w-3 h-3 flex items-center justify-center bg-brand rounded-full text-xs font-bold text-white">
+                  ©
+                </div>
                 <p className="text-xs text-gray-600">
                   2025 Gisele Galvão. Todos os direitos reservados.
                 </p>
               </div>
-              
+
               <p className="text-xs leading-relaxed max-w-sm mx-auto text-gray-500">
-                <span className="font-semibold">QuizFlow</span> é uma marca registrada de 
-                <span className="font-semibold"> Gisele Galvão Personal Stylist & Business Coach</span>. 
-                Plataforma especializada em conversão digital através de quizzes interativos.
+                <span className="font-semibold">QuizFlow</span> é uma marca
+                registrada de
+                <span className="font-semibold">
+                  {" "}
+                  Gisele Galvão Personal Stylist & Business Coach
+                </span>
+                . Plataforma especializada em conversão digital através de
+                quizzes interativos.
               </p>
-              
+
               <div className="flex items-center justify-center space-x-4 text-xs mt-3">
-                <a href="#" className="text-brand hover:underline transition-colors">
+                <a
+                  href="#"
+                  className="text-brand hover:underline transition-colors"
+                >
                   Termos de Uso
                 </a>
                 <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                <a href="#" className="text-brand hover:underline transition-colors">
+                <a
+                  href="#"
+                  className="text-brand hover:underline transition-colors"
+                >
                   Política de Privacidade
                 </a>
                 <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                <a href="#" className="text-brand hover:underline transition-colors">
+                <a
+                  href="#"
+                  className="text-brand hover:underline transition-colors"
+                >
                   Contato
                 </a>
               </div>
