@@ -10,10 +10,11 @@ const Home: React.FC = () => {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    // Redirecionar para auth se não estiver logado
-    if (!loading && !user) {
-      setLocation("/auth");
-    }
+    // COMENTADO: Permitir acesso público à Home
+    // Redirecionar para auth apenas se acessar rotas protegidas
+    // if (!loading && !user) {
+    //   setLocation("/auth");
+    // }
   }, [user, loading, setLocation]);
 
   const handleStartQuiz = () => {
@@ -39,10 +40,7 @@ const Home: React.FC = () => {
     );
   }
 
-  if (!user) {
-    return null; // Será redirecionado
-  }
-
+  // Renderizar para todos os usuários (logados e não logados)
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#FEFEFE" }}>
       {/* Header minimalista */}
@@ -65,13 +63,25 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 text-sm" style={{ color: "#6B4F43" }}>
-              <Users className="h-4 w-4" />
-              <span>
-                Olá, <span className="font-medium">{user?.name || user?.email}</span>
-              </span>
-            </div>
-            <LogoutButton />
+            {user ? (
+              <>
+                <div className="hidden sm:flex items-center gap-2 text-sm" style={{ color: "#6B4F43" }}>
+                  <Users className="h-4 w-4" />
+                  <span>
+                    Olá, <span className="font-medium">{user?.name || user?.email}</span>
+                  </span>
+                </div>
+                <LogoutButton />
+              </>
+            ) : (
+              <Button 
+                onClick={() => setLocation("/auth")}
+                variant="outline" 
+                size="sm"
+              >
+                Entrar
+              </Button>
+            )}
           </div>
         </div>
       </header>
