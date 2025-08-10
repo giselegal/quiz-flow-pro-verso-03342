@@ -79,7 +79,44 @@ export const getStep01Template = () => {
       },
     },
 
-    // 📝 3. TÍTULO PRINCIPAL COM PROPRIEDADES EDITÁVEIS
+    // 🎯 3. COMPONENTE DE INTRODUÇÃO INTERATIVA
+    {
+      id: "intro-block-step01",
+      type: "step01-intro", 
+      properties: {
+        // ✨ CONTEÚDO CONFIGURÁVEL
+        title: "Bem-vindo ao Quiz de Estilo Pessoal",
+        descriptionTop: "Descubra seu estilo único através de perguntas personalizadas.",
+        descriptionBottom: "Vamos começar! Primeiro, nos conte seu nome:",
+        imageIntro: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/quiz-intro-image.webp",
+        inputLabel: "Seu Nome",
+        inputPlaceholder: "Digite seu nome aqui",
+        buttonText: "Iniciar Quiz",
+        privacyText: "Seus dados são seguros conosco. Confira nossa política de privacidade.",
+        footerText: "Desenvolvido com ❤️ para você descobrir seu estilo único",
+        required: true,
+
+        // ✨ CONFIGURAÇÕES VISUAIS
+        scale: 100,
+        alignment: "center",
+        backgroundColor: "transparent",
+        backgroundOpacity: 100,
+        textColor: "#432818",
+        showImage: true,
+        showInput: true,
+
+        // ✨ CONFIGURAÇÕES DE LAYOUT
+        containerWidth: "full",
+        containerPosition: "center",
+        spacing: "normal",
+        
+        // ✨ CONFIGURAÇÕES DE MARGENS
+        marginTop: 32,
+        marginBottom: 32,
+      },
+    },
+
+    // 📝 4. TÍTULO PRINCIPAL COM PROPRIEDADES EDITÁVEIS
     {
       id: "main-title-step01",
       type: "text-inline",

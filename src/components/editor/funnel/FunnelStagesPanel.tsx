@@ -273,52 +273,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                           Etapa {stage.order}
                         </span>
                         <div style={{ color: "#6B4F43" }}>{stage.name}</div>
-
-                        {/* Mostrar componentes da etapa */}
-                        {stageComponents.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1 justify-center">
-                            <Badge variant="secondary" className="text-xs flex items-center gap-1">
-                              <Layers className="h-3 w-3" />
-                              {stageComponents.length} componente
-                              {stageComponents.length !== 1 ? "s" : ""}
-                            </Badge>
-                          </div>
-                        )}
-
-                        {/* Lista de tipos de componentes */}
-                        {componentTypes.length > 0 && (
-                          <div className="mt-1 flex flex-wrap gap-1 justify-center max-w-full">
-                            {componentTypes.slice(0, 3).map((type, idx) => (
-                              <Badge
-                                key={idx}
-                                variant="outline"
-                                className="text-xs px-1 py-0 h-5"
-                                style={{ fontSize: "10px" }}
-                              >
-                                {type.includes("step01")
-                                  ? "Intro"
-                                  : type.includes("quiz")
-                                    ? "Quiz"
-                                    : type.includes("header")
-                                      ? "Header"
-                                      : type.replace(/[-_]/g, " ").substring(0, 8)}
-                              </Badge>
-                            ))}
-                            {componentTypes.length > 3 && (
-                              <Badge
-                                variant="outline"
-                                className="text-xs px-1 py-0 h-5"
-                                style={{ fontSize: "10px" }}
-                              >
-                                +{componentTypes.length - 3}
-                              </Badge>
-                            )}
-                          </div>
-                        )}
                       </div>
-                    </div>
-
-                    {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
+                    </div>                    {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
                     {activeStageId === stage.id && (
                       <div className="flex justify-center mt-2">
                         <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div>
