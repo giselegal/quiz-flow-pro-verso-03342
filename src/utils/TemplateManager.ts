@@ -1,6 +1,5 @@
 // Update the import path below to the correct relative path if needed
 import type { Block } from "../types/editor";
-import { TemplateJsonLoader } from "./TemplateJsonLoader";
 
 /**
  * Mapeamento de etapas para templates JSON
@@ -54,14 +53,12 @@ export class TemplateManager {
         return this.getFallbackBlocks(stepId);
       }
 
-      // Carrega template JSON
+      // Retorna blocos padrão para o stepId
       console.log(
-        `🔄 Carregando template JSON para ${stepId}: ${templatePath}`
+        `🔄 Gerando blocos padrão para ${stepId} (TemplateJsonLoader removido)`
       );
-      const blocks = await TemplateJsonLoader.loadTemplateAsBlocks(
-        templatePath,
-        stepId
-      );
+      
+      const blocks: Block[] = this.getDefaultBlocksForStep(stepId);
 
       // Armazena no cache
       this.cache.set(stepId, blocks);
