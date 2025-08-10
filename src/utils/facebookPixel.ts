@@ -53,6 +53,13 @@ export const initFacebookPixel = (pixelId: string): boolean => {
 
     ensurePixelScriptLoaded();
 
+    // Avoid re-initializing the same Pixel ID
+    if (window.__ACTIVE_PIXEL_ID === pixelId && window.fbq) {
+      console.log(`[Pixel] Facebook Pixel already initialized with ID: ${pixelId}`);
+      attachDebugTools();
+      return true;
+    }
+
     if (!window.fbq) {
       const w = window as any;
       w.fbq = function () {
