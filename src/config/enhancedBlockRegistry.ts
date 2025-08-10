@@ -1,7 +1,7 @@
-import { BlockDefinition }import { EditorOptionsGridBlock } from "../components/blocks/quiz/EditorOptionsGridBlock";
-import { QuizOptionsGridBlock } from "../components/blocks/quiz/QuizOptionsGridBlock";from "@/types/editor";
+import { BlockDefinition } from "@/types/editor";
 import { Heading, Image, Minus, MousePointer, Type } from "lucide-react";
 import React from "react";
+import { EditorOptionsGridBlock } from "../components/blocks/quiz/EditorOptionsGridBlock";
 
 /**
  * ENHANCED BLOCK REGISTRY - APENAS COMPONENTES PRINCIPAIS
@@ -25,7 +25,6 @@ import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlin
 import TextInline from "../components/blocks/inline/TextInline";
 
 // Componentes Editor Blocks
-import QuizOptionsGridBlock from "../components/blocks/quiz/QuizOptionsGridBlock";
 import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
 import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
 import FormInputBlock from "../components/editor/blocks/FormInputBlock";
@@ -68,7 +67,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "legal-notice-inline": LegalNoticeInlineBlock,
 
   // Quiz Advanced
-  "options-grid": QuizOptionsGridBlock,
+  "options-grid": EditorOptionsGridBlock,
   "quiz-option": QuizOptionBlock,
   "quiz-progress": QuizProgressBlock,
   "quiz-results": QuizResultsEditor,

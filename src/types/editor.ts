@@ -130,7 +130,8 @@ export type BlockType =
   | "form-input"
   | "legal-notice-inline"
   | "animation-block"
-  | "options-grid";
+  | "options-grid"
+  | "quiz-intro-header";
 
 export interface FAQItem {
   id: string;

@@ -1,14 +1,14 @@
+import type { BlockComponentProps } from "@/types/blocks";
 import React from "react";
 import QuizOptionsGridBlock from "./QuizOptionsGridBlock";
-import type { BlockComponentProps } from "@/types/blocks";
 
 /**
  * Wrapper/Adaptador para o QuizOptionsGridBlock no contexto do Editor
- * 
+ *
  * Resolve o desacoplamento de contrato onde:
  * - O Canvas envia `block` (via SortableBlockWrapper)
  * - Mas QuizOptionsGridBlock espera `propriedades`
- * 
+ *
  * Este componente faz a adaptação necessária.
  */
 export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
