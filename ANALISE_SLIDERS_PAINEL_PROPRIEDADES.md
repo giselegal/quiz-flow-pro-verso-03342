@@ -20,6 +20,7 @@
 ## ✅ CORREÇÕES IMPLEMENTADAS
 
 ### 1. Sincronização Registry ↔ Definitions
+
 ```typescript
 // ANTES (blockDefinitions.ts)
 component: OptionsGridBlock,
@@ -29,6 +30,7 @@ component: QuizOptionsGridBlock,
 ```
 
 ### 2. Correção de Tipos de Propriedades
+
 ```typescript
 // ANTES
 options: {
@@ -44,6 +46,7 @@ options: {
 ```
 
 ### 3. Importação Corrigida
+
 ```typescript
 // ADICIONADO
 import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
@@ -65,13 +68,14 @@ graph TD
 ### Propriedades de Slider Configuradas
 
 1. **imageSize**: 64-512px (padrão: 256px)
-2. **imageWidth**: 64-512px (padrão: 256px) 
+2. **imageWidth**: 64-512px (padrão: 256px)
 3. **imageHeight**: 64-512px (padrão: 256px)
 4. **borderWidth**: 0-20px (padrão: 2px)
 5. **borderRadius**: 0-50px (padrão: 8px)
 6. **shadowIntensity**: 0-20 (padrão: 3)
 
 ### Exemplo de Configuração de Slider
+
 ```typescript
 imageSize: {
   type: "range",
@@ -86,6 +90,7 @@ imageSize: {
 ## 🔧 COMPONENTES ENVOLVIDOS
 
 ### 1. SizeSlider Component
+
 - **Localização:** `/src/components/visual-controls/SizeSlider.tsx`
 - **Função:** Wrapper visual para sliders com feedback
 - **Features:**
@@ -95,6 +100,7 @@ imageSize: {
   - Controle de step personalizado
 
 ### 2. Radix UI Slider
+
 - **Biblioteca:** `@radix-ui/react-slider`
 - **Versão:** 1.2.4
 - **Funcionalidades:**
@@ -103,6 +109,7 @@ imageSize: {
   - Customização visual
 
 ### 3. PropertyChangeIndicator
+
 - **Função:** Feedback visual de mudanças
 - **Localização:** `/src/components/universal/PropertyChangeIndicator.tsx`
 - **Features:**
@@ -122,7 +129,7 @@ imageSize: {
 ### 🧪 Como Testar os Sliders
 
 1. Acesse: `http://localhost:8081/quiz-builder`
-2. Adicione um bloco "Grade de Opções" 
+2. Adicione um bloco "Grade de Opções"
 3. Abra o painel de propriedades
 4. Teste os seguintes sliders:
    - Tamanho da Imagem
@@ -132,32 +139,36 @@ imageSize: {
 
 ## 📊 PROPRIEDADES SINCRONIZADAS
 
-| Camada | Arquivo | Status | 
-|--------|---------|--------|
-| 1. Definições | `blockDefinitions.ts` | ✅ Corrigido |
-| 2. Interface | `QuizOptionsGridBlockProps` | ✅ Atualizado |
-| 3. Componente | `QuizOptionsGridBlock.tsx` | ✅ Implementado |
-| 4. Renderização | `QuizQuestion.tsx` | ✅ Com customStyles |
-| 5. Registry | `enhancedBlockRegistry.ts` | ✅ Sincronizado |
+| Camada          | Arquivo                     | Status              |
+| --------------- | --------------------------- | ------------------- |
+| 1. Definições   | `blockDefinitions.ts`       | ✅ Corrigido        |
+| 2. Interface    | `QuizOptionsGridBlockProps` | ✅ Atualizado       |
+| 3. Componente   | `QuizOptionsGridBlock.tsx`  | ✅ Implementado     |
+| 4. Renderização | `QuizQuestion.tsx`          | ✅ Com customStyles |
+| 5. Registry     | `enhancedBlockRegistry.ts`  | ✅ Sincronizado     |
 
 ## 🚀 MELHORIAS IMPLEMENTADAS
 
 ### 1. Novos Controles de Layout
+
 - ✅ Orientação (vertical/horizontal)
 - ✅ Número de colunas dinâmico
 - ✅ Controles de gap/espaçamento
 
 ### 2. Controles Visuais Avançados
+
 - ✅ Borders configuráveis (width, color, radius)
 - ✅ Shadows customizáveis (blur, offset, color)
 - ✅ Tamanhos de imagem flexíveis
 
 ### 3. Tipos de Conteúdo
+
 - ✅ Apenas texto
-- ✅ Apenas imagem  
+- ✅ Apenas imagem
 - ✅ Texto + imagem
 
 ### 4. Sistema de Pontuação
+
 - ✅ Pontos por opção
 - ✅ Categorias para cálculo
 - ✅ Preview de configurações

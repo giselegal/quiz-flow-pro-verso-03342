@@ -27,6 +27,7 @@ interface CustomStyles {
   shadowOffsetY?: number;
   imageSize?: number;
   contentType?: "text-only" | "image-only" | "text-and-image";
+  scale?: number;
 }
 
 /**

@@ -4,14 +4,13 @@ import { AlignLeft, Heading, Image, Minus, Square, Type } from "lucide-react";
 // Import real components instead of placeholder
 import ImageDisplayInlineBlock from "@/components/blocks/inline/ImageDisplayInlineBlock";
 // import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
+import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
 import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
 import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
 import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
 import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
 import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
 import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
-import OptionsGridBlock from "@/components/editor/blocks/OptionsGridBlock";
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
 import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
 import QuizProgressBlock from "@/components/editor/blocks/QuizProgressBlock";
 import QuizResultsEditor from "@/components/editor/blocks/QuizResultsEditor";
@@ -1236,6 +1235,15 @@ export const blockDefinitions: BlockDefinition[] = [
         min: 0,
         max: 10,
         step: 1,
+      },
+      // === CONTROLE DE ESCALA ===
+      scale: {
+        type: "range",
+        default: 100,
+        label: "Escala do Container (%)",
+        min: 50,
+        max: 110,
+        step: 5,
       },
       // === CONFIGURAÇÕES DE CONTEÚDO ===
       contentType: {

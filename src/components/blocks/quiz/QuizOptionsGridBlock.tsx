@@ -60,6 +60,8 @@ export interface QuizOptionsGridBlockProps extends QuizBlockProps {
     shadowColor?: string;
     selectedShadowColor?: string;
     shadowIntensity?: number;
+    // Escala
+    scale?: number;
     // Cores
     primaryColor?: string;
     selectedColor?: string;
@@ -126,6 +128,14 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
+  console.log("🎯 QuizOptionsGridBlock - RENDERIZANDO:", {
+    id,
+    properties: properties,
+    hasOptions: !!properties?.options,
+    optionsType: typeof properties?.options,
+    optionsLength: Array.isArray(properties?.options) ? properties?.options.length : 'não é array',
+  });
+
   // Extrair as opções - pode ser array de objetos ou string
   const parseOptions = (options: any) => {
     console.log("QuizOptionsGridBlock - parseOptions input:", options);
@@ -157,6 +167,12 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   };
 
   const options = parseOptions(properties?.options || []);
+
+  console.log("🎯 QuizOptionsGridBlock - APÓS PARSE:", {
+    parsedOptionsLength: options.length,
+    parsedOptions: options,
+    primeirosElementos: options.slice(0, 3),
+  });
 
   // Determinar o número mínimo de seleções com base nas propriedades
   // Por padrão são 3 opções obrigatórias conforme requisito
@@ -211,6 +227,8 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     shadowColor = "#00000020",
     selectedShadowColor = "#B89B7A40",
     shadowIntensity = 3,
+    // Escala
+    scale = 100,
     // Cores
     primaryColor = "#B89B7A",
     selectedColor = "#B89B7A",
@@ -246,7 +264,15 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   } as React.CSSProperties;
 
   return (
-    <div className="quiz-options-grid-block" data-block-id={id}>
+    <div
+      className="quiz-options-grid-block"
+      data-block-id={id}
+      style={{
+        transform: `scale(${scale / 100})`,
+        transformOrigin: "top center",
+        transition: "transform 0.2s ease-in-out",
+      }}
+    >
       <QuizQuestion
         question={properties?.question || ""}
         description={properties?.description || ""}
@@ -283,6 +309,18 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
             : `repeat(${columns}, 1fr)`,
           imageWidth: `${finalImageWidth}px`,
           imageHeight: `${finalImageHeight}px`,
+          scale: scale,
+          layoutOrientation,
+          columnsCount: typeof columns === "number" ? columns : parseInt(columns as string) || 2,
+          borderWidth,
+          borderColor,
+          borderRadius,
+          shadowBlur: shadowIntensity * 2,
+          shadowColor,
+          shadowOffsetX: 0,
+          shadowOffsetY: shadowIntensity,
+          imageSize,
+          contentType,
         }}
       />
     </div>
