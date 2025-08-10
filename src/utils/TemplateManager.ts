@@ -58,7 +58,18 @@ export class TemplateManager {
         `🔄 Gerando blocos padrão para ${stepId} (TemplateJsonLoader removido)`
       );
       
-      const blocks: Block[] = this.getDefaultBlocksForStep(stepId);
+      // Gera blocos básicos padrão 
+      const blocks: Block[] = [
+        {
+          id: `${stepId}-default`,
+          type: "text-inline",
+          position: 0,
+          properties: {
+            content: `Conteúdo padrão para ${stepId}`,
+            className: "text-center"
+          }
+        }
+      ];
 
       // Armazena no cache
       this.cache.set(stepId, blocks);
