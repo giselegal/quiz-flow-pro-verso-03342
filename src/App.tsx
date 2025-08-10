@@ -10,6 +10,7 @@ import TemplatesIA from "@/pages/TemplatesIA";
 import TestButton from "@/pages/test-button";
 import TestPropertiesPanel from "@/pages/test-properties";
 import TestOptionsRendering from "@/components/debug/TestOptionsRendering";
+import DebugStep02 from "@/components/debug/DebugStep02";
 import { Route, Router, Switch } from "wouter";
 import MigrationPanel from "./components/admin/MigrationPanel";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -89,6 +90,15 @@ function App() {
                 <Route path="/test/properties" component={TestPropertiesPanel} />
                 <Route path="/test/button" component={TestButton} />
                 <Route path="/test/options" component={TestOptionsRendering} />
+                <Route path="/debug/step02">
+                  {() => (
+                    <ErrorBoundary>
+                      <EditorProvider>
+                        <DebugStep02 />
+                      </EditorProvider>
+                    </ErrorBoundary>
+                  )}
+                </Route>
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>
