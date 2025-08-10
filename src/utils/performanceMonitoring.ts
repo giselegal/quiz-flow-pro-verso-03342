@@ -90,13 +90,9 @@ class PerformanceMonitor {
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
-      const usagePercent = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
-
-      this.metrics.memoryUsage = usagePercent;
-
-      if (usagePercent > 80) {
-        this.trackEvent("high-memory-usage", "performance", {
-          usage: usagePercent,
+      if (memory) {
+        this.metrics.memoryUsage = memory.usedJSHeapSize;
+        this.trackEvent("memory-usage", "performance", {
           usedHeap: memory.usedJSHeapSize,
           totalHeap: memory.totalJSHeapSize,
           limit: memory.jsHeapSizeLimit,
@@ -104,7 +100,28 @@ class PerformanceMonitor {
       }
     };
 
-    setInterval(checkMemory, 5000);
+    // Usar requestIdleCallback para evitar violations
+    const scheduleMemoryCheck = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          checkMemory();
+          // Reagendar apenas se ainda estiver monitorando
+          if (this.isMonitoring) {
+            setTimeout(scheduleMemoryCheck, 10000); // Reduzido para 10s
+          }
+        });
+      } else {
+        // Fallback mais otimizado
+        setTimeout(() => {
+          checkMemory();
+          if (this.isMonitoring) {
+            setTimeout(scheduleMemoryCheck, 10000);
+          }
+        }, 16); // Frame-time aware
+      }
+    };
+
+    scheduleMemoryCheck();
   }
 
   private monitorBundleSize() {

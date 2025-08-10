@@ -78,8 +78,17 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
           buffered: true,
         });
       } else {
-        // Fallback para navegadores que não suportam PerformanceObserver
-        setTimeout(fixBlurryIntroQuizImages, 1000);
+        // Fallback otimizado usando requestIdleCallback
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(() => {
+            fixBlurryIntroQuizImages();
+          }, { timeout: 2000 });
+        } else {
+          // Fallback mais suave
+          requestAnimationFrame(() => {
+            setTimeout(fixBlurryIntroQuizImages, 300);
+          });
+        }
       }
     }
   }, [fixOnMount]);

@@ -1,6 +1,6 @@
-import { LogoutButton } from "@/components/auth/LogoutButton";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
+import { LogoutButton } from "../components/auth/LogoutButton";
+import { Button } from "../components/ui/button";
+import { useAuth } from "../context/AuthContext";
 import { ArrowRight, BarChart3, Layout, Target, TrendingUp, Users } from "lucide-react";
 import React, { useEffect } from "react";
 import { useLocation } from "wouter";

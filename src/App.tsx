@@ -1,9 +1,9 @@
-import ErrorBoundary from "@/components/common/ErrorBoundary";
-import { Toaster } from "@/components/ui/toaster";
-import { AdminAuthProvider } from "@/context/AdminAuthContext";
-import { AuthProvider } from "@/context/AuthContext";
-import { EditorProvider } from "@/context/EditorContext";
-import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
+import ErrorBoundary from "./components/common/ErrorBoundary";
+import { Toaster } from "./components/ui/toaster";
+import { AdminAuthProvider } from "./context/AdminAuthContext";
+import { AuthProvider } from "./context/AuthContext";
+import { EditorProvider } from "./context/EditorContext";
+import { ScrollSyncProvider } from "./context/ScrollSyncContext";
 import { lazy, Suspense } from "react";
 import { Route, Router, Switch } from "wouter";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
