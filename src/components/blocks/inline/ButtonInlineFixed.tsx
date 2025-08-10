@@ -20,33 +20,107 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     dynamicRequiresValidInput: false,
   });
 
-  // Destructuring das propriedades do bloco
+  // Destructuring das propriedades do bloco - TODAS EDITÁVEIS
   const {
+    // ✨ TEXTO E CONTEÚDO
     text = "Clique aqui",
+    label = "",
+    
+    // ✨ ESTILO E VARIANTE
     style = "primary",
     variant = "primary",
     size = "large",
+    
+    // ✨ CORES EDITÁVEIS
     backgroundColor = "#B89B7A",
     textColor = "#ffffff",
+    borderColor = "#B89B7A",
+    hoverBackgroundColor = "#aa6b5d",
+    hoverTextColor = "#ffffff",
+    focusColor = "#B89B7A",
+    
+    // ✨ TAMANHO E LAYOUT RESPONSIVO
     fullWidth = true,
-    borderRadius = "rounded-full",
-    padding,
+    width = "auto",
+    height = "auto",
+    minWidth = "120px",
+    maxWidth = "none",
+    
+    // ✨ TIPOGRAFIA EDITÁVEL
     fontSize = "text-lg",
-    fontWeight = "font-bold",
-    boxShadow = "shadow-xl",
-    hoverEffect = true,
-    requiresValidInput = false,
-    disabled = false,
-    // Propriedades de layout
-    textAlign = "text-center",
-    justifyContent = "center",
-    alignItems = "center",
-    display = "flex",
-    margin = "0 auto",
+    fontWeight = "font-bold", 
+    fontFamily = "inherit",
+    lineHeight = "1.5",
+    letterSpacing = "normal",
+    textTransform = "none",
+    
+    // ✨ BORDAS E CANTOS ARREDONDADOS
+    borderRadius = "rounded-full",
+    borderWidth = "2px",
+    borderStyle = "solid",
+    
+    // ✨ ESPAÇAMENTO EDITÁVEL
+    padding = "",
+    paddingX = "",
+    paddingY = "",
+    paddingTop = "",
+    paddingBottom = "",
+    paddingLeft = "",
+    paddingRight = "",
+    
+    // ✨ MARGENS EDITÁVEIS
     marginTop = 0,
     marginBottom = 0,
     marginLeft = 0,
     marginRight = 0,
+    
+    // ✨ EFEITOS E SOMBRAS
+    boxShadow = "shadow-lg",
+    hoverEffect = true,
+    clickEffect = true,
+    glowEffect = false,
+    gradientBackground = false,
+    gradientColors = ["#B89B7A", "#aa6b5d"],
+    
+    // ✨ COMPORTAMENTO E VALIDAÇÃO
+    requiresValidInput = false,
+    conditionalActivation = false,
+    validationTarget = "name-input",
+    disabled = false,
+    loading = false,
+    
+    // ✨ NAVEGAÇÃO E AÇÃO
+    action = "custom",
+    nextStep = "",
+    targetUrl = "",
+    openInNewTab = false,
+    scrollToTop = true,
+    
+    // ✨ RESPONSIVIDADE
+    mobileFullWidth = true,
+    mobileSize = "medium",
+    mobileFontSize = "text-base",
+    tabletSize = "large",
+    desktopSize = "large",
+    
+    // ✨ ANIMAÇÕES
+    animationType = "none",
+    animationDuration = "300ms",
+    animationDelay = "0ms",
+    transitionEasing = "ease-in-out",
+    
+    // ✨ LAYOUT AVANÇADO
+    textAlign = "text-center",
+    justifyContent = "center",
+    alignItems = "center",
+    display = "flex",
+    position = "relative",
+    zIndex = "auto",
+    
+    // ✨ ACESSIBILIDADE
+    ariaLabel = "",
+    title = "",
+    tabIndex = 0,
   } = block?.properties ?? {};
 
   console.log("🚀 ButtonInline renderizado:", {
@@ -60,41 +134,115 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     allProperties: block?.properties,
   });
 
-  // ✅ LISTENER PARA EVENTOS DE VALIDAÇÃO STEP01
+  // ✅ LISTENER PARA EVENTOS DE VALIDAÇÃO - CONDICIONAL E CUSTOMIZÁVEL
   useEffect(() => {
+    // Se não tem ativação condicional, não precisa escutar eventos
+    if (!conditionalActivation) {
+      setButtonState({
+        dynamicDisabled: false,
+        dynamicRequiresValidInput: false,
+      });
+      return;
+    }
+
     const handleButtonStateChange = (event: CustomEvent) => {
       const { buttonId, enabled, disabled, requiresValidInput } = event.detail;
-      
+
       // Verifica se o evento é para este botão
-      if (buttonId === block?.id || (block?.id === 'cta-button-modular' && buttonId === 'cta-button-modular')) {
+      if (
+        buttonId === block?.id ||
+        (block?.id === "cta-button-modular" && buttonId === "cta-button-modular")
+      ) {
         setButtonState({
           dynamicDisabled: disabled || false,
           dynamicRequiresValidInput: requiresValidInput || false,
         });
 
-        console.log('🎯 ButtonInline estado atualizado:', {
+        console.log("🎯 ButtonInline estado atualizado:", {
           buttonId: block?.id,
           enabled,
           disabled,
           requiresValidInput,
+          conditionalActivation,
         });
       }
     };
 
-    window.addEventListener('step01-button-state-change', handleButtonStateChange as EventListener);
-    
-    return () => {
-      window.removeEventListener('step01-button-state-change', handleButtonStateChange as EventListener);
+    // Listener para validação de input específico
+    const handleInputValidation = (event: CustomEvent) => {
+      const { blockId, value, valid } = event.detail;
+      
+      // Verifica se é o input alvo da validação
+      if (blockId === validationTarget || blockId.includes(validationTarget)) {
+        const isValid = valid && value?.trim()?.length >= 2;
+        
+        setButtonState({
+          dynamicDisabled: !isValid,
+          dynamicRequiresValidInput: !isValid,
+        });
+
+        console.log("🎯 Validação de input:", {
+          buttonId: block?.id,
+          validationTarget,
+          inputBlockId: blockId,
+          value,
+          isValid,
+        });
+      }
     };
-  }, [block?.id]);
+
+    if (conditionalActivation) {
+      window.addEventListener("step01-button-state-change", handleButtonStateChange as EventListener);
+      window.addEventListener("quiz-input-change", handleInputValidation as EventListener);
+    }
+
+    return () => {
+      window.removeEventListener("step01-button-state-change", handleButtonStateChange as EventListener);
+      window.removeEventListener("quiz-input-change", handleInputValidation as EventListener);
+    };
+  }, [block?.id, conditionalActivation, validationTarget]);
 
   // Usar variant se style não estiver definido
   const actualVariant = variant || style;
 
+  // ✨ CLASSES DE TAMANHO RESPONSIVAS E EDITÁVEIS
   const sizeClasses = {
-    small: "px-4 py-2 text-sm",
-    medium: "px-6 py-3 text-base",
+    small: "px-3 py-2 text-sm",
+    medium: "px-6 py-3 text-base", 
     large: "px-8 py-4 text-lg",
+    xl: "px-10 py-5 text-xl",
+    xxl: "px-12 py-6 text-2xl",
+  };
+
+  // ✨ CLASSES RESPONSIVAS BASEADAS NAS PROPRIEDADES
+  const getResponsiveClasses = () => {
+    const mobileClass = mobileSize ? sizeClasses[mobileSize as keyof typeof sizeClasses] : "";
+    const tabletClass = tabletSize ? `md:${sizeClasses[tabletSize as keyof typeof sizeClasses]}` : "";
+    const desktopClass = desktopSize ? `lg:${sizeClasses[desktopSize as keyof typeof sizeClasses]}` : "";
+    
+    return `${mobileClass} ${tabletClass} ${desktopClass}`.trim();
+  };
+
+  // ✨ PADDING CUSTOMIZADO OU CLASSES DE TAMANHO
+  const getPaddingClasses = () => {
+    if (padding) return padding;
+    if (paddingX && paddingY) return `${paddingX} ${paddingY}`;
+    if (paddingTop || paddingBottom || paddingLeft || paddingRight) {
+      return `${paddingTop || ''} ${paddingRight || ''} ${paddingBottom || ''} ${paddingLeft || ''}`.trim();
+    }
+    return getResponsiveClasses() || sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large;
+  };
+
+  // ✨ BACKGROUND COM SUPORTE A GRADIENTE
+  const getBackgroundStyle = () => {
+    if (gradientBackground && gradientColors.length >= 2) {
+      return {
+        background: `linear-gradient(135deg, ${gradientColors.join(', ')})`,
+      };
+    }
+    return {
+      backgroundColor,
+    };
   };
 
   // Função para converter margens numéricas em classes Tailwind
@@ -119,7 +267,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   };
 
   // ✅ LÓGICA DE DESABILITAÇÃO DINÂMICA
-  const isButtonDisabled = disabled || requiresValidInput || buttonState.dynamicDisabled || buttonState.dynamicRequiresValidInput;
+  const isButtonDisabled =
+    disabled ||
+    requiresValidInput ||
+    buttonState.dynamicDisabled ||
+    buttonState.dynamicRequiresValidInput;
 
   const handleButtonClick = () => {
     // ⚠️ Bloquear clique se botão está desabilitado
@@ -180,7 +332,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
 
           // States - Usando lógica dinâmica de desabilitação
           isButtonDisabled && "opacity-50 cursor-not-allowed",
-          
+
           // Hover effects - apenas se não estiver desabilitado
           !isButtonDisabled && "hover:shadow-2xl hover:brightness-110"
         )}

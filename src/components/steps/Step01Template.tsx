@@ -9,7 +9,8 @@ export const getStep01Template = () => {
       type: "quiz-intro-header",
       properties: {
         // ✨ CONFIGURAÇÕES DO LOGO (baseado no JSON)
-        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão - Quiz de Estilo Pessoal",
         logoWidth: 120,
         logoHeight: 120,
@@ -203,7 +204,8 @@ export const getStep01Template = () => {
       type: "text-inline",
       properties: {
         // ✨ CONTEÚDO (do JSON)
-        content: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        content:
+          "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         text: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
@@ -388,7 +390,8 @@ export const getStep01Template = () => {
       type: "text-inline",
       properties: {
         // ✨ CONTEÚDO (do JSON)
-        content: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
+        content:
+          "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
         text: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
