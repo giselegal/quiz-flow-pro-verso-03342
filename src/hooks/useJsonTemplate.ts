@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import { TemplateManager } from "@/utils/TemplateManager";
 import type { Block } from "@/types/editor";
+import { TemplateManager } from "@/utils/TemplateManager";
+import { useCallback, useEffect, useState } from "react";
 
 interface UseJsonTemplateOptions {
   preload?: boolean;
@@ -34,34 +34,35 @@ export const useJsonTemplate = (
   /**
    * Carrega blocos de uma etapa
    */
-  const loadStep = useCallback(async (stepId: string) => {
-    if (!stepId) return;
+  const loadStep = useCallback(
+    async (stepId: string) => {
+      if (!stepId) return;
 
-    setLoading(true);
-    setError(null);
-    setCurrentStepId(stepId);
+      setLoading(true);
+      setError(null);
+      setCurrentStepId(stepId);
 
-    try {
-      console.log(`🔄 useJsonTemplate: Carregando ${stepId}...`);
-      const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
-      
-      setBlocks(stepBlocks);
-      onLoad?.(stepId, stepBlocks);
-      
-      console.log(`✅ useJsonTemplate: ${stepId} carregado com ${stepBlocks.length} blocos`);
-      
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      setError(error);
-      setBlocks(fallback);
-      onError?.(stepId, error);
-      
-      console.error(`❌ useJsonTemplate: Erro ao carregar ${stepId}:`, error);
-      
-    } finally {
-      setLoading(false);
-    }
-  }, [fallback, onLoad, onError]);
+      try {
+        console.log(`🔄 useJsonTemplate: Carregando ${stepId}...`);
+        const stepBlocks = await TemplateManager.loadStepBlocks(stepId);
+
+        setBlocks(stepBlocks);
+        onLoad?.(stepId, stepBlocks);
+
+        console.log(`✅ useJsonTemplate: ${stepId} carregado com ${stepBlocks.length} blocos`);
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        setError(error);
+        setBlocks(fallback);
+        onError?.(stepId, error);
+
+        console.error(`❌ useJsonTemplate: Erro ao carregar ${stepId}:`, error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fallback, onLoad, onError]
+  );
 
   /**
    * Recarrega template atual
@@ -116,7 +117,7 @@ export const useMultiJsonTemplate = (stepIds: string[]) => {
 
     // Carrega todos os templates em paralelo
     await Promise.allSettled(
-      stepIds.map(async (stepId) => {
+      stepIds.map(async stepId => {
         try {
           const blocks = await TemplateManager.loadStepBlocks(stepId);
           results[stepId] = blocks;

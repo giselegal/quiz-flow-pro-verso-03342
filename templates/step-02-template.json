@@ -13,12 +13,7 @@
     "validationMessage": "Selecione pelo menos uma opção!"
   },
   "analytics": {
-    "events": [
-      "page_view",
-      "option_selected",
-      "validation_error",
-      "completion"
-    ],
+    "events": ["page_view", "option_selected", "validation_error", "completion"],
     "trackingId": "step-02-quiz-question"
   },
   "metadata": {
@@ -26,11 +21,7 @@
     "name": "Q1 - Roupa Favorita",
     "description": "Primeira questão sobre estilo de roupa",
     "category": "quiz-question",
-    "tags": [
-      "quiz",
-      "style",
-      "quiz-question"
-    ],
+    "tags": ["quiz", "style", "quiz-question"],
     "createdAt": "2025-08-10T03:21:08.512Z",
     "updatedAt": "2025-08-10T03:21:08.512Z"
   },

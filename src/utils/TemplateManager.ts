@@ -1,12 +1,12 @@
-import { TemplateJsonLoader } from "@/utils/TemplateJsonLoader";
 import type { Block } from "@/types/editor";
+import { TemplateJsonLoader } from "@/utils/TemplateJsonLoader";
 
 /**
  * Mapeamento de etapas para templates JSON
  */
 const TEMPLATE_MAPPING = {
   "step-1": "/templates/step-01-template.json",
-  "step-2": "/templates/step-02-template.json", 
+  "step-2": "/templates/step-02-template.json",
   "step-3": "/templates/step-03-template.json",
   "step-4": "/templates/step-04-template.json",
   "step-5": "/templates/step-05-template.json",
@@ -55,13 +55,12 @@ export class TemplateManager {
       // Carrega template JSON
       console.log(`🔄 Carregando template JSON para ${stepId}: ${templatePath}`);
       const blocks = await TemplateJsonLoader.loadTemplateAsBlocks(templatePath, stepId);
-      
+
       // Armazena no cache
       this.cache.set(stepId, blocks);
-      
+
       console.log(`✅ Template ${stepId} carregado: ${blocks.length} blocos`);
       return blocks;
-
     } catch (error) {
       console.error(`❌ Erro ao carregar template para ${stepId}:`, error);
       return this.getFallbackBlocks(stepId);
@@ -73,7 +72,7 @@ export class TemplateManager {
    */
   private static getFallbackBlocks(stepId: string): Block[] {
     console.log(`🔄 Usando fallback para ${stepId}`);
-    
+
     // Fallback básico
     return [
       {
@@ -84,32 +83,32 @@ export class TemplateManager {
           content: `Etapa ${stepId}`,
           fontSize: "text-2xl",
           fontWeight: "font-bold",
-          textAlign: "text-center"
+          textAlign: "text-center",
         },
         content: {
           content: `Etapa ${stepId}`,
           fontSize: "text-2xl",
           fontWeight: "font-bold",
-          textAlign: "text-center"
-        }
+          textAlign: "text-center",
+        },
       },
       {
         id: `${stepId}-fallback-message`,
-        type: "text-inline", 
+        type: "text-inline",
         order: 1,
         properties: {
           content: "Template JSON não encontrado. Usando fallback.",
           fontSize: "text-sm",
           color: "#6B7280",
-          textAlign: "text-center"
+          textAlign: "text-center",
         },
         content: {
           content: "Template JSON não encontrado. Usando fallback.",
-          fontSize: "text-sm", 
+          fontSize: "text-sm",
           color: "#6B7280",
-          textAlign: "text-center"
-        }
-      }
+          textAlign: "text-center",
+        },
+      },
     ];
   }
 
@@ -118,15 +117,32 @@ export class TemplateManager {
    */
   static async preloadCommonTemplates(): Promise<void> {
     const commonSteps = [
-      "step-1", "step-2", "step-3", "step-4", "step-5",
-      "step-6", "step-7", "step-8", "step-9", "step-10",
-      "step-11", "step-12", "step-13", "step-14", "step-15",
-      "step-16", "step-17", "step-18", "step-19", "step-20", "step-21"
+      "step-1",
+      "step-2",
+      "step-3",
+      "step-4",
+      "step-5",
+      "step-6",
+      "step-7",
+      "step-8",
+      "step-9",
+      "step-10",
+      "step-11",
+      "step-12",
+      "step-13",
+      "step-14",
+      "step-15",
+      "step-16",
+      "step-17",
+      "step-18",
+      "step-19",
+      "step-20",
+      "step-21",
     ];
-    
+
     console.log("🚀 Pre-carregando templates comuns...");
-    
-    const promises = commonSteps.map(async (stepId) => {
+
+    const promises = commonSteps.map(async stepId => {
       try {
         await this.loadStepBlocks(stepId);
       } catch (error) {

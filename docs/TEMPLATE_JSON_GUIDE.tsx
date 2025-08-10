@@ -1,6 +1,6 @@
 /**
  * 🎯 SISTEMA DE TEMPLATES JSON - GUIA COMPLETO
- * 
+ *
  * Este guia mostra como usar o sistema de templates JSON
  */
 
@@ -107,7 +107,7 @@ const MyComponent = () => {
 
 const ExampleUsage = () => {
   // Este é um exemplo de como seria usado na prática
-  
+
   console.log(`
   📋 EXEMPLO DE USO:
 

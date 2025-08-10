@@ -75,16 +75,15 @@ export class TemplateJsonLoader {
       }
 
       const template: JsonTemplate = await response.json();
-      
+
       // Valida o template
       this.validateTemplate(template);
-      
+
       // Armazena no cache
       this.templates.set(templatePath, template);
-      
+
       console.log(`✅ Template carregado: ${template.metadata.id}`, template);
       return template;
-      
     } catch (error) {
       console.error(`❌ Erro ao carregar template ${templatePath}:`, error);
       throw error;
@@ -97,26 +96,30 @@ export class TemplateJsonLoader {
   static jsonToBlocks(template: JsonTemplate, stepId: string): Block[] {
     return template.blocks
       .sort((a, b) => a.position - b.position) // Ordena por posição
-      .map((jsonBlock, index) => ({
-        id: `${stepId}-${jsonBlock.id}`,
-        type: jsonBlock.type,
-        order: jsonBlock.position,
-        properties: {
-          ...jsonBlock.properties,
-          // Adiciona propriedades do layout global se não existirem
-          containerWidth: jsonBlock.properties.containerWidth || template.layout.containerWidth,
-          spacing: jsonBlock.properties.spacing || template.layout.spacing,
-          backgroundColor: jsonBlock.properties.backgroundColor || template.layout.backgroundColor,
-        },
-        content: jsonBlock.properties, // Para compatibilidade
-        // Adiciona metadados do template
-        _templateMetadata: {
-          originalId: jsonBlock.id,
-          templateId: template.metadata.id,
-          position: jsonBlock.position,
-          conditions: jsonBlock.conditions,
-        }
-      } as Block));
+      .map(
+        (jsonBlock, index) =>
+          ({
+            id: `${stepId}-${jsonBlock.id}`,
+            type: jsonBlock.type,
+            order: jsonBlock.position,
+            properties: {
+              ...jsonBlock.properties,
+              // Adiciona propriedades do layout global se não existirem
+              containerWidth: jsonBlock.properties.containerWidth || template.layout.containerWidth,
+              spacing: jsonBlock.properties.spacing || template.layout.spacing,
+              backgroundColor:
+                jsonBlock.properties.backgroundColor || template.layout.backgroundColor,
+            },
+            content: jsonBlock.properties, // Para compatibilidade
+            // Adiciona metadados do template
+            _templateMetadata: {
+              originalId: jsonBlock.id,
+              templateId: template.metadata.id,
+              position: jsonBlock.position,
+              conditions: jsonBlock.conditions,
+            },
+          }) as Block
+      );
   }
 
   /**
@@ -134,7 +137,7 @@ export class TemplateJsonLoader {
     if (!template.metadata?.id) {
       throw new Error("Template deve ter metadata.id");
     }
-    
+
     if (!template.blocks || template.blocks.length === 0) {
       throw new Error("Template deve ter pelo menos um bloco");
     }
@@ -148,11 +151,16 @@ export class TemplateJsonLoader {
 
     // Valida tipos de bloco conhecidos
     const knownTypes = [
-      'text-inline', 'button-inline', 'image-display-inline', 
-      'options-grid', 'quiz-intro-header', 'form-input',
-      'decorative-bar-inline', 'legal-notice-inline'
+      "text-inline",
+      "button-inline",
+      "image-display-inline",
+      "options-grid",
+      "quiz-intro-header",
+      "form-input",
+      "decorative-bar-inline",
+      "legal-notice-inline",
     ];
-    
+
     for (const block of template.blocks) {
       if (!knownTypes.includes(block.type)) {
         console.warn(`⚠️ Tipo de bloco desconhecido: ${block.type}`);

@@ -14,15 +14,17 @@ const { blocks } = useEffect(() => {
 
 // DEPOIS - usando templates JSON:
 
-export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [activeStepId, setActiveStepId] = useState("step-1");
-  
+
   // Opção 1: Carregar template individual
-  const { 
-    blocks: currentBlocks, 
-    loading, 
+  const {
+    blocks: currentBlocks,
+    loading,
     error,
-    loadStep 
+    loadStep,
   } = useJsonTemplate(activeStepId, {
     preload: true,
     onLoad: (stepId, blocks) => {
@@ -30,19 +32,19 @@ export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> 
     },
     onError: (stepId, error) => {
       console.error(`❌ Erro no template ${stepId}:`, error);
-    }
+    },
   });
 
   // Opção 2: Pre-carregar múltiplos templates
-  const { 
+  const {
     templatesData,
     loading: multiLoading,
-    getBlocks 
+    getBlocks,
   } = useMultiJsonTemplate(["step-1", "step-2", "step-3", "step-4", "step-5"]);
 
   const handleStageChange = async (newStepId: string) => {
     setActiveStepId(newStepId);
-    
+
     // Carrega template se não estiver em cache
     if (multiLoading) {
       await loadStep(newStepId);
@@ -55,21 +57,17 @@ export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> 
     currentBlocks: getBlocks(activeStepId), // Usa template JSON
     loading: loading || multiLoading,
     error,
-    
+
     // Actions
     setActiveStageId: handleStageChange,
-    
+
     // Template actions
     reloadCurrentTemplate: () => loadStep(activeStepId),
-    
+
     // ... resto do context
   };
 
-  return (
-    <EditorContext.Provider value={contextValue}>
-      {children}
-    </EditorContext.Provider>
-  );
+  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };
 
 // Exemplo de uso em um componente:
@@ -86,10 +84,8 @@ export const ExampleUsage = () => {
 
   return (
     <div>
-      <button onClick={handleLoadStep2}>
-        Carregar Etapa 2
-      </button>
-      
+      <button onClick={handleLoadStep2}>Carregar Etapa 2</button>
+
       <div className="blocks-container">
         {blocks.map(block => (
           <div key={block.id}>

@@ -1,7 +1,7 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
-import { TemplateManager } from "@/utils/TemplateManager";
 import { EditorBlock, FunnelStage } from "@/types/editor";
+import { TemplateManager } from "@/utils/TemplateManager";
 import React, {
   createContext,
   ReactNode,
@@ -270,7 +270,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       try {
         // 🚀 PRIORIZAR SISTEMA JSON
         let templateBlocks;
-        
+
         try {
           console.log(`📄 Tentando carregar template JSON para step-${stepNumber}`);
           templateBlocks = await TemplateManager.loadStepBlocks(stageId);
@@ -289,7 +289,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 id: block.id,
                 type: block.type,
                 hasProperties: !!block.properties,
-                hasContent: !!block.content
+                hasContent: !!block.content,
               });
               return {
                 id: block.id || `${stageId}-block-${index + 1}`,

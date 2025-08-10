@@ -1,7 +1,6 @@
 import { BlockDefinition } from "@/types/editor";
 import { Heading, Image, Minus, MousePointer, Type } from "lucide-react";
 import React from "react";
-import { EditorOptionsGridBlock } from "../components/blocks/quiz/EditorOptionsGridBlock";
 import OptionsGridInlineBlock from "../components/blocks/inline/OptionsGridInlineBlock";
 
 /**
@@ -68,7 +67,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "legal-notice-inline": LegalNoticeInlineBlock,
 
   // Quiz Advanced
-  "options-grid": OptionsGridInlineBlock,  // 🎯 FIX: Usar bloco inline ao invés de funnel
+  "options-grid": OptionsGridInlineBlock, // 🎯 FIX: Usar bloco inline ao invés de funnel
   "quiz-option": QuizOptionBlock,
   "quiz-progress": QuizProgressBlock,
   "quiz-results": QuizResultsEditor,

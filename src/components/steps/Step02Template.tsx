@@ -54,22 +54,24 @@ export const getStep02Template = () => {
     // 🎯 GRADE DE OPÇÕES INLINE (100% COMPATÍVEL COM EDITOR)
     {
       id: "step02-clothing-options",
-      type: "options-grid",  // Agora usa OptionsGridInlineBlock
+      type: "options-grid", // Agora usa OptionsGridInlineBlock
       properties: {
         // 📊 OPÇÕES (mesmo conteúdo, estrutura simplificada para inline)
         options: [
           {
             id: "1a",
             text: "Conforto, leveza e praticidade no vestir.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
             value: "1a",
             category: "Natural",
             points: 1,
           },
           {
-            id: "1b", 
+            id: "1b",
             text: "Discrição, caimento clássico e sobriedade.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
             value: "1b",
             category: "Clássico",
             points: 2,
@@ -78,22 +80,24 @@ export const getStep02Template = () => {
             id: "1c",
             text: "Praticidade com um toque de estilo atual.",
             imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            value: "1c", 
+            value: "1c",
             category: "Contemporâneo",
             points: 2,
           },
           {
             id: "1d",
             text: "Elegância refinada, moderna e sem exageros.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
             value: "1d",
-            category: "Elegante", 
+            category: "Elegante",
             points: 3,
           },
           {
             id: "1e",
             text: "Delicadeza em tecidos suaves e fluidos.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
             value: "1e",
             category: "Romântico",
             points: 2,
@@ -101,15 +105,17 @@ export const getStep02Template = () => {
           {
             id: "1f",
             text: "Sensualidade com destaque para o corpo.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
-            value: "1f", 
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            value: "1f",
             category: "Sexy",
             points: 3,
           },
           {
             id: "1g",
             text: "Impacto visual com peças estruturadas e assimétricas.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
             value: "1g",
             category: "Dramático",
             points: 3,
@@ -117,9 +123,10 @@ export const getStep02Template = () => {
           {
             id: "1h",
             text: "Mix criativo com formas ousadas e originais.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
             value: "1h",
-            category: "Criativo", 
+            category: "Criativo",
             points: 4,
           },
         ],
@@ -128,15 +135,15 @@ export const getStep02Template = () => {
         columns: 2,
         imageSize: 256,
         showImages: true,
-        
+
         // 🎯 VALIDAÇÃO
         multipleSelection: true,
         minSelections: 1,
         maxSelections: 3,
-        
+
         // 🎨 CORES
         borderColor: "#E5E7EB",
-        selectedBorderColor: "#B89B7A", 
+        selectedBorderColor: "#B89B7A",
         hoverColor: "#F3E8D3",
 
         // 🎯 CONTAINER
