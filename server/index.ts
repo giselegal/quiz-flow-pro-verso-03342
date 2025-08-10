@@ -1,9 +1,8 @@
 import cors from "cors";
 import express from "express";
 import { createServer } from "http";
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 // Get __dirname equivalent for ES modules
 const __filename = fileURLToPath(import.meta.url);

@@ -225,6 +225,7 @@ export const Auth: React.FC = () => {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
+                autoComplete="email"
                 className="border-2 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
                 style={{ borderColor: "#E5DDD5", backgroundColor: "#FEFEFE" }}
               />
@@ -245,6 +246,7 @@ export const Auth: React.FC = () => {
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
+                autoComplete="current-password"
                 className="border-2 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
                 style={{ borderColor: "#E5DDD5", backgroundColor: "#FEFEFE" }}
               />

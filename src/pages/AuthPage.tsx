@@ -99,6 +99,7 @@ export default function AuthPage() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="seu@email.com"
                 required
+                autoComplete="email"
               />
             </div>
 
@@ -114,6 +115,7 @@ export default function AuthPage() {
                 placeholder="••••••••"
                 required
                 minLength={6}
+                autoComplete="current-password"
               />
             </div>
 
