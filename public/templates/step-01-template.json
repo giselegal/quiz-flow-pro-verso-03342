@@ -1,0 +1,41 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-01",
+    "name": "Step 01 - Intro",
+    "description": "Introdução do quiz",
+    "category": "intro",
+    "tags": ["intro", "welcome"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Bem-vinda ao Quiz!",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center"
+      }
+    },
+    {
+      "id": "subtitle",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "Vamos descobrir seu estilo.",
+        "fontSize": "text-base",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}

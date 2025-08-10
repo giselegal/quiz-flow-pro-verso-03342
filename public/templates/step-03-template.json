@@ -1,0 +1,41 @@
+{
+  "templateVersion": "1.0.0",
+  "metadata": {
+    "id": "step-03",
+    "name": "Step 03 - Pergunta 2",
+    "description": "Pergunta 2 do quiz",
+    "category": "question",
+    "tags": ["question"],
+    "createdAt": "2025-08-10T00:00:00Z",
+    "updatedAt": "2025-08-10T00:00:00Z"
+  },
+  "layout": {
+    "containerWidth": "medium",
+    "spacing": "normal",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "q-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "Qual combinação você mais gosta?",
+        "fontSize": "text-xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center"
+      }
+    },
+    {
+      "id": "q-helper",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "Selecione 1 opção para continuar.",
+        "fontSize": "text-sm",
+        "textAlign": "text-center"
+      }
+    }
+  ]
+}
