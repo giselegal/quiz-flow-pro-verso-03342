@@ -1,22 +1,9 @@
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 12
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step12Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step12 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step12Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  return <div className="step-12">{/* Conteúdo da Etapa 12 renderizado aqui */}</div>;
-};
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 12 - Analisando seu Perfil...
 export const getStep12Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO

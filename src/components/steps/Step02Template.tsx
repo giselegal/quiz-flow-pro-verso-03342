@@ -1,18 +1,3 @@
-import { useIsMobile } from "@/hooks/use-mobile";
-export interface Step02Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step02 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step02Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  // 🚀 Hooks otimizados aplicados automaticamente
-  return <div className="step-02">{/* Conteúdo da Etapa 2 renderizado aqui */}</div>;
-};
-
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 2 - QUESTÃO 1: TIPO DE ROUPA FAVORITA
 export const getStep02Template = () => {
   return [

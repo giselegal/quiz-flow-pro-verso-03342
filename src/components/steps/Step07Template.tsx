@@ -1,22 +1,7 @@
-import { useIsMobile } from "@/hooks/use-mobile";
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 07
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-export interface Step07Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step07 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step07Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  // 🚀 Hooks otimizados aplicados automaticamente
-  return <div className="step-07">{/* Conteúdo da Etapa 7 renderizado aqui */}</div>;
-};
-
-// �� TEMPLATE DE BLOCOS DA ETAPA 7 - QUESTÃO 6: QUAL CASACO É SEU FAVORITO?
 export const getStep07Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO

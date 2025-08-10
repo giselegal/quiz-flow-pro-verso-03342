@@ -1,22 +1,9 @@
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 09
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step09Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step09 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step09Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  return <div className="step-09">{/* Conteúdo da Etapa 9 renderizado aqui */}</div>;
-};
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 9 - Seus calçados preferidos para o dia a dia:
 export const getStep09Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO

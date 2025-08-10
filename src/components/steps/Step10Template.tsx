@@ -1,22 +1,9 @@
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 10
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step10Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step10 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step10Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  return <div className="step-10">{/* Conteúdo da Etapa 10 renderizado aqui */}</div>;
-};
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 10 - Seu estilo de maquiagem preferido:
 export const getStep10Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO

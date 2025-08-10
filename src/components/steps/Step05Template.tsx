@@ -1,22 +1,7 @@
-import { useIsMobile } from "@/hooks/use-mobile";
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 05
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-export interface Step05Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step05 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step05Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  // 🚀 Hooks otimizados aplicados automaticamente
-  return <div className="step-05">{/* Conteúdo da Etapa 5 renderizado aqui */}</div>;
-};
-
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 5 - QUESTÃO 5: QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?
 export const getStep05Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO

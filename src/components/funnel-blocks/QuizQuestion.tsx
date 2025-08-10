@@ -463,7 +463,18 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           className={`mb-8 ${layoutClasses[optionLayout as keyof typeof layoutClasses]}`}
           style={containerStyles}
         >
-          {options.map((option, index) => renderOption(option, index))}
+          {options && options.length > 0 ? (
+            options.map((option, index) => renderOption(option, index))
+          ) : (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600">
+                ⚠️ Nenhuma opção encontrada. Array de opções está vazio ou indefinido.
+              </p>
+              <p className="text-sm text-gray-600 mt-1">
+                Debug: options.length = {options?.length || 0}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Erro de Validação */}

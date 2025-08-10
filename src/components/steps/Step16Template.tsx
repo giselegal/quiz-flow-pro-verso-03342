@@ -1,22 +1,9 @@
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 16
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step16Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step16 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step16Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  return <div className="step-16">{/* Conteúdo da Etapa 16 renderizado aqui */}</div>;
-};
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 16 - undefined
 export const getStep16Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO

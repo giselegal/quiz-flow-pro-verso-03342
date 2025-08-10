@@ -1,22 +1,9 @@
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 17
 import React from "react";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { useDebounce } from "@/hooks/useDebounce";
 import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-export interface Step17Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step17 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step17Props) => {
-  // 🚀 Hooks otimizados aplicados automaticamente
-  const isMobile = useIsMobile();
-  return <div className="step-17">{/* Conteúdo da Etapa 17 renderizado aqui */}</div>;
-};
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 17 - Finalizando sua Análise...
 export const getStep17Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO

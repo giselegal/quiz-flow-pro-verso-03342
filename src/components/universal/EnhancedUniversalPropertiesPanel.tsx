@@ -390,6 +390,44 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           </div>
         );
 
+      // ✅ NO-CODE: Array de opções (para quiz)
+      case PropertyType.ARRAY:
+        const arrayValue = Array.isArray(value) ? value : [];
+        return (
+          <div key={key} className="space-y-2">
+            <Label className="text-sm font-medium text-[#432818]">
+              {label} {required && <span className="text-red-500">*</span>}
+            </Label>
+            <div className="border border-[#B89B7A]/30 rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
+              {arrayValue.length > 0 ? (
+                arrayValue.map((item, index) => (
+                  <div key={index} className="text-xs bg-[#F8F6F3] p-2 rounded border">
+                    {typeof item === "object" ? (
+                      <div className="space-y-1">
+                        {Object.entries(item).map(([k, v]) => (
+                          <div key={k} className="flex gap-2">
+                            <span className="font-medium text-[#432818]">{k}:</span>
+                            <span className="text-[#666]">{String(v)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span>{String(item)}</span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="text-xs text-[#666] italic text-center py-2">
+                  Nenhum item no array
+                </div>
+              )}
+            </div>
+            <div className="text-xs text-[#666]">
+              Total: {arrayValue.length} {arrayValue.length === 1 ? "item" : "itens"}
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div key={key} className="space-y-2 text-red-500 text-sm">

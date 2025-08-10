@@ -1,6 +1,7 @@
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import DebugStep02 from "@/components/debug/DebugStep02";
 import TestOptionsRendering from "@/components/debug/TestOptionsRendering";
+import TestStep02Direct from "@/components/debug/TestStep02Direct";
 import { Toaster } from "@/components/ui/toaster";
 import { AdminAuthProvider } from "@/context/AdminAuthContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -99,6 +100,7 @@ function App() {
                     </ErrorBoundary>
                   )}
                 </Route>
+                <Route path="/test/step02-direct" component={TestStep02Direct} />
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>

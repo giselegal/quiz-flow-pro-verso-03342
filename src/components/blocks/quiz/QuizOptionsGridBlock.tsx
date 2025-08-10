@@ -167,7 +167,21 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
     optionsLength: options?.length,
     firstOption: options?.[0],
     properties: Object.keys(properties || {}),
+    fullOptions: options,
   });
+
+  // Se não há opções, mostrar um placeholder de debug
+  if (!options || options.length === 0) {
+    return (
+      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 className="font-bold text-yellow-800">Debug: QuizOptionsGridBlock</h3>
+        <p className="text-yellow-700">Nenhuma opção encontrada</p>
+        <pre className="text-xs mt-2 bg-white p-2 rounded overflow-auto">
+          {JSON.stringify({ properties, id }, null, 2)}
+        </pre>
+      </div>
+    );
+  }
 
   // Determinar o número mínimo de seleções com base nas propriedades
   // Por padrão são 3 opções obrigatórias conforme requisito

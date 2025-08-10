@@ -1,19 +1,6 @@
-import { useIsMobile } from "@/hooks/use-mobile";
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 01
 import Step01Intro from "../editor/steps/Step01Intro";
 
-export interface Step01Props {
-  onNext?: () => void;
-  onBlockAdd?: (block: any) => void;
-  onAnswer?: (answer: any) => void;
-  userAnswers?: Record<string, any>;
-}
-
-export const Step01 = ({ onNext, onBlockAdd, onAnswer, userAnswers }: Step01Props) => {
-  const isMobile = useIsMobile();
-  return <div className="step-01">{/* Conteúdo da Etapa 1 renderizado aqui */}</div>;
-};
-
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 1 - CONFIGURAÇÃO COMPLETA E INTUITIVA
 export const getStep01Template = () => {
   return [
     // 🎯 1. CABEÇALHO DO QUIZ COM LOGO E PROGRESSO
