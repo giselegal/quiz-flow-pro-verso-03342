@@ -1,16 +1,16 @@
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 01
+// 🎯 ETAPA 1 - CONFIGURAÇÃO MODULAR BASEADA EM JSON
+// Template baseado no JSON fornecido pelo usuário para Quiz de Estilo Pessoal
 
 export const getStep01Template = () => {
   return [
-    // 🎯 1. CABEÇALHO DO QUIZ COM LOGO E PROGRESSO
+    // 🎯 1. CABEÇALHO DO QUIZ - QUIZ INTRO HEADER
     {
-      id: "quiz-intro-header-step01",
+      id: "quiz-intro-header-modular",
       type: "quiz-intro-header",
       properties: {
-        // ✨ CONFIGURAÇÕES DO LOGO
-        logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão - Consultoria de Estilo",
+        // ✨ CONFIGURAÇÕES DO LOGO (baseado no JSON)
+        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        logoAlt: "Logo Gisele Galvão - Quiz de Estilo Pessoal",
         logoWidth: 120,
         logoHeight: 120,
 
@@ -20,24 +20,22 @@ export const getStep01Template = () => {
         showBackButton: false,
         showProgress: true,
 
-        // ✨ TEXTOS CONFIGURÁVEIS
-        title: "Descubra Seu Estilo Pessoal",
-        subtitle: "Quiz Personalizado de Estilo",
-        description: "Em poucos minutos, descubra seu estilo predominante",
+        // ✨ TEXTOS CONFIGURÁVEIS (do JSON meta)
+        title: "Quiz Estilo Pessoal - Template Completo",
+        subtitle: "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda",
+        description: "Versão 1.2.3 - by Gisele Legal",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         containerWidth: "full",
         containerPosition: "center",
         gridColumns: "auto",
         spacing: "normal",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
         marginTop: 0,
         marginBottom: 16,
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        backgroundColor: "transparent",
-        textColor: "#432818",
+        // ✨ CONFIGURAÇÕES DE CORES (do JSON design)
+        backgroundColor: "#FAF9F7", // backgroundColor do JSON
+        textColor: "#432818", // secondaryColor do JSON
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileLogoWidth: 80,
@@ -46,16 +44,16 @@ export const getStep01Template = () => {
       },
     },
 
-    // 🎨 2. BARRA DECORATIVA DOURADA
+    // 🎨 2. BARRA DECORATIVA (usando cores do JSON design)
     {
-      id: "decorative-bar-step01",
+      id: "decorative-bar-modular",
       type: "decorative-bar-inline",
       properties: {
-        // ✨ CONFIGURAÇÕES VISUAIS
+        // ✨ CONFIGURAÇÕES VISUAIS (cores do JSON)
         width: "100%",
-        height: 4,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        height: 6, // progressBar height do JSON
+        color: "#B89B7A", // primaryColor do JSON
+        gradientColors: ["#B89B7A", "#aa6b5d", "#B89B7A"], // primary + accent do JSON
         borderRadius: 3,
         showShadow: true,
 
@@ -64,13 +62,11 @@ export const getStep01Template = () => {
         containerPosition: "center",
         gridColumns: "auto",
         spacing: "none",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
         marginTop: 0,
         marginBottom: 24,
 
         // ✨ CONFIGURAÇÕES DE CORES
-        backgroundColor: "transparent",
+        backgroundColor: "#F3E8E6", // progressBar background do JSON
 
         // ✨ CONFIGURAÇÕES DE ANIMAÇÃO
         animationType: "fadeIn",
@@ -79,58 +75,19 @@ export const getStep01Template = () => {
       },
     },
 
-    // 🎯 3. COMPONENTE DE INTRODUÇÃO INTERATIVA
+    // 📝 3. TÍTULO PRINCIPAL (baseado no step intro do JSON)
     {
-      id: "intro-block-step01",
-      type: "step01-intro",
-      properties: {
-        // ✨ CONTEÚDO CONFIGURÁVEL
-        title: "Bem-vindo ao Quiz de Estilo Pessoal",
-        descriptionTop: "Descubra seu estilo único através de perguntas personalizadas.",
-        descriptionBottom: "Vamos começar! Primeiro, nos conte seu nome:",
-        imageIntro:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/quiz-intro-image.webp",
-        inputLabel: "Seu Nome",
-        inputPlaceholder: "Digite seu nome aqui",
-        buttonText: "Iniciar Quiz",
-        privacyText: "Seus dados são seguros conosco. Confira nossa política de privacidade.",
-        footerText: "Desenvolvido com ❤️ para você descobrir seu estilo único",
-        required: true,
-
-        // ✨ CONFIGURAÇÕES VISUAIS
-        scale: 100,
-        alignment: "center",
-        backgroundColor: "transparent",
-        backgroundOpacity: 100,
-        textColor: "#432818",
-        showImage: true,
-        showInput: true,
-
-        // ✨ CONFIGURAÇÕES DE LAYOUT
-        containerWidth: "full",
-        containerPosition: "center",
-        spacing: "normal",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
-        marginTop: 32,
-        marginBottom: 32,
-      },
-    },
-
-    // 📝 4. TÍTULO PRINCIPAL COM PROPRIEDADES EDITÁVEIS
-    {
-      id: "main-title-step01",
+      id: "main-title-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO CONFIGURÁVEL
-        content:
-          "Chega de um guarda-roupa lotado e da sensação de que [#432818]nada combina com você[/#432818].",
-        text: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
+        // ✨ CONTEÚDO (do JSON steps[0] - intro)
+        content: "Bem-vinda ao Quiz de Estilo",
+        text: "Bem-vinda ao Quiz de Estilo",
 
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
-        fontSize: "text-3xl",
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (do JSON design.fontFamily)
+        fontSize: "text-4xl",
         fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
+        fontFamily: "'Playfair Display', 'Inter', serif", // do JSON design.fontFamily
         lineHeight: "1.2",
         letterSpacing: "normal",
 
@@ -138,93 +95,39 @@ export const getStep01Template = () => {
         textAlign: "text-center",
         textWidth: "w-full",
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        color: "#B89B7A",
-        textColor: "#B89B7A",
+        // ✨ CONFIGURAÇÕES DE CORES (do JSON design)
+        color: "#432818", // secondaryColor do JSON
+        textColor: "#432818",
         backgroundColor: "transparent",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         containerWidth: "large",
         containerPosition: "center",
         gridColumns: "full",
-        spacing: "none",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
+        spacing: "normal",
         marginTop: 0,
         marginBottom: 20,
-        marginLeft: 0,
-        marginRight: 0,
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFontSize: "text-2xl",
+        mobileFontSize: "text-3xl",
         mobileLineHeight: "1.3",
         mobileMarginBottom: 16,
-
-        // ✨ CONFIGURAÇÕES DE EFEITOS
-        hoverEffect: true,
-        shadowEffect: false,
-        borderEffect: false,
       },
     },
 
-    // 🖼️ 4. IMAGEM HERO RESPONSIVA
+    // 📄 4. DESCRIÇÃO SUPERIOR (do JSON steps[0].descriptionTop)
     {
-      id: "hero-image-step01",
-      type: "image-display-inline",
-      properties: {
-        // ✨ CONFIGURAÇÕES DA IMAGEM
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp",
-        alt: "Transforme seu guarda-roupa - Descubra seu estilo pessoal",
-        width: 600,
-        height: 400,
-
-        // ✨ CONFIGURAÇÕES DE ESTILO
-        className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
-        borderRadius: 12,
-        shadow: true,
-        objectFit: "cover",
-
-        // ✨ CONFIGURAÇÕES DE LAYOUT
-        textAlign: "text-center",
-        containerWidth: "large",
-        containerPosition: "center",
-        gridColumns: "auto",
-        spacing: "small",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
-        marginTop: 0,
-        marginBottom: 20,
-
-        // ✨ CONFIGURAÇÕES DE CORES
-        backgroundColor: "transparent",
-        borderColor: "#B89B7A",
-
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileWidth: 350,
-        mobileHeight: 250,
-        mobileClassName: "object-cover w-full h-60 rounded-lg mx-auto shadow-md",
-
-        // ✨ CONFIGURAÇÕES DE EFEITOS
-        hoverEffect: true,
-        zoomOnHover: false,
-        lazyLoading: true,
-      },
-    },
-
-    // 💬 5. TEXTO MOTIVACIONAL UNIFICADO
-    {
-      id: "motivation-unified-step01",
+      id: "description-top-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO CONFIGURÁVEL
-        content:
-          "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
-        text: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        // ✨ CONTEÚDO (do JSON)
+        content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+        text: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
         fontSize: "text-xl",
         fontWeight: "font-normal",
-        fontFamily: "Inter, sans-serif",
+        fontFamily: "'Playfair Display', 'Inter', serif",
         lineHeight: "1.6",
         letterSpacing: "normal",
 
@@ -233,7 +136,7 @@ export const getStep01Template = () => {
         textWidth: "w-full",
 
         // ✨ CONFIGURAÇÕES DE CORES
-        color: "#432818",
+        color: "#432818", // secondaryColor do JSON
         textColor: "#432818",
         backgroundColor: "transparent",
 
@@ -241,62 +144,171 @@ export const getStep01Template = () => {
         containerWidth: "medium",
         containerPosition: "center",
         gridColumns: "full",
-        spacing: "small",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
-        marginTop: 24,
+        spacing: "normal",
+        marginTop: 0,
         marginBottom: 24,
-        marginLeft: 0,
-        marginRight: 0,
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileFontSize: "text-lg",
         mobileLineHeight: "1.5",
-        mobileMarginTop: 16,
-        mobileMarginBottom: 16,
-
-        // ✨ CONFIGURAÇÕES DE EFEITOS
-        hoverEffect: false,
-        shadowEffect: false,
-        borderEffect: false,
+        mobileMarginBottom: 20,
       },
     },
 
-    // 📋 6. CAMPO DE ENTRADA DE NOME
+    // 🖼️ 5. IMAGEM DE INTRODUÇÃO (do JSON steps[0].imageIntro)
     {
-      id: "name-input-step01",
-      type: "form-input",
+      id: "intro-image-modular",
+      type: "image-display-inline",
       properties: {
-        // ✨ CONFIGURAÇÕES DO CAMPO
-        label: "COMO VOCÊ GOSTARIA DE SER CHAMADA?",
-        placeholder: "Digite seu nome aqui...",
-        name: "userName",
-        inputType: "text",
-        required: true,
+        // ✨ CONFIGURAÇÕES DA IMAGEM (do JSON)
+        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
+        alt: "Quiz de Estilo Pessoal - Imagem Introdutória",
+        width: 600,
+        height: 400,
 
-        // ✨ CONFIGURAÇÕES DE VALIDAÇÃO
-        minLength: 2,
-        maxLength: 50,
-        pattern: "[A-Za-zÀ-ÿ\\s]+",
-        helperText: "Seu nome será usado para personalizar sua experiência",
-        errorMessage: "Por favor, digite um nome válido",
-
-        // ✨ CONFIGURAÇÕES DE ESTILO
-        borderColor: "#B89B7A",
-        focusColor: "#A38A69",
-        backgroundColor: "#ffffff",
-        textColor: "#432818",
+        // ✨ CONFIGURAÇÕES DE ESTILO (baseado no JSON design.card)
+        className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+        borderRadius: 16, // do JSON design.card.borderRadius
+        shadow: true, // do JSON design.card.shadow
+        objectFit: "cover",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         textAlign: "text-center",
+        containerWidth: "large",
+        containerPosition: "center",
+        gridColumns: "auto",
+        spacing: "normal",
+        marginTop: 0,
+        marginBottom: 24,
+
+        // ✨ CONFIGURAÇÕES DE CORES
+        backgroundColor: "#fff", // do JSON design.card.background
+        borderColor: "#B89B7A", // primaryColor do JSON
+
+        // ✨ CONFIGURAÇÕES RESPONSIVAS
+        mobileWidth: 350,
+        mobileHeight: 280,
+        mobileClassName: "object-cover w-full h-72 rounded-lg mx-auto shadow-md",
+
+        // ✨ CONFIGURAÇÕES DE EFEITOS
+        hoverEffect: true,
+        zoomOnHover: false,
+        lazyLoading: true,
+      },
+    },
+
+    // 📝 6. DESCRIÇÃO INFERIOR (do JSON steps[0].descriptionBottom)
+    {
+      id: "description-bottom-modular",
+      type: "text-inline",
+      properties: {
+        // ✨ CONTEÚDO (do JSON)
+        content: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        text: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
+        fontSize: "text-lg",
+        fontWeight: "font-normal",
+        fontFamily: "'Playfair Display', 'Inter', serif",
+        lineHeight: "1.6",
+        letterSpacing: "normal",
+
+        // ✨ CONFIGURAÇÕES DE ALINHAMENTO
+        textAlign: "text-center",
+        textWidth: "w-full",
+
+        // ✨ CONFIGURAÇÕES DE CORES
+        color: "#432818", // secondaryColor do JSON
+        textColor: "#432818",
+        backgroundColor: "transparent",
+
+        // ✨ CONFIGURAÇÕES DE LAYOUT
+        containerWidth: "medium",
+        containerPosition: "center",
+        gridColumns: "full",
+        spacing: "normal",
+        marginTop: 0,
+        marginBottom: 32,
+
+        // ✨ CONFIGURAÇÕES RESPONSIVAS
+        mobileFontSize: "text-base",
+        mobileLineHeight: "1.5",
+        mobileMarginBottom: 24,
+      },
+    },
+
+    // 🏷️ 7. LABEL DO INPUT (do JSON steps[0].inputLabel)
+    {
+      id: "input-label-modular",
+      type: "text-inline",
+      properties: {
+        // ✨ CONTEÚDO (do JSON)
+        content: "NOME *",
+        text: "NOME *",
+
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
+        fontSize: "text-sm",
+        fontWeight: "font-semibold",
+        fontFamily: "'Inter', sans-serif",
+        lineHeight: "1.4",
+        letterSpacing: "0.05em",
+
+        // ✨ CONFIGURAÇÕES DE ALINHAMENTO
+        textAlign: "text-left",
+        textWidth: "w-full",
+
+        // ✨ CONFIGURAÇÕES DE CORES
+        color: "#432818", // secondaryColor do JSON
+        textColor: "#432818",
+        backgroundColor: "transparent",
+
+        // ✨ CONFIGURAÇÕES DE LAYOUT
+        containerWidth: "medium",
+        containerPosition: "center",
+        gridColumns: "full",
+        spacing: "tight",
+        marginTop: 0,
+        marginBottom: 8,
+
+        // ✨ CONFIGURAÇÕES RESPONSIVAS
+        mobileFontSize: "text-sm",
+        mobileMarginBottom: 6,
+      },
+    },
+
+    // 📋 8. CAMPO DE ENTRADA DE NOME (baseado no JSON steps[0])
+    {
+      id: "name-input-modular",
+      type: "form-input",
+      properties: {
+        // ✨ CONFIGURAÇÕES DO CAMPO (do JSON)
+        label: "", // removido porque temos um componente separado acima
+        placeholder: "Digite seu nome", // do JSON steps[0].inputPlaceholder
+        name: "userName",
+        inputType: "text", // do JSON steps[0].inputType
+        required: true, // do JSON steps[0].required
+
+        // ✨ CONFIGURAÇÕES DE VALIDAÇÃO (do JSON steps[0].validation)
+        minLength: 2, // do JSON steps[0].validation.minLength
+        maxLength: 50,
+        pattern: "[A-Za-zÀ-ÿ\\s]+",
+        helperText: "Seu nome será usado para personalizar sua experiência",
+        errorMessage: "Digite seu nome para continuar", // do JSON steps[0].validation.errorMessage
+
+        // ✨ CONFIGURAÇÕES DE ESTILO (baseado no JSON design.button)
+        borderColor: "#B89B7A", // primaryColor do JSON
+        focusColor: "#aa6b5d", // accentColor do JSON
+        backgroundColor: "#ffffff",
+        textColor: "#432818", // secondaryColor do JSON
+
+        // ✨ CONFIGURAÇÕES DE LAYOUT
+        textAlign: "text-left",
         containerWidth: "medium",
         containerPosition: "center",
         gridColumns: "auto",
-        spacing: "small",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
+        spacing: "normal",
         marginTop: 0,
-        marginBottom: 20,
+        marginBottom: 24,
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileWidth: "100%",
@@ -310,51 +322,51 @@ export const getStep01Template = () => {
       },
     },
 
-    // 🎯 7. BOTÃO CTA PRINCIPAL
+    // 🎯 9. BOTÃO CTA (baseado no JSON steps[0].buttonText e design.button)
     {
-      id: "cta-button-step01",
+      id: "cta-button-modular",
       type: "button-inline",
       properties: {
-        // ✨ CONFIGURAÇÕES DO TEXTO
-        text: "✨ Quero Descobrir meu Estilo Agora! ✨",
+        // ✨ CONFIGURAÇÕES DO TEXTO (do JSON)
+        text: "Quero Descobrir Meu Estilo!", // Texto quando habilitado
 
-        // ✨ CONFIGURAÇÕES DE ESTILO
+        // ✨ CONFIGURAÇÕES DE ESTILO (do JSON design.button)
         variant: "primary",
         size: "large",
         fullWidth: true,
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        backgroundColor: "#B89B7A",
-        textColor: "#ffffff",
+        // ✨ CONFIGURAÇÕES DE CORES (do JSON design.button)
+        backgroundColor: "#B89B7A", // do JSON design.button.background (gradient simplificado)
+        textColor: "#fff", // do JSON design.button.textColor
         borderColor: "#B89B7A",
-        hoverBackgroundColor: "#A38A69",
-        hoverTextColor: "#ffffff",
+        hoverBackgroundColor: "#aa6b5d", // accentColor do JSON
+        hoverTextColor: "#fff",
         activeBackgroundColor: "#8B7355",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         textAlign: "text-center",
-        containerWidth: "large",
+        containerWidth: "medium",
         containerPosition: "center",
         gridColumns: "auto",
-        spacing: "small",
+        spacing: "normal",
 
-        // ✨ CONFIGURAÇÕES DE APARÊNCIA
-        borderRadius: "rounded-full",
+        // ✨ CONFIGURAÇÕES DE APARÊNCIA (do JSON design.button)
+        borderRadius: "rounded-lg", // do JSON design.button.borderRadius
         padding: "py-4 px-8",
         fontSize: "text-lg",
         fontWeight: "font-bold",
-        boxShadow: "shadow-xl",
+        boxShadow: "shadow-lg", // baseado no JSON design.button.shadow
 
         // ✨ CONFIGURAÇÕES DE MARGENS
         marginTop: 0,
-        marginBottom: 24,
+        marginBottom: 32,
 
         // ✨ CONFIGURAÇÕES DE COMPORTAMENTO
         requiresValidInput: true,
         action: "next-step",
         disabled: false,
 
-        // ✨ CONFIGURAÇÕES DE EFEITOS
+        // ✨ CONFIGURAÇÕES DE EFEITOS (do JSON design.animations.button)
         hoverEffect: true,
         clickEffect: true,
         loadingState: false,
@@ -370,60 +382,84 @@ export const getStep01Template = () => {
       },
     },
 
-    // ⚖️ 8. AVISO LEGAL E COPYRIGHT
+    // 📜 10. TEXTO DE PRIVACIDADE (do JSON steps[0].privacyText)
     {
-      id: "legal-notice-step01",
-      type: "legal-notice-inline",
+      id: "privacy-text-modular",
+      type: "text-inline",
       properties: {
-        // ✨ CONFIGURAÇÕES DE CONTEÚDO
-        privacyText:
-          "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
-        copyrightText: "© 2025 Gisele Galvão - Todos os direitos reservados",
-        termsText: "Termos de Uso",
-
-        // ✨ CONFIGURAÇÕES DE ÍCONE
-        showIcon: true,
-        iconType: "shield",
-        iconColor: "#B89B7A",
+        // ✨ CONTEÚDO (do JSON)
+        content: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
+        text: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
-        textAlign: "text-center",
-        textSize: "text-xs",
-        fontSize: 12,
-        fontFamily: "Inter, sans-serif",
-        fontWeight: "400",
+        fontSize: "text-xs",
+        fontWeight: "font-normal",
+        fontFamily: "'Inter', sans-serif",
         lineHeight: "1.4",
+        letterSpacing: "normal",
+
+        // ✨ CONFIGURAÇÕES DE ALINHAMENTO
+        textAlign: "text-center",
+        textWidth: "w-full",
 
         // ✨ CONFIGURAÇÕES DE CORES
+        color: "#6B7280", // cor mais suave para texto legal
         textColor: "#6B7280",
-        linkColor: "#B89B7A",
+        backgroundColor: "transparent",
+
+        // ✨ CONFIGURAÇÕES DE LAYOUT
+        containerWidth: "medium",
+        containerPosition: "center",
+        gridColumns: "full",
+        spacing: "tight",
+        marginTop: 0,
+        marginBottom: 16,
+
+        // ✨ CONFIGURAÇÕES RESPONSIVAS
+        mobileFontSize: "text-xs",
+        mobileLineHeight: "1.3",
+        mobileMarginBottom: 12,
+      },
+    },
+
+    // ⚖️ 11. FOOTER COPYRIGHT (do JSON steps[0].footerText)
+    {
+      id: "footer-copyright-modular",
+      type: "text-inline",
+      properties: {
+        // ✨ CONTEÚDO (do JSON)
+        content: "© 2025 Gisele Galvão - Todos os direitos reservados",
+        text: "© 2025 Gisele Galvão - Todos os direitos reservados",
+
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
+        fontSize: "text-xs",
+        fontWeight: "font-normal",
+        fontFamily: "'Inter', sans-serif",
+        lineHeight: "1.4",
+        letterSpacing: "normal",
+
+        // ✨ CONFIGURAÇÕES DE ALINHAMENTO
+        textAlign: "text-center",
+        textWidth: "w-full",
+
+        // ✨ CONFIGURAÇÕES DE CORES
+        color: "#6B7280", // cor mais suave para footer
+        textColor: "#6B7280",
         backgroundColor: "transparent",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         containerWidth: "full",
         containerPosition: "center",
-        gridColumns: "auto",
-        spacing: "small",
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
+        gridColumns: "full",
+        spacing: "tight",
         marginTop: 24,
         marginBottom: 16,
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFontSize: 11,
+        mobileFontSize: "text-xs",
         mobileLineHeight: "1.3",
         mobileMarginTop: 16,
         mobileMarginBottom: 12,
-
-        // ✨ CONFIGURAÇÕES DE LINKS
-        privacyUrl: "/privacy-policy",
-        termsUrl: "/terms-of-service",
-        linkTarget: "_blank",
-
-        // ✨ CONFIGURAÇÕES DE COMPORTAMENTO
-        showPrivacyLink: true,
-        showTermsLink: true,
-        showCopyright: true,
       },
     },
   ];

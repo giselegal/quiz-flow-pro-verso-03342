@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
@@ -14,6 +14,12 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = "",
 }) => {
+  // Estado local para controle dinâmico do botão
+  const [buttonState, setButtonState] = useState({
+    dynamicDisabled: false,
+    dynamicRequiresValidInput: false,
+  });
+
   // Destructuring das propriedades do bloco
   const {
     text = "Clique aqui",
@@ -54,6 +60,34 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     allProperties: block?.properties,
   });
 
+  // ✅ LISTENER PARA EVENTOS DE VALIDAÇÃO STEP01
+  useEffect(() => {
+    const handleButtonStateChange = (event: CustomEvent) => {
+      const { buttonId, enabled, disabled, requiresValidInput } = event.detail;
+      
+      // Verifica se o evento é para este botão
+      if (buttonId === block?.id || (block?.id === 'cta-button-modular' && buttonId === 'cta-button-modular')) {
+        setButtonState({
+          dynamicDisabled: disabled || false,
+          dynamicRequiresValidInput: requiresValidInput || false,
+        });
+
+        console.log('🎯 ButtonInline estado atualizado:', {
+          buttonId: block?.id,
+          enabled,
+          disabled,
+          requiresValidInput,
+        });
+      }
+    };
+
+    window.addEventListener('step01-button-state-change', handleButtonStateChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('step01-button-state-change', handleButtonStateChange as EventListener);
+    };
+  }, [block?.id]);
+
   // Usar variant se style não estiver definido
   const actualVariant = variant || style;
 
@@ -84,13 +118,26 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     return `${prefix}-24`;
   };
 
+  // ✅ LÓGICA DE DESABILITAÇÃO DINÂMICA
+  const isButtonDisabled = disabled || requiresValidInput || buttonState.dynamicDisabled || buttonState.dynamicRequiresValidInput;
+
   const handleButtonClick = () => {
+    // ⚠️ Bloquear clique se botão está desabilitado
+    if (isButtonDisabled) {
+      console.log("🚫 Botão desabilitado - clique bloqueado:", {
+        disabled,
+        requiresValidInput,
+        dynamicDisabled: buttonState.dynamicDisabled,
+        dynamicRequiresValidInput: buttonState.dynamicRequiresValidInput,
+      });
+      return;
+    }
+
     onClick?.();
     console.log("🎯 ButtonInline CTA clicado:", {
       text,
       blockId: block?.id,
-      requiresValidInput,
-      disabled,
+      isButtonDisabled,
     });
   };
 
@@ -109,7 +156,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     >
       <button
         onClick={handleButtonClick}
-        disabled={disabled || requiresValidInput}
+        disabled={isButtonDisabled}
         className={cn(
           // Base styles
           "inline-flex items-center justify-center font-bold transition-all duration-300",
@@ -131,12 +178,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           boxShadow,
           hoverEffect && "hover:shadow-xl hover:scale-105 active:scale-95",
 
-          // States
-          disabled && "opacity-50 cursor-not-allowed",
-          requiresValidInput && "opacity-75 cursor-not-allowed",
-
-          // Hover effects
-          "hover:shadow-2xl hover:brightness-110"
+          // States - Usando lógica dinâmica de desabilitação
+          isButtonDisabled && "opacity-50 cursor-not-allowed",
+          
+          // Hover effects - apenas se não estiver desabilitado
+          !isButtonDisabled && "hover:shadow-2xl hover:brightness-110"
         )}
         style={{
           backgroundColor,
