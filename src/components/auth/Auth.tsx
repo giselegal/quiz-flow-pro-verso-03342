@@ -98,7 +98,7 @@ export const Auth: React.FC = () => {
                  style={{ backgroundColor: '#8B7355', opacity: 0.1, animation: 'pulse 4s infinite' }}></div>
             
             {/* Container da logo com efeitos */}
-            <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-110 hover:rotate-3"
+            <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl transform transition-all duration-500 hover:scale-110 hover:rotate-3 shimmer-effect"
                  style={{ 
                    border: '3px solid #B89B7A',
                    boxShadow: '0 0 30px rgba(184, 155, 122, 0.4), 0 0 60px rgba(184, 155, 122, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.1)',
@@ -129,11 +129,11 @@ export const Auth: React.FC = () => {
             </div>
             
             {/* Partículas flutuantes */}
-            <div className="absolute -top-2 -right-2 w-2 h-2 rounded-full animate-bounce"
+            <div className="absolute -top-2 -right-2 w-2 h-2 rounded-full floating-particle"
                  style={{ backgroundColor: '#B89B7A', animationDelay: '0s', animationDuration: '2s' }}></div>
-            <div className="absolute -bottom-1 -left-1 w-1 h-1 rounded-full animate-bounce"
+            <div className="absolute -bottom-1 -left-1 w-1 h-1 rounded-full floating-particle"
                  style={{ backgroundColor: '#A88B6A', animationDelay: '0.5s', animationDuration: '3s' }}></div>
-            <div className="absolute top-0 left-0 w-1.5 h-1.5 rounded-full animate-bounce"
+            <div className="absolute top-0 left-0 w-1.5 h-1.5 rounded-full floating-particle"
                  style={{ backgroundColor: '#8B7355', animationDelay: '1s', animationDuration: '2.5s' }}></div>
           </div>
 
