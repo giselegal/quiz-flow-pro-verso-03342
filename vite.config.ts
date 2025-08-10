@@ -17,6 +17,7 @@ export default defineConfig({
       "@/types": path.resolve(__dirname, "./src/types"),
     },
     extensions: [".mjs", ".js", ".mts", ".ts", ".jsx", ".tsx", ".json"],
+    dedupe: ["react", "react-dom"],
   },
   server: {
     host: "0.0.0.0",
