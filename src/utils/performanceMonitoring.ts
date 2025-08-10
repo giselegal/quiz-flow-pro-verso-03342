@@ -102,63 +102,26 @@ class PerformanceMonitor {
 
     // Usar requestIdleCallback para evitar violations
     const scheduleMemoryCheck = () => {
-      // Desabilitar em produção ou quando performance estiver ruim
-      if (process.env.NODE_ENV === 'production' || !this.shouldMonitor()) {
-        return;
-      }
-
       if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-          if (!this.isMonitoring) return;
-          
-          const start = performance.now();
           checkMemory();
-          const duration = performance.now() - start;
-          
-          // Se demorou muito, aumentar o intervalo
-          const nextInterval = duration > 50 ? 30000 : 15000; // 30s se lento, 15s se rápido
-          
           // Reagendar apenas se ainda estiver monitorando
           if (this.isMonitoring) {
-            setTimeout(scheduleMemoryCheck, nextInterval);
+            setTimeout(scheduleMemoryCheck, 10000); // Reduzido para 10s
           }
-        }, { timeout: 5000 });
+        });
       } else {
-        // Fallback mais otimizado - apenas em desenvolvimento
-        if (process.env.NODE_ENV === 'development') {
-          setTimeout(() => {
-            if (!this.isMonitoring) return;
-            checkMemory();
-            setTimeout(scheduleMemoryCheck, 20000); // Intervalo maior
-          }, 100); // Delay inicial pequeno
-        }
+        // Fallback mais otimizado
+        setTimeout(() => {
+          checkMemory();
+          if (this.isMonitoring) {
+            setTimeout(scheduleMemoryCheck, 10000);
+          }
+        }, 16); // Frame-time aware
       }
     };
 
-    // Só iniciar se ambiente permitir
-    if (process.env.NODE_ENV === 'development') {
-      scheduleMemoryCheck();
-    }
-  }
-
-  private shouldMonitor(): boolean {
-    // Verificar se o browser está com performance ruim
-    if ('memory' in performance && (performance as any).memory) {
-      const memory = (performance as any).memory;
-      const memoryUsage = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
-      
-      // Se uso de memória > 85%, parar monitoramento temporariamente
-      if (memoryUsage > 0.85) {
-        return false;
-      }
-    }
-
-    // Verificar se há input pendente (usuário interagindo)
-    if ('scheduler' in window && (window as any).scheduler.isInputPending) {
-      return !(window as any).scheduler.isInputPending();
-    }
-
-    return true;
+    scheduleMemoryCheck();
   }
 
   private monitorBundleSize() {

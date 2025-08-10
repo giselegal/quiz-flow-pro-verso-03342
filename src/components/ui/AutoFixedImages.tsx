@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import { fixBlurryIntroQuizImages } from "../../utils/fixBlurryIntroQuizImages";
-import { optimizedDebounce, scheduleOptimizedWork } from "../../utils/performanceOptimizer";
+import React, { useEffect, useRef } from "react";
+import { fixBlurryIntroQuizImages } from "@/utils/fixBlurryIntroQuizImages";
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;
@@ -28,21 +27,30 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
   const debounceTimeoutRef = useRef<number | null>(null);
 
   // Função de debounce otimizada
-  // Debounce otimizado usando as funções de performance
-  const debouncedFix = useCallback(
-    optimizedDebounce(
-      () => {
-        scheduleOptimizedWork(
-          fixBlurryIntroQuizImages,
-          'idle', // Usar requestIdleCallback para não bloquear
-          2000    // Timeout de segurança
+  const debouncedFix = () => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    // Usar requestIdleCallback se disponível
+    if ("requestIdleCallback" in window) {
+      debounceTimeoutRef.current = setTimeout(() => {
+        // @ts-ignore
+        window.requestIdleCallback(
+          () => {
+            fixBlurryIntroQuizImages();
+            debounceTimeoutRef.current = null;
+          },
+          { timeout: 1000 }
         );
-      },
-      300,  // Delay
-      true  // Usar requestIdleCallback
-    ),
-    []
-  );
+      }, 300) as unknown as number;
+    } else {
+      debounceTimeoutRef.current = setTimeout(() => {
+        fixBlurryIntroQuizImages();
+        debounceTimeoutRef.current = null;
+      }, 500) as unknown as number;
+    }
+  };
 
   // Aplicar correção na montagem inicial - otimizada para não interferir com LCP
   useEffect(() => {
