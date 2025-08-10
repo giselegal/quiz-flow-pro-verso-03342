@@ -1,7 +1,14 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { cn } from "../../../lib/utils";
-import { Edit3, Bell, MessageSquare, User, DollarSign, AlertCircle } from "lucide-react";
+import {
+  Edit3,
+  Bell,
+  MessageSquare,
+  User,
+  DollarSign,
+  AlertCircle,
+} from "lucide-react";
 
 type NotificationType = "message" | "user" | "payment" | "alert" | "general";
 
@@ -29,7 +36,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -156,17 +170,23 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
                   <div className="flex flex-col overflow-hidden">
                     <figcaption
                       className="flex flex-row items-center whitespace-pre text-lg font-medium cursor-pointer"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         if (onPropertyChange && !disabled) {
-                          const newTitle = prompt("Novo título:", notification.title);
+                          const newTitle = prompt(
+                            "Novo título:",
+                            notification.title
+                          );
                           if (newTitle !== null) {
                             const updatedNotifications = [...notifications];
                             updatedNotifications[index] = {
                               ...notification,
                               title: newTitle,
                             };
-                            onPropertyChange("notifications", updatedNotifications);
+                            onPropertyChange(
+                              "notifications",
+                              updatedNotifications
+                            );
                           }
                         }
                       }}
@@ -177,17 +197,23 @@ const NotificationInlineBlock: React.FC<NotificationInlineBlockProps> = ({
                     </figcaption>
                     <p
                       className="text-sm font-normal text-[#8F7A6A] cursor-pointer"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         if (onPropertyChange && !disabled) {
-                          const newSubtitle = prompt("Novo subtítulo:", notification.subtitle);
+                          const newSubtitle = prompt(
+                            "Novo subtítulo:",
+                            notification.subtitle
+                          );
                           if (newSubtitle !== null) {
                             const updatedNotifications = [...notifications];
                             updatedNotifications[index] = {
                               ...notification,
                               subtitle: newSubtitle,
                             };
-                            onPropertyChange("notifications", updatedNotifications);
+                            onPropertyChange(
+                              "notifications",
+                              updatedNotifications
+                            );
                           }
                         }
                       }}

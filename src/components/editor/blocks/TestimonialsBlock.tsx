@@ -16,7 +16,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -103,9 +110,12 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   return (
     <div className={cn("py-10", className)}>
       <div className="text-center mb-10">
-        <h3 className="text-2xl md:text-3xl font-bold text-[#B89B7A] mb-3">{title}</h3>
+        <h3 className="text-2xl md:text-3xl font-bold text-[#B89B7A] mb-3">
+          {title}
+        </h3>
         <p className="text-center text-[#8F7A6A] mb-4 max-w-2xl mx-auto">
-          O que mulheres como você estão dizendo sobre esta jornada de transformação
+          O que mulheres como você estão dizendo sobre esta jornada de
+          transformação
         </p>
         <div className="h-0.5 w-32 mx-auto bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full"></div>
       </div>
@@ -142,12 +152,16 @@ const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
 
             {/* Rating */}
             {showRatings && (
-              <div className="flex justify-center mb-4">{renderStars(item.rating)}</div>
+              <div className="flex justify-center mb-4">
+                {renderStars(item.rating)}
+              </div>
             )}
 
             {/* Author info */}
             <div className="text-center border-t border-[#B89B7A]/10 pt-4">
-              <h4 className="font-semibold text-[#aa6b5d] text-lg">{item.name}</h4>
+              <h4 className="font-semibold text-[#aa6b5d] text-lg">
+                {item.name}
+              </h4>
               <p className="text-[#8F7A6A] text-sm">{item.role}</p>
             </div>
           </div>

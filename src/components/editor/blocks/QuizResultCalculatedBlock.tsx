@@ -8,7 +8,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -89,15 +96,18 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
 
         {/* Primary Result */}
         <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-          <h3 className="text-2xl font-semibold mb-4" style={{ color: primaryResult.color }}>
+          <h3
+            className="text-2xl font-semibold mb-4"
+            style={{ color: primaryResult.color }}
+          >
             Seu Estilo Principal: {primaryResult.style}
           </h3>
           {showPercentages && (
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               {primaryResult.percentage}% de compatibilidade
             </div>
           )}
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="h-3 rounded-full transition-all duration-500"
               style={{
@@ -117,10 +127,14 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
             {secondaryResults.map((style: any, index: number) => (
               <div key={index} className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
-                  <span style={{ color: '#432818' }}>{style.style}</span>
-                  {showPercentages && <span style={{ color: '#6B4F43' }}>{style.percentage}%</span>}
+                  <span style={{ color: "#432818" }}>{style.style}</span>
+                  {showPercentages && (
+                    <span style={{ color: "#6B4F43" }}>
+                      {style.percentage}%
+                    </span>
+                  )}
                 </div>
-                <div style={{ backgroundColor: '#E5DDD5' }}>
+                <div style={{ backgroundColor: "#E5DDD5" }}>
                   <div
                     className="h-2 rounded-full transition-all duration-500"
                     style={{

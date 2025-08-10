@@ -178,7 +178,8 @@ export const BUTTON_EXAMPLES = {
     borderRadius: "rounded-lg",
 
     // Acessibilidade completa
-    ariaLabel: "Iniciar avaliação de estilo pessoal - Duração estimada: 5 minutos",
+    ariaLabel:
+      "Iniciar avaliação de estilo pessoal - Duração estimada: 5 minutos",
     title: "Clique para começar seu quiz personalizado",
     tabIndex: 0,
 

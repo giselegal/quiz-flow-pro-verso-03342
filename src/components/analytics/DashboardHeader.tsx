@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
-import { RefreshCcw, Download, Trash2, Filter, LayoutGrid, LayoutList } from "lucide-react";
+import {
+  RefreshCcw,
+  Download,
+  Trash2,
+  Filter,
+  LayoutGrid,
+  LayoutList,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../../components/ui/tooltip";
 
 interface DashboardHeaderProps {
   timeRange: "7d" | "30d" | "all";
@@ -58,7 +70,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   const toggleEvent = (eventType: string) => {
     if (selectedEvents.includes(eventType)) {
-      onEventSelectionChange(selectedEvents.filter(e => e !== eventType));
+      onEventSelectionChange(selectedEvents.filter((e) => e !== eventType));
     } else {
       onEventSelectionChange([...selectedEvents, eventType]);
     }
@@ -98,7 +110,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {compactView ? "Expandir visualização" : "Compactar visualização"}
+                  {compactView
+                    ? "Expandir visualização"
+                    : "Compactar visualização"}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -145,11 +159,18 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               onClick={handleRefresh}
               disabled={isRefreshing}
             >
-              <RefreshCcw className={`h-3.5 w-3.5 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+              <RefreshCcw
+                className={`h-3.5 w-3.5 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
+              />
               <span className="text-xs">Atualizar</span>
             </Button>
 
-            <Button variant="outline" size="sm" className="h-8" onClick={onExportData}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8"
+              onClick={onExportData}
+            >
               <Download className="h-3.5 w-3.5 mr-2" />
               <span className="text-xs">Exportar</span>
             </Button>
@@ -157,7 +178,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <Button
               variant="outline"
               size="sm"
-              style={{ color: '#432818' }}
+              style={{ color: "#432818" }}
               onClick={onClearData}
             >
               <Trash2 className="h-3.5 w-3.5 mr-2" />

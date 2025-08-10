@@ -23,7 +23,9 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
   if (!activeStage) {
     return (
       <div className="p-4 text-center">
-        <p className="text-[#8F7A6A]">Selecione uma etapa para adicionar componentes</p>
+        <p className="text-[#8F7A6A]">
+          Selecione uma etapa para adicionar componentes
+        </p>
       </div>
     );
   }
@@ -129,12 +131,14 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({
         <h3 className="font-medium text-[#432818]">Componentes disponíveis</h3>
 
         <div className="grid gap-2">
-          {components.map(component => (
+          {components.map((component) => (
             <Button
               key={component.type}
               variant="outline"
               className="justify-start text-left"
-              onClick={() => onComponentSelect(component.type as QuizComponentType)}
+              onClick={() =>
+                onComponentSelect(component.type as QuizComponentType)
+              }
             >
               {component.icon}
               {component.label}

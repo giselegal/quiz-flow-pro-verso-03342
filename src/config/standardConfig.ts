@@ -153,7 +153,8 @@ export const STANDARD_CANVAS_CONFIG: CanvasLayoutConfig = {
     },
 
     spacer: {
-      className: "min-w-full py-2 border-dashed border-yellow-500 border rounded-lg",
+      className:
+        "min-w-full py-2 border-dashed border-yellow-500 border rounded-lg",
       padding: "py-2",
       border: "border-dashed border-yellow-500 border rounded-lg",
     },
@@ -334,7 +335,7 @@ export class CanvasConfigUtils {
       "canvasItems.wrapper.className",
     ];
 
-    return requiredPaths.every(path => {
+    return requiredPaths.every((path) => {
       const keys = path.split(".");
       let current: any = config;
 

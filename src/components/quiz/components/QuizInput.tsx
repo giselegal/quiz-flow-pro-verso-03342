@@ -64,12 +64,12 @@ const QuizInput: React.FC<QuizInputProps> = ({
         onChange={handleChange}
         required={required}
         style={inputStyle}
-        onFocus={e => {
+        onFocus={(e) => {
           e.target.style.borderColor = "#b89b7a";
           e.target.style.outline = "none";
           e.target.style.boxShadow = "0 0 0 3px rgba(184, 155, 122, 0.1)";
         }}
-        onBlur={e => {
+        onBlur={(e) => {
           e.target.style.borderColor = "#e5e7eb";
           e.target.style.boxShadow = "none";
         }}

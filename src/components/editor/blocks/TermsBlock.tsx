@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,7 +87,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
       data-block-type={block.type}
     >
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Scale style={{ color: '#6B4F43' }} />
+        <Scale style={{ color: "#6B4F43" }} />
         <h3 className="text-xl font-bold text-[#432818] text-center">
           <InlineEditableText
             value={title}
@@ -90,7 +97,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
           />
         </h3>
       </div>
-      <div style={{ color: '#6B4F43' }}>
+      <div style={{ color: "#6B4F43" }}>
         <InlineEditableText
           value={content}
           onChange={(value: string) => handlePropertyChange("content", value)}

@@ -9,7 +9,10 @@ interface HeroSectionBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, onUpdate }) => {
+const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   const content = block.content;
 
   return (
@@ -20,7 +23,7 @@ const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, 
           id="title"
           rows={2}
           value={content.title || ""}
-          onChange={e => onUpdate({ title: e.target.value })}
+          onChange={(e) => onUpdate({ title: e.target.value })}
           placeholder="VOCÊ DESCOBRIU SEU ESTILO"
         />
       </div>
@@ -31,7 +34,7 @@ const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, 
           id="subtitle"
           rows={2}
           value={content.subtitle || ""}
-          onChange={e => onUpdate({ subtitle: e.target.value })}
+          onChange={(e) => onUpdate({ subtitle: e.target.value })}
           placeholder="Agora é hora de aplicar com clareza — e se vestir de você"
         />
       </div>
@@ -41,11 +44,11 @@ const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, 
         <Input
           id="heroImage"
           value={content.heroImage || ""}
-          onChange={e => onUpdate({ heroImage: e.target.value })}
+          onChange={(e) => onUpdate({ heroImage: e.target.value })}
           placeholder="URL da imagem principal"
         />
         {content.heroImage && (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <img
               src={content.heroImage}
               alt="Imagem principal"
@@ -60,11 +63,11 @@ const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, 
         <Input
           id="heroImage2"
           value={content.heroImage2 || ""}
-          onChange={e => onUpdate({ heroImage2: e.target.value })}
+          onChange={(e) => onUpdate({ heroImage2: e.target.value })}
           placeholder="URL da imagem secundária"
         />
         {content.heroImage2 && (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <img
               src={content.heroImage2}
               alt="Imagem secundária"

@@ -15,7 +15,10 @@ interface StyleEditorProps {
   onChange: (style: Record<string, any>) => void;
 }
 
-export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => {
+export const StyleEditor: React.FC<StyleEditorProps> = ({
+  style,
+  onChange,
+}) => {
   // Ensure style is always an object
   const currentStyle = typeof style === "object" && style !== null ? style : {};
 
@@ -36,7 +39,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Label htmlFor="fontFamily">Família da Fonte</Label>
           <Select
             value={currentStyle.fontFamily || "inherit"}
-            onValueChange={value => updateStyle("fontFamily", value)}
+            onValueChange={(value) => updateStyle("fontFamily", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione a fonte" />
@@ -45,7 +48,9 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
               <SelectItem value="inherit">Padrão</SelectItem>
               <SelectItem value="Arial, sans-serif">Arial</SelectItem>
               <SelectItem value="Georgia, serif">Georgia</SelectItem>
-              <SelectItem value="'Times New Roman', serif">Times New Roman</SelectItem>
+              <SelectItem value="'Times New Roman', serif">
+                Times New Roman
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -55,7 +60,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Input
             id="fontSize"
             value={currentStyle.fontSize || ""}
-            onChange={e => updateStyle("fontSize", e.target.value)}
+            onChange={(e) => updateStyle("fontSize", e.target.value)}
             placeholder="16px"
           />
         </div>
@@ -64,7 +69,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Label htmlFor="fontWeight">Peso da Fonte</Label>
           <Select
             value={currentStyle.fontWeight || "normal"}
-            onValueChange={value => updateStyle("fontWeight", value)}
+            onValueChange={(value) => updateStyle("fontWeight", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -82,7 +87,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Input
             id="lineHeight"
             value={currentStyle.lineHeight || ""}
-            onChange={e => updateStyle("lineHeight", e.target.value)}
+            onChange={(e) => updateStyle("lineHeight", e.target.value)}
             placeholder="1.5"
           />
         </div>
@@ -91,7 +96,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Label htmlFor="textAlign">Alinhamento</Label>
           <Select
             value={currentStyle.textAlign || "left"}
-            onValueChange={value => updateStyle("textAlign", value)}
+            onValueChange={(value) => updateStyle("textAlign", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -115,7 +120,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Input
             id="margin"
             value={currentStyle.margin || ""}
-            onChange={e => updateStyle("margin", e.target.value)}
+            onChange={(e) => updateStyle("margin", e.target.value)}
             placeholder="10px"
           />
         </div>
@@ -125,7 +130,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Input
             id="padding"
             value={currentStyle.padding || ""}
-            onChange={e => updateStyle("padding", e.target.value)}
+            onChange={(e) => updateStyle("padding", e.target.value)}
             placeholder="10px"
           />
         </div>
@@ -139,7 +144,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Label>Cor do Texto</Label>
           <ColorPicker
             color={currentStyle.color || "#000000"}
-            onChange={color => updateStyle("color", color)}
+            onChange={(color) => updateStyle("color", color)}
           />
         </div>
 
@@ -147,7 +152,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Label>Cor de Fundo</Label>
           <ColorPicker
             color={currentStyle.backgroundColor || "transparent"}
-            onChange={color => updateStyle("backgroundColor", color)}
+            onChange={(color) => updateStyle("backgroundColor", color)}
           />
         </div>
       </div>
@@ -161,7 +166,7 @@ export const StyleEditor: React.FC<StyleEditorProps> = ({ style, onChange }) => 
           <Input
             id="borderRadius"
             value={currentStyle.borderRadius || ""}
-            onChange={e => updateStyle("borderRadius", e.target.value)}
+            onChange={(e) => updateStyle("borderRadius", e.target.value)}
             placeholder="4px"
           />
         </div>

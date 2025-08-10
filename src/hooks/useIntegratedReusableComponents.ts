@@ -30,13 +30,15 @@ export interface ReusableBlockTemplate {
 export const useIntegratedReusableComponents = () => {
   const reusableHook = useReusableComponents();
   const { stages, updateStageBlocks } = useEditor();
-  const [localTemplates, setLocalTemplates] = useState<ReusableBlockTemplate[]>([]);
+  const [localTemplates, setLocalTemplates] = useState<ReusableBlockTemplate[]>(
+    []
+  );
 
   // 🔗 Integrar templates do sistema atual com componentes reutilizáveis
   const availableTemplates = useMemo(() => {
     // Combinar templates locais com componentes do Supabase
     const systemComponents =
-      reusableHook.componentTypes?.map(comp => ({
+      reusableHook.componentTypes?.map((comp) => ({
         id: comp.id,
         name: comp.display_name,
         description: comp.description,
@@ -56,7 +58,9 @@ export const useIntegratedReusableComponents = () => {
       const template: ReusableBlockTemplate = {
         id: `template-${Date.now()}`,
         name: templateInfo.name || `Template ${block.type}`,
-        description: templateInfo.description || `Template criado a partir de ${block.type}`,
+        description:
+          templateInfo.description ||
+          `Template criado a partir de ${block.type}`,
         blockType: block.type,
         properties: { ...block.properties },
         category: templateInfo.category || "utility",
@@ -65,7 +69,7 @@ export const useIntegratedReusableComponents = () => {
       };
 
       // Salvar localmente
-      setLocalTemplates(prev => [...prev, template]);
+      setLocalTemplates((prev) => [...prev, template]);
 
       // Tentar salvar no Supabase se disponível
       try {
@@ -92,7 +96,7 @@ export const useIntegratedReusableComponents = () => {
   // 🎯 Aplicar template em um step
   const applyTemplateToStep = useCallback(
     async (templateId: string, stepId: string, position: number = -1) => {
-      const template = availableTemplates.find(t => t.id === templateId);
+      const template = availableTemplates.find((t) => t.id === templateId);
       if (!template) {
         throw new Error(`Template ${templateId} não encontrado`);
       }
@@ -107,7 +111,10 @@ export const useIntegratedReusableComponents = () => {
       };
 
       // Adicionar ao step usando useUnifiedProperties
-      const { generateDefaultProperties } = useUnifiedProperties(template.blockType, null);
+      const { generateDefaultProperties } = useUnifiedProperties(
+        template.blockType,
+        null
+      );
       const optimizedProperties = generateDefaultProperties();
 
       const finalBlock = {
@@ -119,7 +126,7 @@ export const useIntegratedReusableComponents = () => {
       };
 
       // Atualizar o stage
-      const currentStage = stages.find(s => s.id === stepId);
+      const currentStage = stages.find((s) => s.id === stepId);
       if (currentStage) {
         const updatedBlocks = [...currentStage.blocks];
         if (position >= 0 && position < updatedBlocks.length) {
@@ -151,8 +158,12 @@ export const useIntegratedReusableComponents = () => {
         .sort((a, b) => (b.usage_count || 0) - (a.usage_count || 0))
         .slice(0, 5),
       recentlyCreated: availableTemplates
-        .filter(t => t.created_at)
-        .sort((a, b) => new Date(b.created_at!).getTime() - new Date(a.created_at!).getTime())
+        .filter((t) => t.created_at)
+        .sort(
+          (a, b) =>
+            new Date(b.created_at!).getTime() -
+            new Date(a.created_at!).getTime()
+        )
         .slice(0, 5),
     };
 
@@ -162,12 +173,14 @@ export const useIntegratedReusableComponents = () => {
   // 🔍 Buscar templates
   const searchTemplates = useCallback(
     (query: string, category?: string) => {
-      return availableTemplates.filter(template => {
+      return availableTemplates.filter((template) => {
         const matchesQuery =
           !query ||
           template.name.toLowerCase().includes(query.toLowerCase()) ||
           template.description.toLowerCase().includes(query.toLowerCase()) ||
-          template.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+          template.tags.some((tag) =>
+            tag.toLowerCase().includes(query.toLowerCase())
+          );
 
         const matchesCategory = !category || template.category === category;
 
@@ -181,7 +194,7 @@ export const useIntegratedReusableComponents = () => {
   const removeTemplate = useCallback(
     async (templateId: string) => {
       // Remover localmente
-      setLocalTemplates(prev => prev.filter(t => t.id !== templateId));
+      setLocalTemplates((prev) => prev.filter((t) => t.id !== templateId));
 
       // Tentar remover do Supabase se for um componente do sistema
       try {
@@ -220,10 +233,11 @@ export const useIntegratedReusableComponents = () => {
  * 🎯 Hook simples para adicionar funcionalidade de templates a qualquer componente
  */
 export const useTemplateActions = (blockType: string) => {
-  const { createTemplate, applyTemplate, templates } = useIntegratedReusableComponents();
+  const { createTemplate, applyTemplate, templates } =
+    useIntegratedReusableComponents();
 
   const templatesForType = useMemo(() => {
-    return templates.filter(t => t.blockType === blockType);
+    return templates.filter((t) => t.blockType === blockType);
   }, [templates, blockType]);
 
   const saveAsTemplate = useCallback(

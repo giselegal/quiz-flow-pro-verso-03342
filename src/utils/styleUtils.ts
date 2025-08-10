@@ -32,53 +32,64 @@ export const getStyleConfig = (category: StyleCategory) => {
       Natural: {
         name: "Natural",
         description: "Seu estilo é caracterizado pela simplicidade e conforto.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/1_srgjwx.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/1_srgjwx.webp",
       },
       Contemporâneo: {
         name: "Contemporâneo",
         description: "Você combina modernidade com praticidade.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
       },
       Clássico: {
         name: "Clássico",
         description: "Seu estilo é atemporal e elegante.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
       },
       Elegante: {
         name: "Elegante",
         description: "Você valoriza sofisticação e refinamento.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
       },
       Romântico: {
         name: "Romântico",
         description: "Seu estilo é delicado e feminino.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
       },
       Sexy: {
         name: "Sexy",
         description: "Você valoriza a sensualidade e confiança.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
       },
       Dramático: {
         name: "Dramático",
         description: "Seu estilo é marcante e impactante.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
       },
       Criativo: {
         name: "Criativo",
         description: "Você expressa originalidade e experimentação.",
-        image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+        image:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
       },
     }[category] || {
       name: category,
       description: "Seu estilo único e pessoal.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/1_srgjwx.webp",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/1_srgjwx.webp",
     }
   );
 };
 
 // Add the missing getFallbackStyle function
-export const getFallbackStyle = (styleCategory: string): React.CSSProperties => {
+export const getFallbackStyle = (
+  styleCategory: string
+): React.CSSProperties => {
   const backgroundColor = getStyleColor(styleCategory as StyleCategory);
 
   return {
@@ -108,7 +119,10 @@ export const getDefaultStyle = (): StyleResult => {
   };
 };
 
-export const createStyleResult = (category: string, score: number): StyleResult => {
+export const createStyleResult = (
+  category: string,
+  score: number
+): StyleResult => {
   // Validate category is one of the allowed values
   const validCategories: StyleCategory[] = [
     "Natural",

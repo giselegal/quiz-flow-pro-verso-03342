@@ -27,7 +27,14 @@ export interface StepInfo {
   id: string;
   name: string;
   order: number;
-  type: "intro" | "question" | "strategic" | "transition" | "result" | "offer" | "custom";
+  type:
+    | "intro"
+    | "question"
+    | "strategic"
+    | "transition"
+    | "result"
+    | "offer"
+    | "custom";
   description: string;
   blocksCount: number;
   hasTemplate: boolean;
@@ -193,9 +200,12 @@ class StepTemplateService {
    * Obtém template de uma etapa específica
    */
   getStepTemplate(stepId: string | number): any[] {
-    const stepNumber = typeof stepId === "string" ? parseInt(stepId.replace(/\D/g, "")) : stepId;
+    const stepNumber =
+      typeof stepId === "string" ? parseInt(stepId.replace(/\D/g, "")) : stepId;
 
-    console.log(`🔍 [StepTemplateService] Buscando template para etapa ${stepNumber}`);
+    console.log(
+      `🔍 [StepTemplateService] Buscando template para etapa ${stepNumber}`
+    );
     console.log(`🧪 [DEBUG] stepId original:`, stepId);
     console.log(`🧪 [DEBUG] stepNumber convertido:`, stepNumber);
 
@@ -203,23 +213,34 @@ class StepTemplateService {
 
     if (!stepMapping) {
       console.warn(`⚠️ Template não encontrado para etapa ${stepNumber}`);
-      console.log(`🧪 [DEBUG] STEP_MAPPING disponíveis:`, Object.keys(STEP_MAPPING));
+      console.log(
+        `🧪 [DEBUG] STEP_MAPPING disponíveis:`,
+        Object.keys(STEP_MAPPING)
+      );
       return this.getDefaultTemplate(stepNumber);
     }
 
-    console.log(`✅ Mapping encontrado para etapa ${stepNumber}:`, stepMapping.name);
+    console.log(
+      `✅ Mapping encontrado para etapa ${stepNumber}:`,
+      stepMapping.name
+    );
 
     try {
       const template = stepMapping.getTemplate();
-      console.log(`✅ Template carregado para etapa ${stepNumber}: ${template.length} blocos`);
+      console.log(
+        `✅ Template carregado para etapa ${stepNumber}: ${template.length} blocos`
+      );
       console.log(`🧱 [DEBUG] Primeiro bloco:`, template[0]);
       console.log(
         `🧱 [DEBUG] Tipos de blocos:`,
-        template.map(b => b.type)
+        template.map((b) => b.type)
       );
       return template;
     } catch (error) {
-      console.error(`❌ Erro ao carregar template da etapa ${stepNumber}:`, error);
+      console.error(
+        `❌ Erro ao carregar template da etapa ${stepNumber}:`,
+        error
+      );
       return this.getDefaultTemplate(stepNumber);
     }
   }
@@ -228,7 +249,8 @@ class StepTemplateService {
    * Obtém informações de uma etapa
    */
   getStepInfo(stepId: string | number): StepInfo | null {
-    const stepNumber = typeof stepId === "string" ? parseInt(stepId.replace(/\D/g, "")) : stepId;
+    const stepNumber =
+      typeof stepId === "string" ? parseInt(stepId.replace(/\D/g, "")) : stepId;
 
     const stepMapping = STEP_MAPPING[stepNumber];
 
@@ -263,9 +285,9 @@ class StepTemplateService {
    */
   getAllSteps(): StepInfo[] {
     return Object.keys(STEP_MAPPING)
-      .map(key => parseInt(key))
+      .map((key) => parseInt(key))
       .sort((a, b) => a - b)
-      .map(stepNumber => this.getStepInfo(stepNumber))
+      .map((stepNumber) => this.getStepInfo(stepNumber))
       .filter((step): step is StepInfo => step !== null);
   }
 
@@ -273,7 +295,8 @@ class StepTemplateService {
    * Verifica se uma etapa tem template disponível
    */
   hasStepTemplate(stepId: string | number): boolean {
-    const stepNumber = typeof stepId === "string" ? parseInt(stepId.replace(/\D/g, "")) : stepId;
+    const stepNumber =
+      typeof stepId === "string" ? parseInt(stepId.replace(/\D/g, "")) : stepId;
     return STEP_MAPPING.hasOwnProperty(stepNumber);
   }
 
@@ -281,7 +304,9 @@ class StepTemplateService {
    * Template padrão para etapas sem template específico
    */
   private getDefaultTemplate(stepNumber: number): any[] {
-    console.log(`🔧 [StepTemplateService] Gerando template padrão para etapa ${stepNumber}`);
+    console.log(
+      `🔧 [StepTemplateService] Gerando template padrão para etapa ${stepNumber}`
+    );
 
     const defaultTemplate = [
       {
@@ -312,7 +337,8 @@ class StepTemplateService {
       {
         type: "text-inline",
         properties: {
-          content: "Esta etapa está sendo desenvolvida. Em breve teremos o conteúdo personalizado.",
+          content:
+            "Esta etapa está sendo desenvolvida. Em breve teremos o conteúdo personalizado.",
           fontSize: "text-lg",
           textAlign: "text-center",
           color: "#6B7280",
@@ -332,8 +358,12 @@ class StepTemplateService {
       },
     ];
 
-    console.log(`🧱 [DEBUG] Template padrão gerado com ${defaultTemplate.length} blocos`);
-    console.log(`🧱 [DEBUG] Tipos: ${defaultTemplate.map(b => b.type).join(", ")}`);
+    console.log(
+      `🧱 [DEBUG] Template padrão gerado com ${defaultTemplate.length} blocos`
+    );
+    console.log(
+      `🧱 [DEBUG] Tipos: ${defaultTemplate.map((b) => b.type).join(", ")}`
+    );
 
     return defaultTemplate;
   }
@@ -343,8 +373,11 @@ class StepTemplateService {
    */
   getTemplateStats() {
     const allSteps = this.getAllSteps();
-    const withTemplate = allSteps.filter(step => step.hasTemplate);
-    const totalBlocks = allSteps.reduce((sum, step) => sum + step.blocksCount, 0);
+    const withTemplate = allSteps.filter((step) => step.hasTemplate);
+    const totalBlocks = allSteps.reduce(
+      (sum, step) => sum + step.blocksCount,
+      0
+    );
 
     return {
       totalSteps: allSteps.length,

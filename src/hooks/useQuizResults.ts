@@ -35,12 +35,14 @@ export interface QuizResultsConfig {
  */
 export const useQuizResults = () => {
   // Calcular pontuações por categoria
-  const calculateCategoryScores = (answers: Map<string, QuestionOption[]>): CategoryScore[] => {
+  const calculateCategoryScores = (
+    answers: Map<string, QuestionOption[]>
+  ): CategoryScore[] => {
     const categoryScores = new Map<string, CategoryScore>();
 
     // Processar todas as respostas
-    answers.forEach(selectedOptions => {
-      selectedOptions.forEach(option => {
+    answers.forEach((selectedOptions) => {
+      selectedOptions.forEach((option) => {
         if (!option.category) return;
 
         const currentScore = categoryScores.get(option.category) || {
@@ -72,11 +74,13 @@ export const useQuizResults = () => {
     switch (method.type) {
       case "sum":
         // Retorna a categoria com maior soma de pontos
-        return categoryScores.reduce((max, current) => (max.score > current.score ? max : current));
+        return categoryScores.reduce((max, current) =>
+          max.score > current.score ? max : current
+        );
 
       case "average":
         // Calcula a média para cada categoria e retorna a maior
-        const withAverages = categoryScores.map(cs => ({
+        const withAverages = categoryScores.map((cs) => ({
           ...cs,
           averageScore: cs.score / cs.count,
         }));
@@ -89,15 +93,19 @@ export const useQuizResults = () => {
         if (method.primaryCategory) {
           // Se tiver categoria primária definida, priorizar ela
           const primaryCategoryScore = categoryScores.find(
-            cs => cs.category === method.primaryCategory
+            (cs) => cs.category === method.primaryCategory
           );
           if (primaryCategoryScore) return primaryCategoryScore;
         }
-        return categoryScores.reduce((max, current) => (max.score > current.score ? max : current));
+        return categoryScores.reduce((max, current) =>
+          max.score > current.score ? max : current
+        );
 
       case "majority":
         // Retorna a categoria com mais ocorrências
-        return categoryScores.reduce((max, current) => (max.count > current.count ? max : current));
+        return categoryScores.reduce((max, current) =>
+          max.count > current.count ? max : current
+        );
 
       default:
         return categoryScores[0];
@@ -114,27 +122,32 @@ export const useQuizResults = () => {
 
     // Calcular pontuação total somando todos os pontos de todas as respostas
     let totalScore = 0;
-    allAnswers.forEach(options => {
-      options.forEach(opt => {
+    allAnswers.forEach((options) => {
+      options.forEach((opt) => {
         totalScore += opt.points || 0;
       });
     });
 
     // Filtrar resultados pela categoria vencedora
-    const categoryResults = results.filter(result => result.category === winningCategory.category);
+    const categoryResults = results.filter(
+      (result) => result.category === winningCategory.category
+    );
 
     if (categoryResults.length === 0) {
       // Se não houver resultados para esta categoria, pegar qualquer um na faixa de pontuação
       return (
-        results.find(result => totalScore >= result.minScore && totalScore <= result.maxScore) ||
-        results[0]
+        results.find(
+          (result) =>
+            totalScore >= result.minScore && totalScore <= result.maxScore
+        ) || results[0]
       );
     }
 
     // Encontrar o resultado adequado para a pontuação dentro da categoria
     return (
       categoryResults.find(
-        result => totalScore >= result.minScore && totalScore <= result.maxScore
+        (result) =>
+          totalScore >= result.minScore && totalScore <= result.maxScore
       ) || categoryResults[0]
     );
   };

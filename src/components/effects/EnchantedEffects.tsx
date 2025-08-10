@@ -19,7 +19,9 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
   phase,
   intensity = 0.5,
 }) => {
-  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>([]);
+  const [floatingElements, setFloatingElements] = useState<FloatingElement[]>(
+    []
+  );
 
   const phaseConfig = {
     intro: {
@@ -63,8 +65,8 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
     setFloatingElements(newElements);
 
     const interval = setInterval(() => {
-      setFloatingElements(prev => {
-        const updated = prev.map(el => ({
+      setFloatingElements((prev) => {
+        const updated = prev.map((el) => ({
           ...el,
           y: (el.y - 1) % 120,
           x: el.x + Math.sin(Date.now() * 0.001 + el.id) * 0.1,
@@ -79,7 +81,7 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
       <AnimatePresence>
-        {floatingElements.map(element => (
+        {floatingElements.map((element) => (
           <motion.div
             key={element.id}
             className="absolute text-2xl opacity-20"
@@ -118,7 +120,10 @@ interface MorphingProgressProps {
   phase: "normal" | "strategic" | "complete";
 }
 
-export const MorphingProgress: React.FC<MorphingProgressProps> = ({ progress, phase }) => {
+export const MorphingProgress: React.FC<MorphingProgressProps> = ({
+  progress,
+  phase,
+}) => {
   const phaseColors = {
     normal: "from-[#B89B7A] to-[#A1835D]", // Cores da marca: bege principal para bege escuro
     strategic: "from-[#aa6b5d] to-[#B89B7A]", // Cores da marca: terracota para bege
@@ -126,7 +131,7 @@ export const MorphingProgress: React.FC<MorphingProgressProps> = ({ progress, ph
   };
 
   return (
-    <div style={{ backgroundColor: '#E5DDD5' }}>
+    <div style={{ backgroundColor: "#E5DDD5" }}>
       <motion.div
         className={`h-full bg-gradient-to-r ${phaseColors[phase]} relative`}
         initial={{ width: 0 }}

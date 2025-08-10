@@ -47,15 +47,21 @@ export class TemplateManager {
       }
 
       // Busca template path
-      const templatePath = TEMPLATE_MAPPING[stepId as keyof typeof TEMPLATE_MAPPING];
+      const templatePath =
+        TEMPLATE_MAPPING[stepId as keyof typeof TEMPLATE_MAPPING];
       if (!templatePath) {
         console.warn(`⚠️ Template não encontrado para etapa: ${stepId}`);
         return this.getFallbackBlocks(stepId);
       }
 
       // Carrega template JSON
-      console.log(`🔄 Carregando template JSON para ${stepId}: ${templatePath}`);
-      const blocks = await TemplateJsonLoader.loadTemplateAsBlocks(templatePath, stepId);
+      console.log(
+        `🔄 Carregando template JSON para ${stepId}: ${templatePath}`
+      );
+      const blocks = await TemplateJsonLoader.loadTemplateAsBlocks(
+        templatePath,
+        stepId
+      );
 
       // Armazena no cache
       this.cache.set(stepId, blocks);
@@ -143,7 +149,7 @@ export class TemplateManager {
 
     console.log("🚀 Pre-carregando templates comuns...");
 
-    const promises = commonSteps.map(async stepId => {
+    const promises = commonSteps.map(async (stepId) => {
       try {
         await this.loadStepBlocks(stepId);
       } catch (error) {

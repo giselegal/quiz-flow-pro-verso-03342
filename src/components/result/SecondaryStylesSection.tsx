@@ -4,7 +4,9 @@ interface SecondaryStylesSectionProps {
   secondaryStyles: any[];
 }
 
-export default function SecondaryStylesSection({ secondaryStyles }: SecondaryStylesSectionProps) {
+export default function SecondaryStylesSection({
+  secondaryStyles,
+}: SecondaryStylesSectionProps) {
   return (
     <div>
       {secondaryStyles && secondaryStyles.length > 0 ? (

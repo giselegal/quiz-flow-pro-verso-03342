@@ -5,7 +5,10 @@ interface PropertyPanelProps {
   onUpdate?: (updates: any) => void;
 }
 
-export const PropertyPanel: React.FC<PropertyPanelProps> = ({ selectedComponent, onUpdate }) => {
+export const PropertyPanel: React.FC<PropertyPanelProps> = ({
+  selectedComponent,
+  onUpdate,
+}) => {
   return (
     <div className="property-panel">
       <h3>Painel de Propriedades</h3>

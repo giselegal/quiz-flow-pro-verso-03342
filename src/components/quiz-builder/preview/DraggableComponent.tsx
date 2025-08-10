@@ -46,7 +46,13 @@ export const DraggableComponent: React.FC<DraggableComponentProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="relative">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="relative"
+    >
       <ComponentRenderer
         component={component}
         isSelected={isSelected}

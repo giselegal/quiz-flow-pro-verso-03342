@@ -25,7 +25,9 @@ export const GlobalLoadingOverlay: React.FC = () => {
               <LoadingSpinner size="lg" />
 
               {state.message && (
-                <p className="text-sm text-muted-foreground text-center">{state.message}</p>
+                <p className="text-sm text-muted-foreground text-center">
+                  {state.message}
+                </p>
               )}
 
               {typeof state.progress === "number" && (

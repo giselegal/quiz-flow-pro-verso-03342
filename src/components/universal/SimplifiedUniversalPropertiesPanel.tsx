@@ -1,6 +1,11 @@
 // Este é um componente simplificado para resolver problemas de compilação
 
-const UniversalPropertiesPanel = ({ selectedBlock, onUpdate, onDelete, onClose }: any) => {
+const UniversalPropertiesPanel = ({
+  selectedBlock,
+  onUpdate,
+  onDelete,
+  onClose,
+}: any) => {
   const handleScaleChange = (value: number) => {
     if (!selectedBlock || !onUpdate) return;
 
@@ -30,12 +35,14 @@ const UniversalPropertiesPanel = ({ selectedBlock, onUpdate, onDelete, onClose }
                 max="200"
                 step="10"
                 value={selectedBlock.properties?.scale || 100}
-                onChange={e => handleScaleChange(Number(e.target.value))}
+                onChange={(e) => handleScaleChange(Number(e.target.value))}
               />
             </label>
           </div>
 
-          <button onClick={() => onUpdate?.(selectedBlock.id, {})}>Atualizar</button>
+          <button onClick={() => onUpdate?.(selectedBlock.id, {})}>
+            Atualizar
+          </button>
           <button onClick={() => onDelete?.(selectedBlock.id)}>Excluir</button>
           <button onClick={() => onClose?.()}>Fechar</button>
         </div>

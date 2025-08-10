@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Award, Star, Gift, Crown, Users, CheckCircle, ShoppingBag } from "lucide-react";
+import {
+  Award,
+  Star,
+  Gift,
+  Crown,
+  Users,
+  CheckCircle,
+  ShoppingBag,
+} from "lucide-react";
 import { Card, CardContent, CardHeader } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
@@ -52,7 +60,8 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
       name: "Elegante",
       image:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp",
-      description: "Seu estilo reflete sofisticação e refinamento em cada detalhe.",
+      description:
+        "Seu estilo reflete sofisticação e refinamento em cada detalhe.",
       characteristics: [
         "Peças estruturadas e bem cortadas",
         "Cores neutras e sóbrias",
@@ -90,7 +99,8 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
   };
 
   const currentStyle =
-    styleConfig[primaryStyle as keyof typeof styleConfig] || styleConfig.elegante;
+    styleConfig[primaryStyle as keyof typeof styleConfig] ||
+    styleConfig.elegante;
   const Icon = currentStyle.icon;
 
   if (!isLoaded && !isEditing) {
@@ -100,9 +110,9 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
         style={{ backgroundColor }}
       >
         <div className="animate-pulse text-center">
-          <div style={{ backgroundColor: '#E5DDD5' }}></div>
-          <div style={{ backgroundColor: '#E5DDD5' }}></div>
-          <div style={{ backgroundColor: '#E5DDD5' }}></div>
+          <div style={{ backgroundColor: "#E5DDD5" }}></div>
+          <div style={{ backgroundColor: "#E5DDD5" }}></div>
+          <div style={{ backgroundColor: "#E5DDD5" }}></div>
         </div>
       </div>
     );
@@ -130,27 +140,41 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               style={{ height: logoHeight }}
               className="mx-auto mb-6"
             />
-            <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: textColor }}>
+            <h1
+              className="text-3xl md:text-4xl font-bold mb-2"
+              style={{ color: textColor }}
+            >
               Parabéns, {userName}!
             </h1>
-            <p style={{ color: '#6B4F43' }}>Seu resultado personalizado está pronto</p>
+            <p style={{ color: "#6B4F43" }}>
+              Seu resultado personalizado está pronto
+            </p>
           </div>
         </AnimatedWrapper>
 
         {/* Resultado Principal */}
         <AnimatedWrapper show={isLoaded} delay={200}>
-          <Card className="overflow-hidden shadow-xl border-0" style={{ borderColor: accentColor }}>
+          <Card
+            className="overflow-hidden shadow-xl border-0"
+            style={{ borderColor: accentColor }}
+          >
             <CardHeader
               className="text-center pb-4"
               style={{ backgroundColor: `${accentColor}15` }}
             >
               <div className="flex items-center justify-center mb-4">
-                <Icon className="w-12 h-12 mr-3" style={{ color: accentColor }} />
-                <h2 className="text-3xl md:text-4xl font-bold" style={{ color: textColor }}>
+                <Icon
+                  className="w-12 h-12 mr-3"
+                  style={{ color: accentColor }}
+                />
+                <h2
+                  className="text-3xl md:text-4xl font-bold"
+                  style={{ color: textColor }}
+                >
                   Estilo {currentStyle.name}
                 </h2>
               </div>
-              <p style={{ color: '#6B4F43' }}>{currentStyle.description}</p>
+              <p style={{ color: "#6B4F43" }}>{currentStyle.description}</p>
             </CardHeader>
 
             <CardContent className="p-8">
@@ -167,19 +191,26 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
 
                 {showCharacteristics && (
                   <div className="order-1 md:order-2">
-                    <h3 className="text-2xl font-semibold mb-6" style={{ color: textColor }}>
+                    <h3
+                      className="text-2xl font-semibold mb-6"
+                      style={{ color: textColor }}
+                    >
                       Suas Características
                     </h3>
                     <div className="space-y-4">
-                      {currentStyle.characteristics.map((characteristic, index) => (
-                        <div key={index} className="flex items-start gap-3">
-                          <CheckCircle
-                            className="w-6 h-6 mt-0.5 flex-shrink-0"
-                            style={{ color: accentColor }}
-                          />
-                          <span style={{ color: '#6B4F43' }}>{characteristic}</span>
-                        </div>
-                      ))}
+                      {currentStyle.characteristics.map(
+                        (characteristic, index) => (
+                          <div key={index} className="flex items-start gap-3">
+                            <CheckCircle
+                              className="w-6 h-6 mt-0.5 flex-shrink-0"
+                              style={{ color: accentColor }}
+                            />
+                            <span style={{ color: "#6B4F43" }}>
+                              {characteristic}
+                            </span>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 )}
@@ -193,10 +224,13 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
           <AnimatedWrapper show={isLoaded} delay={400}>
             <Card className="shadow-lg">
               <CardHeader>
-                <h3 className="text-2xl font-semibold text-center" style={{ color: textColor }}>
+                <h3
+                  className="text-2xl font-semibold text-center"
+                  style={{ color: textColor }}
+                >
                   Seus Estilos Secundários
                 </h3>
-                <p style={{ color: '#6B4F43' }}>
+                <p style={{ color: "#6B4F43" }}>
                   Estes estilos complementam seu estilo predominante
                 </p>
               </CardHeader>
@@ -208,15 +242,18 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                     .map(([key, style]) => {
                       const SecondaryIcon = style.icon;
                       return (
-                        <div key={key} style={{ backgroundColor: '#FAF9F7' }}>
+                        <div key={key} style={{ backgroundColor: "#FAF9F7" }}>
                           <SecondaryIcon
                             className="w-8 h-8 mx-auto mb-3"
                             style={{ color: accentColor }}
                           />
-                          <h4 className="font-semibold mb-2" style={{ color: textColor }}>
+                          <h4
+                            className="font-semibold mb-2"
+                            style={{ color: textColor }}
+                          >
                             {style.name}
                           </h4>
-                          <p style={{ color: '#6B4F43' }}>
+                          <p style={{ color: "#6B4F43" }}>
                             {style.description}
                           </p>
                         </div>
@@ -241,13 +278,16 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               </span>
             </div>
 
-            <h3 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: textColor }}>
+            <h3
+              className="text-2xl md:text-3xl font-bold mb-4"
+              style={{ color: textColor }}
+            >
               Quer descobrir seu guarda-roupa ideal?
             </h3>
 
-            <p style={{ color: '#6B4F43' }}>
-              Tenha acesso ao guia completo personalizado para o seu estilo e transforme sua forma
-              de se vestir para sempre.
+            <p style={{ color: "#6B4F43" }}>
+              Tenha acesso ao guia completo personalizado para o seu estilo e
+              transforme sua forma de se vestir para sempre.
             </p>
 
             <Button
@@ -260,7 +300,9 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               }}
               onClick={() => {
                 if (ctaUrl.startsWith("#")) {
-                  document.querySelector(ctaUrl)?.scrollIntoView({ behavior: "smooth" });
+                  document
+                    .querySelector(ctaUrl)
+                    ?.scrollIntoView({ behavior: "smooth" });
                 } else {
                   window.open(ctaUrl, "_blank");
                 }
@@ -270,7 +312,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               {ctaText}
             </Button>
 
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
                 +10.000 mulheres transformadas

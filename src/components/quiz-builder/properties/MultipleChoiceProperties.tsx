@@ -9,10 +9,9 @@ interface MultipleChoicePropertiesProps {
   onUpdate: (id: string, data: any) => void;
 }
 
-export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> = ({
-  component,
-  onUpdate,
-}) => {
+export const MultipleChoiceProperties: React.FC<
+  MultipleChoicePropertiesProps
+> = ({ component, onUpdate }) => {
   const data = component.data || {};
 
   const handleUpdate = (field: string, value: any) => {
@@ -29,7 +28,7 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
         <Textarea
           id="question"
           value={data.question || ""}
-          onChange={e => handleUpdate("question", e.target.value)}
+          onChange={(e) => handleUpdate("question", e.target.value)}
           placeholder="Digite sua pergunta"
           rows={3}
         />
@@ -40,10 +39,10 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
         <Textarea
           id="options"
           value={(data.options || []).join("\n")}
-          onChange={e =>
+          onChange={(e) =>
             handleUpdate(
               "options",
-              e.target.value.split("\n").filter(opt => opt.trim())
+              e.target.value.split("\n").filter((opt) => opt.trim())
             )
           }
           placeholder="Opção 1\nOpção 2\nOpção 3"
@@ -58,7 +57,9 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
           type="number"
           min="1"
           value={data.multiSelect || 1}
-          onChange={e => handleUpdate("multiSelect", parseInt(e.target.value) || 1)}
+          onChange={(e) =>
+            handleUpdate("multiSelect", parseInt(e.target.value) || 1)
+          }
         />
       </div>
     </div>

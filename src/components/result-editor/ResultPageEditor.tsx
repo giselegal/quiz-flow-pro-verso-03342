@@ -14,7 +14,9 @@ interface ResultPageEditorProps {
   onShowTemplates?: () => void;
 }
 
-export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyle }) => {
+export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({
+  selectedStyle,
+}) => {
   const {
     resultPageConfig,
     loading,
@@ -63,7 +65,7 @@ export const ResultPageEditor: React.FC<ResultPageEditorProps> = ({ selectedStyl
       </div>
       <div className="flex-1 overflow-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-          {Object.keys(sectionTitles).map(key => {
+          {Object.keys(sectionTitles).map((key) => {
             const sectionContent = (resultPageConfig as any)?.[key] || {};
             return (
               <Card key={key} className="shadow-md">

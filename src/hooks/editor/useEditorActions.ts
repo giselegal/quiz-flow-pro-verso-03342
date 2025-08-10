@@ -30,8 +30,10 @@ export const useEditorActions = (
 
   const handleUpdateBlock = useCallback(
     (id: string, content: Partial<EditableContent>) => {
-      const newBlocks = blocks.map(block =>
-        block.id === id ? { ...block, content: { ...block.content, ...content } } : block
+      const newBlocks = blocks.map((block) =>
+        block.id === id
+          ? { ...block, content: { ...block.content, ...content } }
+          : block
       );
 
       onBlocksChange(newBlocks);
@@ -43,7 +45,7 @@ export const useEditorActions = (
   const handleDeleteBlock = useCallback(
     (id: string) => {
       const newBlocks = blocks
-        .filter(block => block.id !== id)
+        .filter((block) => block.id !== id)
         .map((block, index) => ({ ...block, order: index }));
 
       onBlocksChange(newBlocks);

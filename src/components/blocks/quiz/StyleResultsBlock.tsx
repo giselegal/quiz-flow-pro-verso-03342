@@ -22,7 +22,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,13 +87,17 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
     .filter(([style]) => style in styleConfig);
 
   // Estilo principal (maior pontuação)
-  const mainStyle = sortedStyles[0]?.[0] as keyof typeof styleConfig | undefined;
+  const mainStyle = sortedStyles[0]?.[0] as
+    | keyof typeof styleConfig
+    | undefined;
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-[#432818] mb-2">{result.title}</h2>
-        <p style={{ color: '#8B7355' }}>
+        <h2 className="text-3xl font-bold text-[#432818] mb-2">
+          {result.title}
+        </h2>
+        <p style={{ color: "#8B7355" }}>
           Parabéns, {userName}! Seu estilo predominante é:
         </p>
 
@@ -101,7 +112,7 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
         )}
 
         <div className="prose prose-lg prose-stone mx-auto mb-8">
-          <p style={{ color: '#6B4F43' }}>{result.description}</p>
+          <p style={{ color: "#6B4F43" }}>{result.description}</p>
         </div>
 
         {showGuideImage && guideImageUrl && (
@@ -130,28 +141,34 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
 
       {sortedStyles.length > 0 && (
         <div className="mb-8 p-4 bg-stone-50 rounded-lg">
-          <h3 className="font-semibold text-lg mb-3 text-[#432818]">Sua Composição de Estilos</h3>
+          <h3 className="font-semibold text-lg mb-3 text-[#432818]">
+            Sua Composição de Estilos
+          </h3>
 
           <div className="space-y-3">
-            {sortedStyles.slice(0, showAllStyles ? undefined : 3).map(([style, score]) => (
-              <div key={style} className="flex justify-between items-center">
-                <span className="font-medium">{style}</span>
-                <div className="flex items-center gap-3">
-                  <div className="bg-stone-200 w-48 h-4 rounded-full overflow-hidden">
-                    <div
-                      className="bg-[#B89B7A] h-full rounded-full"
-                      style={{
-                        width: `${Math.min(
-                          100,
-                          (score / Math.max(...Object.values(categoryScores))) * 100
-                        )}%`,
-                      }}
-                    />
+            {sortedStyles
+              .slice(0, showAllStyles ? undefined : 3)
+              .map(([style, score]) => (
+                <div key={style} className="flex justify-between items-center">
+                  <span className="font-medium">{style}</span>
+                  <div className="flex items-center gap-3">
+                    <div className="bg-stone-200 w-48 h-4 rounded-full overflow-hidden">
+                      <div
+                        className="bg-[#B89B7A] h-full rounded-full"
+                        style={{
+                          width: `${Math.min(
+                            100,
+                            (score /
+                              Math.max(...Object.values(categoryScores))) *
+                              100
+                          )}%`,
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm font-semibold">{score} pts</span>
                   </div>
-                  <span className="text-sm font-semibold">{score} pts</span>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
 
           {!showAllStyles && sortedStyles.length > 3 && (
@@ -174,14 +191,20 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
         )}
 
         {onShare && (
-          <Button onClick={onShare} className="bg-[#B89B7A] hover:bg-[#A08766] text-white">
+          <Button
+            onClick={onShare}
+            className="bg-[#B89B7A] hover:bg-[#A08766] text-white"
+          >
             Compartilhar Resultado
           </Button>
         )}
       </div>
 
       {showGuideModal && mainStyle && (
-        <StyleGuideModal style={mainStyle} onClose={() => setShowGuideModal(false)} />
+        <StyleGuideModal
+          style={mainStyle}
+          onClose={() => setShowGuideModal(false)}
+        />
       )}
     </div>
   );

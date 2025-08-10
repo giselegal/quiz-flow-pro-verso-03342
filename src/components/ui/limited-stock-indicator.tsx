@@ -18,7 +18,7 @@ export const LimitedStockIndicator: React.FC<LimitedStockIndicatorProps> = ({
       const shouldDecrease = Math.random() < 0.05; // 5% chance to decrease stock
 
       if (shouldDecrease && stockLeft > 1) {
-        setStockLeft(prev => prev - 1);
+        setStockLeft((prev) => prev - 1);
         setIsActive(true);
 
         setTimeout(() => {
@@ -42,7 +42,7 @@ export const LimitedStockIndicator: React.FC<LimitedStockIndicatorProps> = ({
           Restam apenas {stockLeft} unidades
         </span>
       </div>
-      <div style={{ backgroundColor: '#E5DDD5' }}>
+      <div style={{ backgroundColor: "#E5DDD5" }}>
         <div
           className="h-full bg-gradient-to-r from-red-500 to-[#D68047] transition-all duration-500"
           style={{ width: `${percentLeft}%` }}

@@ -57,7 +57,8 @@ export const Step01Intro = () => {
           alt: "Transforme seu guarda-roupa",
           width: 600,
           height: 400,
-          className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+          className:
+            "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
           textAlign: "text-center",
           marginBottom: 32,
         },

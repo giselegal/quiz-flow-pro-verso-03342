@@ -177,7 +177,9 @@ const categoryIcons = {
   interaction: Target,
 };
 
-export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTemplate }) => {
+export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({
+  onApplyTemplate,
+}) => {
   const categorizedTemplates = templates.reduce(
     (acc, template) => {
       if (!acc[template.category]) {
@@ -200,61 +202,68 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
       <PopoverContent className="w-96 p-4" align="start">
         <div className="space-y-4">
           <div>
-            <h3 style={{ color: '#432818' }}>Templates de Propriedades</h3>
-            <p style={{ color: '#6B4F43' }}>Aplique configurações predefinidas rapidamente</p>
+            <h3 style={{ color: "#432818" }}>Templates de Propriedades</h3>
+            <p style={{ color: "#6B4F43" }}>
+              Aplique configurações predefinidas rapidamente
+            </p>
           </div>
 
-          {Object.entries(categorizedTemplates).map(([category, categoryTemplates]) => {
-            const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons];
+          {Object.entries(categorizedTemplates).map(
+            ([category, categoryTemplates]) => {
+              const CategoryIcon =
+                categoryIcons[category as keyof typeof categoryIcons];
 
-            return (
-              <div key={category}>
-                <div className="flex items-center space-x-2 mb-3">
-                  <CategoryIcon className="w-4 h-4" />
-                  <h4 className="font-medium text-sm capitalize">{category}</h4>
-                  <Badge
-                    variant="secondary"
-                    className={`text-xs ${categoryColors[category as keyof typeof categoryColors]}`}
-                  >
-                    {categoryTemplates.length}
-                  </Badge>
-                </div>
+              return (
+                <div key={category}>
+                  <div className="flex items-center space-x-2 mb-3">
+                    <CategoryIcon className="w-4 h-4" />
+                    <h4 className="font-medium text-sm capitalize">
+                      {category}
+                    </h4>
+                    <Badge
+                      variant="secondary"
+                      className={`text-xs ${categoryColors[category as keyof typeof categoryColors]}`}
+                    >
+                      {categoryTemplates.length}
+                    </Badge>
+                  </div>
 
-                <div className="grid grid-cols-1 gap-2 mb-4">
-                  {categoryTemplates.map(template => {
-                    const TemplateIcon = template.icon;
+                  <div className="grid grid-cols-1 gap-2 mb-4">
+                    {categoryTemplates.map((template) => {
+                      const TemplateIcon = template.icon;
 
-                    return (
-                      <Card
-                        key={template.id}
-                        style={{ borderColor: '#E5DDD5' }}
-                        onClick={() => onApplyTemplate(template.properties)}
-                      >
-                        <CardContent className="p-3">
-                          <div className="flex items-start space-x-3">
-                            <div className="flex-shrink-0">
-                              <TemplateIcon style={{ color: '#6B4F43' }} />
+                      return (
+                        <Card
+                          key={template.id}
+                          style={{ borderColor: "#E5DDD5" }}
+                          onClick={() => onApplyTemplate(template.properties)}
+                        >
+                          <CardContent className="p-3">
+                            <div className="flex items-start space-x-3">
+                              <div className="flex-shrink-0">
+                                <TemplateIcon style={{ color: "#6B4F43" }} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h5 style={{ color: "#432818" }}>
+                                  {template.name}
+                                </h5>
+                                <p style={{ color: "#6B4F43" }}>
+                                  {template.description}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <h5 style={{ color: '#432818' }}>
-                                {template.name}
-                              </h5>
-                              <p style={{ color: '#6B4F43' }}>
-                                {template.description}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            }
+          )}
 
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <p style={{ color: '#8B7355' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <p style={{ color: "#8B7355" }}>
               Clique em um template para aplicar as propriedades
             </p>
           </div>

@@ -11,7 +11,11 @@ const ResultStyleCardBlock: React.FC<BlockComponentProps> = ({
   onClick,
   className = "",
 }) => {
-  const { styles = {}, containerWidth = "full", spacing = "medium" } = block.properties || {};
+  const {
+    styles = {},
+    containerWidth = "full",
+    spacing = "medium",
+  } = block.properties || {};
 
   // Simular resultado calculado (em produção viria do scoring)
   const resultStyle = "Elegante"; // Este seria calculado baseado nas respostas
@@ -20,7 +24,7 @@ const ResultStyleCardBlock: React.FC<BlockComponentProps> = ({
   if (!currentStyle) {
     return (
       <div className="text-center p-8">
-        <p style={{ color: '#8B7355' }}>Configuração de estilos necessária</p>
+        <p style={{ color: "#8B7355" }}>Configuração de estilos necessária</p>
       </div>
     );
   }
@@ -47,7 +51,7 @@ const ResultStyleCardBlock: React.FC<BlockComponentProps> = ({
           {currentStyle.name}
         </h2>
 
-        <p style={{ color: '#6B4F43' }}>{currentStyle.description}</p>
+        <p style={{ color: "#6B4F43" }}>{currentStyle.description}</p>
 
         {currentStyle.guideImage && (
           <div className="mt-6">

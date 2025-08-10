@@ -13,8 +13,14 @@ export { usePropertyHistory } from "./usePropertyHistory";
 export { useLiveEditor } from "./useLiveEditor";
 
 // Hooks compostos e avançados
-export { useStepWithContainer, useQuizStepContainer } from "./useStepWithContainer";
-export { useIntegratedReusableComponents, useTemplateActions } from "./useIntegratedReusableComponents";
+export {
+  useStepWithContainer,
+  useQuizStepContainer,
+} from "./useStepWithContainer";
+export {
+  useIntegratedReusableComponents,
+  useTemplateActions,
+} from "./useIntegratedReusableComponents";
 export {
   useSmartPerformance,
   useOptimizedQuizStep,

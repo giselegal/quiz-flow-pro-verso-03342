@@ -26,17 +26,18 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   disabled = false,
   className,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: `sidebar-item-${blockType}`, // ID mais específico para evitar conflitos
-    data: {
-      type: "sidebar-component", // TIPO CRUCIAL que o DndProvider espera
-      blockType: blockType,
-      title: title,
-      description: description,
-      category: category || "default",
-    },
-    disabled,
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `sidebar-item-${blockType}`, // ID mais específico para evitar conflitos
+      data: {
+        type: "sidebar-component", // TIPO CRUCIAL que o DndProvider espera
+        blockType: blockType,
+        title: title,
+        description: description,
+        category: category || "default",
+      },
+      disabled,
+    });
 
   // Debug: verificar se o draggable está sendo configurado
   React.useEffect(() => {
@@ -76,19 +77,29 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         <div className="flex-shrink-0 text-primary">{icon}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium text-stone-900 truncate">{title}</h4>
+            <h4 className="text-sm font-medium text-stone-900 truncate">
+              {title}
+            </h4>
             {blockType.includes("step01") && (
-              <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">STEP1</span>
+              <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">
+                STEP1
+              </span>
             )}
           </div>
           {category && (
-            <span className="text-xs text-stone-500 uppercase tracking-wide">{category}</span>
+            <span className="text-xs text-stone-500 uppercase tracking-wide">
+              {category}
+            </span>
           )}
         </div>
       </div>
 
       {/* Description */}
-      {description && <p className="text-xs text-stone-600 line-clamp-2 w-full">{description}</p>}
+      {description && (
+        <p className="text-xs text-stone-600 line-clamp-2 w-full">
+          {description}
+        </p>
+      )}
 
       {/* Drag Indicator */}
       {isDragging && <div style={{ backgroundColor: "#FAF9F7" }} />}

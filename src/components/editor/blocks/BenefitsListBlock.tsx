@@ -26,7 +26,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -94,9 +101,11 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      <h3 style={{ color: '#432818' }}>{title}</h3>
+      <h3 style={{ color: "#432818" }}>{title}</h3>
 
-      <div className={`space-y-3 ${layout === "grid" ? "grid grid-cols-2 gap-4" : ""}`}>
+      <div
+        className={`space-y-3 ${layout === "grid" ? "grid grid-cols-2 gap-4" : ""}`}
+      >
         {benefits.map((benefit: BenefitItem, index: number) => (
           <div key={index} className="flex items-start gap-3">
             {showIcons && (
@@ -104,13 +113,15 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
                 <Check className="w-3 h-3 text-white" />
               </div>
             )}
-            <span style={{ color: '#6B4F43' }}>{benefit.text}</span>
+            <span style={{ color: "#6B4F43" }}>{benefit.text}</span>
           </div>
         ))}
       </div>
 
       {benefits.length === 0 && (
-        <p className="text-gray-400 italic">Adicione benefícios nas propriedades do bloco</p>
+        <p className="text-gray-400 italic">
+          Adicione benefícios nas propriedades do bloco
+        </p>
       )}
     </div>
   );

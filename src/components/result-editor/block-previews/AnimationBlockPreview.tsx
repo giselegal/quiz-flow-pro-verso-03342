@@ -19,7 +19,9 @@ interface AnimationBlockPreviewProps {
   };
 }
 
-const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }) => {
+const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({
+  content,
+}) => {
   const {
     animationType = "fade-in",
     animationDuration = "500",
@@ -29,7 +31,9 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
     style = {},
   } = content;
 
-  const [isVisible, setIsVisible] = React.useState(animationTrigger !== "onScroll");
+  const [isVisible, setIsVisible] = React.useState(
+    animationTrigger !== "onScroll"
+  );
   const [isHovered, setIsHovered] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -58,7 +62,8 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
   // Gerar os estilos de animação com base nos parâmetros
   const getAnimationStyle = () => {
     // Só aplicar animação se estiver visível ou com hover quando necessário
-    const shouldAnimate = isVisible || (animationTrigger === "onHover" && isHovered);
+    const shouldAnimate =
+      isVisible || (animationTrigger === "onHover" && isHovered);
 
     if (!shouldAnimate) {
       return { opacity: 0 };
@@ -124,9 +129,16 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
         ...style,
         ...getAnimationStyle(),
       }}
-      className={cn("w-full", animationTrigger === "onHover" && "transition-all duration-300")}
-      onMouseEnter={animationTrigger === "onHover" ? () => setIsHovered(true) : undefined}
-      onMouseLeave={animationTrigger === "onHover" ? () => setIsHovered(false) : undefined}
+      className={cn(
+        "w-full",
+        animationTrigger === "onHover" && "transition-all duration-300"
+      )}
+      onMouseEnter={
+        animationTrigger === "onHover" ? () => setIsHovered(true) : undefined
+      }
+      onMouseLeave={
+        animationTrigger === "onHover" ? () => setIsHovered(false) : undefined
+      }
     >
       {children || (
         <div className="p-6 text-center text-gray-400 border border-dashed rounded-md">

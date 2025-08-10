@@ -18,7 +18,7 @@ declare global {
   var marginBottom: number | undefined;
   var marginLeft: number | undefined;
   var marginRight: number | undefined;
-  
+
   // Função global getMarginClass
   var getMarginClass: (value: any, type: any) => string;
 }

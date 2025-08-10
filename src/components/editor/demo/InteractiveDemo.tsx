@@ -6,8 +6,8 @@ export const InteractiveDemo: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const handleItemToggle = (item: string) => {
-    setSelectedItems(prev =>
-      prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+    setSelectedItems((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
     );
   };
 
@@ -18,7 +18,7 @@ export const InteractiveDemo: React.FC = () => {
       <h3 className="text-lg font-semibold mb-4">Demo Interativo</h3>
 
       <div className="space-y-2 mb-4">
-        {items.map(item => (
+        {items.map((item) => (
           <Button
             key={item}
             variant={selectedItems.includes(item) ? "default" : "outline"}
@@ -30,9 +30,10 @@ export const InteractiveDemo: React.FC = () => {
         ))}
       </div>
 
-      <div style={{ backgroundColor: '#FAF9F7' }}>
-        <p style={{ color: '#6B4F43' }}>
-          Itens selecionados: {selectedItems.length > 0 ? selectedItems.join(", ") : "Nenhum"}
+      <div style={{ backgroundColor: "#FAF9F7" }}>
+        <p style={{ color: "#6B4F43" }}>
+          Itens selecionados:{" "}
+          {selectedItems.length > 0 ? selectedItems.join(", ") : "Nenhum"}
         </p>
       </div>
     </Card>

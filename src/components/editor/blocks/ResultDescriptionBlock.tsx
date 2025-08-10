@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -57,8 +64,10 @@ const ResultDescriptionBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = "",
 }) => {
-  const { content = "Baseado nas suas respostas, identificamos que...", showIcon = true } =
-    block?.properties || {};
+  const {
+    content = "Baseado nas suas respostas, identificamos que...",
+    showIcon = true,
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {

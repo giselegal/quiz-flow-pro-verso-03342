@@ -27,7 +27,9 @@ export const useJsonTemplate = (
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [currentStepId, setCurrentStepId] = useState<string | null>(initialStepId || null);
+  const [currentStepId, setCurrentStepId] = useState<string | null>(
+    initialStepId || null
+  );
 
   const { preload = false, fallback = [], onLoad, onError } = options;
 
@@ -49,7 +51,9 @@ export const useJsonTemplate = (
         setBlocks(stepBlocks);
         onLoad?.(stepId, stepBlocks);
 
-        console.log(`✅ useJsonTemplate: ${stepId} carregado com ${stepBlocks.length} blocos`);
+        console.log(
+          `✅ useJsonTemplate: ${stepId} carregado com ${stepBlocks.length} blocos`
+        );
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
         setError(error);
@@ -83,7 +87,7 @@ export const useJsonTemplate = (
 
     // Pre-carregamento opcional
     if (preload) {
-      TemplateManager.preloadCommonTemplates().catch(err => {
+      TemplateManager.preloadCommonTemplates().catch((err) => {
         console.warn("⚠️ Falha no pre-carregamento:", err);
       });
     }
@@ -102,7 +106,9 @@ export const useJsonTemplate = (
  * Hook específico para múltiplas etapas
  */
 export const useMultiJsonTemplate = (stepIds: string[]) => {
-  const [templatesData, setTemplatesData] = useState<Record<string, Block[]>>({});
+  const [templatesData, setTemplatesData] = useState<Record<string, Block[]>>(
+    {}
+  );
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, Error>>({});
 
@@ -117,7 +123,7 @@ export const useMultiJsonTemplate = (stepIds: string[]) => {
 
     // Carrega todos os templates em paralelo
     await Promise.allSettled(
-      stepIds.map(async stepId => {
+      stepIds.map(async (stepId) => {
         try {
           const blocks = await TemplateManager.loadStepBlocks(stepId);
           results[stepId] = blocks;
@@ -132,7 +138,11 @@ export const useMultiJsonTemplate = (stepIds: string[]) => {
     setErrors(errors);
     setLoading(false);
 
-    console.log("📊 useMultiJsonTemplate: Carregados", Object.keys(results).length, "templates");
+    console.log(
+      "📊 useMultiJsonTemplate: Carregados",
+      Object.keys(results).length,
+      "templates"
+    );
   }, [stepIds]);
 
   useEffect(() => {

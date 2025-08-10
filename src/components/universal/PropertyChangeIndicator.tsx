@@ -14,7 +14,9 @@ interface PropertyChangeIndicatorProps {
   debounceMs?: number;
 }
 
-export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = ({
+export const PropertyChangeIndicator: React.FC<
+  PropertyChangeIndicatorProps
+> = ({
   isChanging = false,
   hasChanged = false,
   children,
@@ -33,19 +35,19 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
   return (
     <div className="relative">
       {children}
-      
+
       <AnimatePresence>
         {isChanging && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            style={{ backgroundColor: '#FAF9F7' }}
+            style={{ backgroundColor: "#FAF9F7" }}
           >
             <Loader2 className="w-3 h-3 text-white animate-spin" />
           </motion.div>
         )}
-        
+
         {showSaved && !isChanging && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}

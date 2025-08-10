@@ -18,7 +18,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -99,7 +106,11 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     }
   };
 
-  const handleOptionChange = (optionIndex: number, field: string, value: any) => {
+  const handleOptionChange = (
+    optionIndex: number,
+    field: string,
+    value: any
+  ) => {
     const updatedOptions = options.map((option: any, index: number) =>
       index === optionIndex ? { ...option, [field]: value } : option
     );
@@ -110,7 +121,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
     <div
       className={cn(
         "relative w-full min-h-[400px] p-8 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
+        isSelected
+          ? "border-[#B89B7A] bg-[#B89B7A]/10"
+          : "border-gray-300 bg-white",
         "cursor-pointer hover:border-gray-400 transition-colors",
         className,
         // Margens universais com controles deslizantes
@@ -127,7 +140,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         <div className="flex justify-between items-center mb-2">
           <InlineEditText
             value={progressLabel}
-            onSave={(value: string) => handlePropertyChange("progressLabel", value)}
+            onSave={(value: string) =>
+              handlePropertyChange("progressLabel", value)
+            }
             placeholder="Label do progresso"
             className="text-sm font-medium opacity-70"
             disabled={disabled}
@@ -170,13 +185,12 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
       {/* Options */}
       <div className="grid gap-4 max-w-2xl mx-auto">
         {options.map((option: any, index: number) => (
-          <div
-            key={option.id || index}
-            style={{ borderColor: '#E5DDD5' }}
-          >
+          <div key={option.id || index} style={{ borderColor: "#E5DDD5" }}>
             <InlineEditText
               value={option.text}
-              onSave={(value: string) => handleOptionChange(index, "text", value)}
+              onSave={(value: string) =>
+                handleOptionChange(index, "text", value)
+              }
               placeholder="Texto da opção"
               className="text-lg font-medium"
               style={{ color: textColor }}
@@ -188,7 +202,9 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
               <div className="mt-2">
                 <InlineEditText
                   value={option.category}
-                  onSave={(value: string) => handleOptionChange(index, "category", value)}
+                  onSave={(value: string) =>
+                    handleOptionChange(index, "category", value)
+                  }
                   placeholder="Categoria"
                   className="text-xs"
                   disabled={disabled}
@@ -202,7 +218,11 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
 
       {/* Continue Button */}
       <div className="text-center mt-8">
-        <Button size="lg" className="px-8 py-3 bg-primary hover:bg-primary/90" disabled={disabled}>
+        <Button
+          size="lg"
+          className="px-8 py-3 bg-primary hover:bg-primary/90"
+          disabled={disabled}
+        >
           Continuar
         </Button>
       </div>

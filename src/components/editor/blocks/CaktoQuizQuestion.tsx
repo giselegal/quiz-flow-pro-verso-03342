@@ -12,7 +12,7 @@ interface CaktoQuizQuestionProps {
   className?: string;
 }
 
-export const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = props => {
+export const CaktoQuizQuestion: React.FC<CaktoQuizQuestionProps> = (props) => {
   return <QuizQuestionBlock {...props} />;
 };
 

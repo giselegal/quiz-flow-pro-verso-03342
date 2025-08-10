@@ -20,7 +20,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -97,8 +104,8 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
           <span
-            style={{ color: '#6B4F43' }}
-            onClick={e => {
+            style={{ color: "#6B4F43" }}
+            onClick={(e) => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
                 const newLabel = prompt("Novo rótulo:", label);
@@ -112,10 +119,13 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
             <span
               className="text-sm font-bold ml-2"
               style={{ color }}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 if (onPropertyChange && !disabled) {
-                  const newPercentage = prompt("Nova porcentagem (0-100):", percentage.toString());
+                  const newPercentage = prompt(
+                    "Nova porcentagem (0-100):",
+                    percentage.toString()
+                  );
                   if (newPercentage !== null && !isNaN(Number(newPercentage))) {
                     onPropertyChange(
                       "percentage",
@@ -131,7 +141,7 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
         </div>
 
         {/* Progress Bar */}
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{

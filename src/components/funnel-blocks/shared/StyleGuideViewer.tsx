@@ -5,7 +5,9 @@ interface StyleGuideViewerProps {
   className?: string;
 }
 
-export const StyleGuideViewer: React.FC<StyleGuideViewerProps> = ({ className }) => {
+export const StyleGuideViewer: React.FC<StyleGuideViewerProps> = ({
+  className,
+}) => {
   return (
     <div className={className}>
       <div className="p-6">

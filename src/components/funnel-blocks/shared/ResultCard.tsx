@@ -1,7 +1,12 @@
 import React from "react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardFooter } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardFooter,
+} from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
 
 interface ResultCardProps {
@@ -45,7 +50,9 @@ export const ResultCard: React.FC<ResultCardProps> = ({
     <Card
       className={cn(
         "overflow-hidden transition-shadow duration-300 hover:shadow-lg",
-        isHighlighted ? "border-2 border-primary shadow-md" : "border border-gray-200",
+        isHighlighted
+          ? "border-2 border-primary shadow-md"
+          : "border border-gray-200",
         className
       )}
       style={style}
@@ -53,9 +60,16 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       {/* Cabeçalho com imagem */}
       {imageUrl && (
         <div className="relative w-full h-48">
-          <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+          <img
+            src={imageUrl}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
           {showBadge && (
-            <Badge className="absolute top-2 right-2 bg-primary text-white" variant="default">
+            <Badge
+              className="absolute top-2 right-2 bg-primary text-white"
+              variant="default"
+            >
               {badgeText}
             </Badge>
           )}
@@ -75,7 +89,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               {badgeText}
             </Badge>
           )}
-          {category && <div style={{ color: '#8B7355' }}>{category}</div>}
+          {category && <div style={{ color: "#8B7355" }}>{category}</div>}
           <h3 className="text-lg font-bold">{title}</h3>
         </CardHeader>
       )}
@@ -83,14 +97,14 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       <CardContent className={imageUrl ? "pt-4" : ""}>
         {imageUrl && <h3 className="text-lg font-bold mb-3">{title}</h3>}
 
-        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
+        {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
 
         {features.length > 0 && (
           <ul className="space-y-1 mb-4">
             {features.map((feature, index) => (
               <li key={index} className="flex items-start">
                 <span className="text-primary mr-2">•</span>
-                <span style={{ color: '#6B4F43' }}>{feature}</span>
+                <span style={{ color: "#6B4F43" }}>{feature}</span>
               </li>
             ))}
           </ul>

@@ -25,9 +25,10 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   onDuplicate,
   onDelete,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: block.id,
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: block.id,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -40,12 +41,18 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
   const getBlockPreview = () => {
     switch (block.type as BlockType) {
       case "heading":
-        return <h2 className="text-xl font-medium">{content.text || "Título"}</h2>;
+        return (
+          <h2 className="text-xl font-medium">{content.text || "Título"}</h2>
+        );
       case "paragraph":
-        return <p className="text-sm line-clamp-2">{content.text || "Parágrafo de texto"}</p>;
+        return (
+          <p className="text-sm line-clamp-2">
+            {content.text || "Parágrafo de texto"}
+          </p>
+        );
       case "image":
         return content.imageUrl ? (
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <img
               src={content.imageUrl}
               alt={content.alt || "Imagem"}
@@ -53,9 +60,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
             />
           </div>
         ) : (
-          <div style={{ backgroundColor: '#E5DDD5' }}>
-            Imagem
-          </div>
+          <div style={{ backgroundColor: "#E5DDD5" }}>Imagem</div>
         );
       case "button":
         return (
@@ -64,7 +69,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
           </div>
         );
       default:
-        return <div style={{ color: '#8B7355' }}>{block.type}</div>;
+        return <div style={{ color: "#8B7355" }}>{block.type}</div>;
     }
   };
 
@@ -102,7 +107,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onDuplicate();
                 }}
@@ -116,7 +121,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-7 w-7 p-0"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
                 }}

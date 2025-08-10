@@ -23,8 +23,12 @@ export const StyleResultSection: React.FC<StyleResultSectionProps> = ({
     <Card className="p-4 bg-white shadow-sm border border-[#B89B7A]/20">
       <div className="w-full max-w-md mx-auto mb-4">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-medium text-[#432818]">Estilo Predominante</span>
-          <span className="text-sm font-medium text-[#B89B7A]">{primaryStyle.percentage}%</span>
+          <span className="text-sm font-medium text-[#432818]">
+            Estilo Predominante
+          </span>
+          <span className="text-sm font-medium text-[#B89B7A]">
+            {primaryStyle.percentage}%
+          </span>
         </div>
         <div className="w-full bg-[#F3E8E6] rounded-full h-2">
           <div
@@ -43,7 +47,9 @@ export const StyleResultSection: React.FC<StyleResultSectionProps> = ({
               alt={`Estilo ${primaryStyle.category}`}
               className="w-[30%] h-min rounded-lg shadow-sm"
             />
-            <p className="text-base text-[#432818] leading-relaxed flex-1">{description}</p>
+            <p className="text-base text-[#432818] leading-relaxed flex-1">
+              {description}
+            </p>
           </div>
         ) : (
           // Desktop layout - Complementary styles overlay on image

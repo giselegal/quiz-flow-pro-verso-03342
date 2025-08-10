@@ -8,7 +8,10 @@ interface FunnelProgressBarProps {
   totalSteps: number;
 }
 
-const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({ currentStep, totalSteps }) => {
+const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
+  currentStep,
+  totalSteps,
+}) => {
   const progress = (currentStep / totalSteps) * 100;
   return (
     <div className="w-full">
@@ -62,7 +65,9 @@ const FunnelIntroStep: React.FC<FunnelIntroStepProps> = ({
         {logoUrl && <img src={logoUrl} alt="Logo" className="h-16 mx-auto" />}
 
         <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#432818]">{title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#432818]">
+            {title}
+          </h1>
           <p className="text-xl text-[#8F7A6A]">{subtitle}</p>
         </div>
 
@@ -77,14 +82,21 @@ const FunnelIntroStep: React.FC<FunnelIntroStepProps> = ({
 
           {showProgressBar && (
             <div className="w-full max-w-md mx-auto">
-              <FunnelProgressBar currentStep={stepNumber} totalSteps={totalSteps} />
+              <FunnelProgressBar
+                currentStep={stepNumber}
+                totalSteps={totalSteps}
+              />
             </div>
           )}
         </div>
       </div>
 
       {isEditable && (
-        <Button onClick={onEdit} variant="outline" className="fixed top-4 right-4">
+        <Button
+          onClick={onEdit}
+          variant="outline"
+          className="fixed top-4 right-4"
+        >
           Edit
         </Button>
       )}

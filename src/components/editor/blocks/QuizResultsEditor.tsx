@@ -1,5 +1,10 @@
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import {
@@ -10,9 +15,18 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 import { Switch } from "../../../components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import { Textarea } from "../../../components/ui/textarea";
-import { CalculationMethod, QuizResult, QuizResultsConfig } from "../../../hooks/useQuizResults";
+import {
+  CalculationMethod,
+  QuizResult,
+  QuizResultsConfig,
+} from "../../../hooks/useQuizResults";
 import { MoveDown, MoveUp, Plus, Trash } from "lucide-react";
 import React, { useState } from "react";
 
@@ -21,7 +35,10 @@ interface QuizResultsEditorProps {
   onChange: (config: Partial<QuizResultsConfig>) => void;
 }
 
-const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange }) => {
+const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({
+  config,
+  onChange,
+}) => {
   const [activeTab, setActiveTab] = useState("calculation");
 
   // Valores padrão para config
@@ -124,7 +141,11 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="calculation" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs
+        defaultValue="calculation"
+        value={activeTab}
+        onValueChange={setActiveTab}
+      >
         <TabsList className="w-full">
           <TabsTrigger value="calculation" className="flex-1">
             Método de Cálculo
@@ -147,8 +168,10 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                 <Label htmlFor="calculation-type">Tipo de Cálculo</Label>
                 <Select
                   value={calculationMethod.type}
-                  onValueChange={value =>
-                    updateCalculationMethod({ type: value as CalculationMethod["type"] })
+                  onValueChange={(value) =>
+                    updateCalculationMethod({
+                      type: value as CalculationMethod["type"],
+                    })
                   }
                 >
                   <SelectTrigger>
@@ -158,21 +181,30 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     <SelectItem value="sum">Soma de Pontos</SelectItem>
                     <SelectItem value="average">Média de Pontos</SelectItem>
                     <SelectItem value="highest">Maior Pontuação</SelectItem>
-                    <SelectItem value="majority">Maioria das Respostas</SelectItem>
+                    <SelectItem value="majority">
+                      Maioria das Respostas
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {(calculationMethod.type === "highest" || calculationMethod.type === "majority") && (
+              {(calculationMethod.type === "highest" ||
+                calculationMethod.type === "majority") && (
                 <div>
-                  <Label htmlFor="primary-category">Categoria Prioritária (opcional)</Label>
+                  <Label htmlFor="primary-category">
+                    Categoria Prioritária (opcional)
+                  </Label>
                   <Input
                     id="primary-category"
                     value={calculationMethod.primaryCategory || ""}
-                    onChange={e => updateCalculationMethod({ primaryCategory: e.target.value })}
+                    onChange={(e) =>
+                      updateCalculationMethod({
+                        primaryCategory: e.target.value,
+                      })
+                    }
                     placeholder="Ex: Elegante, Clássico, etc."
                   />
-                  <p style={{ color: '#8B7355' }}>
+                  <p style={{ color: "#8B7355" }}>
                     Em caso de empate, esta categoria terá prioridade
                   </p>
                 </div>
@@ -182,7 +214,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                 <Label htmlFor="tiebreaker">Critério de Desempate</Label>
                 <Select
                   value={calculationMethod.tiebreaker || "highest_score"}
-                  onValueChange={value =>
+                  onValueChange={(value) =>
                     updateCalculationMethod({
                       tiebreaker: value as CalculationMethod["tiebreaker"],
                     })
@@ -192,8 +224,12 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     <SelectValue placeholder="Selecione o critério de desempate" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="highest_score">Maior Pontuação</SelectItem>
-                    <SelectItem value="first_category">Primeira Categoria</SelectItem>
+                    <SelectItem value="highest_score">
+                      Maior Pontuação
+                    </SelectItem>
+                    <SelectItem value="first_category">
+                      Primeira Categoria
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -211,9 +247,14 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
           </div>
 
           {results.length === 0 && (
-            <div style={{ backgroundColor: '#FAF9F7' }}>
-              <p style={{ color: '#8B7355' }}>Nenhum resultado configurado</p>
-              <Button onClick={addResult} variant="outline" size="sm" className="mt-2">
+            <div style={{ backgroundColor: "#FAF9F7" }}>
+              <p style={{ color: "#8B7355" }}>Nenhum resultado configurado</p>
+              <Button
+                onClick={addResult}
+                variant="outline"
+                size="sm"
+                className="mt-2"
+              >
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Resultado
               </Button>
@@ -224,7 +265,9 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
             <Card key={result.id} className="relative">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-base">Resultado {index + 1}</CardTitle>
+                  <CardTitle className="text-base">
+                    Resultado {index + 1}
+                  </CardTitle>
                   <div className="flex space-x-1">
                     <Button
                       variant="ghost"
@@ -245,7 +288,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     <Button
                       variant="ghost"
                       size="sm"
-                      style={{ color: '#432818' }}
+                      style={{ color: "#432818" }}
                       onClick={() => removeResult(index)}
                     >
                       <Trash className="w-4 h-4" />
@@ -259,55 +302,81 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                   <Input
                     id={`result-${index}-title`}
                     value={result.title}
-                    onChange={e => updateResult(index, { title: e.target.value })}
+                    onChange={(e) =>
+                      updateResult(index, { title: e.target.value })
+                    }
                   />
                 </div>
                 <div>
-                  <Label htmlFor={`result-${index}-description`}>Descrição</Label>
+                  <Label htmlFor={`result-${index}-description`}>
+                    Descrição
+                  </Label>
                   <Textarea
                     id={`result-${index}-description`}
                     value={result.description}
-                    onChange={e => updateResult(index, { description: e.target.value })}
+                    onChange={(e) =>
+                      updateResult(index, { description: e.target.value })
+                    }
                     rows={3}
                   />
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <Label htmlFor={`result-${index}-category`}>Categoria</Label>
+                    <Label htmlFor={`result-${index}-category`}>
+                      Categoria
+                    </Label>
                     <Input
                       id={`result-${index}-category`}
                       value={result.category}
-                      onChange={e => updateResult(index, { category: e.target.value })}
+                      onChange={(e) =>
+                        updateResult(index, { category: e.target.value })
+                      }
                       placeholder="Ex: Elegante, Clássico, etc."
                     />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor={`result-${index}-image`}>URL da Imagem</Label>
+                    <Label htmlFor={`result-${index}-image`}>
+                      URL da Imagem
+                    </Label>
                     <Input
                       id={`result-${index}-image`}
                       value={result.imageUrl || ""}
-                      onChange={e => updateResult(index, { imageUrl: e.target.value })}
+                      onChange={(e) =>
+                        updateResult(index, { imageUrl: e.target.value })
+                      }
                       placeholder="https://exemplo.com/imagem.jpg"
                     />
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <Label htmlFor={`result-${index}-min-score`}>Pontuação Mínima</Label>
+                    <Label htmlFor={`result-${index}-min-score`}>
+                      Pontuação Mínima
+                    </Label>
                     <Input
                       id={`result-${index}-min-score`}
                       type="number"
                       value={result.minScore}
-                      onChange={e => updateResult(index, { minScore: Number(e.target.value) })}
+                      onChange={(e) =>
+                        updateResult(index, {
+                          minScore: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                   <div className="flex-1">
-                    <Label htmlFor={`result-${index}-max-score`}>Pontuação Máxima</Label>
+                    <Label htmlFor={`result-${index}-max-score`}>
+                      Pontuação Máxima
+                    </Label>
                     <Input
                       id={`result-${index}-max-score`}
                       type="number"
                       value={result.maxScore}
-                      onChange={e => updateResult(index, { maxScore: Number(e.target.value) })}
+                      onChange={(e) =>
+                        updateResult(index, {
+                          maxScore: Number(e.target.value),
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -323,15 +392,20 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="show-all-results">Mostrar Todos os Resultados</Label>
+                <Label htmlFor="show-all-results">
+                  Mostrar Todos os Resultados
+                </Label>
                 <Switch
                   id="show-all-results"
                   checked={showAllResults}
-                  onCheckedChange={checked => onChange({ ...config, showAllResults: checked })}
+                  onCheckedChange={(checked) =>
+                    onChange({ ...config, showAllResults: checked })
+                  }
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
-                Se ativado, mostra todos os resultados possíveis, não apenas o principal
+              <p style={{ color: "#8B7355" }}>
+                Se ativado, mostra todos os resultados possíveis, não apenas o
+                principal
               </p>
 
               <div className="flex items-center justify-between">
@@ -339,10 +413,12 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                 <Switch
                   id="show-scores"
                   checked={showScores}
-                  onCheckedChange={checked => onChange({ ...config, showScores: checked })}
+                  onCheckedChange={(checked) =>
+                    onChange({ ...config, showScores: checked })
+                  }
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
+              <p style={{ color: "#8B7355" }}>
                 Se ativado, mostra as pontuações do usuário em cada categoria
               </p>
             </CardContent>

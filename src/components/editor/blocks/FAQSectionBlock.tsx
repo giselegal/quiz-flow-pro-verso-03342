@@ -11,7 +11,13 @@ import {
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
 } from "../../../utils/inlineComponentUtils";
-import { BRAND_COLORS, TYPOGRAPHY, ANIMATIONS, EFFECTS, SPACING } from "../../../utils/brandDesignSystem";
+import {
+  BRAND_COLORS,
+  TYPOGRAPHY,
+  ANIMATIONS,
+  EFFECTS,
+  SPACING,
+} from "../../../utils/brandDesignSystem";
 import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 
@@ -21,7 +27,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -145,7 +158,11 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
     handlePropertyChange("questions", [...questions, newQuestion]);
   };
 
-  const updateQuestion = (id: string, field: "question" | "answer", value: string) => {
+  const updateQuestion = (
+    id: string,
+    field: "question" | "answer",
+    value: string
+  ) => {
     const updatedQuestions = questions.map((q: any) =>
       q.id === id ? { ...q, [field]: value } : q
     );
@@ -193,7 +210,13 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
       minHeight="20rem"
       editLabel="Editar FAQ"
     >
-      <div className={cn("w-full max-w-4xl mx-auto", "py-6 md:py-8 lg:py-12", "px-4 md:px-6")}>
+      <div
+        className={cn(
+          "w-full max-w-4xl mx-auto",
+          "py-6 md:py-8 lg:py-12",
+          "px-4 md:px-6"
+        )}
+      >
         {/* Title */}
         {showTitle && (
           <div
@@ -204,9 +227,12 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
           >
             <InlineEditableText
               value={getPersonalizedText(title, title, username, useUsername)}
-              onChange={value => handlePropertyChange("title", value)}
+              onChange={(value) => handlePropertyChange("title", value)}
               placeholder="Título da seção FAQ..."
-              className={cn("text-2xl font-bold", `text-[${BRAND_COLORS.secondary.main}]`)}
+              className={cn(
+                "text-2xl font-bold",
+                `text-[${BRAND_COLORS.secondary.main}]`
+              )}
               fontWeight="bold"
               textAlign={alignment as any}
             />
@@ -237,7 +263,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                       className="h-6 w-6 p-0 bg-white/90 hover:bg-white"
                       onClick={() => removeQuestion(faq.id || index.toString())}
                     >
-                      <Trash2 style={{ color: '#432818' }} />
+                      <Trash2 style={{ color: "#432818" }} />
                     </Button>
                   </div>
                 )}
@@ -250,7 +276,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                     "bg-gray-50 hover:bg-gray-100 cursor-pointer",
                     ANIMATIONS.transition
                   )}
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     toggleQuestion(index);
                   }}
@@ -258,8 +284,12 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                   <div className="flex-1 pr-4">
                     <InlineEditableText
                       value={faq.question}
-                      onChange={value =>
-                        updateQuestion(faq.id || index.toString(), "question", value)
+                      onChange={(value) =>
+                        updateQuestion(
+                          faq.id || index.toString(),
+                          "question",
+                          value
+                        )
                       }
                       placeholder="Pergunta da FAQ..."
                       className={cn(
@@ -305,8 +335,12 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                   >
                     <InlineEditableText
                       value={faq.answer}
-                      onChange={value =>
-                        updateQuestion(faq.id || index.toString(), "answer", value)
+                      onChange={(value) =>
+                        updateQuestion(
+                          faq.id || index.toString(),
+                          "answer",
+                          value
+                        )
                       }
                       placeholder="Resposta da FAQ..."
                       className={cn(
@@ -335,7 +369,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
               )}
               onClick={addQuestion}
             >
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <Plus className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
                 <span className="text-sm">Adicionar Pergunta</span>
               </div>
@@ -347,8 +381,9 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
         {isSelected && (
           <div className="mt-6 md:mt-8 p-3 md:p-4 bg-[#B89B7A]/10 rounded-lg border border-[#B89B7A]/30">
             <p className={cn("text-sm", "text-[#A38A69]")}>
-              💡 <strong>Dica:</strong> Clique nas perguntas para editá-las. Em mobile, o layout se
-              adapta automaticamente para melhor legibilidade.
+              💡 <strong>Dica:</strong> Clique nas perguntas para editá-las. Em
+              mobile, o layout se adapta automaticamente para melhor
+              legibilidade.
             </p>
           </div>
         )}

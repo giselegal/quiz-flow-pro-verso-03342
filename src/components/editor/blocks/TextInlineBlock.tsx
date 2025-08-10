@@ -1,5 +1,11 @@
 import { cn } from "../../../lib/utils";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
@@ -93,16 +99,25 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   const spacingClasses = {
-    tight: "py-0",   // 🎯 Zero padding vertical
-    normal: "py-0",  // 🎯 Zero padding vertical
-    loose: "py-0",   // 🎯 Zero padding vertical
+    tight: "py-0", // 🎯 Zero padding vertical
+    normal: "py-0", // 🎯 Zero padding vertical
+    loose: "py-0", // 🎯 Zero padding vertical
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
-  const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
+  const getMarginClass = (
+    value: number | string,
+    type: "top" | "bottom" | "left" | "right"
+  ) => {
     if (typeof value === "number" && value !== 0) {
       const prefix =
-        type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+        type === "top"
+          ? "mt"
+          : type === "bottom"
+            ? "mb"
+            : type === "left"
+              ? "ml"
+              : "mr";
 
       if (value < 0) {
         // Margens negativas - agora suportadas para todas as direções
@@ -243,7 +258,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // 🎯 Função para detectar se tem marcações de cor ou formatação
   const hasColorMarkings = useMemo(() => {
-    return personalizedContent?.includes("[") && personalizedContent?.includes("[/");
+    return (
+      personalizedContent?.includes("[") && personalizedContent?.includes("[/")
+    );
   }, [personalizedContent]);
 
   // 🎯 Função para detectar formatação simples (sem cores)
@@ -253,7 +270,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
-    const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
+    const hasHtml =
+      personalizedContent?.includes("<") && personalizedContent?.includes(">");
     const hasSpanTag = personalizedContent?.includes("<span");
     const hasStrongTag = personalizedContent?.includes("<strong");
 
@@ -334,7 +352,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   const autoResizeTextarea = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
     }
   }, []);
 
@@ -350,7 +369,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         // CANVAS GRID SYSTEM: Compatível com flex-wrap do canvas
         "flex-shrink-0 flex-grow-0",
         // ES7+ Computed property access com nullish coalescing
-        gridClasses[gridColumns as keyof typeof gridClasses] ?? gridClasses.auto,
+        gridClasses[gridColumns as keyof typeof gridClasses] ??
+          gridClasses.auto,
 
         // VISUAL STYLING: Modular e independente
         "rounded-lg transition-all duration-200",
@@ -363,7 +383,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         isEditing && "ring-2 ring-blue-500 ring-offset-2",
 
         // SPACING - ES7+ Computed property com fallback
-        spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,
+        spacingClasses[spacing as keyof typeof spacingClasses] ??
+          spacingClasses.normal,
 
         // MARGIN SPACING - Apenas margens verticais no container
         getMarginClass(marginTop, "top"),
@@ -384,7 +405,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
           <textarea
             ref={textareaRef}
             value={editContent}
-            onChange={e => {
+            onChange={(e) => {
               setEditContent(e.target.value);
               autoResizeTextarea();
             }}
@@ -392,10 +413,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             onBlur={handleSave}
             className={cn(
               "w-full bg-transparent border-none resize-none outline-none",
-              fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
+              fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ??
+                fontSizeClasses.medium,
               fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
                 fontWeightClasses.normal,
-              textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
+              textAlignClasses[textAlign as keyof typeof textAlignClasses] ??
+                textAlignClasses.left,
               "break-words whitespace-pre-wrap",
               lineHeight || "leading-normal",
               // 🎯 MARGENS LATERAIS aplicadas no textarea de edição
@@ -410,7 +433,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             }}
             placeholder="Digite seu texto..."
           />
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             Cmd/Ctrl + Enter para salvar • Esc para cancelar
           </div>
         </div>
@@ -419,10 +442,12 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         <div
           className={cn(
             // ES7+ Computed properties com fallbacks
-            fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
+            fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ??
+              fontSizeClasses.medium,
             fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
               fontWeightClasses.normal,
-            textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
+            textAlignClasses[textAlign as keyof typeof textAlignClasses] ??
+              textAlignClasses.left,
 
             // Responsividade e quebra de texto
             "break-words whitespace-pre-wrap",
@@ -431,7 +456,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             lineHeight || "leading-normal",
 
             // Hover para indicar que é editável (sem padding lateral para não interferir com margens)
-            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded py-0.5",
+            onPropertyChange &&
+              "hover:bg-gray-50 hover:bg-opacity-50 rounded py-0.5",
 
             // 🎯 MARGENS LATERAIS aplicadas no conteúdo interno
             getMarginClass(marginLeft, "left"),
@@ -449,7 +475,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             <>{parseMultiColorText(personalizedContent)}</>
           ) : hasSimpleFormatting ? (
             // 🎯 Renderiza texto com formatação simples **negrito** sem cores
-            <span style={{ color }}>{parseFormattedText(personalizedContent)}</span>
+            <span style={{ color }}>
+              {parseFormattedText(personalizedContent)}
+            </span>
           ) : isHtmlContent ? (
             // Renderiza como HTML se detectar qualquer tag HTML
             <div
@@ -472,8 +500,22 @@ export default TextInlineBlock;
 export type { BlockComponentProps };
 
 // ES7+ Const assertion para readonly arrays/objects
-export const TEXT_SIZES = ["xs", "sm", "medium", "lg", "xl", "2xl", "3xl"] as const;
-export const TEXT_WEIGHTS = ["light", "normal", "medium", "semibold", "bold"] as const;
+export const TEXT_SIZES = [
+  "xs",
+  "sm",
+  "medium",
+  "lg",
+  "xl",
+  "2xl",
+  "3xl",
+] as const;
+export const TEXT_WEIGHTS = [
+  "light",
+  "normal",
+  "medium",
+  "semibold",
+  "bold",
+] as const;
 export const TEXT_ALIGNS = ["left", "center", "right", "justify"] as const;
 
 // ES7+ Template literal types (para uso futuro)

@@ -20,7 +20,7 @@ export const useBlockOperations = () => {
         content: getDefaultContentForType(type),
       };
 
-      setBlocks(prev => [...prev, newBlock]);
+      setBlocks((prev) => [...prev, newBlock]);
       setSelectedBlockId(newBlock.id);
 
       return newBlock.id;
@@ -29,17 +29,19 @@ export const useBlockOperations = () => {
   );
 
   const handleUpdateBlock = useCallback((id: string, content: any) => {
-    setBlocks(prev =>
-      prev.map(block =>
-        block.id === id ? { ...block, content: { ...block.content, ...content } } : block
+    setBlocks((prev) =>
+      prev.map((block) =>
+        block.id === id
+          ? { ...block, content: { ...block.content, ...content } }
+          : block
       )
     );
   }, []);
 
   const handleDeleteBlock = useCallback((id: string) => {
-    setBlocks(prev => {
+    setBlocks((prev) => {
       const filteredBlocks = prev
-        .filter(block => block.id !== id)
+        .filter((block) => block.id !== id)
         .map((block, index) => ({ ...block, order: index }));
       return filteredBlocks;
     });
@@ -47,18 +49,21 @@ export const useBlockOperations = () => {
     setSelectedBlockId(null);
   }, []);
 
-  const handleReorderBlocks = useCallback((sourceIndex: number, destinationIndex: number) => {
-    setBlocks(prev => {
-      const result = Array.from(prev);
-      const [removed] = result.splice(sourceIndex, 1);
-      result.splice(destinationIndex, 0, removed);
+  const handleReorderBlocks = useCallback(
+    (sourceIndex: number, destinationIndex: number) => {
+      setBlocks((prev) => {
+        const result = Array.from(prev);
+        const [removed] = result.splice(sourceIndex, 1);
+        result.splice(destinationIndex, 0, removed);
 
-      return result.map((block, index) => ({
-        ...block,
-        order: index,
-      }));
-    });
-  }, []);
+        return result.map((block, index) => ({
+          ...block,
+          order: index,
+        }));
+      });
+    },
+    []
+  );
 
   return {
     blocks,

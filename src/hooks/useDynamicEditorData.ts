@@ -27,19 +27,21 @@ export const useDynamicEditorData = (): DynamicEditorDataReturn => {
         properties: {},
       };
 
-      setBlocks(prev => [...prev, newBlock]);
+      setBlocks((prev) => [...prev, newBlock]);
       return newBlock.id;
     },
     [blocks.length]
   );
 
   const updateBlock = useCallback((id: string, updates: Partial<Block>) => {
-    setBlocks(prev => prev.map(block => (block.id === id ? { ...block, ...updates } : block)));
+    setBlocks((prev) =>
+      prev.map((block) => (block.id === id ? { ...block, ...updates } : block))
+    );
   }, []);
 
   const deleteBlock = useCallback(
     (id: string) => {
-      setBlocks(prev => prev.filter(block => block.id !== id));
+      setBlocks((prev) => prev.filter((block) => block.id !== id));
       if (selectedBlockId === id) {
         setSelectedBlockId(null);
       }
@@ -52,7 +54,7 @@ export const useDynamicEditorData = (): DynamicEditorDataReturn => {
   }, []);
 
   const reorderBlocks = useCallback((startIndex: number, endIndex: number) => {
-    setBlocks(prev => {
+    setBlocks((prev) => {
       const result = Array.from(prev);
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);

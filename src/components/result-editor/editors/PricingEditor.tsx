@@ -31,7 +31,7 @@ const PricingEditor: React.FC<PricingEditorProps> = ({ content, onUpdate }) => {
         <Input
           id="price"
           value={content.price || ""}
-          onChange={e => handleChange("price", e.target.value)}
+          onChange={(e) => handleChange("price", e.target.value)}
           placeholder="39,00"
         />
       </div>
@@ -41,7 +41,7 @@ const PricingEditor: React.FC<PricingEditorProps> = ({ content, onUpdate }) => {
         <Input
           id="regularPrice"
           value={content.regularPrice || ""}
-          onChange={e => handleChange("regularPrice", e.target.value)}
+          onChange={(e) => handleChange("regularPrice", e.target.value)}
           placeholder="175,00"
         />
       </div>
@@ -51,7 +51,7 @@ const PricingEditor: React.FC<PricingEditorProps> = ({ content, onUpdate }) => {
         <Input
           id="ctaText"
           value={content.ctaText || ""}
-          onChange={e => handleChange("ctaText", e.target.value)}
+          onChange={(e) => handleChange("ctaText", e.target.value)}
           placeholder="Quero meu Guia + Bônus"
         />
       </div>
@@ -61,7 +61,7 @@ const PricingEditor: React.FC<PricingEditorProps> = ({ content, onUpdate }) => {
         <Input
           id="ctaUrl"
           value={content.ctaUrl || ""}
-          onChange={e => handleChange("ctaUrl", e.target.value)}
+          onChange={(e) => handleChange("ctaUrl", e.target.value)}
           placeholder="https://pay.hotmart.com/..."
         />
       </div>
@@ -71,7 +71,7 @@ const PricingEditor: React.FC<PricingEditorProps> = ({ content, onUpdate }) => {
         <Input
           id="urgencyText"
           value={content.urgencyText || ""}
-          onChange={e => handleChange("urgencyText", e.target.value)}
+          onChange={(e) => handleChange("urgencyText", e.target.value)}
           placeholder="Oferta por tempo limitado!"
         />
       </div>
@@ -81,7 +81,7 @@ const PricingEditor: React.FC<PricingEditorProps> = ({ content, onUpdate }) => {
         <Textarea
           id="paymentMethods"
           value={content.paymentMethods || ""}
-          onChange={e => handleChange("paymentMethods", e.target.value)}
+          onChange={(e) => handleChange("paymentMethods", e.target.value)}
           placeholder="Aceitamos PIX, cartão de crédito e boleto"
           rows={2}
         />

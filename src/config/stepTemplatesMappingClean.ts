@@ -170,8 +170,10 @@ export const STEP_TEMPLATES: StepTemplate[] = [
 ];
 
 // 🔧 UTILITÁRIOS
-export const getTemplateByStep = (stepNumber: number): StepTemplate | undefined => {
-  return STEP_TEMPLATES.find(template => template.stepNumber === stepNumber);
+export const getTemplateByStep = (
+  stepNumber: number
+): StepTemplate | undefined => {
+  return STEP_TEMPLATES.find((template) => template.stepNumber === stepNumber);
 };
 
 export const getTotalSteps = (): number => {
@@ -182,9 +184,13 @@ export const getTotalSteps = (): number => {
 export const getTemplateStats = () => {
   return {
     totalTemplates: STEP_TEMPLATES.length,
-    questionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Pergunta")).length,
-    strategicSteps: STEP_TEMPLATES.filter(t => t.name.includes("Estratégica")).length,
-    transitionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Transição")).length,
-    resultSteps: STEP_TEMPLATES.filter(t => t.name.includes("Resultado")).length,
+    questionSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Pergunta"))
+      .length,
+    strategicSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Estratégica"))
+      .length,
+    transitionSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Transição"))
+      .length,
+    resultSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Resultado"))
+      .length,
   };
 };

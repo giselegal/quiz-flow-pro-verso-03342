@@ -7,7 +7,9 @@ interface StyleButtonsProps {
   fontWeight?: "light" | "normal" | "medium" | "semibold" | "bold";
   fontStyle?: "normal" | "italic";
   textDecoration?: "none" | "underline";
-  onFontWeightChange: (weight: "light" | "normal" | "medium" | "semibold" | "bold") => void;
+  onFontWeightChange: (
+    weight: "light" | "normal" | "medium" | "semibold" | "bold"
+  ) => void;
   onFontStyleChange: (style: "normal" | "italic") => void;
   onTextDecorationChange: (decoration: "none" | "underline") => void;
   className?: string;
@@ -61,7 +63,9 @@ export const StyleButtons: React.FC<StyleButtonsProps> = ({
       <Button
         variant={isUnderline ? "default" : "outline"}
         size="sm"
-        onClick={() => onTextDecorationChange(isUnderline ? "none" : "underline")}
+        onClick={() =>
+          onTextDecorationChange(isUnderline ? "none" : "underline")
+        }
         className={cn(
           "p-2 h-8 w-8",
           isUnderline

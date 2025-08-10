@@ -29,7 +29,8 @@ export const quizTemplates: QuizTemplate[] = [
         type: "cover",
         config: {
           title: "Descubra seu Estilo Pessoal",
-          subtitle: "Responda algumas perguntas e descubra qual estilo combina mais com você",
+          subtitle:
+            "Responda algumas perguntas e descubra qual estilo combina mais com você",
           buttonText: "Começar Quiz",
           backgroundImage:
             "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
@@ -41,7 +42,8 @@ export const quizTemplates: QuizTemplate[] = [
         order: 1,
         type: "question",
         config: {
-          questionText: "Quais dessas peças você mais gosta de usar no dia a dia?",
+          questionText:
+            "Quais dessas peças você mais gosta de usar no dia a dia?",
           questionType: "image",
           multiSelect: 3,
           options: [
@@ -352,7 +354,8 @@ export const quizTemplates: QuizTemplate[] = [
         type: "result",
         config: {
           title: "Seu Estilo de Vida",
-          subtitle: "Baseado nas suas respostas, seu estilo de vida predominante é:",
+          subtitle:
+            "Baseado nas suas respostas, seu estilo de vida predominante é:",
           ctaText: "Ver Recomendações",
           ctaUrl: "/resultado",
         },

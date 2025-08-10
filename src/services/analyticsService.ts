@@ -75,7 +75,9 @@ export class AnalyticsService {
   // TRACKING DE EVENTOS
   // =============================================================================
 
-  async trackEvent(event: Omit<AnalyticsEvent, "id" | "timestamp" | "session_id">): Promise<void> {
+  async trackEvent(
+    event: Omit<AnalyticsEvent, "id" | "timestamp" | "session_id">
+  ): Promise<void> {
     try {
       const eventData: AnalyticsEvent = {
         ...event,
@@ -99,7 +101,9 @@ export class AnalyticsService {
 
   private saveEventLocally(event: AnalyticsEvent): void {
     try {
-      const localEvents = JSON.parse(localStorage.getItem("analytics_events") || "[]");
+      const localEvents = JSON.parse(
+        localStorage.getItem("analytics_events") || "[]"
+      );
       localEvents.push(event);
       localStorage.setItem("analytics_events", JSON.stringify(localEvents));
       console.log("💾 [Analytics] Event saved locally");
@@ -141,7 +145,11 @@ export class AnalyticsService {
     });
   }
 
-  async trackQuizCompletion(quizId: string, result: any, userId?: string): Promise<void> {
+  async trackQuizCompletion(
+    quizId: string,
+    result: any,
+    userId?: string
+  ): Promise<void> {
     await this.trackEvent({
       quiz_id: quizId,
       user_id: userId,
@@ -153,7 +161,11 @@ export class AnalyticsService {
     });
   }
 
-  async trackPageView(quizId: string, pageId: string, userId?: string): Promise<void> {
+  async trackPageView(
+    quizId: string,
+    pageId: string,
+    userId?: string
+  ): Promise<void> {
     await this.trackEvent({
       quiz_id: quizId,
       user_id: userId,
@@ -183,7 +195,11 @@ export class AnalyticsService {
     });
   }
 
-  async trackFormSubmission(quizId: string, formData: any, userId?: string): Promise<void> {
+  async trackFormSubmission(
+    quizId: string,
+    formData: any,
+    userId?: string
+  ): Promise<void> {
     await this.trackEvent({
       quiz_id: quizId,
       user_id: userId,
@@ -213,29 +229,45 @@ export class AnalyticsService {
   private calculateMetrics(
     events: AnalyticsEvent[]
   ): Omit<AnalyticsMetrics, "quiz_id" | "last_updated"> {
-    const totalViews = events.filter(e => e.event_type === "page_viewed").length;
-    const totalStarts = events.filter(e => e.event_type === "quiz_started").length;
-    const totalCompletions = events.filter(e => e.event_type === "quiz_completed").length;
+    const totalViews = events.filter(
+      (e) => e.event_type === "page_viewed"
+    ).length;
+    const totalStarts = events.filter(
+      (e) => e.event_type === "quiz_started"
+    ).length;
+    const totalCompletions = events.filter(
+      (e) => e.event_type === "quiz_completed"
+    ).length;
 
-    const completionRate = totalStarts > 0 ? (totalCompletions / totalStarts) * 100 : 0;
-    const conversionRate = totalViews > 0 ? (totalCompletions / totalViews) * 100 : 0;
-    const bounceRate = totalViews > 0 ? ((totalViews - totalStarts) / totalViews) * 100 : 0;
+    const completionRate =
+      totalStarts > 0 ? (totalCompletions / totalStarts) * 100 : 0;
+    const conversionRate =
+      totalViews > 0 ? (totalCompletions / totalViews) * 100 : 0;
+    const bounceRate =
+      totalViews > 0 ? ((totalViews - totalStarts) / totalViews) * 100 : 0;
 
     // Calcular tempo médio (simplificado)
-    const startEvents = events.filter(e => e.event_type === "quiz_started");
-    const completionEvents = events.filter(e => e.event_type === "quiz_completed");
+    const startEvents = events.filter((e) => e.event_type === "quiz_started");
+    const completionEvents = events.filter(
+      (e) => e.event_type === "quiz_completed"
+    );
 
     let averageTime = 0;
     if (startEvents.length > 0 && completionEvents.length > 0) {
       const times = completionEvents
-        .map(completion => {
-          const start = startEvents.find(s => s.session_id === completion.session_id);
+        .map((completion) => {
+          const start = startEvents.find(
+            (s) => s.session_id === completion.session_id
+          );
           if (start) {
-            return new Date(completion.timestamp).getTime() - new Date(start.timestamp).getTime();
+            return (
+              new Date(completion.timestamp).getTime() -
+              new Date(start.timestamp).getTime()
+            );
           }
           return 0;
         })
-        .filter(time => time > 0);
+        .filter((time) => time > 0);
 
       if (times.length > 0) {
         averageTime = times.reduce((sum, time) => sum + time, 0) / times.length;
@@ -270,13 +302,17 @@ export class AnalyticsService {
 
   async syncLocalEvents(): Promise<void> {
     try {
-      const localEvents = JSON.parse(localStorage.getItem("analytics_events") || "[]");
+      const localEvents = JSON.parse(
+        localStorage.getItem("analytics_events") || "[]"
+      );
 
       if (localEvents.length === 0) {
         return;
       }
 
-      console.log(`🔄 [Analytics] Syncing ${localEvents.length} local events...`);
+      console.log(
+        `🔄 [Analytics] Syncing ${localEvents.length} local events...`
+      );
 
       // Placeholder - analytics_events table doesn't exist
       console.log(`Would sync ${localEvents.length} local events`);

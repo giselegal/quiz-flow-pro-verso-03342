@@ -20,7 +20,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -66,12 +73,15 @@ const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
   onPropertyChange,
 }) => {
   // 🎯 Integrar propriedades de container diretamente
-  const { containerClasses, inlineStyles } = useContainerProperties(block.properties);
+  const { containerClasses, inlineStyles } = useContainerProperties(
+    block.properties
+  );
   const Component = getBlockComponent(block.type);
 
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: block.id,
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: block.id,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -83,7 +93,7 @@ const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <p>Componente não encontrado: {block.type}</p>
         </div>
       </div>

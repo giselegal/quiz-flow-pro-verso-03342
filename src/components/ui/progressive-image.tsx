@@ -35,7 +35,8 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   const [loadStartTime] = useState(Date.now());
 
   // Gerar placeholder de baixa qualidade se não for fornecido
-  const placeholder = lowQualitySrc || getLowQualityPlaceholder(src, { width: 30, quality: 15 });
+  const placeholder =
+    lowQualitySrc || getLowQualityPlaceholder(src, { width: 30, quality: 15 });
 
   // Controlar o carregamento da imagem
   const handleLoad = () => {
@@ -108,7 +109,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           style={{ objectFit: fit }}
         />
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           Não foi possível carregar a imagem
         </div>
       )}

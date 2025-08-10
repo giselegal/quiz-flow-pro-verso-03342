@@ -11,7 +11,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -50,7 +57,10 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
+const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   return (
     <div className="space-y-4">
       <div>
@@ -58,7 +68,7 @@ const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
         <Input
           id={`${block.id}-title`}
           value={block.content.title || ""}
-          onChange={e => onUpdate({ title: e.target.value })}
+          onChange={(e) => onUpdate({ title: e.target.value })}
           className="mt-1"
         />
       </div>
@@ -68,7 +78,7 @@ const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
         <Input
           id={`${block.id}-subtitle`}
           value={block.content.subtitle || ""}
-          onChange={e => onUpdate({ subtitle: e.target.value })}
+          onChange={(e) => onUpdate({ subtitle: e.target.value })}
           className="mt-1"
         />
       </div>
@@ -77,7 +87,7 @@ const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
         <Label>Alinhamento</Label>
         <RadioGroup
           value={block.content.alignment || "left"}
-          onValueChange={value => onUpdate({ alignment: value })}
+          onValueChange={(value) => onUpdate({ alignment: value })}
           className="flex space-x-4 mt-1"
         >
           <div className="flex items-center space-x-2">

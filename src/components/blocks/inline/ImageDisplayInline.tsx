@@ -73,7 +73,10 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
 
   if (hasError) {
     return (
-      <div className={`image-display-inline error ${className}`} style={containerStyle}>
+      <div
+        className={`image-display-inline error ${className}`}
+        style={containerStyle}
+      >
         <div
           style={{
             ...imageStyle,

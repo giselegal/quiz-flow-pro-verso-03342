@@ -25,11 +25,13 @@ const defaultBenefits = [
   },
   {
     title: "Versatilidade sem esforço",
-    description: "Criar combinações que expressam quem você é com menos esforço e mais impacto.",
+    description:
+      "Criar combinações que expressam quem você é com menos esforço e mais impacto.",
   },
   {
     title: "Autoconfiança visível",
-    description: "Sentir segurança no que veste porque cada escolha tem harmonia com quem você é.",
+    description:
+      "Sentir segurança no que veste porque cada escolha tem harmonia com quem você é.",
   },
 ];
 
@@ -68,7 +70,8 @@ const BenefitList: React.FC<BenefitListProps> = ({ items }) => {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        O que você vai <span className="text-[#aa6b5d] font-medium">transformar</span> com esse
+        O que você vai{" "}
+        <span className="text-[#aa6b5d] font-medium">transformar</span> com esse
         material:
         <motion.div
           className="h-0.5 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]/70 mt-1"
@@ -99,7 +102,9 @@ const BenefitList: React.FC<BenefitListProps> = ({ items }) => {
               <h4 className="font-medium text-[#432818] mb-1 group-hover:text-[#aa6b5d] transition-colors duration-300">
                 {benefit.title}
               </h4>
-              <p className="text-[#6b605a] text-sm leading-relaxed">{benefit.description}</p>
+              <p className="text-[#6b605a] text-sm leading-relaxed">
+                {benefit.description}
+              </p>
             </div>
           </motion.div>
         ))}

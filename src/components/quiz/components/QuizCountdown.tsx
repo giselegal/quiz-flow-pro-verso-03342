@@ -62,34 +62,44 @@ const QuizCountdown: React.FC<QuizCountdownProps> = ({
         <div className={styles.countdownTimer}>
           {showDays && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{days.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>
+                {days.toString().padStart(2, "0")}
+              </div>
               <div className={styles.timeLabel}>Dias</div>
             </div>
           )}
 
           {showHours && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{hours.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>
+                {hours.toString().padStart(2, "0")}
+              </div>
               <div className={styles.timeLabel}>Horas</div>
             </div>
           )}
 
           {showMinutes && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{minutes.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>
+                {minutes.toString().padStart(2, "0")}
+              </div>
               <div className={styles.timeLabel}>Min</div>
             </div>
           )}
 
           {showSeconds && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{seconds.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>
+                {seconds.toString().padStart(2, "0")}
+              </div>
               <div className={styles.timeLabel}>Seg</div>
             </div>
           )}
         </div>
 
-        {timeLeft === 0 && <div className={styles.countdownExpired}>⏰ Tempo esgotado!</div>}
+        {timeLeft === 0 && (
+          <div className={styles.countdownExpired}>⏰ Tempo esgotado!</div>
+        )}
       </div>
     </div>
   );

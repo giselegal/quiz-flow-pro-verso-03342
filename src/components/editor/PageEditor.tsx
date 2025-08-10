@@ -20,24 +20,24 @@ export const PageEditor: React.FC<PageEditorProps> = ({
   onPreviewToggle,
   isPreviewing,
 }) => {
-  const { addToHistory, undo, redo, canUndo, canRedo } = useEditorHistory(blocks);
-  const { handleAddBlock, handleUpdateBlock, handleDeleteBlock, handleSave } = useEditorActions(
-    blocks,
-    onBlocksChange,
-    addToHistory
-  );
+  const { addToHistory, undo, redo, canUndo, canRedo } =
+    useEditorHistory(blocks);
+  const { handleAddBlock, handleUpdateBlock, handleDeleteBlock, handleSave } =
+    useEditorActions(blocks, onBlocksChange, addToHistory);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const activeIndex = blocks.findIndex(block => block.id === active.id);
-      const overIndex = blocks.findIndex(block => block.id === over.id);
+      const activeIndex = blocks.findIndex((block) => block.id === active.id);
+      const overIndex = blocks.findIndex((block) => block.id === over.id);
 
-      const newBlocks = arrayMove(blocks, activeIndex, overIndex).map((block, index) => ({
-        ...block,
-        order: index,
-      }));
+      const newBlocks = arrayMove(blocks, activeIndex, overIndex).map(
+        (block, index) => ({
+          ...block,
+          order: index,
+        })
+      );
 
       onBlocksChange(newBlocks);
       addToHistory(newBlocks);

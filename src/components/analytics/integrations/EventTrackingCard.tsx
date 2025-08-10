@@ -18,7 +18,9 @@ interface EventTrackingCardProps {
   initialEnabled?: boolean;
 }
 
-export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEnabled = false }) => {
+export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({
+  initialEnabled = false,
+}) => {
   const [trackingEnabled, setTrackingEnabled] = useState(() => {
     try {
       const stored = localStorage.getItem("event_tracking_enabled");
@@ -58,15 +60,20 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
   // Load settings from localStorage
   useEffect(() => {
     try {
-      const storedTrackingEnabled = localStorage.getItem("event_tracking_enabled");
+      const storedTrackingEnabled = localStorage.getItem(
+        "event_tracking_enabled"
+      );
       const storedTrackButtons = localStorage.getItem("track_buttons");
       const storedTrackLinks = localStorage.getItem("track_links");
       const storedTrackImages = localStorage.getItem("track_images");
 
-      if (storedTrackingEnabled !== null) setTrackingEnabled(storedTrackingEnabled === "true");
-      if (storedTrackButtons !== null) setTrackButtons(storedTrackButtons === "true");
+      if (storedTrackingEnabled !== null)
+        setTrackingEnabled(storedTrackingEnabled === "true");
+      if (storedTrackButtons !== null)
+        setTrackButtons(storedTrackButtons === "true");
       if (storedTrackLinks !== null) setTrackLinks(storedTrackLinks === "true");
-      if (storedTrackImages !== null) setTrackImages(storedTrackImages === "true");
+      if (storedTrackImages !== null)
+        setTrackImages(storedTrackImages === "true");
     } catch (error) {
       console.error("Error loading event tracking settings:", error);
     }
@@ -81,7 +88,8 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
 
       toast({
         title: "Configurações de rastreamento salvas",
-        description: "Suas configurações de rastreamento de eventos foram atualizadas.",
+        description:
+          "Suas configurações de rastreamento de eventos foram atualizadas.",
         duration: 3000,
       });
     } catch (error) {
@@ -103,7 +111,10 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
               Configure os tipos de eventos que serão rastreados
             </CardDescription>
           </div>
-          <Badge variant={trackingEnabled ? "default" : "outline"} className="text-xs">
+          <Badge
+            variant={trackingEnabled ? "default" : "outline"}
+            className="text-xs"
+          >
             {trackingEnabled ? "Ativo" : "Inativo"}
           </Badge>
         </div>
@@ -126,7 +137,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
             <Checkbox
               id="track-buttons"
               checked={trackButtons}
-              onCheckedChange={checked => setTrackButtons(!!checked)}
+              onCheckedChange={(checked) => setTrackButtons(!!checked)}
               disabled={!trackingEnabled}
             />
             <Label
@@ -141,7 +152,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
             <Checkbox
               id="track-links"
               checked={trackLinks}
-              onCheckedChange={checked => setTrackLinks(!!checked)}
+              onCheckedChange={(checked) => setTrackLinks(!!checked)}
               disabled={!trackingEnabled}
             />
             <Label
@@ -156,7 +167,7 @@ export const EventTrackingCard: React.FC<EventTrackingCardProps> = ({ initialEna
             <Checkbox
               id="track-images"
               checked={trackImages}
-              onCheckedChange={checked => setTrackImages(!!checked)}
+              onCheckedChange={(checked) => setTrackImages(!!checked)}
               disabled={!trackingEnabled}
             />
             <Label

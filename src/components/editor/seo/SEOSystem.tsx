@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Textarea } from "../../../components/ui/textarea";
@@ -18,7 +23,7 @@ export const CustomURLEditor: React.FC = () => {
           <Input
             id="custom-url"
             value={url}
-            onChange={e => setUrl(e.target.value)}
+            onChange={(e) => setUrl(e.target.value)}
             placeholder="meu-quiz-personalizado"
           />
         </div>
@@ -43,7 +48,7 @@ export const SEOEditor: React.FC = () => {
           <Input
             id="seo-title"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="Título para mecanismos de busca"
           />
         </div>
@@ -52,7 +57,7 @@ export const SEOEditor: React.FC = () => {
           <Textarea
             id="seo-description"
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Descrição para mecanismos de busca"
             rows={3}
           />
@@ -62,7 +67,7 @@ export const SEOEditor: React.FC = () => {
           <Input
             id="seo-keywords"
             value={keywords}
-            onChange={e => setKeywords(e.target.value)}
+            onChange={(e) => setKeywords(e.target.value)}
             placeholder="palavra1, palavra2, palavra3"
           />
         </div>

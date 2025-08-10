@@ -119,11 +119,15 @@ export const editorTheme = {
 };
 
 // Helper functions
-export const getStatusColor = (status: "active" | "inactive" | "warning" | "error") => {
+export const getStatusColor = (
+  status: "active" | "inactive" | "warning" | "error"
+) => {
   return editorTheme.components.status[status];
 };
 
-export const getButtonVariant = (variant: "primary" | "secondary" | "ghost" | "destructive") => {
+export const getButtonVariant = (
+  variant: "primary" | "secondary" | "ghost" | "destructive"
+) => {
   return editorTheme.components.button[variant];
 };
 

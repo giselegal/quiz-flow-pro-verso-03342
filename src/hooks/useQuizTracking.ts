@@ -7,7 +7,13 @@ export const useQuizTracking = (questionIndex?: number) => {
   const { user } = useAuth();
   const questionStartTime = useRef<number>(Date.now());
   const hasTrackedPageView = useRef<boolean>(false);
-  const { startSession, addAnswer, trackClick, finishSession, getCurrentSession } = useQuizData();
+  const {
+    startSession,
+    addAnswer,
+    trackClick,
+    finishSession,
+    getCurrentSession,
+  } = useQuizData();
 
   // Inicializar sessão automaticamente e tracking de página
   useEffect(() => {
@@ -38,10 +44,17 @@ export const useQuizTracking = (questionIndex?: number) => {
       questionId: string,
       elementPosition?: { x: number; y: number }
     ) => {
-      trackClick("quiz_option", optionId, optionText, elementPosition, questionIndex, {
-        questionId,
-        selectionOrder: Date.now(),
-      });
+      trackClick(
+        "quiz_option",
+        optionId,
+        optionText,
+        elementPosition,
+        questionIndex,
+        {
+          questionId,
+          selectionOrder: Date.now(),
+        }
+      );
     },
     [trackClick, questionIndex]
   );
@@ -57,7 +70,14 @@ export const useQuizTracking = (questionIndex?: number) => {
     ) => {
       const responseTime = Date.now() - questionStartTime.current;
 
-      addAnswer(questionId, questionText, selectedOptions, optionTexts, stylePoints, responseTime);
+      addAnswer(
+        questionId,
+        questionText,
+        selectedOptions,
+        optionTexts,
+        stylePoints,
+        responseTime
+      );
 
       // Track progresso se soubermos o número total de questões
       if (questionIndex !== undefined) {
@@ -83,7 +103,11 @@ export const useQuizTracking = (questionIndex?: number) => {
 
   // Função para rastrear navegação
   const trackNavigation = useCallback(
-    (direction: "next" | "back" | "skip", fromQuestion: number, toQuestion?: number) => {
+    (
+      direction: "next" | "back" | "skip",
+      fromQuestion: number,
+      toQuestion?: number
+    ) => {
       trackClick(
         "navigation_button",
         `nav_${direction}`,
@@ -107,18 +131,30 @@ export const useQuizTracking = (questionIndex?: number) => {
       quizDataService.trackCTAClick(ctaType, ctaText, targetUrl);
 
       // Track como clique regular também
-      trackClick("cta_button", `cta_${ctaType}`, ctaText, undefined, questionIndex, {
-        ctaType,
-        targetUrl,
-        timing: "during_quiz",
-      });
+      trackClick(
+        "cta_button",
+        `cta_${ctaType}`,
+        ctaText,
+        undefined,
+        questionIndex,
+        {
+          ctaType,
+          targetUrl,
+          timing: "during_quiz",
+        }
+      );
     },
     [trackClick, questionIndex]
   );
 
   // Função para rastrear elementos de interface
   const trackUIInteraction = useCallback(
-    (elementType: string, elementId: string, action: string, metadata?: Record<string, any>) => {
+    (
+      elementType: string,
+      elementId: string,
+      action: string,
+      metadata?: Record<string, any>
+    ) => {
       trackClick(elementType, elementId, action, undefined, questionIndex, {
         action,
         ...metadata,
@@ -145,7 +181,10 @@ export const useQuizTracking = (questionIndex?: number) => {
 
   // Função para rastrear loading/transições
   const trackLoadingState = useCallback(
-    (loadingType: "question_load" | "result_load" | "transition", duration?: number) => {
+    (
+      loadingType: "question_load" | "result_load" | "transition",
+      duration?: number
+    ) => {
       trackClick(
         "loading_state",
         `loading_${loadingType}`,
@@ -200,7 +239,7 @@ export const useAutoClickTracking = (enabled: boolean = true) => {
         className: target.className,
         href: target.getAttribute("href"),
         dataAttributes: Array.from(target.attributes)
-          .filter(attr => attr.name.startsWith("data-"))
+          .filter((attr) => attr.name.startsWith("data-"))
           .reduce(
             (acc, attr) => ({
               ...acc,
@@ -235,11 +274,15 @@ export const useQuizSessionStats = () => {
       totalClicks: session.clickEvents.length,
       averageResponseTime:
         session.answers.length > 0
-          ? session.answers.reduce((sum, answer) => sum + answer.responseTime, 0) /
-            session.answers.length
+          ? session.answers.reduce(
+              (sum, answer) => sum + answer.responseTime,
+              0
+            ) / session.answers.length
           : 0,
       clicksPerQuestion:
-        session.answers.length > 0 ? session.clickEvents.length / session.answers.length : 0,
+        session.answers.length > 0
+          ? session.clickEvents.length / session.answers.length
+          : 0,
       device: session.device,
       isActive: !session.endTime,
     };

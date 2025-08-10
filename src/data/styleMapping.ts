@@ -45,7 +45,9 @@ export const createQuizOption = (
 
 // Helper para validar se todos os estilos têm pelo menos uma opção
 export const validateStyleCoverage = (options: QuizOption[]): boolean => {
-  const stylesInOptions = new Set(options.map(opt => opt.style).filter(Boolean));
+  const stylesInOptions = new Set(
+    options.map((opt) => opt.style).filter(Boolean)
+  );
   const allStyles = new Set(Object.values(OPTION_TO_STYLE_MAPPING));
 
   return stylesInOptions.size === allStyles.size;

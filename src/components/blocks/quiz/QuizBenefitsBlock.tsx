@@ -81,7 +81,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -175,9 +182,14 @@ const QuizBenefitsBlock: React.FC<QuizBenefitsBlockProps> = ({
 
   // Handler para clique no título
   const handleTitleClick = () => {
-    trackUIInteraction("benefits_title", "benefits_section_title", "title_clicked", {
-      title_text: title,
-    });
+    trackUIInteraction(
+      "benefits_title",
+      "benefits_section_title",
+      "title_clicked",
+      {
+        title_text: title,
+      }
+    );
   };
 
   // Classes de espaçamento
@@ -227,8 +239,18 @@ const QuizBenefitsBlock: React.FC<QuizBenefitsBlockProps> = ({
         );
       case "arrow":
         return (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         );
       default:
@@ -247,7 +269,9 @@ const QuizBenefitsBlock: React.FC<QuizBenefitsBlockProps> = ({
           "flex items-start gap-3 cursor-pointer hover:opacity-80 transition-opacity",
           isCard ? "p-4 rounded-lg border shadow-sm" : "",
           alignment === "center" && !isCard ? "justify-center" : "",
-          alignment === "right" && !isCard ? "justify-end flex-row-reverse" : "",
+          alignment === "right" && !isCard
+            ? "justify-end flex-row-reverse"
+            : "",
           // Margens universais com controles deslizantes
           getMarginClass(marginTop, "top"),
           getMarginClass(marginBottom, "bottom"),
@@ -271,7 +295,10 @@ const QuizBenefitsBlock: React.FC<QuizBenefitsBlockProps> = ({
         )}
         <div className={cn("flex-1", isCard ? "text-center" : "")}>
           <p
-            className={cn("font-medium", benefit.highlight ? "text-lg" : "text-base")}
+            className={cn(
+              "font-medium",
+              benefit.highlight ? "text-lg" : "text-base"
+            )}
             style={{
               color: benefit.highlight ? colors.primary : colors.text,
             }}
@@ -313,7 +340,10 @@ const QuizBenefitsBlock: React.FC<QuizBenefitsBlockProps> = ({
             </h2>
           )}
           {subtitle && (
-            <p className="text-lg leading-relaxed" style={{ color: colors.textLight }}>
+            <p
+              className="text-lg leading-relaxed"
+              style={{ color: colors.textLight }}
+            >
               {subtitle}
             </p>
           )}

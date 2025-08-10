@@ -10,7 +10,10 @@ interface QuizResultPropertiesProps {
   onUpdate: (data: any) => void;
 }
 
-const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, onUpdate }) => {
+const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({
+  data = {},
+  onUpdate,
+}) => {
   return (
     <div className="space-y-5">
       <div className="space-y-2">
@@ -18,7 +21,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, 
         <Input
           id="title"
           value={data.title || ""}
-          onChange={e => onUpdate({ ...data, title: e.target.value })}
+          onChange={(e) => onUpdate({ ...data, title: e.target.value })}
           placeholder="Seu Resultado"
         />
       </div>
@@ -28,7 +31,7 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, 
         <Textarea
           id="description"
           value={data.description || ""}
-          onChange={e => onUpdate({ ...data, description: e.target.value })}
+          onChange={(e) => onUpdate({ ...data, description: e.target.value })}
           placeholder="Descrição do resultado"
           rows={3}
         />
@@ -42,7 +45,9 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, 
           <Switch
             id="showPrimaryStyle"
             checked={data.showPrimaryStyle !== false}
-            onCheckedChange={checked => onUpdate({ ...data, showPrimaryStyle: checked })}
+            onCheckedChange={(checked) =>
+              onUpdate({ ...data, showPrimaryStyle: checked })
+            }
           />
         </div>
 
@@ -51,7 +56,9 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, 
           <Switch
             id="showSecondaryStyles"
             checked={data.showSecondaryStyles !== false}
-            onCheckedChange={checked => onUpdate({ ...data, showSecondaryStyles: checked })}
+            onCheckedChange={(checked) =>
+              onUpdate({ ...data, showSecondaryStyles: checked })
+            }
           />
         </div>
 
@@ -60,7 +67,9 @@ const QuizResultProperties: React.FC<QuizResultPropertiesProps> = ({ data = {}, 
           <Switch
             id="showOfferSection"
             checked={data.showOfferSection !== false}
-            onCheckedChange={checked => onUpdate({ ...data, showOfferSection: checked })}
+            onCheckedChange={(checked) =>
+              onUpdate({ ...data, showOfferSection: checked })
+            }
           />
         </div>
       </div>

@@ -7,7 +7,9 @@ interface EditResultPageButtonProps {
   className?: string;
 }
 
-export const EditResultPageButton: React.FC<EditResultPageButtonProps> = ({ className }) => {
+export const EditResultPageButton: React.FC<EditResultPageButtonProps> = ({
+  className,
+}) => {
   const [, setLocation] = useLocation();
 
   const handleClick = () => {

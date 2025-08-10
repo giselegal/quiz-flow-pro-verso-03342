@@ -75,7 +75,9 @@ export const QuizTransition: React.FC<QuizTransitionProps> = ({
       className={`min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-[#fffbf7] to-[#f9f4ef] ${className || ""}`}
       style={style}
     >
-      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
+      {customStyles && (
+        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+      )}
 
       <div className="max-w-2xl mx-auto text-center">
         <AnimatedWrapper animation="fade" show={true} duration={600}>
@@ -106,22 +108,33 @@ export const QuizTransition: React.FC<QuizTransitionProps> = ({
             )}
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl font-playfair text-[#432818] mb-6">{title}</h1>
+            <h1 className="text-2xl md:text-3xl font-playfair text-[#432818] mb-6">
+              {title}
+            </h1>
 
             {/* Message */}
-            <p className="text-lg text-[#6B4F43] mb-6 leading-relaxed">{message}</p>
+            <p className="text-lg text-[#6B4F43] mb-6 leading-relaxed">
+              {message}
+            </p>
 
             {/* Submessage */}
-            {submessage && <p className="text-[#8B7355] mb-8 leading-relaxed">{submessage}</p>}
+            {submessage && (
+              <p className="text-[#8B7355] mb-8 leading-relaxed">
+                {submessage}
+              </p>
+            )}
 
             {/* Special note */}
             <div className="bg-[#f9f4ef] p-6 rounded-lg border-l-4 border-[#B89B7A] mb-8">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-5 h-5 text-[#B89B7A]" />
-                <span className="font-semibold text-[#432818]">💬 Importante</span>
+                <span className="font-semibold text-[#432818]">
+                  💬 Importante
+                </span>
               </div>
               <p className="text-[#432818] text-sm">
-                Responda com sinceridade. Isso é só entre você e a sua nova versão.
+                Responda com sinceridade. Isso é só entre você e a sua nova
+                versão.
               </p>
             </div>
 

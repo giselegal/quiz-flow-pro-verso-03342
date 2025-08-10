@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
@@ -10,7 +15,10 @@ interface ConfigPanelProps {
   onConfigChange: (newConfig: Record<string, any>) => void;
 }
 
-export const ConfigPanel: React.FC<ConfigPanelProps> = ({ config, onConfigChange }) => {
+export const ConfigPanel: React.FC<ConfigPanelProps> = ({
+  config,
+  onConfigChange,
+}) => {
   const [localConfig, setLocalConfig] = useState(config || {});
 
   const handleChange = (key: string, value: any) => {
@@ -36,13 +44,13 @@ export const ConfigPanel: React.FC<ConfigPanelProps> = ({ config, onConfigChange
               <Switch
                 id={key}
                 checked={value}
-                onCheckedChange={checked => handleChange(key, checked)}
+                onCheckedChange={(checked) => handleChange(key, checked)}
               />
             ) : (
               <Input
                 id={key}
                 value={String(value)}
-                onChange={e => handleChange(key, e.target.value)}
+                onChange={(e) => handleChange(key, e.target.value)}
               />
             )}
           </div>

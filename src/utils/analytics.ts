@@ -20,11 +20,18 @@ export const trackCustomEvent = (
       value: value,
     });
   }
-  console.log(`[Analytics] Custom Event: ${category} - ${action} - ${label} - ${value}`);
+  console.log(
+    `[Analytics] Custom Event: ${category} - ${action} - ${label} - ${value}`
+  );
 };
 
 // Function to track timing
-export const trackTiming = (category: string, variable: string, value: number, label?: string) => {
+export const trackTiming = (
+  category: string,
+  variable: string,
+  value: number,
+  label?: string
+) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "timing_complete", {
       event_category: category,
@@ -33,7 +40,9 @@ export const trackTiming = (category: string, variable: string, value: number, l
       event_label: label,
     });
   }
-  console.log(`[Analytics] Timing: ${category} - ${variable} - ${value} - ${label}`);
+  console.log(
+    `[Analytics] Timing: ${category} - ${variable} - ${value} - ${label}`
+  );
 };
 
 // Function to track an exception
@@ -56,7 +65,10 @@ export const setUserProperties = (properties: object) => {
 };
 
 // Function to track a page view
-export const trackPageView = (pagePath: string, additionalData?: Record<string, any>) => {
+export const trackPageView = (
+  pagePath: string,
+  additionalData?: Record<string, any>
+) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "page_view", {
       page_path: pagePath,
@@ -113,7 +125,9 @@ export const trackResultView = (resultType: string, data?: any) => {
 };
 
 // Fix getCreativePerformance to accept no arguments and return proper format
-export const getCreativePerformance = async (): Promise<Record<string, any>> => {
+export const getCreativePerformance = async (): Promise<
+  Record<string, any>
+> => {
   // Mock implementation for now
   return {
     "creative-1": {
@@ -147,7 +161,11 @@ export const getAnalyticsEvents = (): any[] => {
 };
 
 // Function to track a social interaction
-export const trackSocialInteraction = (network: string, action: string, target: string) => {
+export const trackSocialInteraction = (
+  network: string,
+  action: string,
+  target: string
+) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "social", {
       event_category: "social",
@@ -156,11 +174,17 @@ export const trackSocialInteraction = (network: string, action: string, target: 
       social_target: target,
     });
   }
-  console.log(`[Analytics] Social Interaction: ${network} - ${action} - ${target}`);
+  console.log(
+    `[Analytics] Social Interaction: ${network} - ${action} - ${target}`
+  );
 };
 
 // Function to track a refund
-export const trackRefund = (transaction_id: string, value?: number, currency?: string) => {
+export const trackRefund = (
+  transaction_id: string,
+  value?: number,
+  currency?: string
+) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "refund", {
       transaction_id: transaction_id,
@@ -183,7 +207,10 @@ export const trackCheckoutProgress = (step: number, option?: string) => {
 };
 
 // Function to track a product impression
-export const trackProductImpression = (products: object[], list_name: string) => {
+export const trackProductImpression = (
+  products: object[],
+  list_name: string
+) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "view_item_list", {
       items: products,
@@ -305,7 +332,7 @@ export const captureUTMParameters = () => {
     "gclid",
   ];
 
-  utmKeys.forEach(key => {
+  utmKeys.forEach((key) => {
     const value = urlParams.get(key);
     if (value) {
       utmParams[key] = value;
@@ -349,7 +376,11 @@ export const initFacebookPixel = (pixelData?: any) => {
   console.log(`[Analytics] Facebook Pixel initialized with ID: ${pixelId}`);
 };
 
-export const trackButtonClick = (buttonId: string, buttonText?: string, location?: string) => {
+export const trackButtonClick = (
+  buttonId: string,
+  buttonText?: string,
+  location?: string
+) => {
   if (typeof window === "undefined") return;
 
   const data = {
@@ -438,7 +469,10 @@ export const trackStyleConsultationStart = (formData?: any) => {
   console.log("[Analytics] Style Consultation Started", data);
 };
 
-export const trackResultGenerated = (resultType: string, templateType: string) => {
+export const trackResultGenerated = (
+  resultType: string,
+  templateType: string
+) => {
   if (typeof window === "undefined") return;
 
   const data = {
@@ -481,7 +515,10 @@ export const trackOfferView = (offerType: string = "style_guide") => {
   console.log(`[Analytics] Offer Viewed: ${offerType}`, data);
 };
 
-export const trackEmailCapture = (email: string, source: string = "style_offer") => {
+export const trackEmailCapture = (
+  email: string,
+  source: string = "style_offer"
+) => {
   if (typeof window === "undefined") return;
 
   const data = {
@@ -507,7 +544,8 @@ export const trackEmailCapture = (email: string, source: string = "style_offer")
 export const trackHotmartClick = (source: string = "style_result") => {
   if (typeof window === "undefined") return;
 
-  const hotmartUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+  const hotmartUrl =
+    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
   const data = {
     content_category: "hotmart",
     content_name: "style_guide_premium",
@@ -532,7 +570,10 @@ export const trackHotmartClick = (source: string = "style_result") => {
   console.log("[Analytics] Hotmart Click Tracked", data);
 };
 
-export const trackHotmartConversion = (transactionId?: string, value: number = 97) => {
+export const trackHotmartConversion = (
+  transactionId?: string,
+  value: number = 97
+) => {
   if (typeof window === "undefined") return;
 
   const data = {
@@ -578,7 +619,10 @@ export const trackAIAgentStart = (templateType: string) => {
   console.log(`[Analytics] AI Agent Started: ${templateType}`, data);
 };
 
-export const trackTemplateGenerated = (templateType: string, funnelId: string) => {
+export const trackTemplateGenerated = (
+  templateType: string,
+  funnelId: string
+) => {
   if (typeof window === "undefined") return;
 
   const data = {
@@ -597,5 +641,8 @@ export const trackTemplateGenerated = (templateType: string, funnelId: string) =
     window.fbq("trackCustom", "TemplateGenerated", data);
   }
 
-  console.log(`[Analytics] Template Generated: ${templateType} - ${funnelId}`, data);
+  console.log(
+    `[Analytics] Template Generated: ${templateType} - ${funnelId}`,
+    data
+  );
 };

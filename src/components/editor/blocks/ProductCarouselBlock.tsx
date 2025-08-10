@@ -15,7 +15,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -60,7 +67,8 @@ const ProductCarouselBlock: React.FC<ProductCarouselBlockProps> = ({
   className,
 }) => {
   const handleCTAClick = () => {
-    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href =
+      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
   };
 
   return (
@@ -75,13 +83,16 @@ const ProductCarouselBlock: React.FC<ProductCarouselBlockProps> = ({
         getMarginClass(marginRight, "right")
       )}
     >
-      <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-4">{title}</h2>
+      <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-4">
+        {title}
+      </h2>
       <div className="elegant-divider"></div>
       {showDescription && (
         <p className="text-[#432818] mb-6 max-w-xl mx-auto">
-          Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção. O Guia da
-          Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade
-          e transformar sua imagem em ferramenta de poder.
+          Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e
+          intenção. O Guia da Gisele Galvão foi criado para mulheres como você —
+          que querem se vestir com autenticidade e transformar sua imagem em
+          ferramenta de poder.
         </p>
       )}
 

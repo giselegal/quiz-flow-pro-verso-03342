@@ -88,7 +88,8 @@ class QuizDataService {
         "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
       utmCampaign: "Teste Lovable - Por Fora",
       funnelName: "quiz_isca",
-      ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+      ctaUrl:
+        "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
     },
     "quiz-descubra-seu-estilo": {
       pixelId: "1038647624890676",
@@ -96,7 +97,8 @@ class QuizDataService {
         "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
       utmCampaign: "Teste Lovable - Por Dentro",
       funnelName: "quiz_embutido",
-      ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+      ctaUrl:
+        "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
     },
   };
 
@@ -204,7 +206,10 @@ class QuizDataService {
     this.clickEventBuffer.push(clickEvent);
 
     // Salvar no localStorage a cada 5 cliques ou imediatamente se for importante
-    if (this.clickEventBuffer.length >= 5 || this.isImportantClick(elementType)) {
+    if (
+      this.clickEventBuffer.length >= 5 ||
+      this.isImportantClick(elementType)
+    ) {
       this.saveSessionToStorage();
       this.clickEventBuffer = [];
     }
@@ -294,7 +299,7 @@ class QuizDataService {
   // Exportar dados para análise
   exportSessionData(sessionId?: string): string {
     const session = sessionId
-      ? this.getAllCompletedSessions().find(s => s.sessionId === sessionId)
+      ? this.getAllCompletedSessions().find((s) => s.sessionId === sessionId)
       : this.currentSession;
 
     if (!session) return "";
@@ -343,7 +348,10 @@ class QuizDataService {
 
   private saveSessionToStorage(): void {
     if (this.currentSession) {
-      localStorage.setItem("current_quiz_session", JSON.stringify(this.currentSession));
+      localStorage.setItem(
+        "current_quiz_session",
+        JSON.stringify(this.currentSession)
+      );
     }
   }
 
@@ -355,11 +363,19 @@ class QuizDataService {
 
     // Manter apenas últimas 10 sessões
     const recentSessions = completedSessions.slice(-10);
-    localStorage.setItem("completed_quiz_sessions", JSON.stringify(recentSessions));
+    localStorage.setItem(
+      "completed_quiz_sessions",
+      JSON.stringify(recentSessions)
+    );
   }
 
   private isImportantClick(elementType: string): boolean {
-    const importantTypes = ["cta_button", "submit_button", "quiz_option", "navigation_button"];
+    const importantTypes = [
+      "cta_button",
+      "submit_button",
+      "quiz_option",
+      "navigation_button",
+    ];
     return importantTypes.includes(elementType);
   }
 
@@ -370,7 +386,8 @@ class QuizDataService {
   }
 
   private getAverageResponseTime(): number {
-    if (!this.currentSession || this.currentSession.answers.length === 0) return 0;
+    if (!this.currentSession || this.currentSession.answers.length === 0)
+      return 0;
 
     const totalTime = this.currentSession.answers.reduce(
       (sum, answer) => sum + answer.responseTime,
@@ -383,8 +400,9 @@ class QuizDataService {
     if (!this.currentSession) return {};
 
     const clicksByType: Record<string, number> = {};
-    this.currentSession.clickEvents.forEach(event => {
-      clicksByType[event.elementType] = (clicksByType[event.elementType] || 0) + 1;
+    this.currentSession.clickEvents.forEach((event) => {
+      clicksByType[event.elementType] =
+        (clicksByType[event.elementType] || 0) + 1;
     });
 
     return clicksByType;
@@ -394,7 +412,7 @@ class QuizDataService {
     if (!this.currentSession) return {};
 
     const stylePoints: Record<string, number> = {};
-    this.currentSession.answers.forEach(answer => {
+    this.currentSession.answers.forEach((answer) => {
       Object.entries(answer.stylePoints).forEach(([style, points]) => {
         stylePoints[style] = (stylePoints[style] || 0) + points;
       });
@@ -435,7 +453,7 @@ class QuizDataService {
     };
 
     // Remover parâmetros undefined
-    Object.keys(this.utmParameters).forEach(key => {
+    Object.keys(this.utmParameters).forEach((key) => {
       if (this.utmParameters[key as keyof UtmParameters] === undefined) {
         delete this.utmParameters[key as keyof UtmParameters];
       }
@@ -443,13 +461,19 @@ class QuizDataService {
 
     // Salvar UTM no localStorage
     if (Object.keys(this.utmParameters).length > 0) {
-      localStorage.setItem("quiz_utm_parameters", JSON.stringify(this.utmParameters));
+      localStorage.setItem(
+        "quiz_utm_parameters",
+        JSON.stringify(this.utmParameters)
+      );
       console.log("UTM parameters captured:", this.utmParameters);
     }
   }
 
   // Tracking de eventos para Facebook Pixel
-  private trackFacebookPixelEvent(eventName: string, data?: Record<string, any>): void {
+  private trackFacebookPixelEvent(
+    eventName: string,
+    data?: Record<string, any>
+  ): void {
     if (!this.funnelConfig || typeof window === "undefined") return;
 
     try {
@@ -465,7 +489,10 @@ class QuizDataService {
   }
 
   // Tracking de eventos para Google Analytics
-  private trackGoogleAnalyticsEvent(eventName: string, data?: Record<string, any>): void {
+  private trackGoogleAnalyticsEvent(
+    eventName: string,
+    data?: Record<string, any>
+  ): void {
     if (typeof window === "undefined" || !window.gtag) return;
 
     try {
@@ -485,7 +512,9 @@ class QuizDataService {
   private trackEvent(eventName: string, data: Record<string, any>): void {
     try {
       // Salvar em localStorage para analytics
-      const events = JSON.parse(localStorage.getItem("quiz_analytics_events") || "[]");
+      const events = JSON.parse(
+        localStorage.getItem("quiz_analytics_events") || "[]"
+      );
       const event = {
         eventName,
         data: {
@@ -501,7 +530,10 @@ class QuizDataService {
 
       // Manter apenas os últimos 100 eventos
       const recentEvents = events.slice(-100);
-      localStorage.setItem("quiz_analytics_events", JSON.stringify(recentEvents));
+      localStorage.setItem(
+        "quiz_analytics_events",
+        JSON.stringify(recentEvents)
+      );
 
       // Enviar para Facebook Pixel e Google Analytics
       this.trackFacebookPixelEvent(eventName, data);
@@ -520,7 +552,8 @@ class QuizDataService {
     this.trackEvent("quiz_start", {
       user_name: userName,
       user_email: userEmail,
-      page_variant: this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
+      page_variant:
+        this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
     });
 
     // Evento específico do Facebook Pixel
@@ -543,7 +576,8 @@ class QuizDataService {
       question_number: questionNumber,
       total_questions: totalQuestions,
       progress_percentage: progress,
-      page_variant: this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
+      page_variant:
+        this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
     });
 
     // Eventos específicos do Facebook Pixel em marcos importantes
@@ -561,7 +595,8 @@ class QuizDataService {
   trackQuizComplete(result: string): void {
     this.trackEvent("quiz_complete", {
       quiz_result: result,
-      page_variant: this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
+      page_variant:
+        this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
     });
 
     this.trackFacebookPixelEvent("CompleteRegistration", {
@@ -574,12 +609,17 @@ class QuizDataService {
   }
 
   // Clique em CTA
-  trackCTAClick(ctaPosition: string, ctaText?: string, targetUrl?: string): void {
+  trackCTAClick(
+    ctaPosition: string,
+    ctaText?: string,
+    targetUrl?: string
+  ): void {
     this.trackEvent("cta_click", {
       cta_position: ctaPosition,
       cta_text: ctaText,
       target_url: targetUrl,
-      page_variant: this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
+      page_variant:
+        this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
     });
 
     this.trackFacebookPixelEvent("Purchase", {
@@ -594,7 +634,9 @@ class QuizDataService {
 
   // Visualização de página
   trackPageView(pagePath?: string): void {
-    const path = pagePath || (typeof window !== "undefined" ? window.location.pathname : "");
+    const path =
+      pagePath ||
+      (typeof window !== "undefined" ? window.location.pathname : "");
 
     this.trackEvent("page_view", {
       page_path: path,
@@ -616,10 +658,16 @@ class QuizDataService {
 
   // Progresso de scroll
   trackScrollProgress(percentage: number): void {
-    if (percentage === 25 || percentage === 50 || percentage === 75 || percentage === 90) {
+    if (
+      percentage === 25 ||
+      percentage === 50 ||
+      percentage === 75 ||
+      percentage === 90
+    ) {
       this.trackEvent("scroll_progress", {
         scroll_percentage: percentage,
-        page_variant: this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
+        page_variant:
+          this.funnelConfig?.funnelName === "quiz_embutido" ? "B" : "A",
       });
     }
   }

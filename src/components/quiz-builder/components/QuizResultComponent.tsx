@@ -19,12 +19,19 @@ interface QuizResultComponentProps {
   isSelected?: boolean;
 }
 
-const QuizResultComponent: React.FC<QuizResultComponentProps> = ({ data, style, isSelected }) => {
+const QuizResultComponent: React.FC<QuizResultComponentProps> = ({
+  data,
+  style,
+  isSelected,
+}) => {
   const accentColor = style?.accentColor || "#B89B7A";
 
   return (
     <div
-      className={cn("p-4", isSelected && "outline-dashed outline-1 outline-blue-400")}
+      className={cn(
+        "p-4",
+        isSelected && "outline-dashed outline-1 outline-blue-400"
+      )}
       style={{
         backgroundColor: style?.backgroundColor || "transparent",
         color: style?.textColor || "inherit",
@@ -40,7 +47,7 @@ const QuizResultComponent: React.FC<QuizResultComponentProps> = ({ data, style, 
         {data.showPercentages && <div className="mt-1 font-medium">65%</div>}
 
         {data.showDescriptions && (
-          <p style={{ color: '#6B4F43' }}>
+          <p style={{ color: "#6B4F43" }}>
             Você se destaca pela sofisticação e refinamento em suas escolhas.
           </p>
         )}
@@ -56,7 +63,7 @@ const QuizResultComponent: React.FC<QuizResultComponentProps> = ({ data, style, 
             <div key={index} className="flex items-center justify-between">
               <span className="font-medium">{style}</span>
               {data.showPercentages && (
-                <span style={{ color: '#6B4F43' }}>{30 - index * 5}%</span>
+                <span style={{ color: "#6B4F43" }}>{30 - index * 5}%</span>
               )}
             </div>
           ))}

@@ -15,8 +15,8 @@ const TestimonialsBlock = () => (
           ))}
         </div>
         <p className="text-[#432818] text-sm mb-3 italic">
-          "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que
-          comprar!"
+          "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei
+          exatamente o que comprar!"
         </p>
         <p className="text-xs text-[#8F7A6A] font-medium">- Maria S.</p>
       </div>
@@ -28,7 +28,8 @@ const TestimonialsBlock = () => (
           ))}
         </div>
         <p className="text-[#432818] text-sm mb-3 italic">
-          "O guia é muito completo! Finalmente entendi como valorizar meu corpo e personalidade."
+          "O guia é muito completo! Finalmente entendi como valorizar meu corpo
+          e personalidade."
         </p>
         <p className="text-xs text-[#8F7A6A] font-medium">- Ana P.</p>
       </div>

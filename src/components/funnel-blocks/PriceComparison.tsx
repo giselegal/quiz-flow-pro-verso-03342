@@ -67,7 +67,11 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
   style,
   customStyles,
 }) => {
-  const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
+  const {
+    disabled: animationsDisabled,
+    duration = 400,
+    staggerDelay = 200,
+  } = animationConfig;
   const isLowPerformance = deviceView === "mobile";
 
   const formatPrice = (price: number) => {
@@ -119,7 +123,9 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
 
         {/* Header */}
         <div className="text-center mb-6">
-          <h3 className="text-xl font-semibold text-[#432818] mb-2">{option.name}</h3>
+          <h3 className="text-xl font-semibold text-[#432818] mb-2">
+            {option.name}
+          </h3>
           {option.description && (
             <p className="text-sm text-[#6B4F43] mb-4">{option.description}</p>
           )}
@@ -135,14 +141,15 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
 
           {/* Price */}
           <div className="mb-4">
-            {option.originalPrice && option.originalPrice > option.currentPrice && (
-              <div className="relative mb-2">
-                <span style={{ color: '#8B7355' }}>
-                  {formatPrice(option.originalPrice)}
-                </span>
-                <div style={{ backgroundColor: '#FAF9F7' }}></div>
-              </div>
-            )}
+            {option.originalPrice &&
+              option.originalPrice > option.currentPrice && (
+                <div className="relative mb-2">
+                  <span style={{ color: "#8B7355" }}>
+                    {formatPrice(option.originalPrice)}
+                  </span>
+                  <div style={{ backgroundColor: "#FAF9F7" }}></div>
+                </div>
+              )}
             <div className="text-3xl font-bold text-[#aa6b5d]">
               {formatPrice(option.currentPrice)}
             </div>
@@ -152,7 +159,8 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
               <div className="mt-2 text-sm">
                 <span className="text-green-600 font-semibold">
                   Economize {formatPrice(option.savings)}
-                  {option.savingsPercentage && ` (${option.savingsPercentage}%)`}
+                  {option.savingsPercentage &&
+                    ` (${option.savingsPercentage}%)`}
                 </span>
               </div>
             )}
@@ -173,7 +181,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
             option.excludedFeatures.map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3 opacity-50">
                 <X className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                <span style={{ color: '#8B7355' }}>{feature}</span>
+                <span style={{ color: "#8B7355" }}>{feature}</span>
               </div>
             ))}
         </div>
@@ -185,7 +193,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
               ? "bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105"
               : "bg-white border-2 border-[#B89B7A] text-[#432818] hover:bg-[#f9f4ef]"
           }`}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             onPriceSelect?.(option);
           }}
@@ -203,13 +211,19 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
   if (layout === "table") {
     return (
       <div className={`py-12 ${className || ""}`} style={style}>
-        {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
+        {customStyles && (
+          <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+        )}
 
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
+          <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
+            {title}
+          </h2>
           {subtitle && (
-            <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>
+            <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
+              {subtitle}
+            </p>
           )}
           <div className="elegant-divider w-32 mx-auto"></div>
         </div>
@@ -217,13 +231,15 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         {/* Table comparison - implementação simplificada */}
         <div className="max-w-full mx-auto">
           <div className="overflow-x-auto">
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               {/* Headers */}
-              <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
                 <div className="font-semibold text-[#432818]">Recursos</div>
-                {priceOptions.slice(0, 3).map(option => (
+                {priceOptions.slice(0, 3).map((option) => (
                   <div key={option.id} className="text-center">
-                    <h3 className="font-semibold text-[#432818]">{option.name}</h3>
+                    <h3 className="font-semibold text-[#432818]">
+                      {option.name}
+                    </h3>
                     <p className="text-lg font-bold text-[#aa6b5d] mt-1">
                       {formatPrice(option.currentPrice)}
                     </p>
@@ -233,9 +249,12 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
 
               {/* Features rows */}
               {priceOptions[0]?.features.map((feature, idx) => (
-                <div key={idx} className="grid grid-cols-4 gap-4 p-4 border-b border-gray-100">
+                <div
+                  key={idx}
+                  className="grid grid-cols-4 gap-4 p-4 border-b border-gray-100"
+                >
                   <div className="text-sm text-[#432818]">{feature}</div>
-                  {priceOptions.slice(0, 3).map(option => (
+                  {priceOptions.slice(0, 3).map((option) => (
                     <div key={option.id} className="text-center">
                       {option.features.includes(feature) ? (
                         <CheckCircle className="w-5 h-5 text-green-500 mx-auto" />
@@ -250,7 +269,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
               {/* Action buttons */}
               <div className="grid grid-cols-4 gap-4 p-4">
                 <div></div>
-                {priceOptions.slice(0, 3).map(option => (
+                {priceOptions.slice(0, 3).map((option) => (
                   <div key={option.id}>
                     <Button
                       className="w-full py-2 text-sm bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white rounded-lg"
@@ -270,12 +289,20 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
 
   return (
     <div className={`py-12 ${className || ""}`} style={style}>
-      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
+      {customStyles && (
+        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+      )}
 
       {/* Header */}
       <div className="text-center mb-10">
-        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
-        {subtitle && <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>}
+        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
+            {subtitle}
+          </p>
+        )}
         <div className="elegant-divider w-32 mx-auto"></div>
       </div>
 

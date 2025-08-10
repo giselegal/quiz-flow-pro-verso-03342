@@ -76,7 +76,9 @@ export class PageStructureValidator {
     }
 
     if (!block.content) {
-      warnings.push(`Bloco '${block.type}' no índice ${index} não possui conteúdo`);
+      warnings.push(
+        `Bloco '${block.type}' no índice ${index} não possui conteúdo`
+      );
     }
 
     return { errors, warnings };
@@ -197,7 +199,9 @@ export class PageStructureValidator {
     }
 
     if (validation.fixedPage) {
-      console.log(`✅ Página "${page.title || page.name}" corrigida para ser schema-driven`);
+      console.log(
+        `✅ Página "${page.title || page.name}" corrigida para ser schema-driven`
+      );
       return validation.fixedPage;
     }
 

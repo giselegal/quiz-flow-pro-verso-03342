@@ -208,12 +208,21 @@ export const getBrandColor = (colorPath: string): string => {
     if (result === undefined) break;
   }
 
-  return typeof result === "string" ? result : brandDesignSystem.colors.neutral[500];
+  return typeof result === "string"
+    ? result
+    : brandDesignSystem.colors.neutral[500];
 };
 
 // Export individual color palettes for convenience
-export const { colors, typography, spacing, borderRadius, shadows, effects, transitions } =
-  brandDesignSystem;
+export const {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+  effects,
+  transitions,
+} = brandDesignSystem;
 
 // Exports em maiúsculo para compatibilidade com imports existentes
 export const BRAND_COLORS = colors;

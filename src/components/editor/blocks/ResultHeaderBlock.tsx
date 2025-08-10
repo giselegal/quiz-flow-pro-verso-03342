@@ -18,7 +18,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -65,7 +72,8 @@ const ResultHeaderBlock: React.FC<ResultHeaderBlockProps> = ({
   className,
 }) => {
   const { user } = useAuth();
-  const userName = (user as any)?.userName || localStorage.getItem("userName") || "";
+  const userName =
+    (user as any)?.userName || localStorage.getItem("userName") || "";
 
   return (
     <div
@@ -92,7 +100,8 @@ const ResultHeaderBlock: React.FC<ResultHeaderBlockProps> = ({
         )}
 
         <h1 className="text-3xl md:text-4xl font-bold text-[#aa6b5d] mb-2">
-          {title} {userName && <span className="text-[#B89B7A]">{userName}!</span>}
+          {title}{" "}
+          {userName && <span className="text-[#B89B7A]">{userName}!</span>}
         </h1>
 
         <p className="text-lg text-[#432818] mb-4">{subtitle}</p>

@@ -6,7 +6,9 @@ export type QuizResult = Database["public"]["Tables"]["quiz_results"]["Row"];
 /**
  * Busca um resultado específico pelo ID
  */
-export async function getQuizResultById(resultId: string): Promise<QuizResult | null> {
+export async function getQuizResultById(
+  resultId: string
+): Promise<QuizResult | null> {
   const { data, error } = await supabase
     .from("quiz_results")
     .select("*")

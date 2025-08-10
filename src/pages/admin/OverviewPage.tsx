@@ -1,6 +1,11 @@
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { Progress } from "../../components/ui/progress";
 import {
   ArrowDownRight,
@@ -25,7 +30,10 @@ import React from "react";
 
 const OverviewPage: React.FC = () => {
   return (
-    <div className="p-6 space-y-8 min-h-screen" style={{ backgroundColor: "#FEFEFE" }}>
+    <div
+      className="p-6 space-y-8 min-h-screen"
+      style={{ backgroundColor: "#FEFEFE" }}
+    >
       {/* Header sofisticado */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -76,10 +84,16 @@ const OverviewPage: React.FC = () => {
         {/* Total de Respostas */}
         <Card
           className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-          style={{ backgroundColor: "#FEFEFE", borderLeft: "4px solid #B89B7A" }}
+          style={{
+            backgroundColor: "#FEFEFE",
+            borderLeft: "4px solid #B89B7A",
+          }}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold" style={{ color: "#432818" }}>
+            <CardTitle
+              className="text-sm font-semibold"
+              style={{ color: "#432818" }}
+            >
               Interações Totais
             </CardTitle>
             <div
@@ -90,7 +104,10 @@ const OverviewPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-1" style={{ color: "#432818" }}>
+            <div
+              className="text-3xl font-bold mb-1"
+              style={{ color: "#432818" }}
+            >
               12,847
             </div>
             <div className="flex items-center text-sm">
@@ -101,7 +118,11 @@ const OverviewPage: React.FC = () => {
               </span>
             </div>
             <div className="mt-3">
-              <Progress value={78} className="h-2" style={{ backgroundColor: "#F3E8E6" }} />
+              <Progress
+                value={78}
+                className="h-2"
+                style={{ backgroundColor: "#F3E8E6" }}
+              />
               <p className="text-xs mt-1" style={{ color: "#6B4F43" }}>
                 78% da meta mensal
               </p>
@@ -112,10 +133,16 @@ const OverviewPage: React.FC = () => {
         {/* Taxa de Conversão */}
         <Card
           className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-          style={{ backgroundColor: "#FEFEFE", borderLeft: "4px solid #A88B6A" }}
+          style={{
+            backgroundColor: "#FEFEFE",
+            borderLeft: "4px solid #A88B6A",
+          }}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold" style={{ color: "#432818" }}>
+            <CardTitle
+              className="text-sm font-semibold"
+              style={{ color: "#432818" }}
+            >
               Taxa de Conversão
             </CardTitle>
             <div
@@ -126,7 +153,10 @@ const OverviewPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-1" style={{ color: "#432818" }}>
+            <div
+              className="text-3xl font-bold mb-1"
+              style={{ color: "#432818" }}
+            >
               34.8%
             </div>
             <div className="flex items-center text-sm">
@@ -137,7 +167,11 @@ const OverviewPage: React.FC = () => {
               </span>
             </div>
             <div className="mt-3">
-              <Progress value={89} className="h-2" style={{ backgroundColor: "#F3E8E6" }} />
+              <Progress
+                value={89}
+                className="h-2"
+                style={{ backgroundColor: "#F3E8E6" }}
+              />
               <p className="text-xs mt-1" style={{ color: "#6B4F43" }}>
                 89% acima da média
               </p>
@@ -148,10 +182,16 @@ const OverviewPage: React.FC = () => {
         {/* Receita Gerada */}
         <Card
           className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-          style={{ backgroundColor: "#FEFEFE", borderLeft: "4px solid #8B7355" }}
+          style={{
+            backgroundColor: "#FEFEFE",
+            borderLeft: "4px solid #8B7355",
+          }}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold" style={{ color: "#432818" }}>
+            <CardTitle
+              className="text-sm font-semibold"
+              style={{ color: "#432818" }}
+            >
               Receita Gerada
             </CardTitle>
             <div
@@ -162,7 +202,10 @@ const OverviewPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-1" style={{ color: "#432818" }}>
+            <div
+              className="text-3xl font-bold mb-1"
+              style={{ color: "#432818" }}
+            >
               R$ 87.420
             </div>
             <div className="flex items-center text-sm">
@@ -173,7 +216,11 @@ const OverviewPage: React.FC = () => {
               </span>
             </div>
             <div className="mt-3">
-              <Progress value={92} className="h-2" style={{ backgroundColor: "#F3E8E6" }} />
+              <Progress
+                value={92}
+                className="h-2"
+                style={{ backgroundColor: "#F3E8E6" }}
+              />
               <p className="text-xs mt-1" style={{ color: "#6B4F43" }}>
                 92% da meta mensal
               </p>
@@ -184,10 +231,16 @@ const OverviewPage: React.FC = () => {
         {/* ROI Médio */}
         <Card
           className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300"
-          style={{ backgroundColor: "#FEFEFE", borderLeft: "4px solid #6B5B47" }}
+          style={{
+            backgroundColor: "#FEFEFE",
+            borderLeft: "4px solid #6B5B47",
+          }}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold" style={{ color: "#432818" }}>
+            <CardTitle
+              className="text-sm font-semibold"
+              style={{ color: "#432818" }}
+            >
               ROI Médio
             </CardTitle>
             <div
@@ -198,7 +251,10 @@ const OverviewPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold mb-1" style={{ color: "#432818" }}>
+            <div
+              className="text-3xl font-bold mb-1"
+              style={{ color: "#432818" }}
+            >
               487%
             </div>
             <div className="flex items-center text-sm">
@@ -209,7 +265,11 @@ const OverviewPage: React.FC = () => {
               </span>
             </div>
             <div className="mt-3">
-              <Progress value={95} className="h-2" style={{ backgroundColor: "#F3E8E6" }} />
+              <Progress
+                value={95}
+                className="h-2"
+                style={{ backgroundColor: "#F3E8E6" }}
+              />
               <p className="text-xs mt-1" style={{ color: "#6B4F43" }}>
                 Performance excepcional
               </p>
@@ -221,9 +281,20 @@ const OverviewPage: React.FC = () => {
       {/* Seção de Analytics Avançado */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Performance por Estilo */}
-        <Card className="border-0 shadow-lg overflow-hidden" style={{ backgroundColor: "#FEFEFE" }}>
-          <CardHeader style={{ backgroundColor: "#FAF9F7", borderBottom: "1px solid #E5DDD5" }}>
-            <CardTitle className="flex items-center gap-2" style={{ color: "#432818" }}>
+        <Card
+          className="border-0 shadow-lg overflow-hidden"
+          style={{ backgroundColor: "#FEFEFE" }}
+        >
+          <CardHeader
+            style={{
+              backgroundColor: "#FAF9F7",
+              borderBottom: "1px solid #E5DDD5",
+            }}
+          >
+            <CardTitle
+              className="flex items-center gap-2"
+              style={{ color: "#432818" }}
+            >
               <BarChart3 className="h-5 w-5" style={{ color: "#B89B7A" }} />
               Performance por Categoria
               <Badge
@@ -241,7 +312,10 @@ const OverviewPage: React.FC = () => {
               style={{ backgroundColor: "#FAF9F7", borderColor: "#E5DDD5" }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#B89B7A" }}></div>
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: "#B89B7A" }}
+                ></div>
                 <div>
                   <div className="font-semibold" style={{ color: "#432818" }}>
                     Estilo Elegante
@@ -268,7 +342,10 @@ const OverviewPage: React.FC = () => {
               style={{ backgroundColor: "#FAF9F7", borderColor: "#E5DDD5" }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#A88B6A" }}></div>
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: "#A88B6A" }}
+                ></div>
                 <div>
                   <div className="font-semibold" style={{ color: "#432818" }}>
                     Estilo Casual
@@ -295,7 +372,10 @@ const OverviewPage: React.FC = () => {
               style={{ backgroundColor: "#FAF9F7", borderColor: "#E5DDD5" }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#8B7355" }}></div>
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: "#8B7355" }}
+                ></div>
                 <div>
                   <div className="font-semibold" style={{ color: "#432818" }}>
                     Estilo Criativo
@@ -309,7 +389,7 @@ const OverviewPage: React.FC = () => {
                 <div className="font-bold" style={{ color: "#432818" }}>
                   19.4%
                 </div>
-                <div style={{ color: '#432818' }}>
+                <div style={{ color: "#432818" }}>
                   <ArrowDownRight className="h-3 w-3 mr-1" />
                   -1.2%
                 </div>
@@ -322,7 +402,10 @@ const OverviewPage: React.FC = () => {
               style={{ backgroundColor: "#FAF9F7", borderColor: "#E5DDD5" }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#6B5B47" }}></div>
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: "#6B5B47" }}
+                ></div>
                 <div>
                   <div className="font-semibold" style={{ color: "#432818" }}>
                     Outros Estilos
@@ -351,22 +434,30 @@ const OverviewPage: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-amber-900">
               <Sparkles className="h-5 w-5 text-orange-700" />
               Top Funis da Semana
-              <Badge className="ml-auto bg-orange-100 text-orange-800 border-0">Hot</Badge>
+              <Badge className="ml-auto bg-orange-100 text-orange-800 border-0">
+                Hot
+              </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
             {/* Funil 1 */}
             <div className="group p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex items-center justify-between mb-2">
-                <div className="font-semibold text-slate-800">Quiz de Estilo Pessoal</div>
+                <div className="font-semibold text-slate-800">
+                  Quiz de Estilo Pessoal
+                </div>
                 <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">
                   <Heart className="h-3 w-3 mr-1" />
                   Top 1
                 </Badge>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">847 conversões • 38.2% taxa</span>
-                <span className="text-emerald-600 font-semibold">R$ 23.420</span>
+                <span className="text-slate-500">
+                  847 conversões • 38.2% taxa
+                </span>
+                <span className="text-emerald-600 font-semibold">
+                  R$ 23.420
+                </span>
               </div>
               <Progress value={87} className="mt-2 h-1.5" />
             </div>
@@ -374,40 +465,49 @@ const OverviewPage: React.FC = () => {
             {/* Funil 2 */}
             <div className="group p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex items-center justify-between mb-2">
-                <div className="font-semibold text-slate-800">Descubra sua Personalidade</div>
-                <Badge style={{ backgroundColor: '#E5DDD5' }}>
+                <div className="font-semibold text-slate-800">
+                  Descubra sua Personalidade
+                </div>
+                <Badge style={{ backgroundColor: "#E5DDD5" }}>
                   <TrendingUp className="h-3 w-3 mr-1" />
                   Hot
                 </Badge>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">623 conversões • 31.4% taxa</span>
-                <span className="text-emerald-600 font-semibold">R$ 18.790</span>
+                <span className="text-slate-500">
+                  623 conversões • 31.4% taxa
+                </span>
+                <span className="text-emerald-600 font-semibold">
+                  R$ 18.790
+                </span>
               </div>
               <Progress value={74} className="mt-2 h-1.5" />
             </div>
 
             {/* Funil 3 */}
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               <div className="flex items-center justify-between mb-2">
-                <div className="font-semibold text-slate-800">Quiz Profissional</div>
-                <Badge style={{ color: '#6B4F43' }}>
+                <div className="font-semibold text-slate-800">
+                  Quiz Profissional
+                </div>
+                <Badge style={{ color: "#6B4F43" }}>
                   <MousePointer className="h-3 w-3 mr-1" />
                   Rising
                 </Badge>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">435 conversões • 28.7% taxa</span>
-                <span className="text-emerald-600 font-semibold">R$ 12.350</span>
+                <span className="text-slate-500">
+                  435 conversões • 28.7% taxa
+                </span>
+                <span className="text-emerald-600 font-semibold">
+                  R$ 12.350
+                </span>
               </div>
               <Progress value={61} className="mt-2 h-1.5" />
             </div>
 
             <div className="pt-2">
-              <Button
-                variant="outline"
-                style={{ backgroundColor: '#FAF9F7' }}
-              >
+              <Button variant="outline" style={{ backgroundColor: "#FAF9F7" }}>
                 <Eye className="h-4 w-4 mr-2" />
                 Ver Todos os Funis
               </Button>
@@ -424,7 +524,9 @@ const OverviewPage: React.FC = () => {
             <CardTitle className="flex items-center gap-2 text-slate-800">
               <Zap className="h-5 w-5 text-emerald-600" />
               Insights Inteligentes
-              <Badge className="ml-auto bg-emerald-100 text-emerald-700 border-0">IA</Badge>
+              <Badge className="ml-auto bg-emerald-100 text-emerald-700 border-0">
+                IA
+              </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
@@ -435,10 +537,13 @@ const OverviewPage: React.FC = () => {
                     <TrendingUp className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <div className="font-semibold text-slate-800 mb-1">Performance Excepcional</div>
+                    <div className="font-semibold text-slate-800 mb-1">
+                      Performance Excepcional
+                    </div>
                     <p className="text-sm text-slate-600 leading-relaxed">
-                      Seus quizzes de estilo pessoal estão <strong>38% acima</strong> da média do
-                      setor. Continue investindo nesta categoria para maximizar ROI.
+                      Seus quizzes de estilo pessoal estão{" "}
+                      <strong>38% acima</strong> da média do setor. Continue
+                      investindo nesta categoria para maximizar ROI.
                     </p>
                   </div>
                 </div>
@@ -446,7 +551,7 @@ const OverviewPage: React.FC = () => {
 
               <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl">
                 <div className="flex items-start gap-3">
-                  <div style={{ backgroundColor: '#FAF9F7' }}>
+                  <div style={{ backgroundColor: "#FAF9F7" }}>
                     <Users className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -454,23 +559,28 @@ const OverviewPage: React.FC = () => {
                       Oportunidade de Crescimento
                     </div>
                     <p className="text-sm text-slate-600 leading-relaxed">
-                      Identificamos <strong>2.3k usuários</strong> que não completaram o quiz. Uma
-                      campanha de remarketing pode recuperar até 25% destes leads.
+                      Identificamos <strong>2.3k usuários</strong> que não
+                      completaram o quiz. Uma campanha de remarketing pode
+                      recuperar até 25% destes leads.
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div style={{ borderColor: '#E5DDD5' }}>
+              <div style={{ borderColor: "#E5DDD5" }}>
                 <div className="flex items-start gap-3">
-                  <div style={{ backgroundColor: '#FAF9F7' }}>
+                  <div style={{ backgroundColor: "#FAF9F7" }}>
                     <Target className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <div className="font-semibold text-slate-800 mb-1">Otimização Sugerida</div>
+                    <div className="font-semibold text-slate-800 mb-1">
+                      Otimização Sugerida
+                    </div>
                     <p className="text-sm text-slate-600 leading-relaxed">
-                      Adicione uma pergunta sobre orçamento no início dos quizzes para
-                      <strong>aumentar qualificação</strong> dos leads em até 15%.
+                      Adicione uma pergunta sobre orçamento no início dos
+                      quizzes para
+                      <strong>aumentar qualificação</strong> dos leads em até
+                      15%.
                     </p>
                   </div>
                 </div>
@@ -502,18 +612,12 @@ const OverviewPage: React.FC = () => {
                 Relatório Detalhado
               </Button>
 
-              <Button
-                variant="outline"
-                style={{ backgroundColor: '#FAF9F7' }}
-              >
+              <Button variant="outline" style={{ backgroundColor: "#FAF9F7" }}>
                 <Share className="h-4 w-4 mr-2" />
                 Compartilhar Dashboard
               </Button>
 
-              <Button
-                variant="outline"
-                style={{ backgroundColor: '#FAF9F7' }}
-              >
+              <Button variant="outline" style={{ backgroundColor: "#FAF9F7" }}>
                 <Calendar className="h-4 w-4 mr-2" />
                 Agendar Análise
               </Button>
@@ -522,9 +626,12 @@ const OverviewPage: React.FC = () => {
             <div className="mt-6 p-4 bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200/50 rounded-xl">
               <div className="text-center">
                 <Crown className="h-6 w-6 text-violet-600 mx-auto mb-2" />
-                <div className="font-semibold text-slate-800 text-sm">QuizFlow Pro</div>
+                <div className="font-semibold text-slate-800 text-sm">
+                  QuizFlow Pro
+                </div>
                 <div className="text-xs text-slate-600 mt-1">
-                  Desbloqueie analytics avançados, A/B testing e integrações premium
+                  Desbloqueie analytics avançados, A/B testing e integrações
+                  premium
                 </div>
                 <Button
                   size="sm"

@@ -3,7 +3,12 @@
 
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import {
@@ -23,7 +28,14 @@ const CanvasColorPicker: React.FC<{
   onChange: (color: string) => void;
   label: string;
 }> = ({ value, onChange, label }) => {
-  const brandColors = ["#FEFEFE", "#FAF9F7", "#E5DDD5", "#B89B7A", "#6B4F43", "#432818"];
+  const brandColors = [
+    "#FEFEFE",
+    "#FAF9F7",
+    "#E5DDD5",
+    "#B89B7A",
+    "#6B4F43",
+    "#432818",
+  ];
 
   const backgroundPresets = [
     "#FFFFFF",
@@ -62,13 +74,14 @@ const CanvasColorPicker: React.FC<{
             const input = document.createElement("input");
             input.type = "color";
             input.value = value.startsWith("#") ? value : "#FFFFFF";
-            input.onchange = e => onChange((e.target as HTMLInputElement).value);
+            input.onchange = (e) =>
+              onChange((e.target as HTMLInputElement).value);
             input.click();
           }}
         />
         <Input
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           className="text-xs h-8"
           style={{ borderColor: "#E5DDD5" }}
         />
@@ -80,7 +93,7 @@ const CanvasColorPicker: React.FC<{
           Cores da Marca
         </Label>
         <div className="grid grid-cols-6 gap-1">
-          {brandColors.map(color => (
+          {brandColors.map((color) => (
             <button
               key={color}
               className="w-6 h-6 rounded border hover:scale-110 transition-transform"
@@ -98,7 +111,7 @@ const CanvasColorPicker: React.FC<{
           Presets de Fundo
         </Label>
         <div className="grid grid-cols-6 gap-1">
-          {backgroundPresets.map(color => (
+          {backgroundPresets.map((color) => (
             <button
               key={color}
               className="w-6 h-6 rounded border hover:scale-110 transition-transform"
@@ -186,7 +199,10 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
     <Card className="border" style={{ borderColor: "#E5DDD5" }}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm flex items-center gap-2" style={{ color: "#432818" }}>
+          <CardTitle
+            className="text-sm flex items-center gap-2"
+            style={{ color: "#432818" }}
+          >
             <Palette className="h-4 w-4" />
             Fundo do Canvas
           </CardTitle>
@@ -205,7 +221,7 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
         {/* Cor de fundo */}
         <CanvasColorPicker
           value={backgroundColor}
-          onChange={color => handleUpdate("backgroundColor", color)}
+          onChange={(color) => handleUpdate("backgroundColor", color)}
           label="Cor de Fundo"
         />
 
@@ -221,7 +237,9 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
           </div>
           <Slider
             value={[backgroundOpacity]}
-            onValueChange={([value]) => handleUpdate("backgroundOpacity", value)}
+            onValueChange={([value]) =>
+              handleUpdate("backgroundOpacity", value)
+            }
             min={0}
             max={100}
             step={5}
@@ -236,7 +254,7 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
           </Label>
           <Input
             value={backgroundImage}
-            onChange={e => handleUpdate("backgroundImage", e.target.value)}
+            onChange={(e) => handleUpdate("backgroundImage", e.target.value)}
             placeholder="https://..."
             className="text-xs mt-1"
             style={{ borderColor: "#E5DDD5" }}
@@ -255,7 +273,7 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
               </Label>
               <Select
                 value={backgroundSize}
-                onValueChange={value => handleUpdate("backgroundSize", value)}
+                onValueChange={(value) => handleUpdate("backgroundSize", value)}
               >
                 <SelectTrigger className="text-xs h-8 mt-1">
                   <SelectValue />
@@ -275,7 +293,9 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
               </Label>
               <Select
                 value={backgroundPosition}
-                onValueChange={value => handleUpdate("backgroundPosition", value)}
+                onValueChange={(value) =>
+                  handleUpdate("backgroundPosition", value)
+                }
               >
                 <SelectTrigger className="text-xs h-8 mt-1">
                   <SelectValue />
@@ -300,7 +320,9 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
               </Label>
               <Select
                 value={backgroundRepeat}
-                onValueChange={value => handleUpdate("backgroundRepeat", value)}
+                onValueChange={(value) =>
+                  handleUpdate("backgroundRepeat", value)
+                }
               >
                 <SelectTrigger className="text-xs h-8 mt-1">
                   <SelectValue />
@@ -308,8 +330,12 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
                 <SelectContent>
                   <SelectItem value="no-repeat">Não repetir</SelectItem>
                   <SelectItem value="repeat">Repetir</SelectItem>
-                  <SelectItem value="repeat-x">Repetir horizontalmente</SelectItem>
-                  <SelectItem value="repeat-y">Repetir verticalmente</SelectItem>
+                  <SelectItem value="repeat-x">
+                    Repetir horizontalmente
+                  </SelectItem>
+                  <SelectItem value="repeat-y">
+                    Repetir verticalmente
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -325,7 +351,9 @@ export const CanvasBackgroundPanel: React.FC<CanvasBackgroundPanelProps> = ({
             className="w-full h-12 rounded border"
             style={{
               backgroundColor,
-              backgroundImage: backgroundImage ? `url(${backgroundImage})` : "none",
+              backgroundImage: backgroundImage
+                ? `url(${backgroundImage})`
+                : "none",
               backgroundSize,
               backgroundPosition,
               backgroundRepeat,

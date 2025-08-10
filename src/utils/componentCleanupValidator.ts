@@ -3,7 +3,10 @@
  * Detecta conflitos e inconsistências no sistema de mapeamento
  */
 
-import { getAllBlockTypes, getBlockComponent } from "../config/editorBlocksMapping";
+import {
+  getAllBlockTypes,
+  getBlockComponent,
+} from "../config/editorBlocksMapping";
 
 export interface ComponentHealth {
   totalComponents: number;
@@ -23,7 +26,7 @@ export const analyzeComponentHealth = (): ComponentHealth => {
   const invalidComponents: string[] = [];
 
   // Verifica cada tipo de componente
-  allTypes.forEach(type => {
+  allTypes.forEach((type) => {
     const component = getBlockComponent(type);
     if (component) {
       validComponents.push(type);
@@ -48,7 +51,12 @@ export const analyzeComponentHealth = (): ComponentHealth => {
  * Detecta possíveis conflitos de nomenclatura
  */
 export const detectNamingConflicts = (componentName: string): boolean => {
-  const commonConflicts = ["HeaderBlock", "TextBlock", "ImageBlock", "ButtonBlock"];
+  const commonConflicts = [
+    "HeaderBlock",
+    "TextBlock",
+    "ImageBlock",
+    "ButtonBlock",
+  ];
 
   return commonConflicts.includes(componentName);
 };
@@ -74,9 +82,12 @@ export const validateNewComponent = (
   }
 
   // Verifica padrão de path
-  const validPaths = ["src/components/editor/blocks/", "src/components/blocks/"];
+  const validPaths = [
+    "src/components/editor/blocks/",
+    "src/components/blocks/",
+  ];
 
-  const hasValidPath = validPaths.some(path => componentPath.includes(path));
+  const hasValidPath = validPaths.some((path) => componentPath.includes(path));
   if (!hasValidPath) {
     warnings.push(`Path '${componentPath}' não segue convenções estabelecidas`);
   }
@@ -107,7 +118,7 @@ ${
   health.invalidComponents.length > 0
     ? `
 ❌ Componentes Inválidos:
-${health.invalidComponents.map(c => `- ${c}`).join("\n")}
+${health.invalidComponents.map((c) => `- ${c}`).join("\n")}
 `
     : "✅ Todos os componentes estão funcionais!"
 }

@@ -17,7 +17,8 @@ export const FUNNEL_STEPS_CONFIG: FunnelStepConfig[] = [
     stepNumber: 1,
     stepType: "intro",
     title: "Introdução ao Quiz",
-    description: "Página inicial que apresenta o quiz e motiva o usuário a começar",
+    description:
+      "Página inicial que apresenta o quiz e motiva o usuário a começar",
     defaultContent: {
       title: "Descubra Seu Estilo Pessoal",
       subtitle: "Um quiz personalizado para descobrir seu estilo único",
@@ -195,12 +196,16 @@ export const FUNNEL_STEPS_CONFIG: FunnelStepConfig[] = [
   },
 ];
 
-export const getStepConfig = (stepNumber: number): FunnelStepConfig | undefined => {
-  return FUNNEL_STEPS_CONFIG.find(step => step.stepNumber === stepNumber);
+export const getStepConfig = (
+  stepNumber: number
+): FunnelStepConfig | undefined => {
+  return FUNNEL_STEPS_CONFIG.find((step) => step.stepNumber === stepNumber);
 };
 
-export const getStepsByType = (stepType: FunnelStepType): FunnelStepConfig[] => {
-  return FUNNEL_STEPS_CONFIG.filter(step => step.stepType === stepType);
+export const getStepsByType = (
+  stepType: FunnelStepType
+): FunnelStepConfig[] => {
+  return FUNNEL_STEPS_CONFIG.filter((step) => step.stepType === stepType);
 };
 
 export const getTotalSteps = (): number => {
@@ -208,6 +213,8 @@ export const getTotalSteps = (): number => {
 };
 
 export const getDefaultContentForFunnelStep = (stepType: string) => {
-  const stepConfig = FUNNEL_STEPS_CONFIG.find(step => step.stepType === stepType);
+  const stepConfig = FUNNEL_STEPS_CONFIG.find(
+    (step) => step.stepType === stepType
+  );
   return stepConfig ? stepConfig.defaultContent : {};
 };

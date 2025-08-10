@@ -60,7 +60,11 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
   style,
   customStyles,
 }) => {
-  const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
+  const {
+    disabled: animationsDisabled,
+    duration = 400,
+    staggerDelay = 200,
+  } = animationConfig;
   const isLowPerformance = deviceView === "mobile";
 
   const getLayoutClasses = () => {
@@ -87,12 +91,20 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
 
   return (
     <div className={`py-12 ${className || ""}`} style={style}>
-      {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
+      {customStyles && (
+        <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+      )}
 
       {/* Header */}
       <div className="text-center mb-10">
-        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">{title}</h2>
-        {subtitle && <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">{subtitle}</p>}
+        <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] mb-2">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="text-center text-[#3a3a3a] mb-6 max-w-lg mx-auto">
+            {subtitle}
+          </p>
+        )}
         <div className="elegant-divider w-32 mx-auto"></div>
       </div>
 
@@ -102,7 +114,9 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
           {motivations.map((motivation, index) => (
             <AnimatedWrapper
               key={motivation.id}
-              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+              animation={
+                animationsDisabled || isLowPerformance ? "none" : "fade"
+              }
               show={true}
               duration={duration}
               delay={staggerDelay * index}
@@ -114,7 +128,9 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
                     : ""
                 }`}
               >
-                <div className={`${layout === "list" ? "flex items-start gap-4" : "text-center"}`}>
+                <div
+                  className={`${layout === "list" ? "flex items-start gap-4" : "text-center"}`}
+                >
                   {/* Icon */}
                   {showIcons && (
                     <div
@@ -122,7 +138,9 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
                     >
                       <div
                         className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
-                          motivation.isHighlighted ? "ring-2 ring-[#B89B7A] ring-opacity-30" : ""
+                          motivation.isHighlighted
+                            ? "ring-2 ring-[#B89B7A] ring-opacity-30"
+                            : ""
                         }`}
                       >
                         {motivation.icon || getDefaultIcon(index)}

@@ -72,7 +72,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -206,7 +213,8 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
       default: // primary
         return {
           ...baseStyle,
-          backgroundColor: disabled || loading ? `${colors.primary}80` : colors.primary,
+          backgroundColor:
+            disabled || loading ? `${colors.primary}80` : colors.primary,
           color: colors.text,
           border: "none",
         };
@@ -231,13 +239,25 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (variant === "primary" && enableHoverEffect && !disabled && !loading && colors.primaryDark) {
+    if (
+      variant === "primary" &&
+      enableHoverEffect &&
+      !disabled &&
+      !loading &&
+      colors.primaryDark
+    ) {
       e.currentTarget.style.backgroundColor = colors.primaryDark;
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (variant === "primary" && enableHoverEffect && !disabled && !loading && colors.primary) {
+    if (
+      variant === "primary" &&
+      enableHoverEffect &&
+      !disabled &&
+      !loading &&
+      colors.primary
+    ) {
       e.currentTarget.style.backgroundColor = colors.primary;
     }
   };

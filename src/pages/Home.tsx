@@ -1,7 +1,14 @@
 import { LogoutButton } from "../components/auth/LogoutButton";
 import { Button } from "../components/ui/button";
 import { useAuth } from "../context/AuthContext";
-import { ArrowRight, BarChart3, Layout, Target, TrendingUp, Users } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  Layout,
+  Target,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import React, { useEffect } from "react";
 import { useLocation } from "wouter";
 
@@ -58,7 +65,10 @@ const Home: React.FC = () => {
               className="w-8 h-8 rounded-lg flex items-center justify-center"
               style={{ backgroundColor: "#B89B7A" }}
             >
-              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "#FEFEFE" }}></div>
+              <div
+                className="w-3 h-3 rounded-sm"
+                style={{ backgroundColor: "#FEFEFE" }}
+              ></div>
             </div>
             <div>
               <h1 className="text-xl font-bold" style={{ color: "#432818" }}>
@@ -69,18 +79,24 @@ const Home: React.FC = () => {
           <div className="flex items-center gap-4">
             {user ? (
               <>
-                <div className="hidden sm:flex items-center gap-2 text-sm" style={{ color: "#6B4F43" }}>
+                <div
+                  className="hidden sm:flex items-center gap-2 text-sm"
+                  style={{ color: "#6B4F43" }}
+                >
                   <Users className="h-4 w-4" />
                   <span>
-                    Olá, <span className="font-medium">{user?.name || user?.email}</span>
+                    Olá,{" "}
+                    <span className="font-medium">
+                      {user?.name || user?.email}
+                    </span>
                   </span>
                 </div>
                 <LogoutButton />
               </>
             ) : (
-              <Button 
+              <Button
                 onClick={() => setLocation("/auth")}
-                variant="outline" 
+                variant="outline"
                 size="sm"
               >
                 Entrar
@@ -106,8 +122,8 @@ const Home: React.FC = () => {
               className="text-xl sm:text-2xl max-w-3xl mx-auto leading-relaxed"
               style={{ color: "#6B4F43" }}
             >
-              A plataforma definitiva para criar funis inteligentes e maximizar conversões através
-              de quizzes interativos.
+              A plataforma definitiva para criar funis inteligentes e maximizar
+              conversões através de quizzes interativos.
             </p>
           </div>
 
@@ -174,12 +190,18 @@ const Home: React.FC = () => {
       <div className="py-20" style={{ backgroundColor: "#FAF9F7" }}>
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: "#432818" }}>
+            <h2
+              className="text-3xl sm:text-4xl font-bold mb-4"
+              style={{ color: "#432818" }}
+            >
               Por que QuizFlow é diferente?
             </h2>
-            <p className="text-lg max-w-2xl mx-auto" style={{ color: "#6B4F43" }}>
-              Nossa plataforma combina simplicidade visual com poder técnico para criar experiências
-              únicas
+            <p
+              className="text-lg max-w-2xl mx-auto"
+              style={{ color: "#6B4F43" }}
+            >
+              Nossa plataforma combina simplicidade visual com poder técnico
+              para criar experiências únicas
             </p>
           </div>
 
@@ -198,12 +220,18 @@ const Home: React.FC = () => {
               >
                 <Layout className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-center mb-4" style={{ color: "#432818" }}>
+              <h3
+                className="text-xl font-bold text-center mb-4"
+                style={{ color: "#432818" }}
+              >
                 Interface Intuitiva
               </h3>
-              <p className="text-center leading-relaxed" style={{ color: "#6B4F43" }}>
-                Editor visual drag & drop com templates profissionais. Crie quizzes sofisticados sem
-                conhecimento técnico.
+              <p
+                className="text-center leading-relaxed"
+                style={{ color: "#6B4F43" }}
+              >
+                Editor visual drag & drop com templates profissionais. Crie
+                quizzes sofisticados sem conhecimento técnico.
               </p>
             </div>
 
@@ -221,12 +249,18 @@ const Home: React.FC = () => {
               >
                 <Target className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-center mb-4" style={{ color: "#432818" }}>
+              <h3
+                className="text-xl font-bold text-center mb-4"
+                style={{ color: "#432818" }}
+              >
                 Funis Inteligentes
               </h3>
-              <p className="text-center leading-relaxed" style={{ color: "#6B4F43" }}>
-                Lógica avançada de segmentação que qualifica leads automaticamente e direciona para
-                ofertas personalizadas.
+              <p
+                className="text-center leading-relaxed"
+                style={{ color: "#6B4F43" }}
+              >
+                Lógica avançada de segmentação que qualifica leads
+                automaticamente e direciona para ofertas personalizadas.
               </p>
             </div>
 
@@ -244,12 +278,18 @@ const Home: React.FC = () => {
               >
                 <TrendingUp className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-center mb-4" style={{ color: "#432818" }}>
+              <h3
+                className="text-xl font-bold text-center mb-4"
+                style={{ color: "#432818" }}
+              >
                 Analytics Avançado
               </h3>
-              <p className="text-center leading-relaxed" style={{ color: "#6B4F43" }}>
-                Dashboards em tempo real com insights acionáveis sobre performance, conversões e ROI
-                dos seus funis.
+              <p
+                className="text-center leading-relaxed"
+                style={{ color: "#6B4F43" }}
+              >
+                Dashboards em tempo real com insights acionáveis sobre
+                performance, conversões e ROI dos seus funis.
               </p>
             </div>
           </div>
@@ -263,9 +303,12 @@ const Home: React.FC = () => {
             <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-white">
               Pronto para revolucionar suas conversões?
             </h2>
-            <p className="text-xl mb-8 leading-relaxed" style={{ color: "#FAF9F7" }}>
-              Junte-se a milhares de empresas que já simplificaram seus funis e aumentaram suas
-              vendas com QuizFlow.
+            <p
+              className="text-xl mb-8 leading-relaxed"
+              style={{ color: "#FAF9F7" }}
+            >
+              Junte-se a milhares de empresas que já simplificaram seus funis e
+              aumentaram suas vendas com QuizFlow.
             </p>
             <Button
               size="lg"

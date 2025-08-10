@@ -24,7 +24,12 @@ export const LogoutButton: React.FC<LogoutButtonProps> = ({
   };
 
   return (
-    <Button variant={variant} size={size} onClick={handleLogout} disabled={loading}>
+    <Button
+      variant={variant}
+      size={size}
+      onClick={handleLogout}
+      disabled={loading}
+    >
       <LogOut className="h-4 w-4 mr-2" />
       Sair
     </Button>

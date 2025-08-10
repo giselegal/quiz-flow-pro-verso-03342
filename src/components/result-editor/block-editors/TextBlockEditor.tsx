@@ -15,7 +15,10 @@ interface TextBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const TextBlockEditor: React.FC<TextBlockEditorProps> = ({ block, onUpdate }) => {
+const TextBlockEditor: React.FC<TextBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   const content = block.content;
 
   return (
@@ -26,7 +29,7 @@ const TextBlockEditor: React.FC<TextBlockEditorProps> = ({ block, onUpdate }) =>
           id="text"
           rows={6}
           value={content.text || ""}
-          onChange={e => onUpdate({ text: e.target.value })}
+          onChange={(e) => onUpdate({ text: e.target.value })}
           placeholder="Digite seu texto aqui..."
         />
       </div>
@@ -35,7 +38,7 @@ const TextBlockEditor: React.FC<TextBlockEditorProps> = ({ block, onUpdate }) =>
         <Label htmlFor="alignment">Alinhamento</Label>
         <Select
           defaultValue={content.alignment || "left"}
-          onValueChange={value => onUpdate({ alignment: value })}
+          onValueChange={(value) => onUpdate({ alignment: value })}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Selecione o alinhamento" />

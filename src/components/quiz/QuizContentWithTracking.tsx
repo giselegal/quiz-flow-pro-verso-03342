@@ -16,7 +16,9 @@ interface QuizContentWithTrackingProps {
   handleAnswerSubmit: (response: UserResponse) => void;
 }
 
-export const QuizContentWithTracking: React.FC<QuizContentWithTrackingProps> = ({
+export const QuizContentWithTracking: React.FC<
+  QuizContentWithTrackingProps
+> = ({
   user,
   currentQuestionIndex,
   totalQuestions,
@@ -32,7 +34,9 @@ export const QuizContentWithTracking: React.FC<QuizContentWithTrackingProps> = (
   const userName = user?.userName || localStorage.getItem("userName") || "";
 
   // Determine the required selections based on question type
-  const requiredSelections = showingStrategicQuestions ? 1 : currentQuestion?.multiSelect || 3;
+  const requiredSelections = showingStrategicQuestions
+    ? 1
+    : currentQuestion?.multiSelect || 3;
 
   // Check if we have enough selections to proceed
   const canProceed = currentAnswers?.length === requiredSelections;

@@ -49,7 +49,11 @@ export type PropertyType =
 
 export type LayoutType = "1-column" | "2-columns" | "3-columns" | "4-columns";
 export type DirectionType = "vertical" | "horizontal";
-export type DispositionType = "image-text" | "text-image" | "text-only" | "image-only";
+export type DispositionType =
+  | "image-text"
+  | "text-image"
+  | "text-only"
+  | "image-only";
 export type BorderSizeType = "none" | "small" | "medium" | "large";
 export type ShadowSizeType = "none" | "small" | "medium" | "large";
 export type SpacingType = "small" | "medium" | "large";
@@ -435,7 +439,8 @@ export const funnelBlockDefinitions = [
         key: "subtitle",
         label: "Subtítulo",
         type: "textarea",
-        defaultValue: "Responda algumas perguntas e descubra qual estilo combina mais com você!",
+        defaultValue:
+          "Responda algumas perguntas e descubra qual estilo combina mais com você!",
         group: "content",
       },
       {
@@ -1210,7 +1215,8 @@ export const funnelBlockDefinitions = [
     label: "Etapa de Quiz Avançada",
     icon: LayoutGrid,
     category: "quiz",
-    description: "Etapa completa de quiz com todas as configurações avançadas baseadas no modelo",
+    description:
+      "Etapa completa de quiz com todas as configurações avançadas baseadas no modelo",
     propertiesSchema: [
       // Header Properties (Integradas)
       {
@@ -1550,13 +1556,13 @@ export const PROPERTY_GROUPS = {
 
 // Helper functions
 export const getBlockDefinition = (type: string) => {
-  return funnelBlockDefinitions.find(def => def.type === type);
+  return funnelBlockDefinitions.find((def) => def.type === type);
 };
 
 export const getBlocksByCategory = (category: string) => {
-  return funnelBlockDefinitions.filter(def => def.category === category);
+  return funnelBlockDefinitions.filter((def) => def.category === category);
 };
 
 export const getAllBlockTypes = () => {
-  return funnelBlockDefinitions.map(def => def.type);
+  return funnelBlockDefinitions.map((def) => def.type);
 };

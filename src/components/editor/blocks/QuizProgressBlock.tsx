@@ -17,7 +17,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -86,7 +93,9 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
                 {currentStep}
               </div>
             )}
-            <h3 className="text-lg font-semibold text-[#432818]">{stepTitle}</h3>
+            <h3 className="text-lg font-semibold text-[#432818]">
+              {stepTitle}
+            </h3>
           </div>
 
           <div className="text-sm text-[#8F7A6A] flex items-center gap-1">
@@ -99,7 +108,7 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         {/* Progress Bar */}
         <div className="relative">
           {/* Background */}
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             {/* Progress Fill */}
             <div
               className="h-full bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full transition-all duration-700 ease-out"
@@ -119,7 +128,9 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
                   key={stepNumber}
                   className={cn(
                     "w-3 h-3 rounded-full border-2 transform -translate-y-0.5 transition-all duration-300",
-                    isCompleted ? "bg-[#B89B7A] border-[#B89B7A]" : "bg-white border-gray-300",
+                    isCompleted
+                      ? "bg-[#B89B7A] border-[#B89B7A]"
+                      : "bg-white border-gray-300",
                     isCurrent && "scale-125 shadow-lg"
                   )}
                 />
@@ -131,7 +142,9 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         {/* Progress Text */}
         <div className="text-center mt-3">
           <p className="text-sm text-[#8F7A6A]">
-            <span className="font-medium text-[#B89B7A]">{Math.round(progressPercentage)}%</span>{" "}
+            <span className="font-medium text-[#B89B7A]">
+              {Math.round(progressPercentage)}%
+            </span>{" "}
             completo - Continue para descobrir mais sobre seu estilo único
           </p>
         </div>

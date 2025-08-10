@@ -58,7 +58,10 @@ export const handleAffiliateTracking = (source: string) => {
     localStorage.setItem("affiliate_source", source);
     console.log(`[Hotmart Integration] Affiliate source stored: ${source}`);
   } catch (error) {
-    console.error("[Hotmart Integration] Error storing affiliate source:", error);
+    console.error(
+      "[Hotmart Integration] Error storing affiliate source:",
+      error
+    );
   }
 };
 
@@ -69,14 +72,20 @@ export const getAffiliateSource = () => {
   try {
     return localStorage.getItem("affiliate_source");
   } catch (error) {
-    console.error("[Hotmart Integration] Error retrieving affiliate source:", error);
+    console.error(
+      "[Hotmart Integration] Error retrieving affiliate source:",
+      error
+    );
     return null;
   }
 };
 
 // Function to generate a unique transaction ID
 export const generateTransactionId = () => {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
 };
 
 // Function to handle purchase completion and track sale conversion

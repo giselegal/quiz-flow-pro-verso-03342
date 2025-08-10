@@ -20,7 +20,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -97,7 +104,9 @@ const QuizResultsBlockEditor: React.FC<QuizResultsBlockEditorProps> = ({
 
     // Se houver um demoResult nas propriedades, use-o
     if (properties?.demoResult) {
-      const selectedResult = results.find(r => r.id === properties.demoResult);
+      const selectedResult = results.find(
+        (r) => r.id === properties.demoResult
+      );
       if (selectedResult) {
         setDemoResult(selectedResult);
         return;
@@ -127,8 +136,10 @@ const QuizResultsBlockEditor: React.FC<QuizResultsBlockEditorProps> = ({
   // Renderização
   if (!demoResult) {
     return (
-      <div style={{ backgroundColor: '#FAF9F7' }}>
-        <p style={{ color: '#8B7355' }}>Adicione resultados para visualizar a prévia</p>
+      <div style={{ backgroundColor: "#FAF9F7" }}>
+        <p style={{ color: "#8B7355" }}>
+          Adicione resultados para visualizar a prévia
+        </p>
       </div>
     );
   }

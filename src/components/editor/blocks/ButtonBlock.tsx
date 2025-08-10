@@ -11,7 +11,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -101,7 +108,8 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
 
   // Safely handle style object
   const styleObj = block.content?.style || {};
-  const safeStyle = typeof styleObj === "object" && styleObj !== null ? styleObj : {};
+  const safeStyle =
+    typeof styleObj === "object" && styleObj !== null ? styleObj : {};
 
   const containerStyle = {
     textAlign: (safeStyle as any).textAlign || textAlign || "center",
@@ -109,7 +117,8 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
   } as React.CSSProperties;
 
   const buttonStyle = {
-    backgroundColor: (safeStyle as any).backgroundColor || backgroundColor || "#3b82f6",
+    backgroundColor:
+      (safeStyle as any).backgroundColor || backgroundColor || "#3b82f6",
     color: (safeStyle as any).color || color || "#ffffff",
     padding: (safeStyle as any).padding || padding || "12px 24px",
     fontSize: (safeStyle as any).fontSize || fontSize || "16px",
@@ -137,11 +146,17 @@ const ButtonBlock: React.FC<BlockComponentProps> = ({
       data-block-type={block.type}
     >
       <div style={{ textAlign: containerStyle.textAlign as any }}>
-        <UIButton style={buttonStyle} onClick={handleButtonClick} className="border-0">
+        <UIButton
+          style={buttonStyle}
+          onClick={handleButtonClick}
+          className="border-0"
+        >
           <MousePointer className="w-4 h-4 mr-2" />
           <InlineEditableText
             value={buttonText}
-            onChange={(value: string) => handlePropertyChange("buttonText", value)}
+            onChange={(value: string) =>
+              handlePropertyChange("buttonText", value)
+            }
             placeholder="Texto do botão"
             className="inline-block"
           />

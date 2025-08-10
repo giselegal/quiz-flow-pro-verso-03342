@@ -1,12 +1,14 @@
 import { cn } from "../../../lib/utils";
 import type { BlockComponentProps } from "../../../types/blocks";
-import { logBlockDebug, safeGetBlockProperties } from "../../../utils/blockUtils";
+import {
+  logBlockDebug,
+  safeGetBlockProperties,
+} from "../../../utils/blockUtils";
 import React from "react";
 
 /**
  * QuizOfferPricingInlineBlock - Preço da oferta do quiz
  */
-
 
 const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -36,12 +38,10 @@ const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
       )}
       onClick={onClick}
     >
-      <p style={{ color: '#432818' }}>{urgencyText}</p>
-      <p style={{ color: '#8B7355' }}>De {originalPrice}</p>
+      <p style={{ color: "#432818" }}>{urgencyText}</p>
+      <p style={{ color: "#8B7355" }}>De {originalPrice}</p>
       <p className="text-3xl font-bold text-[#432818] mb-2">{offerPrice}</p>
-      <span style={{ backgroundColor: '#E5DDD5' }}>
-        {discount}
-      </span>
+      <span style={{ backgroundColor: "#E5DDD5" }}>{discount}</span>
     </div>
   );
 };

@@ -14,12 +14,22 @@ interface Props extends BlockComponentProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: number | string | undefined, type: string): string => {
+const getMarginClass = (
+  value: number | string | undefined,
+  type: string
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -88,7 +98,10 @@ const BenefitsInlineBlock: React.FC<Props> = ({
       )}
       {...props}
     >
-      <h3 className="text-xl font-semibold mb-4 text-center" style={{ color: titleColor }}>
+      <h3
+        className="text-xl font-semibold mb-4 text-center"
+        style={{ color: titleColor }}
+      >
         {title}
       </h3>
 
@@ -101,7 +114,10 @@ const BenefitsInlineBlock: React.FC<Props> = ({
             >
               <Check className="w-3 h-3 text-white" strokeWidth={3} />
             </div>
-            <span className="text-sm leading-relaxed" style={{ color: textColor }}>
+            <span
+              className="text-sm leading-relaxed"
+              style={{ color: textColor }}
+            >
               {benefit}
             </span>
           </div>

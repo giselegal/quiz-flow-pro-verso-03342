@@ -42,9 +42,14 @@ export const Step01ComponentsTest = () => {
       </div>
 
       <div>
-        <h2 className="text-xl font-bold mb-4">IntroPropertiesPanel Component</h2>
+        <h2 className="text-xl font-bold mb-4">
+          IntroPropertiesPanel Component
+        </h2>
         <div className="border rounded-lg p-4 w-80">
-          <IntroPropertiesPanel selectedBlock={mockBlock} onUpdate={mockOnUpdate} />
+          <IntroPropertiesPanel
+            selectedBlock={mockBlock}
+            onUpdate={mockOnUpdate}
+          />
         </div>
       </div>
     </div>

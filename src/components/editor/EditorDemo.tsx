@@ -34,7 +34,8 @@ const SAMPLE_BLOCKS: BlockData[] = [
     id: "intro-description",
     type: "text-inline",
     properties: {
-      content: "Este é o nosso sistema de edição visual com funcionalidades profissionais.",
+      content:
+        "Este é o nosso sistema de edição visual com funcionalidades profissionais.",
       textAlign: "center",
       color: "#6B4F43",
     },
@@ -59,7 +60,7 @@ const EditorDemo: React.FC = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <AdvancedEditor
         initialBlocks={SAMPLE_BLOCKS}
         onSave={handleSave}

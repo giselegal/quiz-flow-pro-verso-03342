@@ -50,7 +50,8 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
     [isMobile]
   );
 
-  const { containerClasses, inlineStyles } = useContainerProperties(containerProps);
+  const { containerClasses, inlineStyles } =
+    useContainerProperties(containerProps);
 
   // 🔄 Debounce para respostas (hook existente)
   const currentAnswer = userAnswers[stepId];
@@ -94,7 +95,13 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
       hasAnswer: !!currentAnswer,
       performanceEnabled: !!performance,
     };
-  }, [stepId, isMobile, containerProps.containerWidth, currentAnswer, performance]);
+  }, [
+    stepId,
+    isMobile,
+    containerProps.containerWidth,
+    currentAnswer,
+    performance,
+  ]);
 
   // 🎯 Handler otimizado para próximo step
   const handleNext = useCallback(() => {
@@ -106,20 +113,26 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
     <div className={optimizedClasses} style={inlineStyles}>
       {/* 📊 Debug info (apenas desenvolvimento) */}
       {devStats && (
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <details className="text-sm">
-            <summary className="font-medium cursor-pointer">🔧 Hook Stats (DEV)</summary>
+            <summary className="font-medium cursor-pointer">
+              🔧 Hook Stats (DEV)
+            </summary>
             <div className="mt-2 space-y-1 text-xs">
               <div>
                 📱 Mobile:{" "}
-                <span className={isMobile ? "text-orange-600" : "text-green-600"}>
+                <span
+                  className={isMobile ? "text-orange-600" : "text-green-600"}
+                >
                   {isMobile ? "Sim" : "Não"}
                 </span>
               </div>
               <div>🔄 Debounce: {devStats.debounceTime}ms</div>
               <div>📦 Container: {devStats.containerWidth}</div>
               <div>💬 Tem Resposta: {devStats.hasAnswer ? "✅" : "❌"}</div>
-              <div>⚡ Performance: {devStats.performanceEnabled ? "✅" : "❌"}</div>
+              <div>
+                ⚡ Performance: {devStats.performanceEnabled ? "✅" : "❌"}
+              </div>
             </div>
           </details>
         </div>
@@ -127,13 +140,17 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
 
       {/* 🏷️ Cabeçalho responsivo */}
       <div className="mb-6">
-        <h2 className={`font-bold text-center mb-2 ${isMobile ? "text-xl" : "text-2xl"}`}>
+        <h2
+          className={`font-bold text-center mb-2 ${isMobile ? "text-xl" : "text-2xl"}`}
+        >
           Step {stepId} {isMobile && "📱"}
         </h2>
 
         {/* Indicador de debounce ativo */}
         {currentAnswer && currentAnswer !== debouncedAnswer && (
-          <div className="text-center text-sm text-yellow-600">⏳ Processando resposta...</div>
+          <div className="text-center text-sm text-yellow-600">
+            ⏳ Processando resposta...
+          </div>
         )}
       </div>
 
@@ -141,20 +158,28 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
       <div className="space-y-4">
         {children || (
           <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <p style={{ color: '#6B4F43' }}>Este step está otimizado com hooks existentes! ✨</p>
+            <p style={{ color: "#6B4F43" }}>
+              Este step está otimizado com hooks existentes! ✨
+            </p>
 
             {/* 📊 Info de performance */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div className="flex items-center space-x-2">
                 <span className="font-medium">Device:</span>
-                <span className={isMobile ? "text-orange-600" : "text-green-600"}>
+                <span
+                  className={isMobile ? "text-orange-600" : "text-green-600"}
+                >
                   {isMobile ? "📱 Mobile" : "💻 Desktop"}
                 </span>
               </div>
 
               <div className="flex items-center space-x-2">
                 <span className="font-medium">Resposta:</span>
-                <span className={debouncedAnswer ? "text-green-600" : "text-gray-400"}>
+                <span
+                  className={
+                    debouncedAnswer ? "text-green-600" : "text-gray-400"
+                  }
+                >
                   {debouncedAnswer ? "✅ Salva" : "⏳ Aguardando"}
                 </span>
               </div>
@@ -166,7 +191,7 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
       {/* 🎛️ Controles otimizados */}
       <div className="mt-8">
         <div className="flex justify-between items-center">
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             Otimizado para {isMobile ? "Mobile" : "Desktop"}
           </div>
 
@@ -203,17 +228,16 @@ export const QuickOptimizedStep: React.FC<ProductionReadyStepProps> = ({
 
   return (
     <div className={containerClasses} style={inlineStyles}>
-      <h2 className={`font-bold mb-6 ${isMobile ? "text-xl text-center" : "text-2xl"}`}>
+      <h2
+        className={`font-bold mb-6 ${isMobile ? "text-xl text-center" : "text-2xl"}`}
+      >
         Step {stepId}
       </h2>
 
       {children}
 
       <div className="mt-8 text-center">
-        <button
-          onClick={onNext}
-          style={{ backgroundColor: '#B89B7A' }}
-        >
+        <button onClick={onNext} style={{ backgroundColor: "#B89B7A" }}>
           Continuar
         </button>
       </div>

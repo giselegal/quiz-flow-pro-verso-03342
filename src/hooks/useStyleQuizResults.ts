@@ -16,7 +16,8 @@ export interface StyleQuizResultData {
  * para o quiz de estilos como a imagem do guia
  */
 export const useStyleQuizResults = (answers: Map<string, QuestionOption[]>) => {
-  const { calculateCategoryScores, applyCalculationMethod, determineResult } = useQuizResults();
+  const { calculateCategoryScores, applyCalculationMethod, determineResult } =
+    useQuizResults();
   const [resultData, setResultData] = useState<StyleQuizResultData>({
     mainResult: null,
     categoryScores: {},
@@ -36,11 +37,15 @@ export const useStyleQuizResults = (answers: Map<string, QuestionOption[]>) => {
       );
 
       // Determinar o resultado final
-      const mainResult = determineResult(winningCategory, initialStyleQuizConfig.results, answers);
+      const mainResult = determineResult(
+        winningCategory,
+        initialStyleQuizConfig.results,
+        answers
+      );
 
       // Criar um objeto de pontuações por categoria para exibição
       const categoryScoresMap: Record<string, number> = {};
-      categoryScores.forEach(cs => {
+      categoryScores.forEach((cs) => {
         categoryScoresMap[cs.category] = cs.score;
       });
 
@@ -57,7 +62,12 @@ export const useStyleQuizResults = (answers: Map<string, QuestionOption[]>) => {
         guideImageUrl,
       });
     }
-  }, [answers, calculateCategoryScores, applyCalculationMethod, determineResult]);
+  }, [
+    answers,
+    calculateCategoryScores,
+    applyCalculationMethod,
+    determineResult,
+  ]);
 
   return resultData;
 };

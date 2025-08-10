@@ -31,7 +31,11 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
         );
 
       case "text":
-        return <div className="prose max-w-none">{data.text || "Texto de exemplo"}</div>;
+        return (
+          <div className="prose max-w-none">
+            {data.text || "Texto de exemplo"}
+          </div>
+        );
 
       case "image":
         return data.imageUrl ? (
@@ -41,26 +45,28 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             className="max-w-full h-auto rounded"
           />
         ) : (
-          <div style={{ backgroundColor: '#E5DDD5' }}>
-            <p style={{ color: '#8B7355' }}>Imagem não definida</p>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
+            <p style={{ color: "#8B7355" }}>Imagem não definida</p>
           </div>
         );
 
       case "stageQuestion":
         return (
           <div className="space-y-4">
-            <h3 className="text-xl font-medium">{data.question || "Pergunta não definida"}</h3>
+            <h3 className="text-xl font-medium">
+              {data.question || "Pergunta não definida"}
+            </h3>
             {data.options && data.options.length > 0 ? (
               <div className="space-y-2">
                 {data.options.map((option: string, index: number) => (
-                  <div key={index} style={{ backgroundColor: '#FAF9F7' }}>
+                  <div key={index} style={{ backgroundColor: "#FAF9F7" }}>
                     {option}
                   </div>
                 ))}
               </div>
             ) : (
-              <div style={{ backgroundColor: '#FAF9F7' }}>
-                <p style={{ color: '#8B7355' }}>Opções não definidas</p>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
+                <p style={{ color: "#8B7355" }}>Opções não definidas</p>
               </div>
             )}
           </div>
@@ -77,11 +83,13 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     id={`opt-${component.id}-${index}`}
                     disabled={isPreviewing}
                   />
-                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>
+                    {option}
+                  </label>
                 </div>
               ))
             ) : (
-              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
+              <div style={{ color: "#8B7355" }}>Opções não definidas</div>
             )}
           </div>
         );
@@ -98,11 +106,13 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                     id={`opt-${component.id}-${index}`}
                     disabled={isPreviewing}
                   />
-                  <label htmlFor={`opt-${component.id}-${index}`}>{option}</label>
+                  <label htmlFor={`opt-${component.id}-${index}`}>
+                    {option}
+                  </label>
                 </div>
               ))
             ) : (
-              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
+              <div style={{ color: "#8B7355" }}>Opções não definidas</div>
             )}
           </div>
         );

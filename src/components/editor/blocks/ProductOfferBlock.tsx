@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -91,8 +98,12 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Imagem do Produto */}
         {productImage && (
-          <div style={{ backgroundColor: '#E5DDD5' }}>
-            <img src={productImage} alt={productName} className="w-full h-full object-cover" />
+          <div style={{ backgroundColor: "#E5DDD5" }}>
+            <img
+              src={productImage}
+              alt={productName}
+              className="w-full h-full object-cover"
+            />
           </div>
         )}
 
@@ -100,7 +111,9 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
           {/* Nome do Produto */}
           <InlineEditableText
             value={productName}
-            onChange={(value: string) => handlePropertyChange("productName", value)}
+            onChange={(value: string) =>
+              handlePropertyChange("productName", value)
+            }
             className="text-xl font-bold text-[#432818] mb-4"
             placeholder="Nome do produto"
           />
@@ -109,13 +122,17 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
           <div className="flex items-center space-x-3 mb-4">
             <InlineEditableText
               value={originalPrice}
-              onChange={(value: string) => handlePropertyChange("originalPrice", value)}
-              style={{ color: '#8B7355' }}
+              onChange={(value: string) =>
+                handlePropertyChange("originalPrice", value)
+              }
+              style={{ color: "#8B7355" }}
               placeholder="Preço original"
             />
             <InlineEditableText
               value={discountPrice}
-              onChange={(value: string) => handlePropertyChange("discountPrice", value)}
+              onChange={(value: string) =>
+                handlePropertyChange("discountPrice", value)
+              }
               className="text-2xl font-bold text-[#B89B7A]"
               placeholder="Preço com desconto"
             />
@@ -131,16 +148,17 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
                     <InlineEditableText
                       value={feature.text}
                       onChange={(value: string) => {
-                        const updatedFeatures = features.map((feat: any, i: number) =>
-                          i === index ? { ...feat, text: value } : feat
+                        const updatedFeatures = features.map(
+                          (feat: any, i: number) =>
+                            i === index ? { ...feat, text: value } : feat
                         );
                         handlePropertyChange("features", updatedFeatures);
                       }}
-                      style={{ color: '#6B4F43' }}
+                      style={{ color: "#6B4F43" }}
                       placeholder="Benefício do produto"
                     />
                   ) : (
-                    <span style={{ color: '#6B4F43' }}>{feature.text}</span>
+                    <span style={{ color: "#6B4F43" }}>{feature.text}</span>
                   )}
                 </div>
               ))}
@@ -152,7 +170,9 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
             <ShoppingCart className="w-5 h-5" />
             <InlineEditableText
               value={buttonText}
-              onChange={(value: string) => handlePropertyChange("buttonText", value)}
+              onChange={(value: string) =>
+                handlePropertyChange("buttonText", value)
+              }
               className="text-white font-bold"
               placeholder="Texto do botão"
             />

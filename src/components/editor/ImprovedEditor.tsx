@@ -1,8 +1,17 @@
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../components/ui/resizable";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "../../components/ui/resizable";
 import { Separator } from "../../components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../../components/ui/tooltip";
 import { cn } from "../../lib/utils";
 import { FileText, Layers, PanelLeft, PanelRight } from "lucide-react";
 import React, { useCallback, useMemo, useState } from "react";
@@ -35,11 +44,13 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
   const [rightPanelVisible, setRightPanelVisible] = useState(true);
-  const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [previewMode, setPreviewMode] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
 
   // Bloco selecionado
   const selectedBlock = useMemo(
-    () => blocks.find(block => block.id === selectedBlockId) || null,
+    () => blocks.find((block) => block.id === selectedBlockId) || null,
     [blocks, selectedBlockId]
   );
 
@@ -60,7 +71,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
     (updates: Partial<BlockData>) => {
       if (!selectedBlockId) return;
 
-      const newBlocks = blocks.map(block =>
+      const newBlocks = blocks.map((block) =>
         block.id === selectedBlockId ? { ...block, ...updates } : block
       );
 
@@ -88,7 +99,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
   const handleBlockDelete = useCallback(() => {
     if (!selectedBlockId) return;
 
-    const newBlocks = blocks.filter(block => block.id !== selectedBlockId);
+    const newBlocks = blocks.filter((block) => block.id !== selectedBlockId);
     handleBlocksChange(newBlocks);
     setSelectedBlockId(null);
   }, [selectedBlockId, blocks, handleBlocksChange]);
@@ -110,7 +121,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
   const handleBlockReset = useCallback(() => {
     if (!selectedBlockId) return;
 
-    const newBlocks = blocks.map(block =>
+    const newBlocks = blocks.map((block) =>
       block.id === selectedBlockId ? { ...block, properties: {} } : block
     );
 
@@ -136,21 +147,28 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                   <FileText className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-semibold text-[#432818]">{title}</h1>
-                  {stepNumber && <p style={{ color: '#6B4F43' }}>Etapa {stepNumber}</p>}
+                  <h1 className="text-xl font-semibold text-[#432818]">
+                    {title}
+                  </h1>
+                  {stepNumber && (
+                    <p style={{ color: "#6B4F43" }}>Etapa {stepNumber}</p>
+                  )}
                 </div>
               </div>
 
               <Separator orientation="vertical" className="h-8" />
 
               {/* Estatísticas */}
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 <div className="flex items-center gap-1">
                   <Layers className="w-4 h-4" />
                   <span>{blocks.length} blocos</span>
                 </div>
                 {selectedBlock && (
-                  <Badge variant="secondary" className="bg-[#B89B7A]/10 text-[#432818]">
+                  <Badge
+                    variant="secondary"
+                    className="bg-[#B89B7A]/10 text-[#432818]"
+                  >
                     {selectedBlock.type}
                   </Badge>
                 )}
@@ -221,7 +239,9 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
             )}
 
             {/* Área central - Preview */}
-            <ResizablePanel defaultSize={leftPanelVisible && rightPanelVisible ? 50 : 70}>
+            <ResizablePanel
+              defaultSize={leftPanelVisible && rightPanelVisible ? 50 : 70}
+            >
               <div className="h-full p-4">
                 <ResponsivePreview
                   blocks={blocks}
@@ -256,7 +276,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
 
         {/* Status bar */}
         <div className="bg-white border-t border-[#B89B7A]/20 px-4 py-2">
-          <div style={{ color: '#6B4F43' }}>
+          <div style={{ color: "#6B4F43" }}>
             <div className="flex items-center gap-4">
               <span>
                 {blocks.length} {blocks.length === 1 ? "bloco" : "blocos"}

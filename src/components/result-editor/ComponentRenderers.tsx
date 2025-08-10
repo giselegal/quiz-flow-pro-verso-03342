@@ -17,7 +17,11 @@ interface ComponentProps {
 }
 
 // Componente de Vídeo
-export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, onSelect }) => {
+export const VideoComponent: React.FC<ComponentProps> = ({
+  props,
+  isSelected,
+  onSelect,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(props.muted || false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -66,13 +70,21 @@ export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, on
             onClick={togglePlay}
             className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70"
           >
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {isPlaying ? (
+              <Pause className="w-4 h-4" />
+            ) : (
+              <Play className="w-4 h-4" />
+            )}
           </button>
           <button
             onClick={toggleMute}
             className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70"
           >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            {isMuted ? (
+              <VolumeX className="w-4 h-4" />
+            ) : (
+              <Volume2 className="w-4 h-4" />
+            )}
           </button>
         </div>
       )}
@@ -81,7 +93,11 @@ export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, on
 };
 
 // Componente de Áudio
-export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, onSelect }) => {
+export const AudioComponent: React.FC<ComponentProps> = ({
+  props,
+  isSelected,
+  onSelect,
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -137,16 +153,20 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
           className="p-3 rounded-full"
           style={{ backgroundColor: props.accentColor, color: "white" }}
         >
-          {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+          {isPlaying ? (
+            <Pause className="w-5 h-5" />
+          ) : (
+            <Play className="w-5 h-5" />
+          )}
         </button>
 
         <div className="flex-1">
           <h4 className="font-semibold text-sm">{props.title}</h4>
-          <p style={{ color: '#6B4F43' }}>{props.description}</p>
+          <p style={{ color: "#6B4F43" }}>{props.description}</p>
 
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs">{formatTime(currentTime)}</span>
-            <div style={{ backgroundColor: '#E5DDD5' }}>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
               <div
                 className="h-1 rounded-full"
                 style={{
@@ -175,18 +195,20 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({
   useEffect(() => {
     if (isAutoPlaying && props.images.length > 1) {
       const interval = setInterval(() => {
-        setCurrentIndex(prev => (prev + 1) % props.images.length);
+        setCurrentIndex((prev) => (prev + 1) % props.images.length);
       }, props.autoplaySpeed);
       return () => clearInterval(interval);
     }
   }, [isAutoPlaying, props.images.length, props.autoplaySpeed]);
 
   const goToPrevious = () => {
-    setCurrentIndex(prev => (prev === 0 ? props.images.length - 1 : prev - 1));
+    setCurrentIndex((prev) =>
+      prev === 0 ? props.images.length - 1 : prev - 1
+    );
   };
 
   const goToNext = () => {
-    setCurrentIndex(prev => (prev + 1) % props.images.length);
+    setCurrentIndex((prev) => (prev + 1) % props.images.length);
   };
 
   const goToSlide = (index: number) => {
@@ -214,7 +236,11 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({
         >
           {props.images.map((image: any, index: number) => (
             <div key={index} className="w-full h-full flex-shrink-0 relative">
-              <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
+              <img
+                src={image.src}
+                alt={image.alt}
+                className="w-full h-full object-cover"
+              />
               {image.title && (
                 <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
                   <h3 className="font-semibold">{image.title}</h3>
@@ -279,7 +305,10 @@ export const BenefitsListComponent: React.FC<ComponentProps> = ({
       <ul className="space-y-3">
         {props.benefits.map((benefit: string, index: number) => (
           <li key={index} className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: props.checkColor }} />
+            <CheckCircle
+              className="w-5 h-5 flex-shrink-0"
+              style={{ color: props.checkColor }}
+            />
             <span className="font-medium">{benefit}</span>
           </li>
         ))}

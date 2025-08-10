@@ -49,7 +49,9 @@ interface CustomStyles {
  * />
  */
 
-export interface QuizQuestionProps extends BlockComponentProps, InteractionCallbacks {
+export interface QuizQuestionProps
+  extends BlockComponentProps,
+    InteractionCallbacks {
   // Conteúdo da pergunta
   question: string;
   description?: string;
@@ -155,7 +157,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     showNextButton,
   });
 
-  const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelections);
+  const [selectedOptionIds, setSelectedOptionIds] =
+    useState<string[]>(initialSelections);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -163,7 +166,10 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   const layoutClasses = {
     vertical: "flex flex-col space-y-3",
     horizontal: "flex flex-wrap gap-3",
-    grid: deviceView === "mobile" ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 gap-4",
+    grid:
+      deviceView === "mobile"
+        ? "grid grid-cols-1 gap-3"
+        : "grid grid-cols-2 gap-4",
   };
 
   // Classes para tamanhos de imagem
@@ -180,7 +186,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     right: "text-right",
   };
 
-  const selectedOptions = options.filter(option => selectedOptionIds.includes(option.id));
+  const selectedOptions = options.filter((option) =>
+    selectedOptionIds.includes(option.id)
+  );
 
   // Validação
   const validateSelection = (selections: string[]) => {
@@ -249,7 +257,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
     if (multipleSelection) {
       if (selectedOptionIds.includes(optionId)) {
-        newSelections = selectedOptionIds.filter(id => id !== optionId);
+        newSelections = selectedOptionIds.filter((id) => id !== optionId);
       } else {
         newSelections = [...selectedOptionIds, optionId];
       }
@@ -263,7 +271,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
     const error = validateSelection(newSelections);
     setValidationError(error);
 
-    const newSelectedOptions = options.filter(option => newSelections.includes(option.id));
+    const newSelectedOptions = options.filter((option) =>
+      newSelections.includes(option.id)
+    );
 
     onSelectionChange?.(newSelectedOptions);
     onValidation?.(!error);
@@ -313,7 +323,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
         break;
       case "button":
         optionClasses += ` px-6 py-3 rounded-lg ${
-          isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+          isSelected
+            ? "bg-[#B89B7A] text-white"
+            : "bg-gray-100 hover:bg-gray-200 text-gray-800"
         }`;
         contentClasses = "text-center";
         break;
@@ -340,7 +352,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                 isSelected ? "border-[#B89B7A] bg-[#B89B7A]" : "border-gray-300"
               }`}
             >
-              {isSelected && <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>}
+              {isSelected && (
+                <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+              )}
             </div>
           )}
 
@@ -374,8 +388,12 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
                 alt={option.text}
                 className={`w-full object-cover rounded-lg`}
                 style={{
-                  width: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
-                  height: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
+                  width: customStyles?.imageSize
+                    ? `${customStyles.imageSize}px`
+                    : undefined,
+                  height: customStyles?.imageSize
+                    ? `${customStyles.imageSize}px`
+                    : undefined,
                   maxWidth: "100%",
                 }}
                 loading="lazy"
@@ -385,12 +403,18 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
           {/* Texto e letra em uma linha quando há imagem */}
           {customStyles?.contentType !== "image-only" && (
-            <div className={option.imageUrl ? "flex items-center space-x-3" : "contents"}>
+            <div
+              className={
+                option.imageUrl ? "flex items-center space-x-3" : "contents"
+              }
+            >
               {/* Letra da opção */}
               {showLetters && optionStyle === "card" && (
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                    isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-200 text-gray-600"
+                    isSelected
+                      ? "bg-[#B89B7A] text-white"
+                      : "bg-gray-200 text-gray-600"
                   }`}
                 >
                   {letter}
@@ -402,7 +426,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
               {/* Pontuação se disponível */}
               {option.points && (
-                <span style={{ color: '#8B7355' }}>{option.points} pontos</span>
+                <span style={{ color: "#8B7355" }}>{option.points} pontos</span>
               )}
             </div>
           )}
@@ -419,18 +443,23 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   );
 
   return (
-    <div className={containerClasses} style={style} data-testid={testId} {...props}>
+    <div
+      className={containerClasses}
+      style={style}
+      data-testid={testId}
+      {...props}
+    >
       {/* Barra de Progresso */}
       {progressConfig?.showProgress && (
         <div className="w-full max-w-2xl mx-auto mb-8">
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressConfig.progressValue || 0}%` }}
             />
           </div>
           {questionNumber && totalQuestions && (
-            <p style={{ color: '#6B4F43' }}>
+            <p style={{ color: "#6B4F43" }}>
               Pergunta {questionNumber} de {totalQuestions}
             </p>
           )}
@@ -454,7 +483,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               {question}
             </h2>
 
-            {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
+            {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
           </div>
         )}
 
@@ -466,11 +495,12 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           {options && options.length > 0 ? (
             options.map((option, index) => renderOption(option, index))
           ) : (
-            <div style={{ borderColor: '#E5DDD5' }}>
-              <p style={{ color: '#432818' }}>
-                ⚠️ Nenhuma opção encontrada. Array de opções está vazio ou indefinido.
+            <div style={{ borderColor: "#E5DDD5" }}>
+              <p style={{ color: "#432818" }}>
+                ⚠️ Nenhuma opção encontrada. Array de opções está vazio ou
+                indefinido.
               </p>
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 Debug: options.length = {options?.length || 0}
               </p>
             </div>
@@ -479,8 +509,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
         {/* Erro de Validação */}
         {validationError && showValidation && (
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <p style={{ color: '#432818' }}>{validationError}</p>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <p style={{ color: "#432818" }}>{validationError}</p>
           </div>
         )}
 

@@ -5,7 +5,11 @@ import {
   getResponsiveImageSources,
   getLowQualityPlaceholder,
 } from "../../utils/imageUtils";
-import { getImageMetadata, isImagePreloaded, getOptimizedImage } from "../../utils/imageManager";
+import {
+  getImageMetadata,
+  isImagePreloaded,
+  getOptimizedImage,
+} from "../../utils/imageManager";
 
 interface OptimizedImageProps {
   src: string;
@@ -45,7 +49,10 @@ export default function OptimizedImage({
   const [blurredLoaded, setBlurredLoaded] = useState(false);
 
   // Check if this image has metadata in our image bank
-  const imageMetadata = useMemo(() => (src ? getImageMetadata(src) : undefined), [src]);
+  const imageMetadata = useMemo(
+    () => (src ? getImageMetadata(src) : undefined),
+    [src]
+  );
 
   // Generate placeholders and optimized URLs only once
   const placeholderSrc = useMemo(() => {
@@ -140,7 +147,7 @@ export default function OptimizedImage({
           )}
 
           {/* Shimmer loading effect */}
-          <div style={{ backgroundColor: '#E5DDD5' }} />
+          <div style={{ backgroundColor: "#E5DDD5" }} />
         </>
       )}
 
@@ -174,8 +181,8 @@ export default function OptimizedImage({
       />
 
       {error && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
-          <span style={{ color: '#8B7355' }}>Imagem não disponível</span>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
+          <span style={{ color: "#8B7355" }}>Imagem não disponível</span>
         </div>
       )}
     </div>

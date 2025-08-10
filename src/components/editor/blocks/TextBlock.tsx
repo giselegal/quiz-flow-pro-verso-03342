@@ -15,7 +15,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,7 +61,12 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const TextBlock: React.FC<TextBlockProps> = ({ content, isSelected, onContentChange, onClick }) => {
+const TextBlock: React.FC<TextBlockProps> = ({
+  content,
+  isSelected,
+  onContentChange,
+  onClick,
+}) => {
   // Create a proper style object with default values
   const textStyle = {
     color: content.color || "#000000",
@@ -73,7 +85,9 @@ const TextBlock: React.FC<TextBlockProps> = ({ content, isSelected, onContentCha
       }`}
       onClick={onClick}
     >
-      <div style={textStyle}>{content.text || "Clique para editar o texto..."}</div>
+      <div style={textStyle}>
+        {content.text || "Clique para editar o texto..."}
+      </div>
     </div>
   );
 };

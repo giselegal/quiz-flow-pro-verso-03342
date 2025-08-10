@@ -41,13 +41,13 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
 
       // Intervalo para mudar as mensagens
       messageInterval = setInterval(() => {
-        setCurrentMessageIndex(prev => (prev + 1) % messages.length);
+        setCurrentMessageIndex((prev) => (prev + 1) % messages.length);
       }, duration / messages.length);
 
       // Intervalo para atualizar a barra de progresso
       if (showProgress) {
         progressInterval = setInterval(() => {
-          setProgress(prev => {
+          setProgress((prev) => {
             const newProgress = prev + 100 / (duration / 100);
             return newProgress > 100 ? 100 : newProgress;
           });
@@ -86,14 +86,17 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
-      <h2 style={{ color: '#432818' }}>{title}</h2>
+      <h2 style={{ color: "#432818" }}>{title}</h2>
 
-      <div style={{ color: '#6B4F43' }}>{messages[currentMessageIndex]}</div>
+      <div style={{ color: "#6B4F43" }}>{messages[currentMessageIndex]}</div>
 
       {/* Tipos de loading */}
       <div className="text-4xl mb-6">
         {loadingType === "spinning" && (
-          <svg className="animate-spin h-10 w-10 text-primary" viewBox="0 0 24 24">
+          <svg
+            className="animate-spin h-10 w-10 text-primary"
+            viewBox="0 0 24 24"
+          >
             <circle
               className="opacity-25"
               cx="12"
@@ -111,7 +114,10 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
         )}
 
         {loadingType === "elegant" && (
-          <svg className="processing-spinner h-10 w-10 text-primary" viewBox="0 0 66 66">
+          <svg
+            className="processing-spinner h-10 w-10 text-primary"
+            viewBox="0 0 66 66"
+          >
             <circle
               className="path"
               fill="none"
@@ -157,7 +163,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
       </div>
 
       {showProgress && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <div
             className="bg-primary h-2.5 rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}

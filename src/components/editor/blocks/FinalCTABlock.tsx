@@ -18,7 +18,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -67,8 +74,13 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   const handleCTAClick = () => {
-    trackButtonClick("final_cta_button", "CTA Final - Página de Resultado", "result_page");
-    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    trackButtonClick(
+      "final_cta_button",
+      "CTA Final - Página de Resultado",
+      "result_page"
+    );
+    window.location.href =
+      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
   };
 
   return (
@@ -97,8 +109,9 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
           </h2>
 
           <p className="text-lg text-[#432818] mb-8 max-w-2xl mx-auto leading-relaxed">
-            Agora que você descobriu seu estilo predominante, é hora de colocar esse conhecimento em
-            prática. Receba um guia personalizado com tudo que precisa para transformar sua imagem.
+            Agora que você descobriu seu estilo predominante, é hora de colocar
+            esse conhecimento em prática. Receba um guia personalizado com tudo
+            que precisa para transformar sua imagem.
           </p>
 
           {/* CTA Button */}
@@ -163,8 +176,8 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
 
         {/* Final Message */}
         <p className="mt-6 text-sm text-[#8F7A6A] italic">
-          Milhares de mulheres já transformaram sua autoestima descobrindo seu estilo autêntico.
-          Seja a próxima!
+          Milhares de mulheres já transformaram sua autoestima descobrindo seu
+          estilo autêntico. Seja a próxima!
         </p>
       </div>
     </div>

@@ -9,7 +9,6 @@ import type { BlockComponentProps } from "../../../types/blocks";
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
 
-
 const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
@@ -64,10 +63,11 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         // Estados do editor
         isSelected && "ring-2 ring-[#432818] ring-offset-2",
         "cursor-pointer transition-all duration-200",
-        className,
+        className
       )}
       style={{
-        backgroundColor: backgroundColor === "transparent" ? undefined : backgroundColor,
+        backgroundColor:
+          backgroundColor === "transparent" ? undefined : backgroundColor,
       }}
       onClick={onClick}
     >
@@ -78,7 +78,11 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
         className={cn(
           "object-cover rounded-lg",
           // Tamanho responsivo baseado no logoWidth
-          logoWidth <= 64 ? "max-w-16" : logoWidth <= 96 ? "max-w-24" : "max-w-32"
+          logoWidth <= 64
+            ? "max-w-16"
+            : logoWidth <= 96
+              ? "max-w-24"
+              : "max-w-32"
         )}
         alt={logoAlt}
         src={logoUrl}
@@ -91,7 +95,10 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           <Progress
             value={progressValue}
             max={progressMax}
-            className={cn("w-full h-2 rounded-full overflow-hidden", "bg-zinc-300")}
+            className={cn(
+              "w-full h-2 rounded-full overflow-hidden",
+              "bg-zinc-300"
+            )}
             style={
               {
                 // Customização da barra de progresso
@@ -103,7 +110,7 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Texto do progresso (opcional) */}
           {progressValue > 0 && (
             <div className="text-center mt-2">
-              <span style={{ color: '#8B7355' }}>
+              <span style={{ color: "#8B7355" }}>
                 {Math.round((progressValue / progressMax) * 100)}% concluído
               </span>
             </div>

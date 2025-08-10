@@ -21,7 +21,8 @@ export const getHighQualityImageUrl = (url: string): string => {
   const pathParts = urlParts[1].split("/");
 
   // Check if there are transformations
-  const hasTransforms = pathParts[0].includes("_") || pathParts[0].includes(",");
+  const hasTransforms =
+    pathParts[0].includes("_") || pathParts[0].includes(",");
 
   // If there are existing transformations, we need to parse and modify them
   if (hasTransforms) {
@@ -30,7 +31,7 @@ export const getHighQualityImageUrl = (url: string): string => {
     // Remove any blur transformations
     const cleanedTransforms = transforms
       .split(",")
-      .filter(t => !t.startsWith("e_blur"))
+      .filter((t) => !t.startsWith("e_blur"))
       .join(",");
 
     // Add or replace quality parameter with high quality
@@ -82,7 +83,7 @@ export const isLikelyBlurryImage = (url: string): boolean => {
     "placeholder",
   ];
 
-  return blurryIndicators.some(indicator => url.includes(indicator));
+  return blurryIndicators.some((indicator) => url.includes(indicator));
 };
 
 /**
@@ -102,7 +103,7 @@ export const replaceBlurryIntroImages = (): {
   const introImages = document.querySelectorAll(".quiz-intro img");
   let replaced = 0;
 
-  introImages.forEach(img => {
+  introImages.forEach((img) => {
     const imgElement = img as HTMLImageElement;
     const currentSrc = imgElement.src;
 

@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -116,7 +123,9 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="text-center mb-6">
           {/* Icon */}
           <div className="flex justify-center mb-4">
-            <div className="p-4 rounded-full bg-white shadow-md">{getIcon()}</div>
+            <div className="p-4 rounded-full bg-white shadow-md">
+              {getIcon()}
+            </div>
           </div>
 
           {/* Title */}
@@ -152,7 +161,10 @@ const GuaranteeInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Features */}
         <div className="grid md:grid-cols-2 gap-4">
           {features.map((feature: string, index: number) => (
-            <div key={index} className="flex items-center space-x-3 bg-white/50 p-3 rounded-lg">
+            <div
+              key={index}
+              className="flex items-center space-x-3 bg-white/50 p-3 rounded-lg"
+            >
               <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
               <span className="text-[#432818] flex-1">{feature}</span>
             </div>

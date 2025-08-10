@@ -141,7 +141,9 @@ export class ABTestService {
       };
 
       // Placeholder - AB tests table doesn't exist in current schema
-      console.warn("AB tests not implemented - using quiz_sessions table as fallback");
+      console.warn(
+        "AB tests not implemented - using quiz_sessions table as fallback"
+      );
       const newTest = {
         id: `test_${Date.now()}`,
         ...test,
@@ -155,7 +157,8 @@ export class ABTestService {
       const variants = testData.variants.map((variant, index) => ({
         ...variant,
         ab_test_id: newTest.id,
-        traffic_percentage: index === 0 ? testData.traffic_split : 100 - testData.traffic_split,
+        traffic_percentage:
+          index === 0 ? testData.traffic_split : 100 - testData.traffic_split,
       }));
 
       // Placeholder - AB test variants table doesn't exist in current schema
@@ -250,7 +253,10 @@ export class ABTestService {
   }
 
   // Atribuir usuário a uma variante - PLACEHOLDER
-  static async assignUserToVariant(testId: string, userId: string): Promise<string> {
+  static async assignUserToVariant(
+    testId: string,
+    userId: string
+  ): Promise<string> {
     try {
       console.log("Would assign user to variant:", testId, userId);
       // Return mock variant ID
@@ -331,13 +337,19 @@ export class ABTestService {
       throw new Error("Divisão de tráfego deve estar entre 10% e 90%");
     }
 
-    if (!testData.settings.minimum_sample_size || testData.settings.minimum_sample_size < 100) {
+    if (
+      !testData.settings.minimum_sample_size ||
+      testData.settings.minimum_sample_size < 100
+    ) {
       throw new Error("Tamanho mínimo da amostra deve ser pelo menos 100");
     }
   }
 
   // Determinar variante para usuário
-  private static determineVariant(userId: string, variants: ABVariant[]): ABVariant {
+  private static determineVariant(
+    userId: string,
+    variants: ABVariant[]
+  ): ABVariant {
     // Usar hash simples do userId para determinar variante
     const hash = this.simpleHash(userId);
     const percentage = hash % 100;
@@ -362,7 +374,10 @@ export class ABTestService {
   }
 
   // Incrementar participantes - PLACEHOLDER
-  private static async incrementParticipants(testId: string, variantId: string): Promise<void> {
+  private static async incrementParticipants(
+    testId: string,
+    variantId: string
+  ): Promise<void> {
     console.log("Would increment participants:", testId, variantId);
   }
 
@@ -408,7 +423,10 @@ export class ABTestService {
   }
 
   // Calcular significância estatística
-  private static calculateStatisticalSignificance(variantA: any, variantB: any): number {
+  private static calculateStatisticalSignificance(
+    variantA: any,
+    variantB: any
+  ): number {
     // Simulação de cálculo de significância estatística
     // Em produção, usaria uma biblioteca estatística apropriada
 
@@ -417,15 +435,24 @@ export class ABTestService {
 
     // Fórmula simplificada para demonstração
     const sampleSize = variantA.participants + variantB.participants;
-    const significance = Math.min(95, (diff / avgRate) * Math.sqrt(sampleSize) * 10);
+    const significance = Math.min(
+      95,
+      (diff / avgRate) * Math.sqrt(sampleSize) * 10
+    );
 
     return Math.max(0, significance);
   }
 
   // Gerar recomendação
-  private static generateRecommendation(variantA: any, variantB: any, significance: number) {
+  private static generateRecommendation(
+    variantA: any,
+    variantB: any,
+    significance: number
+  ) {
     const improvement =
-      ((variantB.conversion_rate - variantA.conversion_rate) / variantA.conversion_rate) * 100;
+      ((variantB.conversion_rate - variantA.conversion_rate) /
+        variantA.conversion_rate) *
+      100;
 
     let winner: "A" | "B" | "inconclusive" = "inconclusive";
     let recommendationText = "";
@@ -456,7 +483,11 @@ export class ABTestService {
     modifications: any
   ): Promise<string> {
     try {
-      console.log("Would duplicate quiz for testing:", originalQuizId, modifications);
+      console.log(
+        "Would duplicate quiz for testing:",
+        originalQuizId,
+        modifications
+      );
       return `quiz_${Date.now()}`;
     } catch (error) {
       console.error("Erro ao duplicar quiz:", error);

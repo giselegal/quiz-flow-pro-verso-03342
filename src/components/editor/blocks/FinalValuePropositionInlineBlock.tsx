@@ -11,7 +11,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -110,7 +117,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-4">
           <InlineEditableText
             value={title}
-            onChange={value => handlePropertyChange("title", value)}
+            onChange={(value) => handlePropertyChange("title", value)}
             placeholder="Título principal"
             className="text-2xl md:text-3xl font-bold text-[#aa6b5d]"
           />
@@ -125,7 +132,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         <p className="text-[#432818] mb-6 max-w-xl mx-auto">
           <InlineEditableText
             value={description}
-            onChange={value => handlePropertyChange("description", value)}
+            onChange={(value) => handlePropertyChange("description", value)}
             placeholder="Descrição principal..."
             className="text-[#432818] max-w-xl mx-auto"
             multiline
@@ -137,7 +144,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
           <h3 className="text-xl font-medium text-[#aa6b5d] mb-4">
             <InlineEditableText
               value={sectionTitle}
-              onChange={value => handlePropertyChange("sectionTitle", value)}
+              onChange={(value) => handlePropertyChange("sectionTitle", value)}
               placeholder="Título da seção"
               className="text-xl font-medium text-[#aa6b5d]"
             />

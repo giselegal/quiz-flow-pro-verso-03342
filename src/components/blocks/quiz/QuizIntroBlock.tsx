@@ -56,12 +56,16 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
   // Validação defensiva para evitar erro quando block ou properties não existem
   if (!block || !block.properties) {
-    console.warn("QuizIntroBlock: block ou block.properties não foi fornecido", { block });
+    console.warn(
+      "QuizIntroBlock: block ou block.properties não foi fornecido",
+      { block }
+    );
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>
-        <p style={{ color: '#432818' }}>
-          O componente QuizIntroBlock precisa de um objeto 'block' com 'properties' válidas.
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Configuração do bloco inválida</p>
+        <p style={{ color: "#432818" }}>
+          O componente QuizIntroBlock precisa de um objeto 'block' com
+          'properties' válidas.
         </p>
       </div>
     );
@@ -232,7 +236,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
               autoFocus
               required
             />
-            {error && <p style={{ color: '#432818' }}>{error}</p>}
+            {error && <p style={{ color: "#432818" }}>{error}</p>}
           </div>
 
           <button
@@ -254,7 +258,8 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
         {/* Privacy notice */}
         <p className="text-sm opacity-70 max-w-md mx-auto">
-          Seu nome é necessário para personalizar sua experiência. Respeitamos sua privacidade.
+          Seu nome é necessário para personalizar sua experiência. Respeitamos
+          sua privacidade.
         </p>
       </div>
     </div>

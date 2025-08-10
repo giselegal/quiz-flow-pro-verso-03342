@@ -62,7 +62,9 @@ class FunnelService {
   private baseUrl = "http://localhost:3001/api";
 
   // Funnel operations
-  async createFunnel(data: Omit<InsertFunnel, "userId"> & { userId?: number }): Promise<Funnel> {
+  async createFunnel(
+    data: Omit<InsertFunnel, "userId"> & { userId?: number }
+  ): Promise<Funnel> {
     const response = await fetch(`${this.baseUrl}/funnels`, {
       method: "POST",
       headers: {
@@ -104,7 +106,10 @@ class FunnelService {
     return result.data;
   }
 
-  async updateFunnel(id: string, updates: Partial<InsertFunnel>): Promise<Funnel> {
+  async updateFunnel(
+    id: string,
+    updates: Partial<InsertFunnel>
+  ): Promise<Funnel> {
     const response = await fetch(`${this.baseUrl}/funnels/${id}`, {
       method: "PUT",
       headers: {
@@ -150,7 +155,9 @@ class FunnelService {
   }
 
   async getFunnelPages(funnelId: string): Promise<FunnelPage[]> {
-    const response = await fetch(`${this.baseUrl}/funnel-pages/funnel/${funnelId}`);
+    const response = await fetch(
+      `${this.baseUrl}/funnel-pages/funnel/${funnelId}`
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch funnel pages");
@@ -160,7 +167,10 @@ class FunnelService {
     return result.data;
   }
 
-  async updateFunnelPage(id: string, updates: Partial<InsertFunnelPage>): Promise<FunnelPage> {
+  async updateFunnelPage(
+    id: string,
+    updates: Partial<InsertFunnelPage>
+  ): Promise<FunnelPage> {
     const response = await fetch(`${this.baseUrl}/funnel-pages/${id}`, {
       method: "PUT",
       headers: {
@@ -206,7 +216,9 @@ class FunnelService {
   }
 
   async getFunnelVersions(funnelId: string): Promise<FunnelVersion[]> {
-    const response = await fetch(`${this.baseUrl}/funnel-versions/funnel/${funnelId}`);
+    const response = await fetch(
+      `${this.baseUrl}/funnel-versions/funnel/${funnelId}`
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch funnel versions");
@@ -285,7 +297,7 @@ class FunnelService {
    */
   async syncFunnelToPageConfigs(funnelData: FunnelData): Promise<boolean> {
     try {
-      const syncPromises = funnelData.pages.map(async page => {
+      const syncPromises = funnelData.pages.map(async (page) => {
         const pageConfig = {
           pageId: page.id,
           pageName: page.name || page.title || "Página sem nome",
@@ -311,7 +323,7 @@ class FunnelService {
       });
 
       const results = await Promise.all(syncPromises);
-      return results.every(result => result === true);
+      return results.every((result) => result === true);
     } catch (error) {
       console.error("Error syncing funnel to page configs:", error);
       return false;
@@ -325,19 +337,19 @@ class FunnelService {
     try {
       // Encontrar páginas de quiz (etapas 1-19)
       const quizPages = funnelData.pages.filter(
-        page =>
+        (page) =>
           page.type === "question" ||
           page.type === "intro" ||
           page.type === "main-transition" ||
           page.type === "strategic"
       );
 
-      const syncPromises = quizPages.map(async page => {
+      const syncPromises = quizPages.map(async (page) => {
         // Configuração específica para páginas de quiz
         const quizPageConfig = {
           pageId: page.id,
           pageName: page.title || `Etapa ${page.order || 1}`,
-          blocks: page.blocks.map(block => ({
+          blocks: page.blocks.map((block) => ({
             ...block,
             // Mapear tipos específicos para componentes reutilizáveis
             componentType: this.mapBlockTypeToComponent(block.type),
@@ -371,7 +383,7 @@ class FunnelService {
       });
 
       const results = await Promise.all(syncPromises);
-      return results.every(result => result === true);
+      return results.every((result) => result === true);
     } catch (error) {
       console.error("Error syncing quiz blocks:", error);
       return false;
@@ -451,7 +463,10 @@ class FunnelService {
   }
 
   // High-level operations
-  async saveFunnelData(funnelData: FunnelData, userId?: number): Promise<Funnel> {
+  async saveFunnelData(
+    funnelData: FunnelData,
+    userId?: number
+  ): Promise<Funnel> {
     // Check if funnel exists
     let funnel = await this.getFunnelById(funnelData.id);
 
@@ -477,14 +492,14 @@ class FunnelService {
 
     // Delete pages that no longer exist
     for (const existingPage of existingPages) {
-      if (!funnelData.pages.find(p => p.id === existingPage.id)) {
+      if (!funnelData.pages.find((p) => p.id === existingPage.id)) {
         await this.deleteFunnelPage(existingPage.id);
       }
     }
 
     // Create or update pages
     for (const pageData of funnelData.pages) {
-      const existingPage = existingPages.find(p => p.id === pageData.id);
+      const existingPage = existingPages.find((p) => p.id === pageData.id);
 
       if (existingPage) {
         await this.updateFunnelPage(existingPage.id, {
@@ -527,7 +542,7 @@ class FunnelService {
       id: funnel.id,
       name: funnel.name,
       description: funnel.description || undefined,
-      pages: pages.map(page => ({
+      pages: pages.map((page) => ({
         id: page.id,
         type: page.pageType,
         title: page.title || undefined,

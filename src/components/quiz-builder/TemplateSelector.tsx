@@ -17,8 +17,12 @@ interface TemplateSelectorProps {
   onSelectTemplate: (template: QuizTemplate) => void;
 }
 
-const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate }) => {
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+const TemplateSelector: React.FC<TemplateSelectorProps> = ({
+  onSelectTemplate,
+}) => {
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  );
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSelectTemplate = (template: QuizTemplate) => {
@@ -26,7 +30,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
   };
 
   const handleConfirmSelection = () => {
-    const selectedTemplate = quizTemplates.find(template => template.id === selectedTemplateId);
+    const selectedTemplate = quizTemplates.find(
+      (template) => template.id === selectedTemplateId
+    );
     if (selectedTemplate) {
       onSelectTemplate(selectedTemplate);
       setDialogOpen(false);
@@ -45,13 +51,14 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
         <DialogHeader>
           <DialogTitle>Escolha um Template</DialogTitle>
           <DialogDescription>
-            Selecione um template pré-definido para começar seu quiz rapidamente.
+            Selecione um template pré-definido para começar seu quiz
+            rapidamente.
           </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="flex-grow pr-4 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
-            {quizTemplates.map(template => (
+            {quizTemplates.map((template) => (
               <Card
                 key={template.id}
                 className={`p-4 cursor-pointer transition-all hover:shadow-md ${selectedTemplateId === template.id ? "ring-2 ring-primary" : ""}`}
@@ -70,7 +77,9 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
                   />
                 </div>
                 <h3 className="font-medium text-lg">{template.name}</h3>
-                <p className="text-sm text-muted-foreground">{template.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {template.description}
+                </p>
                 <p className="text-xs text-muted-foreground mt-2">
                   {template.stages.length} etapas
                 </p>
@@ -83,7 +92,10 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
           <Button variant="outline" onClick={() => setDialogOpen(false)}>
             Cancelar
           </Button>
-          <Button onClick={handleConfirmSelection} disabled={!selectedTemplateId}>
+          <Button
+            onClick={handleConfirmSelection}
+            disabled={!selectedTemplateId}
+          >
             Usar Template
           </Button>
         </div>

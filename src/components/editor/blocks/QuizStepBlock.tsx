@@ -86,7 +86,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -179,7 +186,9 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
   onChange,
   className = "",
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set());
+  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(
+    new Set()
+  );
   const [isEditingQuestion, setIsEditingQuestion] = useState(false);
 
   // Helper functions para classes CSS
@@ -304,7 +313,8 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
   };
 
   const canProceed = isRequired
-    ? selectedOptions.size >= minSelections && selectedOptions.size <= maxSelections
+    ? selectedOptions.size >= minSelections &&
+      selectedOptions.size <= maxSelections
     : true;
 
   return (
@@ -324,7 +334,11 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
           <div className="grid gap-4">
             <div className="flex flex-row w-full h-auto justify-center relative">
               {showBackButton && (
-                <Button variant="ghost" size="icon" className="h-10 w-10 absolute left-0">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-10 w-10 absolute left-0"
+                >
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
               )}
@@ -359,7 +373,10 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
         )}
 
         {/* Main Content Area */}
-        <div className="main-content w-full relative mx-auto" style={{ maxWidth: `${maxWidth}%` }}>
+        <div
+          className="main-content w-full relative mx-auto"
+          style={{ maxWidth: `${maxWidth}%` }}
+        >
           <div className="flex flex-col pb-10">
             {/* Question */}
             <div className="w-full mb-6">
@@ -375,8 +392,10 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
             </div>
 
             {/* Options Grid */}
-            <div className={`grid ${getLayoutClasses(layout)} ${getSpacingClass(spacing)} w-full`}>
-              {options.map(option => {
+            <div
+              className={`grid ${getLayoutClasses(layout)} ${getSpacingClass(spacing)} w-full`}
+            >
+              {options.map((option) => {
                 const isOptionSelected = selectedOptions.has(option.id);
 
                 return (
@@ -391,8 +410,12 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
                     `}
                     style={
                       {
-                        borderColor: isOptionSelected ? primaryColor : borderColor,
-                        backgroundColor: isOptionSelected ? `${primaryColor}20` : undefined,
+                        borderColor: isOptionSelected
+                          ? primaryColor
+                          : borderColor,
+                        backgroundColor: isOptionSelected
+                          ? `${primaryColor}20`
+                          : undefined,
                         "--tw-ring-color": primaryColor,
                       } as React.CSSProperties
                     }
@@ -409,7 +432,8 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
                             alt="Opção"
                             className={`w-full h-32 object-cover ${getBorderRadiusClass(borderRadius)}`}
                             style={{
-                              maxWidth: disposition === "image-only" ? "100%" : "120px",
+                              maxWidth:
+                                disposition === "image-only" ? "100%" : "120px",
                             }}
                           />
                         </div>
@@ -448,7 +472,10 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
                   disabled={!canProceed}
                   onClick={() => {
                     if (canProceed) {
-                      console.log("Proceeding with selections:", Array.from(selectedOptions));
+                      console.log(
+                        "Proceeding with selections:",
+                        Array.from(selectedOptions)
+                      );
                       // Proceed logic here
                     }
                   }}
@@ -465,7 +492,7 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
 
             {/* Validation message */}
             {isRequired && isMultipleChoice && (
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 {minSelections === maxSelections
                   ? `Selecione ${minSelections} opções`
                   : `Selecione entre ${minSelections} e ${maxSelections} opções`}

@@ -8,7 +8,10 @@ interface PricingBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({ block, onUpdate }) => {
+const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   return (
     <div className="space-y-4">
       <div>
@@ -16,7 +19,9 @@ const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({ block, onUpdate
         <Input
           id={`${block.id}-price`}
           value={block.content?.regularPrice || ""}
-          onChange={e => onUpdate({ ...block.content, regularPrice: e.target.value })}
+          onChange={(e) =>
+            onUpdate({ ...block.content, regularPrice: e.target.value })
+          }
           className="mt-1"
           placeholder="R$ 99,90"
         />
@@ -27,7 +32,9 @@ const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({ block, onUpdate
         <Input
           id={`${block.id}-sale-price`}
           value={block.content?.salePrice || ""}
-          onChange={e => onUpdate({ ...block.content, salePrice: e.target.value })}
+          onChange={(e) =>
+            onUpdate({ ...block.content, salePrice: e.target.value })
+          }
           className="mt-1"
           placeholder="R$ 49,90"
         />
@@ -38,7 +45,9 @@ const PricingBlockEditor: React.FC<PricingBlockEditorProps> = ({ block, onUpdate
         <Input
           id={`${block.id}-description`}
           value={block.content?.description || ""}
-          onChange={e => onUpdate({ ...block.content, description: e.target.value })}
+          onChange={(e) =>
+            onUpdate({ ...block.content, description: e.target.value })
+          }
           className="mt-1"
           placeholder="Descrição do produto"
         />

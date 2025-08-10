@@ -18,8 +18,8 @@ const AccessibilityTip: React.FC = () => {
           <Info className="h-4 w-4 text-[#B89B7A] mt-0.5 flex-shrink-0" />
           <div>
             <p className="mb-1">
-              <strong>Dica:</strong> Este quiz foi projetado para ser acessível. Use Tab para
-              navegar e Espaço para selecionar opções.
+              <strong>Dica:</strong> Este quiz foi projetado para ser acessível.
+              Use Tab para navegar e Espaço para selecionar opções.
             </p>
             <button
               onClick={() => setIsVisible(false)}

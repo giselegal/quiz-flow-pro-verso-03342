@@ -16,15 +16,15 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
   });
 
   const updateBlocks = useCallback((blocks: EditorBlock[]) => {
-    setState(prev => ({ ...prev, blocks }));
+    setState((prev) => ({ ...prev, blocks }));
   }, []);
 
   const selectBlock = useCallback((blockId: string | null) => {
-    setState(prev => ({ ...prev, selectedBlockId: blockId }));
+    setState((prev) => ({ ...prev, selectedBlockId: blockId }));
   }, []);
 
   const togglePreview = useCallback(() => {
-    setState(prev => ({ ...prev, isPreviewing: !prev.isPreviewing }));
+    setState((prev) => ({ ...prev, isPreviewing: !prev.isPreviewing }));
   }, []);
 
   const addBlock = useCallback(
@@ -42,7 +42,7 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
         order: state.blocks.length,
       };
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         blocks: [...prev.blocks, newBlock],
       }));
@@ -52,18 +52,24 @@ export const useEditorState = (initialBlocks: EditorBlock[] = []) => {
     [state.blocks.length]
   );
 
-  const updateBlock = useCallback((id: string, updates: Partial<EditorBlock>) => {
-    setState(prev => ({
-      ...prev,
-      blocks: prev.blocks.map(block => (block.id === id ? { ...block, ...updates } : block)),
-    }));
-  }, []);
+  const updateBlock = useCallback(
+    (id: string, updates: Partial<EditorBlock>) => {
+      setState((prev) => ({
+        ...prev,
+        blocks: prev.blocks.map((block) =>
+          block.id === id ? { ...block, ...updates } : block
+        ),
+      }));
+    },
+    []
+  );
 
   const deleteBlock = useCallback((id: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
-      blocks: prev.blocks.filter(block => block.id !== id),
-      selectedBlockId: prev.selectedBlockId === id ? null : prev.selectedBlockId,
+      blocks: prev.blocks.filter((block) => block.id !== id),
+      selectedBlockId:
+        prev.selectedBlockId === id ? null : prev.selectedBlockId,
     }));
   }, []);
 

@@ -8,7 +8,11 @@ export const fetchQuizQuestions = async (quizId: string) => {
   return [];
 };
 
-export const saveParticipant = async (name: string, email: string, quizId: string) => {
+export const saveParticipant = async (
+  name: string,
+  email: string,
+  quizId: string
+) => {
   const response = await fetch("http://localhost:3001/api/quiz-participants", {
     method: "POST",
     headers: {
@@ -43,9 +47,16 @@ export const saveAnswers = async (
   return;
 };
 
-export const saveResults = async (participantId: string, results: Array<StyleResult>) => {
+export const saveResults = async (
+  participantId: string,
+  results: Array<StyleResult>
+) => {
   // Results are calculated and displayed client-side
   // Storage can be implemented later if analytics are needed
-  console.log("Quiz results calculated for participant:", participantId, results);
+  console.log(
+    "Quiz results calculated for participant:",
+    participantId,
+    results
+  );
   return;
 };

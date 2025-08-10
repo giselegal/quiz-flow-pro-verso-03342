@@ -176,7 +176,11 @@ export class ReportService {
   }
 
   // Buscar dados de uma sessão específica
-  private static async getSessionData(quizId: string, userId: string, sessionId: string) {
+  private static async getSessionData(
+    quizId: string,
+    userId: string,
+    sessionId: string
+  ) {
     // Simular dados de sessão
     return {
       quiz_title: "Quiz de Personalidade",
@@ -200,7 +204,8 @@ export class ReportService {
           user_answer: "Lendo um livro",
           correct_answer: "Lendo um livro",
           is_correct: true,
-          explanation: "A leitura é uma excelente forma de relaxamento e aprendizado.",
+          explanation:
+            "A leitura é uma excelente forma de relaxamento e aprendizado.",
         },
       ],
       recommendations: [
@@ -212,13 +217,19 @@ export class ReportService {
   }
 
   // Criar documento PDF
-  private static async createPDFDocument(data: ReportData, options: PDFOptions): Promise<Blob> {
+  private static async createPDFDocument(
+    data: ReportData,
+    options: PDFOptions
+  ): Promise<Blob> {
     const html = this.generateReportHTML(data, options);
     return await this.htmlToPDF(html, options);
   }
 
   // Gerar HTML do relatório completo
-  private static generateReportHTML(data: ReportData, options: PDFOptions): string {
+  private static generateReportHTML(
+    data: ReportData,
+    options: PDFOptions
+  ): string {
     return `
     <!DOCTYPE html>
     <html>
@@ -396,7 +407,7 @@ export class ReportService {
           <tbody>
             ${data.topQuestions
               .map(
-                q => `
+                (q) => `
               <tr>
                 <td>${q.question}</td>
                 <td>${q.correctRate}%</td>
@@ -538,7 +549,10 @@ export class ReportService {
   }
 
   // Converter HTML para PDF
-  private static async htmlToPDF(html: string, options?: PDFOptions): Promise<Blob> {
+  private static async htmlToPDF(
+    html: string,
+    options?: PDFOptions
+  ): Promise<Blob> {
     // Simulação de conversão HTML para PDF
     // Em produção, usaria uma biblioteca como Puppeteer, jsPDF ou similar
 
@@ -648,7 +662,9 @@ export class ReportService {
       `Tempo Médio,${data.summary.averageTime} min`,
       "",
       "Pergunta,Taxa de Acerto,Total de Respostas",
-      ...data.topQuestions.map(q => `"${q.question}",${q.correctRate}%,${q.totalAnswers}`),
+      ...data.topQuestions.map(
+        (q) => `"${q.question}",${q.correctRate}%,${q.totalAnswers}`
+      ),
     ].join("\n");
 
     return new Blob([csvContent], { type: "text/csv" });

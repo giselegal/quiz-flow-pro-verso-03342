@@ -15,7 +15,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -91,7 +98,7 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
   // Timer countdown with urgency detection
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimer(prev => {
+      setTimer((prev) => {
         const totalSeconds = prev.minutes * 60 + prev.seconds;
 
         // Set urgency when less than 5 minutes
@@ -144,7 +151,10 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Alert Icon */}
           {showAlert && (
             <div className={`mb-4 ${isUrgent ? "animate-bounce" : ""}`}>
-              <AlertTriangle className="w-8 h-8 mx-auto" style={{ color: pulseColor }} />
+              <AlertTriangle
+                className="w-8 h-8 mx-auto"
+                style={{ color: pulseColor }}
+              />
             </div>
           )}
 
@@ -174,9 +184,13 @@ const UrgencyTimerInlineBlock: React.FC<BlockComponentProps> = ({
                 className="text-4xl lg:text-5xl font-black font-mono tracking-wider"
                 style={{ color: textColor }}
               >
-                {String(timer.minutes).padStart(2, "0")}:{String(timer.seconds).padStart(2, "0")}
+                {String(timer.minutes).padStart(2, "0")}:
+                {String(timer.seconds).padStart(2, "0")}
               </div>
-              <div className="text-sm font-medium mt-1" style={{ color: pulseColor }}>
+              <div
+                className="text-sm font-medium mt-1"
+                style={{ color: pulseColor }}
+              >
                 MINUTOS : SEGUNDOS
               </div>
             </div>

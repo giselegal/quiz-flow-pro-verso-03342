@@ -8,7 +8,10 @@ interface ResultHeaderProps {
   customTitle?: string;
 }
 
-const ResultHeader: React.FC<ResultHeaderProps> = ({ userName, customTitle }) => {
+const ResultHeader: React.FC<ResultHeaderProps> = ({
+  userName,
+  customTitle,
+}) => {
   // 🎯 SISTEMA 1: ID Semântico para componente de resultado
   const componentId = StepTemplateIds.result.header(userName);
 

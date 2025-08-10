@@ -1,14 +1,25 @@
-import React, { createContext, useContext, useRef, useCallback, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useCallback,
+  useState,
+} from "react";
 
 interface ScrollSyncContextType {
   canvasScrollRef: React.RefObject<HTMLDivElement>;
   componentsScrollRef: React.RefObject<HTMLDivElement>;
   propertiesScrollRef: React.RefObject<HTMLDivElement>;
-  syncScroll: (source: "canvas" | "components" | "properties", scrollTop: number) => void;
+  syncScroll: (
+    source: "canvas" | "components" | "properties",
+    scrollTop: number
+  ) => void;
   isScrolling: boolean;
 }
 
-const ScrollSyncContext = createContext<ScrollSyncContextType | undefined>(undefined);
+const ScrollSyncContext = createContext<ScrollSyncContextType | undefined>(
+  undefined
+);
 
 export const useScrollSync = () => {
   const context = useContext(ScrollSyncContext);
@@ -22,7 +33,9 @@ interface ScrollSyncProviderProps {
   children: React.ReactNode;
 }
 
-export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children }) => {
+export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({
+  children,
+}) => {
   const canvasScrollRef = useRef<HTMLDivElement>(null);
   const componentsScrollRef = useRef<HTMLDivElement>(null);
   const propertiesScrollRef = useRef<HTMLDivElement>(null);
@@ -41,13 +54,16 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
         return;
       }
 
-      const canvasScrollHeight = canvasElement.scrollHeight - canvasElement.clientHeight;
-      const scrollRatio = canvasScrollHeight > 0 ? scrollTop / canvasScrollHeight : 0;
+      const canvasScrollHeight =
+        canvasElement.scrollHeight - canvasElement.clientHeight;
+      const scrollRatio =
+        canvasScrollHeight > 0 ? scrollTop / canvasScrollHeight : 0;
 
       // Sincronizar com as outras colunas
       if (source !== "components" && componentsScrollRef.current) {
         const componentsMaxScroll =
-          componentsScrollRef.current.scrollHeight - componentsScrollRef.current.clientHeight;
+          componentsScrollRef.current.scrollHeight -
+          componentsScrollRef.current.clientHeight;
         const componentsTargetScroll = Math.max(
           0,
           Math.min(componentsMaxScroll, scrollRatio * componentsMaxScroll)
@@ -57,7 +73,8 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
 
       if (source !== "properties" && propertiesScrollRef.current) {
         const propertiesMaxScroll =
-          propertiesScrollRef.current.scrollHeight - propertiesScrollRef.current.clientHeight;
+          propertiesScrollRef.current.scrollHeight -
+          propertiesScrollRef.current.clientHeight;
         const propertiesTargetScroll = Math.max(
           0,
           Math.min(propertiesMaxScroll, scrollRatio * propertiesMaxScroll)
@@ -83,5 +100,9 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
     isScrolling,
   };
 
-  return <ScrollSyncContext.Provider value={value}>{children}</ScrollSyncContext.Provider>;
+  return (
+    <ScrollSyncContext.Provider value={value}>
+      {children}
+    </ScrollSyncContext.Provider>
+  );
 };

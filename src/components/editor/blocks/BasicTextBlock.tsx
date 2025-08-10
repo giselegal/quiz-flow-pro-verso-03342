@@ -9,7 +9,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -72,7 +79,7 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
       )}
       onClick={onClick}
     >
-      <div style={{ color: '#432818' }}>{text}</div>
+      <div style={{ color: "#432818" }}>{text}</div>
     </div>
   );
 };

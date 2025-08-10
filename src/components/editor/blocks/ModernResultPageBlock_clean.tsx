@@ -18,7 +18,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -95,7 +102,8 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
         // Background
         backgroundColor || "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
         // Padding responsivo
-        paddingClasses[padding as keyof typeof paddingClasses] || paddingClasses.large,
+        paddingClasses[padding as keyof typeof paddingClasses] ||
+          paddingClasses.large,
         // Estados visuais
         "transition-all duration-200",
         isSelected && "ring-2 ring-[#B89B7A]",
@@ -115,7 +123,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#432818] mb-4">
             {title}
           </h1>
-          <p className="text-lg sm:text-xl text-[#5D4A3A] max-w-2xl mx-auto">{subtitle}</p>
+          <p className="text-lg sm:text-xl text-[#5D4A3A] max-w-2xl mx-auto">
+            {subtitle}
+          </p>
         </div>
 
         {/* Resultado Principal */}
@@ -154,7 +164,7 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
 
               {/* Estrelas */}
               <div className="flex justify-center space-x-1">
-                {[1, 2, 3, 4, 5].map(star => (
+                {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
                     className={cn(
@@ -184,7 +194,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
             <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span className="text-sm font-medium text-[#432818]">Seu Estilo</span>
+                <span className="text-sm font-medium text-[#432818]">
+                  Seu Estilo
+                </span>
               </div>
             </div>
           </div>
@@ -193,7 +205,9 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
         {/* Descrição */}
         <Card className="p-6 sm:p-8 bg-white/60 backdrop-blur-sm border-[#B89B7A]/20 mb-8">
           <div className="text-center">
-            <h3 className="text-xl sm:text-2xl font-bold text-[#432818] mb-4">Sobre Seu Estilo</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-[#432818] mb-4">
+              Sobre Seu Estilo
+            </h3>
             <p className="text-base sm:text-lg text-[#5D4A3A] leading-relaxed max-w-4xl mx-auto">
               {description}
             </p>
@@ -209,7 +223,8 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
                   Seu Guia de Estilo Personalizado
                 </h3>
                 <p className="text-[#5D4A3A] mb-6">
-                  Descubra todas as peças que combinam perfeitamente com seu estilo único.
+                  Descubra todas as peças que combinam perfeitamente com seu
+                  estilo único.
                 </p>
 
                 {/* CTA */}

@@ -8,7 +8,9 @@ interface HeadlineBlockPreviewProps {
   };
 }
 
-const HeadlineBlockPreview: React.FC<HeadlineBlockPreviewProps> = ({ content }) => {
+const HeadlineBlockPreview: React.FC<HeadlineBlockPreviewProps> = ({
+  content,
+}) => {
   const { title, subtitle, style = {} } = content;
 
   // Aplicar estilos ou usar padrões

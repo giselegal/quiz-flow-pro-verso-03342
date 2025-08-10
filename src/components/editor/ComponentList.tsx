@@ -32,7 +32,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -367,7 +374,8 @@ const COMPONENT_CATEGORIES = {
         category: "content",
         defaultProps: {
           title: "Garantia de 30 dias",
-          description: "Se não ficar satisfeito, devolvemos 100% do seu dinheiro.",
+          description:
+            "Se não ficar satisfeito, devolvemos 100% do seu dinheiro.",
           icon: "shield",
           color: "#059669",
         },
@@ -429,11 +437,17 @@ interface ComponentListProps {
   selectedComponent: SimpleComponent | null;
 }
 
-const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, selectedComponent }) => {
+const ComponentList: React.FC<ComponentListProps> = ({
+  onComponentSelect,
+  selectedComponent,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const handleComponentDragStart = (e: React.DragEvent, component: EditorComponent) => {
+  const handleComponentDragStart = (
+    e: React.DragEvent,
+    component: EditorComponent
+  ) => {
     e.dataTransfer.setData("component", JSON.stringify(component));
     e.dataTransfer.effectAllowed = "copy";
   };
@@ -455,12 +469,12 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
       key,
       ...category,
       components: category.components.filter(
-        component =>
+        (component) =>
           component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           component.description.toLowerCase().includes(searchTerm.toLowerCase())
       ),
     }))
-    .filter(category => category.components.length > 0);
+    .filter((category) => category.components.length > 0);
 
   return (
     <div className={styles.componentList}>
@@ -469,17 +483,19 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
           type="text"
           placeholder="Buscar componentes..."
           value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ boxShadow: "0 0 0 3px rgba(184, 155, 122, 0.5)" }}
         />
       </div>
 
       <ScrollArea className="flex-1">
         <div className="p-4 space-y-6">
-          {filteredCategories.map(category => (
+          {filteredCategories.map((category) => (
             <div key={category.key} className={styles.componentCategory}>
               <div className={styles.categoryHeader}>
-                <h3 className={`${styles.categoryTitle} text-${category.color}-700`}>
+                <h3
+                  className={`${styles.categoryTitle} text-${category.color}-700`}
+                >
                   {category.title}
                 </h3>
                 <Badge
@@ -491,7 +507,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
               </div>
 
               <div className="grid grid-cols-1 gap-2">
-                {category.components.map(component => {
+                {category.components.map((component) => {
                   const Icon = component.icon;
                   const isSelected = selectedComponent?.type === component.id;
 
@@ -500,13 +516,19 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
                       key={component.id}
                       className={`${styles.componentItem} ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
                       draggable
-                      onDragStart={e => handleComponentDragStart(e, component)}
+                      onDragStart={(e) =>
+                        handleComponentDragStart(e, component)
+                      }
                       onClick={() => handleComponentClick(component)}
                     >
                       <Icon className={styles.componentIcon} />
                       <div className={styles.componentInfo}>
-                        <h4 className={styles.componentName}>{component.name}</h4>
-                        <p className={styles.componentDescription}>{component.description}</p>
+                        <h4 className={styles.componentName}>
+                          {component.name}
+                        </h4>
+                        <p className={styles.componentDescription}>
+                          {component.description}
+                        </p>
                       </div>
                     </div>
                   );
@@ -516,7 +538,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
           ))}
 
           {filteredCategories.length === 0 && (
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>Nenhum componente encontrado</p>
               <p className="text-sm">Tente buscar por outros termos</p>

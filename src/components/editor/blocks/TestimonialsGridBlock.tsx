@@ -26,7 +26,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -110,7 +117,8 @@ const TestimonialsGridBlock: React.FC<TestimonialsGridBlockProps> = ({
   const finalGridColumns = gridColumns || blockData.gridColumns || 3;
   const finalShowRating = showRating ?? blockData.showRating ?? true;
   const finalShowAvatar = showAvatar ?? blockData.showAvatar ?? true;
-  const finalBackgroundColor = backgroundColor || blockData.backgroundColor || "bg-gray-50";
+  const finalBackgroundColor =
+    backgroundColor || blockData.backgroundColor || "bg-gray-50";
   const finalTextColor = textColor || blockData.textColor || "text-gray-900";
 
   const getGridColumns = () => {
@@ -138,7 +146,7 @@ const TestimonialsGridBlock: React.FC<TestimonialsGridBlockProps> = ({
   const getInitials = (name: string) => {
     return name
       .split(" ")
-      .map(word => word.charAt(0))
+      .map((word) => word.charAt(0))
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -172,11 +180,15 @@ const TestimonialsGridBlock: React.FC<TestimonialsGridBlockProps> = ({
               >
                 {/* Rating */}
                 {finalShowRating && (
-                  <div className="flex items-center mb-4">{renderStars(testimonial.rating)}</div>
+                  <div className="flex items-center mb-4">
+                    {renderStars(testimonial.rating)}
+                  </div>
                 )}
 
                 {/* Content */}
-                <blockquote className={`${finalTextColor} mb-6 text-base leading-relaxed`}>
+                <blockquote
+                  className={`${finalTextColor} mb-6 text-base leading-relaxed`}
+                >
                   "{testimonial.content}"
                 </blockquote>
 
@@ -198,8 +210,12 @@ const TestimonialsGridBlock: React.FC<TestimonialsGridBlockProps> = ({
                     </div>
                   )}
                   <div>
-                    <div className={`font-semibold ${finalTextColor}`}>{testimonial.name}</div>
-                    <div className={`text-sm ${finalTextColor} opacity-75`}>{testimonial.role}</div>
+                    <div className={`font-semibold ${finalTextColor}`}>
+                      {testimonial.name}
+                    </div>
+                    <div className={`text-sm ${finalTextColor} opacity-75`}>
+                      {testimonial.role}
+                    </div>
                   </div>
                 </div>
               </div>

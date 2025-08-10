@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import {
@@ -35,10 +40,14 @@ interface CreativeStats {
 }
 
 const CreativeAnalyticsDashboardNew: React.FC = () => {
-  const [creativesData, setCreativesData] = useState<Record<string, CreativeStats>>({});
+  const [creativesData, setCreativesData] = useState<
+    Record<string, CreativeStats>
+  >({});
   const [selectedPeriod, setSelectedPeriod] = useState<number>(7);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedView, setSelectedView] = useState<"overview" | "detailed">("overview");
+  const [selectedView, setSelectedView] = useState<"overview" | "detailed">(
+    "overview"
+  );
 
   // Cores da identidade visual da marca
   const brandColors = {
@@ -112,7 +121,8 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
 
   const creativesList = Object.values(creativesData);
   const bestPerformingCreative = creativesList.reduce((best, current) => {
-    return parseFloat(current.conversion_rate) > parseFloat(best.conversion_rate || "0")
+    return parseFloat(current.conversion_rate) >
+      parseFloat(best.conversion_rate || "0")
       ? current
       : best;
   }, {} as CreativeStats);
@@ -138,14 +148,14 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
     const rate = parseFloat(conversionRate);
     if (rate >= 2.0)
       return (
-        <Badge style={{ color: '#6B4F43' }}>
+        <Badge style={{ color: "#6B4F43" }}>
           <CheckCircle2 size={12} className="mr-1" />
           Excelente
         </Badge>
       );
     if (rate >= 1.0)
       return (
-        <Badge style={{ borderColor: '#E5DDD5' }}>
+        <Badge style={{ borderColor: "#E5DDD5" }}>
           <Target size={12} className="mr-1" />
           Bom
         </Badge>
@@ -158,14 +168,21 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         </Badge>
       );
     return (
-      <Badge style={{ borderColor: '#E5DDD5' }}>
+      <Badge style={{ borderColor: "#E5DDD5" }}>
         <TrendingDown size={12} className="mr-1" />
         Baixo
       </Badge>
     );
   };
 
-  const MetricCard = ({ icon: Icon, title, value, subtitle, trend, color }: any) => (
+  const MetricCard = ({
+    icon: Icon,
+    title,
+    value,
+    subtitle,
+    trend,
+    color,
+  }: any) => (
     <Card
       className="border-0 shadow-sm hover:shadow-md transition-all duration-300"
       style={{ backgroundColor: brandColors.background }}
@@ -173,18 +190,30 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-3 rounded-xl" style={{ backgroundColor: `${color}15` }}>
+            <div
+              className="p-3 rounded-xl"
+              style={{ backgroundColor: `${color}15` }}
+            >
               <Icon size={24} style={{ color }} />
             </div>
             <div>
-              <h3 className="text-sm font-medium" style={{ color: brandColors.text.medium }}>
+              <h3
+                className="text-sm font-medium"
+                style={{ color: brandColors.text.medium }}
+              >
                 {title}
               </h3>
-              <p className="text-2xl font-bold" style={{ color: brandColors.text.dark }}>
+              <p
+                className="text-2xl font-bold"
+                style={{ color: brandColors.text.dark }}
+              >
                 {value}
               </p>
               {subtitle && (
-                <p className="text-xs" style={{ color: brandColors.text.light }}>
+                <p
+                  className="text-xs"
+                  style={{ color: brandColors.text.light }}
+                >
                   {subtitle}
                 </p>
               )}
@@ -193,10 +222,16 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
           {trend && (
             <div
               className={`flex items-center space-x-1 text-xs px-2 py-1 rounded-full ${
-                trend > 0 ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
+                trend > 0
+                  ? "bg-green-50 text-green-700"
+                  : "bg-red-50 text-red-700"
               }`}
             >
-              {trend > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+              {trend > 0 ? (
+                <TrendingUp size={12} />
+              ) : (
+                <TrendingDown size={12} />
+              )}
               <span>{Math.abs(trend)}%</span>
             </div>
           )}
@@ -222,7 +257,10 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               {creative.creative_name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h3 className="font-semibold text-lg" style={{ color: brandColors.text.dark }}>
+              <h3
+                className="font-semibold text-lg"
+                style={{ color: brandColors.text.dark }}
+              >
                 {creative.creative_name}
               </h3>
               {getPerformanceBadge(creative.conversion_rate)}
@@ -239,36 +277,60 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: brandColors.text.medium }}>
+              <span
+                className="text-sm"
+                style={{ color: brandColors.text.medium }}
+              >
                 Visualizações
               </span>
-              <span className="font-semibold" style={{ color: brandColors.text.dark }}>
+              <span
+                className="font-semibold"
+                style={{ color: brandColors.text.dark }}
+              >
                 {creative.page_views.toLocaleString()}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: brandColors.text.medium }}>
+              <span
+                className="text-sm"
+                style={{ color: brandColors.text.medium }}
+              >
                 Leads
               </span>
-              <span className="font-semibold" style={{ color: brandColors.text.dark }}>
+              <span
+                className="font-semibold"
+                style={{ color: brandColors.text.dark }}
+              >
                 {creative.leads}
               </span>
             </div>
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: brandColors.text.medium }}>
+              <span
+                className="text-sm"
+                style={{ color: brandColors.text.medium }}
+              >
                 Taxa Conv.
               </span>
-              <span className="font-semibold text-lg" style={{ color: brandColors.success }}>
+              <span
+                className="font-semibold text-lg"
+                style={{ color: brandColors.success }}
+              >
                 {creative.conversion_rate}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm" style={{ color: brandColors.text.medium }}>
+              <span
+                className="text-sm"
+                style={{ color: brandColors.text.medium }}
+              >
                 Receita
               </span>
-              <span className="font-semibold" style={{ color: brandColors.text.dark }}>
+              <span
+                className="font-semibold"
+                style={{ color: brandColors.text.dark }}
+              >
                 {formatCurrency(creative.revenue)}
               </span>
             </div>
@@ -278,14 +340,20 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         {/* Barra de progresso da conversão */}
         <div className="mt-4">
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs" style={{ color: brandColors.text.medium }}>
+            <span
+              className="text-xs"
+              style={{ color: brandColors.text.medium }}
+            >
               Performance
             </span>
-            <span className="text-xs font-medium" style={{ color: brandColors.text.dark }}>
+            <span
+              className="text-xs font-medium"
+              style={{ color: brandColors.text.dark }}
+            >
               {creative.conversion_rate}
             </span>
           </div>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="h-2 rounded-full transition-all duration-500"
               style={{
@@ -307,10 +375,13 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       >
         <div className="text-center space-y-4">
           <div
-            style={{ borderColor: '#E5DDD5' }}
+            style={{ borderColor: "#E5DDD5" }}
             style={{ borderTopColor: brandColors.primary }}
           ></div>
-          <p className="text-lg font-medium" style={{ color: brandColors.text.medium }}>
+          <p
+            className="text-lg font-medium"
+            style={{ color: brandColors.text.medium }}
+          >
             Carregando dados dos criativos...
           </p>
         </div>
@@ -319,7 +390,10 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen p-6" style={{ backgroundColor: brandColors.background }}>
+    <div
+      className="min-h-screen p-6"
+      style={{ backgroundColor: brandColors.background }}
+    >
       {/* Header Elegante */}
       <div className="mb-8">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -342,13 +416,17 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
           <div className="flex flex-wrap items-center gap-3">
             {/* Seletor de período */}
             <div className="flex bg-white rounded-lg p-1 shadow-sm border">
-              {[7, 14, 30].map(days => (
+              {[7, 14, 30].map((days) => (
                 <Button
                   key={days}
                   variant={selectedPeriod === days ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setSelectedPeriod(days)}
-                  className={selectedPeriod === days ? "text-white shadow-sm" : "hover:bg-gray-50"}
+                  className={
+                    selectedPeriod === days
+                      ? "text-white shadow-sm"
+                      : "hover:bg-gray-50"
+                  }
                   style={
                     selectedPeriod === days
                       ? {
@@ -365,12 +443,20 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
             </div>
 
             {/* Botões de ação */}
-            <Button variant="outline" size="sm" style={{ borderColor: '#E5DDD5' }}>
+            <Button
+              variant="outline"
+              size="sm"
+              style={{ borderColor: "#E5DDD5" }}
+            >
               <RefreshCcw size={14} className="mr-2" />
               Atualizar
             </Button>
 
-            <Button variant="outline" size="sm" style={{ borderColor: '#E5DDD5' }}>
+            <Button
+              variant="outline"
+              size="sm"
+              style={{ borderColor: "#E5DDD5" }}
+            >
               <Download size={14} className="mr-2" />
               Exportar
             </Button>
@@ -424,7 +510,11 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
             variant={selectedView === "overview" ? "default" : "ghost"}
             size="sm"
             onClick={() => setSelectedView("overview")}
-            className={selectedView === "overview" ? "text-white shadow-sm" : "hover:bg-gray-50"}
+            className={
+              selectedView === "overview"
+                ? "text-white shadow-sm"
+                : "hover:bg-gray-50"
+            }
             style={
               selectedView === "overview"
                 ? {
@@ -441,7 +531,11 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
             variant={selectedView === "detailed" ? "default" : "ghost"}
             size="sm"
             onClick={() => setSelectedView("detailed")}
-            className={selectedView === "detailed" ? "text-white shadow-sm" : "hover:bg-gray-50"}
+            className={
+              selectedView === "detailed"
+                ? "text-white shadow-sm"
+                : "hover:bg-gray-50"
+            }
             style={
               selectedView === "detailed"
                 ? {
@@ -477,7 +571,10 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                     {creative.creative_name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg" style={{ color: brandColors.text.dark }}>
+                    <h3
+                      className="font-semibold text-lg"
+                      style={{ color: brandColors.text.dark }}
+                    >
                       {creative.creative_name}
                     </h3>
                     {getPerformanceBadge(creative.conversion_rate)}
@@ -494,36 +591,60 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: brandColors.text.medium }}>
+                    <span
+                      className="text-sm"
+                      style={{ color: brandColors.text.medium }}
+                    >
                       Visualizações
                     </span>
-                    <span className="font-semibold" style={{ color: brandColors.text.dark }}>
+                    <span
+                      className="font-semibold"
+                      style={{ color: brandColors.text.dark }}
+                    >
                       {creative.page_views.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: brandColors.text.medium }}>
+                    <span
+                      className="text-sm"
+                      style={{ color: brandColors.text.medium }}
+                    >
                       Leads
                     </span>
-                    <span className="font-semibold" style={{ color: brandColors.text.dark }}>
+                    <span
+                      className="font-semibold"
+                      style={{ color: brandColors.text.dark }}
+                    >
                       {creative.leads}
                     </span>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: brandColors.text.medium }}>
+                    <span
+                      className="text-sm"
+                      style={{ color: brandColors.text.medium }}
+                    >
                       Taxa Conv.
                     </span>
-                    <span className="font-semibold text-lg" style={{ color: brandColors.success }}>
+                    <span
+                      className="font-semibold text-lg"
+                      style={{ color: brandColors.success }}
+                    >
                       {creative.conversion_rate}%
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm" style={{ color: brandColors.text.medium }}>
+                    <span
+                      className="text-sm"
+                      style={{ color: brandColors.text.medium }}
+                    >
                       Receita
                     </span>
-                    <span className="font-semibold" style={{ color: brandColors.text.dark }}>
+                    <span
+                      className="font-semibold"
+                      style={{ color: brandColors.text.dark }}
+                    >
                       {formatCurrency(creative.revenue)}
                     </span>
                   </div>
@@ -533,14 +654,20 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               {/* Barra de progresso da conversão */}
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs" style={{ color: brandColors.text.medium }}>
+                  <span
+                    className="text-xs"
+                    style={{ color: brandColors.text.medium }}
+                  >
                     Performance
                   </span>
-                  <span className="text-xs font-medium" style={{ color: brandColors.text.dark }}>
+                  <span
+                    className="text-xs font-medium"
+                    style={{ color: brandColors.text.dark }}
+                  >
                     {creative.conversion_rate}%
                   </span>
                 </div>
-                <div style={{ backgroundColor: '#E5DDD5' }}>
+                <div style={{ backgroundColor: "#E5DDD5" }}>
                   <div
                     className="h-2 rounded-full transition-all duration-500"
                     style={{
@@ -556,7 +683,10 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       </div>
 
       {/* Insights e Recomendações */}
-      <Card className="mt-8 border-0 shadow-sm" style={{ backgroundColor: brandColors.background }}>
+      <Card
+        className="mt-8 border-0 shadow-sm"
+        style={{ backgroundColor: brandColors.background }}
+      >
         <CardHeader>
           <CardTitle
             className="flex items-center space-x-2"
@@ -569,37 +699,52 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
-              <h4 className="font-semibold" style={{ color: brandColors.text.dark }}>
+              <h4
+                className="font-semibold"
+                style={{ color: brandColors.text.dark }}
+              >
                 🎯 Principais Oportunidades
               </h4>
-              <ul className="space-y-2 text-sm" style={{ color: brandColors.text.medium }}>
+              <ul
+                className="space-y-2 text-sm"
+                style={{ color: brandColors.text.medium }}
+              >
                 <li className="flex items-start space-x-2">
                   <span className="text-green-500">•</span>
                   <span>
-                    Criativo "Elegante Mulher Vestido" tem a melhor taxa de conversão (2.3%)
+                    Criativo "Elegante Mulher Vestido" tem a melhor taxa de
+                    conversão (2.3%)
                   </span>
                 </li>
                 <li className="flex items-start space-x-2">
                   <span className="text-yellow-500">•</span>
-                  <span>Aumentar budget nos criativos com conversão acima de 1.5%</span>
+                  <span>
+                    Aumentar budget nos criativos com conversão acima de 1.5%
+                  </span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <span style={{ color: '#432818' }}>•</span>
+                  <span style={{ color: "#432818" }}>•</span>
                   <span>Pausar criativos com conversão abaixo de 0.5%</span>
                 </li>
               </ul>
             </div>
             <div className="space-y-3">
-              <h4 className="font-semibold" style={{ color: brandColors.text.dark }}>
+              <h4
+                className="font-semibold"
+                style={{ color: brandColors.text.dark }}
+              >
                 📊 Próximos Passos
               </h4>
-              <ul className="space-y-2 text-sm" style={{ color: brandColors.text.medium }}>
+              <ul
+                className="space-y-2 text-sm"
+                style={{ color: brandColors.text.medium }}
+              >
                 <li className="flex items-start space-x-2">
                   <span className="text-[#B89B7A]">•</span>
                   <span>Criar variações do melhor criativo</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <span style={{ color: '#B89B7A' }}>•</span>
+                  <span style={{ color: "#B89B7A" }}>•</span>
                   <span>Testar novos ângulos baseados no winner</span>
                 </li>
                 <li className="flex items-start space-x-2">

@@ -50,7 +50,8 @@ export const giseleStyleTemplate = {
         price: "39,00",
         regularPrice: "175,00",
         ctaText: "Quero meu guia + bônus",
-        ctaUrl: "Https://pay.hotmart.com/w98977034c?checkoutmode=10&bid=1744967466912",
+        ctaUrl:
+          "Https://pay.hotmart.com/w98977034c?checkoutmode=10&bid=1744967466912",
       },
       style: {
         backgroundColor: "#fffaf7",
@@ -81,7 +82,8 @@ export const giseleStyleTemplate = {
         price: "39,00",
         regularPrice: "175,00",
         ctaText: "Quero meu guia + bônus",
-        ctaUrl: "Https://pay.hotmart.com/w98977034c?checkoutmode=10&bid=1744967466912",
+        ctaUrl:
+          "Https://pay.hotmart.com/w98977034c?checkoutmode=10&bid=1744967466912",
         urgencyText: "Oferta por tempo limitado!",
       },
       style: {
@@ -156,7 +158,8 @@ export const giseleStyleTemplate = {
       type: "header",
       content: {
         title: "Seu estilo foi revelado. Agora é hora da transformação.",
-        subtitle: "Você acabou de dar um passo essencial: descobrir o seu estilo predominante.",
+        subtitle:
+          "Você acabou de dar um passo essencial: descobrir o seu estilo predominante.",
       },
       order: 0,
     },
@@ -212,7 +215,8 @@ export const giseleStyleTemplate = {
         regularPrice: "175,00",
         salePrice: "39,00",
         buttonText: "Quero meu guia + bônus",
-        ctaUrl: "https://pay.hotmart.com/w98977034c?checkoutmode=10&bid=1744967466912",
+        ctaUrl:
+          "https://pay.hotmart.com/w98977034c?checkoutmode=10&bid=1744967466912",
         urgencyText: "Oferta por tempo limitado!",
       },
       order: 4,

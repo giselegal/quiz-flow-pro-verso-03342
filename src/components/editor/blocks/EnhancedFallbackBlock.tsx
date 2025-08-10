@@ -12,7 +12,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -51,7 +58,9 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string }> = ({
+const EnhancedFallbackBlock: React.FC<
+  BlockComponentProps & { blockType: string }
+> = ({
   block,
   isSelected = false,
   onClick,
@@ -72,7 +81,8 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
       },
       "flex-container-horizontal": {
         name: "Container Flex Horizontal",
-        description: "Container flexbox para organizar elementos horizontalmente",
+        description:
+          "Container flexbox para organizar elementos horizontalmente",
         category: "Layout",
         icon: "↔️",
       },
@@ -128,7 +138,7 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
 
     return (
       componentMap[type] || {
-        name: type.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+        name: type.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
         description: "Componente personalizado em desenvolvimento",
         category: "Personalizado",
         icon: "🔧",
@@ -143,7 +153,8 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
       className={cn(
         "border-2 border-dashed border-[#B89B7A]/40 bg-[#B89B7A]/10 rounded-lg p-6 text-center transition-all duration-200",
         "hover:border-orange-400 hover:bg-[#B89B7A]/20",
-        isSelected && "border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200",
+        isSelected &&
+          "border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200",
         className,
         // Margens universais com controles deslizantes
         getMarginClass(marginTop, "top"),
@@ -158,19 +169,27 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
         <div className="flex flex-col items-center space-y-2">
           <div className="text-4xl">{info.icon}</div>
           <h3 className="text-lg font-semibold text-orange-900">{info.name}</h3>
-          <Badge variant="outline" className="bg-[#B89B7A]/20 text-orange-800 border-[#B89B7A]/40">
+          <Badge
+            variant="outline"
+            className="bg-[#B89B7A]/20 text-orange-800 border-[#B89B7A]/40"
+          >
             {info.category}
           </Badge>
         </div>
 
         {/* Descrição */}
-        <p className="text-[#A38A69] text-sm max-w-md mx-auto">{info.description}</p>
+        <p className="text-[#A38A69] text-sm max-w-md mx-auto">
+          {info.description}
+        </p>
 
         {/* Status de desenvolvimento */}
         <div className="bg-white rounded-md p-3 border border-orange-200">
-          <div className="text-xs text-[#B89B7A] font-medium mb-1">🚧 Em Desenvolvimento</div>
+          <div className="text-xs text-[#B89B7A] font-medium mb-1">
+            🚧 Em Desenvolvimento
+          </div>
           <div className="text-xs text-orange-500">
-            Tipo: <code className="bg-[#B89B7A]/20 px-1 rounded">{blockType}</code>
+            Tipo:{" "}
+            <code className="bg-[#B89B7A]/20 px-1 rounded">{blockType}</code>
           </div>
         </div>
 
@@ -200,7 +219,7 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
           variant="outline"
           size="sm"
           className="border-[#B89B7A]/40 text-[#A38A69] hover:bg-[#B89B7A]/20"
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             onClick?.();
           }}

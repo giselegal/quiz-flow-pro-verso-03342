@@ -10,7 +10,8 @@ export const BlocoIntroducao = {
 
 export const BlocoOferta = {
   title: "Guia Completo de Estilo",
-  subtitle: "Transforme seu guarda-roupa e sua confiança com este guia prático:",
+  subtitle:
+    "Transforme seu guarda-roupa e sua confiança com este guia prático:",
   bullets: [
     "✔️ Análise detalhada do seu tipo de estilo predominante",
     "✔️ Paleta de cores personalizada para valorizar seu tom de pele",
@@ -83,5 +84,6 @@ export const BlocoUrgencia = {
   subtitle:
     "O preço promocional e os bônus exclusivos estarão disponíveis apenas por mais 48 horas.",
   ctaText: "Garantir Meu Acesso Agora",
-  ctaLink: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+  ctaLink:
+    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
 };

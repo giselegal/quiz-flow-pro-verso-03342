@@ -1,5 +1,9 @@
 import React from "react";
-import { safeGetBlockProperties, logBlockDebug, isValidBlock } from "../utils/blockUtils";
+import {
+  safeGetBlockProperties,
+  logBlockDebug,
+  isValidBlock,
+} from "../utils/blockUtils";
 
 interface QuestionBlockProps {
   question: string;
@@ -34,9 +38,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
   // Validate block first
   if (!isValidBlock(block)) {
     console.warn("⚠️ Invalid block received:", block);
-    return (
-      <div style={{ borderColor: '#E5DDD5' }}>Block inválido</div>
-    );
+    return <div style={{ borderColor: "#E5DDD5" }}>Block inválido</div>;
   }
 
   logBlockDebug("DynamicBlockRenderer", block);
@@ -66,13 +68,16 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
     } = questionProps;
 
     return (
-      <div className="question-block p-6 bg-white rounded-lg shadow-sm border" style={{ height }}>
+      <div
+        className="question-block p-6 bg-white rounded-lg shadow-sm border"
+        style={{ height }}
+      >
         <h3 className="text-xl font-medium mb-4">{question}</h3>
         <div className="space-y-3">
-          {options.map(option => (
+          {options.map((option) => (
             <div
               key={option.id}
-              style={{ backgroundColor: '#FAF9F7' }}
+              style={{ backgroundColor: "#FAF9F7" }}
               onClick={() => {
                 if (autoAdvance) {
                   console.log(
@@ -119,8 +124,8 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
               className="max-w-full h-auto rounded"
             />
           ) : (
-            <div style={{ backgroundColor: '#E5DDD5' }}>
-              <span style={{ color: '#8B7355' }}>Imagem não definida</span>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
+              <span style={{ color: "#8B7355" }}>Imagem não definida</span>
             </div>
           )}
         </div>
@@ -128,8 +133,10 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
 
     default:
       return (
-        <div style={{ borderColor: '#E5DDD5' }}>
-          <p style={{ color: '#6B4F43' }}>Tipo de bloco desconhecido: {block.type}</p>
+        <div style={{ borderColor: "#E5DDD5" }}>
+          <p style={{ color: "#6B4F43" }}>
+            Tipo de bloco desconhecido: {block.type}
+          </p>
         </div>
       );
   }

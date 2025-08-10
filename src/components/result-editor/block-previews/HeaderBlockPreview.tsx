@@ -32,7 +32,9 @@ const HeaderBlockPreview: React.FC<HeaderBlockPreviewProps> = ({ content }) => {
       )}
 
       {content.title && (
-        <h1 className="text-xl md:text-2xl font-semibold text-[#432818] mb-2">{content.title}</h1>
+        <h1 className="text-xl md:text-2xl font-semibold text-[#432818] mb-2">
+          {content.title}
+        </h1>
       )}
 
       {content.subtitle && <p className="text-[#8F7A6A]">{content.subtitle}</p>}

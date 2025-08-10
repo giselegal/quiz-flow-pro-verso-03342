@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 
 export const AdvancedTab: React.FC = () => {
   return (
@@ -9,7 +15,9 @@ export const AdvancedTab: React.FC = () => {
         <CardDescription>Options for experienced users</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>Coming soon: advanced settings such as SEO, Google Analytics, etc.</p>
+        <p>
+          Coming soon: advanced settings such as SEO, Google Analytics, etc.
+        </p>
       </CardContent>
     </Card>
   );

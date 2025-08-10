@@ -1,6 +1,9 @@
 import { cn } from "../../../lib/utils";
 import type { BlockComponentProps } from "../../../types/blocks";
-import { logBlockDebug, safeGetBlockProperties } from "../../../utils/blockUtils";
+import {
+  logBlockDebug,
+  safeGetBlockProperties,
+} from "../../../utils/blockUtils";
 import { Gift } from "lucide-react";
 import React from "react";
 
@@ -9,12 +12,22 @@ import React from "react";
  */
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: number | string | undefined, type: string): string => {
+const getMarginClass = (
+  value: number | string | undefined,
+  type: string
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,7 +77,9 @@ const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
 
   const {
     title = "Bônus Inclusos",
-    bonuses = [{ title: "Bônus 1", value: "R$ 97", description: "Descrição do bônus" }],
+    bonuses = [
+      { title: "Bônus 1", value: "R$ 97", description: "Descrição do bônus" },
+    ],
     marginTop = 0,
     marginBottom = 0,
     marginLeft = 0,
@@ -99,7 +114,7 @@ const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="flex justify-between items-start">
               <div className="flex-1">
                 <h4 className="font-medium">{bonus.title}</h4>
-                <p style={{ color: '#6B4F43' }}>{bonus.description}</p>
+                <p style={{ color: "#6B4F43" }}>{bonus.description}</p>
               </div>
               <span className="font-bold text-[#432818]">{bonus.value}</span>
             </div>

@@ -64,7 +64,10 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
   // 🎨 Renderização condicional baseada na performance
   if (!performance.shouldRender) {
     return (
-      <div ref={performance.intersectionRef} className="h-96 flex items-center justify-center">
+      <div
+        ref={performance.intersectionRef}
+        className="h-96 flex items-center justify-center"
+      >
         <div className="animate-pulse">Carregando step {stepId}...</div>
       </div>
     );
@@ -78,13 +81,16 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
     >
       {/* 📊 Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === "development" && container.stats && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <strong>🔧 Hook Stats:</strong>
           <ul>
             <li>📱 Mobile: {container.isMobile ? "Sim" : "Não"}</li>
             <li>⚡ Otimizações: {container.stats.totalOptimizations}</li>
             <li>📈 Render: {performance.metrics?.renderCount || 0}x</li>
-            <li>🔮 Preload: {performance.preloadStatus.nextStepReady ? "✅" : "⏳"}</li>
+            <li>
+              🔮 Preload:{" "}
+              {performance.preloadStatus.nextStepReady ? "✅" : "⏳"}
+            </li>
             <li>📝 Templates: {templates.availableTemplates.length}</li>
           </ul>
         </div>
@@ -103,11 +109,15 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
                   type: "quiz-step",
                   properties: { stepId, ...userAnswers[stepId] },
                 };
-                templates.saveAsTemplate(currentBlock, `Step ${stepId} Template`);
+                templates.saveAsTemplate(
+                  currentBlock,
+                  `Step ${stepId} Template`
+                );
               }}
-              style={{ backgroundColor: '#B89B7A' }}
+              style={{ backgroundColor: "#B89B7A" }}
             >
-              💾 Salvar como Template ({templates.availableTemplates.length} disponíveis)
+              💾 Salvar como Template ({templates.availableTemplates.length}{" "}
+              disponíveis)
             </button>
           </div>
         )}
@@ -118,13 +128,19 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
         {/* Aqui vai o conteúdo real do step */}
         <div className="space-y-4">
           <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <p style={{ color: '#6B4F43' }}>Este é um step otimizado usando hooks compostos!</p>
+            <p style={{ color: "#6B4F43" }}>
+              Este é um step otimizado usando hooks compostos!
+            </p>
 
             {/* 📊 Informações de performance */}
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="font-medium">Device:</span>
-                <span className={container.isMobile ? "text-orange-600" : "text-green-600"}>
+                <span
+                  className={
+                    container.isMobile ? "text-orange-600" : "text-green-600"
+                  }
+                >
                   {container.isMobile ? " 📱 Mobile" : " 💻 Desktop"}
                 </span>
               </div>
@@ -133,10 +149,14 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
                 <span className="font-medium">Performance:</span>
                 <span
                   className={
-                    performance.device.shouldOptimize ? "text-orange-600" : "text-green-600"
+                    performance.device.shouldOptimize
+                      ? "text-orange-600"
+                      : "text-green-600"
                   }
                 >
-                  {performance.device.shouldOptimize ? " ⚡ Otimizado" : " 🚀 Normal"}
+                  {performance.device.shouldOptimize
+                    ? " ⚡ Otimizado"
+                    : " 🚀 Normal"}
                 </span>
               </div>
             </div>
@@ -144,14 +164,18 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
 
           {/* 🔮 Status do preload */}
           {performance.preloadStatus.isPreloading && (
-            <div style={{ color: '#8B7355' }}>🔮 Preparando próximo step...</div>
+            <div style={{ color: "#8B7355" }}>
+              🔮 Preparando próximo step...
+            </div>
           )}
         </div>
       </div>
 
       {/* 🎛️ Controles */}
       <div className="mt-8 flex justify-between items-center">
-        <div style={{ color: '#8B7355' }}>Debounce: {performance.debounceTime}ms</div>
+        <div style={{ color: "#8B7355" }}>
+          Debounce: {performance.debounceTime}ms
+        </div>
 
         <button
           onClick={onNext}
@@ -162,7 +186,9 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
-          {performance.preloadStatus.nextStepReady ? "➡️ Próximo" : "⏳ Carregando..."}
+          {performance.preloadStatus.nextStepReady
+            ? "➡️ Próximo"
+            : "⏳ Carregando..."}
         </button>
       </div>
     </div>
@@ -172,7 +198,10 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
 /**
  * 🎯 Exemplo de uso simples (para casos básicos)
  */
-export const SimpleOptimizedStep: React.FC<OptimizedStepProps> = ({ stepId, onNext }) => {
+export const SimpleOptimizedStep: React.FC<OptimizedStepProps> = ({
+  stepId,
+  onNext,
+}) => {
   // 🏗️ Apenas container básico
   const { stepClasses, isMobile } = useQuizStepContainer(stepId);
 
@@ -184,10 +213,7 @@ export const SimpleOptimizedStep: React.FC<OptimizedStepProps> = ({ stepId, onNe
 
       <p className="mb-6">Este é um exemplo simples de step otimizado!</p>
 
-      <button
-        onClick={onNext}
-        style={{ backgroundColor: '#B89B7A' }}
-      >
+      <button onClick={onNext} style={{ backgroundColor: "#B89B7A" }}>
         Continuar
       </button>
     </div>

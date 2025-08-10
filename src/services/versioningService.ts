@@ -112,7 +112,10 @@ export class VersioningService {
     console.log("Would restore version:", versionId);
   }
 
-  static async compareVersions(versionAId: string, versionBId: string): Promise<VersionComparison> {
+  static async compareVersions(
+    versionAId: string,
+    versionBId: string
+  ): Promise<VersionComparison> {
     console.log("Would compare versions:", versionAId, versionBId);
     const version = await this.getVersion(versionAId);
     return {

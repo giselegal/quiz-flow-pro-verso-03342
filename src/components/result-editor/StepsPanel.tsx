@@ -3,7 +3,16 @@ import React, { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Badge } from "../../components/ui/badge";
-import { Plus, MoreVertical, Edit2, Copy, Trash2, Eye, EyeOff, GripVertical } from "lucide-react";
+import {
+  Plus,
+  MoreVertical,
+  Edit2,
+  Copy,
+  Trash2,
+  Eye,
+  EyeOff,
+  GripVertical,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,7 +93,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               <span className="text-sm font-medium">{index + 1}</span>
             </div>
           ))}
-          <Button variant="outline" size="sm" className="w-12 h-12 p-0" onClick={() => onAddStep()}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-12 h-12 p-0"
+            onClick={() => onAddStep()}
+          >
             <Plus className="w-4 h-4" />
           </Button>
         </div>
@@ -94,8 +108,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
   return (
     <div className="flex-1 flex flex-col">
-      <div style={{ borderColor: '#E5DDD5' }}>
-        <Button variant="outline" className="w-full" onClick={() => onAddStep()}>
+      <div style={{ borderColor: "#E5DDD5" }}>
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => onAddStep()}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Nova Etapa
         </Button>
@@ -122,7 +140,9 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                 </div>
 
                 <div className="flex items-center gap-1">
-                  {!step.settings.isVisible && <EyeOff className="w-4 h-4 text-gray-400" />}
+                  {!step.settings.isVisible && (
+                    <EyeOff className="w-4 h-4 text-gray-400" />
+                  )}
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -135,7 +155,9 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                         <Edit2 className="w-4 h-4 mr-2" />
                         Editar Nome
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => onDuplicateStep(step.id)}>
+                      <DropdownMenuItem
+                        onClick={() => onDuplicateStep(step.id)}
+                      >
                         <Copy className="w-4 h-4 mr-2" />
                         Duplicar
                       </DropdownMenuItem>
@@ -164,7 +186,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       {steps.length > 1 && (
                         <DropdownMenuItem
                           onClick={() => onDeleteStep(step.id)}
-                          style={{ color: '#432818' }}
+                          style={{ color: "#432818" }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Excluir
@@ -179,8 +201,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                 <div className="space-y-2">
                   <Input
                     value={editingName}
-                    onChange={e => setEditingName(e.target.value)}
-                    onKeyDown={e => {
+                    onChange={(e) => setEditingName(e.target.value)}
+                    onKeyDown={(e) => {
                       if (e.key === "Enter") handleEditSave();
                       if (e.key === "Escape") handleEditCancel();
                     }}
@@ -191,7 +213,11 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                     <Button size="sm" onClick={handleEditSave}>
                       Salvar
                     </Button>
-                    <Button size="sm" variant="outline" onClick={handleEditCancel}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleEditCancel}
+                    >
                       Cancelar
                     </Button>
                   </div>
@@ -200,7 +226,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                 <h4 className="font-medium text-sm mb-1">{step.name}</h4>
               )}
 
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <span>{step.items.length} componentes</span>
                 <div className="flex gap-1">
                   {step.settings.showLogo && <span>🏷️</span>}

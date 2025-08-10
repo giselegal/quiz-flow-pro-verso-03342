@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -89,14 +96,18 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
           placeholder="Título do gráfico"
         />
       </h3>
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <div className="text-center">
           <ChartArea className="w-12 h-12 opacity-50 mx-auto mb-2" />
           <p>Visualização do Gráfico de Área</p>
-          <p className="text-xs mt-1">Dados: {Array.isArray(data) ? data.length : 0} pontos</p>
+          <p className="text-xs mt-1">
+            Dados: {Array.isArray(data) ? data.length : 0} pontos
+          </p>
         </div>
       </div>
-      <p style={{ color: '#6B4F43' }}>Configure os dados no painel de propriedades.</p>
+      <p style={{ color: "#6B4F43" }}>
+        Configure os dados no painel de propriedades.
+      </p>
     </div>
   );
 };

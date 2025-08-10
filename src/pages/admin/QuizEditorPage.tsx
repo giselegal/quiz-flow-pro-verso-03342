@@ -51,7 +51,7 @@ const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
     return (
       <AdminLayout>
         <div className="p-6">
-          <p style={{ color: '#432818' }}>{error}</p>
+          <p style={{ color: "#432818" }}>{error}</p>
         </div>
       </AdminLayout>
     );

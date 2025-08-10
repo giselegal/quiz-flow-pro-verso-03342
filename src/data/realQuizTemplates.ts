@@ -65,7 +65,8 @@ export const generateRealQuestionTemplates = (): QuizTemplate[] => {
   const questionKeys = Object.keys(questionScoringConfig);
 
   return questionKeys.map((questionKey, index) => {
-    const config = questionScoringConfig[questionKey as keyof typeof questionScoringConfig];
+    const config =
+      questionScoringConfig[questionKey as keyof typeof questionScoringConfig];
 
     return {
       id: `question-${index + 1}`,

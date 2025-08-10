@@ -9,9 +9,9 @@ const AnimatedProgressIndicator: React.FC = () => (
       animate={{ width: "2rem" }}
       transition={{ duration: 0.5 }}
     />
-    <div style={{ backgroundColor: '#E5DDD5' }}></div>
-    <div style={{ backgroundColor: '#E5DDD5' }}></div>
-    <div style={{ backgroundColor: '#E5DDD5' }}></div>
+    <div style={{ backgroundColor: "#E5DDD5" }}></div>
+    <div style={{ backgroundColor: "#E5DDD5" }}></div>
+    <div style={{ backgroundColor: "#E5DDD5" }}></div>
   </div>
 );
 

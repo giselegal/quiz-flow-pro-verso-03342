@@ -93,7 +93,7 @@ export const EditableSections: React.FC<EditableSectionsProps> = ({
         <EditSectionOverlay
           section={activeSection}
           data={getSectionData(config, activeSection)}
-          onSave={data => handleSaveSection(activeSection, data)}
+          onSave={(data) => handleSaveSection(activeSection, data)}
           onCancel={() => setActiveSection(null)}
         />
       )}

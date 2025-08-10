@@ -6,7 +6,14 @@ export default function ComponentPalette() {
 
     if (isNaN(numValue) || numValue === 0) return "";
 
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+    const prefix =
+      type === "top"
+        ? "mt"
+        : type === "bottom"
+          ? "mb"
+          : type === "left"
+            ? "ml"
+            : "mr";
 
     // Margens negativas
     if (numValue < 0) {
@@ -61,12 +68,12 @@ export default function ComponentPalette() {
     <div className="space-y-4">
       <h3 className="font-medium">Componentes</h3>
       <div className="space-y-2">
-        {componentTypes.map(component => (
+        {componentTypes.map((component) => (
           <div
             key={component.id}
             draggable
-            onDragStart={e => handleDragStart(e, component.id)}
-            style={{ backgroundColor: '#FAF9F7' }}
+            onDragStart={(e) => handleDragStart(e, component.id)}
+            style={{ backgroundColor: "#FAF9F7" }}
           >
             <div className="flex items-center gap-2">
               <span>{component.icon}</span>
@@ -76,7 +83,7 @@ export default function ComponentPalette() {
         ))}
       </div>
 
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         💡 Arraste os componentes para o canvas para começar a editar
       </div>
     </div>

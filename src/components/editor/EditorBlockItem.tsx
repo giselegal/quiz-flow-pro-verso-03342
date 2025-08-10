@@ -5,7 +5,13 @@ import { CSS } from "@dnd-kit/utilities";
 import { EditorBlock } from "../../types/editor";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
-import { Trash2, GripVertical, ChevronDown, ChevronUp, Copy } from "lucide-react";
+import {
+  Trash2,
+  GripVertical,
+  ChevronDown,
+  ChevronUp,
+  Copy,
+} from "lucide-react";
 import { cn } from "../../lib/utils";
 import EditBlockContent from "./EditBlockContent";
 
@@ -21,7 +27,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -60,10 +73,21 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDelete }) => {
+const EditorBlockItem: React.FC<EditorBlockItemProps> = ({
+  block,
+  onUpdate,
+  onDelete,
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: block.id,
   });
 
@@ -130,7 +154,13 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
       {/* Block Header */}
       <div className="bg-[#FAF9F7] border-b border-[#B89B7A]/20 p-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="cursor-grab" {...attributes} {...listeners}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="cursor-grab"
+            {...attributes}
+            {...listeners}
+          >
             <GripVertical className="w-4 h-4 text-[#8F7A6A]" />
           </Button>
           <span className="font-medium text-[#432818]">{getBlockTitle()}</span>
@@ -139,7 +169,11 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
           <Button variant="ghost" size="sm" onClick={handleDuplicate}>
             <Copy className="w-4 h-4 text-[#8F7A6A]" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
             {isExpanded ? (
               <ChevronUp className="w-4 h-4 text-[#8F7A6A]" />
             ) : (
@@ -150,7 +184,7 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
             variant="ghost"
             size="sm"
             onClick={onDelete}
-            style={{ color: '#432818' }}
+            style={{ color: "#432818" }}
           >
             <Trash2 className="w-3 h-3" />
           </Button>
@@ -160,7 +194,10 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
       {/* Block Content */}
       {isExpanded && (
         <div className="p-4 bg-white">
-          <EditBlockContent block={blockWithProperties} onUpdateBlock={handleUpdateBlock} />
+          <EditBlockContent
+            block={blockWithProperties}
+            onUpdateBlock={handleUpdateBlock}
+          />
         </div>
       )}
     </Card>

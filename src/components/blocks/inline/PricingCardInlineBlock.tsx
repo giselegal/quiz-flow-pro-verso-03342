@@ -33,12 +33,22 @@ interface Props {
 }
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value: number | string | undefined, type: string): string => {
+const getMarginClass = (
+  value: number | string | undefined,
+  type: string
+): string => {
   const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
   if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -86,7 +96,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
   marginTop = 0,
   marginBottom = 0,
   marginLeft = 0,
-  marginRight = 0
+  marginRight = 0,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const properties = safeGetBlockProperties(block);
@@ -113,8 +123,12 @@ const PricingCardInlineBlock: React.FC<Props> = ({
 
   // Função para calcular desconto
   const calculateDiscountPercentage = () => {
-    const original = parseFloat(originalPrice.replace(/[^\d,]/g, "").replace(",", "."));
-    const current = parseFloat(currentPrice.replace(/[^\d,]/g, "").replace(",", "."));
+    const original = parseFloat(
+      originalPrice.replace(/[^\d,]/g, "").replace(",", ".")
+    );
+    const current = parseFloat(
+      currentPrice.replace(/[^\d,]/g, "").replace(",", ".")
+    );
     if (original && current) {
       return Math.round(((original - current) / original) * 100);
     }
@@ -127,7 +141,8 @@ const PricingCardInlineBlock: React.FC<Props> = ({
       case "premium":
         return {
           card: "bg-gradient-to-br from-[#432818] via-[#432818] to-[#432818] text-white border-[#432818] shadow-2xl shadow-[#432818]/20",
-          badge: "bg-gradient-to-r from-[#432818] to-[#432818] text-[#432818] shadow-lg",
+          badge:
+            "bg-gradient-to-r from-[#432818] to-[#432818] text-[#432818] shadow-lg",
           price: "text-[#432818]",
           button:
             "bg-gradient-to-r from-[#432818] to-[#432818] hover:from-[#432818] hover:to-[#432818] text-[#432818] shadow-lg",
@@ -145,7 +160,8 @@ const PricingCardInlineBlock: React.FC<Props> = ({
       default:
         return {
           card: "bg-gradient-to-br from-white via-[#432818] to-[#432818]/30 border-2 border-[#432818]/40 shadow-xl hover:shadow-2xl",
-          badge: "bg-gradient-to-r from-[#432818] to-[#432818] text-white shadow-md",
+          badge:
+            "bg-gradient-to-r from-[#432818] to-[#432818] text-white shadow-md",
           price: "text-[#432818]",
           button:
             "bg-gradient-to-r from-[#432818] via-[#432818] to-[#432818] hover:from-[#432818] hover:to-[#432818] text-white shadow-lg hover:shadow-xl",
@@ -203,7 +219,10 @@ const PricingCardInlineBlock: React.FC<Props> = ({
           {showBadge && (
             <div className="flex justify-center">
               <Badge
-                className={cn(variantStyles.badge, "text-sm font-bold px-3 py-1 animate-pulse")}
+                className={cn(
+                  variantStyles.badge,
+                  "text-sm font-bold px-3 py-1 animate-pulse"
+                )}
               >
                 <Zap className="w-3 h-3 mr-1" />
                 {calculateDiscountPercentage()}% OFF
@@ -245,7 +264,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
               isHovered && "scale-105"
             )}
             suppressContentEditableWarning
-            onBlur={e => onUpdate?.({ title: e.target.textContent })}
+            onBlur={(e) => onUpdate?.({ title: e.target.textContent })}
           >
             {title}
           </h2>
@@ -257,7 +276,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
               variant === "premium" ? "text-[#432818]/90" : "text-[#432818]"
             )}
             suppressContentEditableWarning
-            onBlur={e => onUpdate?.({ subtitle: e.target.textContent })}
+            onBlur={(e) => onUpdate?.({ subtitle: e.target.textContent })}
           >
             {subtitle}
           </p>
@@ -272,7 +291,9 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             >
               <span
                 suppressContentEditableWarning
-                onBlur={e => onUpdate?.({ originalPrice: e.target.textContent })}
+                onBlur={(e) =>
+                  onUpdate?.({ originalPrice: e.target.textContent })
+                }
               >
                 {originalPrice}
               </span>
@@ -281,14 +302,18 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             <div className={cn("text-4xl font-bold", variantStyles.price)}>
               <span
                 suppressContentEditableWarning
-                onBlur={e => onUpdate?.({ currentPrice: e.target.textContent })}
+                onBlur={(e) =>
+                  onUpdate?.({ currentPrice: e.target.textContent })
+                }
               >
                 {currentPrice}
               </span>
             </div>
 
             <div className="text-sm opacity-80">
-              <span className="font-medium">Economize {calculateDiscountPercentage()}%</span>
+              <span className="font-medium">
+                Economize {calculateDiscountPercentage()}%
+              </span>
             </div>
           </div>
 
@@ -300,13 +325,17 @@ const PricingCardInlineBlock: React.FC<Props> = ({
                   <Check
                     className={cn(
                       "w-4 h-4 flex-shrink-0",
-                      variant === "premium" ? "text-[#432818]" : "text-[#432818]"
+                      variant === "premium"
+                        ? "text-[#432818]"
+                        : "text-[#432818]"
                     )}
                   />
                   <span
                     className={cn(
                       "text-sm",
-                      variant === "premium" ? "text-[#432818]" : "text-[#432818]"
+                      variant === "premium"
+                        ? "text-[#432818]"
+                        : "text-[#432818]"
                     )}
                   >
                     {feature}
@@ -323,7 +352,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
               variantStyles.button,
               isHovered && "transform scale-105"
             )}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               if (buttonUrl && buttonUrl !== "#") {
                 window.open(buttonUrl, "_blank");
@@ -333,7 +362,7 @@ const PricingCardInlineBlock: React.FC<Props> = ({
             <span className="flex items-center justify-center gap-2 relative z-10">
               <span
                 suppressContentEditableWarning
-                onBlur={e => onUpdate?.({ buttonText: e.target.textContent })}
+                onBlur={(e) => onUpdate?.({ buttonText: e.target.textContent })}
               >
                 {buttonText}
               </span>

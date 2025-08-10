@@ -48,7 +48,13 @@ const DecorativeBarInline: React.FC<DecorativeBarInlineProps> = ({
     ...style,
   };
 
-  return <div className={`decorative-bar-inline ${className}`} style={barStyle} {...props} />;
+  return (
+    <div
+      className={`decorative-bar-inline ${className}`}
+      style={barStyle}
+      {...props}
+    />
+  );
 };
 
 export default DecorativeBarInline;

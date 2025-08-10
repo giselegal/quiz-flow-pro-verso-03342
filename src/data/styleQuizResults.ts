@@ -36,6 +36,8 @@ export const initialStyleQuizConfig = {
 /**
  * Retorna o resultado para um estilo específico
  */
-export const getStyleResult = (style: keyof typeof styleConfig): QuizResult | undefined => {
-  return styleToQuizResults().find(result => result.title === style);
+export const getStyleResult = (
+  style: keyof typeof styleConfig
+): QuizResult | undefined => {
+  return styleToQuizResults().find((result) => result.title === style);
 };

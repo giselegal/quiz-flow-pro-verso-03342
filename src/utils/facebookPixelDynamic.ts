@@ -1,5 +1,9 @@
 // Facebook Pixel utility functions for A/B test
-import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from "../services/pixelManager";
+import {
+  getPixelId,
+  getCurrentFunnelConfig,
+  trackFunnelEvent,
+} from "../services/pixelManager";
 
 /**
  * Initialize Facebook Pixel with the provided ID
@@ -38,7 +42,10 @@ export const initFacebookPixel = (pixelId: string): boolean => {
  * @param eventName Name of the event to track
  * @param params Additional parameters to send
  */
-export const trackPixelEvent = (eventName: string, params?: Record<string, unknown>): void => {
+export const trackPixelEvent = (
+  eventName: string,
+  params?: Record<string, unknown>
+): void => {
   try {
     if (typeof window === "undefined" || !window.fbq) {
       console.warn("Facebook Pixel not initialized");
@@ -68,7 +75,9 @@ export const loadFacebookPixelDynamic = (): void => {
 
     if (pixelId) {
       initFacebookPixel(pixelId);
-      console.log(`Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`);
+      console.log(
+        `Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`
+      );
 
       // Dispara evento de inicialização específico do funil
       trackFunnelEvent("PixelInitialized", {

@@ -27,7 +27,12 @@ export const getStep20CanvasConfig = (userResult: any) => {
     order: 20,
     components: [
       createSimpleBlockData("header", "header", { title: "Resultado" }, 0),
-      createSimpleBlockData("content", "text", { text: "Conteúdo do resultado" }, 1),
+      createSimpleBlockData(
+        "content",
+        "text",
+        { text: "Conteúdo do resultado" },
+        1
+      ),
       createSimpleBlockData("cta", "button", { text: "Ação Principal" }, 2),
     ],
   };

@@ -37,7 +37,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -88,7 +95,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
   const parseOptions = (optionsText: string) => {
     return optionsText
       .split("\n")
-      .filter(line => line.trim() !== "")
+      .filter((line) => line.trim() !== "")
       .map((line, index) => ({
         id: `option-${index}`,
         text: line.trim(),
@@ -103,8 +110,8 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
       // Aceita formatos como "0,1,2" ou "0 1 2" ou "0;1;2"
       const indices = answersStr
         .split(/[,;\s]+/)
-        .map(s => parseInt(s.trim()))
-        .filter(n => !isNaN(n));
+        .map((s) => parseInt(s.trim()))
+        .filter((n) => !isNaN(n));
 
       return indices;
     } catch (error) {
@@ -122,16 +129,21 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
     setSelectedOptions(selectedOptions);
 
     // Verificar se as respostas estão corretas
-    const selectedIds = selectedOptions.map(opt => parseInt(opt.id.split("-")[1]));
-    const correctCount = selectedIds.filter(id => correctAnswers.includes(id)).length;
+    const selectedIds = selectedOptions.map((opt) =>
+      parseInt(opt.id.split("-")[1])
+    );
+    const correctCount = selectedIds.filter((id) =>
+      correctAnswers.includes(id)
+    ).length;
     const allCorrect =
-      correctCount === correctAnswers.length && selectedIds.length === correctAnswers.length;
+      correctCount === correctAnswers.length &&
+      selectedIds.length === correctAnswers.length;
 
     // Notificar o editor que uma seleção foi feita
     if (onPropertyChange) {
       onPropertyChange(
         "selectedOptions",
-        selectedOptions.map(opt => opt.id)
+        selectedOptions.map((opt) => opt.id)
       );
       onPropertyChange("correctAnswersSelected", allCorrect);
       onPropertyChange("partiallyCorrect", correctCount > 0 && !allCorrect);
@@ -144,7 +156,7 @@ const QuizMultipleChoiceBlock: React.FC<QuizMultipleChoiceBlockProps> = ({
       onPropertyChange("complete", true);
       onPropertyChange(
         "selectedOptions",
-        selectedOptions.map(opt => opt.id)
+        selectedOptions.map((opt) => opt.id)
       );
     }
   };

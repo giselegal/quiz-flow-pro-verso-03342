@@ -174,7 +174,7 @@ export const getAllSteps = () => {
 };
 
 export const getStepsByType = (type: string) => {
-  return Object.values(steps).filter(step => step.type === type);
+  return Object.values(steps).filter((step) => step.type === type);
 };
 
 export const getTotalSteps = () => {

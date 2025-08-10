@@ -27,7 +27,13 @@ export const HeadingInline: React.FC<HeadingInlineProps> = ({
     padding: 0,
   };
 
-  return <Tag style={styles} className={className} dangerouslySetInnerHTML={{ __html: content }} />;
+  return (
+    <Tag
+      style={styles}
+      className={className}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  );
 };
 
 export default HeadingInline;

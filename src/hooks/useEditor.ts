@@ -20,20 +20,22 @@ export const useEditor = () => {
       order: blocks.length,
       properties: {},
     };
-    setBlocks(prev => [...prev, newBlock]);
+    setBlocks((prev) => [...prev, newBlock]);
     return newBlock.id;
   };
 
   const updateBlock = (id: string, updates: any) => {
-    setBlocks(prev => prev.map(block => (block.id === id ? { ...block, ...updates } : block)));
+    setBlocks((prev) =>
+      prev.map((block) => (block.id === id ? { ...block, ...updates } : block))
+    );
   };
 
   const deleteBlock = (id: string) => {
-    setBlocks(prev => prev.filter(block => block.id !== id));
+    setBlocks((prev) => prev.filter((block) => block.id !== id));
   };
 
   const reorderBlocks = (startIndex: number, endIndex: number) => {
-    setBlocks(prev => {
+    setBlocks((prev) => {
       const result = Array.from(prev);
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);

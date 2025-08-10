@@ -11,7 +11,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -50,7 +57,10 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
+const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   return (
     <div className="space-y-4">
       <div>
@@ -58,18 +68,20 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Input
           id={`${block.id}-heroImage`}
           value={block.content.heroImage || ""}
-          onChange={e => onUpdate({ heroImage: e.target.value })}
+          onChange={(e) => onUpdate({ heroImage: e.target.value })}
           className="mt-1"
           placeholder="URL da imagem principal"
         />
       </div>
 
       <div>
-        <Label htmlFor={`${block.id}-heroImageAlt`}>Texto Alternativo da Imagem</Label>
+        <Label htmlFor={`${block.id}-heroImageAlt`}>
+          Texto Alternativo da Imagem
+        </Label>
         <Input
           id={`${block.id}-heroImageAlt`}
           value={block.content.heroImageAlt || ""}
-          onChange={e => onUpdate({ heroImageAlt: e.target.value })}
+          onChange={(e) => onUpdate({ heroImageAlt: e.target.value })}
           className="mt-1"
           placeholder="Descrição da imagem para acessibilidade"
         />
@@ -80,7 +92,7 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Textarea
           id={`${block.id}-quote`}
           value={block.content.quote || ""}
-          onChange={e => onUpdate({ quote: e.target.value })}
+          onChange={(e) => onUpdate({ quote: e.target.value })}
           className="mt-1"
           placeholder="Digite o depoimento do cliente"
         />
@@ -91,7 +103,7 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Input
           id={`${block.id}-quoteAuthor`}
           value={block.content.quoteAuthor || ""}
-          onChange={e => onUpdate({ quoteAuthor: e.target.value })}
+          onChange={(e) => onUpdate({ quoteAuthor: e.target.value })}
           className="mt-1"
           placeholder="Nome e idade do cliente"
         />

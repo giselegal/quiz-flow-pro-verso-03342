@@ -21,7 +21,14 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
   onDelete,
   onDuplicate,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id,
     data: {
       type: "canvas-item",
@@ -42,7 +49,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
         ${isSelected ? "ring-2 ring-[#B89B7A] shadow-lg" : "hover:shadow-md"}
         ${isDragging ? "opacity-50 z-50" : ""}
       `}
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation();
         onSelect();
       }}
@@ -53,11 +60,13 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
             <div
               {...attributes}
               {...listeners}
-              style={{ backgroundColor: '#E5DDD5' }}
+              style={{ backgroundColor: "#E5DDD5" }}
             >
               <GripVertical className="w-4 h-4 text-[#B89B7A]" />
             </div>
-            <span className="text-xs font-medium text-[#432818]">Componente selecionado</span>
+            <span className="text-xs font-medium text-[#432818]">
+              Componente selecionado
+            </span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -65,7 +74,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onDuplicate();
                 }}
@@ -77,11 +86,11 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 onDelete();
               }}
-              style={{ color: '#432818' }}
+              style={{ color: "#432818" }}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

@@ -39,7 +39,8 @@ export const getDefaultContentForType = (type: string) => {
           {
             id: "benefit-1",
             title: "Análise Completa de Estilo",
-            description: "Identificação detalhada do seu perfil e características únicas",
+            description:
+              "Identificação detalhada do seu perfil e características únicas",
             icon: "star",
             isHighlight: true,
             isIncluded: true,

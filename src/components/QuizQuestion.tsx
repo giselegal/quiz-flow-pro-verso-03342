@@ -22,7 +22,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   return (
     <div className="quiz-question p-6">
-      <h2 className="text-xl font-bold mb-4">{question?.title || "Question"}</h2>
+      <h2 className="text-xl font-bold mb-4">
+        {question?.title || "Question"}
+      </h2>
 
       {showQuestionImage && question?.imageUrl && (
         <img
@@ -41,7 +43,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
                 ? "bg-[#B89B7A]/20 border-[#B89B7A]"
                 : "hover:bg-gray-50"
             }`}
-            onClick={() => onAnswer({ questionId: question.id, selectedOption: option.id })}
+            onClick={() =>
+              onAnswer({ questionId: question.id, selectedOption: option.id })
+            }
           >
             <span>{option.text}</span>
           </div>

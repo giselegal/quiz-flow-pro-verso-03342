@@ -9,7 +9,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,7 +63,11 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
   className = "",
 }) => {
-  const { images = [], autoplay = true, interval = 5000 } = block?.properties || {};
+  const {
+    images = [],
+    autoplay = true,
+    interval = 5000,
+  } = block?.properties || {};
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -64,7 +75,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
     if (!autoplay || !images || images.length <= 1) return;
 
     const timer = setInterval(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, interval || 5000);
 
     return () => clearInterval(timer);
@@ -105,8 +116,9 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
         src={currentImage.src}
         alt={currentImage.alt}
         className="w-full h-auto object-cover aspect-video"
-        onError={e =>
-          (e.currentTarget.src = "https://placehold.co/600x400/cccccc/333333?text=Erro+Imagem")
+        onError={(e) =>
+          (e.currentTarget.src =
+            "https://placehold.co/600x400/cccccc/333333?text=Erro+Imagem")
         }
       />
       {images.length > 1 && (

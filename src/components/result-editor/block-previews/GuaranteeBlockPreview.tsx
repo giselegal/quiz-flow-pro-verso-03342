@@ -9,7 +9,9 @@ interface GuaranteeBlockPreviewProps {
   };
 }
 
-const GuaranteeBlockPreview: React.FC<GuaranteeBlockPreviewProps> = ({ content }) => {
+const GuaranteeBlockPreview: React.FC<GuaranteeBlockPreviewProps> = ({
+  content,
+}) => {
   return (
     <div
       className="flex flex-col md:flex-row items-center gap-6 p-6 bg-[#fff7f3] rounded-lg"
@@ -17,7 +19,11 @@ const GuaranteeBlockPreview: React.FC<GuaranteeBlockPreviewProps> = ({ content }
     >
       {content.image && (
         <div className="w-24 h-24 flex-shrink-0">
-          <img src={content.image} alt="Garantia" className="w-full h-full object-contain" />
+          <img
+            src={content.image}
+            alt="Garantia"
+            className="w-full h-full object-contain"
+          />
         </div>
       )}
 

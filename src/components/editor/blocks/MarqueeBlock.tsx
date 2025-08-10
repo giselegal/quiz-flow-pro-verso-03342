@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -72,7 +79,8 @@ const MarqueeBlock: React.FC<BlockComponentProps> = ({
   };
 
   const animationSpeed = speed ? `${speed / 10}s` : "5s";
-  const animationDirection = direction === "right" ? "marquee-right" : "marquee-left";
+  const animationDirection =
+    direction === "right" ? "marquee-right" : "marquee-left";
 
   return (
     <div

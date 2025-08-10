@@ -24,7 +24,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -73,11 +80,14 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
 }) => {
   const properties = block.properties || {};
   const title = properties.title || "Sua Transformação";
-  const subtitle = properties.subtitle || "Veja o antes e depois da sua nova imagem";
+  const subtitle =
+    properties.subtitle || "Veja o antes e depois da sua nova imagem";
   const beforeImage =
-    properties.beforeImage || "https://placehold.co/400x500/cccccc/333333?text=Antes";
+    properties.beforeImage ||
+    "https://placehold.co/400x500/cccccc/333333?text=Antes";
   const afterImage =
-    properties.afterImage || "https://placehold.co/400x500/cccccc/333333?text=Depois";
+    properties.afterImage ||
+    "https://placehold.co/400x500/cccccc/333333?text=Depois";
   const beforeLabel = properties.beforeLabel || "ANTES";
   const afterLabel = properties.afterLabel || "DEPOIS";
   const showComparison = properties.showComparison !== false;
@@ -101,9 +111,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
             alt="Antes"
             className="w-full h-64 md:h-80 object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <div style={{ backgroundColor: '#FAF9F7' }}>
-            {beforeLabel}
-          </div>
+          <div style={{ backgroundColor: "#FAF9F7" }}>{beforeLabel}</div>
         </div>
       </div>
 
@@ -126,7 +134,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
   const renderToggle = () => (
     <div className="max-w-md mx-auto">
       {/* Toggle Buttons */}
-      <div style={{ backgroundColor: '#E5DDD5' }}>
+      <div style={{ backgroundColor: "#E5DDD5" }}>
         <button
           onClick={() => setActiveView("before")}
           className={cn(
@@ -190,8 +198,8 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
     >
       {/* Título */}
       <div className="text-center mb-6">
-        <h3 style={{ color: '#432818' }}>{title}</h3>
-        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+        <h3 style={{ color: "#432818" }}>{title}</h3>
+        <p style={{ color: "#6B4F43" }}>{subtitle}</p>
         <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 mx-auto mt-3 rounded-full" />
       </div>
 
@@ -213,8 +221,9 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
 
       {/* Call to Action */}
       <div className="text-center">
-        <p style={{ color: '#6B4F43' }}>
-          Esta pode ser sua transformação! Comece hoje mesmo sua jornada rumo ao estilo dos sonhos.
+        <p style={{ color: "#6B4F43" }}>
+          Esta pode ser sua transformação! Comece hoje mesmo sua jornada rumo ao
+          estilo dos sonhos.
         </p>
         <div className="inline-flex items-center gap-2 bg-[#B89B7A]/100 text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#B89B7A] transition-colors">
           <ArrowRightLeft className="w-4 h-4" />

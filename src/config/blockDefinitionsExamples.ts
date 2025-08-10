@@ -56,7 +56,8 @@ export const enhancedOptionsGridBlockDefinition: BlockDefinition = {
     responsiveColumns: {
       type: "boolean",
       label: "Colunas Responsivas",
-      description: "Ajustar automaticamente o número de colunas em dispositivos móveis",
+      description:
+        "Ajustar automaticamente o número de colunas em dispositivos móveis",
       category: "layout",
       default: true,
     },

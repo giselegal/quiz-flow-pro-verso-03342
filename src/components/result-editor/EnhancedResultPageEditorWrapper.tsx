@@ -11,7 +11,7 @@ interface EnhancedResultPageEditorWrapperProps {
 
 export const EnhancedResultPageEditorWrapper: React.FC<
   EnhancedResultPageEditorWrapperProps
-> = props => {
+> = (props) => {
   return (
     <EnhancedResultPageEditor
       selectedStyle={props.primaryStyle}

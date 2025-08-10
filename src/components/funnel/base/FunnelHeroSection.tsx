@@ -84,12 +84,16 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
 
   const getTextOrder = () => {
     if (layout !== "side-by-side") return "";
-    return imagePosition === "right" ? "order-1 md:order-1" : "order-1 md:order-2";
+    return imagePosition === "right"
+      ? "order-1 md:order-1"
+      : "order-1 md:order-2";
   };
 
   const getImageOrder = () => {
     if (layout !== "side-by-side") return "";
-    return imagePosition === "right" ? "order-2 md:order-2" : "order-2 md:order-1";
+    return imagePosition === "right"
+      ? "order-2 md:order-2"
+      : "order-2 md:order-1";
   };
 
   return (
@@ -119,7 +123,9 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             className={cn(
               "space-y-6",
               getTextOrder(),
-              layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+              layout === "hero-centered"
+                ? "text-center"
+                : "text-center md:text-left"
             )}
           >
             {/* Logo */}
@@ -127,7 +133,9 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
               <div
                 className={cn(
                   "mb-6",
-                  layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                  layout === "hero-centered"
+                    ? "text-center"
+                    : "text-center md:text-left"
                 )}
               >
                 <img
@@ -145,7 +153,9 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             <h1
               className={cn(
                 "text-3xl md:text-4xl lg:text-5xl font-playfair leading-tight",
-                layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                layout === "hero-centered"
+                  ? "text-center"
+                  : "text-center md:text-left"
               )}
             >
               {title}
@@ -155,7 +165,9 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             <p
               className={cn(
                 "text-lg md:text-xl opacity-80",
-                layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                layout === "hero-centered"
+                  ? "text-center"
+                  : "text-center md:text-left"
               )}
             >
               {description}
@@ -165,7 +177,9 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             <div
               className={cn(
                 "flex",
-                layout === "hero-centered" ? "justify-center" : "justify-center md:justify-start"
+                layout === "hero-centered"
+                  ? "justify-center"
+                  : "justify-center md:justify-start"
               )}
             >
               <Button
@@ -187,7 +201,9 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
               <p
                 className={cn(
                   "text-sm opacity-70",
-                  layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                  layout === "hero-centered"
+                    ? "text-center"
+                    : "text-center md:text-left"
                 )}
               >
                 {ctaSubtext}
@@ -199,7 +215,11 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
           {heroImageUrl && imagePosition !== "background" && (
             <div className={cn("relative", getImageOrder())}>
               <div className="relative rounded-lg overflow-hidden shadow-2xl">
-                <img src={heroImageUrl} alt={heroImageAlt} className="w-full h-auto object-cover" />
+                <img
+                  src={heroImageUrl}
+                  alt={heroImageAlt}
+                  className="w-full h-auto object-cover"
+                />
               </div>
             </div>
           )}

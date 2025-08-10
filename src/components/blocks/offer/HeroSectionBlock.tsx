@@ -49,7 +49,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -132,12 +139,12 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             </h1>
 
             {subtitle && (
-              <h2 className="text-xl md:text-2xl text-[#6B5B73] mb-6 font-medium">{subtitle}</h2>
+              <h2 className="text-xl md:text-2xl text-[#6B5B73] mb-6 font-medium">
+                {subtitle}
+              </h2>
             )}
 
-            {description && (
-              <p style={{ color: '#6B4F43' }}>{description}</p>
-            )}
+            {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
 
             <Button
               onClick={handleButtonClick}
@@ -149,7 +156,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             </Button>
 
             {showSocialProof && socialProofText && (
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-500 fill-current" />
                   <Star className="w-4 h-4 text-yellow-500 fill-current" />

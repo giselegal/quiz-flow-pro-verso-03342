@@ -29,7 +29,11 @@ export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
   if (!show || !mounted) return null;
 
   const animationClass =
-    animation === "fade" ? "animate-fade-in" : animation === "scale" ? "animate-scale-in" : "";
+    animation === "fade"
+      ? "animate-fade-in"
+      : animation === "scale"
+        ? "animate-scale-in"
+        : "";
 
   return (
     <div

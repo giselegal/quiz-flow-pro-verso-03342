@@ -15,7 +15,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import { styleQuizTemplate } from "../../../services/templates/styleQuizTemplate";
 import { styleQuizTemplate2 } from "../../../services/templates/styleQuizTemplate2";
 import { QuizBuilderState } from "../../../types/quizBuilder";
@@ -56,18 +61,23 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<string>("templates");
   const [isImporting, setIsImporting] = useState(false);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  );
 
   const templates: TemplateItem[] = [
     {
       id: "style-quiz-1",
       title: "Quiz de Estilo Pessoal",
-      description: "Template padrão com perguntas sobre preferências de estilo e personalidade.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+      description:
+        "Template padrão com perguntas sobre preferências de estilo e personalidade.",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
       template: {
         id: "style-quiz-1",
         name: "Quiz de Estilo Pessoal",
-        description: "Template padrão com perguntas sobre preferências de estilo e personalidade.",
+        description:
+          "Template padrão com perguntas sobre preferências de estilo e personalidade.",
         questions: [],
         resultPageSettings: {
           styleType: "classic",
@@ -87,7 +97,8 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       title: "Quiz de Estilo Avançado",
       description:
         "Template com questões de múltipla escolha e imagens para análise de estilo detalhada.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
       template: styleQuizTemplate2,
       type: "builderState",
     },
@@ -99,7 +110,8 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       name: "Quiz Atual",
       description:
         "Importar o quiz em execução no site atual com todas as perguntas e configurações.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
     },
     {
       id: "result-page",
@@ -132,7 +144,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       }
 
       // Adiciona um pequeno atraso para simular um processo e dar feedback visual ao usuário
-      await new Promise(resolve => setTimeout(resolve, 800));
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       onImportTemplate(builderState);
       toast({
@@ -169,13 +181,17 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
         );
 
         // Adiciona um pequeno atraso para simular um processo e dar feedback visual ao usuário
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         // Try to load existing results from localStorage
         try {
-          const savedResultConfig = localStorage.getItem("quiz_result_config_Elegante");
+          const savedResultConfig = localStorage.getItem(
+            "quiz_result_config_Elegante"
+          );
           if (savedResultConfig) {
-            console.log("Found existing result configuration, integrating with builder state");
+            console.log(
+              "Found existing result configuration, integrating with builder state"
+            );
             // In a real implementation, we would merge the result config with the builder state
           }
         } catch (error) {
@@ -263,9 +279,12 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-playfair text-[#432818]">Importar Quiz</DialogTitle>
+          <DialogTitle className="text-2xl font-playfair text-[#432818]">
+            Importar Quiz
+          </DialogTitle>
           <DialogDescription>
-            Escolha um template pré-configurado ou importe de uma fonte existente.
+            Escolha um template pré-configurado ou importe de uma fonte
+            existente.
           </DialogDescription>
         </DialogHeader>
 
@@ -277,7 +296,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
           <TabsContent value="templates" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-              {templates.map(template => (
+              {templates.map((template) => (
                 <Card
                   key={template.id}
                   className={cn(
@@ -295,7 +314,9 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                     />
                   </div>
                   <CardHeader>
-                    <CardTitle className="font-playfair text-[#432818]">{template.title}</CardTitle>
+                    <CardTitle className="font-playfair text-[#432818]">
+                      {template.title}
+                    </CardTitle>
                     <CardDescription>{template.description}</CardDescription>
                   </CardHeader>
                   <CardFooter>
@@ -323,7 +344,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
           <TabsContent value="existing" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
-              {importSources.map(source => (
+              {importSources.map((source) => (
                 <Card
                   key={source.id}
                   className={cn(
@@ -341,7 +362,9 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                     />
                   </div>
                   <CardHeader>
-                    <CardTitle className="font-playfair text-[#432818]">{source.name}</CardTitle>
+                    <CardTitle className="font-playfair text-[#432818]">
+                      {source.name}
+                    </CardTitle>
                     <CardDescription>{source.description}</CardDescription>
                   </CardHeader>
                   <CardFooter>

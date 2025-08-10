@@ -26,7 +26,10 @@ const QuizTestimonial: React.FC<QuizTestimonialProps> = ({
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
-      <span key={index} className={index < rating ? styles.starFilled : styles.starEmpty}>
+      <span
+        key={index}
+        className={index < rating ? styles.starFilled : styles.starEmpty}
+      >
         ⭐
       </span>
     ));
@@ -47,9 +50,10 @@ const QuizTestimonial: React.FC<QuizTestimonialProps> = ({
             src={avatar}
             alt={author}
             className={styles.testimonialAvatar}
-            onError={e => {
+            onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=👤";
+              target.src =
+                "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=👤";
             }}
           />
           <div className={styles.testimonialInfo}>

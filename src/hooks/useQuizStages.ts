@@ -23,7 +23,7 @@ export const useQuizStages = () => {
           stageTitle = "Etapa 1: Capa do Quiz";
           break;
         case "question":
-          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter(s => s.type === "question").length + 1}`;
+          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter((s) => s.type === "question").length + 1}`;
           break;
         case "result":
           stageTitle = `Etapa ${stageNumber}: Página de Resultado`;
@@ -37,20 +37,22 @@ export const useQuizStages = () => {
         type,
       };
 
-      setStages(prev => [...prev, newStage]);
+      setStages((prev) => [...prev, newStage]);
       return newStage.id;
     },
     [stages]
   );
 
   const updateStage = useCallback((id: string, updates: Partial<QuizStage>) => {
-    setStages(prev => prev.map(stage => (stage.id === id ? { ...stage, ...updates } : stage)));
+    setStages((prev) =>
+      prev.map((stage) => (stage.id === id ? { ...stage, ...updates } : stage))
+    );
   }, []);
 
   const deleteStage = useCallback(
     (id: string) => {
-      setStages(prev => {
-        const filteredStages = prev.filter(stage => stage.id !== id);
+      setStages((prev) => {
+        const filteredStages = prev.filter((stage) => stage.id !== id);
         return filteredStages.map((stage, index) => ({
           ...stage,
           order: index,
@@ -58,8 +60,8 @@ export const useQuizStages = () => {
       });
 
       if (id === activeStageId) {
-        setActiveStageId(prev => {
-          const remainingStages = stages.filter(stage => stage.id !== id);
+        setActiveStageId((prev) => {
+          const remainingStages = stages.filter((stage) => stage.id !== id);
           return remainingStages.length > 0 ? remainingStages[0].id : null;
         });
       }
@@ -68,9 +70,9 @@ export const useQuizStages = () => {
   );
 
   const moveStage = useCallback((draggedId: string, targetId: string) => {
-    setStages(prev => {
-      const draggedIndex = prev.findIndex(s => s.id === draggedId);
-      const targetIndex = prev.findIndex(s => s.id === targetId);
+    setStages((prev) => {
+      const draggedIndex = prev.findIndex((s) => s.id === draggedId);
+      const targetIndex = prev.findIndex((s) => s.id === targetId);
 
       if (draggedIndex === -1 || targetIndex === -1) return prev;
 
@@ -92,7 +94,7 @@ export const useQuizStages = () => {
    */
   const duplicateStage = useCallback(
     (id: string): string | null => {
-      const stageToDuplicate = stages.find(stage => stage.id === id);
+      const stageToDuplicate = stages.find((stage) => stage.id === id);
 
       if (!stageToDuplicate) return null;
 
@@ -104,7 +106,7 @@ export const useQuizStages = () => {
           stageTitle = `Etapa ${stageNumber}: Capa do Quiz (Cópia)`;
           break;
         case "question":
-          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter(s => s.type === "question").length + 1} (Cópia)`;
+          stageTitle = `Etapa ${stageNumber}: Questão ${stages.filter((s) => s.type === "question").length + 1} (Cópia)`;
           break;
         case "result":
           stageTitle = `Etapa ${stageNumber}: Página de Resultado (Cópia)`;
@@ -124,7 +126,7 @@ export const useQuizStages = () => {
         config: configCopy,
       };
 
-      setStages(prev => [...prev, newStage]);
+      setStages((prev) => [...prev, newStage]);
       return newStage.id;
     },
     [stages]

@@ -2,7 +2,7 @@
 // Mapeamento das 21 etapas para seus templates específicos
 
 // Test import para verificar se o alias está funcionando
-import type { FC } from 'react';
+import type { FC } from "react";
 
 // Importações dos templates de cada etapa (arquivos .tsx)
 import { getStep01Template } from "../components/steps/Step01Template";
@@ -173,8 +173,10 @@ export const STEP_TEMPLATES: StepTemplate[] = [
 ];
 
 // 🔧 UTILITÁRIOS
-export const getTemplateByStep = (stepNumber: number): StepTemplate | undefined => {
-  return STEP_TEMPLATES.find(template => template.stepNumber === stepNumber);
+export const getTemplateByStep = (
+  stepNumber: number
+): StepTemplate | undefined => {
+  return STEP_TEMPLATES.find((template) => template.stepNumber === stepNumber);
 };
 
 export const getTotalSteps = (): number => {
@@ -185,9 +187,13 @@ export const getTotalSteps = (): number => {
 export const getTemplateStats = () => {
   return {
     totalTemplates: STEP_TEMPLATES.length,
-    questionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Pergunta")).length,
-    strategicSteps: STEP_TEMPLATES.filter(t => t.name.includes("Estratégica")).length,
-    transitionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Transição")).length,
-    resultSteps: STEP_TEMPLATES.filter(t => t.name.includes("Resultado")).length,
+    questionSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Pergunta"))
+      .length,
+    strategicSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Estratégica"))
+      .length,
+    transitionSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Transição"))
+      .length,
+    resultSteps: STEP_TEMPLATES.filter((t) => t.name.includes("Resultado"))
+      .length,
   };
 };

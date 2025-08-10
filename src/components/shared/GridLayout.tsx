@@ -34,5 +34,9 @@ export const GridLayout: React.FC<GridLayoutProps> = ({
     xl: "gap-8",
   };
 
-  return <div className={cn("grid", colsMap[columns], gapMap[gap], className)}>{children}</div>;
+  return (
+    <div className={cn("grid", colsMap[columns], gapMap[gap], className)}>
+      {children}
+    </div>
+  );
 };

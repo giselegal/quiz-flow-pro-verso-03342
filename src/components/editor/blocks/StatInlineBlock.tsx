@@ -10,7 +10,17 @@ import {
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
 } from "../../../utils/inlineComponentUtils";
-import { Users, TrendingUp, Heart, Clock, Star, Award, Target, Zap, BarChart3 } from "lucide-react";
+import {
+  Users,
+  TrendingUp,
+  Heart,
+  Clock,
+  Star,
+  Award,
+  Target,
+  Zap,
+  BarChart3,
+} from "lucide-react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
@@ -18,7 +28,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -131,7 +148,8 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
       "bar-chart": "text-cyan-500",
     };
 
-    const colorClass = colorMap[icon as keyof typeof colorMap] || "text-[#B89B7A]";
+    const colorClass =
+      colorMap[icon as keyof typeof colorMap] || "text-[#B89B7A]";
 
     return <IconComponent className={`w-6 h-6 ${colorClass}`} />;
   };
@@ -175,7 +193,12 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const personalizedLabel = getPersonalizedText(label, usernamePattern, username, useUsername);
+  const personalizedLabel = getPersonalizedText(
+    label,
+    usernamePattern,
+    username,
+    useUsername
+  );
 
   const sizeClasses = {
     small: {
@@ -198,7 +221,8 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
     },
   };
 
-  const currentSize = sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.medium;
+  const currentSize =
+    sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.medium;
 
   return (
     <InlineBaseWrapper
@@ -241,7 +265,12 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
         )}
 
         {/* Content */}
-        <div className={cn("flex-1", layout === "vertical" ? "text-center" : "text-left")}>
+        <div
+          className={cn(
+            "flex-1",
+            layout === "vertical" ? "text-center" : "text-left"
+          )}
+        >
           {/* Value */}
           <div
             className={cn(
@@ -252,12 +281,14 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
           >
             <InlineEditableText
               value={displayValue}
-              onChange={value => handlePropertyChange("value", value)}
+              onChange={(value) => handlePropertyChange("value", value)}
               placeholder="1000+"
-              fontSize={size === "large" ? "3xl" : size === "small" ? "xl" : "2xl"}
+              fontSize={
+                size === "large" ? "3xl" : size === "small" ? "xl" : "2xl"
+              }
               fontWeight="bold"
               textAlign={layout === "vertical" ? "center" : "left"}
-              style={{ color: '#432818' }}
+              style={{ color: "#432818" }}
             />
           </div>
 
@@ -265,11 +296,11 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
           <div className={cn("text-gray-600 mt-1", currentSize.label)}>
             <InlineEditableText
               value={personalizedLabel}
-              onChange={value => handlePropertyChange("label", value)}
+              onChange={(value) => handlePropertyChange("label", value)}
               placeholder="Estatística..."
               fontSize={size === "large" ? "base" : "sm"}
               textAlign={layout === "vertical" ? "center" : "left"}
-              style={{ color: '#6B4F43' }}
+              style={{ color: "#6B4F43" }}
             />
           </div>
         </div>

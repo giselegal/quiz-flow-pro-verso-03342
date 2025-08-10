@@ -103,10 +103,20 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
   };
 
   // Função para converter margens numéricas em classes Tailwind
-  const getMarginClass = (value: number, type: "top" | "bottom" | "left" | "right"): string => {
+  const getMarginClass = (
+    value: number,
+    type: "top" | "bottom" | "left" | "right"
+  ): string => {
     if (!value || value === 0) return "";
 
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+    const prefix =
+      type === "top"
+        ? "mt"
+        : type === "bottom"
+          ? "mb"
+          : type === "left"
+            ? "ml"
+            : "mr";
 
     // Converter pixels em unidades Tailwind (aproximadamente)
     if (value <= 4) return `${prefix}-1`;
@@ -180,13 +190,13 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
             "--hover-bg": backgroundColor,
           } as React.CSSProperties)),
       }}
-      onMouseEnter={e => {
+      onMouseEnter={(e) => {
         if (actualVariant === "outline") {
           e.currentTarget.style.backgroundColor = backgroundColor;
           e.currentTarget.style.color = textColor;
         }
       }}
-      onMouseLeave={e => {
+      onMouseLeave={(e) => {
         if (actualVariant === "outline") {
           e.currentTarget.style.backgroundColor = "transparent";
           e.currentTarget.style.color = backgroundColor;

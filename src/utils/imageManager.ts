@@ -28,7 +28,7 @@ export const preloadImagesByUrls = (
   urls: string[],
   options: PreloadOptions = {}
 ): Promise<void> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const { quality = 80, batchSize = 5 } = options;
     const total = urls.length;
     let loaded = 0;
@@ -36,8 +36,8 @@ export const preloadImagesByUrls = (
     const loadBatch = (batch: string[]) => {
       Promise.all(
         batch.map(
-          url =>
-            new Promise<void>(resolveImage => {
+          (url) =>
+            new Promise<void>((resolveImage) => {
               const img = new Image();
               img.src = getOptimizedImageUrl(url, {
                 quality,
@@ -72,7 +72,13 @@ export const preloadImagesByUrls = (
 };
 
 export const preloadCriticalImages = async (
-  context: "strategic" | "results" | "transformation" | "bonus" | "testimonials" | string[],
+  context:
+    | "strategic"
+    | "results"
+    | "transformation"
+    | "bonus"
+    | "testimonials"
+    | string[],
   options: Omit<PreloadOptions, "onProgress" | "onComplete"> = {}
 ): Promise<void> => {
   const { quality = 75, batchSize = 3, format } = options;
@@ -128,7 +134,7 @@ export const preloadCriticalImages = async (
     }
   } else if (Array.isArray(context)) {
     // Collect images from an array of contexts
-    context.forEach(ctx => {
+    context.forEach((ctx) => {
       switch (ctx) {
         case "strategic":
           imageUrls.push(
@@ -229,14 +235,14 @@ export const preloadImages = (
   }>,
   options?: { quality?: number; batchSize?: number; format?: string }
 ) => {
-  const urls = images.map(img => img.src);
+  const urls = images.map((img) => img.src);
   return preloadImagesByUrls(urls, options);
 };
 
 // Add missing functions with simplified implementations
 export const preloadImagesByIds = (ids: string[], options?: PreloadOptions) => {
   // Convert IDs to URLs - this is a simplified implementation
-  const urls = ids.map(id => `/images/${id}`);
+  const urls = ids.map((id) => `/images/${id}`);
   return preloadImagesByUrls(urls, options);
 };
 
@@ -245,10 +251,21 @@ export const preloadImagesByCategory = (
   options?: Omit<PreloadOptions, "onProgress" | "onComplete">
 ) => {
   // Map category to proper context string
-  const validCategories = ["strategic", "results", "transformation", "bonus", "testimonials"];
+  const validCategories = [
+    "strategic",
+    "results",
+    "transformation",
+    "bonus",
+    "testimonials",
+  ];
   if (validCategories.includes(category)) {
     return preloadCriticalImages(
-      category as "strategic" | "results" | "transformation" | "bonus" | "testimonials",
+      category as
+        | "strategic"
+        | "results"
+        | "transformation"
+        | "bonus"
+        | "testimonials",
       options
     );
   }

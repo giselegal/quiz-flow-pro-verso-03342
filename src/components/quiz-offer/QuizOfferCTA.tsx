@@ -33,16 +33,21 @@ export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
             Desbloqueie Seu Estilo Autêntico Hoje
           </h2>
           <p className="text-[#432818]/80">
-            Dê o próximo passo e descubra como vestir-se para expressar sua verdadeira personalidade
+            Dê o próximo passo e descubra como vestir-se para expressar sua
+            verdadeira personalidade
           </p>
         </div>
 
         <div className="flex justify-center mb-4">
           <div className="bg-white rounded-lg p-4 text-center shadow-sm border border-[#EAE4DA]">
-            <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
+            <p className="text-sm text-[#aa6b5d] uppercase font-medium">
+              Hoje por apenas
+            </p>
             <div className="flex items-baseline justify-center">
               <span className="text-sm mr-1">R$</span>
-              <p className="text-4xl font-bold gold-text">{price.split(",")[0]}</p>
+              <p className="text-4xl font-bold gold-text">
+                {price.split(",")[0]}
+              </p>
               <span className="text-lg">,{price.split(",")[1]}</span>
             </div>
             <p className="text-xs text-[#3a3a3a]/60 mt-1">Pagamento único</p>
@@ -51,7 +56,9 @@ export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
             </p>
 
             <div className="mt-3 flex items-center justify-center">
-              <div className="text-sm text-[#3a3a3a]/80 line-through mr-2">R$ {regularPrice}</div>
+              <div className="text-sm text-[#3a3a3a]/80 line-through mr-2">
+                R$ {regularPrice}
+              </div>
               <div className="bg-[#aa6b5d] text-white text-xs px-2 py-0.5 rounded-full">
                 -78% OFF
               </div>
@@ -79,7 +86,9 @@ export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6">
           <div className="bg-white p-3 rounded-lg shadow-sm border border-[#EAE4DA]">
-            <h4 className="font-medium text-[#432818] text-sm">Guia Detalhado</h4>
+            <h4 className="font-medium text-[#432818] text-sm">
+              Guia Detalhado
+            </h4>
             <p className="text-xs text-[#432818]/70">
               Descubra seu estilo pessoal com análises profundas
             </p>
@@ -91,7 +100,9 @@ export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
             </p>
           </div>
           <div className="bg-white p-3 rounded-lg shadow-sm border border-[#EAE4DA]">
-            <h4 className="font-medium text-[#432818] text-sm">Visagismo Facial</h4>
+            <h4 className="font-medium text-[#432818] text-sm">
+              Visagismo Facial
+            </h4>
             <p className="text-xs text-[#432818]/70">
               Adapte seu visual às suas características faciais
             </p>

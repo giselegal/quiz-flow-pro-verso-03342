@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { cn } from "../../lib/utils";
 import * as LucideIcons from "lucide-react";
 import { dynamicIconImport } from "../../utils/dynamicIconImport";
@@ -87,7 +93,11 @@ export const MetricCard = ({
             <div className="flex items-baseline justify-between">
               <div>
                 <p className="text-2xl font-bold">{value}</p>
-                {description && <p className="text-xs text-muted-foreground mt-1">{description}</p>}
+                {description && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {description}
+                  </p>
+                )}
               </div>
               {trend && (
                 <div
@@ -129,11 +139,8 @@ export interface MetricsGridComposition {
   Item: typeof MetricCard;
 }
 
-export const MetricsGrid: React.FC<MetricsGridProps> & MetricsGridComposition = ({
-  children,
-  columns = 3,
-  className,
-}) => {
+export const MetricsGrid: React.FC<MetricsGridProps> &
+  MetricsGridComposition = ({ children, columns = 3, className }) => {
   return (
     <div
       className={cn(

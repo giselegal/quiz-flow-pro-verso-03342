@@ -80,7 +80,9 @@ export interface UseUnifiedPropertiesReturn {
   resetProperties: () => void;
   validateProperties: () => boolean;
   getPropertyByKey: (key: string) => UnifiedProperty | undefined;
-  getPropertiesByCategory: (category: PropertyCategoryOrString) => UnifiedProperty[];
+  getPropertiesByCategory: (
+    category: PropertyCategoryOrString
+  ) => UnifiedProperty[];
   exportProperties: () => Record<string, any>;
   applyBrandColors: () => void;
 }
@@ -122,19 +124,28 @@ const createProperty = (
   ...options,
 });
 
-const createSelectOptions = (options: Array<{ value: string; label: string }>) => options;
+const createSelectOptions = (
+  options: Array<{ value: string; label: string }>
+) => options;
 
 /**
  * 🌟 Funções de propriedades universais
  */
 const getUniversalProperties = (): UnifiedProperty[] => [
   // 1. Controles de margens (4 direções)
-  createProperty("marginTop", 0, PropertyType.RANGE, "Margem Superior", PropertyCategory.LAYOUT, {
-    min: 0,
-    max: 100,
-    step: 2,
-    unit: "px",
-  }),
+  createProperty(
+    "marginTop",
+    0,
+    PropertyType.RANGE,
+    "Margem Superior",
+    PropertyCategory.LAYOUT,
+    {
+      min: 0,
+      max: 100,
+      step: 2,
+      unit: "px",
+    }
+  ),
   createProperty(
     "marginBottom",
     0,
@@ -143,25 +154,46 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     PropertyCategory.LAYOUT,
     { min: 0, max: 100, step: 2, unit: "px" }
   ),
-  createProperty("marginLeft", 0, PropertyType.RANGE, "Margem Esquerda", PropertyCategory.LAYOUT, {
-    min: 0,
-    max: 100,
-    step: 2,
-    unit: "px",
-  }),
-  createProperty("marginRight", 0, PropertyType.RANGE, "Margem Direita", PropertyCategory.LAYOUT, {
-    min: 0,
-    max: 100,
-    step: 2,
-    unit: "px",
-  }),
+  createProperty(
+    "marginLeft",
+    0,
+    PropertyType.RANGE,
+    "Margem Esquerda",
+    PropertyCategory.LAYOUT,
+    {
+      min: 0,
+      max: 100,
+      step: 2,
+      unit: "px",
+    }
+  ),
+  createProperty(
+    "marginRight",
+    0,
+    PropertyType.RANGE,
+    "Margem Direita",
+    PropertyCategory.LAYOUT,
+    {
+      min: 0,
+      max: 100,
+      step: 2,
+      unit: "px",
+    }
+  ),
 
   // 2. Escala Bloco (controle de escala)
-  createProperty("scale", 1, PropertyType.RANGE, "Escala Bloco", PropertyCategory.LAYOUT, {
-    min: 0.5,
-    max: 2,
-    step: 0.1,
-  }),
+  createProperty(
+    "scale",
+    1,
+    PropertyType.RANGE,
+    "Escala Bloco",
+    PropertyCategory.LAYOUT,
+    {
+      min: 0.5,
+      max: 2,
+      step: 0.1,
+    }
+  ),
 
   // 3. Cor de fundo do Container
   createProperty(
@@ -226,12 +258,19 @@ const getTextProperties = (): UnifiedProperty[] => [
     "Texto",
     PropertyCategory.CONTENT
   ),
-  createProperty("fontSize", 16, PropertyType.RANGE, "Tamanho da Fonte", PropertyCategory.STYLE, {
-    min: 10,
-    max: 48,
-    step: 1,
-    unit: "px",
-  }),
+  createProperty(
+    "fontSize",
+    16,
+    PropertyType.RANGE,
+    "Tamanho da Fonte",
+    PropertyCategory.STYLE,
+    {
+      min: 10,
+      max: 48,
+      step: 1,
+      unit: "px",
+    }
+  ),
   createProperty(
     "fontWeight",
     "400",
@@ -598,7 +637,8 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             "errorMessage",
-            currentBlock?.properties?.errorMessage || "Por favor, preencha este campo",
+            currentBlock?.properties?.errorMessage ||
+              "Por favor, preencha este campo",
             PropertyType.TEXT,
             "Mensagem de Erro",
             PropertyCategory.CONTENT
@@ -821,7 +861,8 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             "copyrightText",
-            currentBlock?.properties?.copyrightText || "© 2025 Gisele Galvão Consultoria",
+            currentBlock?.properties?.copyrightText ||
+              "© 2025 Gisele Galvão Consultoria",
             PropertyType.TEXT,
             "Texto de Copyright",
             PropertyCategory.CONTENT
@@ -925,7 +966,8 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             "imageClasses",
-            currentBlock?.properties?.imageClasses || "w-full h-full object-cover rounded-lg",
+            currentBlock?.properties?.imageClasses ||
+              "w-full h-full object-cover rounded-lg",
             PropertyType.TEXT,
             "Classes CSS da Imagem",
             PropertyCategory.ADVANCED
@@ -950,9 +992,11 @@ export const useUnifiedProperties = (
           createProperty(
             "options",
             // 🎯 FIX: Não sobrescrever opções existentes com valor padrão
-            currentBlock?.properties?.options && currentBlock.properties.options.length > 0
+            currentBlock?.properties?.options &&
+              currentBlock.properties.options.length > 0
               ? currentBlock.properties.options // Usar opções existentes
-              : currentBlock?.content?.options && currentBlock.content.options.length > 0
+              : currentBlock?.content?.options &&
+                  currentBlock.content.options.length > 0
                 ? currentBlock.content.options // Fallback para content.options
                 : [
                     // Só usar padrão se não houver opções em lugar nenhum
@@ -1114,7 +1158,8 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             "buttonContainerColor",
-            currentBlock?.properties?.buttonContainerColor || BRAND_COLORS.primary,
+            currentBlock?.properties?.buttonContainerColor ||
+              BRAND_COLORS.primary,
             PropertyType.COLOR,
             "Cor de Fundo do Container",
             PropertyCategory.STYLE
@@ -1257,7 +1302,8 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             "componentId",
-            currentBlock?.properties?.componentId || "step-2-block-options-grid-pos-1",
+            currentBlock?.properties?.componentId ||
+              "step-2-block-options-grid-pos-1",
             PropertyType.TEXT,
             "ID do Componente",
             PropertyCategory.ADVANCED
@@ -1283,7 +1329,9 @@ export const useUnifiedProperties = (
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
-      setProperties(prev => prev.map(prop => (prop.key === key ? { ...prop, value } : prop)));
+      setProperties((prev) =>
+        prev.map((prop) => (prop.key === key ? { ...prop, value } : prop))
+      );
 
       if (onUpdateExternal && block) {
         const updatedProps = { ...block.properties, [key]: value };
@@ -1294,7 +1342,7 @@ export const useUnifiedProperties = (
   );
 
   const resetProperties = useCallback(() => {
-    const resetProps = generatedProperties?.map(prop => ({
+    const resetProps = generatedProperties?.map((prop) => ({
       ...prop,
       value: prop.defaultValue ?? prop.value,
     }));
@@ -1317,7 +1365,9 @@ export const useUnifiedProperties = (
           (property.max === undefined || numValue <= property.max)
         );
       case PropertyType.SELECT:
-        return property.options?.some(opt => opt.value === property.value) ?? true;
+        return (
+          property.options?.some((opt) => opt.value === property.value) ?? true
+        );
       case PropertyType.COLOR:
         return typeof property.value === "string" && property.value.length > 0;
       case PropertyType.SWITCH:
@@ -1328,12 +1378,12 @@ export const useUnifiedProperties = (
   };
 
   const validateProperties = useCallback(() => {
-    return properties.every(prop => validateProperty(prop));
+    return properties.every((prop) => validateProperty(prop));
   }, [properties]);
 
   const getPropertyByKey = useCallback(
     (key: string) => {
-      return properties.find(prop => prop.key === key);
+      return properties.find((prop) => prop.key === key);
     },
     [properties]
   );
@@ -1343,7 +1393,7 @@ export const useUnifiedProperties = (
       if (!properties || !Array.isArray(properties)) {
         return [];
       }
-      return properties.filter(prop => prop.category === category);
+      return properties.filter((prop) => prop.category === category);
     },
     [properties]
   );
@@ -1361,13 +1411,16 @@ export const useUnifiedProperties = (
   const applyBrandColors = useCallback(() => {
     if (!properties.length || !block) return;
 
-    setProperties(prev =>
-      prev.map(prop => {
+    setProperties((prev) =>
+      prev.map((prop) => {
         if (prop.type === PropertyType.COLOR) {
           if (prop.key.includes("text") || prop.key.includes("Text")) {
             return { ...prop, value: BRAND_COLORS.textPrimary };
           }
-          if (prop.key.includes("background") || prop.key.includes("Background")) {
+          if (
+            prop.key.includes("background") ||
+            prop.key.includes("Background")
+          ) {
             return { ...prop, value: BRAND_COLORS.primary };
           }
           if (prop.key.includes("border") || prop.key.includes("Border")) {
@@ -1384,9 +1437,15 @@ export const useUnifiedProperties = (
           if (prop.type === PropertyType.COLOR) {
             if (prop.key.includes("text") || prop.key.includes("Text")) {
               acc[prop.key] = BRAND_COLORS.textPrimary;
-            } else if (prop.key.includes("background") || prop.key.includes("Background")) {
+            } else if (
+              prop.key.includes("background") ||
+              prop.key.includes("Background")
+            ) {
               acc[prop.key] = BRAND_COLORS.primary;
-            } else if (prop.key.includes("border") || prop.key.includes("Border")) {
+            } else if (
+              prop.key.includes("border") ||
+              prop.key.includes("Border")
+            ) {
               acc[prop.key] = BRAND_COLORS.primary;
             } else {
               acc[prop.key] = prop.value;
@@ -1417,7 +1476,10 @@ export const useUnifiedProperties = (
 /**
  * 🎯 Helper para componentes inline otimizados
  */
-export const getInlineComponentProperties = (type: string, currentProps: any = {}) => {
+export const getInlineComponentProperties = (
+  type: string,
+  currentProps: any = {}
+) => {
   const inlineDefaults = {
     "heading-inline": {
       content: "Título",

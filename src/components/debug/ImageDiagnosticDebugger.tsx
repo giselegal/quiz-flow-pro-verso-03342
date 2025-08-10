@@ -14,10 +14,13 @@ interface ImageDiagnosticDebuggerProps {
   isVisible: boolean;
 }
 
-const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVisible }) => {
+const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({
+  isVisible,
+}) => {
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [analysisResults, setAnalysisResults] = useState<ImageAnalysis[]>([]);
-  const [diagnosticResult, setDiagnosticResult] = useState<ImageDiagnosticResult | null>(null);
+  const [diagnosticResult, setDiagnosticResult] =
+    useState<ImageDiagnosticResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [optimizationSettings, setOptimizationSettings] = useState({
     quality: 80,
@@ -32,7 +35,9 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
 
     setIsLoading(true);
     const waitForImages = () => {
-      const imgs = Array.from(document.querySelectorAll("img")) as HTMLImageElement[];
+      const imgs = Array.from(
+        document.querySelectorAll("img")
+      ) as HTMLImageElement[];
       if (imgs.length > 0) {
         setImages(imgs);
         setIsLoading(false);
@@ -51,19 +56,27 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
       format: optimizationSettings.format,
       width: optimizationSettings.responsive ? undefined : 800,
     };
-    const optimizedUrl = isCloudinary ? optimizeCloudinaryUrl(url, options) : url;
+    const optimizedUrl = isCloudinary
+      ? optimizeCloudinaryUrl(url, options)
+      : url;
     const originalSize = await getImageSize(url);
     const optimizedSize = await getImageSize(optimizedUrl);
 
     let suggestedImprovements: string[] = [];
     if (isCloudinary && optimizationSettings.quality < 80) {
-      suggestedImprovements.push("Aumentar a qualidade da imagem para pelo menos 80.");
+      suggestedImprovements.push(
+        "Aumentar a qualidade da imagem para pelo menos 80."
+      );
     }
     if (isCloudinary && optimizationSettings.format === "auto") {
-      suggestedImprovements.push("Usar formato específico como WebP para melhor compressão.");
+      suggestedImprovements.push(
+        "Usar formato específico como WebP para melhor compressão."
+      );
     }
     if (!url.includes("w_auto") && !url.includes("dpr_auto")) {
-      suggestedImprovements.push("Considerar URLs responsivas para diferentes tamanhos de tela.");
+      suggestedImprovements.push(
+        "Considerar URLs responsivas para diferentes tamanhos de tela."
+      );
     }
 
     const analysis: ImageAnalysis = {
@@ -95,10 +108,12 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
           const blob = request.response;
           resolve(blob.size);
         };
-        request.onerror = () => reject(new Error(`Erro ao obter o tamanho da imagem: ${url}`));
+        request.onerror = () =>
+          reject(new Error(`Erro ao obter o tamanho da imagem: ${url}`));
         request.send();
       };
-      img.onerror = () => reject(new Error(`Erro ao carregar a imagem: ${url}`));
+      img.onerror = () =>
+        reject(new Error(`Erro ao carregar a imagem: ${url}`));
       img.src = url;
     });
   };
@@ -164,11 +179,15 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
           }
           if (optimizationSettings.format === "auto") {
             totalImagesWithIssues++;
-            issues.push("Formato da imagem não é específico (usar webp ou avif).");
+            issues.push(
+              "Formato da imagem não é específico (usar webp ou avif)."
+            );
           }
           if (!url.includes("w_auto") && !url.includes("dpr_auto")) {
             totalImagesWithIssues++;
-            issues.push("URLs não são responsivas para diferentes tamanhos de tela.");
+            issues.push(
+              "URLs não são responsivas para diferentes tamanhos de tela."
+            );
           }
           if (optimizedSize > originalSize) {
             issues.push("Tamanho da imagem otimizada é maior que a original.");
@@ -258,22 +277,26 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
 
   return (
     isVisible && (
-      <div style={{ backgroundColor: '#E5DDD5' }}>
+      <div style={{ backgroundColor: "#E5DDD5" }}>
         <div className="container mx-auto p-4">
           <h2 className="text-2xl font-bold mb-4">Image Diagnostic Debugger</h2>
 
           {/* Optimization Settings */}
           <div className="mb-4 p-4 bg-white rounded shadow-md">
-            <h3 className="text-lg font-semibold mb-2">Optimization Settings</h3>
+            <h3 className="text-lg font-semibold mb-2">
+              Optimization Settings
+            </h3>
             <div className="space-y-2">
               <div>
-                <Label htmlFor="quality">Quality ({optimizationSettings.quality})</Label>
+                <Label htmlFor="quality">
+                  Quality ({optimizationSettings.quality})
+                </Label>
                 <Slider
                   id="quality"
                   defaultValue={[optimizationSettings.quality]}
                   max={100}
                   step={5}
-                  onValueChange={value =>
+                  onValueChange={(value) =>
                     setOptimizationSettings({
                       ...optimizationSettings,
                       quality: value[0],
@@ -287,7 +310,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                   id="format"
                   className="w-full p-2 border rounded"
                   value={optimizationSettings.format}
-                  onChange={e =>
+                  onChange={(e) =>
                     setOptimizationSettings({
                       ...optimizationSettings,
                       format: e.target.value as "auto" | "webp" | "avif",
@@ -303,7 +326,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                 <Switch
                   id="responsive"
                   checked={optimizationSettings.responsive}
-                  onCheckedChange={checked =>
+                  onCheckedChange={(checked) =>
                     setOptimizationSettings({
                       ...optimizationSettings,
                       responsive: checked,
@@ -323,9 +346,12 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                 type="url"
                 placeholder="Enter image URL"
                 value={customUrl}
-                onChange={e => setCustomUrl(e.target.value)}
+                onChange={(e) => setCustomUrl(e.target.value)}
               />
-              <Button onClick={() => optimizeImageUrl(customUrl)} disabled={!customUrl}>
+              <Button
+                onClick={() => optimizeImageUrl(customUrl)}
+                disabled={!customUrl}
+              >
                 Optimize & Copy
               </Button>
             </div>
@@ -347,11 +373,21 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
           {diagnosticResult && diagnosticResult.summary && (
             <div className="mt-4 p-4 bg-white rounded shadow-md">
               <h3 className="text-lg font-semibold mb-2">Diagnostic Summary</h3>
-              <p>Total Images Rendered: {diagnosticResult.summary.totalImagesRendered}</p>
-              <p>Total Images with Issues: {diagnosticResult.summary.totalImagesWithIssues}</p>
-              <p>Total Downloaded Bytes: {diagnosticResult.summary.totalDownloadedBytes}</p>
               <p>
-                Estimated Performance Impact: {diagnosticResult.summary.estimatedPerformanceImpact}
+                Total Images Rendered:{" "}
+                {diagnosticResult.summary.totalImagesRendered}
+              </p>
+              <p>
+                Total Images with Issues:{" "}
+                {diagnosticResult.summary.totalImagesWithIssues}
+              </p>
+              <p>
+                Total Downloaded Bytes:{" "}
+                {diagnosticResult.summary.totalDownloadedBytes}
+              </p>
+              <p>
+                Estimated Performance Impact:{" "}
+                {diagnosticResult.summary.estimatedPerformanceImpact}
               </p>
             </div>
           )}
@@ -368,15 +404,17 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                       <strong>URL:</strong> {issue.url}
                     </p>
                     <p>
-                      <strong>Natural Dimensions:</strong> {issue.dimensions?.natural?.width}x
+                      <strong>Natural Dimensions:</strong>{" "}
+                      {issue.dimensions?.natural?.width}x
                       {issue.dimensions?.natural?.height}
                     </p>
                     <p>
-                      <strong>Display Dimensions:</strong> {issue.dimensions?.display?.width}x
+                      <strong>Display Dimensions:</strong>{" "}
+                      {issue.dimensions?.display?.width}x
                       {issue.dimensions?.display?.height}
                     </p>
                     {issue.issues?.map((error, i) => (
-                      <p key={i} style={{ color: '#432818' }}>
+                      <p key={i} style={{ color: "#432818" }}>
                         <AlertTriangle className="inline-block h-4 w-4 mr-1" />
                         {error}
                       </p>
@@ -411,7 +449,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                           {analysisResults[index].isOptimized ? (
                             <CheckCircle className="inline-block h-4 w-4 text-green-500" />
                           ) : (
-                            <AlertTriangle style={{ color: '#432818' }} />
+                            <AlertTriangle style={{ color: "#432818" }} />
                           )}
                         </p>
                         <p className="text-sm">
@@ -419,15 +457,20 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                           {analysisResults[index].isResponsive ? (
                             <CheckCircle className="inline-block h-4 w-4 text-green-500" />
                           ) : (
-                            <AlertTriangle style={{ color: '#432818' }} />
+                            <AlertTriangle style={{ color: "#432818" }} />
                           )}
                         </p>
                         {analysisResults[index].suggestedImprovements &&
-                          analysisResults[index].suggestedImprovements!.length > 0 && (
+                          analysisResults[index].suggestedImprovements!.length >
+                            0 && (
                             <>
-                              <p className="text-sm font-medium">Suggested Improvements:</p>
-                              <ul style={{ color: '#432818' }}>
-                                {analysisResults[index].suggestedImprovements!.map(
+                              <p className="text-sm font-medium">
+                                Suggested Improvements:
+                              </p>
+                              <ul style={{ color: "#432818" }}>
+                                {analysisResults[
+                                  index
+                                ].suggestedImprovements!.map(
                                   (improvement, i) => (
                                     <li key={i}>{improvement}</li>
                                   )

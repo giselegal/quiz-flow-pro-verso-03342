@@ -33,7 +33,9 @@ export const useEditorBlocks = (
       setConfig({
         ...config,
         blocks: config.blocks.map((block: EditorBlock) =>
-          block.id === id ? { ...block, content: { ...block.content, ...content } } : block
+          block.id === id
+            ? { ...block, content: { ...block.content, ...content } }
+            : block
         ),
       });
     },

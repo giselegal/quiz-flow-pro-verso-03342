@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../../components/ui/card";
 import { Input } from "../../../../components/ui/input";
 import { Label } from "../../../../components/ui/label";
 import { Button } from "../../../../components/ui/button";
@@ -14,7 +20,10 @@ interface WebhookSettingsProps {
   onUpdate: (settings: Partial<WebhookSettingsType>) => void;
 }
 
-export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUpdate }) => {
+export const WebhookSettings: React.FC<WebhookSettingsProps> = ({
+  settings,
+  onUpdate,
+}) => {
   const { toast } = useToast();
   const [testingWebhook, setTestingWebhook] = useState<string | null>(null);
 
@@ -34,14 +43,16 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
   };
 
   const updateCustomWebhook = (id: string, updates: any) => {
-    const updatedWebhooks = settings.customWebhooks.map(webhook =>
+    const updatedWebhooks = settings.customWebhooks.map((webhook) =>
       webhook.id === id ? { ...webhook, ...updates } : webhook
     );
     onUpdate({ customWebhooks: updatedWebhooks });
   };
 
   const removeCustomWebhook = (id: string) => {
-    const updatedWebhooks = settings.customWebhooks.filter(webhook => webhook.id !== id);
+    const updatedWebhooks = settings.customWebhooks.filter(
+      (webhook) => webhook.id !== id
+    );
     onUpdate({ customWebhooks: updatedWebhooks });
   };
 
@@ -92,7 +103,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
             <Input
               id="hotmartPostback"
               value={settings.hotmartPostbackUrl}
-              onChange={e => onUpdate({ hotmartPostbackUrl: e.target.value })}
+              onChange={(e) => onUpdate({ hotmartPostbackUrl: e.target.value })}
               placeholder="https://api.minhaapi.com/hotmart/postback"
             />
             <p className="text-sm text-muted-foreground">
@@ -104,7 +115,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
             <Switch
               id="testMode"
               checked={settings.testMode}
-              onCheckedChange={checked => onUpdate({ testMode: checked })}
+              onCheckedChange={(checked) => onUpdate({ testMode: checked })}
             />
             <Label htmlFor="testMode">Modo de teste</Label>
           </div>
@@ -121,7 +132,8 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
             </Button>
           </CardTitle>
           <CardDescription>
-            Configure webhooks personalizados para integrar com suas próprias APIs
+            Configure webhooks personalizados para integrar com suas próprias
+            APIs
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -130,7 +142,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
               Nenhum webhook personalizado configurado
             </p>
           ) : (
-            settings.customWebhooks.map(webhook => (
+            settings.customWebhooks.map((webhook) => (
               <Card key={webhook.id} className="border-dashed">
                 <CardContent className="pt-4">
                   <div className="space-y-4">
@@ -138,7 +150,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
                       <div className="flex items-center space-x-2">
                         <Input
                           value={webhook.name}
-                          onChange={e =>
+                          onChange={(e) =>
                             updateCustomWebhook(webhook.id, {
                               name: e.target.value,
                             })
@@ -148,11 +160,13 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
                         />
                         <Switch
                           checked={webhook.active}
-                          onCheckedChange={checked =>
+                          onCheckedChange={(checked) =>
                             updateCustomWebhook(webhook.id, { active: checked })
                           }
                         />
-                        <Badge variant={webhook.active ? "default" : "secondary"}>
+                        <Badge
+                          variant={webhook.active ? "default" : "secondary"}
+                        >
                           {webhook.active ? "Ativo" : "Inativo"}
                         </Badge>
                       </div>
@@ -161,10 +175,14 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
                           variant="outline"
                           size="sm"
                           onClick={() => testWebhook(webhook.url, webhook.id)}
-                          disabled={!webhook.url || testingWebhook === webhook.id}
+                          disabled={
+                            !webhook.url || testingWebhook === webhook.id
+                          }
                         >
                           <TestTube className="w-4 h-4 mr-2" />
-                          {testingWebhook === webhook.id ? "Testando..." : "Testar"}
+                          {testingWebhook === webhook.id
+                            ? "Testando..."
+                            : "Testar"}
                         </Button>
                         <Button
                           variant="outline"
@@ -180,7 +198,7 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
                       <Label>URL do Webhook</Label>
                       <Input
                         value={webhook.url}
-                        onChange={e =>
+                        onChange={(e) =>
                           updateCustomWebhook(webhook.id, {
                             url: e.target.value,
                           })
@@ -192,14 +210,23 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
                     <div className="space-y-2">
                       <Label>Eventos</Label>
                       <div className="flex flex-wrap gap-2">
-                        {["lead_capture", "form_submit", "page_view", "conversion"].map(event => (
+                        {[
+                          "lead_capture",
+                          "form_submit",
+                          "page_view",
+                          "conversion",
+                        ].map((event) => (
                           <Badge
                             key={event}
-                            variant={webhook.events.includes(event) ? "default" : "outline"}
+                            variant={
+                              webhook.events.includes(event)
+                                ? "default"
+                                : "outline"
+                            }
                             className="cursor-pointer"
                             onClick={() => {
                               const events = webhook.events.includes(event)
-                                ? webhook.events.filter(e => e !== event)
+                                ? webhook.events.filter((e) => e !== event)
                                 : [...webhook.events, event];
                               updateCustomWebhook(webhook.id, { events });
                             }}
@@ -220,7 +247,9 @@ export const WebhookSettings: React.FC<WebhookSettingsProps> = ({ settings, onUp
       <Card>
         <CardHeader>
           <CardTitle>Documentação</CardTitle>
-          <CardDescription>Links úteis para configurar seus webhooks</CardDescription>
+          <CardDescription>
+            Links úteis para configurar seus webhooks
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">

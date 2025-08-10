@@ -20,14 +20,16 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   isLastQuestion = false,
 }) => {
   const [showActivationEffect, setShowActivationEffect] = useState(false);
-  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [autoAdvanceTimer, setAutoAdvanceTimer] =
+    useState<NodeJS.Timeout | null>(null);
 
   const shouldAutoAdvance = useCallback((): boolean => {
     if (!canProceed) {
       return false;
     }
     // Auto-avanço só para questões normais, não estratégicas
-    const normalCondition = currentQuestionType === "normal" && selectedOptionsCount === 3;
+    const normalCondition =
+      currentQuestionType === "normal" && selectedOptionsCount === 3;
     return normalCondition;
   }, [canProceed, currentQuestionType, selectedOptionsCount]);
 
@@ -81,7 +83,9 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
     <div className="mt-6 w-full px-4 md:px-0">
       <div className="flex flex-col items-center w-full">
         {/* O helper text para questões estratégicas agora é exibido */}
-        {!canProceed && <p className="text-sm text-[#8F7A6A] mb-3">{getHelperText()}</p>}
+        {!canProceed && (
+          <p className="text-sm text-[#8F7A6A] mb-3">{getHelperText()}</p>
+        )}
 
         <div className="flex justify-center items-center w-full gap-3">
           {onPrevious && (

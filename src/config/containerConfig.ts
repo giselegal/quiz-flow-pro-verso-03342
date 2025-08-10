@@ -20,7 +20,7 @@ export const containerConfig: ContainerConfig = {
   base: "w-full mx-auto flex flex-col",
   padding: {
     mobile: "px-1", // Removido py-1
-    tablet: "px-2", // Removido py-1  
+    tablet: "px-2", // Removido py-1
     desktop: "px-2", // Removido py-1
   },
   spacing: {
@@ -63,7 +63,12 @@ export const getOptimizedContainerClasses = (
  * Container padrão para componentes do editor - máximo aproveitamento
  */
 export const getEditorContainerClasses = (customClasses?: string): string => {
-  return getOptimizedContainerClasses("desktop", "tight", "full", customClasses);
+  return getOptimizedContainerClasses(
+    "desktop",
+    "tight",
+    "full",
+    customClasses
+  );
 };
 
 /**

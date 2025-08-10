@@ -21,8 +21,12 @@ const StagePreview: React.FC<StagePreviewProps> = ({ stage, components }) => {
 
   return (
     <div className="space-y-4">
-      {sortedComponents.map(component => (
-        <ComponentRenderer key={component.id} component={component} isSelected={false} />
+      {sortedComponents.map((component) => (
+        <ComponentRenderer
+          key={component.id}
+          component={component}
+          isSelected={false}
+        />
       ))}
 
       {sortedComponents.length === 0 && (

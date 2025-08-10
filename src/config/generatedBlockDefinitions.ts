@@ -84,7 +84,8 @@ export const COMPLETE_21_STEPS_TEMPLATE: Record<string, StepTemplate> = {
           alt: "Transforme seu guarda-roupa",
           width: 600,
           height: 400,
-          className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+          className:
+            "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
           textAlign: "text-center",
           marginBottom: 32,
         },
@@ -356,10 +357,30 @@ export const COMPLETE_21_STEPS_TEMPLATE: Record<string, StepTemplate> = {
       image:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838154/20250509_2149_Or%C3%A7amento_e_Investimento_simple_compose_01jtvtc8grfgxdq3pvr9c4jqan_drrewn.webp",
       options: [
-        { id: "ate-200", text: "Até R$ 200", value: "ate-200", segment: "economica" },
-        { id: "200-500", text: "R$ 200 - R$ 500", value: "200-500", segment: "media" },
-        { id: "500-1000", text: "R$ 500 - R$ 1000", value: "500-1000", segment: "premium" },
-        { id: "acima-1000", text: "Acima de R$ 1000", value: "acima-1000", segment: "luxury" },
+        {
+          id: "ate-200",
+          text: "Até R$ 200",
+          value: "ate-200",
+          segment: "economica",
+        },
+        {
+          id: "200-500",
+          text: "R$ 200 - R$ 500",
+          value: "200-500",
+          segment: "media",
+        },
+        {
+          id: "500-1000",
+          text: "R$ 500 - R$ 1000",
+          value: "500-1000",
+          segment: "premium",
+        },
+        {
+          id: "acima-1000",
+          text: "Acima de R$ 1000",
+          value: "acima-1000",
+          segment: "luxury",
+        },
       ],
     },
     blocks: [],
@@ -563,8 +584,12 @@ export const QUIZ_QUESTIONS_DATA = {
 /**
  * 🎯 FUNÇÃO PARA GERAR ETAPA DINÂMICA
  */
-export function generateStepFromTemplate(stepNumber: number, customData?: any): StepTemplate {
-  const step = COMPLETE_21_STEPS_TEMPLATE[`step${stepNumber.toString().padStart(2, "0")}`];
+export function generateStepFromTemplate(
+  stepNumber: number,
+  customData?: any
+): StepTemplate {
+  const step =
+    COMPLETE_21_STEPS_TEMPLATE[`step${stepNumber.toString().padStart(2, "0")}`];
 
   if (!step) {
     throw new Error(`Template para etapa ${stepNumber} não encontrado`);
@@ -585,14 +610,16 @@ export function generateStepFromTemplate(stepNumber: number, customData?: any): 
  * 🎯 FUNÇÃO PARA OBTER TODAS AS ETAPAS
  */
 export function getAllStepsTemplates(): StepTemplate[] {
-  return Object.values(COMPLETE_21_STEPS_TEMPLATE).sort((a, b) => a.stepNumber - b.stepNumber);
+  return Object.values(COMPLETE_21_STEPS_TEMPLATE).sort(
+    (a, b) => a.stepNumber - b.stepNumber
+  );
 }
 
 /**
  * 🎯 FUNÇÃO PARA OBTER ETAPAS POR TIPO
  */
 export function getStepsByType(type: StepTemplate["type"]): StepTemplate[] {
-  return getAllStepsTemplates().filter(step => step.type === type);
+  return getAllStepsTemplates().filter((step) => step.type === type);
 }
 
 /**

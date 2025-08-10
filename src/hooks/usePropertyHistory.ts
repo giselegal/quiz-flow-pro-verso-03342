@@ -11,7 +11,9 @@ interface HistoryEntry {
   description: string;
 }
 
-export function usePropertyHistory(initialProperties: Record<string, any> = {}) {
+export function usePropertyHistory(
+  initialProperties: Record<string, any> = {}
+) {
   const [history, setHistory] = useState<HistoryEntry[]>([
     {
       id: "initial",
@@ -24,7 +26,10 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
   const lastSaveTime = useRef(Date.now());
 
   const saveToHistory = useCallback(
-    (properties: Record<string, any>, description: string = "Alteração de propriedade") => {
+    (
+      properties: Record<string, any>,
+      description: string = "Alteração de propriedade"
+    ) => {
       const now = Date.now();
 
       // Evitar salvar mudanças muito frequentes (debounce de 1 segundo)
@@ -39,7 +44,7 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
         description,
       };
 
-      setHistory(prev => {
+      setHistory((prev) => {
         // Remove entradas futuras se estivermos no meio do histórico
         const truncatedHistory = prev.slice(0, currentIndex + 1);
 
@@ -50,7 +55,7 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
         return newHistory.slice(-50);
       });
 
-      setCurrentIndex(prev => {
+      setCurrentIndex((prev) => {
         const truncatedLength = history.slice(0, prev + 1).length;
         return truncatedLength; // Nova posição será o final
       });
@@ -62,7 +67,7 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
 
   const undo = useCallback(() => {
     if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
+      setCurrentIndex((prev) => prev - 1);
       return history[currentIndex - 1].properties;
     }
     return null;
@@ -70,7 +75,7 @@ export function usePropertyHistory(initialProperties: Record<string, any> = {}) 
 
   const redo = useCallback(() => {
     if (currentIndex < history.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
       return history[currentIndex + 1].properties;
     }
     return null;

@@ -77,7 +77,7 @@ export const useLazyLoad = (threshold = 0.1) => {
 
   React.useEffect(() => {
     const observer = createIntersectionObserver(
-      entries => {
+      (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsVisible(true);

@@ -8,7 +8,10 @@ interface QuizTransitionProps {
   onComplete: () => void;
 }
 
-const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplete }) => {
+const QuizTransition: React.FC<QuizTransitionProps> = ({
+  isCompleting,
+  onComplete,
+}) => {
   React.useEffect(() => {
     if (isCompleting) {
       const timer = setTimeout(() => {
@@ -36,12 +39,12 @@ const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplet
 
       <h2 className="text-2xl font-bold mb-4 text-center">Quiz Concluído!</h2>
 
-      <p style={{ color: '#6B4F43' }}>
+      <p style={{ color: "#6B4F43" }}>
         Aguarde enquanto preparamos seus resultados...
       </p>
 
       <div className="flex space-x-2">
-        {[0, 1, 2].map(i => (
+        {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
             className="w-3 h-3 bg-[#B89B7A]/100 rounded-full"

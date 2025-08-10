@@ -3,12 +3,22 @@
 
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Slider } from "../../../components/ui/slider";
 import { Switch } from "../../../components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import { Textarea } from "../../../components/ui/textarea";
 import { QUIZ_CONFIGURATION } from "../../../config/quizConfiguration";
 import {
@@ -41,7 +51,14 @@ const BackgroundColorPicker: React.FC<{
     "#432818",
   ];
 
-  const backgroundPresets = ["#FFFFFF", "#F8F9FA", "#F1F3F4", "#E8EAED", "#DADCE0", "#F0F0F0"];
+  const backgroundPresets = [
+    "#FFFFFF",
+    "#F8F9FA",
+    "#F1F3F4",
+    "#E8EAED",
+    "#DADCE0",
+    "#F0F0F0",
+  ];
 
   return (
     <div className="space-y-3">
@@ -64,14 +81,15 @@ const BackgroundColorPicker: React.FC<{
               const input = document.createElement("input");
               input.type = "color";
               input.value = value.startsWith("#") ? value : "#FFFFFF";
-              input.onchange = e => onChange((e.target as HTMLInputElement).value);
+              input.onchange = (e) =>
+                onChange((e.target as HTMLInputElement).value);
               input.click();
             }
           }}
         />
         <Input
           value={value}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           className="text-xs h-8"
           style={{ borderColor: "#E5DDD5" }}
         />
@@ -83,7 +101,7 @@ const BackgroundColorPicker: React.FC<{
           Cores da Marca
         </Label>
         <div className="grid grid-cols-7 gap-1">
-          {brandColors.map(color => (
+          {brandColors.map((color) => (
             <button
               key={color}
               className="w-6 h-6 rounded border hover:scale-110 transition-transform"
@@ -108,7 +126,7 @@ const BackgroundColorPicker: React.FC<{
           Presets
         </Label>
         <div className="grid grid-cols-6 gap-1">
-          {backgroundPresets.map(color => (
+          {backgroundPresets.map((color) => (
             <button
               key={color}
               className="w-6 h-6 rounded border hover:scale-110 transition-transform"
@@ -136,7 +154,8 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
 
   const properties = selectedBlock?.properties || {};
   const introStep =
-    QUIZ_CONFIGURATION.steps.find(step => step.type === "intro") || QUIZ_CONFIGURATION.steps[0];
+    QUIZ_CONFIGURATION.steps.find((step) => step.type === "intro") ||
+    QUIZ_CONFIGURATION.steps[0];
 
   const handlePropertyUpdate = (key: string, value: any) => {
     if (selectedBlock && onUpdate) {
@@ -174,13 +193,18 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
   };
 
   return (
-    <div className="h-full flex flex-col" style={{ backgroundColor: "#FEFEFE" }}>
+    <div
+      className="h-full flex flex-col"
+      style={{ backgroundColor: "#FEFEFE" }}
+    >
       <div className="border-b p-3" style={{ borderColor: "#E5DDD5" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div
               className="w-6 h-6 rounded flex items-center justify-center"
-              style={{ backgroundColor: QUIZ_CONFIGURATION.design.primaryColor }}
+              style={{
+                backgroundColor: QUIZ_CONFIGURATION.design.primaryColor,
+              }}
             >
               <Settings className="h-3 w-3 text-white" />
             </div>
@@ -200,7 +224,11 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
       </div>
 
       <div className="flex-1 overflow-auto p-3">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="space-y-4"
+        >
           <TabsList className="grid w-full grid-cols-4 h-8">
             <TabsTrigger value="content" className="text-xs">
               <Type className="h-3 w-3 mr-1" />
@@ -234,7 +262,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <Input
                     value={properties.title || introStep.title}
-                    onChange={e => handlePropertyUpdate("title", e.target.value)}
+                    onChange={(e) =>
+                      handlePropertyUpdate("title", e.target.value)
+                    }
                     className="text-xs mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -245,8 +275,12 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                     Descrição Superior
                   </Label>
                   <Textarea
-                    value={properties.descriptionTop || introStep.descriptionTop}
-                    onChange={e => handlePropertyUpdate("descriptionTop", e.target.value)}
+                    value={
+                      properties.descriptionTop || introStep.descriptionTop
+                    }
+                    onChange={(e) =>
+                      handlePropertyUpdate("descriptionTop", e.target.value)
+                    }
                     className="text-xs min-h-[60px] mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -257,8 +291,13 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                     Descrição Inferior
                   </Label>
                   <Textarea
-                    value={properties.descriptionBottom || introStep.descriptionBottom}
-                    onChange={e => handlePropertyUpdate("descriptionBottom", e.target.value)}
+                    value={
+                      properties.descriptionBottom ||
+                      introStep.descriptionBottom
+                    }
+                    onChange={(e) =>
+                      handlePropertyUpdate("descriptionBottom", e.target.value)
+                    }
                     className="text-xs min-h-[60px] mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -279,7 +318,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <Input
                     value={properties.inputLabel || introStep.inputLabel}
-                    onChange={e => handlePropertyUpdate("inputLabel", e.target.value)}
+                    onChange={(e) =>
+                      handlePropertyUpdate("inputLabel", e.target.value)
+                    }
                     className="text-xs mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -290,8 +331,12 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                     Placeholder
                   </Label>
                   <Input
-                    value={properties.inputPlaceholder || introStep.inputPlaceholder}
-                    onChange={e => handlePropertyUpdate("inputPlaceholder", e.target.value)}
+                    value={
+                      properties.inputPlaceholder || introStep.inputPlaceholder
+                    }
+                    onChange={(e) =>
+                      handlePropertyUpdate("inputPlaceholder", e.target.value)
+                    }
                     className="text-xs mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -303,7 +348,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <Input
                     value={properties.buttonText || introStep.buttonText}
-                    onChange={e => handlePropertyUpdate("buttonText", e.target.value)}
+                    onChange={(e) =>
+                      handlePropertyUpdate("buttonText", e.target.value)
+                    }
                     className="text-xs mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -315,9 +362,13 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <Switch
                     checked={
-                      properties.required !== undefined ? properties.required : introStep.required
+                      properties.required !== undefined
+                        ? properties.required
+                        : introStep.required
                     }
-                    onCheckedChange={checked => handlePropertyUpdate("required", checked)}
+                    onCheckedChange={(checked) =>
+                      handlePropertyUpdate("required", checked)
+                    }
                   />
                 </div>
               </CardContent>
@@ -336,7 +387,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <Textarea
                     value={properties.privacyText || introStep.privacyText}
-                    onChange={e => handlePropertyUpdate("privacyText", e.target.value)}
+                    onChange={(e) =>
+                      handlePropertyUpdate("privacyText", e.target.value)
+                    }
                     className="text-xs min-h-[40px] mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -348,7 +401,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <Input
                     value={properties.footerText || introStep.footerText}
-                    onChange={e => handlePropertyUpdate("footerText", e.target.value)}
+                    onChange={(e) =>
+                      handlePropertyUpdate("footerText", e.target.value)
+                    }
                     className="text-xs mt-1"
                     style={{ borderColor: "#E5DDD5" }}
                   />
@@ -372,7 +427,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   <div className="flex gap-2 mt-1">
                     <Input
                       value={properties.imageIntro || introStep.imageIntro}
-                      onChange={e => handlePropertyUpdate("imageIntro", e.target.value)}
+                      onChange={(e) =>
+                        handlePropertyUpdate("imageIntro", e.target.value)
+                      }
                       placeholder="https://..."
                       className="text-xs"
                       style={{ borderColor: "#E5DDD5" }}
@@ -392,7 +449,10 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
 
                 {/* Preview da imagem */}
                 {(properties.imageIntro || introStep.imageIntro) && (
-                  <div className="mt-3 p-2 border rounded" style={{ borderColor: "#E5DDD5" }}>
+                  <div
+                    className="mt-3 p-2 border rounded"
+                    style={{ borderColor: "#E5DDD5" }}
+                  >
                     <div className="text-xs mb-2" style={{ color: "#6B4F43" }}>
                       Preview:
                     </div>
@@ -417,7 +477,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
               <CardContent className="space-y-3">
                 <BackgroundColorPicker
                   value={properties.backgroundColor || "transparent"}
-                  onChange={color => handlePropertyUpdate("backgroundColor", color)}
+                  onChange={(color) =>
+                    handlePropertyUpdate("backgroundColor", color)
+                  }
                   label="Cor de Fundo"
                 />
 
@@ -432,7 +494,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </div>
                   <Slider
                     value={[properties.backgroundOpacity || 100]}
-                    onValueChange={([value]) => handlePropertyUpdate("backgroundOpacity", value)}
+                    onValueChange={([value]) =>
+                      handlePropertyUpdate("backgroundOpacity", value)
+                    }
                     min={0}
                     max={100}
                     step={5}
@@ -463,13 +527,18 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </div>
                   <Slider
                     value={[properties.scale || 100]}
-                    onValueChange={([value]) => handlePropertyUpdate("scale", value)}
+                    onValueChange={([value]) =>
+                      handlePropertyUpdate("scale", value)
+                    }
                     min={50}
                     max={110}
                     step={5}
                     className="w-full"
                   />
-                  <div className="flex justify-between text-xs" style={{ color: "#6B4F43" }}>
+                  <div
+                    className="flex justify-between text-xs"
+                    style={{ color: "#6B4F43" }}
+                  >
                     <span>50%</span>
                     <span>100%</span>
                     <span>110%</span>
@@ -483,7 +552,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                   </Label>
                   <div className="grid grid-cols-3 gap-2">
                     <Button
-                      variant={properties.alignment === "left" ? "default" : "outline"}
+                      variant={
+                        properties.alignment === "left" ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => handlePropertyUpdate("alignment", "left")}
                       className="text-xs"
@@ -504,21 +575,26 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                     </Button>
                     <Button
                       variant={
-                        properties.alignment === "center" || !properties.alignment
+                        properties.alignment === "center" ||
+                        !properties.alignment
                           ? "default"
                           : "outline"
                       }
                       size="sm"
-                      onClick={() => handlePropertyUpdate("alignment", "center")}
+                      onClick={() =>
+                        handlePropertyUpdate("alignment", "center")
+                      }
                       className="text-xs"
                       style={{
                         backgroundColor:
-                          properties.alignment === "center" || !properties.alignment
+                          properties.alignment === "center" ||
+                          !properties.alignment
                             ? QUIZ_CONFIGURATION.design.primaryColor
                             : "transparent",
                         borderColor: QUIZ_CONFIGURATION.design.primaryColor,
                         color:
-                          properties.alignment === "center" || !properties.alignment
+                          properties.alignment === "center" ||
+                          !properties.alignment
                             ? "#FEFEFE"
                             : QUIZ_CONFIGURATION.design.primaryColor,
                       }}
@@ -527,7 +603,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
                       Centro
                     </Button>
                     <Button
-                      variant={properties.alignment === "right" ? "default" : "outline"}
+                      variant={
+                        properties.alignment === "right" ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => handlePropertyUpdate("alignment", "right")}
                       className="text-xs"

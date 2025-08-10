@@ -16,7 +16,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -146,7 +153,8 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
         )}
         style={{
           color,
-          backgroundColor: backgroundColor === "transparent" ? undefined : backgroundColor,
+          backgroundColor:
+            backgroundColor === "transparent" ? undefined : backgroundColor,
         }}
       >
         {content || "Título Principal"}
@@ -161,9 +169,11 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Empty state com instruções */}
       {!content && (
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <Type className="w-6 h-6 mr-2" />
-          <span className="text-sm">Clique e edite no painel de propriedades →</span>
+          <span className="text-sm">
+            Clique e edite no painel de propriedades →
+          </span>
         </div>
       )}
 

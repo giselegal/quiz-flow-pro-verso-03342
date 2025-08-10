@@ -17,7 +17,14 @@ const getMarginClass = (
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -68,8 +75,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }
@@ -191,7 +198,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           type={inputType}
           placeholder={placeholder}
           value={value}
-          onChange={e => handleInputChange(e.target.value)}
+          onChange={(e) => handleInputChange(e.target.value)}
           style={{
             backgroundColor: backgroundColor,
             borderColor: borderColor,

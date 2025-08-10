@@ -27,7 +27,13 @@ export const TextInline: React.FC<TextInlineProps> = ({
     whiteSpace: "pre-wrap" as const,
   };
 
-  return <p style={styles} className={className} dangerouslySetInnerHTML={{ __html: text }} />;
+  return (
+    <p
+      style={styles}
+      className={className}
+      dangerouslySetInnerHTML={{ __html: text }}
+    />
+  );
 };
 
 export default TextInline;

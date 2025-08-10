@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -78,11 +85,11 @@ const DynamicPricingBlock: React.FC<BlockComponentProps> = ({
       data-block-type={block.type}
     >
       <div className="text-center">
-        <h3 style={{ color: '#432818' }}>{title}</h3>
+        <h3 style={{ color: "#432818" }}>{title}</h3>
 
         <div className="mb-6">
           {originalPrice && (
-            <span style={{ color: '#8B7355' }}>
+            <span style={{ color: "#8B7355" }}>
               {currency} {originalPrice}
             </span>
           )}
@@ -97,13 +104,15 @@ const DynamicPricingBlock: React.FC<BlockComponentProps> = ({
             {features.map((feature: string, featureIndex: number) => (
               <li key={featureIndex} className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span style={{ color: '#6B4F43' }}>{feature}</span>
+                <span style={{ color: "#6B4F43" }}>{feature}</span>
               </li>
             ))}
           </ul>
         )}
 
-        <Button className="w-full bg-green-600 hover:bg-green-700">{buttonText}</Button>
+        <Button className="w-full bg-green-600 hover:bg-green-700">
+          {buttonText}
+        </Button>
       </div>
     </div>
   );

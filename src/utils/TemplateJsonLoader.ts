@@ -105,10 +105,13 @@ export class TemplateJsonLoader {
             properties: {
               ...jsonBlock.properties,
               // Adiciona propriedades do layout global se não existirem
-              containerWidth: jsonBlock.properties.containerWidth || template.layout.containerWidth,
+              containerWidth:
+                jsonBlock.properties.containerWidth ||
+                template.layout.containerWidth,
               spacing: jsonBlock.properties.spacing || template.layout.spacing,
               backgroundColor:
-                jsonBlock.properties.backgroundColor || template.layout.backgroundColor,
+                jsonBlock.properties.backgroundColor ||
+                template.layout.backgroundColor,
             },
             content: jsonBlock.properties, // Para compatibilidade
             // Adiciona metadados do template
@@ -125,7 +128,10 @@ export class TemplateJsonLoader {
   /**
    * Carrega template e converte para blocos
    */
-  static async loadTemplateAsBlocks(templatePath: string, stepId: string): Promise<Block[]> {
+  static async loadTemplateAsBlocks(
+    templatePath: string,
+    stepId: string
+  ): Promise<Block[]> {
     const template = await this.loadTemplate(templatePath);
     return this.jsonToBlocks(template, stepId);
   }
@@ -143,7 +149,7 @@ export class TemplateJsonLoader {
     }
 
     // Valida IDs únicos
-    const ids = template.blocks.map(b => b.id);
+    const ids = template.blocks.map((b) => b.id);
     const uniqueIds = new Set(ids);
     if (ids.length !== uniqueIds.size) {
       throw new Error("IDs dos blocos devem ser únicos");
@@ -178,7 +184,9 @@ export class TemplateJsonLoader {
   /**
    * Obtém metadados de um template carregado
    */
-  static getTemplateMetadata(templatePath: string): JsonTemplateMetadata | null {
+  static getTemplateMetadata(
+    templatePath: string
+  ): JsonTemplateMetadata | null {
     const template = this.templates.get(templatePath);
     return template?.metadata || null;
   }

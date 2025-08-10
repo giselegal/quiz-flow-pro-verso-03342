@@ -17,7 +17,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -83,8 +90,14 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
   }
 
   // Handle both string and object style types
-  const category = typeof primaryStyle === "string" ? primaryStyle : (primaryStyle as any).category;
-  const percentage = typeof primaryStyle === "object" ? (primaryStyle as any).percentage || 85 : 85;
+  const category =
+    typeof primaryStyle === "string"
+      ? primaryStyle
+      : (primaryStyle as any).category;
+  const percentage =
+    typeof primaryStyle === "object"
+      ? (primaryStyle as any).percentage || 85
+      : 85;
 
   const styleData = styleConfig[category as keyof typeof styleConfig];
 
@@ -108,7 +121,9 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
       <div className="text-center mb-8">
         <div className="max-w-md mx-auto mb-6">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-[#8F7A6A]">Seu estilo predominante</span>
+            <span className="text-sm text-[#8F7A6A]">
+              Seu estilo predominante
+            </span>
             <span className="text-[#aa6b5d] font-medium">{percentage}%</span>
           </div>
           {showProgress && (
@@ -120,12 +135,16 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
           )}
         </div>
 
-        <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-4">Estilo {category}</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-4">
+          Estilo {category}
+        </h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="space-y-4">
-          {showDescription && <p className="text-[#432818] leading-relaxed">{description}</p>}
+          {showDescription && (
+            <p className="text-[#432818] leading-relaxed">{description}</p>
+          )}
         </div>
 
         {showImage && (

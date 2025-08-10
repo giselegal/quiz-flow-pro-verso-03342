@@ -9,7 +9,10 @@ interface HeadlineBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpdate }) => {
+const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   const content = block.content;
 
   return (
@@ -20,7 +23,7 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           id="title"
           rows={2}
           value={content.title || ""}
-          onChange={e => onUpdate({ title: e.target.value })}
+          onChange={(e) => onUpdate({ title: e.target.value })}
           placeholder="Digite o título aqui"
         />
       </div>
@@ -31,7 +34,7 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           id="subtitle"
           rows={2}
           value={content.subtitle || ""}
-          onChange={e => onUpdate({ subtitle: e.target.value })}
+          onChange={(e) => onUpdate({ subtitle: e.target.value })}
           placeholder="Digite o subtítulo aqui"
         />
       </div>
@@ -42,7 +45,7 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           id="textColor"
           type="color"
           value={content.textColor || "#432818"}
-          onChange={e => onUpdate({ textColor: e.target.value })}
+          onChange={(e) => onUpdate({ textColor: e.target.value })}
         />
       </div>
 
@@ -52,7 +55,9 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           <button
             type="button"
             className={`p-2 border rounded-md ${
-              (content.alignment || "center") === "left" ? "bg-[#B89B7A]/20" : ""
+              (content.alignment || "center") === "left"
+                ? "bg-[#B89B7A]/20"
+                : ""
             }`}
             onClick={() => onUpdate({ alignment: "left" })}
           >
@@ -61,7 +66,9 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           <button
             type="button"
             className={`p-2 border rounded-md ${
-              (content.alignment || "center") === "center" ? "bg-[#B89B7A]/20" : ""
+              (content.alignment || "center") === "center"
+                ? "bg-[#B89B7A]/20"
+                : ""
             }`}
             onClick={() => onUpdate({ alignment: "center" })}
           >
@@ -70,7 +77,9 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           <button
             type="button"
             className={`p-2 border rounded-md ${
-              (content.alignment || "center") === "right" ? "bg-[#B89B7A]/20" : ""
+              (content.alignment || "center") === "right"
+                ? "bg-[#B89B7A]/20"
+                : ""
             }`}
             onClick={() => onUpdate({ alignment: "right" })}
           >

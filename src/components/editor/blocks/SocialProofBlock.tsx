@@ -14,7 +14,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,17 +71,24 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>
+          Erro: Bloco não encontrado ou propriedades indefinidas
+        </p>
       </div>
     );
   }
 
   // Debug das propriedades recebidas
-  console.log("🔍 [SocialProofBlock] Propriedades recebidas:", block.properties);
+  console.log(
+    "🔍 [SocialProofBlock] Propriedades recebidas:",
+    block.properties
+  );
 
-  const { title = "Depoimentos Reais de Quem Transformou o Guarda-Roupa", showTitle = true } =
-    block?.properties || {};
+  const {
+    title = "Depoimentos Reais de Quem Transformou o Guarda-Roupa",
+    showTitle = true,
+  } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -87,19 +101,22 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
       name: "Ana Paula, 34 anos",
       text: "Nunca imaginei que descobrir meu estilo seria tão transformador. Agora me visto com confiança e recebo elogios todos os dias!",
       style: "Elegante",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento1.webp",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento1.webp",
     },
     {
       name: "Carla Santos, 28 anos",
       text: "O guia me ensinou a montar looks incríveis com peças que já tinha no armário. Economizei muito e ainda melhoro minha imagem!",
       style: "Contemporâneo",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento2.webp",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento2.webp",
     },
     {
       name: "Fernanda Lima, 42 anos",
       text: "Finalmente entendi qual estilo combina comigo. Minha autoestima subiu muito e me sinto mais eu mesma a cada dia.",
       style: "Natural",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento3.webp",
+      image:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/depoimento3.webp",
     },
   ];
   const renderStars = () => {
@@ -119,15 +136,21 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
           <div className="flex">{renderStars()}</div>
         </div>
 
-        <p className="text-[#432818] mb-4 flex-grow italic leading-relaxed">"{testimonial.text}"</p>
+        <p className="text-[#432818] mb-4 flex-grow italic leading-relaxed">
+          "{testimonial.text}"
+        </p>
 
         <div className="flex items-center justify-between pt-4 border-t border-[#B89B7A]/10">
           <div>
             <p className="font-semibold text-[#aa6b5d]">{testimonial.name}</p>
-            <p className="text-sm text-[#B89B7A] font-medium">Estilo: {testimonial.style}</p>
+            <p className="text-sm text-[#B89B7A] font-medium">
+              Estilo: {testimonial.style}
+            </p>
           </div>
           <div className="w-12 h-12 bg-[#B89B7A]/10 rounded-full flex items-center justify-center">
-            <span className="text-[#B89B7A] font-bold text-lg">{testimonial.name.charAt(0)}</span>
+            <span className="text-[#B89B7A] font-bold text-lg">
+              {testimonial.name.charAt(0)}
+            </span>
           </div>
         </div>
       </div>
@@ -138,7 +161,9 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
     <div
       className={cn(
         "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
+        isSelected
+          ? "border-[#B89B7A] bg-[#B89B7A]/10"
+          : "border-gray-300 bg-white",
         "cursor-pointer hover:border-gray-400 transition-colors",
         className,
         // Margens universais com controles deslizantes
@@ -149,11 +174,15 @@ const SocialProofBlock: React.FC<SocialProofBlockProps> = ({
       )}
       onClick={onClick}
     >
-      <div className={cn("py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]")}>
+      <div
+        className={cn("py-12 bg-gradient-to-br from-[#faf8f5] to-[#f9f4ef]")}
+      >
         <div className="max-w-7xl mx-auto px-6">
           {showTitle && (
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#aa6b5d] mb-4">{title}</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#aa6b5d] mb-4">
+                {title}
+              </h2>
               <div className="w-24 h-1 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] mx-auto rounded-full"></div>
               <p className="text-[#432818] mt-4 max-w-2xl mx-auto">
                 Veja como outras mulheres transformaram seu estilo e autoestima

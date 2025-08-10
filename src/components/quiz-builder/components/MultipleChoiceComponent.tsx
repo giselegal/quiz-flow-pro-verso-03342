@@ -29,7 +29,10 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
 
   return (
     <div
-      className={cn("p-4", isSelected && "outline-dashed outline-1 outline-blue-400")}
+      className={cn(
+        "p-4",
+        isSelected && "outline-dashed outline-1 outline-blue-400"
+      )}
       style={{
         backgroundColor: style?.backgroundColor || "transparent",
         color: style?.textColor || "inherit",
@@ -39,7 +42,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
         <h3 className="text-lg font-medium mb-2">
           {data.question || "Pergunta de múltipla escolha"}
         </h3>
-        <p style={{ color: '#8B7355' }}>
+        <p style={{ color: "#8B7355" }}>
           {data.minSelections && data.maxSelections
             ? `Selecione de ${data.minSelections} a ${data.maxSelections} opções`
             : "Selecione uma ou mais opções"}
@@ -50,7 +53,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
         {options.map((option, index) => (
           <div
             key={`option-${option}-${index}`}
-            style={{ backgroundColor: '#FAF9F7' }}
+            style={{ backgroundColor: "#FAF9F7" }}
           >
             {(displayType === "image" || displayType === "both") && (
               <div className="mb-2">
@@ -61,8 +64,8 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
                     className="w-full h-32 object-cover rounded-md"
                   />
                 ) : (
-                  <div style={{ backgroundColor: '#E5DDD5' }}>
-                    <span style={{ color: '#8B7355' }}>Sem imagem</span>
+                  <div style={{ backgroundColor: "#E5DDD5" }}>
+                    <span style={{ color: "#8B7355" }}>Sem imagem</span>
                   </div>
                 )}
               </div>
@@ -70,7 +73,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
 
             {(displayType === "text" || displayType === "both") && (
               <div className="flex items-center">
-                <div style={{ borderColor: '#E5DDD5' }}></div>
+                <div style={{ borderColor: "#E5DDD5" }}></div>
                 <span>{option}</span>
               </div>
             )}

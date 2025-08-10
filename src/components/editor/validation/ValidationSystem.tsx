@@ -12,7 +12,13 @@ export type ValidationSeverity = "error" | "warning" | "info" | "success";
 export interface ValidationRule {
   id: string;
   field: string;
-  type: "required" | "minLength" | "maxLength" | "pattern" | "custom" | "uniqueness";
+  type:
+    | "required"
+    | "minLength"
+    | "maxLength"
+    | "pattern"
+    | "custom"
+    | "uniqueness";
   message: string;
   severity: ValidationSeverity;
   validator?: (value: any, context?: any) => boolean;
@@ -54,7 +60,7 @@ export const VALIDATION_RULES: ValidationRule[] = [
     type: "minLength",
     message: "Nome deve ter pelo menos 3 caracteres",
     severity: "error",
-    validator: value => value && value.length >= 3,
+    validator: (value) => value && value.length >= 3,
   },
   {
     id: "funnel-description-recommended",
@@ -80,7 +86,7 @@ export const VALIDATION_RULES: ValidationRule[] = [
     type: "custom",
     message: "Página deve ter pelo menos um componente",
     severity: "warning",
-    validator: components => components && components.length > 0,
+    validator: (components) => components && components.length > 0,
     suggestion: "Adicione componentes para construir o conteúdo da página",
   },
 
@@ -91,7 +97,7 @@ export const VALIDATION_RULES: ValidationRule[] = [
     type: "custom",
     message: "Título SEO deve ter entre 30-60 caracteres",
     severity: "warning",
-    validator: value => !value || (value.length >= 30 && value.length <= 60),
+    validator: (value) => !value || (value.length >= 30 && value.length <= 60),
     suggestion: "Otimize o título para melhor rankeamento nos buscadores",
   },
   {
@@ -100,8 +106,10 @@ export const VALIDATION_RULES: ValidationRule[] = [
     type: "custom",
     message: "Meta descrição deve ter entre 120-160 caracteres",
     severity: "warning",
-    validator: value => !value || (value.length >= 120 && value.length <= 160),
-    suggestion: "Crie uma descrição atrativa para aparecer nos resultados de busca",
+    validator: (value) =>
+      !value || (value.length >= 120 && value.length <= 160),
+    suggestion:
+      "Crie uma descrição atrativa para aparecer nos resultados de busca",
   },
 
   // Performance validations
@@ -111,27 +119,30 @@ export const VALIDATION_RULES: ValidationRule[] = [
     type: "custom",
     message: "Muitas páginas podem afetar a performance",
     severity: "info",
-    validator: pages => !pages || pages.length <= 30,
+    validator: (pages) => !pages || pages.length <= 30,
     suggestion: "Considere dividir em múltiplos funis menores",
   },
 ];
 
 // Hook para validação em tempo real
 export const useValidation = () => {
-  const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
+  const [validationResults, setValidationResults] = useState<
+    ValidationResult[]
+  >([]);
   const [isValidating, setIsValidating] = useState(false);
 
   const validateField = useCallback(
     (field: string, value: any, context?: FunnelValidationContext) => {
       const applicableRules = VALIDATION_RULES.filter(
-        rule =>
+        (rule) =>
           rule.field === field ||
-          (rule.field.includes("[]") && field.includes(rule.field.replace("[]", "")))
+          (rule.field.includes("[]") &&
+            field.includes(rule.field.replace("[]", "")))
       );
 
       const results: ValidationResult[] = [];
 
-      applicableRules.forEach(rule => {
+      applicableRules.forEach((rule) => {
         let isValid = true;
         let message = rule.message;
 
@@ -174,15 +185,25 @@ export const useValidation = () => {
       try {
         // Validate funnel level
         if (context.funnel) {
-          allResults.push(...validateField("name", context.funnel.name, context));
-          allResults.push(...validateField("description", context.funnel.description, context));
+          allResults.push(
+            ...validateField("name", context.funnel.name, context)
+          );
+          allResults.push(
+            ...validateField("description", context.funnel.description, context)
+          );
           allResults.push(...validateField("pages", context.pages, context));
 
           // SEO validation
           if (context.funnel.seo) {
-            allResults.push(...validateField("seo.title", context.funnel.seo.title, context));
             allResults.push(
-              ...validateField("seo.description", context.funnel.seo.description, context)
+              ...validateField("seo.title", context.funnel.seo.title, context)
+            );
+            allResults.push(
+              ...validateField(
+                "seo.description",
+                context.funnel.seo.description,
+                context
+              )
             );
           }
         }
@@ -190,9 +211,15 @@ export const useValidation = () => {
         // Validate pages
         if (context.pages) {
           context.pages.forEach((page, index) => {
-            allResults.push(...validateField(`pages[${index}].title`, page.title, context));
             allResults.push(
-              ...validateField(`pages[${index}].components`, page.components, context)
+              ...validateField(`pages[${index}].title`, page.title, context)
+            );
+            allResults.push(
+              ...validateField(
+                `pages[${index}].components`,
+                page.components,
+                context
+              )
             );
           });
         }
@@ -210,9 +237,14 @@ export const useValidation = () => {
   const getValidationSummary = useMemo(() => {
     const summary = {
       total: validationResults.length,
-      errors: validationResults.filter(r => !r.isValid && r.severity === "error").length,
-      warnings: validationResults.filter(r => !r.isValid && r.severity === "warning").length,
-      info: validationResults.filter(r => !r.isValid && r.severity === "info").length,
+      errors: validationResults.filter(
+        (r) => !r.isValid && r.severity === "error"
+      ).length,
+      warnings: validationResults.filter(
+        (r) => !r.isValid && r.severity === "warning"
+      ).length,
+      info: validationResults.filter((r) => !r.isValid && r.severity === "info")
+        .length,
       score: 0,
     };
 
@@ -221,7 +253,12 @@ export const useValidation = () => {
     const maxPossibleIssues = validationResults.length;
     summary.score =
       maxPossibleIssues > 0
-        ? Math.max(0, Math.round(((maxPossibleIssues - totalIssues) / maxPossibleIssues) * 100))
+        ? Math.max(
+            0,
+            Math.round(
+              ((maxPossibleIssues - totalIssues) / maxPossibleIssues) * 100
+            )
+          )
         : 100;
 
     return summary;
@@ -245,13 +282,15 @@ export const FieldValidationFeedback: React.FC<{
 }> = ({ field, value, context, className = "" }) => {
   const { validateField } = useValidation();
   const results = validateField(field, value, context);
-  const activeResults = results.filter(r => !r.isValid);
+  const activeResults = results.filter((r) => !r.isValid);
 
   if (activeResults.length === 0) return null;
 
   const mostSevere = activeResults.reduce((prev, current) => {
     const severityOrder = { error: 4, warning: 3, info: 2, success: 1 };
-    return severityOrder[current.severity] > severityOrder[prev.severity] ? current : prev;
+    return severityOrder[current.severity] > severityOrder[prev.severity]
+      ? current
+      : prev;
   });
 
   const getIcon = (severity: ValidationSeverity) => {
@@ -289,11 +328,18 @@ export const FieldValidationFeedback: React.FC<{
             <AlertDescription className="text-sm">
               {mostSevere.message}
               {mostSevere.suggestion && (
-                <div className="mt-1 text-xs opacity-80">💡 {mostSevere.suggestion}</div>
+                <div className="mt-1 text-xs opacity-80">
+                  💡 {mostSevere.suggestion}
+                </div>
               )}
             </AlertDescription>
             {mostSevere.autoFix && (
-              <Button size="sm" variant="outline" className="mt-2" onClick={mostSevere.autoFix}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="mt-2"
+                onClick={mostSevere.autoFix}
+              >
                 Corrigir automaticamente
               </Button>
             )}
@@ -309,7 +355,12 @@ export const ValidationSummary: React.FC<{
   context: FunnelValidationContext;
   className?: string;
 }> = ({ context, className = "" }) => {
-  const { validationResults, getValidationSummary, validateFunnel, isValidating } = useValidation();
+  const {
+    validationResults,
+    getValidationSummary,
+    validateFunnel,
+    isValidating,
+  } = useValidation();
   const summary = getValidationSummary;
 
   React.useEffect(() => {
@@ -337,7 +388,11 @@ export const ValidationSummary: React.FC<{
           <h3 className="text-sm font-semibold">Qualidade do Funil</h3>
           <Badge
             variant={
-              summary.score >= 70 ? "secondary" : summary.score >= 50 ? "outline" : "destructive"
+              summary.score >= 70
+                ? "secondary"
+                : summary.score >= 50
+                  ? "outline"
+                  : "destructive"
             }
           >
             {getScoreLabel(summary.score)}
@@ -346,7 +401,9 @@ export const ValidationSummary: React.FC<{
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span>Score</span>
-            <span className={`font-bold ${getScoreColor(summary.score)}`}>{summary.score}/100</span>
+            <span className={`font-bold ${getScoreColor(summary.score)}`}>
+              {summary.score}/100
+            </span>
           </div>
           <Progress value={summary.score} className="h-2" />
         </div>
@@ -358,9 +415,11 @@ export const ValidationSummary: React.FC<{
           <h3 className="text-sm font-semibold mb-3">Resumo de Validação</h3>
           <div className="space-y-2">
             {summary.errors > 0 && (
-              <div style={{ color: '#432818' }}>
+              <div style={{ color: "#432818" }}>
                 <AlertCircle className="h-4 w-4" />
-                <span className="text-sm">{summary.errors} erro(s) crítico(s)</span>
+                <span className="text-sm">
+                  {summary.errors} erro(s) crítico(s)
+                </span>
               </div>
             )}
             {summary.warnings > 0 && (
@@ -380,24 +439,30 @@ export const ValidationSummary: React.FC<{
       )}
 
       {/* Detailed Issues */}
-      {validationResults.filter(r => !r.isValid).length > 0 && (
+      {validationResults.filter((r) => !r.isValid).length > 0 && (
         <div className="space-y-2">
           <h4 className="text-sm font-semibold">Detalhes</h4>
           {validationResults
-            .filter(r => !r.isValid)
+            .filter((r) => !r.isValid)
             .map((result, index) => (
               <Alert key={index} className="bg-white">
                 <div className="flex items-start gap-2">
-                  {result.severity === "error" && <AlertCircle style={{ color: '#432818' }} />}
+                  {result.severity === "error" && (
+                    <AlertCircle style={{ color: "#432818" }} />
+                  )}
                   {result.severity === "warning" && (
                     <AlertTriangle className="h-4 w-4 text-yellow-500" />
                   )}
-                  {result.severity === "info" && <Info className="h-4 w-4 text-[#B89B7A]" />}
+                  {result.severity === "info" && (
+                    <Info className="h-4 w-4 text-[#B89B7A]" />
+                  )}
                   <div className="flex-1">
                     <AlertDescription className="text-sm">
                       <strong>{result.field}:</strong> {result.message}
                       {result.suggestion && (
-                        <div className="mt-1 text-xs opacity-70">{result.suggestion}</div>
+                        <div className="mt-1 text-xs opacity-70">
+                          {result.suggestion}
+                        </div>
                       )}
                     </AlertDescription>
                   </div>
@@ -410,7 +475,7 @@ export const ValidationSummary: React.FC<{
       {isValidating && (
         <div className="text-center py-4">
           <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-            <div style={{ borderColor: '#E5DDD5' }}></div>
+            <div style={{ borderColor: "#E5DDD5" }}></div>
             Validando funil...
           </div>
         </div>
@@ -420,7 +485,9 @@ export const ValidationSummary: React.FC<{
 };
 
 // HOC para adicionar validação a inputs
-export const withValidation = <P extends object>(Component: React.ComponentType<P>) => {
+export const withValidation = <P extends object>(
+  Component: React.ComponentType<P>
+) => {
   return React.forwardRef<
     HTMLElement,
     P & {
@@ -430,13 +497,23 @@ export const withValidation = <P extends object>(Component: React.ComponentType<
       showFeedback?: boolean;
     }
   >((props, ref) => {
-    const { field, value, context, showFeedback = true, ...componentProps } = props;
+    const {
+      field,
+      value,
+      context,
+      showFeedback = true,
+      ...componentProps
+    } = props;
 
     return (
       <div className="space-y-1">
         <Component {...(componentProps as P)} ref={ref} />
         {showFeedback && field && (
-          <FieldValidationFeedback field={field} value={value} context={context} />
+          <FieldValidationFeedback
+            field={field}
+            value={value}
+            context={context}
+          />
         )}
       </div>
     );

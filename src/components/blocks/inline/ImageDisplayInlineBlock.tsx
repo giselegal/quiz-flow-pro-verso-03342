@@ -84,12 +84,22 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Função para converter valores de margem em classes Tailwind (alinhada com useContainerProperties)
-  const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
+  const getMarginClass = (
+    value: number | string,
+    type: "top" | "bottom" | "left" | "right"
+  ) => {
     const numValue = typeof value === "string" ? parseInt(value, 10) : value;
 
     if (isNaN(numValue) || numValue === 0) return "";
 
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+    const prefix =
+      type === "top"
+        ? "mt"
+        : type === "bottom"
+          ? "mb"
+          : type === "left"
+            ? "ml"
+            : "mr";
 
     // Margens negativas
     if (numValue < 0) {
@@ -133,7 +143,9 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
     "flex-shrink-0 flex-grow-0 relative",
     // Centralização baseada no alignment ou textAlign
-    alignment === "center" || textAlign === "center" || textAlign === "text-center"
+    alignment === "center" ||
+      textAlign === "center" ||
+      textAlign === "text-center"
       ? "mx-auto flex justify-center"
       : alignment === "left"
         ? "justify-start"
@@ -186,7 +198,9 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Badge flutuante */}
         {showBadge && badgeText && (
           <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
-            <span className="text-sm font-medium text-[#432818]">{badgeText}</span>
+            <span className="text-sm font-medium text-[#432818]">
+              {badgeText}
+            </span>
           </div>
         )}
       </div>

@@ -4,7 +4,11 @@ import BrandHeader from "../components/ui/BrandHeader";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { LoadingSpinner } from "../components/ui/loading-spinner";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../components/ui/resizable";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "../components/ui/resizable";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
 import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
@@ -250,12 +254,14 @@ const SimpleBlockRenderer: React.FC<{
   onClick?: () => void;
   onPropertyChange?: (key: string, value: any) => void;
 }> = ({ block, isSelected = false, onClick, onPropertyChange }) => {
-  const { containerClasses, inlineStyles } = useContainerProperties(block.properties || {});
+  const { containerClasses, inlineStyles } = useContainerProperties(
+    block.properties || {}
+  );
   const Component = getBlockComponent(block.type);
 
   if (!Component) {
     return (
-      <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <p>Componente não encontrado: {block.type}</p>
       </div>
     );
@@ -285,7 +291,9 @@ const SimpleBlockRenderer: React.FC<{
 
 const EditorPage: React.FC = () => {
   const [location, setLocation] = useLocation();
-  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
+  const [selectedComponentId, setSelectedComponentId] = useState<string | null>(
+    null
+  );
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("desktop");
@@ -297,8 +305,16 @@ const EditorPage: React.FC = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const funnelId = urlParams.get("id");
 
-  const { config, addBlock, updateBlock, deleteBlock, setAllBlocks, clearAllBlocks } = useEditor();
-  const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+  const {
+    config,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    setAllBlocks,
+    clearAllBlocks,
+  } = useEditor();
+  const { saveFunnel, loadFunnel, isSaving, isLoading } =
+    useEditorPersistence();
 
   // ===== DETECÇÃO DE MOBILE =====
   useEffect(() => {
@@ -374,7 +390,8 @@ const EditorPage: React.FC = () => {
           id: "test-4",
           type: "text-inline",
           properties: {
-            content: "Componente de texto inline - totalmente responsivo e editável",
+            content:
+              "Componente de texto inline - totalmente responsivo e editável",
           },
         },
         {
@@ -392,7 +409,10 @@ const EditorPage: React.FC = () => {
       for (const block of testBlocks) {
         try {
           const normalizedBlock = normalizeBlock(block);
-          console.log(`📦 Adicionando bloco ${addedCount + 1}:`, normalizedBlock.type);
+          console.log(
+            `📦 Adicionando bloco ${addedCount + 1}:`,
+            normalizedBlock.type
+          );
 
           const newBlockId = addBlock(normalizedBlock.type as any);
           addedCount++;
@@ -480,7 +500,8 @@ const EditorPage: React.FC = () => {
             alt: "Transforme seu guarda-roupa",
             width: 600,
             height: 400,
-            className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+            className:
+              "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
             textAlign: "text-center",
             marginBottom: 32,
           },
@@ -539,7 +560,8 @@ const EditorPage: React.FC = () => {
           properties: {
             privacyText:
               "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
-            copyrightText: "© 2025 Gisele Galvão - Todos os direitos reservados",
+            copyrightText:
+              "© 2025 Gisele Galvão - Todos os direitos reservados",
             showIcon: true,
             iconType: "shield",
             textAlign: "text-center",
@@ -562,7 +584,10 @@ const EditorPage: React.FC = () => {
       for (const block of step1Blocks) {
         try {
           const normalizedBlock = normalizeBlock(block);
-          console.log(`📦 Preparando bloco Etapa 1 ${addedCount + 1}:`, normalizedBlock.type);
+          console.log(
+            `📦 Preparando bloco Etapa 1 ${addedCount + 1}:`,
+            normalizedBlock.type
+          );
 
           // Criar bloco completo de uma vez
           const fullBlock = {
@@ -586,8 +611,14 @@ const EditorPage: React.FC = () => {
 
       // Debug: Verificar se os blocos foram realmente adicionados
       setTimeout(() => {
-        console.log("🔍 Debug - Blocos no estado após setAllBlocks:", config?.blocks);
-        console.log("🔍 Debug - Primeiro bloco detalhado:", config?.blocks?.[0]);
+        console.log(
+          "🔍 Debug - Blocos no estado após setAllBlocks:",
+          config?.blocks
+        );
+        console.log(
+          "🔍 Debug - Primeiro bloco detalhado:",
+          config?.blocks?.[0]
+        );
       }, 100);
 
       toast({
@@ -627,7 +658,10 @@ const EditorPage: React.FC = () => {
       for (const block of step2Blocks) {
         try {
           const normalizedBlock = normalizeBlock(block);
-          console.log(`📦 Preparando bloco Step02 ${addedCount + 1}:`, normalizedBlock.type);
+          console.log(
+            `📦 Preparando bloco Step02 ${addedCount + 1}:`,
+            normalizedBlock.type
+          );
 
           // Criar bloco completo de uma vez
           const fullBlock = {
@@ -664,15 +698,19 @@ const EditorPage: React.FC = () => {
   }, [addBlock, updateBlock, clearAllBlocks, setAllBlocks]);
 
   // ===== COMPONENTE FILTRADO DE COMPONENTES =====
-  const filteredBlocks = AVAILABLE_BLOCKS.filter(block => {
+  const filteredBlocks = AVAILABLE_BLOCKS.filter((block) => {
     const matchesSearch =
       block.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       block.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || block.category === selectedCategory;
+    const matchesCategory =
+      selectedCategory === "all" || block.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ["all", ...Array.from(new Set(AVAILABLE_BLOCKS.map(block => block.category)))];
+  const categories = [
+    "all",
+    ...Array.from(new Set(AVAILABLE_BLOCKS.map((block) => block.category))),
+  ];
 
   // Load funnel data if ID is provided in URL
   useEffect(() => {
@@ -682,14 +720,18 @@ const EditorPage: React.FC = () => {
       setIsLoadingFunnel(true);
       try {
         console.log("🔍 Loading funnel from schema service:", funnelId);
-        const schemaDrivenData = await schemaDrivenFunnelService.loadFunnel(funnelId);
+        const schemaDrivenData =
+          await schemaDrivenFunnelService.loadFunnel(funnelId);
 
         if (schemaDrivenData) {
           // Convert to editor format and load first page blocks
           const firstPage = schemaDrivenData.pages[0];
           if (firstPage && firstPage.blocks) {
             // setConfig not available in current hook
-            console.log("✅ Would load funnel blocks:", firstPage.blocks.length);
+            console.log(
+              "✅ Would load funnel blocks:",
+              firstPage.blocks.length
+            );
           }
         } else {
           console.warn("❌ Funnel not found with ID:", funnelId);
@@ -811,7 +853,11 @@ const EditorPage: React.FC = () => {
             variant={isPreviewing ? "default" : "outline"}
             size="sm"
           >
-            {isPreviewing ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+            {isPreviewing ? (
+              <EyeOff className="w-4 h-4 mr-2" />
+            ) : (
+              <Eye className="w-4 h-4 mr-2" />
+            )}
             {isPreviewing ? "Editar" : "Preview"}
           </Button>
 
@@ -827,22 +873,26 @@ const EditorPage: React.FC = () => {
         /* Mobile Layout - Vertical Stack */
         <div className="flex-1 flex flex-col">
           {/* Mobile Components Panel */}
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Input
                   placeholder="Buscar componentes..."
                   value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="text-sm"
                 />
-                <Button onClick={handleLoadTemplate} size="sm" variant="outline">
+                <Button
+                  onClick={handleLoadTemplate}
+                  size="sm"
+                  variant="outline"
+                >
                   <Download className="w-4 h-4" />
                 </Button>
               </div>
 
               <div className="flex space-x-1 overflow-x-auto">
-                {filteredBlocks.slice(0, 10).map(block => (
+                {filteredBlocks.slice(0, 10).map((block) => (
                   <Button
                     key={block.type}
                     variant="outline"
@@ -859,20 +909,18 @@ const EditorPage: React.FC = () => {
           </div>
 
           {/* Mobile Canvas */}
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <ScrollArea className="h-full p-4">
               <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
                 {sortedBlocks.length === 0 ? (
-                  <div style={{ borderColor: '#E5DDD5' }}>
+                  <div style={{ borderColor: "#E5DDD5" }}>
                     <div className="text-center space-y-4 max-w-md">
                       <div className="w-16 h-16 mx-auto bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
                         <Plus className="w-8 h-8 text-[#B89B7A]" />
                       </div>
                       <div>
-                        <h3 style={{ color: '#432818' }}>
-                          Construa Seu Funil
-                        </h3>
-                        <p style={{ color: '#6B4F43' }}>
+                        <h3 style={{ color: "#432818" }}>Construa Seu Funil</h3>
+                        <p style={{ color: "#6B4F43" }}>
                           Selecione componentes acima para começar
                         </p>
                         <Button onClick={handleLoadTemplate} className="mb-2">
@@ -881,8 +929,8 @@ const EditorPage: React.FC = () => {
                         </Button>
 
                         {/* 🎯 SEÇÃO PARA CARREGAR STEPS DO FUNIL */}
-                        <div style={{ backgroundColor: '#FAF9F7' }}>
-                          <h4 style={{ color: '#6B4F43' }}>
+                        <div style={{ backgroundColor: "#FAF9F7" }}>
+                          <h4 style={{ color: "#6B4F43" }}>
                             📋 Etapas do Quiz
                           </h4>
                           <div className="flex flex-col gap-2">
@@ -911,7 +959,7 @@ const EditorPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {sortedBlocks.map(block => {
+                    {sortedBlocks.map((block) => {
                       const blockData = {
                         id: block.id,
                         type: block.type,
@@ -950,7 +998,7 @@ const EditorPage: React.FC = () => {
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Components Panel */}
           <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               <ScrollArea className="h-full">
                 <div className="space-y-4 p-2">
                   <div className="p-2 border-b space-y-2">
@@ -962,7 +1010,7 @@ const EditorPage: React.FC = () => {
                       <Input
                         placeholder="Buscar componentes..."
                         value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-8 text-sm"
                       />
                     </div>
@@ -970,12 +1018,14 @@ const EditorPage: React.FC = () => {
                     {/* Category Filter */}
                     <select
                       value={selectedCategory}
-                      onChange={e => setSelectedCategory(e.target.value)}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
                       className="w-full p-2 border rounded text-sm"
                     >
-                      {categories.map(category => (
+                      {categories.map((category) => (
                         <option key={category} value={category}>
-                          {category === "all" ? "Todas as Categorias" : category}
+                          {category === "all"
+                            ? "Todas as Categorias"
+                            : category}
                         </option>
                       ))}
                     </select>
@@ -983,7 +1033,7 @@ const EditorPage: React.FC = () => {
 
                   {/* Components Grid */}
                   <div className="p-2 space-y-1">
-                    {filteredBlocks.map(block => (
+                    {filteredBlocks.map((block) => (
                       <Button
                         key={block.type}
                         variant="outline"
@@ -993,8 +1043,12 @@ const EditorPage: React.FC = () => {
                       >
                         <span className="mr-2">{block.icon}</span>
                         <div className="flex-1">
-                          <div className="font-medium text-xs">{block.name}</div>
-                          <div style={{ color: '#8B7355' }}>{block.category}</div>
+                          <div className="font-medium text-xs">
+                            {block.name}
+                          </div>
+                          <div style={{ color: "#8B7355" }}>
+                            {block.category}
+                          </div>
                         </div>
                       </Button>
                     ))}
@@ -1008,11 +1062,11 @@ const EditorPage: React.FC = () => {
 
           {/* Canvas */}
           <ResizablePanel defaultSize={55}>
-            <div style={{ backgroundColor: '#FAF9F7' }}>
+            <div style={{ backgroundColor: "#FAF9F7" }}>
               <ScrollArea className="h-full p-6">
                 {/* Preview Mode Indicator */}
                 <div className="text-center mb-4">
-                  <div style={{ color: '#6B4F43' }}>
+                  <div style={{ color: "#6B4F43" }}>
                     {previewMode === "desktop" && (
                       <>
                         <Monitor className="w-4 h-4" /> Desktop (1200px)
@@ -1043,18 +1097,18 @@ const EditorPage: React.FC = () => {
                   >
                     <div className="p-6">
                       {sortedBlocks.length === 0 ? (
-                        <div style={{ borderColor: '#E5DDD5' }}>
+                        <div style={{ borderColor: "#E5DDD5" }}>
                           <div className="text-center space-y-4 max-w-md">
                             <div className="w-16 h-16 mx-auto bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
                               <Plus className="w-8 h-8 text-[#B89B7A]" />
                             </div>
                             <div>
-                              <h3 style={{ color: '#432818' }}>
+                              <h3 style={{ color: "#432818" }}>
                                 Construa Seu Funil
                               </h3>
-                              <p style={{ color: '#6B4F43' }}>
-                                Sistema completo para criar um funil de quiz de estilo pessoal
-                                otimizado para conversão
+                              <p style={{ color: "#6B4F43" }}>
+                                Sistema completo para criar um funil de quiz de
+                                estilo pessoal otimizado para conversão
                               </p>
                             </div>
                             <div className="space-y-2">
@@ -1066,48 +1120,49 @@ const EditorPage: React.FC = () => {
                                 Carregar Template Completo
                               </Button>
 
-                              <p style={{ color: '#8B7355' }}>
+                              <p style={{ color: "#8B7355" }}>
                                 Ou adicione componentes da barra lateral
                               </p>
                             </div>
                             {/* 🎯 SEÇÃO PARA CARREGAR STEPS DO FUNIL */}
-                              <div style={{ backgroundColor: '#FAF9F7' }}>
-                                <h4 style={{ color: '#6B4F43' }}>
-                                  📋 Etapas do Quiz
-                                </h4>
-                                <div className="flex flex-col gap-2">
-                                  <Button
-                                    onClick={handleLoadStep1}
-                                    size="sm"
-                                    variant="outline"
-                                    className="w-full justify-start"
-                                  >
-                                    <span className="mr-2">1️⃣</span>
-                                    Step 01 - Introdução
-                                  </Button>
-                                  <Button
-                                    onClick={handleLoadStep2}
-                                    size="sm"
-                                    variant="outline"
-                                    className="w-full justify-start"
-                                  >
-                                    <span className="mr-2">2️⃣</span>
-                                    Step 02 - Questão 1
-                                  </Button>
-                                </div>
+                            <div style={{ backgroundColor: "#FAF9F7" }}>
+                              <h4 style={{ color: "#6B4F43" }}>
+                                📋 Etapas do Quiz
+                              </h4>
+                              <div className="flex flex-col gap-2">
+                                <Button
+                                  onClick={handleLoadStep1}
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full justify-start"
+                                >
+                                  <span className="mr-2">1️⃣</span>
+                                  Step 01 - Introdução
+                                </Button>
+                                <Button
+                                  onClick={handleLoadStep2}
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full justify-start"
+                                >
+                                  <span className="mr-2">2️⃣</span>
+                                  Step 02 - Questão 1
+                                </Button>
                               </div>
+                            </div>
 
-                              <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
-                                <p className="text-xs text-[#A38A69]">
-                                  <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes
-                                  disponíveis
-                                </p>
-                              </div>
+                            <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
+                              <p className="text-xs text-[#A38A69]">
+                                <strong>🎯 Status:</strong>{" "}
+                                {AVAILABLE_BLOCKS.length} componentes
+                                disponíveis
+                              </p>
+                            </div>
                           </div>
                         </div>
                       ) : (
                         <div className="space-y-1">
-                          {sortedBlocks.map(block => {
+                          {sortedBlocks.map((block) => {
                             const blockData = {
                               id: block.id,
                               type: block.type,
@@ -1147,13 +1202,17 @@ const EditorPage: React.FC = () => {
 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               {selectedComponentId ? (
                 <EnhancedUniversalPropertiesPanel
                   selectedBlock={{
                     id: selectedComponentId,
-                    type: blocks.find(b => b.id === selectedComponentId)?.type || "unknown",
-                    properties: blocks.find(b => b.id === selectedComponentId)?.properties || {},
+                    type:
+                      blocks.find((b) => b.id === selectedComponentId)?.type ||
+                      "unknown",
+                    properties:
+                      blocks.find((b) => b.id === selectedComponentId)
+                        ?.properties || {},
                   }}
                   onUpdate={(blockId: string, updates: any) => {
                     updateBlock(blockId, updates);
@@ -1165,8 +1224,10 @@ const EditorPage: React.FC = () => {
                   onClose={() => setSelectedComponentId(null)}
                 />
               ) : (
-                <div style={{ color: '#8B7355' }}>
-                  <p className="text-sm">Selecione um bloco para editar suas propriedades</p>
+                <div style={{ color: "#8B7355" }}>
+                  <p className="text-sm">
+                    Selecione um bloco para editar suas propriedades
+                  </p>
                 </div>
               )}
             </div>
@@ -1175,7 +1236,7 @@ const EditorPage: React.FC = () => {
       )}
 
       {/* Status Bar */}
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <div className="flex items-center space-x-4">
           <span>Total de blocos: {blocks.length}</span>
           <span>Modo: {previewMode}</span>
@@ -1183,11 +1244,12 @@ const EditorPage: React.FC = () => {
         <div className="flex items-center space-x-2">
           {selectedComponentId && (
             <span className="bg-[#B89B7A]/20 text-[#A38A69] px-2 py-1 rounded">
-              Selecionado: {blocks.find(b => b.id === selectedComponentId)?.type}
+              Selecionado:{" "}
+              {blocks.find((b) => b.id === selectedComponentId)?.type}
             </span>
           )}
           {isSaving && (
-            <span style={{ backgroundColor: '#E5DDD5' }}>Salvando...</span>
+            <span style={{ backgroundColor: "#E5DDD5" }}>Salvando...</span>
           )}
         </div>
       </div>

@@ -8,7 +8,12 @@ import React, { useState, useRef, useCallback } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -54,7 +59,7 @@ export function ImageUploader({
       }
 
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         const result = e.target?.result as string;
         onChange(result);
         setIsOpen(false);
@@ -88,7 +93,10 @@ export function ImageUploader({
   }, []);
 
   const handleUrlSubmit = () => {
-    if (urlValue && urlValue.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)) {
+    if (
+      urlValue &&
+      urlValue.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)
+    ) {
       onChange(urlValue);
       setIsOpen(false);
     }
@@ -134,7 +142,12 @@ export function ImageUploader({
           <div className="flex gap-2">
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm" disabled={disabled} className="flex-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={disabled}
+                  className="flex-1"
+                >
                   <Upload className="w-4 h-4 mr-2" />
                   {value ? "Alterar" : "Selecionar"}
                 </Button>
@@ -154,7 +167,9 @@ export function ImageUploader({
                     <div
                       className={cn(
                         "border-2 border-dashed rounded-lg p-6 text-center transition-colors",
-                        dragActive ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300",
+                        dragActive
+                          ? "border-[#B89B7A] bg-[#B89B7A]/10"
+                          : "border-gray-300",
                         "hover:border-gray-400"
                       )}
                       onDrop={handleDrop}
@@ -162,7 +177,7 @@ export function ImageUploader({
                       onDragLeave={handleDragLeave}
                     >
                       <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                      <p style={{ color: '#6B4F43' }}>
+                      <p style={{ color: "#6B4F43" }}>
                         Arraste uma imagem aqui ou clique para selecionar
                       </p>
                       <Button
@@ -178,12 +193,12 @@ export function ImageUploader({
                         type="file"
                         accept={accept}
                         className="hidden"
-                        onChange={e => {
+                        onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) handleFileSelect(file);
                         }}
                       />
-                      <p style={{ color: '#8B7355' }}>Máximo: {maxSize}MB</p>
+                      <p style={{ color: "#8B7355" }}>Máximo: {maxSize}MB</p>
                     </div>
                   </TabsContent>
 
@@ -192,9 +207,13 @@ export function ImageUploader({
                       <Input
                         placeholder="https://exemplo.com/imagem.jpg"
                         value={urlValue}
-                        onChange={e => setUrlValue(e.target.value)}
+                        onChange={(e) => setUrlValue(e.target.value)}
                       />
-                      <Button onClick={handleUrlSubmit} className="w-full" disabled={!urlValue}>
+                      <Button
+                        onClick={handleUrlSubmit}
+                        className="w-full"
+                        disabled={!urlValue}
+                      >
                         <Link className="w-4 h-4 mr-2" />
                         Usar URL
                       </Button>
@@ -213,7 +232,7 @@ export function ImageUploader({
                   variant="outline"
                   size="sm"
                   onClick={clearImage}
-                  style={{ color: '#432818' }}
+                  style={{ color: "#432818" }}
                 >
                   <X className="w-4 h-4" />
                 </Button>
@@ -221,7 +240,7 @@ export function ImageUploader({
             )}
           </div>
 
-          {!value && <p style={{ color: '#8B7355' }}>{placeholder}</p>}
+          {!value && <p style={{ color: "#8B7355" }}>{placeholder}</p>}
         </div>
       </div>
 
@@ -233,7 +252,11 @@ export function ImageUploader({
           </DialogHeader>
           {previewUrl && (
             <div className="max-h-96 overflow-auto">
-              <img src={previewUrl} alt="Preview" className="w-full h-auto rounded-md" />
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="w-full h-auto rounded-md"
+              />
             </div>
           )}
         </DialogContent>

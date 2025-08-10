@@ -7,14 +7,16 @@ interface QuizEditorInterfaceProps {
   onSave?: () => void;
 }
 
-export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave }) => {
+export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({
+  onSave,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
       // Simulate save operation
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       onSave?.();
       toast({
         title: "Sucesso",
@@ -36,7 +38,7 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave
     setIsLoading(true);
     try {
       // Simulate publish operation
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast({
         title: "Sucesso",
         description: "Quiz publicado com sucesso",
@@ -58,7 +60,9 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave
       <h2 className="text-xl font-semibold mb-4">Editor de Quiz</h2>
 
       <div className="space-y-4">
-        <p style={{ color: '#6B4F43' }}>Configure e personalize seu quiz aqui.</p>
+        <p style={{ color: "#6B4F43" }}>
+          Configure e personalize seu quiz aqui.
+        </p>
 
         <div className="flex gap-2">
           <Button onClick={handleSave} disabled={isLoading} variant="outline">

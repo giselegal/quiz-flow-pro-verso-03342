@@ -1,5 +1,10 @@
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Label } from "../../../components/ui/label";
 import {
   Select,
@@ -9,7 +14,12 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 import { Switch } from "../../../components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import { styleConfig } from "../../../data/styleConfig";
 import React, { useState } from "react";
 
@@ -75,13 +85,15 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                 <Label htmlFor="style-select">Selecione o Estilo</Label>
                 <Select
                   value={selectedStyle}
-                  onValueChange={value => updateConfig({ selectedStyle: value })}
+                  onValueChange={(value) =>
+                    updateConfig({ selectedStyle: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione um estilo" />
                   </SelectTrigger>
                   <SelectContent>
-                    {styleOptions.map(style => (
+                    {styleOptions.map((style) => (
                       <SelectItem key={style} value={style}>
                         {style}
                       </SelectItem>
@@ -90,8 +102,8 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                 </Select>
               </div>
 
-              <div style={{ backgroundColor: '#FAF9F7' }}>
-                <p style={{ color: '#8B7355' }}>Pré-visualização:</p>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
+                <p style={{ color: "#8B7355" }}>Pré-visualização:</p>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0">
                     <img
@@ -102,7 +114,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   </div>
                   <div>
                     <h4 className="font-medium">{selectedStyle}</h4>
-                    <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
+                    <p style={{ color: "#6B4F43" }}>{styleData.description}</p>
                   </div>
                 </div>
               </div>
@@ -117,15 +129,20 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label htmlFor="show-all-styles">Mostrar Todos os Estilos</Label>
+                <Label htmlFor="show-all-styles">
+                  Mostrar Todos os Estilos
+                </Label>
                 <Switch
                   id="show-all-styles"
                   checked={showAllStyles}
-                  onCheckedChange={checked => updateConfig({ showAllStyles: checked })}
+                  onCheckedChange={(checked) =>
+                    updateConfig({ showAllStyles: checked })
+                  }
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
-                Se ativado, mostra todos os estilos e suas pontuações, não apenas os 3 principais
+              <p style={{ color: "#8B7355" }}>
+                Se ativado, mostra todos os estilos e suas pontuações, não
+                apenas os 3 principais
               </p>
 
               <div className="flex items-center justify-between">
@@ -133,11 +150,14 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                 <Switch
                   id="show-guide-image"
                   checked={showGuideImage}
-                  onCheckedChange={checked => updateConfig({ showGuideImage: checked })}
+                  onCheckedChange={(checked) =>
+                    updateConfig({ showGuideImage: checked })
+                  }
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
-                Se ativado, mostra a imagem do guia de estilo associado ao resultado
+              <p style={{ color: "#8B7355" }}>
+                Se ativado, mostra a imagem do guia de estilo associado ao
+                resultado
               </p>
             </CardContent>
           </Card>
@@ -158,7 +178,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   />
                 </div>
               ) : (
-                <p style={{ color: '#8B7355' }}>
+                <p style={{ color: "#8B7355" }}>
                   Imagem do guia não disponível para este estilo
                 </p>
               )}

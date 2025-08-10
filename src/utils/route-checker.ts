@@ -89,7 +89,7 @@ export const projectRoutes: RouteDefinition[] = [
  * @returns Informações sobre a rota ou undefined se não existir
  */
 export const checkRoute = (path: string): RouteDefinition | undefined => {
-  return projectRoutes.find(route => route.path === path);
+  return projectRoutes.find((route) => route.path === path);
 };
 
 /**
@@ -115,7 +115,9 @@ export const getAvailableRoutes = (): RouteDefinition[] => {
       : "development";
 
   return projectRoutes.filter(
-    route => route.accessibleIn.includes("all") || route.accessibleIn.includes(environment as any)
+    (route) =>
+      route.accessibleIn.includes("all") ||
+      route.accessibleIn.includes(environment as any)
   );
 };
 
@@ -130,7 +132,10 @@ export const logCurrentRoute = (): void => {
 
   console.group("Informações da Rota Atual");
   console.log("Caminho:", currentPath);
-  console.log("Ambiente:", isRunningInLovable() ? "Lovable.dev" : process.env.NODE_ENV);
+  console.log(
+    "Ambiente:",
+    isRunningInLovable() ? "Lovable.dev" : process.env.NODE_ENV
+  );
 
   if (routeInfo) {
     console.log("Descrição:", routeInfo.description);

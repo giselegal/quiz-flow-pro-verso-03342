@@ -77,8 +77,8 @@ export const MIGRATION_PROGRESS = {
 
 // 🎯 Validação de migração completa
 export const validateMigration = (): boolean => {
-  const allStepsReady = Object.values(MIGRATION_PROGRESS.stepsStatus).every(status =>
-    status.includes("✅")
+  const allStepsReady = Object.values(MIGRATION_PROGRESS.stepsStatus).every(
+    (status) => status.includes("✅")
   );
 
   return (
@@ -92,6 +92,8 @@ export const validateMigration = (): boolean => {
 console.log("🔄 Migração para Templates JSON:", {
   isComplete: validateMigration(),
   totalSteps: 21,
-  readySteps: Object.values(MIGRATION_PROGRESS.stepsStatus).filter(s => s.includes("✅")).length,
+  readySteps: Object.values(MIGRATION_PROGRESS.stepsStatus).filter((s) =>
+    s.includes("✅")
+  ).length,
   config: MIGRATION_CONFIG,
 });

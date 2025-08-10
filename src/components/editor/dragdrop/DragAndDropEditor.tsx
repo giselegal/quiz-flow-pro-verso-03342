@@ -1,7 +1,12 @@
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardHeader } from "../../../components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../../../components/ui/tooltip";
 import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
 import { cn } from "../../../lib/utils";
 import type { BlockData } from "../../../types/blocks";
@@ -59,7 +64,14 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   onDuplicate,
   onDelete,
 }) => {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: block.id,
     data: {
       type: "Block",
@@ -102,13 +114,13 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
         return (
           <div className="space-y-2">
             <div className="h-3 bg-gray-300 rounded w-3/4"></div>
-            <div style={{ backgroundColor: '#E5DDD5' }}></div>
+            <div style={{ backgroundColor: "#E5DDD5" }}></div>
           </div>
         );
       case "image-display-inline":
         return (
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <span style={{ color: '#8B7355' }}>📷 Imagem</span>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <span style={{ color: "#8B7355" }}>📷 Imagem</span>
           </div>
         );
       case "button-inline":
@@ -120,15 +132,15 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
       case "options-grid":
         return (
           <div className="grid grid-cols-2 gap-2">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} style={{ backgroundColor: '#E5DDD5' }}></div>
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} style={{ backgroundColor: "#E5DDD5" }}></div>
             ))}
           </div>
         );
       default:
         return (
           <div className="h-12 bg-gradient-to-r from-gray-100 to-gray-200 rounded flex items-center justify-center">
-            <span style={{ color: '#6B4F43' }}>{block.type}</span>
+            <span style={{ color: "#6B4F43" }}>{block.type}</span>
           </div>
         );
     }
@@ -147,7 +159,9 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
       <Card
         className={cn(
           "cursor-pointer transition-all duration-200 hover:shadow-md",
-          isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2 bg-[#B89B7A]/5" : "hover:bg-gray-50",
+          isSelected
+            ? "ring-2 ring-[#B89B7A] ring-offset-2 bg-[#B89B7A]/5"
+            : "hover:bg-gray-50",
           isDragging ? "shadow-lg bg-white" : "",
           isOverlay && "shadow-2xl bg-white border-[#B89B7A]"
         )}
@@ -182,10 +196,13 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
 
               {/* Block Status */}
               {getBlockComponent(block.type) ? (
-                <div className="w-2 h-2 bg-green-500 rounded-full" title="Componente disponível" />
+                <div
+                  className="w-2 h-2 bg-green-500 rounded-full"
+                  title="Componente disponível"
+                />
               ) : (
                 <div
-                  style={{ backgroundColor: '#FAF9F7' }}
+                  style={{ backgroundColor: "#FAF9F7" }}
                   title="Componente não encontrado"
                 />
               )}
@@ -220,7 +237,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      style={{ color: '#432818' }}
+                      style={{ color: "#432818" }}
                       onClick={handleDelete}
                     >
                       <Trash2 className="w-3 h-3" />
@@ -239,7 +256,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
             {renderBlockPreview()}
 
             {/* Informações adicionais */}
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <span>ID: {block.id.slice(-8)}</span>
               {block.properties && Object.keys(block.properties).length > 0 && (
                 <span>{Object.keys(block.properties).length} props</span>
@@ -284,13 +301,15 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
       const { active, over } = event;
 
       if (active.id !== over?.id) {
-        const oldIndex = blocks.findIndex(block => block.id === active.id);
-        const newIndex = blocks.findIndex(block => block.id === over?.id);
+        const oldIndex = blocks.findIndex((block) => block.id === active.id);
+        const newIndex = blocks.findIndex((block) => block.id === over?.id);
 
-        const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex).map((block, index) => ({
-          ...block,
-          position: index,
-        }));
+        const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex).map(
+          (block, index) => ({
+            ...block,
+            position: index,
+          })
+        );
 
         onBlocksReorder(reorderedBlocks);
       }
@@ -310,22 +329,33 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
     }),
   };
 
-  const activeBlock = activeId ? blocks.find(block => block.id === activeId) : null;
+  const activeBlock = activeId
+    ? blocks.find((block) => block.id === activeId)
+    : null;
 
   return (
     <div className={cn("h-full flex flex-col", className)}>
       <TooltipProvider>
         {/* Header */}
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <div className="flex items-center gap-2">
             <Move3D className="w-5 h-5 text-[#B89B7A]" />
-            <h3 className="text-lg font-medium text-[#432818]">Editor de Blocos</h3>
-            <Badge variant="secondary" className="bg-[#B89B7A]/10 text-[#432818]">
+            <h3 className="text-lg font-medium text-[#432818]">
+              Editor de Blocos
+            </h3>
+            <Badge
+              variant="secondary"
+              className="bg-[#B89B7A]/10 text-[#432818]"
+            >
               {blocks.length} blocos
             </Badge>
           </div>
 
-          <Button onClick={onAddNewBlock} size="sm" className="bg-[#B89B7A] hover:bg-[#B89B7A]/90">
+          <Button
+            onClick={onAddNewBlock}
+            size="sm"
+            className="bg-[#B89B7A] hover:bg-[#B89B7A]/90"
+          >
             <Plus className="w-4 h-4 mr-1" />
             Novo Bloco
           </Button>
@@ -345,11 +375,11 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
             }}
           >
             <SortableContext
-              items={blocks.map(block => block.id)}
+              items={blocks.map((block) => block.id)}
               strategy={verticalListSortingStrategy}
             >
               <div className="space-y-3">
-                {blocks.map(block => (
+                {blocks.map((block) => (
                   <DraggableBlock
                     key={block.id}
                     block={block}
@@ -364,18 +394,25 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
 
             {/* Overlay durante drag */}
             <DragOverlay dropAnimation={dropAnimation}>
-              {activeBlock ? <DraggableBlock block={activeBlock} isOverlay /> : null}
+              {activeBlock ? (
+                <DraggableBlock block={activeBlock} isOverlay />
+              ) : null}
             </DragOverlay>
           </DndContext>
 
           {/* Estado vazio */}
           {blocks.length === 0 && (
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <div className="text-center">
                 <Move3D className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium">Nenhum bloco adicionado</p>
-                <p className="text-sm mb-4">Adicione blocos para começar a editar</p>
-                <Button onClick={onAddNewBlock} className="bg-[#B89B7A] hover:bg-[#B89B7A]/90">
+                <p className="text-sm mb-4">
+                  Adicione blocos para começar a editar
+                </p>
+                <Button
+                  onClick={onAddNewBlock}
+                  className="bg-[#B89B7A] hover:bg-[#B89B7A]/90"
+                >
                   <Plus className="w-4 h-4 mr-1" />
                   Adicionar Primeiro Bloco
                 </Button>
@@ -385,8 +422,8 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
         </div>
 
         {/* Footer com dicas */}
-        <div style={{ borderColor: '#E5DDD5' }}>
-          <div style={{ color: '#6B4F43' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ color: "#6B4F43" }}>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <GripVertical className="w-3 h-3" />
@@ -400,7 +437,8 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
             <div className="flex items-center gap-1">
               <Eye className="w-3 h-3" />
               <span>
-                {blocks.filter(b => getBlockComponent(b.type)).length} de {blocks.length} funcionais
+                {blocks.filter((b) => getBlockComponent(b.type)).length} de{" "}
+                {blocks.length} funcionais
               </span>
             </div>
           </div>

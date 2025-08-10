@@ -38,7 +38,8 @@ export function loadQuiz21EtapasIndividualizado(): BlockData[] {
       content: {},
       order: 2,
       properties: {
-        content: "Responda perguntas e receba um guia personalizado baseado no seu perfil único",
+        content:
+          "Responda perguntas e receba um guia personalizado baseado no seu perfil único",
         size: "base",
         color: "#374151",
       },

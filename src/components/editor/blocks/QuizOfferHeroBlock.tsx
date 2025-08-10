@@ -9,7 +9,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -98,22 +105,34 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
           {/* Logo */}
           {showLogo && (
             <div className="mb-6">
-              <img src={logoUrl} alt={logoAlt} style={{ height: logoHeight }} className="mx-auto" />
+              <img
+                src={logoUrl}
+                alt={logoAlt}
+                style={{ height: logoHeight }}
+                className="mx-auto"
+              />
             </div>
           )}
 
           {/* Title */}
-          <h1 className="text-3xl md:text-5xl font-bold mb-4" style={{ color: textColor }}>
+          <h1
+            className="text-3xl md:text-5xl font-bold mb-4"
+            style={{ color: textColor }}
+          >
             {title}
           </h1>
 
           {/* Subtitle */}
-          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+          <p style={{ color: "#6B4F43" }}>{subtitle}</p>
 
           {/* Hero Image */}
           {showImage && (
             <div className="max-w-md mx-auto">
-              <img src={heroImage} alt="Hero Image" className="w-full rounded-lg shadow-xl" />
+              <img
+                src={heroImage}
+                alt="Hero Image"
+                className="w-full rounded-lg shadow-xl"
+              />
             </div>
           )}
         </div>

@@ -82,7 +82,7 @@ export const getStepById = (stepId: string) => {
     default:
       if (stepNumber >= 2 && stepNumber <= 11) {
         const questionSteps = getQuestionSteps();
-        return questionSteps.find(step => step.id === stepId);
+        return questionSteps.find((step) => step.id === stepId);
       }
       return null;
   }

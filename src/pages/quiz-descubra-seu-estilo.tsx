@@ -449,7 +449,8 @@ const painPoints = [
   {
     icon: Heart,
     title: "Problemas de autoestima",
-    description: "Você se sente insegura com sua imagem e não sabe como melhorar",
+    description:
+      "Você se sente insegura com sua imagem e não sabe como melhorar",
   },
   {
     icon: ShoppingBag,
@@ -467,7 +468,8 @@ const benefits = [
   {
     icon: Crown,
     title: "Descobrir seu estilo único",
-    description: "Identifique qual estilo combina perfeitamente com sua personalidade",
+    description:
+      "Identifique qual estilo combina perfeitamente com sua personalidade",
   },
   {
     icon: Target,
@@ -509,7 +511,9 @@ const realTestimonials = [
 const handleCTAClick = (buttonId: string, action: string = "Comprar Agora") => {
   return (event: React.MouseEvent) => {
     event.preventDefault();
-    const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
+    const emailInput = document.querySelector(
+      'input[type="email"]'
+    ) as HTMLInputElement;
     trackButtonClick(buttonId, action, "quiz_offer_page");
 
     if (emailInput?.value) {
@@ -598,7 +602,7 @@ const DramaticCountdown = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(prevTime => {
+      setTime((prevTime) => {
         if (prevTime.seconds > 0) {
           return { ...prevTime, seconds: prevTime.seconds - 1 };
         } else if (prevTime.minutes > 0) {
@@ -637,7 +641,9 @@ const DramaticCountdown = () => {
           <div>{formatNumber(time.seconds)}</div>
         </div>
       </div>
-      <p className="mt-3 text-sm opacity-90">Não perca esta oportunidade única!</p>
+      <p className="mt-3 text-sm opacity-90">
+        Não perca esta oportunidade única!
+      </p>
     </div>
   );
 };
@@ -690,7 +696,9 @@ const FaqSectionAdvanced = () => {
               onClick={() => toggleItem(index)}
               className="w-full px-6 py-6 text-left flex justify-between items-center hover:bg-[#B89B7A]/10 transition-colors"
             >
-              <span className="font-semibold text-[#432818] text-lg pr-4">{item.question}</span>
+              <span className="font-semibold text-[#432818] text-lg pr-4">
+                {item.question}
+              </span>
               <ChevronRight
                 size={24}
                 className={`text-orange-500 transition-transform duration-300 flex-shrink-0 ${
@@ -700,9 +708,7 @@ const FaqSectionAdvanced = () => {
             </button>
 
             {openItem === index && (
-              <div style={{ color: '#6B4F43' }}>
-                {item.answer}
-              </div>
+              <div style={{ color: "#6B4F43" }}>{item.answer}</div>
             )}
           </div>
         ))}
@@ -757,15 +763,20 @@ const DescubraSeuEstilo: React.FC = () => {
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-[#432818] text-center md:text-left leading-tight">
-                <span style={{ color: "#B89B7A", fontWeight: 700 }}>Chega</span> de um guarda-roupa
-                lotado e da sensação de que{" "}
-                <span style={{ color: "#B89B7A", fontWeight: 700 }}>nada combina com você.</span>
+                <span style={{ color: "#B89B7A", fontWeight: 700 }}>Chega</span>{" "}
+                de um guarda-roupa lotado e da sensação de que{" "}
+                <span style={{ color: "#B89B7A", fontWeight: 700 }}>
+                  nada combina com você.
+                </span>
               </h1>
 
               <p className="text-lg md:text-xl text-[#8F7A6A] text-center md:text-left">
                 Em poucos minutos, descubra seu{" "}
-                <strong style={{ color: "#B89B7A" }}>Estilo Predominante</strong> — e aprenda a
-                montar looks que realmente refletem sua essência, com praticidade e confiança.
+                <strong style={{ color: "#B89B7A" }}>
+                  Estilo Predominante
+                </strong>{" "}
+                — e aprenda a montar looks que realmente refletem sua essência,
+                com praticidade e confiança.
               </p>
 
               <div className="flex justify-center md:justify-start">
@@ -774,7 +785,9 @@ const DescubraSeuEstilo: React.FC = () => {
                   size="lg"
                   className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <span className="hidden md:inline">Quero Descobrir meu Estilo Agora!</span>
+                  <span className="hidden md:inline">
+                    Quero Descobrir meu Estilo Agora!
+                  </span>
                   <span className="md:hidden">Iniciar Quiz</span>
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -824,8 +837,9 @@ const DescubraSeuEstilo: React.FC = () => {
           </div>
           <div className="text-center mt-12">
             <p className="text-lg text-[#8F7A6A] italic max-w-4xl mx-auto">
-              A solução está em descobrir seu estilo autêntico. Com essa clareza, você criará um
-              guarda-roupa harmonioso que expressa verdadeiramente quem você é.
+              A solução está em descobrir seu estilo autêntico. Com essa
+              clareza, você criará um guarda-roupa harmonioso que expressa
+              verdadeiramente quem você é.
             </p>
           </div>
         </div>
@@ -872,8 +886,9 @@ const DescubraSeuEstilo: React.FC = () => {
                   Quiz de Estilo Personalizado
                 </h3>
                 <p className="text-[#8F7A6A]">
-                  Um método preciso que analisa suas preferências reais e identifica seu estilo
-                  predominante entre os 8 estilos universais.
+                  Um método preciso que analisa suas preferências reais e
+                  identifica seu estilo predominante entre os 8 estilos
+                  universais.
                 </p>
               </CardContent>
             </Card>
@@ -884,18 +899,20 @@ const DescubraSeuEstilo: React.FC = () => {
                   Guia de Imagem e Estilo
                 </h3>
                 <p className="text-[#8F7A6A]">
-                  Específico para o seu resultado no Quiz, com orientações práticas para valorizar e
-                  expressar sua personalidade.
+                  Específico para o seu resultado no Quiz, com orientações
+                  práticas para valorizar e expressar sua personalidade.
                 </p>
               </CardContent>
             </Card>
 
             <Card className="border-[#B89B7A]/20">
               <CardContent className="p-6">
-                <h3 className="text-xl font-semibold text-[#432818] mb-4">Bônus Exclusivos</h3>
+                <h3 className="text-xl font-semibold text-[#432818] mb-4">
+                  Bônus Exclusivos
+                </h3>
                 <p className="text-[#8F7A6A]">
-                  Guia das Peças-Chave do Guarda-Roupa de Sucesso e Guia de Visagismo Facial para
-                  complementar sua transformação.
+                  Guia das Peças-Chave do Guarda-Roupa de Sucesso e Guia de
+                  Visagismo Facial para complementar sua transformação.
                 </p>
               </CardContent>
             </Card>
@@ -928,7 +945,9 @@ const DescubraSeuEstilo: React.FC = () => {
                     <h4 className="text-[#432818] text-base md:text-lg font-semibold">
                       {benefit.title}
                     </h4>
-                    <p className="text-[#8F7A6A] text-sm">{benefit.description}</p>
+                    <p className="text-[#8F7A6A] text-sm">
+                      {benefit.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -938,8 +957,9 @@ const DescubraSeuEstilo: React.FC = () => {
 
         <div className="text-center mt-12">
           <p className="text-lg text-[#8F7A6A] max-w-4xl mx-auto italic">
-            Com o nosso método, você não apenas descobrirá seu estilo, mas também aprenderá a usá-lo
-            como uma ferramenta poderosa para expressar sua autenticidade e aumentar sua confiança.
+            Com o nosso método, você não apenas descobrirá seu estilo, mas
+            também aprenderá a usá-lo como uma ferramenta poderosa para
+            expressar sua autenticidade e aumentar sua confiança.
           </p>
         </div>
       </section>
@@ -960,8 +980,8 @@ const DescubraSeuEstilo: React.FC = () => {
                 Bônus 1: Peças-Chave do Guarda-Roupa de Sucesso
               </h3>
               <p className="text-[#8F7A6A] mb-4">
-                Um manual completo para construir um armário funcional, versátil e alinhado com sua
-                identidade.
+                Um manual completo para construir um armário funcional, versátil
+                e alinhado com sua identidade.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
@@ -1007,8 +1027,8 @@ const DescubraSeuEstilo: React.FC = () => {
                 Bônus 2: Guia de Visagismo Facial
               </h3>
               <p className="text-[#8F7A6A] mb-4">
-                Uma ferramenta poderosa para valorizar seus traços naturais e potencializar sua
-                beleza única.
+                Uma ferramenta poderosa para valorizar seus traços naturais e
+                potencializar sua beleza única.
               </p>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2">
@@ -1053,10 +1073,15 @@ const DescubraSeuEstilo: React.FC = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <div>
-                      <p className="font-medium text-[#432818]">{testimonial.author}</p>
+                      <p className="font-medium text-[#432818]">
+                        {testimonial.author}
+                      </p>
                       <div className="flex gap-1">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-[#B89B7A] text-[#B89B7A]" />
+                          <Star
+                            key={i}
+                            className="h-4 w-4 fill-[#B89B7A] text-[#B89B7A]"
+                          />
                         ))}
                       </div>
                     </div>
@@ -1076,13 +1101,16 @@ const DescubraSeuEstilo: React.FC = () => {
             <div className="flex items-center justify-center gap-4 mb-6">
               <Shield className="h-12 w-12 text-[#B89B7A]" />
               <div>
-                <h3 className="text-xl font-semibold text-[#432818]">Garantia de 7 Dias</h3>
+                <h3 className="text-xl font-semibold text-[#432818]">
+                  Garantia de 7 Dias
+                </h3>
                 <p className="text-[#8F7A6A]">100% do seu dinheiro de volta</p>
               </div>
             </div>
             <p className="text-[#8F7A6A]">
-              Estou tão confiante de que estes materiais vão transformar sua relação com a sua
-              imagem pessoal que ofereço uma garantia incondicional de 7 dias.
+              Estou tão confiante de que estes materiais vão transformar sua
+              relação com a sua imagem pessoal que ofereço uma garantia
+              incondicional de 7 dias.
             </p>
           </div>
 
@@ -1126,18 +1154,24 @@ const DescubraSeuEstilo: React.FC = () => {
           </div>
 
           <Button
-            onClick={handleCTAClick("final-cta", "Quero Transformar Minha Imagem")}
+            onClick={handleCTAClick(
+              "final-cta",
+              "Quero Transformar Minha Imagem"
+            )}
             size="lg"
             className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-xl font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 w-full md:w-auto"
           >
-            <span className="hidden md:inline">Quero Descobrir Meu Estilo!</span>
+            <span className="hidden md:inline">
+              Quero Descobrir Meu Estilo!
+            </span>
             <span className="md:hidden">Descobrir Meu Estilo!</span>
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
 
           <p className="text-sm text-[#8F7A6A] mt-4">
-            Pense bem: quanto você já gastou com roupas que nunca usou? Este investimento em
-            autoconhecimento vai muito além de roupas - é um investimento em você mesma.
+            Pense bem: quanto você já gastou com roupas que nunca usou? Este
+            investimento em autoconhecimento vai muito além de roupas - é um
+            investimento em você mesma.
           </p>
         </div>
       </section>

@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "../../../components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import { Button } from "../../../components/ui/button";
 import { useToast } from "../../../hooks/use-toast";
 import { useFunnelSettingsHistory } from "../../../hooks/editor/useFunnelSettingsHistory";
@@ -8,7 +18,10 @@ import { SEOSettings } from "./sections/SEOSettings";
 import { AnalyticsSettings } from "./sections/AnalyticsSettings";
 import { WebhookSettings } from "./sections/WebhookSettings";
 import { DomainSettings } from "./sections/DomainSettings";
-import { FunnelSettings, defaultFunnelSettings } from "../../../types/funnelSettings";
+import {
+  FunnelSettings,
+  defaultFunnelSettings,
+} from "../../../types/funnelSettings";
 import { FunnelSettingsService } from "../../../services/funnelSettingsService";
 import { Save, Undo, Redo, RotateCcw } from "lucide-react";
 
@@ -28,8 +41,16 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   const [isSaving, setIsSaving] = useState(false);
 
   // Inicializar com configurações padrão
-  const { settings, updateSettings, saveState, undo, redo, reset, canUndo, canRedo } =
-    useFunnelSettingsHistory(funnelId, defaultFunnelSettings);
+  const {
+    settings,
+    updateSettings,
+    saveState,
+    undo,
+    redo,
+    reset,
+    canUndo,
+    canRedo,
+  } = useFunnelSettingsHistory(funnelId, defaultFunnelSettings);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -71,12 +92,15 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   };
 
   const handleReset = () => {
-    if (window.confirm("Tem certeza que deseja resetar todas as configurações?")) {
+    if (
+      window.confirm("Tem certeza que deseja resetar todas as configurações?")
+    ) {
       reset();
       updateSettings(defaultFunnelSettings);
       toast({
         title: "Configurações resetadas",
-        description: "Todas as configurações foram resetadas para os valores padrão.",
+        description:
+          "Todas as configurações foram resetadas para os valores padrão.",
       });
     }
   };
@@ -89,7 +113,9 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     updateSettings(newSettings);
   };
 
-  const updateAnalyticsSettings = (analyticsSettings: Partial<FunnelSettings["analytics"]>) => {
+  const updateAnalyticsSettings = (
+    analyticsSettings: Partial<FunnelSettings["analytics"]>
+  ) => {
     const newSettings = {
       ...settings,
       analytics: { ...settings.analytics, ...analyticsSettings },
@@ -97,7 +123,9 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     updateSettings(newSettings);
   };
 
-  const updateWebhookSettings = (webhookSettings: Partial<FunnelSettings["webhooks"]>) => {
+  const updateWebhookSettings = (
+    webhookSettings: Partial<FunnelSettings["webhooks"]>
+  ) => {
     const newSettings = {
       ...settings,
       webhooks: { ...settings.webhooks, ...webhookSettings },
@@ -105,7 +133,9 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     updateSettings(newSettings);
   };
 
-  const updateDomainSettings = (domainSettings: Partial<FunnelSettings["domain"]>) => {
+  const updateDomainSettings = (
+    domainSettings: Partial<FunnelSettings["domain"]>
+  ) => {
     const newSettings = {
       ...settings,
       domain: { ...settings.domain, ...domainSettings },
@@ -120,10 +150,20 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
           <DialogTitle className="flex items-center justify-between">
             <span>Configurações do Funil</span>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={handleUndo} disabled={!canUndo}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleUndo}
+                disabled={!canUndo}
+              >
                 <Undo className="w-4 h-4" />
               </Button>
-              <Button variant="outline" size="sm" onClick={handleRedo} disabled={!canRedo}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRedo}
+                disabled={!canRedo}
+              >
                 <Redo className="w-4 h-4" />
               </Button>
               <Button variant="outline" size="sm" onClick={handleReset}>
@@ -138,7 +178,11 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
         </DialogHeader>
 
         <div className="overflow-y-auto">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="seo">SEO</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -147,19 +191,31 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
             </TabsList>
 
             <TabsContent value="seo" className="mt-4">
-              <SEOSettings settings={settings.seo} onUpdate={updateSEOSettings} />
+              <SEOSettings
+                settings={settings.seo}
+                onUpdate={updateSEOSettings}
+              />
             </TabsContent>
 
             <TabsContent value="analytics" className="mt-4">
-              <AnalyticsSettings settings={settings.analytics} onUpdate={updateAnalyticsSettings} />
+              <AnalyticsSettings
+                settings={settings.analytics}
+                onUpdate={updateAnalyticsSettings}
+              />
             </TabsContent>
 
             <TabsContent value="webhooks" className="mt-4">
-              <WebhookSettings settings={settings.webhooks} onUpdate={updateWebhookSettings} />
+              <WebhookSettings
+                settings={settings.webhooks}
+                onUpdate={updateWebhookSettings}
+              />
             </TabsContent>
 
             <TabsContent value="domain" className="mt-4">
-              <DomainSettings settings={settings.domain} onUpdate={updateDomainSettings} />
+              <DomainSettings
+                settings={settings.domain}
+                onUpdate={updateDomainSettings}
+              />
             </TabsContent>
           </Tabs>
         </div>

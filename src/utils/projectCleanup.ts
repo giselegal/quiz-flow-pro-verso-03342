@@ -4,7 +4,7 @@
 
 export const detectAuthConflicts = () => {
   const authKeys = Object.keys(localStorage).filter(
-    key => key.startsWith("supabase.auth.") || key.includes("sb-")
+    (key) => key.startsWith("supabase.auth.") || key.includes("sb-")
   );
 
   if (authKeys.length > 2) {
@@ -17,14 +17,14 @@ export const detectAuthConflicts = () => {
 export const cleanupAuthState = () => {
   try {
     let cleanedCount = 0;
-    Object.keys(localStorage).forEach(key => {
+    Object.keys(localStorage).forEach((key) => {
       if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
         localStorage.removeItem(key);
         cleanedCount++;
       }
     });
 
-    Object.keys(sessionStorage || {}).forEach(key => {
+    Object.keys(sessionStorage || {}).forEach((key) => {
       if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
         sessionStorage.removeItem(key);
         cleanedCount++;

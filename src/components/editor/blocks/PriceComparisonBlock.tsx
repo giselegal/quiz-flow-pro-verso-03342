@@ -1,6 +1,11 @@
 // @ts-nocheck
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Badge } from "../../../components/ui/badge";
 import { Check, Star, X } from "lucide-react";
 import type { BlockComponentProps, BlockData } from "../../../types/blocks";
@@ -46,7 +51,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -143,7 +155,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
           <h2 className="text-3xl font-bold mb-2" style={{ color: textColor }}>
             {title}
           </h2>
-          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+          <p style={{ color: "#6B4F43" }}>{subtitle}</p>
         </div>
 
         {/* Table Layout */}
@@ -159,24 +171,33 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
             </thead>
             <tbody>
               {plans.map((plan, index) => (
-                <tr key={plan.id} style={{ backgroundColor: '#FAF9F7' }}>
+                <tr key={plan.id} style={{ backgroundColor: "#FAF9F7" }}>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{plan.name}</span>
                       {plan.isPopular && highlightPopular && (
-                        <Badge className="bg-[#B89B7A]/100 text-white">Mais Popular</Badge>
+                        <Badge className="bg-[#B89B7A]/100 text-white">
+                          Mais Popular
+                        </Badge>
                       )}
                     </div>
                   </td>
                   <td className="p-4 text-center">
                     <div>
-                      <span className="text-2xl font-bold" style={{ color: accentColor }}>
+                      <span
+                        className="text-2xl font-bold"
+                        style={{ color: accentColor }}
+                      >
                         {plan.price}
                       </span>
-                      {plan.period && <span style={{ color: '#8B7355' }}>/{plan.period}</span>}
+                      {plan.period && (
+                        <span style={{ color: "#8B7355" }}>/{plan.period}</span>
+                      )}
                     </div>
                     {plan.originalPrice && showDiscount && (
-                      <div style={{ color: '#8B7355' }}>{plan.originalPrice}</div>
+                      <div style={{ color: "#8B7355" }}>
+                        {plan.originalPrice}
+                      </div>
                     )}
                   </td>
                   <td className="p-4">
@@ -234,7 +255,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
         <h2 className="text-3xl font-bold mb-2" style={{ color: textColor }}>
           {title}
         </h2>
-        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+        <p style={{ color: "#6B4F43" }}>{subtitle}</p>
       </div>
 
       {/* Cards Grid */}
@@ -262,22 +283,31 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
           >
             {plan.isPopular && highlightPopular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-[#B89B7A]/100 text-white px-4 py-1">Mais Popular</Badge>
+                <Badge className="bg-[#B89B7A]/100 text-white px-4 py-1">
+                  Mais Popular
+                </Badge>
               </div>
             )}
 
             <CardHeader className="text-center pb-4">
-              <CardTitle className="text-xl font-bold mb-2">{plan.name}</CardTitle>
+              <CardTitle className="text-xl font-bold mb-2">
+                {plan.name}
+              </CardTitle>
 
               <div className="mb-4">
-                <span className="text-4xl font-bold" style={{ color: accentColor }}>
+                <span
+                  className="text-4xl font-bold"
+                  style={{ color: accentColor }}
+                >
                   {plan.price}
                 </span>
-                {plan.period && <span style={{ color: '#8B7355' }}>/{plan.period}</span>}
+                {plan.period && (
+                  <span style={{ color: "#8B7355" }}>/{plan.period}</span>
+                )}
               </div>
 
               {plan.originalPrice && showDiscount && (
-                <div style={{ color: '#8B7355' }}>{plan.originalPrice}</div>
+                <div style={{ color: "#8B7355" }}>{plan.originalPrice}</div>
               )}
 
               {plan.badge && (
@@ -309,17 +339,21 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
                   }
                 `}
                 style={{
-                  backgroundColor: plan.isPopular && highlightPopular ? accentColor : "transparent",
+                  backgroundColor:
+                    plan.isPopular && highlightPopular
+                      ? accentColor
+                      : "transparent",
                   borderColor: accentColor,
-                  color: plan.isPopular && highlightPopular ? "white" : accentColor,
+                  color:
+                    plan.isPopular && highlightPopular ? "white" : accentColor,
                 }}
-                onMouseEnter={e => {
+                onMouseEnter={(e) => {
                   if (!plan.isPopular || !highlightPopular) {
                     e.currentTarget.style.backgroundColor = accentColor;
                     e.currentTarget.style.color = "white";
                   }
                 }}
-                onMouseLeave={e => {
+                onMouseLeave={(e) => {
                   if (!plan.isPopular || !highlightPopular) {
                     e.currentTarget.style.backgroundColor = "transparent";
                     e.currentTarget.style.color = accentColor;
@@ -330,7 +364,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
               </button>
 
               {plan.footerText && (
-                <p style={{ color: '#8B7355' }}>{plan.footerText}</p>
+                <p style={{ color: "#8B7355" }}>{plan.footerText}</p>
               )}
             </CardContent>
           </Card>
@@ -338,8 +372,10 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
       </div>
 
       {plans.length === 0 && (
-        <div style={{ color: '#8B7355' }}>
-          <p>Nenhum plano configurado. Adicione planos nas propriedades do bloco.</p>
+        <div style={{ color: "#8B7355" }}>
+          <p>
+            Nenhum plano configurado. Adicione planos nas propriedades do bloco.
+          </p>
         </div>
       )}
     </div>

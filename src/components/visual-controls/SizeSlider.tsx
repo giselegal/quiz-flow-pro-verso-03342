@@ -43,7 +43,7 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
       <div className="px-1">
         <Slider
           value={[value]}
-          onValueChange={values => onChange(values[0])}
+          onValueChange={(values) => onChange(values[0])}
           min={min}
           max={max}
           step={step}
@@ -51,7 +51,7 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
         />
       </div>
 
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <span>
           {min}
           {unit}

@@ -44,7 +44,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -96,7 +103,10 @@ const SectionTitleBlock: React.FC<SectionTitleBlockProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`section-title-block py-12 px-6 ${className}`} data-block-id={blockId}>
+    <div
+      className={`section-title-block py-12 px-6 ${className}`}
+      data-block-id={blockId}
+    >
       <div className="max-w-4xl mx-auto" style={{ textAlign: alignment }}>
         {showBadge && badgeText && (
           <div className="mb-6">
@@ -125,7 +135,10 @@ const SectionTitleBlock: React.FC<SectionTitleBlockProps> = ({
         </h2>
 
         {subtitle && (
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: subtitleColor }}>
+          <p
+            className="text-lg max-w-2xl mx-auto leading-relaxed"
+            style={{ color: subtitleColor }}
+          >
             {subtitle}
           </p>
         )}

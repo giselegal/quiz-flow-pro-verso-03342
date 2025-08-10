@@ -13,7 +13,13 @@ export const optimizeCloudinaryUrl = (
   if (!url || !url.includes("cloudinary.com")) return url;
 
   // Configurações padrão
-  const { width, height, quality = 85, format = "auto", crop = false } = options;
+  const {
+    width,
+    height,
+    quality = 85,
+    format = "auto",
+    crop = false,
+  } = options;
 
   // Extrair partes da URL do Cloudinary
   const parts = url.split("/image/upload/");
@@ -62,7 +68,10 @@ export const optimizeCloudinaryUrl = (
  * @param options Opções de otimização
  * @returns URL otimizada
  */
-export const getOptimizedImage = (url: string, options: ImageOptimizationOptions = {}): string => {
+export const getOptimizedImage = (
+  url: string,
+  options: ImageOptimizationOptions = {}
+): string => {
   return optimizeCloudinaryUrl(url, options);
 };
 
@@ -90,7 +99,11 @@ export const getLowQualityPlaceholder = (url: string): string => {
  * @param height Altura desejada (opcional)
  * @returns URL otimizada
  */
-export const getOptimizedImageUrl = (url: string, width: number, height?: number): string => {
+export const getOptimizedImageUrl = (
+  url: string,
+  width: number,
+  height?: number
+): string => {
   const options: ImageOptimizationOptions = {
     width,
     quality: 85,
@@ -114,7 +127,7 @@ export const getResponsiveImageSources = (
   url: string,
   widths: number[] = [640, 768, 1024, 1280, 1536]
 ): Array<{ srcset: string; width: number }> => {
-  return widths.map(width => ({
+  return widths.map((width) => ({
     srcset: getOptimizedImageUrl(url, width),
     width,
   }));
@@ -126,8 +139,17 @@ export const getResponsiveImageSources = (
  * @param options Opções de otimização
  * @returns URL otimizada
  */
-export const optimizeImageUrl = (url: string, options: ImageOptimizationOptions = {}) => {
-  const { quality = 80, width, height, format = "auto", crop = false } = options;
+export const optimizeImageUrl = (
+  url: string,
+  options: ImageOptimizationOptions = {}
+) => {
+  const {
+    quality = 80,
+    width,
+    height,
+    format = "auto",
+    crop = false,
+  } = options;
 
   // Simplified optimization logic
   const params = new URLSearchParams();

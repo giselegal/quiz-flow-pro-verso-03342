@@ -27,7 +27,9 @@ export interface ContainerProperties {
   scale?: number; // 🎯 Propriedade de escala (50-200%)
 }
 
-export const useContainerProperties = (properties: ContainerProperties = {}) => {
+export const useContainerProperties = (
+  properties: ContainerProperties = {}
+) => {
   console.log("🏗️ useContainerProperties chamado com:", properties);
 
   const {
@@ -266,7 +268,9 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     // Adicionar estilos específicos se necessário
     if (
       backgroundColor &&
-      !["transparent", "white", "gray-50", "brand-light"].includes(backgroundColor)
+      !["transparent", "white", "gray-50", "brand-light"].includes(
+        backgroundColor
+      )
     ) {
       styles.backgroundColor = backgroundColor;
     }

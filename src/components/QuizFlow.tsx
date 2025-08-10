@@ -54,14 +54,14 @@ export default function QuizFlow() {
 
   const handleOptionClick = (option: QuestionOption) => {
     // Salva a resposta selecionada
-    setAnswers(prev => ({
+    setAnswers((prev) => ({
       ...prev,
       [quizQuestions[currentQuestion].id]: option,
     }));
 
     // Avança para a próxima pergunta ou finaliza o quiz
     if (currentQuestion < quizQuestions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     } else {
       // Finaliza o quiz e calcula o resultado
       setIsLoading(true);
@@ -75,7 +75,10 @@ export default function QuizFlow() {
 
   // Função simples para calcular um ID de resultado com base nas respostas
   const calculateResultId = (userAnswers: Record<string, QuestionOption>) => {
-    const totalScore = Object.values(userAnswers).reduce((sum, option) => sum + option.value, 0);
+    const totalScore = Object.values(userAnswers).reduce(
+      (sum, option) => sum + option.value,
+      0
+    );
     // Gerar um ID de resultado baseado no score total
     return `result_${totalScore}`;
   };
@@ -119,7 +122,12 @@ export default function QuizFlow() {
               <span>
                 Pergunta {currentQuestion + 1} de {quizQuestions.length}
               </span>
-              <span>{Math.round(((currentQuestion + 1) / quizQuestions.length) * 100)}%</span>
+              <span>
+                {Math.round(
+                  ((currentQuestion + 1) / quizQuestions.length) * 100
+                )}
+                %
+              </span>
             </div>
 
             <div
@@ -134,12 +142,15 @@ export default function QuizFlow() {
               ></div>
             </div>
 
-            <h2 className="mb-6 text-xl font-medium" data-lovable-component="quiz-question">
+            <h2
+              className="mb-6 text-xl font-medium"
+              data-lovable-component="quiz-question"
+            >
               {question.text}
             </h2>
 
             <div className="space-y-3" data-lovable-component="quiz-options">
-              {question.options.map(option => (
+              {question.options.map((option) => (
                 <button
                   key={option.id}
                   className="w-full rounded-lg border bg-card p-4 text-left hover:border-primary hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary"

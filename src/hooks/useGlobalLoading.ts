@@ -12,21 +12,30 @@ interface GlobalLoadingContextType extends GlobalLoadingState {
   clearLoading: () => void;
 }
 
-const GlobalLoadingContext = createContext<GlobalLoadingContextType | undefined>(undefined);
+const GlobalLoadingContext = createContext<
+  GlobalLoadingContextType | undefined
+>(undefined);
 
-export const GlobalLoadingProvider = ({ children }: { children: React.ReactNode }) => {
+export const GlobalLoadingProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [state, setState] = useState<GlobalLoadingState>({
     isLoading: false,
     message: undefined,
     progress: undefined,
   });
 
-  const setLoading = useCallback((loading: boolean, message?: string, progress?: number) => {
-    setState({ isLoading: loading, message, progress });
-  }, []);
+  const setLoading = useCallback(
+    (loading: boolean, message?: string, progress?: number) => {
+      setState({ isLoading: loading, message, progress });
+    },
+    []
+  );
 
   const updateProgress = useCallback((progress: number) => {
-    setState(prev => ({ ...prev, progress }));
+    setState((prev) => ({ ...prev, progress }));
   }, []);
 
   const clearLoading = useCallback(() => {
@@ -40,13 +49,19 @@ export const GlobalLoadingProvider = ({ children }: { children: React.ReactNode 
     clearLoading,
   };
 
-  return React.createElement(GlobalLoadingContext.Provider, { value: contextValue }, children);
+  return React.createElement(
+    GlobalLoadingContext.Provider,
+    { value: contextValue },
+    children
+  );
 };
 
 export const useGlobalLoading = () => {
   const context = useContext(GlobalLoadingContext);
   if (!context) {
-    throw new Error("useGlobalLoading must be used within GlobalLoadingProvider");
+    throw new Error(
+      "useGlobalLoading must be used within GlobalLoadingProvider"
+    );
   }
 
   return {

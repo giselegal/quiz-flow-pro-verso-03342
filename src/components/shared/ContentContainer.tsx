@@ -21,6 +21,10 @@ export const ContentContainer: React.FC<ContentContainerProps> = ({
   }[size];
 
   return (
-    <div className={cn("mx-auto px-4 sm:px-6 w-full", maxWidthClass, className)}>{children}</div>
+    <div
+      className={cn("mx-auto px-4 sm:px-6 w-full", maxWidthClass, className)}
+    >
+      {children}
+    </div>
   );
 };

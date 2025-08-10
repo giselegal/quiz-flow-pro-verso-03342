@@ -84,7 +84,9 @@ export const PulseEffect: React.FC<PulseEffectProps> = ({
       style={{
         background: `radial-gradient(circle, ${color}20 0%, transparent 70%)`,
         transform: active ? pulseScale[intensity] : "scale(1)",
-        filter: active ? `drop-shadow(${glowIntensity[intensity]} ${color}40)` : "none",
+        filter: active
+          ? `drop-shadow(${glowIntensity[intensity]} ${color}40)`
+          : "none",
         animation: active ? "breathe 2s ease-in-out infinite" : "none",
       }}
     />

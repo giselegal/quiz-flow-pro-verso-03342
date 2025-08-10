@@ -15,7 +15,10 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 import { ResultPageBlock } from "../../types/quizResult";
 
 interface DraggableBlockListProps {
@@ -52,8 +55,8 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = blocks.findIndex(block => block.id === active.id);
-      const newIndex = blocks.findIndex(block => block.id === over.id);
+      const oldIndex = blocks.findIndex((block) => block.id === active.id);
+      const newIndex = blocks.findIndex((block) => block.id === over.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         onReorderBlocks(oldIndex, newIndex);
@@ -68,17 +71,24 @@ export const DraggableBlockList: React.FC<DraggableBlockListProps> = ({
       onDragEnd={handleDragEnd}
       modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
-      <SortableContext items={blocks.map(block => block.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={blocks.map((block) => block.id)}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="space-y-4 p-4">
-          {blocks.map(block => (
+          {blocks.map((block) => (
             <SortableBlock
               key={block.id}
               block={block}
               isSelected={selectedBlockId === block.id}
               isPreviewing={isPreviewing}
               onSelect={() => onSelectBlock(block.id)}
-              onDuplicate={onDuplicateBlock ? () => onDuplicateBlock(block.id) : undefined}
-              onDelete={onDeleteBlock ? () => onDeleteBlock(block.id) : undefined}
+              onDuplicate={
+                onDuplicateBlock ? () => onDuplicateBlock(block.id) : undefined
+              }
+              onDelete={
+                onDeleteBlock ? () => onDeleteBlock(block.id) : undefined
+              }
             />
           ))}
         </div>

@@ -16,7 +16,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -152,8 +159,12 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
           <div
             className={cn(
               "relative overflow-hidden",
-              borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses],
-              aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
+              borderRadiusClasses[
+                borderRadius as keyof typeof borderRadiusClasses
+              ],
+              aspectRatioClasses[
+                aspectRatio as keyof typeof aspectRatioClasses
+              ],
               maxWidthClasses[maxWidth as keyof typeof maxWidthClasses],
               alignmentClasses[alignment as keyof typeof alignmentClasses],
               clickable && "cursor-pointer"
@@ -175,14 +186,16 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           {showCaption && caption && (
-            <p style={{ color: '#6B4F43' }}>{caption}</p>
+            <p style={{ color: "#6B4F43" }}>{caption}</p>
           )}
         </div>
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
-          <div style={{ color: '#8B7355' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ color: "#8B7355" }}>
             <ImageIcon className="w-8 h-8 mx-auto mb-2" />
-            <p className="text-sm">Clique para selecionar e adicionar imagem no painel</p>
+            <p className="text-sm">
+              Clique para selecionar e adicionar imagem no painel
+            </p>
           </div>
         </div>
       )}

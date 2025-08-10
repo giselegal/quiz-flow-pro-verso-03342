@@ -102,7 +102,10 @@ const Guarantee: React.FC<GuaranteeProps> = ({
                   initial="initial"
                   animate="animate"
                 >
-                  <CheckCircle2 className="w-5 h-5 text-white" strokeWidth={2.5} />
+                  <CheckCircle2
+                    className="w-5 h-5 text-white"
+                    strokeWidth={2.5}
+                  />
                 </motion.div>
                 <span className="text-sm font-medium mt-1">7 DIAS</span>
               </div>

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import AdminLayout from "../../components/admin/AdminLayout";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../components/ui/tabs";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "../../components/ui/tabs";
 import { AppearanceTab } from "../../components/settings/AppearanceTab";
 import { AnalyticsTab } from "../../components/settings/AnalyticsTab";
 import { MarketingTab } from "../../components/settings/MarketingTab";
@@ -28,7 +33,11 @@ const SettingsPage = () => {
       <div className="container p-6">
         <h1 className="text-2xl font-semibold mb-6">Configurações</h1>
 
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-4">
+        <Tabs
+          value={activeTab}
+          onValueChange={handleTabChange}
+          className="space-y-4"
+        >
           <TabsList className="grid grid-cols-7 gap-1">
             <TabsTrigger value="appearance">Aparência</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>

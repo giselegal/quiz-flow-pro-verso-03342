@@ -21,7 +21,8 @@ const FAQBlockPreview: React.FC<FAQBlockPreviewProps> = ({ content }) => {
   const { faqItems = [], defaultOpen = false, style = {} } = content;
 
   // Define o valor padrão para o Accordion
-  const defaultValue = defaultOpen && faqItems.length > 0 ? `item-0` : undefined;
+  const defaultValue =
+    defaultOpen && faqItems.length > 0 ? `item-0` : undefined;
 
   return (
     <div style={style} className="w-full">
@@ -30,10 +31,17 @@ const FAQBlockPreview: React.FC<FAQBlockPreviewProps> = ({ content }) => {
           Adicione perguntas frequentes ao seu FAQ
         </div>
       ) : (
-        <Accordion type="single" collapsible defaultValue={defaultValue} className="w-full">
+        <Accordion
+          type="single"
+          collapsible
+          defaultValue={defaultValue}
+          className="w-full"
+        >
           {faqItems.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-left font-medium">{item.question}</AccordionTrigger>
+              <AccordionTrigger className="text-left font-medium">
+                {item.question}
+              </AccordionTrigger>
               <AccordionContent>
                 <div dangerouslySetInnerHTML={{ __html: item.answer }} />
               </AccordionContent>

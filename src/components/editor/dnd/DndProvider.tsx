@@ -52,7 +52,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   React.useEffect(() => {
     console.log(
       "📦 Blocks atualizados no DndProvider:",
-      blocks.map(b => ({ id: b.id, type: b.type }))
+      blocks.map((b) => ({ id: b.id, type: b.type }))
     );
   }, [blocks]);
 
@@ -92,7 +92,11 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       return;
     }
 
-    console.log("✅ Dados válidos:", active.data.current.type, active.data.current.blockType);
+    console.log(
+      "✅ Dados válidos:",
+      active.data.current.type,
+      active.data.current.blockType
+    );
 
     // 🎯 Haptic feedback para dispositivos móveis
     if ("vibrate" in navigator) {
@@ -109,7 +113,7 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       });
     } else {
       // Para blocos existentes, buscar no array
-      const activeBlockData = blocks.find(block => block.id === active.id);
+      const activeBlockData = blocks.find((block) => block.id === active.id);
       setActiveBlock(activeBlockData || null);
     }
   };
@@ -143,8 +147,8 @@ export const DndProvider: React.FC<DndProviderProps> = ({
       active.data.current?.type === "canvas-block" &&
       over.data.current?.type === "canvas-block"
     ) {
-      const activeIndex = blocks.findIndex(block => block.id === active.id);
-      const overIndex = blocks.findIndex(block => block.id === over.id);
+      const activeIndex = blocks.findIndex((block) => block.id === active.id);
+      const overIndex = blocks.findIndex((block) => block.id === over.id);
 
       if (activeIndex !== overIndex && activeIndex !== -1 && overIndex !== -1) {
         const newBlocks = arrayMove(blocks, activeIndex, overIndex);
@@ -216,8 +220,12 @@ export const DndProvider: React.FC<DndProviderProps> = ({
                   <div className="w-4 h-4 bg-brand rounded-sm"></div>
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-stone-800">{activeBlock.type}</div>
-                  <div className="text-xs text-stone-500">Arrastando componente...</div>
+                  <div className="text-sm font-semibold text-stone-800">
+                    {activeBlock.type}
+                  </div>
+                  <div className="text-xs text-stone-500">
+                    Arrastando componente...
+                  </div>
                 </div>
               </div>
             </div>

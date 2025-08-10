@@ -68,7 +68,8 @@ export const getStep09Template = () => {
         alt: "Imagem da pergunta 9",
         width: 400,
         height: 300,
-        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
+        className:
+          "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
         textAlign: "text-center",
         marginBottom: 24,
         spacing: "small",
@@ -224,4 +225,3 @@ export const getStep09Template = () => {
     },
   ];
 };
-

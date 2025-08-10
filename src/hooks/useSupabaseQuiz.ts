@@ -142,8 +142,8 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
       try {
         // Encontrar a pergunta e opção
-        const question = questions.find(q => q.id === questionId);
-        const option = question?.options.find(o => o.id === optionId);
+        const question = questions.find((q) => q.id === questionId);
+        const option = question?.options.find((o) => o.id === optionId);
 
         if (!question || !option) {
           throw new Error("Pergunta ou opção não encontrada");
@@ -330,7 +330,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
           // Verificar se o resultado tem o formato esperado
           if (parsedResult.primaryStyle && parsedResult.secondaryStyles) {
-            setSession(prev => ({
+            setSession((prev) => ({
               ...prev,
               isCompleted: true,
               result: parsedResult,

@@ -11,7 +11,9 @@ interface QuizEditorProps {
 
 const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(null);
+  const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(
+    null
+  );
   const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   const handleAddQuestion = () => {
@@ -29,10 +31,10 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
         question: question.title || question.question || "", // Ensure question property is set
         type: "normal",
       };
-      setQuestions(prev => [...prev, newQuestion]);
+      setQuestions((prev) => [...prev, newQuestion]);
     } else {
-      setQuestions(prev =>
-        prev.map(q =>
+      setQuestions((prev) =>
+        prev.map((q) =>
           q.id === question.id
             ? {
                 ...question,
@@ -53,7 +55,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
   };
 
   const handleDeleteQuestion = (questionId: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== questionId));
+    setQuestions((prev) => prev.filter((q) => q.id !== questionId));
     setEditingQuestion(null);
   };
 
@@ -84,7 +86,10 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-[#432818]">Editor de Quiz</h2>
-        <Button onClick={handleAddQuestion} className="bg-[#B89B7A] hover:bg-[#A38A69] text-white">
+        <Button
+          onClick={handleAddQuestion}
+          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
+        >
           <Plus className="w-4 h-4 mr-2" />
           Nova Pergunta
         </Button>
@@ -93,7 +98,9 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
       <div className="grid gap-4">
         {questions.length === 0 ? (
           <Card className="p-8 text-center">
-            <p className="text-[#8F7A6A] mb-4">Nenhuma pergunta adicionada ainda.</p>
+            <p className="text-[#8F7A6A] mb-4">
+              Nenhuma pergunta adicionada ainda.
+            </p>
             <Button
               onClick={handleAddQuestion}
               variant="outline"
@@ -104,15 +111,18 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
           </Card>
         ) : (
           questions.map((question, index) => (
-            <Card key={question.id} className="p-4 hover:shadow-md transition-shadow">
+            <Card
+              key={question.id}
+              className="p-4 hover:shadow-md transition-shadow"
+            >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <h3 className="font-medium text-[#432818] mb-2">
                     Pergunta {index + 1}: {question.title || question.question}
                   </h3>
                   <p className="text-sm text-[#8F7A6A] mb-2">
-                    {question.options.length} opções • {question.multiSelect || 3} seleções
-                    permitidas
+                    {question.options.length} opções •{" "}
+                    {question.multiSelect || 3} seleções permitidas
                   </p>
                 </div>
                 <Button

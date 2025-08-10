@@ -63,7 +63,7 @@ export const useToast = () => {
       ...toast,
     };
 
-    setToasts(prev => [...prev, newToast]);
+    setToasts((prev) => [...prev, newToast]);
 
     // Auto remove se não for persistente
     if (!newToast.persistent && newToast.duration) {
@@ -76,7 +76,7 @@ export const useToast = () => {
   }, []);
 
   const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   }, []);
 
   const clearToasts = useCallback(() => {
@@ -102,7 +102,7 @@ export const useLoadingState = () => {
   }, []);
 
   const updateProgress = useCallback((progress: number, message?: string) => {
-    setLoadingState(prev => ({ ...prev, progress, message }));
+    setLoadingState((prev) => ({ ...prev, progress, message }));
   }, []);
 
   const stopLoading = useCallback(() => {
@@ -134,7 +134,7 @@ export const useAutoSave = (
   // Detectar mudanças
   useEffect(() => {
     if (enabled) {
-      setPendingChanges(prev => prev + 1);
+      setPendingChanges((prev) => prev + 1);
     }
   }, deps);
 
@@ -143,7 +143,7 @@ export const useAutoSave = (
     if (!enabled || pendingChanges === 0) return;
 
     const timer = setTimeout(async () => {
-      setAutoSaveState(prev => ({ ...prev, status: "saving" }));
+      setAutoSaveState((prev) => ({ ...prev, status: "saving" }));
 
       try {
         await saveFunction();
@@ -160,7 +160,7 @@ export const useAutoSave = (
           duration: 2000,
         });
       } catch (error) {
-        setAutoSaveState(prev => ({ ...prev, status: "error" }));
+        setAutoSaveState((prev) => ({ ...prev, status: "error" }));
         addToast({
           type: "error",
           title: "Erro ao salvar",
@@ -191,11 +191,11 @@ export const useConnectionState = () => {
 
   useEffect(() => {
     const handleOnline = () => {
-      setConnectionState(prev => ({ ...prev, isOnline: true }));
+      setConnectionState((prev) => ({ ...prev, isOnline: true }));
     };
 
     const handleOffline = () => {
-      setConnectionState(prev => ({ ...prev, isOnline: false }));
+      setConnectionState((prev) => ({ ...prev, isOnline: false }));
     };
 
     window.addEventListener("online", handleOnline);
@@ -220,13 +220,13 @@ const Toast: React.FC<{
       case "success":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
       case "error":
-        return <AlertCircle style={{ color: '#432818' }} />;
+        return <AlertCircle style={{ color: "#432818" }} />;
       case "warning":
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case "info":
         return <Info className="h-5 w-5 text-[#B89B7A]" />;
       case "loading":
-        return <Loader2 style={{ color: '#8B7355' }} />;
+        return <Loader2 style={{ color: "#8B7355" }} />;
     }
   };
 
@@ -255,8 +255,10 @@ const Toast: React.FC<{
       <div className="flex items-start">
         <div className="flex-shrink-0">{getIcon()}</div>
         <div className="ml-3 w-0 flex-1">
-          <p style={{ color: '#432818' }}>{toast.title}</p>
-          {toast.description && <p style={{ color: '#8B7355' }}>{toast.description}</p>}
+          <p style={{ color: "#432818" }}>{toast.title}</p>
+          {toast.description && (
+            <p style={{ color: "#8B7355" }}>{toast.description}</p>
+          )}
           {toast.action && (
             <div className="mt-3">
               <button
@@ -270,7 +272,7 @@ const Toast: React.FC<{
         </div>
         <div className="ml-4 flex-shrink-0 flex">
           <button
-            style={{ color: '#8B7355' }}
+            style={{ color: "#8B7355" }}
             onClick={() => onRemove(toast.id)}
           >
             <X className="h-5 w-5" />
@@ -288,7 +290,7 @@ export const ToastContainer: React.FC = () => {
   return createPortal(
     <div className="fixed bottom-0 right-0 z-50 p-6 space-y-4">
       <AnimatePresence>
-        {toasts.map(toast => (
+        {toasts.map((toast) => (
           <Toast key={toast.id} toast={toast} onRemove={removeToast} />
         ))}
       </AnimatePresence>
@@ -309,7 +311,7 @@ export const AutoSaveIndicator: React.FC<{
       case "saved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "error":
-        return <AlertCircle style={{ color: '#432818' }} />;
+        return <AlertCircle style={{ color: "#432818" }} />;
       default:
         return pendingChanges ? (
           <Clock className="h-4 w-4 text-yellow-500" />
@@ -335,7 +337,7 @@ export const AutoSaveIndicator: React.FC<{
   return (
     <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-md border text-sm">
       {getStatusIcon()}
-      <span style={{ color: '#6B4F43' }}>{getStatusText()}</span>
+      <span style={{ color: "#6B4F43" }}>{getStatusText()}</span>
     </div>
   );
 };
@@ -349,9 +351,9 @@ export const ConnectionIndicator: React.FC<{
   }
 
   return (
-    <div style={{ borderColor: '#E5DDD5' }}>
-      <WifiOff style={{ color: '#432818' }} />
-      <span style={{ color: '#432818' }}>
+    <div style={{ borderColor: "#E5DDD5" }}>
+      <WifiOff style={{ color: "#432818" }} />
+      <span style={{ color: "#432818" }}>
         {!connectionState.isOnline ? "Sem conexão" : "Conectando..."}
       </span>
     </div>
@@ -389,9 +391,9 @@ export const LoadingOverlay: React.FC<{
         <div className="flex items-center justify-center mb-4">
           <Loader2 className="h-8 w-8 animate-spin text-[#B89B7A]" />
         </div>
-        {message && <p style={{ color: '#6B4F43' }}>{message}</p>}
+        {message && <p style={{ color: "#6B4F43" }}>{message}</p>}
         {progress !== undefined && (
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="bg-[#B89B7A]/100 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}

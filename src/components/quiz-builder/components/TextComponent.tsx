@@ -23,16 +23,23 @@ const TextComponent: React.FC<TextComponentProps> = ({
 }) => {
   return (
     <div
-      className={cn("p-4", isSelected && "outline-dashed outline-1 outline-blue-400")}
+      className={cn(
+        "p-4",
+        isSelected && "outline-dashed outline-1 outline-blue-400"
+      )}
       style={{
         backgroundColor: style?.backgroundColor || "transparent",
         color: style?.textColor || "inherit",
       }}
     >
       {isHeadline ? (
-        <h2 className="text-xl md:text-2xl font-medium mb-1">{data.text || "Título da Seção"}</h2>
+        <h2 className="text-xl md:text-2xl font-medium mb-1">
+          {data.text || "Título da Seção"}
+        </h2>
       ) : (
-        <p className="text-base leading-relaxed">{data.text || "Texto do parágrafo"}</p>
+        <p className="text-base leading-relaxed">
+          {data.text || "Texto do parágrafo"}
+        </p>
       )}
     </div>
   );

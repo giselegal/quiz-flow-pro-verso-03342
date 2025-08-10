@@ -79,7 +79,8 @@ export const getStep02Template = () => {
           {
             id: "1c",
             text: "Praticidade com um toque de estilo atual.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
             value: "1c",
             category: "Contemporâneo",
             points: 2,

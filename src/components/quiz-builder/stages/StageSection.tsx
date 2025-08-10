@@ -22,7 +22,9 @@ const StageSection: React.FC<StageSectionProps> = ({
   return (
     <Card
       className={`p-3 cursor-pointer transition-colors ${
-        isActive ? "border-[#B89B7A] bg-[#FFFAF0]" : "border-[#B89B7A]/20 hover:bg-[#FFFAF0]/50"
+        isActive
+          ? "border-[#B89B7A] bg-[#FFFAF0]"
+          : "border-[#B89B7A]/20 hover:bg-[#FFFAF0]/50"
       }`}
       onClick={() => onSelect(stage.id)}
     >
@@ -36,7 +38,7 @@ const StageSection: React.FC<StageSectionProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               onEdit(stage.id);
             }}
@@ -48,11 +50,11 @@ const StageSection: React.FC<StageSectionProps> = ({
           <Button
             size="sm"
             variant="ghost"
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               onDelete(stage.id);
             }}
-            style={{ color: '#432818' }}
+            style={{ color: "#432818" }}
           >
             <Trash2 className="h-3 w-3" />
           </Button>

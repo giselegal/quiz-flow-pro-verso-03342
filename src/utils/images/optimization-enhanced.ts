@@ -29,7 +29,8 @@ export const optimizeCloudinaryUrl = (
 
   const baseUrlParts = parts;
   const secondPart = baseUrlParts[1];
-  const hasTransformations = secondPart.includes("/") && !/v\d+\//.test(secondPart.split("/")[0]); // Distingue transforms de version strings
+  const hasTransformations =
+    secondPart.includes("/") && !/v\d+\//.test(secondPart.split("/")[0]); // Distingue transforms de version strings
 
   // Constrói a string de transformação
   let transformations = `f_${format === "auto" ? "auto" : format},q_${quality}`;
@@ -127,7 +128,10 @@ export const getOptimizedImageUrl = (
  * @param url URL da imagem
  * @param settings Configurações de otimização
  */
-export const getOptimizedImage = (url: string, settings?: ImageSettings): string => {
+export const getOptimizedImage = (
+  url: string,
+  settings?: ImageSettings
+): string => {
   if (!url) return "";
   return optimizeCloudinaryUrl(url, settings);
 };
@@ -148,5 +152,5 @@ export const getResponsiveImageSources = (
 
   const { quality = 80 } = options;
 
-  return widths.map(width => getOptimizedImageUrl(url, { width, quality }));
+  return widths.map((width) => getOptimizedImageUrl(url, { width, quality }));
 };

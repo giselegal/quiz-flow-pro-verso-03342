@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -75,7 +82,9 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
   // Fallback para ícone
   const getIcon = (iconName: string) => {
     if (iconName === "CheckCircle") {
-      return <CheckCircle className="w-5 h-5 text-[#B89B7A] flex-shrink-0 mt-0.5" />;
+      return (
+        <CheckCircle className="w-5 h-5 text-[#B89B7A] flex-shrink-0 mt-0.5" />
+      );
     }
     // Se não é um ícone conhecido, trata como emoji ou usa bullet
     return <span className="text-xl flex-shrink-0">{iconName || "✅"}</span>;
@@ -102,14 +111,14 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
       </h3>
       <div className="space-y-3">
         {(items || []).map((item: any, index: number) => (
-          <div key={index} style={{ backgroundColor: '#FAF9F7' }}>
+          <div key={index} style={{ backgroundColor: "#FAF9F7" }}>
             {getIcon(item.icon)}
             <p className="flex-1 text-[#432818]">{item.text}</p>
           </div>
         ))}
       </div>
       {(!items || items.length === 0) && (
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <Book className="w-12 h-12 mb-4 opacity-50" />
           <p>Configure os argumentos no painel de propriedades.</p>
         </div>

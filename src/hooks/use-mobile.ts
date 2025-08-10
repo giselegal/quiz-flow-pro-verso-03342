@@ -42,7 +42,8 @@ export const useIsLowPerformanceDevice = () => {
     if (isMobile) {
       // Additional check for older mobile devices
       const isOlderDevice =
-        /Android\s[0-6]/i.test(navigator.userAgent) || /OS\s[0-9]_/i.test(navigator.userAgent);
+        /Android\s[0-6]/i.test(navigator.userAgent) ||
+        /OS\s[0-9]_/i.test(navigator.userAgent);
       if (isOlderDevice) {
         setIsLowPerformance(true);
         return;

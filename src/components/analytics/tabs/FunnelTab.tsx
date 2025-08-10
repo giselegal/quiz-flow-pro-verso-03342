@@ -1,5 +1,11 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import {
   BarChart,
   Bar,
@@ -20,7 +26,10 @@ interface FunnelTabProps {
   loading: boolean;
 }
 
-export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) => {
+export const FunnelTab: React.FC<FunnelTabProps> = ({
+  analyticsData,
+  loading,
+}) => {
   const metrics = analyticsData?.metrics;
 
   // Prepare funnel data
@@ -66,7 +75,14 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
   };
 
   // Define colors with gradients for funnel steps
-  const FUNNEL_COLORS = ["#4f46e5", "#6366f1", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
+  const FUNNEL_COLORS = [
+    "#4f46e5",
+    "#6366f1",
+    "#10b981",
+    "#f59e0b",
+    "#ef4444",
+    "#ec4899",
+  ];
 
   // Custom tooltip renderer
   const renderTooltipContent = (props: any) => {
@@ -80,7 +96,7 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
       <div className="bg-white p-1.5 border border-gray-100 shadow-lg rounded-md">
         <p className="text-[7px] font-medium mb-0.5">{data.name}</p>
         <p className="text-[7px] font-semibold">{data.value} usuários</p>
-        <p style={{ color: '#8B7355' }}>{data.text}</p>
+        <p style={{ color: "#8B7355" }}>{data.text}</p>
       </div>
     );
   };
@@ -114,7 +130,11 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
                 layout="vertical"
                 margin={{ top: 4, right: 4, left: 35, bottom: 0 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" horizontal={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e0e0e0"
+                  horizontal={false}
+                />
                 <XAxis
                   type="number"
                   stroke="#888888"
@@ -151,13 +171,18 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
           <GridLayout columns={3} gap="md" className="mt-4">
             <Card className="border border-border/60">
               <CardHeader className="pb-1 pt-2">
-                <CardTitle className="text-sm font-medium">Início → Meio</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Início → Meio
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 pt-0 pb-2">
                 <div className="flex justify-between items-baseline">
                   <p className="text-xs font-bold">
                     {funnelData[1]?.value
-                      ? ((funnelData[1].value / funnelData[0].value) * 100).toFixed(1)
+                      ? (
+                          (funnelData[1].value / funnelData[0].value) *
+                          100
+                        ).toFixed(1)
                       : 0}
                     %
                   </p>
@@ -167,7 +192,9 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
                 </div>
                 <Progress
                   value={
-                    funnelData[1]?.value ? (funnelData[1].value / funnelData[0].value) * 100 : 0
+                    funnelData[1]?.value
+                      ? (funnelData[1].value / funnelData[0].value) * 100
+                      : 0
                   }
                   indicatorClassName="bg-gradient-to-r from-blue-500 to-indigo-700"
                   className="h-1 bg-muted/50"
@@ -177,13 +204,18 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
 
             <Card className="border border-border/60">
               <CardHeader className="pb-1 pt-2">
-                <CardTitle className="text-sm font-medium">Meio → Resultado</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Meio → Resultado
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 pt-0 pb-2">
                 <div className="flex justify-between items-baseline">
                   <p className="text-xs font-bold">
                     {funnelData[3]?.value && funnelData[1]?.value
-                      ? ((funnelData[3].value / funnelData[1].value) * 100).toFixed(1)
+                      ? (
+                          (funnelData[3].value / funnelData[1].value) *
+                          100
+                        ).toFixed(1)
                       : 0}
                     %
                   </p>
@@ -205,13 +237,18 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
 
             <Card className="border border-border/60">
               <CardHeader className="pb-1 pt-2">
-                <CardTitle className="text-sm font-medium">Resultado → Venda</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Resultado → Venda
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-1 pt-0 pb-2">
                 <div className="flex justify-between items-baseline">
                   <p className="text-xs font-bold">
                     {funnelData[5]?.value && funnelData[3]?.value
-                      ? ((funnelData[5].value / funnelData[3].value) * 100).toFixed(1)
+                      ? (
+                          (funnelData[5].value / funnelData[3].value) *
+                          100
+                        ).toFixed(1)
                       : 0}
                     %
                   </p>

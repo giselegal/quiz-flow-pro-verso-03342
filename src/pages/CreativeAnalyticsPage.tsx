@@ -1,7 +1,12 @@
 import * as React from "react";
 import { JSX, ReactElement } from "react";
 import CreativePerformanceDashboard from "../components/analytics/CreativePerformanceDashboard";
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { RefreshCw, Download, Settings, TestTube } from "lucide-react";
 
@@ -129,14 +134,18 @@ const CreativeAnalyticsPage = (): JSX.Element => {
     localStorage.setItem("all_tracked_events", JSON.stringify(testData));
 
     // Mostrar mensagem de sucesso
-    alert("✅ Dados de teste gerados! O dashboard será atualizado automaticamente.");
+    alert(
+      "✅ Dados de teste gerados! O dashboard será atualizado automaticamente."
+    );
 
     // Forçar atualização da página
     window.location.reload();
   };
 
   const handleExportData = () => {
-    const events = JSON.parse(localStorage.getItem("all_tracked_events") || "[]");
+    const events = JSON.parse(
+      localStorage.getItem("all_tracked_events") || "[]"
+    );
     const dataStr = JSON.stringify(events, null, 2);
     const dataBlob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(dataBlob);
@@ -161,7 +170,7 @@ const CreativeAnalyticsPage = (): JSX.Element => {
 
       // Limpar dados de tracking de usuários individuais
       const keys = Object.keys(localStorage);
-      keys.forEach(key => {
+      keys.forEach((key) => {
         if (key.startsWith("user_tracking_")) {
           localStorage.removeItem(key);
         }
@@ -173,14 +182,14 @@ const CreativeAnalyticsPage = (): JSX.Element => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       {/* Header com controles */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 style={{ color: '#432818' }}>Analytics de Criativos</h1>
-              <p style={{ color: '#6B4F43' }}>
+              <h1 style={{ color: "#432818" }}>Analytics de Criativos</h1>
+              <p style={{ color: "#6B4F43" }}>
                 Monitore a performance dos seus criativos em tempo real
               </p>
             </div>
@@ -244,10 +253,12 @@ const CreativeAnalyticsPage = (): JSX.Element => {
                 <h4 className="font-semibold mb-2">📊 Dados Rastreados:</h4>
                 <ul className="text-sm space-y-1">
                   <li>
-                    • <strong>utm_content:</strong> Identifica o criativo específico
+                    • <strong>utm_content:</strong> Identifica o criativo
+                    específico
                   </li>
                   <li>
-                    • <strong>PageView:</strong> Quantas pessoas chegaram à página
+                    • <strong>PageView:</strong> Quantas pessoas chegaram à
+                    página
                   </li>
                   <li>
                     • <strong>QuizStart:</strong> Quantas iniciaram o quiz
@@ -265,13 +276,15 @@ const CreativeAnalyticsPage = (): JSX.Element => {
                 <div className="font-semibold mb-2">🎯 URLs de Exemplo:</div>
                 <div className="text-xs space-y-1 bg-[#B89B7A]/20 p-2 rounded">
                   <div>
-                    <strong>Criativo A:</strong> ?utm_content=elegante_mulher_vestido
+                    <strong>Criativo A:</strong>{" "}
+                    ?utm_content=elegante_mulher_vestido
                   </div>
                   <div>
                     <strong>Criativo B:</strong> ?utm_content=casual_jovem_jeans
                   </div>
                   <div>
-                    <strong>Criativo C:</strong> ?utm_content=profissional_executiva
+                    <strong>Criativo C:</strong>{" "}
+                    ?utm_content=profissional_executiva
                   </div>
                 </div>
               </div>
@@ -279,8 +292,9 @@ const CreativeAnalyticsPage = (): JSX.Element => {
 
             <div className="pt-3 border-t border-[#B89B7A]/40">
               <p className="text-sm">
-                <strong>💡 Dica:</strong> Use o botão "Gerar Dados de Teste" para ver o dashboard em
-                ação, ou aguarde dados reais das suas campanhas aparecerem automaticamente.
+                <strong>💡 Dica:</strong> Use o botão "Gerar Dados de Teste"
+                para ver o dashboard em ação, ou aguarde dados reais das suas
+                campanhas aparecerem automaticamente.
               </p>
             </div>
           </CardContent>

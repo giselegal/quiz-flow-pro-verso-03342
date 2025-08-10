@@ -14,7 +14,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -104,7 +111,10 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
           {showFeatures && (
             <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-3 sm:mb-4">
               {securityFeatures.map((feature, index) => (
-                <div key={index} className="flex flex-col items-center gap-1 sm:gap-2">
+                <div
+                  key={index}
+                  className="flex flex-col items-center gap-1 sm:gap-2"
+                >
                   <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center text-[#B89B7A] shadow-sm">
                     {feature.icon}
                   </div>
@@ -117,8 +127,9 @@ const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
           )}
 
           <p className="text-xs sm:text-sm text-[#8F7A6A] mb-3 sm:mb-4 leading-relaxed px-2">
-            Seus dados estão protegidos por criptografia de nível bancário. Processamento via
-            Hotmart, plataforma líder em produtos digitais no Brasil.
+            Seus dados estão protegidos por criptografia de nível bancário.
+            Processamento via Hotmart, plataforma líder em produtos digitais no
+            Brasil.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs text-[#8F7A6A]">

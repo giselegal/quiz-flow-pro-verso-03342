@@ -246,7 +246,10 @@ export const blockDefinitions: BlockDefinition[] = [
         label: "Família da Fonte",
         options: [
           { value: "Inter, sans-serif", label: "Inter (Sans-serif)" },
-          { value: "Playfair Display, serif", label: "Playfair Display (Serif)" },
+          {
+            value: "Playfair Display, serif",
+            label: "Playfair Display (Serif)",
+          },
           { value: "Georgia, serif", label: "Georgia (Serif)" },
           { value: "Arial, sans-serif", label: "Arial (Sans-serif)" },
         ],
@@ -825,7 +828,8 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "form-input",
     name: "Campo de Formulário",
-    description: "Componente campo de formulário com propriedades configuráveis",
+    description:
+      "Componente campo de formulário com propriedades configuráveis",
     category: "Form",
     icon: Type,
     component: FormInputBlock,
@@ -1028,7 +1032,8 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "options-grid",
     name: "Grade de Opções",
-    description: "Componente grade de opções com propriedades configuráveis completas",
+    description:
+      "Componente grade de opções com propriedades configuráveis completas",
     category: "Quiz",
     icon: Type,
     component: QuizOptionsGridBlock,
@@ -1545,7 +1550,8 @@ export const blockDefinitions: BlockDefinition[] = [
   {
     type: "style-results",
     name: "Resultados de Estilo",
-    description: "Componente resultados de estilo com propriedades configuráveis",
+    description:
+      "Componente resultados de estilo com propriedades configuráveis",
     category: "Quiz",
     icon: Type,
     component: StyleResultsEditor,
@@ -1922,16 +1928,16 @@ export const blockDefinitions: BlockDefinition[] = [
 
 export const getCategories = (): string[] => {
   const categories = new Set<string>();
-  blockDefinitions.forEach(block => {
+  blockDefinitions.forEach((block) => {
     categories.add(block.category);
   });
   return Array.from(categories);
 };
 
 export const getBlocksByCategory = (category: string): BlockDefinition[] => {
-  return blockDefinitions.filter(block => block.category === category);
+  return blockDefinitions.filter((block) => block.category === category);
 };
 
 export const getBlockByType = (type: string): BlockDefinition | undefined => {
-  return blockDefinitions.find(block => block.type === type);
+  return blockDefinitions.find((block) => block.type === type);
 };

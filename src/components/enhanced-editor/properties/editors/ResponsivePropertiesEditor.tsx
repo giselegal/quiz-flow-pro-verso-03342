@@ -42,14 +42,18 @@ export function ResponsivePropertiesEditor({
             <Checkbox
               id="hide-on-mobile"
               checked={responsive.hideOnMobile || false}
-              onCheckedChange={checked => handleResponsiveUpdate("hideOnMobile", checked === true)}
+              onCheckedChange={(checked) =>
+                handleResponsiveUpdate("hideOnMobile", checked === true)
+              }
             />
-            <Label htmlFor="hide-on-mobile">Ocultar em dispositivos móveis (sm)</Label>
+            <Label htmlFor="hide-on-mobile">
+              Ocultar em dispositivos móveis (sm)
+            </Label>
           </div>
           {isMobile && responsive.hideOnMobile && (
             <p className="text-xs text-orange-500">
-              Este componente está oculto em dispositivos móveis. A visualização atual mostra como
-              ficará em desktop.
+              Este componente está oculto em dispositivos móveis. A visualização
+              atual mostra como ficará em desktop.
             </p>
           )}
         </div>
@@ -58,7 +62,9 @@ export function ResponsivePropertiesEditor({
           <Checkbox
             id="hide-on-tablet"
             checked={responsive.hideOnTablet || false}
-            onCheckedChange={checked => handleResponsiveUpdate("hideOnTablet", checked === true)}
+            onCheckedChange={(checked) =>
+              handleResponsiveUpdate("hideOnTablet", checked === true)
+            }
           />
           <Label htmlFor="hide-on-tablet">Ocultar em tablets (md)</Label>
         </div>
@@ -67,7 +73,9 @@ export function ResponsivePropertiesEditor({
           <Checkbox
             id="hide-on-desktop"
             checked={responsive.hideOnDesktop || false}
-            onCheckedChange={checked => handleResponsiveUpdate("hideOnDesktop", checked === true)}
+            onCheckedChange={(checked) =>
+              handleResponsiveUpdate("hideOnDesktop", checked === true)
+            }
           />
           <Label htmlFor="hide-on-desktop">Ocultar em desktop (lg, xl)</Label>
         </div>
@@ -80,7 +88,9 @@ export function ResponsivePropertiesEditor({
           <Label htmlFor="mobile-width">Largura em dispositivos móveis</Label>
           <Select
             value={responsive.mobileWidth || "full"}
-            onValueChange={value => handleResponsiveUpdate("mobileWidth", value)}
+            onValueChange={(value) =>
+              handleResponsiveUpdate("mobileWidth", value)
+            }
           >
             <SelectTrigger id="mobile-width">
               <SelectValue placeholder="Selecione a largura" />
@@ -98,7 +108,9 @@ export function ResponsivePropertiesEditor({
           <Label htmlFor="tablet-width">Largura em tablets</Label>
           <Select
             value={responsive.tabletWidth || "full"}
-            onValueChange={value => handleResponsiveUpdate("tabletWidth", value)}
+            onValueChange={(value) =>
+              handleResponsiveUpdate("tabletWidth", value)
+            }
           >
             <SelectTrigger id="tablet-width">
               <SelectValue placeholder="Selecione a largura" />

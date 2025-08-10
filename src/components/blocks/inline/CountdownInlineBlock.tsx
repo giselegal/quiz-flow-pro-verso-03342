@@ -32,7 +32,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,7 +87,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   // Safety check for block and properties
   if (!block) {
     console.warn("⚠️ CountdownInlineBlock: block is undefined");
-    return <div style={{ color: '#432818' }}>Error: Block not found</div>;
+    return <div style={{ color: "#432818" }}>Error: Block not found</div>;
   }
 
   // Safe destructuring with fallbacks
@@ -88,7 +95,11 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   const content = properties.content || {};
   const style = properties.style || {};
 
-  const { targetDate = "", format = "full", expiredMessage = "Tempo esgotado!" } = content;
+  const {
+    targetDate = "",
+    format = "full",
+    expiredMessage = "Tempo esgotado!",
+  } = content;
 
   const {
     size = "md",
@@ -125,7 +136,9 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
       if (difference > 0) {
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          hours: Math.floor(
+            (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          ),
           minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
           seconds: Math.floor((difference % (1000 * 60)) / 1000),
         });
@@ -198,7 +211,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
           isSelected && "ring-2 ring-[#432818] ring-offset-2"
         )}
       >
-        <div style={{ color: '#6B4F43' }}>{expiredMessage}</div>
+        <div style={{ color: "#6B4F43" }}>{expiredMessage}</div>
       </div>
     );
   }
@@ -223,14 +236,19 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
 
         {format === "hours" && (
           <>
-            <TimeUnit value={timeLeft.hours + timeLeft.days * 24} label="horas" />
+            <TimeUnit
+              value={timeLeft.hours + timeLeft.days * 24}
+              label="horas"
+            />
             <TimeUnit value={timeLeft.minutes} label="min" />
           </>
         )}
 
         {format === "minutes" && (
           <TimeUnit
-            value={timeLeft.minutes + timeLeft.hours * 60 + timeLeft.days * 24 * 60}
+            value={
+              timeLeft.minutes + timeLeft.hours * 60 + timeLeft.days * 24 * 60
+            }
             label="minutos"
           />
         )}

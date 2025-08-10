@@ -4,9 +4,12 @@ import { useCallback, useState } from "react";
 export const useQuizComponents = () => {
   const [components, setComponents] = useState<QuizComponentData[]>([]);
 
-  const initializeComponents = useCallback((initialComponents: QuizComponentData[]) => {
-    setComponents(initialComponents);
-  }, []);
+  const initializeComponents = useCallback(
+    (initialComponents: QuizComponentData[]) => {
+      setComponents(initialComponents);
+    },
+    []
+  );
 
   const addComponent = useCallback(
     (type: string) => {
@@ -18,20 +21,25 @@ export const useQuizComponents = () => {
         content: {},
         order: components.length,
       };
-      setComponents(prev => [...prev, newComponent]);
+      setComponents((prev) => [...prev, newComponent]);
       return newComponent.id;
     },
     [components.length]
   );
 
-  const updateComponent = useCallback((id: string, updates: Partial<QuizComponentData>) => {
-    setComponents(prev =>
-      prev.map(component => (component.id === id ? { ...component, ...updates } : component))
-    );
-  }, []);
+  const updateComponent = useCallback(
+    (id: string, updates: Partial<QuizComponentData>) => {
+      setComponents((prev) =>
+        prev.map((component) =>
+          component.id === id ? { ...component, ...updates } : component
+        )
+      );
+    },
+    []
+  );
 
   const deleteComponent = useCallback((id: string) => {
-    setComponents(prev => prev.filter(component => component.id !== id));
+    setComponents((prev) => prev.filter((component) => component.id !== id));
   }, []);
 
   const moveComponent = useCallback((draggedId: string, targetId: string) => {

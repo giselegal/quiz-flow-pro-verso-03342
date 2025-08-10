@@ -12,7 +12,10 @@ import { EditorToolbar } from "../components/enhanced-editor/toolbar/EditorToolb
 import EnhancedUniversalPropertiesPanel from "../components/universal/EnhancedUniversalPropertiesPanel";
 
 // Configuration & Registry
-import { generateBlockDefinitions, getRegistryStats } from "../config/enhancedBlockRegistry";
+import {
+  generateBlockDefinitions,
+  getRegistryStats,
+} from "../config/enhancedBlockRegistry";
 
 // Context & Hooks
 import { useEditor } from "../context/EditorContext";
@@ -22,7 +25,7 @@ import { useSyncedScroll } from "../hooks/useSyncedScroll";
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
- * 
+ *
  * Editor de funil com drag & drop completo, incluindo:
  * - Layout de 4 colunas responsivo
  * - Sistema avançado de drag & drop
@@ -34,7 +37,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: "canvas" });
   const propertyHistory = usePropertyHistory();
-  
+
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
 
@@ -63,8 +66,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Função utilitária para obter definição de bloco com propriedades padrão
   const getBlockDefinitionForType = (type: string) => {
-    const definition = allBlockDefinitions.find(def => def.type === type);
-    
+    const definition = allBlockDefinitions.find((def) => def.type === type);
+
     if (definition) {
       return definition;
     }
@@ -151,7 +154,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   useKeyboardShortcuts({
     onUndo: propertyHistory.undo,
     onRedo: propertyHistory.redo,
-    onDelete: selectedBlockId ? () => handleDeleteBlock(selectedBlockId) : undefined,
+    onDelete: selectedBlockId
+      ? () => handleDeleteBlock(selectedBlockId)
+      : undefined,
     canUndo: propertyHistory.canUndo,
     canRedo: propertyHistory.canRedo,
     hasSelectedBlock: !!selectedBlockId,
@@ -159,17 +164,19 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   return (
     <DndProvider
-      blocks={(currentBlocks || []).map(block => ({
+      blocks={(currentBlocks || []).map((block) => ({
         id: block.id,
         type: block.type,
         properties: block.properties || {},
       }))}
-      onBlocksReorder={newBlocksData => {
-        const newBlockIds = newBlocksData.map(b => b.id);
-        const oldBlockIds = (currentBlocks || []).map(b => b.id);
+      onBlocksReorder={(newBlocksData) => {
+        const newBlockIds = newBlocksData.map((b) => b.id);
+        const oldBlockIds = (currentBlocks || []).map((b) => b.id);
 
         if (oldBlockIds.length !== newBlockIds.length) {
-          console.warn("⚠️ Reordenação abortada: quantidade de blocos não confere");
+          console.warn(
+            "⚠️ Reordenação abortada: quantidade de blocos não confere"
+          );
           return;
         }
 
@@ -182,7 +189,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           addBlock(blockType, activeStageId || undefined);
         }
       }}
-      onBlockSelect={blockId => {
+      onBlockSelect={(blockId) => {
         setSelectedBlockId(blockId);
       }}
       selectedBlockId={selectedBlockId || undefined}
@@ -205,14 +212,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           />
 
           {/* Top Bar - Otimizado */}
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <h1 className="text-lg font-semibold text-stone-700">
                   Editor de Funil - Etapa {activeStageId}
                 </h1>
                 <div className="text-sm text-stone-500">
-                  {totalBlocks} componente{totalBlocks !== 1 ? "s" : ""} • {stageCount} etapa
+                  {totalBlocks} componente{totalBlocks !== 1 ? "s" : ""} •{" "}
+                  {stageCount} etapa
                   {stageCount !== 1 ? "s" : ""}
                 </div>
               </div>
@@ -220,7 +228,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           </div>
 
           <FourColumnLayout
-            stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
+            stagesPanel={
+              <FunnelStagesPanel onStageSelect={handleStageSelect} />
+            }
             componentsPanel={
               <CombinedComponentsPanel
                 currentStepNumber={getStepNumberFromStageId(activeStageId)}
@@ -256,7 +266,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       ...(selectedBlock.content || {}),
                     },
                   }}
-                  blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
+                  blockDefinition={getBlockDefinitionForType(
+                    selectedBlock.type
+                  )}
                   onUpdate={(blockId, updates) => {
                     updateBlock(blockId, updates);
                   }}
@@ -265,7 +277,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               ) : !isPreviewing ? (
                 <div className="h-full p-4 flex items-center justify-center text-stone-500">
                   <div className="text-center">
-                    <p className="text-sm">Selecione um bloco para editar propriedades</p>
+                    <p className="text-sm">
+                      Selecione um bloco para editar propriedades
+                    </p>
                     <p className="text-xs text-stone-400 mt-1">
                       Painel Universal ativo • Drag & Drop habilitado
                     </p>

@@ -8,7 +8,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -47,7 +54,10 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const ButtonBlock: React.FC<BlockComponentProps> = ({ block, className = "" }) => {
+const ButtonBlock: React.FC<BlockComponentProps> = ({
+  block,
+  className = "",
+}) => {
   return (
     <div className={`button-block ${className}`}>
       <Button onClick={() => console.log("Button clicked")}>

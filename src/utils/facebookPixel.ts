@@ -1,5 +1,9 @@
 // Facebook Pixel utility functions
-import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from "../services/pixelManager";
+import {
+  getPixelId,
+  getCurrentFunnelConfig,
+  trackFunnelEvent,
+} from "../services/pixelManager";
 
 // Use the same type definition as in global.d.ts
 declare global {
@@ -32,7 +36,12 @@ const attachDebugTools = (): void => {
         console.warn("[Pixel] fbq not ready for test");
         return;
       }
-      const payload = { ...params, test: true, ts: Date.now(), pixel_id: window.__ACTIVE_PIXEL_ID };
+      const payload = {
+        ...params,
+        test: true,
+        ts: Date.now(),
+        pixel_id: window.__ACTIVE_PIXEL_ID,
+      };
       window.fbq("trackCustom", eventName, payload);
       console.log(`[Pixel] Test event '${eventName}' sent`, payload);
     };
@@ -55,7 +64,9 @@ export const initFacebookPixel = (pixelId: string): boolean => {
 
     // Avoid re-initializing the same Pixel ID
     if (window.__ACTIVE_PIXEL_ID === pixelId && window.fbq) {
-      console.log(`[Pixel] Facebook Pixel already initialized with ID: ${pixelId}`);
+      console.log(
+        `[Pixel] Facebook Pixel already initialized with ID: ${pixelId}`
+      );
       attachDebugTools();
       return true;
     }
@@ -63,7 +74,9 @@ export const initFacebookPixel = (pixelId: string): boolean => {
     if (!window.fbq) {
       const w = window as any;
       w.fbq = function () {
-        w.fbq.callMethod ? w.fbq.callMethod.apply(w.fbq, arguments) : w.fbq.queue.push(arguments);
+        w.fbq.callMethod
+          ? w.fbq.callMethod.apply(w.fbq, arguments)
+          : w.fbq.queue.push(arguments);
       };
       if (!w._fbq) w._fbq = w.fbq;
       w.fbq.push = w.fbq;
@@ -89,7 +102,10 @@ export const initFacebookPixel = (pixelId: string): boolean => {
  * @param eventName Name of the event to track
  * @param params Additional parameters to send
  */
-export const trackPixelEvent = (eventName: string, params?: Record<string, unknown>): void => {
+export const trackPixelEvent = (
+  eventName: string,
+  params?: Record<string, unknown>
+): void => {
   try {
     if (typeof window === "undefined" || !window.fbq) {
       console.warn("Facebook Pixel not initialized");
@@ -134,7 +150,9 @@ export const loadFacebookPixel = (): void => {
 
     if (pixelId) {
       initFacebookPixel(pixelId);
-      console.log(`Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`);
+      console.log(
+        `Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`
+      );
 
       // Dispara evento de inicialização específico do funil
       trackFunnelEvent("PixelInitialized", {

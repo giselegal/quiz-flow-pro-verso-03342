@@ -36,7 +36,10 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({
         {Array(8)
           .fill(0)
           .map((_, i) => (
-            <div key={i} className="bg-card rounded-lg border border-border/40 p-4">
+            <div
+              key={i}
+              className="bg-card rounded-lg border border-border/40 p-4"
+            >
               <Skeleton className="h-4 w-24 mb-2" />
               <Skeleton className="h-8 w-16 mb-1" />
               <Skeleton className="h-3 w-32" />

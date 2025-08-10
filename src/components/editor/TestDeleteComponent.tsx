@@ -9,7 +9,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -48,30 +55,34 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDelete }) => {
+const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({
+  onDelete,
+}) => {
   const handleClick = () => {
     console.log("🗑️ Botão de exclusão clicado!");
     onDelete();
   };
 
   return (
-    <div style={{ borderColor: '#E5DDD5' }}>
-      <div className="text-lg font-semibold mb-2">🧪 Componente de Teste de Exclusão</div>
-      <div style={{ color: '#6B4F43' }}>
+    <div style={{ borderColor: "#E5DDD5" }}>
+      <div className="text-lg font-semibold mb-2">
+        🧪 Componente de Teste de Exclusão
+      </div>
+      <div style={{ color: "#6B4F43" }}>
         Este é um componente especial apenas para testar a exclusão.
       </div>
 
       {/* Botão de exclusão sempre visível */}
       <button
         onClick={handleClick}
-        style={{ backgroundColor: '#FAF9F7' }}
+        style={{ backgroundColor: "#FAF9F7" }}
         type="button"
       >
         <Trash2 className="w-4 h-4 mr-2" />
         Excluir Este Componente
       </button>
 
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         Se este botão não funcionar, há um problema na função onDelete
       </div>
     </div>

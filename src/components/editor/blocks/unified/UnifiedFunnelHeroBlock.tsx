@@ -31,7 +31,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,7 +87,8 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   const props = {
     title: block.properties.title || "Seu Título Persuasivo Aqui",
     description:
-      block.properties.description || "Descrição que conecta com seu público e gera conversão",
+      block.properties.description ||
+      "Descrição que conecta com seu público e gera conversão",
     ctaText: block.properties.ctaText || "Call to Action",
     ctaSubtext: block.properties.ctaSubtext,
     logoUrl: block.properties.logoUrl,

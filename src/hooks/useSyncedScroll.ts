@@ -6,9 +6,17 @@ interface UseSyncedScrollOptions {
   enabled?: boolean;
 }
 
-export const useSyncedScroll = ({ source, enabled = true }: UseSyncedScrollOptions) => {
-  const { canvasScrollRef, componentsScrollRef, propertiesScrollRef, syncScroll, isScrolling } =
-    useScrollSync();
+export const useSyncedScroll = ({
+  source,
+  enabled = true,
+}: UseSyncedScrollOptions) => {
+  const {
+    canvasScrollRef,
+    componentsScrollRef,
+    propertiesScrollRef,
+    syncScroll,
+    isScrolling,
+  } = useScrollSync();
 
   const getScrollRef = () => {
     switch (source) {

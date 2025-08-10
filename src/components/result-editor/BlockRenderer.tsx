@@ -29,7 +29,9 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
   };
 
   const isFAQItemArray = (items: any[]): items is FAQItem[] => {
-    return items.length > 0 && typeof items[0] === "object" && "question" in items[0];
+    return (
+      items.length > 0 && typeof items[0] === "object" && "question" in items[0]
+    );
   };
 
   switch (block.type) {
@@ -41,14 +43,16 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
             <input
               type="text"
               value={content.title || ""}
-              onChange={e => handleContentChange("title", e.target.value)}
+              onChange={(e) => handleContentChange("title", e.target.value)}
               className="text-2xl font-bold w-full border-none outline-none bg-transparent"
               placeholder="Digite o título"
             />
           ) : (
-            <h1 style={{ color: '#432818' }}>{content.title || "Título"}</h1>
+            <h1 style={{ color: "#432818" }}>{content.title || "Título"}</h1>
           )}
-          {content.subtitle && <p style={{ color: '#6B4F43' }}>{content.subtitle}</p>}
+          {content.subtitle && (
+            <p style={{ color: "#6B4F43" }}>{content.subtitle}</p>
+          )}
         </div>
       );
 
@@ -58,13 +62,15 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
           {isEditing ? (
             <textarea
               value={content.text || ""}
-              onChange={e => handleContentChange("text", e.target.value)}
+              onChange={(e) => handleContentChange("text", e.target.value)}
               className="w-full p-2 border rounded resize-none"
               rows={4}
               placeholder="Digite o texto"
             />
           ) : (
-            <p style={{ color: '#6B4F43' }}>{content.text || "Texto de exemplo"}</p>
+            <p style={{ color: "#6B4F43" }}>
+              {content.text || "Texto de exemplo"}
+            </p>
           )}
         </div>
       );
@@ -79,12 +85,12 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
               className="max-w-full h-auto rounded-lg mx-auto"
             />
           ) : (
-            <div style={{ backgroundColor: '#E5DDD5' }}>
-              <span style={{ color: '#8B7355' }}>Imagem</span>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
+              <span style={{ color: "#8B7355" }}>Imagem</span>
             </div>
           )}
           {content.description && (
-            <p style={{ color: '#6B4F43' }}>{content.description}</p>
+            <p style={{ color: "#6B4F43" }}>{content.description}</p>
           )}
         </div>
       );
@@ -102,7 +108,9 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       const benefitItems = content.items || [];
       return (
         <div>
-          <h3 className="text-xl font-semibold mb-4">{content.title || "Benefícios"}</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            {content.title || "Benefícios"}
+          </h3>
           <ul className="space-y-2">
             {benefitItems.length > 0 && isStringArray(benefitItems) ? (
               benefitItems.map((item: string, index: number) => (
@@ -112,7 +120,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
                 </li>
               ))
             ) : (
-              <li style={{ color: '#8B7355' }}>Nenhum benefício adicionado</li>
+              <li style={{ color: "#8B7355" }}>Nenhum benefício adicionado</li>
             )}
           </ul>
         </div>
@@ -122,17 +130,19 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       const faqItems = content.faqItems || content.items || [];
       return (
         <div>
-          <h3 className="text-xl font-semibold mb-4">{content.title || "Perguntas Frequentes"}</h3>
+          <h3 className="text-xl font-semibold mb-4">
+            {content.title || "Perguntas Frequentes"}
+          </h3>
           <div className="space-y-4">
             {faqItems.length > 0 && isFAQItemArray(faqItems) ? (
               faqItems.map((item: FAQItem, index: number) => (
                 <div key={index} className="border-b pb-3">
-                  <h4 style={{ color: '#432818' }}>{item.question}</h4>
-                  <p style={{ color: '#6B4F43' }}>{item.answer}</p>
+                  <h4 style={{ color: "#432818" }}>{item.question}</h4>
+                  <p style={{ color: "#6B4F43" }}>{item.answer}</p>
                 </div>
               ))
             ) : (
-              <p style={{ color: '#8B7355' }}>Nenhuma pergunta adicionada</p>
+              <p style={{ color: "#8B7355" }}>Nenhuma pergunta adicionada</p>
             )}
           </div>
         </div>
@@ -140,11 +150,11 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 
     case "testimonials":
       return (
-        <div style={{ backgroundColor: '#FAF9F7' }}>
-          <blockquote style={{ color: '#432818' }}>
+        <div style={{ backgroundColor: "#FAF9F7" }}>
+          <blockquote style={{ color: "#432818" }}>
             "{content.quote || "Depoimento incrível sobre o produto..."}"
           </blockquote>
-          <cite style={{ color: '#6B4F43' }}>
+          <cite style={{ color: "#6B4F43" }}>
             — {content.quoteAuthor || "Nome do Cliente"}
           </cite>
         </div>
@@ -154,11 +164,9 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       return (
         <div className="bg-white border-2 border-[#B89B7A]/30 rounded-lg p-6 text-center">
           {content.regularPrice && (
-            <div style={{ color: '#8B7355' }}>R$ {content.regularPrice}</div>
+            <div style={{ color: "#8B7355" }}>R$ {content.regularPrice}</div>
           )}
-          <div style={{ color: '#B89B7A' }}>
-            R$ {content.salePrice || "97"}
-          </div>
+          <div style={{ color: "#B89B7A" }}>R$ {content.salePrice || "97"}</div>
           <button className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
             Comprar Agora
           </button>
@@ -167,7 +175,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 
     default:
       return (
-        <div style={{ color: '#6B4F43' }}>
+        <div style={{ color: "#6B4F43" }}>
           Bloco: {block.type}
           {content.title && <div className="font-medium">{content.title}</div>}
           {content.text && <div className="text-sm">{content.text}</div>}

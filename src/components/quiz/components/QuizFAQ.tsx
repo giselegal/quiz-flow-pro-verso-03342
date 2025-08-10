@@ -36,7 +36,9 @@ const QuizFAQ: React.FC<QuizFAQProps> = ({
 
   const toggleItem = (index: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setOpenItems(prev => (prev.includes(index) ? prev.filter(i => i !== index) : [...prev, index]));
+    setOpenItems((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
   };
 
   return (
@@ -52,10 +54,12 @@ const QuizFAQ: React.FC<QuizFAQProps> = ({
             <div key={index} className={styles.faqItem}>
               <button
                 className={`${styles.faqQuestion} ${openItems.includes(index) ? styles.open : ""}`}
-                onClick={e => toggleItem(index, e)}
+                onClick={(e) => toggleItem(index, e)}
               >
                 <span>{item.question}</span>
-                <span className={styles.faqToggle}>{openItems.includes(index) ? "−" : "+"}</span>
+                <span className={styles.faqToggle}>
+                  {openItems.includes(index) ? "−" : "+"}
+                </span>
               </button>
 
               {openItems.includes(index) && (

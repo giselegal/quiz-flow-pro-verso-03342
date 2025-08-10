@@ -9,7 +9,10 @@ interface HeaderBlockEditorProps {
   onUpdate: (content: any) => void;
 }
 
-const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }) => {
+const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   const content = block.content;
 
   return (
@@ -20,7 +23,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           id="title"
           rows={2}
           value={content.title || ""}
-          onChange={e => onUpdate({ title: e.target.value })}
+          onChange={(e) => onUpdate({ title: e.target.value })}
           placeholder="Olá, seu Estilo Predominante é:"
         />
       </div>
@@ -31,7 +34,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           id="subtitle"
           rows={2}
           value={content.subtitle || ""}
-          onChange={e => onUpdate({ subtitle: e.target.value })}
+          onChange={(e) => onUpdate({ subtitle: e.target.value })}
           placeholder="Subtítulo personalizado"
         />
       </div>
@@ -41,12 +44,16 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
         <Input
           id="logo"
           value={content.logo || ""}
-          onChange={e => onUpdate({ logo: e.target.value })}
+          onChange={(e) => onUpdate({ logo: e.target.value })}
           placeholder="https://exemplo.com/seu-logo.png"
         />
         {content.logo && (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
-            <img src={content.logo} alt="Logo" className="h-10 object-contain mx-auto" />
+          <div style={{ backgroundColor: "#FAF9F7" }}>
+            <img
+              src={content.logo}
+              alt="Logo"
+              className="h-10 object-contain mx-auto"
+            />
           </div>
         )}
       </div>
@@ -56,7 +63,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
         <Input
           id="logoAlt"
           value={content.logoAlt || ""}
-          onChange={e => onUpdate({ logoAlt: e.target.value })}
+          onChange={(e) => onUpdate({ logoAlt: e.target.value })}
           placeholder="Logo Gisele Galvão"
         />
       </div>
@@ -67,7 +74,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           <Input
             id="logoWidth"
             value={content.logoWidth || ""}
-            onChange={e => onUpdate({ logoWidth: e.target.value })}
+            onChange={(e) => onUpdate({ logoWidth: e.target.value })}
             placeholder="auto"
           />
         </div>
@@ -76,7 +83,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           <Input
             id="logoHeight"
             value={content.logoHeight || ""}
-            onChange={e => onUpdate({ logoHeight: e.target.value })}
+            onChange={(e) => onUpdate({ logoHeight: e.target.value })}
             placeholder="auto"
           />
         </div>

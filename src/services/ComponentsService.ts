@@ -28,34 +28,42 @@ function createMockSupabaseClient() {
       select: (query?: string) => ({
         eq: (column: string, value: any) => ({
           order: (column: string, options: { ascending: boolean }) => ({
-            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+            then: (callback: Function) =>
+              Promise.resolve(callback({ data: [], error: null })),
             limit: (num: number) => ({
-              then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+              then: (callback: Function) =>
+                Promise.resolve(callback({ data: [], error: null })),
               single: () => Promise.resolve({ data: null, error: null }),
             }),
             single: () => Promise.resolve({ data: null, error: null }),
           }),
           limit: (num: number) => ({
-            then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+            then: (callback: Function) =>
+              Promise.resolve(callback({ data: [], error: null })),
             single: () => Promise.resolve({ data: null, error: null }),
           }),
           single: () => Promise.resolve({ data: null, error: null }),
         }),
         order: (column: string, options: { ascending: boolean }) => ({
-          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+          then: (callback: Function) =>
+            Promise.resolve(callback({ data: [], error: null })),
         }),
         limit: (num: number) => ({
-          then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+          then: (callback: Function) =>
+            Promise.resolve(callback({ data: [], error: null })),
         }),
         single: () => Promise.resolve({ data: null, error: null }),
-        then: (callback: Function) => Promise.resolve(callback({ data: [], error: null })),
+        then: (callback: Function) =>
+          Promise.resolve(callback({ data: [], error: null })),
       }),
       insert: (data: any) => Promise.resolve({ data: null, error: null }),
       update: (data: any) => ({
-        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
+        eq: (column: string, value: any) =>
+          Promise.resolve({ data: null, error: null }),
       }),
       delete: () => ({
-        eq: (column: string, value: any) => Promise.resolve({ data: null, error: null }),
+        eq: (column: string, value: any) =>
+          Promise.resolve({ data: null, error: null }),
       }),
     }),
     rpc: (func: string, params: any) =>
@@ -160,7 +168,8 @@ export class ComponentsService {
         id: instance.instance_key,
         type: instance.component_types.type_key,
         content: instance.content || instance.component_types.default_content,
-        properties: instance.properties || instance.component_types.default_properties,
+        properties:
+          instance.properties || instance.component_types.default_properties,
         order: instance.stage_order,
         metadata: {
           database_id: instance.id,
@@ -181,11 +190,17 @@ export class ComponentsService {
    * @param blocks Array de blocos para sincronizar.
    * @returns Uma Promise que resolve para um booleano indicando o sucesso da operação.
    */
-  public static async syncStage(stageKey: string, blocks: Block[]): Promise<boolean> {
+  public static async syncStage(
+    stageKey: string,
+    blocks: Block[]
+  ): Promise<boolean> {
     try {
       if (!this.isOnline) throw new Error("Serviço offline");
 
-      await supabase.from("component_instances").delete().eq("stage_key", stageKey);
+      await supabase
+        .from("component_instances")
+        .delete()
+        .eq("stage_key", stageKey);
 
       const instances = blocks.map((block, index) => ({
         instance_key: block.id,
@@ -197,7 +212,9 @@ export class ComponentsService {
       }));
 
       if (instances.length > 0) {
-        const { error } = await supabase.from("component_instances").insert(instances);
+        const { error } = await supabase
+          .from("component_instances")
+          .insert(instances);
         if (error) {
           console.error("Erro ao sincronizar stage:", error);
           return false;
@@ -242,10 +259,13 @@ export class ComponentsService {
       }
 
       // 2. Gera uma chave única para a instância
-      const { data: result, error } = await supabase.rpc("generate_instance_key", {
-        p_type_key: typeKey,
-        p_stage_key: stageKey,
-      });
+      const { data: result, error } = await supabase.rpc(
+        "generate_instance_key",
+        {
+          p_type_key: typeKey,
+          p_stage_key: stageKey,
+        }
+      );
 
       if (error || !result) {
         console.error("Erro ao gerar instance_key:", error);
@@ -266,14 +286,16 @@ export class ComponentsService {
       const nextOrder = (maxOrder?.[0]?.stage_order || 0) + 1;
 
       // 4. Insere a nova instância no banco
-      const { error: insertError } = await supabase.from("component_instances").insert({
-        instance_key: instanceKey,
-        type_key: typeKey,
-        stage_key: stageKey,
-        stage_order: nextOrder,
-        content: content || componentType.default_content,
-        properties: properties || componentType.default_properties,
-      });
+      const { error: insertError } = await supabase
+        .from("component_instances")
+        .insert({
+          instance_key: instanceKey,
+          type_key: typeKey,
+          stage_key: stageKey,
+          stage_order: nextOrder,
+          content: content || componentType.default_content,
+          properties: properties || componentType.default_properties,
+        });
 
       if (insertError) {
         console.error("Erro ao criar bloco:", insertError);

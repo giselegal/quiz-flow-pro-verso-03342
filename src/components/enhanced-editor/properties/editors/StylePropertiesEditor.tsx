@@ -8,7 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../../components/ui/select";
-import { PopoverTrigger, Popover, PopoverContent } from "../../../../components/ui/popover";
+import {
+  PopoverTrigger,
+  Popover,
+  PopoverContent,
+} from "../../../../components/ui/popover";
 
 interface StylePropertiesEditorProps {
   style: any;
@@ -21,7 +25,10 @@ const textAlignOptions = [
   { value: "right", label: "Direita" },
 ];
 
-export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditorProps) {
+export function StylePropertiesEditor({
+  style,
+  onUpdate,
+}: StylePropertiesEditorProps) {
   return (
     <div className="space-y-6">
       <div className="space-y-4">
@@ -54,7 +61,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
                       "#432818",
                       "#aa6b5d",
                       "#fffaf7",
-                    ].map(color => (
+                    ].map((color) => (
                       <button
                         key={color}
                         className="w-8 h-8 rounded-md border"
@@ -69,7 +76,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
             <Input
               id="backgroundColor"
               value={style.backgroundColor || ""}
-              onChange={e => onUpdate({ backgroundColor: e.target.value })}
+              onChange={(e) => onUpdate({ backgroundColor: e.target.value })}
               placeholder="#ffffff"
             />
           </div>
@@ -100,7 +107,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
                       "#432818",
                       "#aa6b5d",
                       "#ffffff",
-                    ].map(color => (
+                    ].map((color) => (
                       <button
                         key={color}
                         className="w-8 h-8 rounded-md border"
@@ -115,7 +122,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
             <Input
               id="color"
               value={style.color || ""}
-              onChange={e => onUpdate({ color: e.target.value })}
+              onChange={(e) => onUpdate({ color: e.target.value })}
               placeholder="#000000"
             />
           </div>
@@ -130,7 +137,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
           <Input
             id="padding"
             value={style.padding || ""}
-            onChange={e => onUpdate({ padding: e.target.value })}
+            onChange={(e) => onUpdate({ padding: e.target.value })}
             placeholder="1rem"
           />
         </div>
@@ -140,7 +147,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
           <Input
             id="margin"
             value={style.margin || ""}
-            onChange={e => onUpdate({ margin: e.target.value })}
+            onChange={(e) => onUpdate({ margin: e.target.value })}
             placeholder="0"
           />
         </div>
@@ -154,7 +161,7 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
           <Input
             id="borderRadius"
             value={style.borderRadius || ""}
-            onChange={e => onUpdate({ borderRadius: e.target.value })}
+            onChange={(e) => onUpdate({ borderRadius: e.target.value })}
             placeholder="0.375rem"
           />
         </div>
@@ -163,13 +170,13 @@ export function StylePropertiesEditor({ style, onUpdate }: StylePropertiesEditor
           <Label htmlFor="textAlign">Alinhamento do Texto</Label>
           <Select
             value={style.textAlign || "left"}
-            onValueChange={value => onUpdate({ textAlign: value })}
+            onValueChange={(value) => onUpdate({ textAlign: value })}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o alinhamento" />
             </SelectTrigger>
             <SelectContent>
-              {textAlignOptions.map(option => (
+              {textAlignOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
                 </SelectItem>

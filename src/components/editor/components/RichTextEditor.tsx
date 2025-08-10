@@ -44,8 +44,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   }, [value, isEditing]);
 
   return (
-    <div style={{ borderColor: '#E5DDD5' }}>
-      <div style={{ borderColor: '#E5DDD5' }}>
+    <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <Button
           type="button"
           size="sm"
@@ -104,7 +104,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         suppressContentEditableWarning={true}
         style={{ minHeight: "100px" }}
       >
-        {!value && <div className="text-gray-400 pointer-events-none">{placeholder}</div>}
+        {!value && (
+          <div className="text-gray-400 pointer-events-none">{placeholder}</div>
+        )}
       </div>
     </div>
   );

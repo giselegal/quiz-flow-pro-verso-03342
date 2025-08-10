@@ -24,8 +24,8 @@ const GuaranteeSection: React.FC = () => {
 
         <div className="max-w-xl mx-auto">
           <p className="text-[#6B5B4E] leading-relaxed mb-6">
-            Se por qualquer motivo você não ficar 100% satisfeita, reembolsamos o valor integral sem
-            perguntas.
+            Se por qualquer motivo você não ficar 100% satisfeita, reembolsamos
+            o valor integral sem perguntas.
           </p>
         </div>
 

@@ -19,8 +19,8 @@ export const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({
       <Alert>
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
-          Cuidado ao inserir código personalizado. Certifique-se de que o código seja seguro e
-          válido.
+          Cuidado ao inserir código personalizado. Certifique-se de que o código
+          seja seguro e válido.
         </AlertDescription>
       </Alert>
 
@@ -29,7 +29,7 @@ export const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({
         <Textarea
           id={`${block.id}-code`}
           value={block.content.code || ""}
-          onChange={e => onUpdate({ ...block.content, code: e.target.value })}
+          onChange={(e) => onUpdate({ ...block.content, code: e.target.value })}
           placeholder="Cole seu código personalizado aqui..."
           className="mt-1 font-mono text-sm"
           rows={10}
@@ -41,7 +41,9 @@ export const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({
         <Textarea
           id={`${block.id}-description`}
           value={block.content.description || ""}
-          onChange={e => onUpdate({ ...block.content, description: e.target.value })}
+          onChange={(e) =>
+            onUpdate({ ...block.content, description: e.target.value })
+          }
           placeholder="Descreva o que este código faz..."
           className="mt-1"
           rows={3}

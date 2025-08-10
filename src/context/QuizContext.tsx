@@ -16,14 +16,18 @@ type QuizContextType = ReturnType<typeof useQuizLogic> & {
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
 // Provider component
-export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const QuizProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const quizLogic = useQuizLogic();
   const { toast } = useToast();
 
   // Define all context functions before returning the provider
   const startQuiz = async (name: string, email: string, quizId: string) => {
     try {
-      console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
+      console.log(
+        `Starting quiz for ${name} (${email}) with quiz ID ${quizId}`
+      );
       return { id: "1", name, email };
     } catch (error) {
       toast({
@@ -73,7 +77,9 @@ export const QuizProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   // Return the provider
-  return <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>;
+  return (
+    <QuizContext.Provider value={contextValue}>{children}</QuizContext.Provider>
+  );
 };
 
 // Hook for using the context
@@ -115,7 +121,9 @@ export const useQuiz = () => {
     ...quizResult,
     startQuiz: async (name: string, email: string, quizId: string) => {
       try {
-        console.log(`Starting quiz for ${name} (${email}) with quiz ID ${quizId}`);
+        console.log(
+          `Starting quiz for ${name} (${email}) with quiz ID ${quizId}`
+        );
         return { id: "1", name, email };
       } catch (error) {
         toast({

@@ -5,7 +5,10 @@ import { StyleResult } from "../../../types/quiz";
 import { ScrollArea } from "../../../components/ui/scroll-area";
 import { BlockPreviewRenderer } from "./BlockPreviewRenderer";
 import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 interface PreviewPanelProps {
   blocks: Block[];
@@ -38,8 +41,8 @@ export function PreviewPanel({
 
     if (!over || active.id === over.id) return;
 
-    const oldIndex = blocks.findIndex(block => block.id === active.id);
-    const newIndex = blocks.findIndex(block => block.id === over.id);
+    const oldIndex = blocks.findIndex((block) => block.id === active.id);
+    const newIndex = blocks.findIndex((block) => block.id === over.id);
 
     onReorderBlocks(oldIndex, newIndex);
   };
@@ -60,9 +63,12 @@ export function PreviewPanel({
           >
             <ScrollArea className="h-full">
               <div className="p-4">
-                <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <DndContext
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
                   <SortableContext
-                    items={blocks.map(block => block.id)}
+                    items={blocks.map((block) => block.id)}
                     strategy={verticalListSortingStrategy}
                   >
                     {blocks.length === 0 ? (
@@ -72,7 +78,7 @@ export function PreviewPanel({
                         </p>
                       </div>
                     ) : (
-                      blocks.map(block => (
+                      blocks.map((block) => (
                         <BlockPreviewRenderer
                           key={block.id}
                           block={block}

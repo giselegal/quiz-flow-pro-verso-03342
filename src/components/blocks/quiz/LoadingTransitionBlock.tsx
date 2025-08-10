@@ -93,7 +93,9 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
     if (isCompleted || messages.length === 0) return;
 
     const messageTimer = setInterval(() => {
-      setCurrentMessageIndex(prev => (prev + 1 >= messages.length ? 0 : prev + 1));
+      setCurrentMessageIndex((prev) =>
+        prev + 1 >= messages.length ? 0 : prev + 1
+      );
     }, messageInterval);
 
     return () => clearInterval(messageTimer);
@@ -104,7 +106,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
     if (isCompleted) return;
 
     const progressTimer = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         const newProgress = prev + 100 / (duration / 50);
 
         if (onProgress) {
@@ -130,12 +132,17 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
   const renderAnimation = () => {
     switch (animationType) {
       case "spinner":
-        return <Loader2 className="w-12 h-12 animate-spin" style={{ color: accentColor }} />;
+        return (
+          <Loader2
+            className="w-12 h-12 animate-spin"
+            style={{ color: accentColor }}
+          />
+        );
 
       case "dots":
         return (
           <div className="flex space-x-2">
-            {[0, 1, 2].map(i => (
+            {[0, 1, 2].map((i) => (
               <div
                 key={i}
                 className="w-3 h-3 rounded-full animate-pulse"
@@ -158,10 +165,20 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         );
 
       case "sparkles":
-        return <Sparkles className="w-12 h-12 animate-pulse" style={{ color: accentColor }} />;
+        return (
+          <Sparkles
+            className="w-12 h-12 animate-pulse"
+            style={{ color: accentColor }}
+          />
+        );
 
       default:
-        return <Loader2 className="w-12 h-12 animate-spin" style={{ color: accentColor }} />;
+        return (
+          <Loader2
+            className="w-12 h-12 animate-spin"
+            style={{ color: accentColor }}
+          />
+        );
     }
   };
 
@@ -179,7 +196,10 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         {/* Ícone de sucesso quando completo */}
         {isCompleted ? (
           <div className="mb-8">
-            <CheckCircle className="w-16 h-16 mx-auto" style={{ color: "#10B981" }} />
+            <CheckCircle
+              className="w-16 h-16 mx-auto"
+              style={{ color: "#10B981" }}
+            />
           </div>
         ) : (
           <div className="mb-8">{renderAnimation()}</div>
@@ -198,10 +218,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
 
         {/* Mensagem atual */}
         {!isCompleted && messages.length > 0 && (
-          <p
-            style={{ color: '#6B4F43' }}
-            key={currentMessageIndex}
-          >
+          <p style={{ color: "#6B4F43" }} key={currentMessageIndex}>
             {messages[currentMessageIndex]}
           </p>
         )}
@@ -209,7 +226,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         {/* Barra de progresso */}
         {showProgress && (
           <div className="mb-8">
-            <div style={{ backgroundColor: '#E5DDD5' }}>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
               <div
                 className="h-full rounded-full transition-all duration-100 ease-out"
                 style={{
@@ -219,13 +236,15 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
                 }}
               />
             </div>
-            <p style={{ color: '#8B7355' }}>{Math.round(progress)}% concluído</p>
+            <p style={{ color: "#8B7355" }}>
+              {Math.round(progress)}% concluído
+            </p>
           </div>
         )}
 
         {/* Informação adicional */}
         {!isCompleted && (
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             <p>⏱️ Isso levará apenas alguns segundos...</p>
           </div>
         )}

@@ -16,7 +16,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -66,8 +73,10 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>
+          Erro: Bloco não encontrado ou propriedades indefinidas
+        </p>
       </div>
     );
   }
@@ -90,11 +99,16 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
   };
 
   // Convert fontSize to CSS
-  const fontSizeClass = typeof fontSize === "number" ? `${fontSize}px` : fontSize;
+  const fontSizeClass =
+    typeof fontSize === "number" ? `${fontSize}px` : fontSize;
 
   // Convert textAlign to CSS class
   const textAlignClass =
-    textAlign === "left" ? "text-left" : textAlign === "right" ? "text-right" : "text-center";
+    textAlign === "left"
+      ? "text-left"
+      : textAlign === "right"
+        ? "text-right"
+        : "text-center";
 
   // Convert fontWeight to CSS class
   const fontWeightClass =
@@ -110,7 +124,9 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
     <div
       className={cn(
         "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
+        isSelected
+          ? "border-[#B89B7A] bg-[#B89B7A]/10"
+          : "border-gray-300 bg-white",
         "cursor-pointer hover:border-gray-400 transition-colors",
         className,
         // Margens universais com controles deslizantes
@@ -137,7 +153,9 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
           color: colors.text,
           backgroundColor: colors.background,
           marginBottom: `${spacing}px`,
-          textDecoration: textStyle?.includes("underline") ? "underline" : "none",
+          textDecoration: textStyle?.includes("underline")
+            ? "underline"
+            : "none",
         }}
         disabled={disabled}
         as="h1"

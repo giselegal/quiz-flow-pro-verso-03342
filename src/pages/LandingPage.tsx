@@ -22,11 +22,13 @@ const LandingPage: React.FC = () => {
   }, [setLocation]);
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <div className="text-center">
         <LoadingSpinner size="lg" color="#B89B7A" className="mx-auto" />
-        <p style={{ color: '#6B4F43' }}>Carregando sua experiência personalizada...</p>
-        <p style={{ color: '#8B7355' }}>
+        <p style={{ color: "#6B4F43" }}>
+          Carregando sua experiência personalizada...
+        </p>
+        <p style={{ color: "#8B7355" }}>
           Ou acesse diretamente:{" "}
           <a href="/quiz" className="text-[#B89B7A] hover:underline">
             Quiz Original

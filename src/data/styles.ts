@@ -42,7 +42,13 @@ export const STYLES: Record<StyleType, Style> = {
       secondary: "#FFFFFF",
       accent: "#E74C3C",
     },
-    keywords: ["marcante", "impactante", "contraste", "geométrico", "confiante"],
+    keywords: [
+      "marcante",
+      "impactante",
+      "contraste",
+      "geométrico",
+      "confiante",
+    ],
   },
   natural: {
     id: "natural",
@@ -56,7 +62,13 @@ export const STYLES: Record<StyleType, Style> = {
       secondary: "#D7CCC8",
       accent: "#4CAF50",
     },
-    keywords: ["descomplicado", "confortável", "natural", "terroso", "autêntico"],
+    keywords: [
+      "descomplicado",
+      "confortável",
+      "natural",
+      "terroso",
+      "autêntico",
+    ],
   },
   criativo: {
     id: "criativo",

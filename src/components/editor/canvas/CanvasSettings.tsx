@@ -4,7 +4,12 @@
  */
 
 import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { ColorPicker } from "../../../components/ui/ColorPicker";
 import { Label } from "../../../components/ui/label";
 import {
@@ -29,7 +34,9 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [viewportMode, setViewportMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [viewportMode, setViewportMode] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
 
   const viewportSizes = {
     desktop: { icon: Monitor, label: "Desktop", width: "100%" },
@@ -67,7 +74,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
 
             {/* Presets Rápidos */}
             <div className="grid grid-cols-4 gap-2">
-              {presetBackgrounds.map(preset => (
+              {presetBackgrounds.map((preset) => (
                 <button
                   key={preset.value}
                   onClick={() => onBackgroundColorChange(preset.value)}
@@ -80,7 +87,10 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
                     }
                   `}
                   style={{
-                    backgroundColor: preset.value === "transparent" ? "transparent" : preset.value,
+                    backgroundColor:
+                      preset.value === "transparent"
+                        ? "transparent"
+                        : preset.value,
                   }}
                   title={preset.label}
                 >
@@ -119,7 +129,10 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
               Modo de Visualização
             </Label>
 
-            <Select value={viewportMode} onValueChange={(value: any) => setViewportMode(value)}>
+            <Select
+              value={viewportMode}
+              onValueChange={(value: any) => setViewportMode(value)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Selecionar modo de visualização" />
               </SelectTrigger>
@@ -131,7 +144,9 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
                       <div className="flex items-center gap-2">
                         <IconComponent className="w-4 h-4" />
                         <span>{config.label}</span>
-                        <span style={{ color: '#8B7355' }}>({config.width})</span>
+                        <span style={{ color: "#8B7355" }}>
+                          ({config.width})
+                        </span>
                       </div>
                     </SelectItem>
                   );
@@ -143,9 +158,9 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
           {/* Preview do Canvas */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">Preview</Label>
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               <div
-                style={{ borderColor: '#E5DDD5' }}
+                style={{ borderColor: "#E5DDD5" }}
                 style={{ backgroundColor: backgroundColor }}
               >
                 {backgroundColor === "transparent" && (
@@ -162,7 +177,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-16 h-8 bg-[#B89B7A] rounded mb-2 mx-auto"></div>
-                    <div style={{ color: '#8B7355' }}>Canvas Preview</div>
+                    <div style={{ color: "#8B7355" }}>Canvas Preview</div>
                   </div>
                 </div>
               </div>

@@ -34,10 +34,20 @@ export type FileType = "image" | "video" | "audio" | "document" | "other";
 
 const STORAGE_BUCKET = "media-uploads";
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
 const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/mov"];
 const ALLOWED_AUDIO_TYPES = ["audio/mp3", "audio/wav", "audio/ogg"];
-const ALLOWED_DOCUMENT_TYPES = ["application/pdf", "text/plain", "application/msword"];
+const ALLOWED_DOCUMENT_TYPES = [
+  "application/pdf",
+  "text/plain",
+  "application/msword",
+];
 
 // =============================================================================
 // SERVIÇO DE UPLOAD
@@ -189,7 +199,10 @@ export class MediaUploadService {
       console.error("❌ [Upload] Upload error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro desconhecido no upload",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Erro desconhecido no upload",
       };
     }
   }
@@ -210,7 +223,9 @@ export class MediaUploadService {
     const results: UploadResult[] = [];
     const fileArray = Array.from(files);
 
-    console.log(`📤 [Upload] Starting batch upload of ${fileArray.length} files`);
+    console.log(
+      `📤 [Upload] Starting batch upload of ${fileArray.length} files`
+    );
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -218,7 +233,7 @@ export class MediaUploadService {
       const result = await this.uploadFile(file, {
         folder: options.folder,
         prefix: options.prefix,
-        onProgress: progress => options.onProgress?.(i, progress),
+        onProgress: (progress) => options.onProgress?.(i, progress),
       });
 
       results.push(result);
@@ -226,7 +241,7 @@ export class MediaUploadService {
     }
 
     console.log(
-      `✅ [Upload] Batch upload complete. Success: ${results.filter(r => r.success).length}/${results.length}`
+      `✅ [Upload] Batch upload complete. Success: ${results.filter((r) => r.success).length}/${results.length}`
     );
     return results;
   }
@@ -275,7 +290,8 @@ export class MediaUploadService {
       console.error("❌ [Upload] Image upload error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro no upload da imagem",
+        error:
+          error instanceof Error ? error.message : "Erro no upload da imagem",
       };
     }
   }
@@ -319,7 +335,7 @@ export class MediaUploadService {
 
         // Converter para blob
         canvas.toBlob(
-          blob => {
+          (blob) => {
             if (blob) {
               const optimizedFile = new File([blob], file.name, {
                 type: file.type,
@@ -344,9 +360,13 @@ export class MediaUploadService {
   // REMOÇÃO DE ARQUIVOS
   // =============================================================================
 
-  static async deleteFile(path: string): Promise<{ success: boolean; error?: string }> {
+  static async deleteFile(
+    path: string
+  ): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+      const { error } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .remove([path]);
 
       if (error) {
         console.error("❌ [Upload] Delete failed:", error);
@@ -359,7 +379,8 @@ export class MediaUploadService {
       console.error("❌ [Upload] Delete error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro ao deletar arquivo",
+        error:
+          error instanceof Error ? error.message : "Erro ao deletar arquivo",
       };
     }
   }
@@ -372,7 +393,9 @@ export class MediaUploadService {
     folder: string = ""
   ): Promise<{ success: boolean; files?: any[]; error?: string }> {
     try {
-      const { data, error } = await supabase.storage.from(STORAGE_BUCKET).list(folder);
+      const { data, error } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .list(folder);
 
       if (error) {
         console.error("❌ [Upload] List failed:", error);
@@ -384,7 +407,8 @@ export class MediaUploadService {
       console.error("❌ [Upload] List error:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Erro ao listar arquivos",
+        error:
+          error instanceof Error ? error.message : "Erro ao listar arquivos",
       };
     }
   }

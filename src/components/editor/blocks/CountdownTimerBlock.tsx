@@ -1,6 +1,9 @@
 import { Card, CardContent } from "../../../components/ui/card";
 import { cn } from "../../../lib/utils";
-import type { BlockComponentProps, CountdownTimerBlock } from "../../../types/blocks";
+import type {
+  BlockComponentProps,
+  CountdownTimerBlock,
+} from "../../../types/blocks";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Flame, Timer } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -25,7 +28,14 @@ const getMarginClass = (
 
   if (!numValue || isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr"; // Margens negativas
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr"; // Margens negativas
   if (numValue < 0) {
     const absValue = Math.abs(numValue);
     if (absValue <= 4) return `-${prefix}-1`;
@@ -151,7 +161,9 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
 
       const total = Math.floor(difference / 1000);
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hours = Math.floor(
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
@@ -209,7 +221,9 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
   const themeClasses = getThemeClasses();
   const isUrgent = timeLeft.total <= urgencyThreshold * 60 && !isExpired;
   const progressPercentage =
-    initialTotal > 0 ? ((initialTotal - timeLeft.total) / initialTotal) * 100 : 0;
+    initialTotal > 0
+      ? ((initialTotal - timeLeft.total) / initialTotal) * 100
+      : 0;
 
   const renderTimeUnit = (unit: TimeUnit, index: number) => {
     const shouldShow =
@@ -254,7 +268,14 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
               {unit.shortLabel}
             </span>
             {index < 3 && (
-              <span className={cn("mx-0.5 sm:mx-1 text-lg font-bold", themeClasses.accent)}>:</span>
+              <span
+                className={cn(
+                  "mx-0.5 sm:mx-1 text-lg font-bold",
+                  themeClasses.accent
+                )}
+              >
+                :
+              </span>
             )}
           </span>
         );
@@ -292,7 +313,8 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         const circumference = 2 * Math.PI * 40;
         const strokeDasharray = circumference;
         const strokeDashoffset =
-          circumference - (unit.value / (unit.label === "segundos" ? 60 : 24)) * circumference;
+          circumference -
+          (unit.value / (unit.label === "segundos" ? 60 : 24)) * circumference;
 
         return (
           <div key={unit.label} className="flex flex-col items-center group">
@@ -329,7 +351,10 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   strokeDashoffset={strokeDashoffset}
                   className="transition-all duration-500 drop-shadow-sm"
                   style={{
-                    filter: theme === "neon" ? `drop-shadow(0 0 4px #B89B7A)` : undefined,
+                    filter:
+                      theme === "neon"
+                        ? `drop-shadow(0 0 4px #B89B7A)`
+                        : undefined,
                   }}
                 />
               </svg>
@@ -363,12 +388,20 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
             key={unit.label}
             initial={{ scale: 1 }}
             animate={{
-              scale: pulseAnimation && isUrgent && unit.label === "segundos" ? [1, 1.05, 1] : 1,
+              scale:
+                pulseAnimation && isUrgent && unit.label === "segundos"
+                  ? [1, 1.05, 1]
+                  : 1,
             }}
             transition={{ duration: 1, repeat: Infinity }}
             whileHover={{ scale: 1.02, y: -2 }}
           >
-            <Card className={cn(themeClasses.card, "relative overflow-hidden group")}>
+            <Card
+              className={cn(
+                themeClasses.card,
+                "relative overflow-hidden group"
+              )}
+            >
               <div className="absolute inset-0 bg-gradient-to-br from-[#B89B7A]/5 to-[#E8D5C4]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <CardContent className="p-3 sm:p-4 text-center relative z-10">
                 <div
@@ -423,7 +456,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          style={{ color: '#432818' }}
+          style={{ color: "#432818" }}
         >
           <AlertTriangle className="w-5 h-5" />
           Oferta Expirada!
@@ -462,8 +495,10 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
       <div
         className={cn(
           "bg-gradient-to-br from-[#E8D5C4] to-white p-4 sm:p-6 md:p-8 rounded-xl text-[#432818] flex flex-col items-center justify-center min-h-[150px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer transition-all duration-300 border border-[#B89B7A]/20",
-          isSelected && "ring-2 ring-[#B89B7A]/40 shadow-lg shadow-[#B89B7A]/10",
-          !isSelected && "hover:shadow-lg hover:shadow-[#B89B7A]/5 hover:border-[#B89B7A]/30",
+          isSelected &&
+            "ring-2 ring-[#B89B7A]/40 shadow-lg shadow-[#B89B7A]/10",
+          !isSelected &&
+            "hover:shadow-lg hover:shadow-[#B89B7A]/5 hover:border-[#B89B7A]/30",
           className
         )}
         onClick={onClick}
@@ -512,7 +547,8 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
       style={{
-        backgroundColor: backgroundColor !== "#ffffff" ? backgroundColor : undefined,
+        backgroundColor:
+          backgroundColor !== "#ffffff" ? backgroundColor : undefined,
       }}
     >
       {/* Decorative background pattern */}
@@ -539,10 +575,17 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           </h2>
         )}
         {subtitle && (
-          <p className={cn("text-base sm:text-lg mb-3 sm:mb-4 font-medium", themeClasses.accent)}>
+          <p
+            className={cn(
+              "text-base sm:text-lg mb-3 sm:mb-4 font-medium",
+              themeClasses.accent
+            )}
+          >
             <InlineEditableText
               value={subtitle}
-              onChange={(value: string) => handlePropertyChange("subtitle", value)}
+              onChange={(value: string) =>
+                handlePropertyChange("subtitle", value)
+              }
               className="inline-block"
               placeholder="Subtítulo do countdown"
             />
@@ -563,7 +606,9 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
             )}
           >
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="font-medium text-sm sm:text-base">{urgencyText}</span>
+            <span className="font-medium text-sm sm:text-base">
+              {urgencyText}
+            </span>
           </div>
         )}
 
@@ -618,7 +663,12 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                 transition={{ duration: 0.5 }}
               />
             </div>
-            <p className={cn("text-center text-xs sm:text-sm mt-2", themeClasses.accent)}>
+            <p
+              className={cn(
+                "text-center text-xs sm:text-sm mt-2",
+                themeClasses.accent
+              )}
+            >
               {Math.round(progressPercentage)}% da oferta já expirou
             </p>
           </div>

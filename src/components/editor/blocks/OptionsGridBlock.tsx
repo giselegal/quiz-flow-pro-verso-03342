@@ -60,7 +60,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -188,18 +195,25 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const { width: imgW, height: imgH } = getImageSize();
 
   const cardLayoutClass =
-    imageLayout === "horizontal" && (imagePosition === "left" || imagePosition === "right")
+    imageLayout === "horizontal" &&
+    (imagePosition === "left" || imagePosition === "right")
       ? "flex items-center"
       : "flex flex-col";
 
   const gridColsClass = (() => {
-    const colNum = typeof columns === "string" ? parseInt(columns, 10) : columns;
+    const colNum =
+      typeof columns === "string" ? parseInt(columns, 10) : columns;
     if (colNum === 1) return "grid-cols-1";
-    if (colNum === 2) return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
+    if (colNum === 2)
+      return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
     if (colNum === 3)
-      return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-3";
+      return responsiveColumns
+        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+        : "grid-cols-3";
     if (colNum === 4)
-      return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4" : "grid-cols-4";
+      return responsiveColumns
+        ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        : "grid-cols-4";
     return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
   })();
 
@@ -257,7 +271,9 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 decoding="async"
               />
             )}
-            <p className={`${imageLayout === "horizontal" ? "flex-1" : "text-center"} font-medium`}>
+            <p
+              className={`${imageLayout === "horizontal" ? "flex-1" : "text-center"} font-medium`}
+            >
               {opt.text}
             </p>
           </div>

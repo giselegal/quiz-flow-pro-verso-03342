@@ -29,7 +29,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -138,7 +145,9 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
 }) => {
   // ✅ CORREÇÃO: Verificação de segurança para result
   if (!result) {
-    console.warn("QuizResultsBlock: result prop is undefined, usando dados padrão");
+    console.warn(
+      "QuizResultsBlock: result prop is undefined, usando dados padrão"
+    );
     const defaultResult: QuizResult = {
       id: "default-result",
       title: "Seu Resultado",
@@ -175,7 +184,9 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-[#432818] mb-4">{safeResult.title}</h2>
+        <h2 className="text-3xl font-bold text-[#432818] mb-4">
+          {safeResult.title}
+        </h2>
 
         {safeResult.imageUrl && (
           <div className="mb-6">
@@ -188,7 +199,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
         )}
 
         <div className="prose prose-lg prose-stone mx-auto">
-          <p style={{ color: '#6B4F43' }}>{safeResult.description}</p>
+          <p style={{ color: "#6B4F43" }}>{safeResult.description}</p>
         </div>
       </div>
 
@@ -199,17 +210,24 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
           </h3>
 
           <div className="space-y-3">
-            {categoryScores.map(categoryScore => (
-              <div key={categoryScore.category} className="flex justify-between items-center">
+            {categoryScores.map((categoryScore) => (
+              <div
+                key={categoryScore.category}
+                className="flex justify-between items-center"
+              >
                 <span className="font-medium">{categoryScore.category}</span>
                 <div className="flex items-center gap-3">
                   <div className="bg-stone-200 w-48 h-4 rounded-full overflow-hidden">
                     <div
                       className="bg-[#B89B7A] h-full rounded-full"
-                      style={{ width: `${Math.min(100, (categoryScore.score / 10) * 100)}%` }}
+                      style={{
+                        width: `${Math.min(100, (categoryScore.score / 10) * 100)}%`,
+                      }}
                     />
                   </div>
-                  <span className="text-sm font-semibold">{categoryScore.score} pts</span>
+                  <span className="text-sm font-semibold">
+                    {categoryScore.score} pts
+                  </span>
                 </div>
               </div>
             ))}
@@ -229,7 +247,10 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
         )}
 
         {onShare && (
-          <Button onClick={onShare} className="bg-[#B89B7A] hover:bg-[#A08766] text-white">
+          <Button
+            onClick={onShare}
+            className="bg-[#B89B7A] hover:bg-[#A08766] text-white"
+          >
             Compartilhar Resultado
           </Button>
         )}
@@ -239,7 +260,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
 };
 
 // ✅ WRAPPER PARA COMPATIBILIDADE
-const QuizResultsBlock: React.FC<QuizResultsBlockProps> = props => (
+const QuizResultsBlock: React.FC<QuizResultsBlockProps> = (props) => (
   <QuizResultsBlockCore {...props} />
 );
 

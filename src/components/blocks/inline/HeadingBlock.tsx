@@ -104,7 +104,7 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
       }}
       contentEditable={isSelected}
       suppressContentEditableWarning
-      onBlur={e => handlePropertyUpdate("text", e.target.textContent || "")}
+      onBlur={(e) => handlePropertyUpdate("text", e.target.textContent || "")}
       onClick={onClick}
     >
       {text}

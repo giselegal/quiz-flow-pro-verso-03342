@@ -15,10 +15,9 @@ interface CountdownPropertyEditorProps {
   onChange: (key: string, value: any) => void;
 }
 
-export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = ({
-  properties = {},
-  onChange,
-}) => {
+export const CountdownPropertyEditor: React.FC<
+  CountdownPropertyEditorProps
+> = ({ properties = {}, onChange }) => {
   const {
     initialMinutes = 15,
     title = "Oferta por tempo limitado",
@@ -37,7 +36,7 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
         <Input
           id="title"
           value={title}
-          onChange={e => onChange("title", e.target.value)}
+          onChange={(e) => onChange("title", e.target.value)}
           placeholder="Digite o título do countdown"
         />
       </div>
@@ -47,7 +46,7 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
         <Textarea
           id="urgencyText"
           value={urgencyText}
-          onChange={e => onChange("urgencyText", e.target.value)}
+          onChange={(e) => onChange("urgencyText", e.target.value)}
           placeholder="Digite o texto de urgência"
           rows={2}
         />
@@ -59,7 +58,9 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
           id="initialMinutes"
           type="number"
           value={initialMinutes}
-          onChange={e => onChange("initialMinutes", parseInt(e.target.value) || 15)}
+          onChange={(e) =>
+            onChange("initialMinutes", parseInt(e.target.value) || 15)
+          }
           min="1"
           max="120"
         />
@@ -71,7 +72,7 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
           id="backgroundColor"
           type="color"
           value={backgroundColor}
-          onChange={e => onChange("backgroundColor", e.target.value)}
+          onChange={(e) => onChange("backgroundColor", e.target.value)}
         />
       </div>
 
@@ -81,7 +82,7 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
           id="textColor"
           type="color"
           value={textColor}
-          onChange={e => onChange("textColor", e.target.value)}
+          onChange={(e) => onChange("textColor", e.target.value)}
         />
       </div>
 
@@ -91,7 +92,7 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
           id="accentColor"
           type="color"
           value={accentColor}
-          onChange={e => onChange("accentColor", e.target.value)}
+          onChange={(e) => onChange("accentColor", e.target.value)}
         />
       </div>
 
@@ -99,7 +100,7 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
         <Label htmlFor="gridColumns">Colunas</Label>
         <Select
           value={gridColumns.toString()}
-          onValueChange={value => onChange("gridColumns", parseInt(value))}
+          onValueChange={(value) => onChange("gridColumns", parseInt(value))}
         >
           <SelectTrigger>
             <SelectValue />
@@ -113,7 +114,10 @@ export const CountdownPropertyEditor: React.FC<CountdownPropertyEditorProps> = (
 
       <div>
         <Label htmlFor="spacing">Espaçamento</Label>
-        <Select value={spacing} onValueChange={value => onChange("spacing", value)}>
+        <Select
+          value={spacing}
+          onValueChange={(value) => onChange("spacing", value)}
+        >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>

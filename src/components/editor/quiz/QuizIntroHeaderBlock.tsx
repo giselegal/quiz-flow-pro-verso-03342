@@ -111,9 +111,14 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   const containerStyle: React.CSSProperties = {
     transform: `scale(${scale / 100})`,
     transformOrigin:
-      alignment === "left" ? "left center" : alignment === "right" ? "right center" : "center",
+      alignment === "left"
+        ? "left center"
+        : alignment === "right"
+          ? "right center"
+          : "center",
     textAlign: alignment,
-    backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
+    backgroundColor:
+      backgroundColor === "transparent" ? "transparent" : backgroundColor,
     opacity: backgroundOpacity / 100,
     ...style,
   };
@@ -160,13 +165,16 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {showLogo && logoUrl && (
         <div
           className="logo-container"
-          style={{ marginBottom: showDecorativeBar && barPosition === "bottom" ? "0" : "16px" }}
+          style={{
+            marginBottom:
+              showDecorativeBar && barPosition === "bottom" ? "0" : "16px",
+          }}
         >
           <img
             src={logoUrl}
             alt={logoAlt}
             style={logoStyle}
-            onError={e => {
+            onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
             }}
@@ -221,7 +229,10 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             gap: "8px",
           }}
         >
-          <Badge variant="outline" style={{ borderColor: "#B89B7A", color: "#B89B7A" }}>
+          <Badge
+            variant="outline"
+            style={{ borderColor: "#B89B7A", color: "#B89B7A" }}
+          >
             Cabeçalho do Quiz
           </Badge>
           <div style={{ fontSize: "12px", color: "#6B4F43" }}>

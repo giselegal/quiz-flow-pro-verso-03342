@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -82,10 +89,12 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
 
   // Safely handle style object
   const styleObj = block.content?.style || {};
-  const safeStyle = typeof styleObj === "object" && styleObj !== null ? styleObj : {};
+  const safeStyle =
+    typeof styleObj === "object" && styleObj !== null ? styleObj : {};
 
   const containerStyle = {
-    backgroundColor: (safeStyle as any).backgroundColor || backgroundColor || "transparent",
+    backgroundColor:
+      (safeStyle as any).backgroundColor || backgroundColor || "transparent",
     padding: (safeStyle as any).padding || padding || "2rem 1rem",
     margin: (safeStyle as any).margin || margin || "0",
     textAlign: (safeStyle as any).textAlign || textAlign || "center",
@@ -124,7 +133,8 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
             fontSize: (safeStyle as any).fontSize || fontSize || "2.5rem",
             fontWeight: (safeStyle as any).fontWeight || fontWeight || "bold",
             color: (safeStyle as any).color || color || "#1f2937",
-            fontFamily: (safeStyle as any).fontFamily || fontFamily || "inherit",
+            fontFamily:
+              (safeStyle as any).fontFamily || fontFamily || "inherit",
             margin: 0,
             lineHeight: 1.2,
           }}
@@ -144,13 +154,16 @@ const HeaderBlock: React.FC<BlockComponentProps> = ({
               fontSize: (safeStyle as any).subtitleFontSize || "1.25rem",
               color: (safeStyle as any).subtitleColor || "#6b7280",
               fontWeight: (safeStyle as any).subtitleFontWeight || "normal",
-              fontFamily: (safeStyle as any).fontFamily || fontFamily || "inherit",
+              fontFamily:
+                (safeStyle as any).fontFamily || fontFamily || "inherit",
               margin: 0,
             }}
           >
             <InlineEditableText
               value={subtitle}
-              onChange={(value: string) => handlePropertyChange("subtitle", value)}
+              onChange={(value: string) =>
+                handlePropertyChange("subtitle", value)
+              }
               placeholder="Subtítulo opcional"
               className="block"
             />

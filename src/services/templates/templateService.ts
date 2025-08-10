@@ -30,7 +30,10 @@ const loadTemplates = (): QuizTemplate[] => {
         updatedAt: new Date().toISOString(),
       },
     ];
-    localStorage.setItem(TEMPLATES_STORAGE_KEY, JSON.stringify(defaultTemplates));
+    localStorage.setItem(
+      TEMPLATES_STORAGE_KEY,
+      JSON.stringify(defaultTemplates)
+    );
     return defaultTemplates;
   } catch (error) {
     console.error("Erro ao carregar templates:", error);
@@ -79,7 +82,7 @@ export const getAllTemplates = (): TemplateListItem[] => {
 // Obter um template específico pelo ID
 export const getTemplateById = (id: string): QuizTemplate | null => {
   const templates = loadTemplates();
-  return templates.find(template => template.id === id) || null;
+  return templates.find((template) => template.id === id) || null;
 };
 
 // Criar novo template
@@ -104,7 +107,7 @@ export const createTemplate = (
 // Duplicar template existente
 export const duplicateTemplate = (id: string): string | null => {
   const templates = loadTemplates();
-  const templateToDuplicate = templates.find(template => template.id === id);
+  const templateToDuplicate = templates.find((template) => template.id === id);
 
   if (!templateToDuplicate) return null;
 
@@ -125,9 +128,12 @@ export const duplicateTemplate = (id: string): string | null => {
 };
 
 // Atualizar template existente
-export const updateTemplate = (id: string, updates: Partial<QuizTemplate>): boolean => {
+export const updateTemplate = (
+  id: string,
+  updates: Partial<QuizTemplate>
+): boolean => {
   const templates = loadTemplates();
-  const index = templates.findIndex(template => template.id === id);
+  const index = templates.findIndex((template) => template.id === id);
 
   if (index === -1) return false;
 
@@ -144,7 +150,7 @@ export const updateTemplate = (id: string, updates: Partial<QuizTemplate>): bool
 // Salvar template completo
 export const saveTemplate = (template: QuizTemplate): boolean => {
   const templates = loadTemplates();
-  const index = templates.findIndex(t => t.id === template.id);
+  const index = templates.findIndex((t) => t.id === template.id);
 
   if (index >= 0) {
     templates[index] = {
@@ -166,7 +172,7 @@ export const saveTemplate = (template: QuizTemplate): boolean => {
 // Excluir template
 export const deleteTemplate = (id: string): boolean => {
   const templates = loadTemplates();
-  const filteredTemplates = templates.filter(template => template.id !== id);
+  const filteredTemplates = templates.filter((template) => template.id !== id);
 
   if (filteredTemplates.length === templates.length) return false;
 
@@ -177,7 +183,7 @@ export const deleteTemplate = (id: string): boolean => {
 // Publicar/despublicar template
 export const toggleTemplatePublication = (id: string): boolean => {
   const templates = loadTemplates();
-  const index = templates.findIndex(template => template.id === id);
+  const index = templates.findIndex((template) => template.id === id);
 
   if (index === -1) return false;
 

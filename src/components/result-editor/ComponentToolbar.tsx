@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Input } from "../../components/ui/input";
 import { Search, Lock } from "lucide-react";
@@ -22,15 +27,19 @@ interface DraggableComponentProps {
   isLocked?: boolean;
 }
 
-const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLocked = false }) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: component.id,
-    data: {
-      type: "component",
-      component: component,
-    },
-    disabled: isLocked,
-  });
+const DraggableComponent: React.FC<DraggableComponentProps> = ({
+  component,
+  isLocked = false,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: component.id,
+      data: {
+        type: "component",
+        component: component,
+      },
+      disabled: isLocked,
+    });
 
   const style = transform
     ? {
@@ -56,8 +65,12 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ component, isLo
       `}
     >
       <div className="flex items-center gap-2 mb-2">
-        <Icon className={`w-4 h-4 ${isLocked ? "text-gray-400" : "text-[#B89B7A]"}`} />
-        <span className={`font-medium text-sm ${isLocked ? "text-gray-400" : "text-[#432818]"}`}>
+        <Icon
+          className={`w-4 h-4 ${isLocked ? "text-gray-400" : "text-[#B89B7A]"}`}
+        />
+        <span
+          className={`font-medium text-sm ${isLocked ? "text-gray-400" : "text-[#432818]"}`}
+        >
           {component.label}
         </span>
         {component.isPremium && (
@@ -90,11 +103,16 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
   const userFeatures = ["basic_components"];
   const userPlan = "FREE";
 
-  const availableComponents = getAvailableComponents(userFeatures, hasPremiumFeatures);
+  const availableComponents = getAvailableComponents(
+    userFeatures,
+    hasPremiumFeatures
+  );
 
   const { available, locked } = components.reduce(
     (acc, component) => {
-      const isAvailable = availableComponents.find(c => c.id === component.id);
+      const isAvailable = availableComponents.find(
+        (c) => c.id === component.id
+      );
       if (isAvailable) {
         acc.available.push(component);
       } else if (component.isPremium) {
@@ -108,8 +126,9 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
     }
   );
 
-  const filteredComponents = [...available, ...locked].filter(component => {
-    const matchesCategory = selectedCategory === "all" || component.category === selectedCategory;
+  const filteredComponents = [...available, ...locked].filter((component) => {
+    const matchesCategory =
+      selectedCategory === "all" || component.category === selectedCategory;
     const matchesSearch =
       component.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       component.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -120,7 +139,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
     return (
       <div className="p-4">
         <div className="grid grid-cols-2 gap-2">
-          {available.slice(0, 4).map(component => (
+          {available.slice(0, 4).map((component) => (
             <DraggableComponent key={component.id} component={component} />
           ))}
         </div>
@@ -136,14 +155,16 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
           <Input
             placeholder="Buscar componentes..."
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 border-[#D4C4A0] focus:border-[#B89B7A] text-[#432818]"
           />
         </div>
 
         <div className="mb-4 p-3 bg-[#F5F2E9] rounded-lg">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-[#432818]">Plano: {userPlan}</span>
+            <span className="text-sm font-medium text-[#432818]">
+              Plano: {userPlan}
+            </span>
             <Badge
               variant="outline"
               className={`${
@@ -155,7 +176,9 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
               {hasPremiumFeatures ? "Premium" : "Básico"}
             </Badge>
           </div>
-          <p className="text-xs text-[#B89B7A] mt-1">{available.length} componentes disponíveis</p>
+          <p className="text-xs text-[#B89B7A] mt-1">
+            {available.length} componentes disponíveis
+          </p>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -169,8 +192,10 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
           >
             Todos ({filteredComponents.length})
           </button>
-          {COMPONENT_CATEGORIES.map(category => {
-            const categoryCount = filteredComponents.filter(c => c.category === category.id).length;
+          {COMPONENT_CATEGORIES.map((category) => {
+            const categoryCount = filteredComponents.filter(
+              (c) => c.category === category.id
+            ).length;
             if (categoryCount === 0) return null;
 
             return (
@@ -199,25 +224,31 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
         ) : (
           <div className="space-y-3">
             {filteredComponents
-              .filter(c => available.find(a => a.id === c.id))
-              .map(component => (
+              .filter((c) => available.find((a) => a.id === c.id))
+              .map((component) => (
                 <DraggableComponent key={component.id} component={component} />
               ))}
 
             {filteredComponents
-              .filter(c => locked.find(l => l.id === c.id))
-              .map(component => (
-                <DraggableComponent key={component.id} component={component} isLocked={true} />
+              .filter((c) => locked.find((l) => l.id === c.id))
+              .map((component) => (
+                <DraggableComponent
+                  key={component.id}
+                  component={component}
+                  isLocked={true}
+                />
               ))}
           </div>
         )}
 
         {locked.length > 0 && !hasPremiumFeatures && (
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <h4 className="font-semibold text-stone-700 mb-2">🚀 Desbloqueie Mais Componentes</h4>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <h4 className="font-semibold text-stone-700 mb-2">
+              🚀 Desbloqueie Mais Componentes
+            </h4>
             <p className="text-sm text-stone-700 mb-3">
-              Upgrade para o plano Professional e tenha acesso a {locked.length} componentes
-              premium:
+              Upgrade para o plano Professional e tenha acesso a {locked.length}{" "}
+              componentes premium:
             </p>
             <ul className="text-xs text-stone-600 mb-3 space-y-1">
               <li>• Vídeos e áudios</li>

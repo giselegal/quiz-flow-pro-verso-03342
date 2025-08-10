@@ -21,7 +21,9 @@ export const safeGetBlockProperties = (block: any): Record<string, any> => {
   let properties = block.content || block.properties || block.data || {};
 
   if (!properties || typeof properties !== "object") {
-    console.warn(`⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`);
+    console.warn(
+      `⚠️ Propriedades undefined no bloco ${blockId} (tipo: ${block.type})`
+    );
     properties = {};
   }
 
@@ -128,13 +130,20 @@ export const createSafeFallback = (blockType: string, error?: string) => {
 };
 
 // Função helper para obter valores com fallback
-export const getBlockValue = (block: any, key: string, defaultValue: any = "") => {
+export const getBlockValue = (
+  block: any,
+  key: string,
+  defaultValue: any = ""
+) => {
   const properties = safeGetBlockProperties(block);
   return properties[key] !== undefined ? properties[key] : defaultValue;
 };
 
 // Função para atualizar propriedades de um bloco de forma segura
-export const updateBlockProperties = (block: any, updates: Record<string, any>) => {
+export const updateBlockProperties = (
+  block: any,
+  updates: Record<string, any>
+) => {
   if (!block) return block;
 
   const currentProperties = safeGetBlockProperties(block);

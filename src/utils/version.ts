@@ -11,6 +11,8 @@ export const VERSION = {
 
 export const displayVersion = () => {
   console.info(`App Version: ${VERSION.buildNumber}`);
-  console.info(`Last Updated: ${new Date(VERSION.lastUpdated).toLocaleDateString()}`);
+  console.info(
+    `Last Updated: ${new Date(VERSION.lastUpdated).toLocaleDateString()}`
+  );
   console.info(`Environment: ${VERSION.environment}`);
 };

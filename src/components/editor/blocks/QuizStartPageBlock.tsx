@@ -36,7 +36,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -135,7 +142,10 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
     >
       {/* Header */}
       <div className="text-center mb-4">
-        <Badge variant="outline" className="mb-3 text-xs bg-[#B89B7A] text-white border-[#B89B7A]">
+        <Badge
+          variant="outline"
+          className="mb-3 text-xs bg-[#B89B7A] text-white border-[#B89B7A]"
+        >
           Etapa 1 - Quiz de Estilo Pessoal
         </Badge>
 
@@ -193,7 +203,7 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
           <input
             type="text"
             placeholder={nameInputPlaceholder}
-            style={{ borderColor: '#E5DDD5' }}
+            style={{ borderColor: "#E5DDD5" }}
             disabled={disabled}
           />
         </div>
@@ -211,7 +221,9 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
 
       {/* Footer Info */}
       <div className="text-center mt-3">
-        <p className="text-xs opacity-60">⏱️ Leva apenas 5 minutos • 100% gratuito</p>
+        <p className="text-xs opacity-60">
+          ⏱️ Leva apenas 5 minutos • 100% gratuito
+        </p>
       </div>
     </div>
   );

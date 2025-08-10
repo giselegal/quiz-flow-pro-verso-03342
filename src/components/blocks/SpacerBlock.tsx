@@ -7,7 +7,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -46,10 +53,18 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const SpacerBlock: React.FC<BlockComponentProps> = ({ block, className = "" }) => {
+const SpacerBlock: React.FC<BlockComponentProps> = ({
+  block,
+  className = "",
+}) => {
   const height = block.properties?.height || 20;
 
-  return <div className={`spacer-block ${className}`} style={{ height: `${height}px` }} />;
+  return (
+    <div
+      className={`spacer-block ${className}`}
+      style={{ height: `${height}px` }}
+    />
+  );
 };
 
 export default SpacerBlock;

@@ -62,7 +62,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   };
 
   const handleAddOption = () => {
-    setEditedQuestion(prev => ({
+    setEditedQuestion((prev) => ({
       ...prev,
       options: [
         ...prev.options,
@@ -81,14 +81,14 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
   };
 
   const handleRemoveOption = (index: number) => {
-    setEditedQuestion(prev => ({
+    setEditedQuestion((prev) => ({
       ...prev,
       options: prev.options.filter((_, i) => i !== index),
     }));
   };
 
   const handleOptionChange = (index: number, field: string, value: string) => {
-    setEditedQuestion(prev => ({
+    setEditedQuestion((prev) => ({
       ...prev,
       options: prev.options.map((option, i) =>
         i === index ? { ...option, [field]: value } : option
@@ -107,7 +107,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             variant="outline"
             size="sm"
             onClick={onDelete}
-            style={{ color: '#432818' }}
+            style={{ color: "#432818" }}
           >
             <Trash className="w-4 h-4" />
           </Button>
@@ -120,8 +120,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           <Input
             id="question-title"
             value={editedQuestion.title || ""}
-            onChange={e =>
-              setEditedQuestion(prev => ({
+            onChange={(e) =>
+              setEditedQuestion((prev) => ({
                 ...prev,
                 title: e.target.value,
                 question: e.target.value, // Keep in sync
@@ -140,8 +140,8 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             min="1"
             max="10"
             value={editedQuestion.multiSelect || 3}
-            onChange={e =>
-              setEditedQuestion(prev => ({
+            onChange={(e) =>
+              setEditedQuestion((prev) => ({
                 ...prev,
                 multiSelect: parseInt(e.target.value) || 3,
               }))
@@ -167,14 +167,13 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
           <div className="space-y-3">
             {editedQuestion.options.map((option, index) => (
-              <div
-                key={option.id || index}
-                style={{ borderColor: '#E5DDD5' }}
-              >
+              <div key={option.id || index} style={{ borderColor: "#E5DDD5" }}>
                 <div className="flex-1">
                   <Input
                     value={option.text}
-                    onChange={e => handleOptionChange(index, "text", e.target.value)}
+                    onChange={(e) =>
+                      handleOptionChange(index, "text", e.target.value)
+                    }
                     placeholder={`Opção ${index + 1}`}
                   />
                 </div>
@@ -183,7 +182,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => handleRemoveOption(index)}
-                  style={{ color: '#432818' }}
+                  style={{ color: "#432818" }}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>
@@ -194,10 +193,17 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
       </div>
 
       <div className="flex justify-end gap-3 pt-4 border-t border-[#B89B7A]/20">
-        <Button variant="outline" onClick={onCancel} className="border-[#B89B7A] text-[#432818]">
+        <Button
+          variant="outline"
+          onClick={onCancel}
+          className="border-[#B89B7A] text-[#432818]"
+        >
           Cancelar
         </Button>
-        <Button onClick={handleSave} className="bg-[#B89B7A] hover:bg-[#A38A69] text-white">
+        <Button
+          onClick={handleSave}
+          className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
+        >
           Salvar Pergunta
         </Button>
       </div>

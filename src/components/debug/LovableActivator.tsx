@@ -4,7 +4,9 @@ interface LovableActivatorProps {
   forceActivate?: boolean;
 }
 
-export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivate = false }) => {
+export const LovableActivator: React.FC<LovableActivatorProps> = ({
+  forceActivate = false,
+}) => {
   const [lovableStatus, setLovableStatus] = useState({
     isActive: false,
     hasConfig: false,
@@ -60,7 +62,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
         });
       } catch (error) {
         console.error("❌ Erro ao ativar Lovable:", error);
-        setLovableStatus(prev => ({
+        setLovableStatus((prev) => ({
           ...prev,
           error: error instanceof Error ? error.message : "Erro desconhecido",
         }));
@@ -72,9 +74,12 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get("lovable") === "true" || urlParams.get("activate") === "lovable") {
+      if (
+        urlParams.get("lovable") === "true" ||
+        urlParams.get("activate") === "lovable"
+      ) {
         console.log("🔄 Auto-ativando Lovable baseado na URL...");
-        setLovableStatus(prev => ({ ...prev, shouldActivate: true }));
+        setLovableStatus((prev) => ({ ...prev, shouldActivate: true }));
       }
     }
   }, []);
@@ -84,7 +89,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
   }
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <h3 className="font-bold mb-2">🚀 Lovable Status</h3>
 
       <div className="space-y-1 text-sm">
@@ -93,7 +98,8 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
         </div>
 
         <div>
-          <strong>Config:</strong> {lovableStatus.hasConfig ? "✅ Carregada" : "❌ Ausente"}
+          <strong>Config:</strong>{" "}
+          {lovableStatus.hasConfig ? "✅ Carregada" : "❌ Ausente"}
         </div>
 
         <div>
@@ -117,9 +123,11 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
         <button
           onClick={() => {
             window.location.href =
-              window.location.href + (window.location.search ? "&" : "?") + "lovable=true";
+              window.location.href +
+              (window.location.search ? "&" : "?") +
+              "lovable=true";
           }}
-          style={{ color: '#B89B7A' }}
+          style={{ color: "#B89B7A" }}
         >
           Ativar Lovable
         </button>
@@ -130,14 +138,15 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
               window_LOVABLE_CONFIG: (window as any).LOVABLE_CONFIG,
               body_classes: document.body.className,
               body_attributes: {
-                "data-lovable-root": document.body.getAttribute("data-lovable-root"),
+                "data-lovable-root":
+                  document.body.getAttribute("data-lovable-root"),
               },
               pathname: window.location.pathname,
               search: window.location.search,
               href: window.location.href,
             });
           }}
-          style={{ color: '#6B4F43' }}
+          style={{ color: "#6B4F43" }}
         >
           Debug Info
         </button>

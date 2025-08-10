@@ -14,7 +14,7 @@ export const useHistory = <T>(initialState: T) => {
   });
 
   const saveState = useCallback((newState: T) => {
-    setHistory(currentHistory => ({
+    setHistory((currentHistory) => ({
       past: [...currentHistory.past, currentHistory.present],
       present: newState,
       future: [],
@@ -22,11 +22,14 @@ export const useHistory = <T>(initialState: T) => {
   }, []);
 
   const undo = useCallback(() => {
-    setHistory(currentHistory => {
+    setHistory((currentHistory) => {
       if (currentHistory.past.length === 0) return currentHistory;
 
       const previous = currentHistory.past[currentHistory.past.length - 1];
-      const newPast = currentHistory.past.slice(0, currentHistory.past.length - 1);
+      const newPast = currentHistory.past.slice(
+        0,
+        currentHistory.past.length - 1
+      );
 
       return {
         past: newPast,
@@ -37,7 +40,7 @@ export const useHistory = <T>(initialState: T) => {
   }, []);
 
   const redo = useCallback(() => {
-    setHistory(currentHistory => {
+    setHistory((currentHistory) => {
       if (currentHistory.future.length === 0) return currentHistory;
 
       const next = currentHistory.future[0];

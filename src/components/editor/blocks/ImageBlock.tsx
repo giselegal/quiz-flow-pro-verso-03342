@@ -16,7 +16,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -65,7 +72,7 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
     const file = event.target.files?.[0];
     if (file && onContentChange) {
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         onContentChange({
           url: e.target?.result as string,
           alt: content.alt || "Uploaded image",
@@ -107,11 +114,13 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
           className="cursor-pointer"
         />
       ) : (
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <div className="text-stone-400 mb-4">
             <Upload size={48} />
           </div>
-          <p className="text-stone-600 mb-4">Clique para adicionar uma imagem</p>
+          <p className="text-stone-600 mb-4">
+            Clique para adicionar uma imagem
+          </p>
           <input
             type="file"
             accept="image/*"

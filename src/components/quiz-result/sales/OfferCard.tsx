@@ -24,7 +24,8 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config = {} }) => {
     price: "39,00",
     regularPrice: "175,00",
     ctaText: "Quero meu Guia + Bônus por R$39,00",
-    ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+    ctaUrl:
+      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
     heroImage:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp",
     heroImage2:
@@ -64,7 +65,9 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config = {} }) => {
       }}
     >
       <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
-        <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
+        <p className="text-sm text-[#aa6b5d] uppercase font-medium">
+          Hoje por apenas
+        </p>
         <p className="text-4xl font-bold gold-text">R$ 39,00</p>
         <p className="text-xs text-[#3a3a3a]/60 mt-1">Pagamento único</p>
         <p className="text-sm text-[#432818] mt-2">
@@ -116,14 +119,18 @@ const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config = {} }) => {
           alt="Mockup celular peças-chave por dentro"
           className="w-full rounded-lg"
         />
-        <img src={finalConfig.heroImage2} alt="Foto Gisele Galvão" className="w-full rounded-lg" />
+        <img
+          src={finalConfig.heroImage2}
+          alt="Foto Gisele Galvão"
+          className="w-full rounded-lg"
+        />
       </div>
 
       <img
         src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp"
         alt="Imagem adicional bônus"
         className="w-full rounded-lg"
-        onError={e => (e.currentTarget.style.display = "none")}
+        onError={(e) => (e.currentTarget.style.display = "none")}
       />
 
       <Testimonials />

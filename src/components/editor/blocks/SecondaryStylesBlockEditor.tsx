@@ -9,7 +9,14 @@ const getMarginClass = (value: string | number, type: string): string => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -48,26 +55,33 @@ const getMarginClass = (value: string | number, type: string): string => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
+const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({
+  block,
+  onUpdate,
+}) => {
   return (
     <div className="space-y-4">
       <div>
-        <Label htmlFor={`${block.id}-title`}>Título dos Estilos Secundários</Label>
+        <Label htmlFor={`${block.id}-title`}>
+          Título dos Estilos Secundários
+        </Label>
         <Input
           id={`${block.id}-title`}
           value={block.content.title || ""}
-          onChange={e => onUpdate({ title: e.target.value })}
+          onChange={(e) => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Seus Estilos Complementares"
         />
       </div>
 
       <div>
-        <Label htmlFor={`${block.id}-description`}>Descrição dos Estilos Secundários</Label>
+        <Label htmlFor={`${block.id}-description`}>
+          Descrição dos Estilos Secundários
+        </Label>
         <Input
           id={`${block.id}-description`}
           value={block.content.text || ""}
-          onChange={e => onUpdate({ text: e.target.value })}
+          onChange={(e) => onUpdate({ text: e.target.value })}
           className="mt-1"
           placeholder="Descrição dos estilos complementares"
         />

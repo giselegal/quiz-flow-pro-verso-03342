@@ -176,13 +176,19 @@ export const createBuilderStateFromQuiz = (
     },
   ];
 
-  const components = [...welcomeComponents, ...questionComponents, ...resultComponents];
+  const components = [
+    ...welcomeComponents,
+    ...questionComponents,
+    ...resultComponents,
+  ];
 
   return { stages, components };
 };
 
 // Add function to convert ResultPageConfig to QuizBuilderState
-export const createBuilderStateFromResultPage = (config: ResultPageConfig): QuizBuilderState => {
+export const createBuilderStateFromResultPage = (
+  config: ResultPageConfig
+): QuizBuilderState => {
   const resultStageId = generateId();
 
   const stage: QuizStage = {

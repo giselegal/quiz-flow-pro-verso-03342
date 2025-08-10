@@ -52,7 +52,7 @@ export interface TestimonialsGridProps extends BlockComponentProps {
   tabletColumns?: 1 | 2 | 3;
 }
 
-export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
+export const TestimonialsGrid: React.FC<TestimonialsGridProps> = (props) => {
   const {
     // Conteúdo
     title = "Depoimentos de Clientes",
@@ -109,10 +109,12 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
   const cardStyleClasses = {
     elegant:
       "bg-white shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300",
-    minimal: "bg-gray-50 border-none hover:bg-white transition-colors duration-300",
+    minimal:
+      "bg-gray-50 border-none hover:bg-white transition-colors duration-300",
     bordered:
       "bg-white border-2 border-gray-200 hover:border-[#B89B7A] transition-colors duration-300",
-    shadow: "bg-white shadow-xl border-none hover:shadow-2xl transition-shadow duration-300",
+    shadow:
+      "bg-white shadow-xl border-none hover:shadow-2xl transition-shadow duration-300",
   };
 
   // Classes de tamanho do avatar
@@ -161,17 +163,21 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
 
           {/* Info do Cliente */}
           <div className="flex-1">
-            <h4 className="font-semibold text-[#432818] text-lg">{testimonial.author}</h4>
+            <h4 className="font-semibold text-[#432818] text-lg">
+              {testimonial.author}
+            </h4>
 
             {showRoles && testimonial.role && (
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 {testimonial.role}
-                {showCompany && testimonial.company && ` • ${testimonial.company}`}
+                {showCompany &&
+                  testimonial.company &&
+                  ` • ${testimonial.company}`}
               </p>
             )}
 
             {testimonial.location && (
-              <p style={{ color: '#8B7355' }}>📍 {testimonial.location}</p>
+              <p style={{ color: "#8B7355" }}>📍 {testimonial.location}</p>
             )}
           </div>
         </div>
@@ -182,10 +188,14 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
         )}
 
         {/* Texto do Depoimento */}
-        <blockquote style={{ color: '#6B4F43' }}>
-          <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
+        <blockquote style={{ color: "#6B4F43" }}>
+          <span className="text-[#B89B7A] text-4xl font-serif leading-none">
+            "
+          </span>
           <span className="text-base">{testimonial.text}</span>
-          <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
+          <span className="text-[#B89B7A] text-4xl font-serif leading-none">
+            "
+          </span>
         </blockquote>
       </CardContent>
     </Card>
@@ -205,31 +215,40 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
         {(title || subtitle) && (
           <div className={`mb-12 ${alignmentClasses[alignment]}`}>
             {title && (
-              <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">
+                {title}
+              </h2>
             )}
 
-            {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
+            {subtitle && <p style={{ color: "#6B4F43" }}>{subtitle}</p>}
           </div>
         )}
 
         {/* Grid de Depoimentos */}
         {layout === "grid" && (
           <div className={getGridClasses()}>
-            {testimonials.map((testimonial, index) => renderTestimonial(testimonial, index))}
+            {testimonials.map((testimonial, index) =>
+              renderTestimonial(testimonial, index)
+            )}
           </div>
         )}
 
         {/* Lista de Depoimentos */}
         {layout === "list" && (
           <div className="space-y-2">
-            {testimonials.map((testimonial, index) => renderTestimonial(testimonial, index))}
+            {testimonials.map((testimonial, index) =>
+              renderTestimonial(testimonial, index)
+            )}
           </div>
         )}
 
         {/* Carousel de Depoimentos (versão simplificada) */}
         {layout === "carousel" && (
           <div className="overflow-x-auto">
-            <div className="flex space-x-6 pb-4" style={{ width: "max-content" }}>
+            <div
+              className="flex space-x-6 pb-4"
+              style={{ width: "max-content" }}
+            >
               {testimonials.map((testimonial, index) => (
                 <div
                   key={testimonial.id || index}
@@ -247,7 +266,11 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
         {testimonials.length > 0 && (
           <div className="mt-12 text-center">
             <div className="inline-flex items-center space-x-2 px-6 py-3 bg-green-50 border border-green-200 rounded-full">
-              <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-6 h-6 text-green-600"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"

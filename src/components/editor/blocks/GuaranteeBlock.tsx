@@ -17,7 +17,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -89,8 +96,9 @@ const GuaranteeBlock: React.FC<GuaranteeBlockProps> = ({
           </h3>
 
           <p className="text-sm sm:text-base text-[#432818] leading-relaxed mb-4 sm:mb-5 md:mb-6">
-            Experimente o conteúdo por <strong>{guaranteePeriod}</strong>. Se não ficar
-            completamente satisfeita, devolvemos 100% do seu investimento, sem perguntas.
+            Experimente o conteúdo por <strong>{guaranteePeriod}</strong>. Se
+            não ficar completamente satisfeita, devolvemos 100% do seu
+            investimento, sem perguntas.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-left">
@@ -114,14 +122,17 @@ const GuaranteeBlock: React.FC<GuaranteeBlockProps> = ({
             </div>
             <div className="flex items-start gap-2">
               <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#B89B7A] mt-0.5 flex-shrink-0" />
-              <span className="text-xs sm:text-sm text-[#432818]">Suporte dedicado disponível</span>
+              <span className="text-xs sm:text-sm text-[#432818]">
+                Suporte dedicado disponível
+              </span>
             </div>
           </div>
 
           <div className="mt-4 sm:mt-5 md:mt-6 p-3 sm:p-4 bg-white rounded-lg border border-[#B89B7A]/10">
             <p className="text-xs sm:text-sm text-[#8F7A6A] italic leading-relaxed">
-              "Nosso compromisso é com sua satisfação e transformação. Se o conteúdo não atender
-              suas expectativas, faremos a devolução integral." - Equipe Gisele Galvão
+              "Nosso compromisso é com sua satisfação e transformação. Se o
+              conteúdo não atender suas expectativas, faremos a devolução
+              integral." - Equipe Gisele Galvão
             </p>
           </div>
         </div>

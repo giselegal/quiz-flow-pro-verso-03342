@@ -42,7 +42,7 @@ export const useEditorPersistence = () => {
           description: data.description || "",
           theme: "default",
           isPublished: data.isPublished,
-          pages: data.pages.map(page => ({
+          pages: data.pages.map((page) => ({
             id: page.id,
             name: page.title,
             title: page.title,
@@ -73,7 +73,8 @@ export const useEditorPersistence = () => {
           createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
         };
 
-        const result = await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
+        const result =
+          await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
 
         toast({
           title: "Sucesso",
@@ -113,7 +114,7 @@ export const useEditorPersistence = () => {
           isPublished: schemaDrivenData.isPublished || false,
           version: schemaDrivenData.version || 1,
           settings: schemaDrivenData.config || {},
-          pages: schemaDrivenData.pages.map(page => ({
+          pages: schemaDrivenData.pages.map((page) => ({
             id: page.id,
             pageType: page.type,
             pageOrder: page.order,
@@ -145,7 +146,9 @@ export const useEditorPersistence = () => {
     setIsLoading(true);
     try {
       // TODO: Implementar listagem de funis no schemaDrivenFunnelService
-      console.warn("listFunnels não implementado ainda no schemaDrivenFunnelService");
+      console.warn(
+        "listFunnels não implementado ainda no schemaDrivenFunnelService"
+      );
       return [];
     } catch (error) {
       console.error("Error listing funnels:", error);
@@ -164,7 +167,9 @@ export const useEditorPersistence = () => {
     async (id: string) => {
       try {
         // TODO: Implementar deleteFunnel no schemaDrivenFunnelService
-        console.warn("deleteFunnel não implementado ainda no schemaDrivenFunnelService");
+        console.warn(
+          "deleteFunnel não implementado ainda no schemaDrivenFunnelService"
+        );
         toast({
           title: "Sucesso",
           description: "Funil deletado com sucesso!",
@@ -187,7 +192,9 @@ export const useEditorPersistence = () => {
     async (id: string) => {
       try {
         // TODO: Implementar publishFunnel no schemaDrivenFunnelService
-        console.warn("publishFunnel não implementado ainda no schemaDrivenFunnelService");
+        console.warn(
+          "publishFunnel não implementado ainda no schemaDrivenFunnelService"
+        );
         toast({
           title: "Sucesso",
           description: "Funil publicado com sucesso!",

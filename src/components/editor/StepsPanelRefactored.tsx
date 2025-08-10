@@ -5,7 +5,16 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ScrollArea } from "../ui/scroll-area";
 import { Badge } from "../ui/badge";
-import { GripVertical, Plus, MoreHorizontal, Edit2, Trash2, Copy, Check, X } from "lucide-react";
+import {
+  GripVertical,
+  Plus,
+  MoreHorizontal,
+  Edit2,
+  Trash2,
+  Copy,
+  Check,
+  X,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +36,10 @@ interface StepsPanelProps {
  * Este componente utiliza o StepsContext para gerenciar o estado das etapas,
  * simplificando a interface e removendo a necessidade de passar múltiplos callbacks.
  */
-export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopulateStep }) => {
+export const StepsPanel: React.FC<StepsPanelProps> = ({
+  className = "",
+  onPopulateStep,
+}) => {
   // Consumir o contexto de etapas
   const {
     steps,
@@ -77,7 +89,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
     <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle style={{ color: '#432818' }}>Etapas Quiz</CardTitle>
+          <CardTitle style={{ color: "#432818" }}>Etapas Quiz</CardTitle>
           <Badge variant="secondary" className="text-xs">
             {steps.length}
           </Badge>
@@ -110,7 +122,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                     <div className="flex items-center space-x-2">
                       <Input
                         value={editingName}
-                        onChange={e => setEditingName(e.target.value)}
+                        onChange={(e) => setEditingName(e.target.value)}
                         onKeyDown={handleKeyPress}
                         className="h-7 text-sm"
                         autoFocus
@@ -136,7 +148,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                   ) : (
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 style={{ color: '#432818' }}>{step.name}</h4>
+                        <h4 style={{ color: "#432818" }}>{step.name}</h4>
                         <div className="flex items-center space-x-1">
                           {step.blocksCount > 0 && (
                             <Badge variant="outline" className="text-xs px-1">
@@ -148,7 +160,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                           )}
                         </div>
                       </div>
-                      <p style={{ color: '#8B7355' }}>
+                      <p style={{ color: "#8B7355" }}>
                         Etapa {index + 1} • {step.blocksCount} componente
                         {step.blocksCount !== 1 ? "s" : ""}
                       </p>
@@ -165,7 +177,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                           variant="ghost"
                           size="sm"
                           className="h-7 w-7 p-0"
-                          onClick={e => e.stopPropagation()}
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <MoreHorizontal className="w-4 h-4" />
                         </Button>
@@ -175,12 +187,16 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                           <Edit2 className="w-4 h-4 mr-2" />
                           Renomear
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => duplicateStep(step.id)}>
+                        <DropdownMenuItem
+                          onClick={() => duplicateStep(step.id)}
+                        >
                           <Copy className="w-4 h-4 mr-2" />
                           Duplicar
                         </DropdownMenuItem>
                         {onPopulateStep && (
-                          <DropdownMenuItem onClick={() => onPopulateStep(step.id)}>
+                          <DropdownMenuItem
+                            onClick={() => onPopulateStep(step.id)}
+                          >
                             <Plus className="w-4 h-4 mr-2" />
                             Popular Etapa
                           </DropdownMenuItem>
@@ -188,7 +204,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => deleteStep(step.id)}
-                          style={{ color: '#432818' }}
+                          style={{ color: "#432818" }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Excluir
@@ -208,7 +224,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
             {/* Add New Step Button */}
             <Button
               variant="outline"
-              style={{ borderColor: '#E5DDD5' }}
+              style={{ borderColor: "#E5DDD5" }}
               onClick={addStep}
             >
               <Plus className="w-4 h-4" />

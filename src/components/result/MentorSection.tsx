@@ -9,15 +9,18 @@ const MentorSection: React.FC = () => {
 
       <div className="grid md:grid-cols-2 gap-8 items-center relative z-10">
         <div>
-          <h2 className="text-2xl font-playfair text-[#aa6b5d] mb-4">Conheça Sua Mentora</h2>
+          <h2 className="text-2xl font-playfair text-[#aa6b5d] mb-4">
+            Conheça Sua Mentora
+          </h2>
           <p className="text-[#432818] mb-4">
-            <strong>Gisele Galvão</strong> — Consultora de Imagem e Estilo, Personal Branding,
-            Estrategista de Marca pessoal e Especialista em coloração pessoal com Certificação
-            internacional.
+            <strong>Gisele Galvão</strong> — Consultora de Imagem e Estilo,
+            Personal Branding, Estrategista de Marca pessoal e Especialista em
+            coloração pessoal com Certificação internacional.
           </p>
           <p className="text-[#432818] mb-4">
-            Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu
-            estilo autêntico e transformarem sua relação com a imagem pessoal.
+            Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a
+            descobrirem seu estilo autêntico e transformarem sua relação com a
+            imagem pessoal.
           </p>
         </div>
 

@@ -58,7 +58,8 @@ export const enhancedPropertyConfigurations = {
       responsiveColumns: {
         type: "boolean" as const,
         label: "Colunas Responsivas",
-        description: "Ajustar automaticamente o número de colunas em dispositivos móveis",
+        description:
+          "Ajustar automaticamente o número de colunas em dispositivos móveis",
         category: "layout" as const,
         default: true,
       },
@@ -293,9 +294,13 @@ export const enhancedPropertyConfigurations = {
 };
 
 // 🎯 Função para obter configuração aprimorada de um tipo de bloco
-export const getEnhancedBlockDefinition = (blockType: string): BlockDefinition | null => {
+export const getEnhancedBlockDefinition = (
+  blockType: string
+): BlockDefinition | null => {
   const config =
-    enhancedPropertyConfigurations[blockType as keyof typeof enhancedPropertyConfigurations];
+    enhancedPropertyConfigurations[
+      blockType as keyof typeof enhancedPropertyConfigurations
+    ];
   return config ? (config as BlockDefinition) : null;
 };
 

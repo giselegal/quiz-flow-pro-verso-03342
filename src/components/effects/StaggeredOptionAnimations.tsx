@@ -15,7 +15,9 @@ const StaggeredOptionAnimations: React.FC<StaggeredOptionAnimationsProps> = ({
   className = "grid gap-3 h-full",
 }) => {
   const [showOptions, setShowOptions] = useState(false);
-  const instanceId = useRef(`options-${Math.random().toString(36).substr(2, 9)}`).current;
+  const instanceId = useRef(
+    `options-${Math.random().toString(36).substr(2, 9)}`
+  ).current;
 
   useEffect(() => {
     if (isVisible) {

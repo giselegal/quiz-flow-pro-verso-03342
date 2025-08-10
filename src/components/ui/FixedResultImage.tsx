@@ -93,7 +93,10 @@ const FixedResultImage: React.FC<FixedResultImageProps> = ({
   };
 
   return (
-    <div className={`relative overflow-hidden ${containerClassName}`} style={{ paddingBottom }}>
+    <div
+      className={`relative overflow-hidden ${containerClassName}`}
+      style={{ paddingBottom }}
+    >
       <img
         src={highQualitySrc}
         alt={alt}

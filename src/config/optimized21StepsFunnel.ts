@@ -1293,7 +1293,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                                   id: "options-grid",
                                   type: "options-grid",
                                   properties: {
-                                    question: "Como é seu ambiente de trabalho?",
+                                    question:
+                                      "Como é seu ambiente de trabalho?",
                                     columns: "2",
                                     gap: 16,
                                     selectionMode: "single",
@@ -1777,7 +1778,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                         {
                           id: "step-16",
                           name: "Estratégica 4 - Objetivos",
-                          description: "Qual seu principal objetivo com o estilo?",
+                          description:
+                            "Qual seu principal objetivo com o estilo?",
                           order: 16,
                           type: "strategic",
                           questionData: {
@@ -1835,7 +1837,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                               id: "options-grid",
                               type: "options-grid",
                               properties: {
-                                question: "Qual seu principal objetivo com o estilo?",
+                                question:
+                                  "Qual seu principal objetivo com o estilo?",
                                 columns: "1",
                                 gap: 12,
                                 selectionMode: "single",
@@ -1861,7 +1864,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                                   {
                                     id: "step-17",
                                     name: "Finalizando Análise",
-                                    description: "Últimos ajustes na sua análise...",
+                                    description:
+                                      "Últimos ajustes na sua análise...",
                                     order: 17,
                                     type: "transition",
                                     blocks: [
@@ -1882,7 +1886,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                                         id: "transition-title",
                                         type: "heading-inline",
                                         properties: {
-                                          content: "Analisando suas respostas...",
+                                          content:
+                                            "Analisando suas respostas...",
                                           level: "h2",
                                           textAlign: "center",
                                           color: "#432818",
@@ -1901,7 +1906,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                                       {
                                         id: "step-18",
                                         name: "Calculando Resultado",
-                                        description: "Processando seu perfil completo...",
+                                        description:
+                                          "Processando seu perfil completo...",
                                         order: 18,
                                         type: "processing",
                                         blocks: [
@@ -1922,7 +1928,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
                                             id: "processing-title",
                                             type: "heading-inline",
                                             properties: {
-                                              content: "Calculando seu resultado...",
+                                              content:
+                                                "Calculando seu resultado...",
                                               level: "h2",
                                               textAlign: "center",
                                               color: "#432818",
@@ -2766,15 +2773,22 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
     styles: {
       natural: {
         name: "Natural",
-        description: "Você valoriza o conforto e a praticidade sem abrir mão do estilo.",
-        characteristics: ["Confortável", "Prática", "Autêntica", "Descomplicada"],
+        description:
+          "Você valoriza o conforto e a praticidade sem abrir mão do estilo.",
+        characteristics: [
+          "Confortável",
+          "Prática",
+          "Autêntica",
+          "Descomplicada",
+        ],
         colors: ["#8B7355", "#A0956B", "#6B5B73"],
         guideImage:
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
       },
       classico: {
         name: "Clássico",
-        description: "Você prefere peças atemporais, elegantes e bem estruturadas.",
+        description:
+          "Você prefere peças atemporais, elegantes e bem estruturadas.",
         characteristics: ["Atemporal", "Elegante", "Sofisticada", "Refinada"],
         colors: ["#2C3E50", "#34495E", "#7F8C8D"],
         guideImage:
@@ -2782,7 +2796,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
       },
       romantico: {
         name: "Romântico",
-        description: "Você adora peças femininas, delicadas e com detalhes especiais.",
+        description:
+          "Você adora peças femininas, delicadas e com detalhes especiais.",
         characteristics: ["Feminina", "Delicada", "Suave", "Detalhista"],
         colors: ["#F8BBD9", "#E8A2C0", "#D7819F"],
         guideImage:
@@ -2790,7 +2805,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
       },
       dramatico: {
         name: "Dramático",
-        description: "Você gosta de peças marcantes, estruturadas e com presença.",
+        description:
+          "Você gosta de peças marcantes, estruturadas e com presença.",
         characteristics: ["Marcante", "Poderosa", "Estruturada", "Impactante"],
         colors: ["#000000", "#8B0000", "#4B0082"],
         guideImage:
@@ -2798,7 +2814,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
       },
       elegante: {
         name: "Elegante",
-        description: "Você aprecia sofisticação, qualidade e peças bem cortadas.",
+        description:
+          "Você aprecia sofisticação, qualidade e peças bem cortadas.",
         characteristics: ["Sofisticada", "Refinada", "Polida", "Impecável"],
         colors: ["#1C1C1C", "#8B4513", "#CD853F"],
         guideImage:
@@ -2806,7 +2823,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
       },
       criativo: {
         name: "Criativo",
-        description: "Você gosta de experimentar, misturar e criar looks únicos.",
+        description:
+          "Você gosta de experimentar, misturar e criar looks únicos.",
         characteristics: ["Criativa", "Ousada", "Única", "Experimental"],
         colors: ["#FF6B35", "#F7931E", "#FFD23F"],
         guideImage:
@@ -2814,7 +2832,8 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
       },
       contemporaneo: {
         name: "Contemporâneo",
-        description: "Você acompanha tendências mas adapta ao seu estilo pessoal.",
+        description:
+          "Você acompanha tendências mas adapta ao seu estilo pessoal.",
         characteristics: ["Moderna", "Atualizada", "Versátil", "Inovadora"],
         colors: ["#95A5A6", "#BDC3C7", "#ECF0F1"],
         guideImage:
@@ -2853,6 +2872,7 @@ export const OPTIMIZED_FUNNEL_CONFIG = {
 
 export type OptimizedStepConfig = (typeof OPTIMIZED_FUNNEL_CONFIG.steps)[0];
 export type QuizDataConfig = typeof OPTIMIZED_FUNNEL_CONFIG.quizData;
-export type StyleConfig = typeof OPTIMIZED_FUNNEL_CONFIG.quizData.styles.natural;
+export type StyleConfig =
+  typeof OPTIMIZED_FUNNEL_CONFIG.quizData.styles.natural;
 
 export default OPTIMIZED_FUNNEL_CONFIG;

@@ -7,7 +7,12 @@ interface UseAutoSaveOptions {
   enabled?: boolean;
 }
 
-export const useAutoSave = ({ data, onSave, delay = 3000, enabled = true }: UseAutoSaveOptions) => {
+export const useAutoSave = ({
+  data,
+  onSave,
+  delay = 3000,
+  enabled = true,
+}: UseAutoSaveOptions) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const lastDataRef = useRef(data);
 

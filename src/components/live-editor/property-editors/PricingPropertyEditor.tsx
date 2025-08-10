@@ -26,14 +26,16 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
   return (
     <div className="space-y-6 p-4">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-[#432818]">Configurações do Preço</h3>
+        <h3 className="text-lg font-semibold text-[#432818]">
+          Configurações do Preço
+        </h3>
 
         <div className="space-y-2">
           <Label htmlFor="productTitle">Título do Produto</Label>
           <Input
             id="productTitle"
             value={properties.productTitle || ""}
-            onChange={e => handleChange("productTitle", e.target.value)}
+            onChange={(e) => handleChange("productTitle", e.target.value)}
             placeholder="Guia de Estilo"
           />
         </div>
@@ -43,7 +45,7 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           <Input
             id="originalPrice"
             value={properties.originalPrice || ""}
-            onChange={e => handleChange("originalPrice", e.target.value)}
+            onChange={(e) => handleChange("originalPrice", e.target.value)}
             placeholder="R$ 97,00"
           />
         </div>
@@ -53,7 +55,7 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           <Input
             id="offerPrice"
             value={properties.offerPrice || ""}
-            onChange={e => handleChange("offerPrice", e.target.value)}
+            onChange={(e) => handleChange("offerPrice", e.target.value)}
             placeholder="R$ 39,90"
           />
         </div>
@@ -63,7 +65,7 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           <Input
             id="discount"
             value={properties.discount || ""}
-            onChange={e => handleChange("discount", e.target.value)}
+            onChange={(e) => handleChange("discount", e.target.value)}
             placeholder="60% OFF"
           />
         </div>
@@ -73,7 +75,7 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           <Input
             id="badge"
             value={properties.badge || ""}
-            onChange={e => handleChange("badge", e.target.value)}
+            onChange={(e) => handleChange("badge", e.target.value)}
             placeholder="OFERTA ESPECIAL"
           />
         </div>
@@ -82,7 +84,7 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           <Switch
             id="showBadge"
             checked={properties.showBadge !== false}
-            onCheckedChange={checked => handleChange("showBadge", checked)}
+            onCheckedChange={(checked) => handleChange("showBadge", checked)}
           />
           <Label htmlFor="showBadge">Mostrar Badge</Label>
         </div>
@@ -91,7 +93,7 @@ const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           <Label htmlFor="cardStyle">Estilo do Cartão</Label>
           <Select
             value={properties.cardStyle || "standard"}
-            onValueChange={value => handleChange("cardStyle", value)}
+            onValueChange={(value) => handleChange("cardStyle", value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Selecione o estilo" />

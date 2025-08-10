@@ -9,7 +9,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -68,7 +75,7 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
   useEffect(() => {
     if (!isEditing) {
       const timer = setInterval(() => {
-        setTimeLeft(prev => (prev > 0 ? prev - 1 : 0));
+        setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
       }, 1000);
 
       return () => clearInterval(timer);
@@ -105,7 +112,10 @@ const QuizOfferCountdownBlock: React.FC<BlockComponentProps> = ({
           <span className="text-lg font-semibold" style={{ color: textColor }}>
             {title}
           </span>
-          <span className="text-3xl font-bold font-mono" style={{ color: textColor }}>
+          <span
+            className="text-3xl font-bold font-mono"
+            style={{ color: textColor }}
+          >
             {formatTime(timeLeft)}
           </span>
         </div>

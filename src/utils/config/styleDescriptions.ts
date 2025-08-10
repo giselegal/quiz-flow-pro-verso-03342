@@ -18,6 +18,7 @@ export const getStyleDescription = (styleType: string): string => {
   };
 
   return (
-    descriptions[styleType] || "Seu estilo pessoal reflete sua personalidade autêntica e única."
+    descriptions[styleType] ||
+    "Seu estilo pessoal reflete sua personalidade autêntica e única."
   );
 };

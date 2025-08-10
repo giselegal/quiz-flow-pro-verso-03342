@@ -32,7 +32,11 @@ const ensureOptionsProps = (props: any) => {
     imageSize: props?.imageSize || 120,
     imageWidth: props?.imageWidth || 120,
     imageHeight: props?.imageHeight || 120,
-    responsiveColumns: props?.responsiveColumns || { mobile: 1, tablet: 2, desktop: 2 },
+    responsiveColumns: props?.responsiveColumns || {
+      mobile: 1,
+      tablet: 2,
+      desktop: 2,
+    },
     ...props,
   };
 };
@@ -50,10 +54,12 @@ const DebugStep02: React.FC = () => {
   }, [setActiveStage]);
 
   const step02Blocks = getBlocksForStage("step-2");
-  const optionsGridBlock = step02Blocks.find(block => String(block.type) === "options-grid") as any;
+  const optionsGridBlock = step02Blocks.find(
+    (block) => String(block.type) === "options-grid"
+  ) as any;
   const step02Template = getStep02Template();
   const templateOptionsGrid = step02Template.find(
-    block => String(block.type) === "options-grid"
+    (block) => String(block.type) === "options-grid"
   ) as any;
 
   console.log("🔍 DebugStep02 - Dados:", {
@@ -71,7 +77,7 @@ const DebugStep02: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Dados do Editor Context</h2>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <p>
               <strong>Etapa Ativa:</strong> {activeStageId}
             </p>
@@ -85,8 +91,10 @@ const DebugStep02: React.FC = () => {
           </div>
 
           {optionsGridBlock && (
-            <div style={{ backgroundColor: '#FAF9F7' }}>
-              <h3 className="font-semibold mb-2">Options Grid Block Properties</h3>
+            <div style={{ backgroundColor: "#FAF9F7" }}>
+              <h3 className="font-semibold mb-2">
+                Options Grid Block Properties
+              </h3>
               <pre className="text-xs overflow-auto">
                 {JSON.stringify(optionsGridBlock.properties, null, 2)}
               </pre>
@@ -96,7 +104,7 @@ const DebugStep02: React.FC = () => {
 
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Dados do Template</h2>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <p>
               <strong>Template Blocos:</strong> {step02Template.length}
             </p>
@@ -108,7 +116,9 @@ const DebugStep02: React.FC = () => {
 
           {templateOptionsGrid && (
             <div className="bg-green-50 p-4 rounded">
-              <h3 className="font-semibold mb-2">Template Options Grid Properties</h3>
+              <h3 className="font-semibold mb-2">
+                Template Options Grid Properties
+              </h3>
               <pre className="text-xs overflow-auto max-h-64">
                 {JSON.stringify(templateOptionsGrid.properties, null, 2)}
               </pre>
@@ -119,8 +129,10 @@ const DebugStep02: React.FC = () => {
 
       {/* Renderização Direta do QuizOptionsGridBlock */}
       <div className="mt-8">
-        <h2 className="text-xl font-semibold mb-4">Teste de Renderização Direta</h2>
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <h2 className="text-xl font-semibold mb-4">
+          Teste de Renderização Direta
+        </h2>
+        <div style={{ borderColor: "#E5DDD5" }}>
           {optionsGridBlock ? (
             <QuizOptionsGridBlock
               id={optionsGridBlock.id}
@@ -140,7 +152,9 @@ const DebugStep02: React.FC = () => {
               }}
             />
           ) : (
-            <div style={{ color: '#432818' }}>❌ Nenhum Options Grid encontrado</div>
+            <div style={{ color: "#432818" }}>
+              ❌ Nenhum Options Grid encontrado
+            </div>
           )}
         </div>
       </div>

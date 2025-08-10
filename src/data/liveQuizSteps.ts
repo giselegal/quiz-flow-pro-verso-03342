@@ -215,7 +215,8 @@ export const STEPS_BY_ROUTE = {
 export const getTotalSteps = () => ALL_LIVE_QUIZ_STEPS.length;
 export const getStepByRoute = (route: string) =>
   STEPS_BY_ROUTE[route as keyof typeof STEPS_BY_ROUTE] || [];
-export const getStepById = (id: string) => ALL_LIVE_QUIZ_STEPS.find(step => step.id === id);
+export const getStepById = (id: string) =>
+  ALL_LIVE_QUIZ_STEPS.find((step) => step.id === id);
 export const getQuizSteps = () => STEPS_BY_ROUTE["/quiz"];
 export const getResultSteps = () => STEPS_BY_ROUTE["/resultado"];
 export const getOfferSteps = () => STEPS_BY_ROUTE["/quiz-descubra-seu-estilo"];

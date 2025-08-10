@@ -12,7 +12,11 @@ export function componentTagger(): Plugin {
       }
 
       // Pular node_modules e arquivos de teste
-      if (id.includes("node_modules") || id.includes(".test.") || id.includes(".spec.")) {
+      if (
+        id.includes("node_modules") ||
+        id.includes(".test.") ||
+        id.includes(".spec.")
+      ) {
         return null;
       }
 
@@ -23,10 +27,14 @@ export function componentTagger(): Plugin {
             .split("/")
             .pop()
             ?.replace(/\.(tsx|jsx)$/, "") || "Unknown";
-        const componentName = fileName.charAt(0).toUpperCase() + fileName.slice(1);
+        const componentName =
+          fileName.charAt(0).toUpperCase() + fileName.slice(1);
 
         // Verificar se é um componente React válido (contém JSX)
-        if (!code.includes("<") || (!code.includes("React") && !code.includes("jsx"))) {
+        if (
+          !code.includes("<") ||
+          (!code.includes("React") && !code.includes("jsx"))
+        ) {
           return null;
         }
 
@@ -46,7 +54,10 @@ export function componentTagger(): Plugin {
         };
       } catch (error) {
         // Em caso de erro, retornar código original
-        console.warn(`Lovable Component Tagger: Error processing ${id}:`, error);
+        console.warn(
+          `Lovable Component Tagger: Error processing ${id}:`,
+          error
+        );
         return null;
       }
     },

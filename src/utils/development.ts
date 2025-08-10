@@ -39,7 +39,9 @@ export const cleanupConsoleWarnings = () => {
         "Strategy 4: No clear indicators found, assuming All tab",
       ];
 
-      const shouldIgnore = ignoredWarnings.some(warning => message.includes(warning));
+      const shouldIgnore = ignoredWarnings.some((warning) =>
+        message.includes(warning)
+      );
 
       if (!shouldIgnore) {
         originalWarn.apply(console, args);
@@ -87,7 +89,9 @@ export const performanceMonitor = {
 
       const measure = performance.getEntriesByName(label)[0];
       if (measure && measure.duration > 16) {
-        console.warn(`⚡ Performance: ${label} took ${measure.duration.toFixed(2)}ms`);
+        console.warn(
+          `⚡ Performance: ${label} took ${measure.duration.toFixed(2)}ms`
+        );
       }
     }
   },

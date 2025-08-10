@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -118,11 +125,11 @@ const CompareBlock: React.FC<BlockComponentProps> = ({
           {label2 || "Depois"} ({Math.round(percent2)}%)
         </div>
       </div>
-      <div style={{ color: '#6B4F43' }}>
+      <div style={{ color: "#6B4F43" }}>
         <div>Valor 1: {val1}</div>
         <div>Valor 2: {val2}</div>
       </div>
-      <p style={{ color: '#6B4F43' }}>Compare dois valores visualmente.</p>
+      <p style={{ color: "#6B4F43" }}>Compare dois valores visualmente.</p>
     </div>
   );
 };

@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { cn } from "../../../lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import type { BlockComponentProps } from "../../../types/blocks";
-import { RESPONSIVE_PATTERNS, INLINE_ANIMATIONS } from "../../../utils/inlineComponentUtils";
+import {
+  RESPONSIVE_PATTERNS,
+  INLINE_ANIMATIONS,
+} from "../../../utils/inlineComponentUtils";
 import {
   ArrowUpDown,
   ArrowLeftRight,
@@ -35,7 +38,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -132,7 +142,10 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   const getCurrentSize = () => {
-    if (responsive && responsiveClasses[height as keyof typeof responsiveClasses]) {
+    if (
+      responsive &&
+      responsiveClasses[height as keyof typeof responsiveClasses]
+    ) {
       return responsiveClasses[height as keyof typeof responsiveClasses];
     }
     return sizeClasses[height as keyof typeof sizeClasses] || sizeClasses.md;
@@ -191,7 +204,10 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           ],
 
           !isSelected &&
-            isHovered && ["bg-gray-50/30", showGuides && "border-2 border-dashed border-gray-200"],
+            isHovered && [
+              "bg-gray-50/30",
+              showGuides && "border-2 border-dashed border-gray-200",
+            ],
 
           // Background
           backgroundColor !== "transparent" && `bg-${backgroundColor}`,
@@ -200,7 +216,8 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           "min-h-[20px] min-w-[20px]"
         )}
         style={{
-          backgroundColor: backgroundColor !== "transparent" ? backgroundColor : undefined,
+          backgroundColor:
+            backgroundColor !== "transparent" ? backgroundColor : undefined,
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -210,11 +227,11 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           <>
             {/* Direction Indicator */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div style={{ borderColor: '#E5DDD5' }}>
+              <div style={{ borderColor: "#E5DDD5" }}>
                 {direction === "vertical" ? (
-                  <ArrowUpDown style={{ color: '#8B7355' }} />
+                  <ArrowUpDown style={{ color: "#8B7355" }} />
                 ) : (
-                  <ArrowLeftRight style={{ color: '#8B7355' }} />
+                  <ArrowLeftRight style={{ color: "#8B7355" }} />
                 )}
               </div>
             </div>
@@ -234,18 +251,18 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="absolute -right-12 top-1/2 transform -translate-y-1/2 flex flex-col gap-1">
             <button
               onClick={() => adjustSize(true)}
-              style={{ borderColor: '#E5DDD5' }}
+              style={{ borderColor: "#E5DDD5" }}
               title="Aumentar"
             >
-              <Maximize2 style={{ color: '#6B4F43' }} />
+              <Maximize2 style={{ color: "#6B4F43" }} />
             </button>
 
             <button
               onClick={() => adjustSize(false)}
-              style={{ borderColor: '#E5DDD5' }}
+              style={{ borderColor: "#E5DDD5" }}
               title="Diminuir"
             >
-              <Minimize2 style={{ color: '#6B4F43' }} />
+              <Minimize2 style={{ color: "#6B4F43" }} />
             </button>
 
             <button
@@ -255,24 +272,26 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
                   direction === "vertical" ? "horizontal" : "vertical"
                 )
               }
-              style={{ borderColor: '#E5DDD5' }}
+              style={{ borderColor: "#E5DDD5" }}
               title="Alternar direção"
             >
-              <Move style={{ color: '#6B4F43' }} />
+              <Move style={{ color: "#6B4F43" }} />
             </button>
           </div>
         )}
 
         {/* Settings Panel (Editor Mode) */}
         {isSelected && (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <label style={{ color: '#6B4F43' }}>Tamanho</label>
+                <label style={{ color: "#6B4F43" }}>Tamanho</label>
                 <select
                   value={height}
-                  onChange={e => handlePropertyChange("height", e.target.value)}
-                  style={{ borderColor: '#E5DDD5' }}
+                  onChange={(e) =>
+                    handlePropertyChange("height", e.target.value)
+                  }
+                  style={{ borderColor: "#E5DDD5" }}
                 >
                   <option value="xs">Extra Pequeno</option>
                   <option value="sm">Pequeno</option>
@@ -284,11 +303,13 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div>
-                <label style={{ color: '#6B4F43' }}>Direção</label>
+                <label style={{ color: "#6B4F43" }}>Direção</label>
                 <select
                   value={direction}
-                  onChange={e => handlePropertyChange("direction", e.target.value)}
-                  style={{ borderColor: '#E5DDD5' }}
+                  onChange={(e) =>
+                    handlePropertyChange("direction", e.target.value)
+                  }
+                  style={{ borderColor: "#E5DDD5" }}
                 >
                   <option value="vertical">Vertical</option>
                   <option value="horizontal">Horizontal</option>
@@ -296,11 +317,13 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div>
-                <label style={{ color: '#6B4F43' }}>Borda</label>
+                <label style={{ color: "#6B4F43" }}>Borda</label>
                 <select
                   value={borderStyle}
-                  onChange={e => handlePropertyChange("borderStyle", e.target.value)}
-                  style={{ borderColor: '#E5DDD5' }}
+                  onChange={(e) =>
+                    handlePropertyChange("borderStyle", e.target.value)
+                  }
+                  style={{ borderColor: "#E5DDD5" }}
                 >
                   <option value="none">Nenhuma</option>
                   <option value="dashed">Tracejada</option>
@@ -314,10 +337,12 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
                   <input
                     type="checkbox"
                     checked={responsive}
-                    onChange={e => handlePropertyChange("responsive", e.target.checked)}
+                    onChange={(e) =>
+                      handlePropertyChange("responsive", e.target.checked)
+                    }
                     className="rounded"
                   />
-                  <span style={{ color: '#6B4F43' }}>Responsivo</span>
+                  <span style={{ color: "#6B4F43" }}>Responsivo</span>
                 </label>
               </div>
             </div>

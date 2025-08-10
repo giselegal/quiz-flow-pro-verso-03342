@@ -1,10 +1,16 @@
 import { useState, useCallback, useEffect } from "react";
 import { useHistory } from "../../hooks/useHistory";
-import { FunnelSettings, defaultFunnelSettings } from "../../types/funnelSettings";
+import {
+  FunnelSettings,
+  defaultFunnelSettings,
+} from "../../types/funnelSettings";
 import { FunnelSettingsService } from "../../services/funnelSettingsService";
 import { useAutoSaveWithDebounce } from "./useAutoSaveWithDebounce";
 
-export const useFunnelSettingsHistory = (funnelId: string, initialSettings: FunnelSettings) => {
+export const useFunnelSettingsHistory = (
+  funnelId: string,
+  initialSettings: FunnelSettings
+) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Usar o hook useHistory para gerenciar histórico
@@ -47,7 +53,8 @@ export const useFunnelSettingsHistory = (funnelId: string, initialSettings: Funn
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const loadedSettings = await FunnelSettingsService.loadSettings(funnelId);
+        const loadedSettings =
+          await FunnelSettingsService.loadSettings(funnelId);
         if (loadedSettings) {
           saveState(loadedSettings);
         }

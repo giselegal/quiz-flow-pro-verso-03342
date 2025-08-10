@@ -18,14 +18,18 @@ const ABTestRedirect: React.FC<ABTestRedirectProps> = ({ children }) => {
     const urlParams = new URLSearchParams(window.location.search);
 
     // Verifica se há parâmetro para forçar exibição do quiz
-    const forceQuiz = urlParams.get("quiz") === "true" || urlParams.get("force-quiz") === "true";
+    const forceQuiz =
+      urlParams.get("quiz") === "true" ||
+      urlParams.get("force-quiz") === "true";
     const skipAbTest = urlParams.get("skip-ab") === "true";
 
     // Só faz redirecionamento da rota raiz para evitar loops
     if (currentPath === "/" && !forceQuiz && !skipAbTest) {
       const redirectUrl = getABTestRedirectUrl(LANDING_PAGE_AB_TEST);
 
-      console.log(`🔄 A/B Test: Redirecionando de ${currentPath} para ${redirectUrl}`);
+      console.log(
+        `🔄 A/B Test: Redirecionando de ${currentPath} para ${redirectUrl}`
+      );
 
       // Preserva query parameters na URL
       const searchParams = window.location.search;

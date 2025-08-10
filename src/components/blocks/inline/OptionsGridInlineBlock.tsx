@@ -52,9 +52,9 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
   const handleOptionClick = (optionId: string) => {
     if (multipleSelection) {
-      setSelectedOptions(prev => {
+      setSelectedOptions((prev) => {
         const newSelected = prev.includes(optionId)
-          ? prev.filter(id => id !== optionId)
+          ? prev.filter((id) => id !== optionId)
           : [...prev, optionId].slice(0, maxSelections);
 
         // Notificar mudança
@@ -108,13 +108,17 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                   ? `border-[${selectedBorderColor}] bg-[${selectedBorderColor}]/10 shadow-lg`
                   : `border-[${borderColor}] hover:border-[${selectedBorderColor}] hover:bg-[${hoverColor}]`
               )}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 handleOptionClick(option.id);
               }}
               style={{
-                borderColor: isSelectedOption ? selectedBorderColor : borderColor,
-                backgroundColor: isSelectedOption ? `${selectedBorderColor}20` : undefined,
+                borderColor: isSelectedOption
+                  ? selectedBorderColor
+                  : borderColor,
+                backgroundColor: isSelectedOption
+                  ? `${selectedBorderColor}20`
+                  : undefined,
               }}
             >
               {/* Imagem da opção */}
@@ -140,7 +144,9 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                 <p
                   className={cn(
                     "text-sm font-medium leading-relaxed",
-                    isSelectedOption ? `text-[${selectedBorderColor}]` : "text-gray-800"
+                    isSelectedOption
+                      ? `text-[${selectedBorderColor}]`
+                      : "text-gray-800"
                   )}
                 >
                   {option.text}
@@ -165,7 +171,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Feedback de seleção */}
       <div className="selection-feedback mt-4 text-center">
-        <p style={{ color: '#6B4F43' }}>
+        <p style={{ color: "#6B4F43" }}>
           {multipleSelection
             ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ""}`
             : selectedOptions.length > 0

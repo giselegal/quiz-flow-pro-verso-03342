@@ -10,7 +10,14 @@ const getMarginClass = (value, type) => {
 
   if (isNaN(numValue) || numValue === 0) return "";
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix =
+    type === "top"
+      ? "mt"
+      : type === "bottom"
+        ? "mb"
+        : type === "left"
+          ? "ml"
+          : "mr";
 
   // Margens negativas
   if (numValue < 0) {
@@ -51,7 +58,7 @@ const getMarginClass = (value, type) => {
 
 const BlockLoadingSkeleton: React.FC = () => (
   <div className="animate-pulse">
-    <div style={{ backgroundColor: '#E5DDD5' }}>
+    <div style={{ backgroundColor: "#E5DDD5" }}>
       <div className="h-4 bg-gray-300 rounded w-3/4"></div>
       <div className="space-y-2">
         <div className="h-3 bg-gray-300 rounded"></div>
@@ -112,7 +119,9 @@ const ENHANCED_BLOCK_REGISTRY = {
   // 💬 BLOCKS DE CREDIBILIDADE
   testimonials: lazy(() => import("./TestimonialsBlock")),
   "testimonials-grid": lazy(() => import("./TestimonialsGridBlock")),
-  "testimonials-real-inline": lazy(() => import("./TestimonialsRealInlineBlock")),
+  "testimonials-real-inline": lazy(
+    () => import("./TestimonialsRealInlineBlock")
+  ),
   "testimonial-inline": lazy(() => import("./TestimonialInlineBlock")),
   "social-proof": lazy(() => import("./SocialProofBlock")),
 
@@ -131,7 +140,9 @@ const ENHANCED_BLOCK_REGISTRY = {
   "advanced-cta": lazy(() => import("./AdvancedCTABlock")),
   "advanced-cta-inline": lazy(() => import("./AdvancedCTAInlineBlock")),
   "final-cta": lazy(() => import("./FinalCTABlock")),
-  "final-value-proposition-inline": lazy(() => import("./FinalValuePropositionInlineBlock")),
+  "final-value-proposition-inline": lazy(
+    () => import("./FinalValuePropositionInlineBlock")
+  ),
 
   // 📊 BLOCKS DE ESTATÍSTICAS E MÉTRICAS
   "stats-metrics": lazy(() => import("./StatsMetricsBlock")),
@@ -428,8 +439,13 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
 };
 
 // 🔧 UTILITY FUNCTIONS
-export function getBlockComponent(type: string): React.LazyExoticComponent<any> | null {
-  const registry = ENHANCED_BLOCK_REGISTRY as Record<string, React.LazyExoticComponent<any>>;
+export function getBlockComponent(
+  type: string
+): React.LazyExoticComponent<any> | null {
+  const registry = ENHANCED_BLOCK_REGISTRY as Record<
+    string,
+    React.LazyExoticComponent<any>
+  >;
   return registry[type] || null;
 }
 
@@ -438,7 +454,9 @@ export function getBlockDefinition(type: string): BlockDefinition | null {
 }
 
 export function getBlocksByCategory(category: string): BlockDefinition[] {
-  return Object.values(BLOCK_DEFINITIONS).filter(block => block.category === category);
+  return Object.values(BLOCK_DEFINITIONS).filter(
+    (block) => block.category === category
+  );
 }
 
 export function getAllBlockTypes(): string[] {
@@ -448,10 +466,10 @@ export function getAllBlockTypes(): string[] {
 export function searchBlocks(query: string): BlockDefinition[] {
   const lowercaseQuery = query.toLowerCase();
   return Object.values(BLOCK_DEFINITIONS).filter(
-    block =>
+    (block) =>
       block.name.toLowerCase().includes(lowercaseQuery) ||
       block.description.toLowerCase().includes(lowercaseQuery) ||
-      block.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+      block.tags?.some((tag) => tag.toLowerCase().includes(lowercaseQuery))
   );
 }
 

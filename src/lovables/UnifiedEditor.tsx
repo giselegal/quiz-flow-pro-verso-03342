@@ -1,10 +1,14 @@
-import { UnifiedVisualEditor, EditorTab } from "../components/unified-editor/UnifiedVisualEditor";
+import {
+  UnifiedVisualEditor,
+  EditorTab,
+} from "../components/unified-editor/UnifiedVisualEditor";
 import { StyleResult } from "../types/quiz";
 
 export default {
   name: "unified-editor",
   displayName: "Editor Unificado",
-  description: "Editor visual unificado para Quiz, Página de Resultado e Página de Vendas",
+  description:
+    "Editor visual unificado para Quiz, Página de Resultado e Página de Vendas",
   category: "Editores",
   defaultProps: {
     initialTab: "quiz",
