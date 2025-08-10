@@ -43,6 +43,9 @@ import BonusShowcaseBlock from "../components/blocks/inline/BonusShowcaseBlock";
 import LoadingAnimationBlock from "../components/blocks/inline/LoadingAnimationBlock";
 import ResultStyleCardBlock from "../components/blocks/inline/ResultStyleCardBlock";
 
+// Componentes Step01
+import { IntroBlock } from "../components/steps/step01/IntroBlock";
+
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
@@ -54,6 +57,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // Quiz Components
   "quiz-intro-header": QuizIntroHeaderBlock,
   "quiz-header": QuizIntroHeaderBlock,
+  "step01-intro": IntroBlock,
   "form-input": FormInputBlock,
 
   // Interactive Elements

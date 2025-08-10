@@ -289,8 +289,59 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     return [headerBlock, introBlock, ...stepBlocks];
   };
 
+  // Bloco decorativo separado
+  const decorativeBarBlock: BlockDefinition = {
+    type: "decorative-bar-inline",
+    name: "Barra Decorativa",
+    description: "Barra decorativa com gradiente dourado",
+    category: "Layout e Design",
+    icon: Settings,
+    component: "DecorativeBarInlineBlock" as any,
+    properties: {
+      width: {
+        type: "string" as const,
+        default: "100%",
+        label: "Largura",
+        description: "Largura da barra",
+        category: "layout" as const,
+      },
+      height: {
+        type: "number" as const,
+        default: 4,
+        label: "Altura",
+        description: "Altura da barra em pixels",
+        category: "layout" as const,
+      },
+      color: {
+        type: "color" as const,
+        default: "#B89B7A",
+        label: "Cor Principal",
+        description: "Cor principal da barra",
+        category: "styling" as const,
+      },
+      showShadow: {
+        type: "boolean" as const,
+        default: true,
+        label: "Mostrar Sombra",
+        description: "Exibir sombra na barra",
+        category: "styling" as const,
+      },
+    },
+    label: "Barra Decorativa",
+    defaultProps: {
+      width: "100%",
+      height: 4,
+      color: "#B89B7A",
+      gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+      borderRadius: 3,
+      showShadow: true,
+      backgroundColor: "transparent",
+    },
+    tags: [`decorativo`, `barra`, `dourado`],
+  };
+
   // Obter todas as definições de blocos do registry validado + blocos do quiz
-  const allBlocks = [...generateQuizBlocks(), ...generateBlockDefinitions()];
+  const allBlocks = [...generateQuizBlocks(), decorativeBarBlock, ...generateBlockDefinitions()];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -339,6 +390,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
             break;
           case "step01-intro":
             category = "Quiz";
+            break;
+          case "decorative-bar-inline":
+            category = "Layout e Design";
             break;
           case "text-inline":
             category = "Conteúdo";

@@ -6,48 +6,23 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { BlockComponentProps } from "@/types/blocks";
 import React, { useEffect, useState } from "react";
 
-interface IntroBlockProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
-  properties?: {
-    // Configurações da introdução
-    title?: string;
-    descriptionTop?: string;
-    descriptionBottom?: string;
-    imageIntro?: string;
-    inputLabel?: string;
-    inputPlaceholder?: string;
-    buttonText?: string;
-    privacyText?: string;
-    footerText?: string;
-    required?: boolean;
-
-    // Configurações visuais
-    scale?: number;
-    alignment?: "left" | "center" | "right";
-    backgroundColor?: string;
-    backgroundOpacity?: number;
-
-    // Configuração JSON específica
-    jsonConfig?: any;
-  };
-  isEditing?: boolean;
-  onUpdate?: (id: string, updates: any) => void;
-}
-
-export const IntroBlock: React.FC<IntroBlockProps> = ({
-  id,
-  className = "",
-  style = {},
-  properties = {},
+export const IntroBlock: React.FC<BlockComponentProps> = ({
+  block,
+  isSelected = false,
   isEditing = false,
-  onUpdate,
+  onClick,
+  onPropertyChange,
+  className = "",
 }) => {
   const [userName, setUserName] = useState("");
   const [isValid, setIsValid] = useState(false);
+
+  // Extrair propriedades do bloco
+  const properties = block?.properties || {};
+  const id = block?.id || "intro-block";
 
   // Configuração padrão baseada no JSON
   const introStep =
@@ -92,17 +67,13 @@ export const IntroBlock: React.FC<IntroBlockProps> = ({
     opacity: backgroundOpacity / 100,
     padding: "32px",
     minHeight: "600px",
-    ...style,
   };
 
   const handleInputChange = (value: string) => {
     setUserName(value);
 
-    if (onUpdate) {
-      onUpdate(id, {
-        ...properties,
-        userInput: value,
-      });
+    if (onPropertyChange) {
+      onPropertyChange("userInput", value);
     }
   };
 
@@ -110,12 +81,9 @@ export const IntroBlock: React.FC<IntroBlockProps> = ({
     if (isValid) {
       console.log("✅ Usuário válido:", userName);
       // Aqui seria implementada a lógica de navegação
-      if (onUpdate) {
-        onUpdate(id, {
-          ...properties,
-          userInput: userName,
-          completed: true,
-        });
+      if (onPropertyChange) {
+        onPropertyChange("userInput", userName);
+        onPropertyChange("completed", true);
       }
     }
   };

@@ -131,7 +131,8 @@ export type BlockType =
   | "legal-notice-inline"
   | "animation-block"
   | "options-grid"
-  | "quiz-intro-header";
+  | "quiz-intro-header"
+  | "step01-intro";
 
 export interface FAQItem {
   id: string;
