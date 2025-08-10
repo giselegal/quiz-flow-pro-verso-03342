@@ -1,0 +1,23 @@
+{
+  "name": "Quiz Quest Challenge Verse - Gisele Galvão",
+  "short_name": "Quiz Quest",
+  "description": "Plataforma completa de quizzes interativos para engajamento e aprendizado",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f3ef",
+  "theme_color": "#4F46E5",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_192,h_192,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://res.cloudinary.com/dqljyf76t/image/upload/c_fit,w_512,h_512,f_png/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
