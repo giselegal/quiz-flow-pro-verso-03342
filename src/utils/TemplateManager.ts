@@ -1,5 +1,6 @@
-import type { Block } from "@/types/editor";
-import { TemplateJsonLoader } from "@/utils/TemplateJsonLoader";
+// Update the import path below to the correct relative path if needed
+import type { Block } from "../types/editor";
+import { TemplateJsonLoader } from "./TemplateJsonLoader";
 
 /**
  * Mapeamento de etapas para templates JSON

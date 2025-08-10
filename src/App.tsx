@@ -108,37 +108,121 @@ function App() {
                 </Route>
 
                 {/* Debug/Test Routes */}
-                <Route path="/debug/editor" component={DebugEditorContext} />
-                <Route path="/test/properties" component={TestPropertiesPanel} />
-                <Route path="/test/button" component={TestButton} />
-                <Route path="/test/options" component={TestOptionsRendering} />
-                <Route path="/debug/step02">
+                <Route path="/debug/editor">
                   {() => (
-                    <ErrorBoundary>
-                      <EditorProvider>
-                        <DebugStep02 />
-                      </EditorProvider>
-                    </ErrorBoundary>
+                    <Suspense fallback={<PageLoading />}>
+                      <DebugEditorContext />
+                    </Suspense>
                   )}
                 </Route>
-                <Route path="/test/step02-direct" component={TestStep02Direct} />
-                <Route path="/test/all-templates" component={TestAllTemplates} />
+                <Route path="/test/properties">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestPropertiesPanel />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/button">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestButton />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/options">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestOptionsRendering />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/debug/step02">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <DebugStep02 />
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/step02-direct">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestStep02Direct />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/all-templates">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestAllTemplates />
+                    </Suspense>
+                  )}
+                </Route>
 
                 {/* Admin Routes */}
                 <Route path="/admin" nest>
-                  <DashboardPage />
+                  <Suspense fallback={<PageLoading />}>
+                    <DashboardPage />
+                  </Suspense>
                 </Route>
-                <Route path="/admin/migrate" component={MigrationPanel} />
+                <Route path="/admin/migrate">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <MigrationPanel />
+                    </Suspense>
+                  )}
+                </Route>
 
                 {/* Public Routes */}
-                <Route path="/" component={Home} />
-                <Route path="/quiz/:id" component={QuizPageUser} />
-                <Route path="/resultado/:resultId" component={ResultPage} />
-                <Route path="/auth" component={AuthPage} />
+                <Route path="/">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <Home />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/quiz/:id">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizPageUser />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/resultado/:resultId">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ResultPage />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/auth">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <AuthPage />
+                    </Suspense>
+                  )}
+                </Route>
 
                 {/* Protected Routes */}
-                <ProtectedRoute path="/admin/funis" component={FunnelsPage} />
-                <ProtectedRoute path="/admin/resultados" component={ResultConfigPage} />
+                <ProtectedRoute 
+                  path="/admin/funis" 
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <FunnelsPage />
+                    </Suspense>
+                  )}
+                />
+                <ProtectedRoute 
+                  path="/admin/resultados" 
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ResultConfigPage />
+                    </Suspense>
+                  )}
+                />
               </Switch>
               <Toaster />
             </div>
