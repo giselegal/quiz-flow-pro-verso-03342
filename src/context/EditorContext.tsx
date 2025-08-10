@@ -1,5 +1,6 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
+import { TemplateManager } from "@/utils/TemplateManager";
 import { EditorBlock, FunnelStage } from "@/types/editor";
 import React, {
   createContext,
@@ -208,6 +209,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [activeStageId, setActiveStageId] = useState<string>("step-1");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
+  // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
+  useEffect(() => {
+    console.log("🚀 EditorProvider: Iniciando pré-carregamento de templates JSON");
+    TemplateManager.preloadCommonTemplates()
+      .then(() => {
+        console.log("✅ Templates JSON pré-carregados com sucesso");
+      })
+      .catch(error => {
+        console.warn("⚠️ Erro no pré-carregamento de templates JSON:", error);
+      });
+  }, []);
+
   // ═══════════════════════════════════════════════
   // 🎨 UI STATE
   // ═══════════════════════════════════════════════
@@ -244,25 +257,40 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // 🎯 STAGE ACTIONS (GERENCIAMENTO DE ETAPAS)
   // ═══════════════════════════════════════════════
 
-  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE (DIRETO - SEM ADAPTER)
+  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE JSON (SISTEMA HÍBRIDO)
   const loadStageTemplate = useCallback(
-    (stageId: string) => {
+    async (stageId: string) => {
       const stage = stages.find(s => s.id === stageId);
       if (!stage) return;
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
 
-      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
+      console.log(`🎨 EditorContext: Carregando template JSON para etapa ${stepNumber}`);
 
       try {
-        // ✅ CARREGAR DIRETAMENTE DO TEMPLATE
-        const templateBlocks = getStepTemplate(stepNumber);
-        console.log(`📦 Template blocks recebidos:`, templateBlocks?.length || 0, templateBlocks);
+        // 🚀 PRIORIZAR SISTEMA JSON
+        let templateBlocks;
+        
+        try {
+          console.log(`📄 Tentando carregar template JSON para step-${stepNumber}`);
+          templateBlocks = await TemplateManager.loadStepBlocks(stageId);
+          console.log(`✅ Template JSON carregado:`, templateBlocks?.length || 0, "blocos");
+        } catch (jsonError) {
+          console.warn(`⚠️ JSON template falhou, usando TSX fallback:`, jsonError);
+          // FALLBACK: usar sistema TSX antigo
+          templateBlocks = getStepTemplate(stepNumber);
+          console.log(`📦 Template TSX fallback:`, templateBlocks?.length || 0, "blocos");
+        }
 
         if (templateBlocks && templateBlocks.length > 0) {
           const editorBlocks: EditorBlock[] = templateBlocks.map(
             (block: { id: any; type: any; properties: any; content: any }, index: number) => {
-              console.log(`🔧 Processando bloco ${index}:`, block);
+              console.log(`🔧 Processando bloco ${index}:`, {
+                id: block.id,
+                type: block.type,
+                hasProperties: !!block.properties,
+                hasContent: !!block.content
+              });
               return {
                 id: block.id || `${stageId}-block-${index + 1}`,
                 type: block.type as any,
@@ -296,7 +324,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           );
 
           console.log(
-            `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber}`
+            `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber} via JSON`
           );
         } else {
           console.warn(`⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`);
@@ -325,9 +353,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       console.log(`🔍 EditorContext: Etapa ${stageId} tem ${currentBlocks.length} blocos`);
 
       if (currentBlocks.length === 0) {
-        console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template...`);
-        // Executar imediatamente ao invés de timeout
-        loadStageTemplate(stageId);
+        console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template JSON...`);
+        // Executar carregamento assíncrono do template JSON
+        loadStageTemplate(stageId).catch(error => {
+          console.error(`❌ Erro ao carregar template para ${stageId}:`, error);
+        });
       } else {
         console.log(
           `📋 EditorContext: Etapa ${stageId} já tem blocos:`,

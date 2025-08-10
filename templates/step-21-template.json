@@ -1,0 +1,103 @@
+{
+  "templateVersion": "1.0",
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 1,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione pelo menos uma opção!"
+  },
+  "analytics": {
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
+    "trackingId": "step-21-offer"
+  },
+  "metadata": {
+    "id": "quiz-step-21",
+    "name": "Oferta Final",
+    "description": "Apresentação da oferta comercial",
+    "category": "offer",
+    "tags": [
+      "quiz",
+      "style",
+      "offer"
+    ],
+    "createdAt": "2025-08-10T03:21:08.535Z",
+    "updatedAt": "2025-08-10T03:21:08.535Z"
+  },
+  "blocks": [
+    {
+      "id": "step21-header",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "progressValue": 100,
+        "progressTotal": 100,
+        "showProgress": true,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-offer-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "OFERTA ESPECIAL PARA VOCÊ!",
+        "fontSize": "text-3xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-offer-card",
+      "type": "offer-card",
+      "position": 2,
+      "properties": {
+        "title": "Consultoria de Estilo Personalizada",
+        "originalPrice": "R$ 497",
+        "discountPrice": "R$ 297",
+        "description": "Consultoria completa com análise personalizada do seu estilo",
+        "features": [
+          "Análise completa",
+          "Guia personalizado",
+          "Suporte por 30 dias"
+        ],
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-cta-button",
+      "type": "button-inline",
+      "position": 3,
+      "properties": {
+        "text": "QUERO APROVEITAR ESTA OFERTA",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24
+      }
+    }
+  ]
+}

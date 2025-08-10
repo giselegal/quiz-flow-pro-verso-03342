@@ -10,7 +10,22 @@ const TEMPLATE_MAPPING = {
   "step-3": "/templates/step-03-template.json",
   "step-4": "/templates/step-04-template.json",
   "step-5": "/templates/step-05-template.json",
-  // ... adicionar mais conforme necessário
+  "step-6": "/templates/step-06-template.json",
+  "step-7": "/templates/step-07-template.json",
+  "step-8": "/templates/step-08-template.json",
+  "step-9": "/templates/step-09-template.json",
+  "step-10": "/templates/step-10-template.json",
+  "step-11": "/templates/step-11-template.json",
+  "step-12": "/templates/step-12-template.json",
+  "step-13": "/templates/step-13-template.json",
+  "step-14": "/templates/step-14-template.json",
+  "step-15": "/templates/step-15-template.json",
+  "step-16": "/templates/step-16-template.json",
+  "step-17": "/templates/step-17-template.json",
+  "step-18": "/templates/step-18-template.json",
+  "step-19": "/templates/step-19-template.json",
+  "step-20": "/templates/step-20-template.json",
+  "step-21": "/templates/step-21-template.json",
 } as const;
 
 /**
@@ -102,7 +117,12 @@ export class TemplateManager {
    * Pre-carrega templates mais usados
    */
   static async preloadCommonTemplates(): Promise<void> {
-    const commonSteps = ["step-1", "step-2", "step-3"];
+    const commonSteps = [
+      "step-1", "step-2", "step-3", "step-4", "step-5",
+      "step-6", "step-7", "step-8", "step-9", "step-10",
+      "step-11", "step-12", "step-13", "step-14", "step-15",
+      "step-16", "step-17", "step-18", "step-19", "step-20", "step-21"
+    ];
     
     console.log("🚀 Pre-carregando templates comuns...");
     
