@@ -51,145 +51,98 @@ export const getStep02Template = () => {
       },
     },
 
-    // 🎯 AGRUPAMENTO DE OPÇÕES OTIMIZADO (EDITÁVEL COMO BLOCO ÚNICO)
+    // 🎯 GRADE DE OPÇÕES INLINE (100% COMPATÍVEL COM EDITOR)
     {
       id: "step02-clothing-options",
-      type: "options-grid",
+      type: "options-grid",  // Agora usa OptionsGridInlineBlock
       properties: {
-        questionId: "q1",
+        // 📊 OPÇÕES (mesmo conteúdo, estrutura simplificada para inline)
         options: [
           {
             id: "1a",
             text: "Conforto, leveza e praticidade no vestir.",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
             value: "1a",
             category: "Natural",
-            styleCategory: "Natural",
-            keyword: "natural",
             points: 1,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            spacing: "small",
-            marginTop: 0,
-            marginBottom: 0,
           },
           {
-            id: "1b",
+            id: "1b", 
             text: "Discrição, caimento clássico e sobriedade.",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
             value: "1b",
             category: "Clássico",
-            styleCategory: "Clássico",
-            keyword: "classico",
             points: 2,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
           },
           {
             id: "1c",
             text: "Praticidade com um toque de estilo atual.",
-            value: "1c",
-            category: "Contemporâneo",
-            styleCategory: "Contemporâneo",
-            keyword: "contemporaneo",
-            points: 2,
             imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            value: "1c", 
+            category: "Contemporâneo",
+            points: 2,
           },
           {
             id: "1d",
             text: "Elegância refinada, moderna e sem exageros.",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
             value: "1d",
-            category: "Elegante",
-            styleCategory: "Elegante",
-            keyword: "elegante",
+            category: "Elegante", 
             points: 3,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
           },
           {
             id: "1e",
             text: "Delicadeza em tecidos suaves e fluidos.",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
             value: "1e",
             category: "Romântico",
-            styleCategory: "Romântico",
-            keyword: "romantico",
             points: 2,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
           },
           {
             id: "1f",
             text: "Sensualidade com destaque para o corpo.",
-            value: "1f",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            value: "1f", 
             category: "Sexy",
-            styleCategory: "Sexy",
-            keyword: "sexy",
             points: 3,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
           },
           {
             id: "1g",
             text: "Impacto visual com peças estruturadas e assimétricas.",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
             value: "1g",
             category: "Dramático",
-            styleCategory: "Dramático",
-            keyword: "dramatico",
             points: 3,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
           },
           {
             id: "1h",
             text: "Mix criativo com formas ousadas e originais.",
+            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
             value: "1h",
-            category: "Criativo",
-            styleCategory: "Criativo",
-            keyword: "criativo",
+            category: "Criativo", 
             points: 4,
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
           },
         ],
 
-        // 🎨 LAYOUT RESPONSIVO OTIMIZADO - 256x256px
-        columns: "2",
-        responsiveColumns: true,
-        gridGap: 8,
-
-        // 🖼️ CONTROLES DE IMAGEM OTIMIZADOS
+        // 🎨 LAYOUT E ESTILO (simplificado para inline)
+        columns: 2,
+        imageSize: 256,
         showImages: true,
-        imageSize: "256",
-        imagePosition: "top",
-        imageWidth: 256,
-        imageHeight: 256,
-
-        // 🎯 VALIDAÇÃO INTELIGENTE (1-3 SELEÇÕES)
+        
+        // 🎯 VALIDAÇÃO
         multipleSelection: true,
-        maxSelections: 3,
         minSelections: 1,
-        requiredSelections: 1,
+        maxSelections: 3,
+        
+        // 🎨 CORES
+        borderColor: "#E5E7EB",
+        selectedBorderColor: "#B89B7A", 
+        hoverColor: "#F3E8D3",
 
-        // 📝 FEEDBACK OTIMIZADO
-        validationMessage: "Selecione de 1 a 3 opções que representam você!",
-        progressMessage: "{selected} de {maxSelections} selecionados",
-
-        // 🚀 AUTO-ADVANCE CONFIGURÁVEL
-        autoAdvanceOnComplete: false,
-        autoAdvanceDelay: 0,
-        instantActivation: true,
-
-        // 🔘 ATIVAÇÃO INTELIGENTE DO BOTÃO
-        enableButtonOnlyWhenValid: true,
-        showValidationFeedback: true,
-
-        // 🎨 ESTILO VISUAL AVANÇADO
-        selectionStyle: "border",
-        selectedColor: "#B89B7A",
-        hoverColor: "#D4C2A8",
-
-        // 📊 UX MELHORADA
-        showSelectionCount: true,
-        allowDeselection: true,
-        trackSelectionOrder: true,
+        // 🎯 CONTAINER
+        containerWidth: "full",
+        spacing: "small",
+        marginBottom: 16,
       },
     },
 
