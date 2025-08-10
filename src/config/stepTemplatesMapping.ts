@@ -1,10 +1,13 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos
 
+// Test import para verificar se o alias está funcionando
+import type { FC } from 'react';
+
 // Importações dos templates de cada etapa (arquivos .tsx)
-import { getStep01Template } from "@/components/steps/Step01Template";
-import { getStep02Template } from "@/components/steps/Step02Template";
-import { getStep03Template } from "@/components/steps/Step03Template";
+import { getStep01Template } from "../components/steps/Step01Template";
+import { getStep02Template } from "../components/steps/Step02Template";
+import { getStep03Template } from "../components/steps/Step03Template";
 import { getStep04Template } from "@/components/steps/Step04Template";
 import { getStep05Template } from "@/components/steps/Step05Template";
 import { getStep06Template } from "@/components/steps/Step06Template";
