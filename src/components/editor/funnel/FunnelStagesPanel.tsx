@@ -129,7 +129,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   // Função para obter tipos únicos de componentes por etapa
   const getStageComponentTypes = (stageId: string) => {
     const blocks = getBlocksForStage(stageId);
-    const types = [...new Set(blocks.map(block => block.type))];
+    const typeSet = new Set(blocks.map(block => block.type));
+    const types = Array.from(typeSet);
     return types;
   };
 
@@ -230,13 +231,18 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
           <div className="space-y-2 p-4">
             {stages.map((stage, index) => {
               console.log("🚨 RENDERIZANDO STAGE:", stage.id, stage.name, "Order:", stage.order);
+              
+              // Obter componentes da etapa
+              const stageComponents = getStageComponents(stage.id);
+              const componentTypes = getStageComponentTypes(stage.id);
+              
               return (
                 <div
                   key={stage.id}
                   className={cn(
                     "group relative rounded-lg border-2 transition-all duration-200 cursor-pointer select-none",
                     "hover:border-brand/60 hover:shadow-lg active:scale-[0.95]",
-                    "min-h-[60px] bg-white",
+                    "min-h-[80px] bg-white",
                     // ✅ USAR activeStageId DO EDITORCONTEXT PARA HIGHLIGHT
                     activeStageId === stage.id
                       ? "border-brand bg-brand/10 shadow-md ring-2 ring-brand/30"
@@ -267,6 +273,40 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                           Etapa {stage.order}
                         </span>
                         <div style={{ color: '#6B4F43' }}>{stage.name}</div>
+                        
+                        {/* Mostrar componentes da etapa */}
+                        {stageComponents.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1 justify-center">
+                            <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                              <Layers className="h-3 w-3" />
+                              {stageComponents.length} componente{stageComponents.length !== 1 ? 's' : ''}
+                            </Badge>
+                          </div>
+                        )}
+                        
+                        {/* Lista de tipos de componentes */}
+                        {componentTypes.length > 0 && (
+                          <div className="mt-1 flex flex-wrap gap-1 justify-center max-w-full">
+                            {componentTypes.slice(0, 3).map((type, idx) => (
+                              <Badge 
+                                key={idx} 
+                                variant="outline" 
+                                className="text-xs px-1 py-0 h-5"
+                                style={{ fontSize: '10px' }}
+                              >
+                                {type.includes('step01') ? 'Intro' : 
+                                 type.includes('quiz') ? 'Quiz' : 
+                                 type.includes('header') ? 'Header' :
+                                 type.replace(/[-_]/g, ' ').substring(0, 8)}
+                              </Badge>
+                            ))}
+                            {componentTypes.length > 3 && (
+                              <Badge variant="outline" className="text-xs px-1 py-0 h-5" style={{ fontSize: '10px' }}>
+                                +{componentTypes.length - 3}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 
