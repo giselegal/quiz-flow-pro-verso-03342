@@ -57,18 +57,20 @@ export class TemplateManager {
       console.log(
         `🔄 Gerando blocos padrão para ${stepId} (TemplateJsonLoader removido)`
       );
-      
-      // Gera blocos básicos padrão 
+
+      // Gera blocos básicos padrão
       const blocks: Block[] = [
         {
           id: `${stepId}-default`,
           type: "text-inline",
-          position: 0,
+          content: {
+            text: `Conteúdo padrão para ${stepId}`,
+          },
+          order: 0,
           properties: {
-            content: `Conteúdo padrão para ${stepId}`,
-            className: "text-center"
-          }
-        }
+            className: "text-center",
+          },
+        },
       ];
 
       // Armazena no cache
@@ -174,7 +176,6 @@ export class TemplateManager {
    */
   static async reloadTemplate(stepId: string): Promise<Block[]> {
     this.cache.delete(stepId);
-    TemplateJsonLoader.clearCache();
     return this.loadStepBlocks(stepId);
   }
 
@@ -197,7 +198,6 @@ export class TemplateManager {
    */
   static clearCache(): void {
     this.cache.clear();
-    TemplateJsonLoader.clearCache();
   }
 }
 
