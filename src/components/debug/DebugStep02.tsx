@@ -3,6 +3,40 @@ import { getStep02Template } from "@/components/steps/Step02Template";
 import { useEditor } from "@/context/EditorContext";
 import React, { useEffect } from "react";
 
+// 🛡️ Helper para garantir props corretas
+const ensureOptionsProps = (props: any) => {
+  return {
+    question: props?.question || "",
+    description: props?.description || "",
+    options: props?.options || [],
+    requireOption: props?.requireOption || false,
+    autoAdvance: props?.autoAdvance || false,
+    autoAdvanceDelay: props?.autoAdvanceDelay || 1000,
+    showCorrectAnswer: props?.showCorrectAnswer || false,
+    correctOptionIndex: props?.correctOptionIndex || 0,
+    useLetterOptions: props?.useLetterOptions || false,
+    optionsLayout: props?.optionsLayout || "grid",
+    optionsPerRow: props?.optionsPerRow || 2,
+    showOptionImages: props?.showOptionImages || true,
+    optionImageSize: props?.optionImageSize || "medium",
+    alignment: props?.alignment || "center",
+    optionStyle: props?.optionStyle || "card",
+    nextButtonText: props?.nextButtonText || "Próxima",
+    minSelections: props?.minSelections || 1,
+    maxSelections: props?.maxSelections || 1,
+    columns: props?.columns || 2,
+    layoutOrientation: props?.layoutOrientation || "vertical",
+    contentType: props?.contentType || "text-and-image",
+    showImages: props?.showImages !== false,
+    imagePosition: props?.imagePosition || "top",
+    imageSize: props?.imageSize || 120,
+    imageWidth: props?.imageWidth || 120,
+    imageHeight: props?.imageHeight || 120,
+    responsiveColumns: props?.responsiveColumns || { mobile: 1, tablet: 2, desktop: 2 },
+    ...props,
+  };
+};
+
 const DebugStep02: React.FC = () => {
   const {
     stageActions: { setActiveStage },
@@ -16,9 +50,11 @@ const DebugStep02: React.FC = () => {
   }, [setActiveStage]);
 
   const step02Blocks = getBlocksForStage("step-2");
-  const optionsGridBlock = step02Blocks.find(block => block.type === "options-grid");
+  const optionsGridBlock = step02Blocks.find(block => String(block.type) === "options-grid") as any;
   const step02Template = getStep02Template();
-  const templateOptionsGrid = step02Template.find(block => block.type === "options-grid");
+  const templateOptionsGrid = step02Template.find(
+    block => String(block.type) === "options-grid"
+  ) as any;
 
   console.log("🔍 DebugStep02 - Dados:", {
     activeStageId,
@@ -88,7 +124,8 @@ const DebugStep02: React.FC = () => {
           {optionsGridBlock ? (
             <QuizOptionsGridBlock
               id={optionsGridBlock.id}
-              properties={optionsGridBlock.properties}
+              type="options-grid"
+              properties={ensureOptionsProps(optionsGridBlock.properties)}
               onPropertyChange={(key, value) => {
                 console.log("Property changed:", key, value);
               }}
@@ -96,7 +133,8 @@ const DebugStep02: React.FC = () => {
           ) : templateOptionsGrid ? (
             <QuizOptionsGridBlock
               id="test-options-grid"
-              properties={templateOptionsGrid.properties}
+              type="options-grid"
+              properties={ensureOptionsProps(templateOptionsGrid.properties)}
               onPropertyChange={(key, value) => {
                 console.log("Property changed:", key, value);
               }}

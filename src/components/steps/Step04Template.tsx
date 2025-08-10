@@ -1,7 +1,4 @@
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 04
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 export const getStep04Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO

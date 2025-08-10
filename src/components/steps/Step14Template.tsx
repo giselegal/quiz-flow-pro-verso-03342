@@ -1,8 +1,5 @@
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 14
 import React from "react";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 
 export const getStep14Template = () => {
   return [

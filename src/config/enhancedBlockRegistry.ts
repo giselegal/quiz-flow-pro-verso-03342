@@ -1,4 +1,5 @@
-import { BlockDefinition } from "@/types/editor";
+import { BlockDefinition }import { EditorOptionsGridBlock } from "../components/blocks/quiz/EditorOptionsGridBlock";
+import { QuizOptionsGridBlock } from "../components/blocks/quiz/QuizOptionsGridBlock";from "@/types/editor";
 import { Heading, Image, Minus, MousePointer, Type } from "lucide-react";
 import React from "react";
 

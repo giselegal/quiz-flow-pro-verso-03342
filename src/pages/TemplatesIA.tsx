@@ -4,13 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { type FunnelTemplate } from "@/services/FunnelAIAgent";
-import { 
-  trackAIAgentStart, 
-  trackTemplateGenerated, 
-  trackHotmartClick, 
-  trackOfferView,
-  trackEmailCapture 
-} from "@/utils/analytics";
+import { trackAIAgentStart } from "@/utils/analytics";
 import { Bot, Check, Eye, Play, Sparkles, Wand2 } from "lucide-react";
 import React, { useState } from "react";
 import { useRouter } from "wouter";
@@ -501,7 +495,7 @@ const TemplatesIA: React.FC = () => {
       });
       return false;
     }
-    
+
     const template = getCurrentTemplate();
     if (!template) {
       toast({
@@ -513,7 +507,7 @@ const TemplatesIA: React.FC = () => {
     }
 
     // Track analytics
-    trackAIAgentStart();
+    trackAIAgentStart(getCurrentTemplate().meta.name);
     return true;
   };
 
