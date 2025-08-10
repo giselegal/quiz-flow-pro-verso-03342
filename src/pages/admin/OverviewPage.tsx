@@ -63,19 +63,21 @@ const OverviewPage: React.FC = () => {
       {/* Métricas Principais com design sofisticado */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total de Respostas */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-orange-100 hover:from-amber-100 hover:to-orange-200">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300" 
+              style={{ backgroundColor: '#FEFEFE', borderLeft: '4px solid #B89B7A' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-amber-800">Interações Totais</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold" style={{ color: '#432818' }}>Interações Totais</CardTitle>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                 style={{ backgroundColor: '#B89B7A' }}>
               <Users className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-amber-900 mb-1">12,847</div>
+            <div className="text-3xl font-bold mb-1" style={{ color: '#432818' }}>12,847</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+18.2%</span>
-              <span className="text-amber-700/80 ml-1">vs mês anterior</span>
+              <span className="ml-1" style={{ color: '#6B4F43' }}>vs mês anterior</span>
             </div>
             <div className="mt-3">
               <Progress value={78} className="h-2" />
