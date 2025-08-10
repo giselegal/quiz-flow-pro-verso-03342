@@ -1,8 +1,4 @@
 // 🎯 TEMPLATE DE BLOCOS DA ETAPA 18
-import React from "react";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
 
 export const getStep18Template = () => {
   return [
