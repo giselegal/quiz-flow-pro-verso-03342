@@ -336,7 +336,7 @@ export const getStep01Template = () => {
         // ✨ ESTILO E VARIANTE
         variant: "primary",
         size: "large",
-        
+
         // ✨ CORES TOTALMENTE EDITÁVEIS
         backgroundColor: "#B89B7A", // Cor principal do botão
         textColor: "#ffffff", // Cor do texto

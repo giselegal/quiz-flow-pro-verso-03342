@@ -1,9 +1,8 @@
-import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { Card } from "@/components/ui/card";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { useEditor } from "@/hooks/useEditor";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { ComponentsSidebar } from "../sidebar/ComponentsSidebar";
+import { StyleResult } from "@/types/quiz";
+import React from "react";
+import ComponentsSidebar from "../sidebar/ComponentsSidebar";
 import { PreviewPanel } from "./PreviewPanel";
 import { PropertiesPanel } from "./PropertiesPanel";
 
@@ -25,7 +24,7 @@ export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primarySty
         {/* Left Sidebar - Components */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
           <ComponentsSidebar
-            onComponentSelect={type => {
+            onComponentSelect={(type: string) => {
               const newId = addBlock(type);
               setSelectedComponent(newId);
             }}

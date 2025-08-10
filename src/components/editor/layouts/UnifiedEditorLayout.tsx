@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { ComponentsSidebar } from "../sidebar/ComponentsSidebar";
-import { EditorCanvas } from "../canvas/EditorCanvas";
-import PropertiesPanel from "../properties/PropertiesPanel";
 import { EditorProvider } from "@/context/EditorContext";
 import { useResultPageConfig } from "@/hooks/useResultPageConfig";
+import React, { useState } from "react";
+import { EditorCanvas } from "../canvas/EditorCanvas";
+import PropertiesPanel from "../properties/PropertiesPanel";
+import ComponentsSidebar from "../sidebar/ComponentsSidebar";
 
 interface UnifiedEditorLayoutProps {
   className?: string;
@@ -137,13 +137,13 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
           <TabsContent value="quiz" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p style={{ color: '#8B7355' }}>Quiz Editor - Em desenvolvimento</p>
+              <p style={{ color: "#8B7355" }}>Quiz Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
 
           <TabsContent value="sales" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p style={{ color: '#8B7355' }}>Sales Page Editor - Em desenvolvimento</p>
+              <p style={{ color: "#8B7355" }}>Sales Page Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
         </Tabs>

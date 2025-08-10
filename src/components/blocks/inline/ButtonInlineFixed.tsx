@@ -25,12 +25,12 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     // ✨ TEXTO E CONTEÚDO
     text = "Clique aqui",
     label = "",
-    
+
     // ✨ ESTILO E VARIANTE
     style = "primary",
     variant = "primary",
     size = "large",
-    
+
     // ✨ CORES EDITÁVEIS
     backgroundColor = "#B89B7A",
     textColor = "#ffffff",
@@ -38,27 +38,27 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     hoverBackgroundColor = "#aa6b5d",
     hoverTextColor = "#ffffff",
     focusColor = "#B89B7A",
-    
+
     // ✨ TAMANHO E LAYOUT RESPONSIVO
     fullWidth = true,
     width = "auto",
     height = "auto",
     minWidth = "120px",
     maxWidth = "none",
-    
+
     // ✨ TIPOGRAFIA EDITÁVEL
     fontSize = "text-lg",
-    fontWeight = "font-bold", 
+    fontWeight = "font-bold",
     fontFamily = "inherit",
     lineHeight = "1.5",
     letterSpacing = "normal",
     textTransform = "none",
-    
+
     // ✨ BORDAS E CANTOS ARREDONDADOS
     borderRadius = "rounded-full",
     borderWidth = "2px",
     borderStyle = "solid",
-    
+
     // ✨ ESPAÇAMENTO EDITÁVEL
     padding = "",
     paddingX = "",
@@ -67,13 +67,13 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     paddingBottom = "",
     paddingLeft = "",
     paddingRight = "",
-    
+
     // ✨ MARGENS EDITÁVEIS
     marginTop = 0,
     marginBottom = 0,
     marginLeft = 0,
     marginRight = 0,
-    
+
     // ✨ EFEITOS E SOMBRAS
     boxShadow = "shadow-lg",
     hoverEffect = true,
@@ -81,34 +81,34 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     glowEffect = false,
     gradientBackground = false,
     gradientColors = ["#B89B7A", "#aa6b5d"],
-    
+
     // ✨ COMPORTAMENTO E VALIDAÇÃO
     requiresValidInput = false,
     conditionalActivation = false,
     validationTarget = "name-input",
     disabled = false,
     loading = false,
-    
+
     // ✨ NAVEGAÇÃO E AÇÃO
     action = "custom",
     nextStep = "",
     targetUrl = "",
     openInNewTab = false,
     scrollToTop = true,
-    
+
     // ✨ RESPONSIVIDADE
     mobileFullWidth = true,
     mobileSize = "medium",
     mobileFontSize = "text-base",
     tabletSize = "large",
     desktopSize = "large",
-    
+
     // ✨ ANIMAÇÕES
     animationType = "none",
     animationDuration = "300ms",
     animationDelay = "0ms",
     transitionEasing = "ease-in-out",
-    
+
     // ✨ LAYOUT AVANÇADO
     textAlign = "text-center",
     justifyContent = "center",
@@ -116,7 +116,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     display = "flex",
     position = "relative",
     zIndex = "auto",
-    
+
     // ✨ ACESSIBILIDADE
     ariaLabel = "",
     title = "",
@@ -171,11 +171,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     // Listener para validação de input específico
     const handleInputValidation = (event: CustomEvent) => {
       const { blockId, value, valid } = event.detail;
-      
+
       // Verifica se é o input alvo da validação
       if (blockId === validationTarget || blockId.includes(validationTarget)) {
         const isValid = valid && value?.trim()?.length >= 2;
-        
+
         setButtonState({
           dynamicDisabled: !isValid,
           dynamicRequiresValidInput: !isValid,
@@ -192,12 +192,18 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     };
 
     if (conditionalActivation) {
-      window.addEventListener("step01-button-state-change", handleButtonStateChange as EventListener);
+      window.addEventListener(
+        "step01-button-state-change",
+        handleButtonStateChange as EventListener
+      );
       window.addEventListener("quiz-input-change", handleInputValidation as EventListener);
     }
 
     return () => {
-      window.removeEventListener("step01-button-state-change", handleButtonStateChange as EventListener);
+      window.removeEventListener(
+        "step01-button-state-change",
+        handleButtonStateChange as EventListener
+      );
       window.removeEventListener("quiz-input-change", handleInputValidation as EventListener);
     };
   }, [block?.id, conditionalActivation, validationTarget]);
@@ -208,7 +214,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   // ✨ CLASSES DE TAMANHO RESPONSIVAS E EDITÁVEIS
   const sizeClasses = {
     small: "px-3 py-2 text-sm",
-    medium: "px-6 py-3 text-base", 
+    medium: "px-6 py-3 text-base",
     large: "px-8 py-4 text-lg",
     xl: "px-10 py-5 text-xl",
     xxl: "px-12 py-6 text-2xl",
@@ -217,9 +223,13 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   // ✨ CLASSES RESPONSIVAS BASEADAS NAS PROPRIEDADES
   const getResponsiveClasses = () => {
     const mobileClass = mobileSize ? sizeClasses[mobileSize as keyof typeof sizeClasses] : "";
-    const tabletClass = tabletSize ? `md:${sizeClasses[tabletSize as keyof typeof sizeClasses]}` : "";
-    const desktopClass = desktopSize ? `lg:${sizeClasses[desktopSize as keyof typeof sizeClasses]}` : "";
-    
+    const tabletClass = tabletSize
+      ? `md:${sizeClasses[tabletSize as keyof typeof sizeClasses]}`
+      : "";
+    const desktopClass = desktopSize
+      ? `lg:${sizeClasses[desktopSize as keyof typeof sizeClasses]}`
+      : "";
+
     return `${mobileClass} ${tabletClass} ${desktopClass}`.trim();
   };
 
@@ -228,16 +238,18 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     if (padding) return padding;
     if (paddingX && paddingY) return `${paddingX} ${paddingY}`;
     if (paddingTop || paddingBottom || paddingLeft || paddingRight) {
-      return `${paddingTop || ''} ${paddingRight || ''} ${paddingBottom || ''} ${paddingLeft || ''}`.trim();
+      return `${paddingTop || ""} ${paddingRight || ""} ${paddingBottom || ""} ${paddingLeft || ""}`.trim();
     }
-    return getResponsiveClasses() || sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large;
+    return (
+      getResponsiveClasses() || sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large
+    );
   };
 
   // ✨ BACKGROUND COM SUPORTE A GRADIENTE
   const getBackgroundStyle = () => {
     if (gradientBackground && gradientColors.length >= 2) {
       return {
-        background: `linear-gradient(135deg, ${gradientColors.join(', ')})`,
+        background: `linear-gradient(135deg, ${gradientColors.join(", ")})`,
       };
     }
     return {
@@ -267,9 +279,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
   };
 
   // ✅ LÓGICA DE DESABILITAÇÃO DINÂMICA E CONDICIONAL
-  const isButtonDisabled = disabled || 
-    loading || 
-    (conditionalActivation && (requiresValidInput || buttonState.dynamicDisabled || buttonState.dynamicRequiresValidInput));
+  const isButtonDisabled =
+    disabled ||
+    loading ||
+    (conditionalActivation &&
+      (requiresValidInput || buttonState.dynamicDisabled || buttonState.dynamicRequiresValidInput));
 
   // ✅ HANDLER DE CLIQUE COM NAVEGAÇÃO E AÇÕES
   const handleButtonClick = async () => {
@@ -293,9 +307,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           if (nextStep) {
             console.log("📝 Navegando para próxima etapa:", nextStep);
             // Disparar evento de navegação
-            window.dispatchEvent(new CustomEvent('quiz-navigate', {
-              detail: { step: nextStep, scrollToTop }
-            }));
+            window.dispatchEvent(
+              new CustomEvent("quiz-navigate", {
+                detail: { step: nextStep, scrollToTop },
+              })
+            );
           }
           break;
 
@@ -303,7 +319,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           if (targetUrl) {
             console.log("🌐 Navegando para URL:", targetUrl);
             if (openInNewTab) {
-              window.open(targetUrl, '_blank');
+              window.open(targetUrl, "_blank");
             } else {
               window.location.href = targetUrl;
             }
@@ -312,9 +328,11 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
 
         case "submit":
           console.log("📤 Enviando formulário/dados");
-          window.dispatchEvent(new CustomEvent('quiz-submit', {
-            detail: { buttonId: block?.id, step: nextStep }
-          }));
+          window.dispatchEvent(
+            new CustomEvent("quiz-submit", {
+              detail: { buttonId: block?.id, step: nextStep },
+            })
+          );
           break;
 
         case "custom":
@@ -328,7 +346,7 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
 
       // ✅ Scroll para o topo se configurado
       if (scrollToTop) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
       console.log("🎯 ButtonInline CTA clicado:", {
@@ -339,7 +357,6 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
         targetUrl,
         isButtonDisabled,
       });
-
     } catch (error) {
       console.error("❌ Erro ao executar ação do botão:", error);
     }
@@ -368,21 +385,21 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           // ✨ BASE STYLES
           "inline-flex items-center justify-center transition-all",
           "focus:outline-none focus:ring-4 focus:ring-opacity-50",
-          
+
           // ✨ TIPOGRAFIA EDITÁVEL
           fontSize || "text-lg",
           fontWeight || "font-bold",
           fontFamily !== "inherit" && `font-[${fontFamily}]`,
           letterSpacing !== "normal" && `tracking-${letterSpacing}`,
           textTransform !== "none" && textTransform,
-          
+
           // ✨ PADDING RESPONSIVO E CUSTOMIZÁVEL
           getPaddingClasses(),
 
           // ✨ LAYOUT RESPONSIVO
           fullWidth ? "w-full" : "w-auto",
           mobileFullWidth && "w-full md:w-auto",
-          
+
           // ✨ BORDAS E CANTOS ARREDONDADOS
           borderRadius || "rounded-lg",
           "border",
@@ -392,59 +409,59 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
           hoverEffect && !isButtonDisabled && "hover:shadow-xl hover:scale-105 active:scale-95",
           clickEffect && !isButtonDisabled && "active:scale-95",
           glowEffect && !isButtonDisabled && "hover:shadow-2xl hover:shadow-current/25",
-          
+
           // ✨ TRANSIÇÕES
-          `duration-${animationDuration?.replace('ms', '') || '300'}`,
-          transitionEasing && `ease-${transitionEasing.replace('ease-', '') || 'in-out'}`,
+          `duration-${animationDuration?.replace("ms", "") || "300"}`,
+          transitionEasing && `ease-${transitionEasing.replace("ease-", "") || "in-out"}`,
 
           // ✨ ESTADOS RESPONSIVOS
           isButtonDisabled && "opacity-50 cursor-not-allowed",
           loading && "cursor-wait",
-          
+
           // ✨ RESPONSIVIDADE MOBILE/TABLET/DESKTOP
-          mobileFontSize && `${mobileFontSize} md:${fontSize || 'text-lg'}`,
-          
+          mobileFontSize && `${mobileFontSize} md:${fontSize || "text-lg"}`,
+
           // ✨ HOVER EFFECTS - apenas se não estiver desabilitado
           !isButtonDisabled && "hover:brightness-110",
-          
+
           // ✨ FOCUS STYLES
           `focus:ring-[${focusColor}]`,
-          
+
           // ✨ POSITION E Z-INDEX
           position,
           zIndex !== "auto" && `z-${zIndex}`,
-          
+
           // ✨ CLASSES DE ALINHAMENTO
           textAlign,
           `justify-${justifyContent}`,
-          `items-${alignItems}`,
+          `items-${alignItems}`
         )}
         style={{
           // ✨ CORES CUSTOMIZÁVEIS
           ...getBackgroundStyle(),
           color: textColor,
           borderColor: borderColor,
-          
+
           // ✨ DIMENSÕES CUSTOMIZÁVEIS
           width: !fullWidth && width !== "auto" ? width : undefined,
           height: height !== "auto" ? height : undefined,
           minWidth: minWidth !== "120px" ? minWidth : undefined,
           maxWidth: maxWidth !== "none" ? maxWidth : undefined,
-          
+
           // ✨ TIPOGRAFIA AVANÇADA
           fontFamily: fontFamily !== "inherit" ? fontFamily : undefined,
           lineHeight: lineHeight !== "1.5" ? lineHeight : undefined,
-          
+
           // ✨ SOMBRAS CUSTOMIZÁVEIS
           boxShadow: boxShadow && !isButtonDisabled ? boxShadow : undefined,
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!isButtonDisabled && hoverBackgroundColor) {
             e.currentTarget.style.backgroundColor = hoverBackgroundColor;
             e.currentTarget.style.color = hoverTextColor || textColor;
           }
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={e => {
           if (!isButtonDisabled) {
             e.currentTarget.style.backgroundColor = backgroundColor;
             e.currentTarget.style.color = textColor;

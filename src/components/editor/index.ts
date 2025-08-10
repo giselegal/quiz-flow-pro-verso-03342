@@ -7,7 +7,7 @@
 export { default as ComponentList } from "./ComponentList";
 export { default as PageEditorCanvas } from "./PageEditorCanvas";
 export { default as QuizEditorSteps } from "./QuizEditorSteps";
-// export { default as SchemaDrivenEditorResponsive } from "./SchemaDrivenEditorResponsive";
+export { default as SchemaDrivenEditorResponsive } from "./SchemaDrivenEditorResponsive";
 
 // Componentes com named exports
 export { AddBlockButton } from "./AddBlockButton";
