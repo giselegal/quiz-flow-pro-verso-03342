@@ -1,12 +1,12 @@
+import type { Session } from "@supabase/supabase-js";
 import React, {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 import { supabase } from "../integrations/supabase/client";
-import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
 interface User {
   id: string;

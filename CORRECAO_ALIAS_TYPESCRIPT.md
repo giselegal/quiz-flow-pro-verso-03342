@@ -1,6 +1,7 @@
 # 🔧 CORREÇÃO DOS ALIAS @ - TYPESCRIPT E VITE
 
 ## 🚨 PROBLEMA IDENTIFICADO
+
 - Símbolos `@` marcados em vermelho
 - Import analysis falhou para `@/components/steps/Step01Template`
 - Alias `@` não reconhecido pelo sistema
@@ -8,6 +9,7 @@
 ## ✅ CORREÇÕES APLICADAS
 
 ### 1. **Criado tsconfig.json na raiz**
+
 ```json
 {
   "compilerOptions": {
@@ -27,6 +29,7 @@
 ```
 
 ### 2. **Criado tsconfig.node.json**
+
 ```json
 {
   "compilerOptions": {
@@ -38,6 +41,7 @@
 ```
 
 ### 3. **Expandido aliases no vite.config.ts**
+
 ```typescript
 resolve: {
   alias: {
@@ -55,6 +59,7 @@ resolve: {
 ```
 
 ### 4. **Criado vite-env.d.ts na raiz**
+
 Arquivo de declarações TypeScript para reconhecimento global
 
 ## 🔄 PRÓXIMOS PASSOS
@@ -66,6 +71,7 @@ Arquivo de declarações TypeScript para reconhecimento global
 ## 📊 VERIFICAÇÃO
 
 Após as correções, os seguintes imports devem funcionar:
+
 - ✅ `import { getStep01Template } from "@/components/steps/Step01Template"`
 - ✅ `import { useAuth } from "@/context/AuthContext"`
 - ✅ `import { Button } from "@/components/ui/button"`
@@ -78,4 +84,5 @@ Após as correções, os seguintes imports devem funcionar:
 - **Build**: Sem erros de resolução
 
 ---
-*Configurações aplicadas em: ${new Date().toLocaleString('pt-BR')}*
+
+_Configurações aplicadas em: ${new Date().toLocaleString('pt-BR')}_
