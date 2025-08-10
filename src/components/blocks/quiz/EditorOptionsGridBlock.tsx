@@ -6,16 +6,28 @@ import QuizOptionsGridBlock from "./QuizOptionsGridBlock";
  * Wrapper/Adaptador para o QuizOptionsGridBlock no contexto do Editor
  *
  * Resolve o desacoplamento de contrato onde:
- * - O Canvas envia `block` (via SortableBlockWrapper)
- * - Mas QuizOptionsGridBlock espera `propriedades`
+ * - O Canvas envia `block` (via SortableBlockWrapper)  
+ * - Mas QuizOptionsGridBlock espera `properties` + outros props
  *
  * Este componente faz a adaptação necessária.
  */
 export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
   block,
   onPropertyChange,
+  isSelected,
+  onClick,
+  className,
   ...otherProps
 }) => {
+  // 🔍 DEBUG: Log das propriedades recebidas
+  console.log("🔍 EditorOptionsGridBlock - props recebidas:", {
+    blockId: block.id,
+    blockType: block.type,
+    properties: block.properties,
+    hasOptions: !!block.properties?.options,
+    optionsLength: Array.isArray(block.properties?.options) ? block.properties.options.length : 0,
+  });
+
   // Adaptação: extrair propriedades do block e repassar
   const handlePropertyChange = (property: string, value: any) => {
     if (onPropertyChange) {
@@ -23,18 +35,22 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  // Garantir que as propriedades tenham pelo menos a estrutura mínima esperada
+  // Garantir que as propriedades tenham a estrutura correta
   const properties = {
-    options: [], // fallback para evitar erro de prop obrigatória
-    ...block.properties, // sobrescrever com as propriedades reais do block
-  } as any; // Type assertion para evitar conflitos de TypeScript
+    options: block.properties?.options || [],
+    ...block.properties,
+  } as any; // Type assertion para contornar TypeScript restritivo
 
+  // Passar as propriedades diretamente sem modificação
   return (
     <QuizOptionsGridBlock
       id={block.id}
       type={block.type || "options-grid"}
       properties={properties}
       onPropertyChange={handlePropertyChange}
+      isSelected={isSelected}
+      onClick={onClick}
+      className={className}
       {...otherProps}
     />
   );
