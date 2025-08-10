@@ -295,6 +295,97 @@ export const useUnifiedProperties = (
           ),
         ];
 
+      case "step01-intro":
+        return [
+          ...getUniversalProperties(),
+          // Conteúdo configurável
+          createProperty(
+            "title",
+            currentBlock?.properties?.title || "Bem-vindo ao Quiz",
+            PropertyType.TEXT,
+            "Título Principal",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "descriptionTop",
+            currentBlock?.properties?.descriptionTop || "",
+            PropertyType.TEXTAREA,
+            "Descrição Superior",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "descriptionBottom",
+            currentBlock?.properties?.descriptionBottom || "",
+            PropertyType.TEXTAREA,
+            "Descrição Inferior",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "imageIntro",
+            currentBlock?.properties?.imageIntro || "",
+            PropertyType.UPLOAD,
+            "Imagem de Introdução",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "inputLabel",
+            currentBlock?.properties?.inputLabel || "Seu Nome",
+            PropertyType.TEXT,
+            "Label do Input",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "inputPlaceholder",
+            currentBlock?.properties?.inputPlaceholder || "Digite aqui...",
+            PropertyType.TEXT,
+            "Placeholder do Input",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "buttonText",
+            currentBlock?.properties?.buttonText || "Continuar",
+            PropertyType.TEXT,
+            "Texto do Botão",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "privacyText",
+            currentBlock?.properties?.privacyText || "",
+            PropertyType.TEXTAREA,
+            "Texto de Privacidade",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "footerText",
+            currentBlock?.properties?.footerText || "",
+            PropertyType.TEXT,
+            "Texto do Rodapé",
+            PropertyCategory.CONTENT
+          ),
+          // Configurações visuais
+          createProperty(
+            "showImage",
+            currentBlock?.properties?.showImage !== false,
+            PropertyType.SWITCH,
+            "Mostrar Imagem",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "showInput",
+            currentBlock?.properties?.showInput !== false,
+            PropertyType.SWITCH,
+            "Mostrar Campo de Input",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "required",
+            currentBlock?.properties?.required !== false,
+            PropertyType.SWITCH,
+            "Campo Obrigatório",
+            PropertyCategory.BEHAVIOR
+          ),
+        ];
+
       case "image-display-inline":
         return [
           ...getUniversalProperties(),

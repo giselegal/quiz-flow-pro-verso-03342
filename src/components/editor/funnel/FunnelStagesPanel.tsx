@@ -1,10 +1,9 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor } from "@/context/EditorContext";
 import { cn } from "@/lib/utils";
-import { Copy, Eye, Layers, Loader2, Plus, Settings, Trash2 } from "lucide-react";
+import { Copy, Eye, Loader2, Plus, Settings, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface FunnelStagesPanelProps {
@@ -274,13 +273,13 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         </span>
                         <div style={{ color: "#6B4F43" }}>{stage.name}</div>
                       </div>
-                    </div>                    {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
+                    </div>{" "}
+                    {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
                     {activeStageId === stage.id && (
                       <div className="flex justify-center mt-2">
                         <div className="w-2 h-2 bg-brand rounded-full animate-pulse"></div>
                       </div>
                     )}
-
                     {/* Actions - Aparecem no hover */}
                     <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-2">
                       <Button
