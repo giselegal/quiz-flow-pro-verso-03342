@@ -11,6 +11,7 @@ import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
 import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
 import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
 import OptionsGridBlock from "@/components/editor/blocks/OptionsGridBlock";
+import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
 import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
 import QuizProgressBlock from "@/components/editor/blocks/QuizProgressBlock";
 import QuizResultsEditor from "@/components/editor/blocks/QuizResultsEditor";
@@ -1031,7 +1032,7 @@ export const blockDefinitions: BlockDefinition[] = [
     description: "Componente grade de opções com propriedades configuráveis completas",
     category: "Quiz",
     icon: Type,
-    component: OptionsGridBlock,
+    component: QuizOptionsGridBlock,
     properties: {
       question: {
         type: "textarea",
@@ -1147,9 +1148,115 @@ export const blockDefinitions: BlockDefinition[] = [
         ],
       },
       imageSize: {
-        type: "string",
-        default: "256px",
-        label: "Tamanho da Imagem",
+        type: "range",
+        default: 256,
+        label: "Tamanho da Imagem (px)",
+        min: 64,
+        max: 512,
+        step: 16,
+      },
+      imageWidth: {
+        type: "range",
+        default: 256,
+        label: "Largura da Imagem (px)",
+        min: 64,
+        max: 512,
+        step: 16,
+      },
+      imageHeight: {
+        type: "range",
+        default: 256,
+        label: "Altura da Imagem (px)",
+        min: 64,
+        max: 512,
+        step: 16,
+      },
+      // === CONFIGURAÇÕES DE LAYOUT ===
+      layoutOrientation: {
+        type: "select",
+        default: "vertical",
+        label: "Orientação do Layout",
+        options: [
+          { value: "vertical", label: "Vertical" },
+          { value: "horizontal", label: "Horizontal" },
+        ],
+      },
+      // === CONFIGURAÇÕES DE BORDAS E CORES ===
+      showBorders: {
+        type: "boolean",
+        default: true,
+        label: "Mostrar Bordas",
+      },
+      borderWidth: {
+        type: "range",
+        default: 2,
+        label: "Espessura da Borda (px)",
+        min: 0,
+        max: 8,
+        step: 1,
+      },
+      borderColor: {
+        type: "color",
+        default: "#E5E7EB",
+        label: "Cor da Borda",
+      },
+      selectedBorderColor: {
+        type: "color",
+        default: "#B89B7A",
+        label: "Cor da Borda (Selecionado)",
+      },
+      borderRadius: {
+        type: "range",
+        default: 8,
+        label: "Raio da Borda (px)",
+        min: 0,
+        max: 32,
+        step: 2,
+      },
+      // === CONFIGURAÇÕES DE SOMBRAS ===
+      showShadows: {
+        type: "boolean",
+        default: true,
+        label: "Mostrar Sombras",
+      },
+      shadowColor: {
+        type: "color",
+        default: "#00000020",
+        label: "Cor da Sombra",
+      },
+      selectedShadowColor: {
+        type: "color",
+        default: "#B89B7A40",
+        label: "Cor da Sombra (Selecionado)",
+      },
+      shadowIntensity: {
+        type: "range",
+        default: 3,
+        label: "Intensidade da Sombra",
+        min: 0,
+        max: 10,
+        step: 1,
+      },
+      // === CONFIGURAÇÕES DE CONTEÚDO ===
+      contentType: {
+        type: "select",
+        default: "text-and-image",
+        label: "Tipo de Conteúdo",
+        options: [
+          { value: "text-only", label: "Apenas Texto" },
+          { value: "image-only", label: "Apenas Imagem" },
+          { value: "text-and-image", label: "Texto e Imagem" },
+        ],
+      },
+      // === CONFIGURAÇÕES DE OPÇÕES (Lista Editável) ===
+      options: {
+        type: "array",
+        default: [
+          { text: "Opção 1", points: 1, category: "", imageUrl: "" },
+          { text: "Opção 2", points: 1, category: "", imageUrl: "" },
+        ],
+        label: "Lista de Opções",
+        description: "Configure as opções de resposta disponíveis",
       },
       validationMessage: {
         type: "string",
@@ -1234,7 +1341,36 @@ export const blockDefinitions: BlockDefinition[] = [
       hoverColor: "#D4C2A8",
       showImages: true,
       imagePosition: "top",
-      imageSize: "256px",
+      imageSize: 256,
+      imageWidth: 256,
+      imageHeight: 256,
+      layoutOrientation: "vertical",
+      showBorders: true,
+      borderWidth: 2,
+      borderColor: "#E5E7EB",
+      selectedBorderColor: "#B89B7A",
+      borderRadius: 8,
+      showShadows: true,
+      shadowColor: "#00000020",
+      selectedShadowColor: "#B89B7A40",
+      shadowIntensity: 3,
+      contentType: "text-and-image",
+      options: [
+        {
+          id: "option-1",
+          text: "Opção 1",
+          points: 1,
+          category: "categoria1",
+          imageUrl: "",
+        },
+        {
+          id: "option-2",
+          text: "Opção 2",
+          points: 1,
+          category: "categoria2",
+          imageUrl: "",
+        },
+      ],
       validationMessage: "Selecione uma opção",
       progressMessage: "{selected} de {maxSelections} selecionados",
       autoAdvanceOnComplete: false,

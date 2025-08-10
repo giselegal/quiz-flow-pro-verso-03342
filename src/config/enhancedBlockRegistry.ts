@@ -24,15 +24,14 @@ import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlin
 import TextInline from "../components/blocks/inline/TextInline";
 
 // Componentes Editor Blocks
+import QuizOptionsGridBlock from "../components/blocks/quiz/QuizOptionsGridBlock";
 import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
 import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
 import FormInputBlock from "../components/editor/blocks/FormInputBlock";
 import HeadingInlineBlock from "../components/editor/blocks/HeadingInlineBlock";
 import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
-import OptionsGridBlock from "../components/editor/blocks/OptionsGridBlock";
-import QuizOptionsGridBlock from "../components/blocks/quiz/QuizOptionsGridBlock";
-import QuizOptionBlock from "../components/editor/blocks/QuizOptionBlock";
 import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
+import QuizOptionBlock from "../components/editor/blocks/QuizOptionBlock";
 import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
 import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
 import SpacerInlineBlock from "../components/editor/blocks/SpacerInlineBlock";

@@ -9,6 +9,26 @@ import {
   QuestionOption,
 } from "./types";
 
+// Interface para estilos customizados
+interface CustomStyles {
+  optionStyles?: React.CSSProperties;
+  gridGap?: string;
+  columns?: string;
+  imageWidth?: string;
+  imageHeight?: string;
+  layoutOrientation?: "vertical" | "horizontal";
+  columnsCount?: number;
+  borderWidth?: number;
+  borderColor?: string;
+  borderRadius?: number;
+  shadowBlur?: number;
+  shadowColor?: string;
+  shadowOffsetX?: number;
+  shadowOffsetY?: number;
+  imageSize?: number;
+  contentType?: "text-only" | "image-only" | "text-and-image";
+}
+
 /**
  * QuizQuestion - Componente de pergunta de quiz configurável
  *
@@ -64,6 +84,9 @@ export interface QuizQuestionProps extends BlockComponentProps, InteractionCallb
   // Valores iniciais
   initialSelections?: string[];
 
+  // === NOVAS PROPRIEDADES CUSTOMIZADAS ===
+  customStyles?: CustomStyles;
+
   // Callbacks específicos
   onAnswer?: (selectedOptions: QuestionOption[]) => void;
   onSelectionChange?: (selectedOptions: QuestionOption[]) => void;
@@ -104,6 +127,9 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
   // Valores iniciais
   initialSelections = [],
+
+  // Estilos customizados
+  customStyles,
 
   // Callbacks
   onAnswer,
@@ -165,6 +191,49 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   };
 
   // Manipular seleção de opção
+  // Estilos dinâmicos baseados nas propriedades customizadas
+  const containerStyles = React.useMemo(() => {
+    const baseStyles: React.CSSProperties = {
+      display: "grid",
+      gap: customStyles?.gridGap || "1rem",
+      gridTemplateColumns:
+        customStyles?.layoutOrientation === "horizontal"
+          ? `repeat(${customStyles?.columnsCount || 2}, 1fr)`
+          : "1fr",
+    };
+
+    // Aplicar bordas se configuradas
+    if (customStyles?.borderWidth && customStyles?.borderWidth > 0) {
+      baseStyles.border = `${customStyles.borderWidth}px solid ${customStyles?.borderColor || "#e2e8f0"}`;
+      if (customStyles?.borderRadius) {
+        baseStyles.borderRadius = `${customStyles.borderRadius}px`;
+      }
+    }
+
+    // Aplicar sombras se configuradas
+    if (customStyles?.shadowBlur && customStyles?.shadowBlur > 0) {
+      const shadowColor = customStyles?.shadowColor || "rgba(0, 0, 0, 0.1)";
+      baseStyles.boxShadow = `${customStyles?.shadowOffsetX || 0}px ${customStyles?.shadowOffsetY || 2}px ${customStyles.shadowBlur}px ${shadowColor}`;
+    }
+
+    return baseStyles;
+  }, [customStyles]);
+
+  // Estilos para itens individuais
+  const itemStyles = React.useMemo(() => {
+    const baseStyles: React.CSSProperties = {
+      cursor: "pointer",
+      transition: "all 0.2s ease",
+    };
+
+    // Tamanho da imagem se configurado
+    if (customStyles?.imageSize) {
+      baseStyles.minHeight = `${customStyles.imageSize + 40}px`; // +40px para padding/texto
+    }
+
+    return baseStyles;
+  }, [customStyles]);
+
   const handleOptionSelect = (optionId: string) => {
     let newSelections: string[];
 
@@ -249,6 +318,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
       <div
         key={option.id}
         className={optionClasses}
+        style={{ ...itemStyles, ...(customStyles?.optionStyles || {}) }}
         onClick={() => handleOptionSelect(option.id)}
         data-testid={`option-${option.id}`}
       >
@@ -287,33 +357,45 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           )}
 
           {/* Imagem da opção (se houver) */}
-          {option.imageUrl && (
+          {option.imageUrl && customStyles?.contentType !== "text-only" && (
             <div className="w-full mb-3">
               <img
                 src={option.imageUrl}
                 alt={option.text}
-                className={`w-full ${imageSizeClasses[(optionImageSize || "medium") as keyof typeof imageSizeClasses]} object-cover rounded-lg`}
+                className={`w-full object-cover rounded-lg`}
+                style={{
+                  width: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
+                  height: customStyles?.imageSize ? `${customStyles.imageSize}px` : undefined,
+                  maxWidth: "100%",
+                }}
                 loading="lazy"
               />
             </div>
           )}
 
           {/* Texto e letra em uma linha quando há imagem */}
-          <div className={option.imageUrl ? "flex items-center space-x-3" : "contents"}>
-            {/* Letra da opção */}
-            {showLetters && optionStyle === "card" && (
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                  isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                {letter}
-              </div>
-            )}
+          {customStyles?.contentType !== "image-only" && (
+            <div className={option.imageUrl ? "flex items-center space-x-3" : "contents"}>
+              {/* Letra da opção */}
+              {showLetters && optionStyle === "card" && (
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                    isSelected ? "bg-[#B89B7A] text-white" : "bg-gray-200 text-gray-600"
+                  }`}
+                >
+                  {letter}
+                </div>
+              )}
 
-            {/* Texto da opção */}
-            <span className="flex-1 text-left">{option.text}</span>
-          </div>
+              {/* Texto da opção */}
+              <span className="flex-1 text-left">{option.text}</span>
+
+              {/* Pontuação se disponível */}
+              {option.points && (
+                <span className="text-sm text-gray-500">{option.points} pontos</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -348,24 +430,29 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
       {/* Conteúdo Principal */}
       <div className="flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full">
         {/* Pergunta */}
-        <div className="mb-8">
-          <h2
-            className={`text-2xl md:text-3xl font-bold text-[#432818] mb-4 ${
-              alignment === "center"
-                ? "text-center"
-                : alignment === "right"
-                  ? "text-right"
-                  : "text-left"
-            }`}
-          >
-            {question}
-          </h2>
+        {question && question.trim() && (
+          <div className="mb-8">
+            <h2
+              className={`text-2xl md:text-3xl font-bold text-[#432818] mb-4 ${
+                alignment === "center"
+                  ? "text-center"
+                  : alignment === "right"
+                    ? "text-right"
+                    : "text-left"
+              }`}
+            >
+              {question}
+            </h2>
 
-          {description && <p className="text-lg text-gray-600 leading-relaxed">{description}</p>}
-        </div>
+            {description && <p className="text-lg text-gray-600 leading-relaxed">{description}</p>}
+          </div>
+        )}
 
         {/* Opções */}
-        <div className={`mb-8 ${layoutClasses[optionLayout as keyof typeof layoutClasses]}`}>
+        <div
+          className={`mb-8 ${layoutClasses[optionLayout as keyof typeof layoutClasses]}`}
+          style={containerStyles}
+        >
           {options.map((option, index) => renderOption(option, index))}
         </div>
 
