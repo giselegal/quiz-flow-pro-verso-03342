@@ -1,0 +1,167 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-21",
+    "name": "Resultado do Quiz",
+    "description": "Página de resultado final do quiz",
+    "category": "quiz-result",
+    "type": "result",
+    "tags": ["quiz", "result", "final", "gisele-galvao"],
+    "createdAt": "2025-08-10T03:45:03.511Z",
+    "updatedAt": "2025-08-10T03:45:03.511Z",
+    "author": "giselegal"
+  },
+  "design": {
+    "primaryColor": "#B89B7A",
+    "secondaryColor": "#432818",
+    "accentColor": "#aa6b5d",
+    "backgroundColor": "#FAF9F7",
+    "fontFamily": "'Playfair Display', 'Inter', serif"
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "responsive",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true
+  },
+  "blocks": [
+    {
+      "id": "step21-header",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "progressValue": 100,
+        "progressTotal": 100,
+        "showProgress": true,
+        "showBackButton": false,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-congratulations",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "🎉 Parabéns!",
+        "fontSize": "text-3xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-result-title",
+      "type": "text-inline",
+      "position": 2,
+      "properties": {
+        "content": "Seu Estilo Pessoal Foi Identificado",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-semibold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-result-description",
+      "type": "text-inline",
+      "position": 3,
+      "properties": {
+        "content": "Com base nas suas respostas, identificamos seu estilo único. Agora você pode descobrir as melhores peças e combinações para expressar sua personalidade através da moda.",
+        "fontSize": "text-lg",
+        "textAlign": "text-center",
+        "color": "#6B7280",
+        "marginBottom": 32,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-result-image",
+      "type": "image-display-inline",
+      "position": 4,
+      "properties": {
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/result_style.webp",
+        "alt": "Seu estilo pessoal",
+        "width": 400,
+        "height": 300,
+        "borderRadius": "16px",
+        "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginBottom": 24
+      }
+    },
+    {
+      "id": "step21-cta-button",
+      "type": "button-inline",
+      "position": 5,
+      "properties": {
+        "text": "Ver Meu Resultado Completo →",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+        "textColor": "#ffffff",
+        "borderRadius": "10px",
+        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+        "animation": "hover:scale-105, active:scale-95",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24
+      }
+    },
+    {
+      "id": "step21-share-button",
+      "type": "button-inline",
+      "position": 6,
+      "properties": {
+        "text": "Compartilhar Resultado",
+        "variant": "secondary",
+        "size": "medium",
+        "fullWidth": true,
+        "backgroundColor": "transparent",
+        "textColor": "#B89B7A",
+        "borderColor": "#B89B7A",
+        "borderWidth": "2px",
+        "borderRadius": "10px",
+        "animation": "hover:scale-105, active:scale-95",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 16
+      }
+    }
+  ],
+  "validation": {
+    "required": false
+  },
+  "analytics": {
+    "trackingId": "step-21-quiz-result",
+    "events": ["page_view", "interaction", "completion", "share"],
+    "utmParams": true,
+    "customEvents": ["result_view", "cta_click", "share_click"]
+  },
+  "logic": {
+    "navigation": {
+      "nextStep": null,
+      "prevStep": "step-20",
+      "allowBack": true,
+      "autoAdvance": false
+    },
+    "scoring": {
+      "enabled": false
+    },
+    "conditions": null
+  }
+}
