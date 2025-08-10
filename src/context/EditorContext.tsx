@@ -1,5 +1,5 @@
 // EditorDatabaseAdapter removed - using direct context state management
-import { STEP_TEMPLATES, getTemplateByStep, getTotalSteps } from "@/config/stepTemplatesMapping";
+import { getTemplateByStep, STEP_TEMPLATES } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
 import { TemplateManager } from "@/utils/TemplateManager";
 import React, {

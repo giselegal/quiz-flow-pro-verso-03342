@@ -22,6 +22,7 @@ import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
 // ✅ Importa painel específico do quiz
 import { QuizConfigurationPanel } from "@/components/editor/quiz/QuizConfigurationPanel";
 import { QuizHeaderPropertiesPanel } from "@/components/editor/quiz/QuizHeaderPropertiesPanel";
+import { IntroPropertiesPanel } from "@/components/steps/step01/IntroPropertiesPanel";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
@@ -449,6 +450,17 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
   const isQuizHeader =
     actualBlock?.type === "quiz-intro-header" || actualBlock?.component === "QuizIntroHeaderBlock";
+  const isIntroBlock =
+    actualBlock?.type === "step01-intro" || actualBlock?.component === "IntroBlock";
+
+  // Se for um bloco de introdução, mostrar o painel específico
+  if (isIntroBlock) {
+    return (
+      <div className="w-80 h-fit">
+        <IntroPropertiesPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
+      </div>
+    );
+  }
 
   // Se for um cabeçalho do quiz, mostrar o painel específico do cabeçalho
   if (isQuizHeader) {

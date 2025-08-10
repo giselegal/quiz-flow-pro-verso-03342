@@ -1,10 +1,10 @@
 // src/components/editor/quiz/QuizBlockRegistry.tsx
 // Registro e mapeamento dos blocos específicos do quiz
 
+import { IntroBlock } from "@/components/steps/step01/IntroBlock";
 import React from "react";
 import { QuizIntroHeaderBlock } from "./QuizIntroHeaderBlock";
 import { QuizQuestionBlock } from "./QuizQuestionBlock";
-import { IntroBlock } from "@/components/steps/step01/IntroBlock";
 
 // Mapeamento de componentes do quiz
 export const QUIZ_BLOCK_COMPONENTS = {

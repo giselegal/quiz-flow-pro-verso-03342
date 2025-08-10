@@ -153,6 +153,80 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       tags: [`quiz`, `header`, `cabeçalho`],
     };
 
+    // Criar o bloco de introdução da step 1
+    const introBlock: BlockDefinition = {
+      type: "step01-intro",
+      name: "Introdução - Step 1",
+      description: "Componente de introdução para a primeira etapa do quiz",
+      category: "Questões do Quiz",
+      icon: Type,
+      component: "IntroBlock" as any,
+      properties: {
+        enabled: {
+          type: "boolean" as const,
+          default: true,
+          label: "Habilitar Introdução",
+          description: "Ativar ou desativar o bloco de introdução",
+          category: "general" as const,
+        },
+        title: {
+          type: "string" as const,
+          default: "Bem-vindo ao Quiz de Estilo Pessoal",
+          label: "Título",
+          description: "Título principal da introdução",
+          category: "content" as const,
+        },
+        subtitle: {
+          type: "string" as const,
+          default: "Descubra seu estilo único",
+          label: "Subtítulo",
+          description: "Subtítulo descritivo",
+          category: "content" as const,
+        },
+        description: {
+          type: "textarea" as const,
+          default:
+            "Responda às perguntas a seguir para descobrir qual estilo combina mais com você.",
+          label: "Descrição",
+          description: "Texto explicativo do quiz",
+          category: "content" as const,
+        },
+        showImage: {
+          type: "boolean" as const,
+          default: true,
+          label: "Mostrar Imagem",
+          description: "Exibir imagem ilustrativa",
+          category: "content" as const,
+        },
+        scale: {
+          type: "range" as const,
+          default: 100,
+          label: "Escala",
+          description: "Tamanho geral do componente (50% - 110%)",
+          category: "layout" as const,
+          min: 50,
+          max: 110,
+        },
+      },
+      label: "Introdução - Step 1",
+      defaultProps: {
+        enabled: true,
+        title: "Bem-vindo ao Quiz de Estilo Pessoal",
+        subtitle: "Descubra seu estilo único",
+        description:
+          "Responda às perguntas a seguir para descobrir qual estilo combina mais com você.",
+        showImage: true,
+        imageUrl:
+          "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/intro-illustration.png",
+        imageAlt: "Quiz Illustration",
+        scale: 100,
+        alignment: "center",
+        backgroundColor: "transparent",
+        textColor: "#000000",
+      },
+      tags: [`quiz`, `intro`, `step-1`, `introdução`],
+    };
+
     // Depois, criar os blocos das etapas
     const stepBlocks = QUIZ_CONFIGURATION.steps.map((step, index) => ({
       type: `quiz-${step.type}`,
@@ -212,7 +286,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       tags: [`quiz`, `${step.type}`, `etapa-${index + 1}`],
     }));
 
-    return [headerBlock, ...stepBlocks];
+    return [headerBlock, introBlock, ...stepBlocks];
   };
 
   // Obter todas as definições de blocos do registry validado + blocos do quiz
@@ -261,6 +335,9 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       if (category === "Outros") {
         switch (block.type) {
           case "quiz-intro-header":
+            category = "Quiz";
+            break;
+          case "step01-intro":
             category = "Quiz";
             break;
           case "text-inline":
