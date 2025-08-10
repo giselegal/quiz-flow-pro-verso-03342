@@ -80,74 +80,80 @@ const OverviewPage: React.FC = () => {
               <span className="ml-1" style={{ color: '#6B4F43' }}>vs mês anterior</span>
             </div>
             <div className="mt-3">
-              <Progress value={78} className="h-2" />
-              <p className="text-xs text-amber-600/80 mt-1">78% da meta mensal</p>
+              <Progress value={78} className="h-2" style={{ backgroundColor: '#F3E8E6' }} />
+              <p className="text-xs mt-1" style={{ color: '#6B4F43' }}>78% da meta mensal</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Taxa de Conversão */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-orange-50 to-amber-100 hover:from-orange-100 hover:to-amber-200">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300" 
+              style={{ backgroundColor: '#FEFEFE', borderLeft: '4px solid #A88B6A' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-amber-800">Taxa de Conversão</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold" style={{ color: '#432818' }}>Taxa de Conversão</CardTitle>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                 style={{ backgroundColor: '#A88B6A' }}>
               <Target className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-amber-900 mb-1">34.8%</div>
+            <div className="text-3xl font-bold mb-1" style={{ color: '#432818' }}>34.8%</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+5.7%</span>
-              <span className="text-amber-700/80 ml-1">vs mês anterior</span>
+              <span className="ml-1" style={{ color: '#6B4F43' }}>vs mês anterior</span>
             </div>
             <div className="mt-3">
-              <Progress value={89} className="h-2" />
-              <p className="text-xs text-amber-600/80 mt-1">89% acima da média</p>
+              <Progress value={89} className="h-2" style={{ backgroundColor: '#F3E8E6' }} />
+              <p className="text-xs mt-1" style={{ color: '#6B4F43' }}>89% acima da média</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Receita Gerada */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-100 to-orange-200 hover:from-amber-200 hover:to-orange-300">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300" 
+              style={{ backgroundColor: '#FEFEFE', borderLeft: '4px solid #8B7355' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-amber-900">Receita Gerada</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-amber-600 to-orange-700 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold" style={{ color: '#432818' }}>Receita Gerada</CardTitle>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                 style={{ backgroundColor: '#8B7355' }}>
               <DollarSign className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-amber-900 mb-1">R$ 87.420</div>
+            <div className="text-3xl font-bold mb-1" style={{ color: '#432818' }}>R$ 87.420</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+24.5%</span>
-              <span className="text-amber-800/80 ml-1">vs mês anterior</span>
+              <span className="ml-1" style={{ color: '#6B4F43' }}>vs mês anterior</span>
             </div>
             <div className="mt-3">
-              <Progress value={92} className="h-2" />
-              <p className="text-xs text-amber-700/80 mt-1">92% da meta mensal</p>
+              <Progress value={92} className="h-2" style={{ backgroundColor: '#F3E8E6' }} />
+              <p className="text-xs mt-1" style={{ color: '#6B4F43' }}>92% da meta mensal</p>
             </div>
           </CardContent>
         </Card>
 
         {/* ROI Médio */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-orange-100 to-amber-200 hover:from-orange-200 hover:to-amber-300">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300" 
+              style={{ backgroundColor: '#FEFEFE', borderLeft: '4px solid #6B5B47' }}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-amber-900">ROI Médio</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-orange-600 to-amber-700 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold" style={{ color: '#432818' }}>ROI Médio</CardTitle>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                 style={{ backgroundColor: '#6B5B47' }}>
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-amber-900 mb-1">487%</div>
+            <div className="text-3xl font-bold mb-1" style={{ color: '#432818' }}>487%</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+31.2%</span>
-              <span className="text-amber-800/80 ml-1">vs mês anterior</span>
+              <span className="ml-1" style={{ color: '#6B4F43' }}>vs mês anterior</span>
             </div>
             <div className="mt-3">
-              <Progress value={95} className="h-2" />
-              <p className="text-xs text-amber-700/80 mt-1">Performance excepcional</p>
+              <Progress value={95} className="h-2" style={{ backgroundColor: '#F3E8E6' }} />
+              <p className="text-xs mt-1" style={{ color: '#6B4F43' }}>Performance excepcional</p>
             </div>
           </CardContent>
         </Card>
@@ -156,22 +162,23 @@ const OverviewPage: React.FC = () => {
       {/* Seção de Analytics Avançado */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Performance por Estilo */}
-        <Card className="border-0 shadow-lg overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
-            <CardTitle className="flex items-center gap-2 text-amber-900">
-              <BarChart3 className="h-5 w-5 text-amber-700" />
+        <Card className="border-0 shadow-lg overflow-hidden" style={{ backgroundColor: '#FEFEFE' }}>
+          <CardHeader style={{ backgroundColor: '#FAF9F7', borderBottom: '1px solid #E5DDD5' }}>
+            <CardTitle className="flex items-center gap-2" style={{ color: '#432818' }}>
+              <BarChart3 className="h-5 w-5" style={{ color: '#B89B7A' }} />
               Performance por Categoria
-              <Badge className="ml-auto bg-amber-100 text-amber-800 border-0">Tempo Real</Badge>
+              <Badge className="ml-auto border-0" style={{ backgroundColor: '#F3E8E6', color: '#432818' }}>Tempo Real</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
             {/* Estilo Elegante */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200/50">
+            <div className="flex items-center justify-between p-4 rounded-xl border" 
+                 style={{ backgroundColor: '#FAF9F7', borderColor: '#E5DDD5' }}>
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full"></div>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: '#B89B7A' }}></div>
                 <div>
-                  <div className="font-semibold text-amber-900">Estilo Elegante</div>
-                  <div className="text-sm text-amber-700">2,847 interações</div>
+                  <div className="font-semibold" style={{ color: '#432818' }}>Estilo Elegante</div>
+                  <div className="text-sm" style={{ color: '#6B4F43' }}>2,847 interações</div>
                 </div>
               </div>
               <div className="text-right">
