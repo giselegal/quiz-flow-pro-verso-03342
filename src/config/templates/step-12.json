@@ -1,14 +1,19 @@
 {
   "templateVersion": "2.0",
   "metadata": {
-    "id": "quiz-step-02",
-    "name": "Q1 - QUAL O SEU TIPO DE R",
-    "description": "Questão 1 de 13",
+    "id": "quiz-step-12",
+    "name": "Q11 - QUAL VISUAL VOC MAIS",
+    "description": "Questão 11 de 13",
     "category": "quiz-question",
     "type": "question",
-    "tags": ["quiz", "style", "quiz-question", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question",
+      "gisele-galvao"
+    ],
+    "createdAt": "2025-08-10T03:45:03.515Z",
+    "updatedAt": "2025-08-10T03:45:03.515Z",
     "author": "giselegal"
   },
   "design": {
@@ -64,14 +69,14 @@
   },
   "blocks": [
     {
-      "id": "step02-header",
+      "id": "step12-header",
       "type": "quiz-intro-header",
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 5,
+        "progressValue": 59,
         "progressTotal": 100,
         "showProgress": true,
         "showBackButton": true,
@@ -80,10 +85,10 @@
       }
     },
     {
-      "id": "step02-question-title",
+      "id": "step12-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -94,10 +99,10 @@
       }
     },
     {
-      "id": "step02-question-counter",
+      "id": "step12-question-counter",
       "type": "text-inline",
       "properties": {
-        "content": "Questão 1 de 13",
+        "content": "Questão 11 de 13",
         "fontSize": "text-sm",
         "textAlign": "text-center",
         "color": "#6B7280",
@@ -107,63 +112,63 @@
       }
     },
     {
-      "id": "step02-options-grid",
+      "id": "step12-options-grid",
       "type": "options-grid",
       "properties": {
         "options": [
           {
-            "id": "1a",
-            "text": "Conforto, leveza e praticidade no vestir.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            "id": "3a",
+            "text": "Visual leve, despojado e natural.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
             "styleCategory": "Natural",
             "points": 1
           },
           {
-            "id": "1b",
-            "text": "Discrição, caimento clássico e sobriedade.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "id": "3b",
+            "text": "Visual clássico e tradicional.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
             "styleCategory": "Clássico",
             "points": 2
           },
           {
-            "id": "1c",
-            "text": "Praticidade com um toque de estilo atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            "id": "3c",
+            "text": "Visual casual com toque atual.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
             "styleCategory": "Contemporâneo",
             "points": 2
           },
           {
-            "id": "1d",
-            "text": "Elegância refinada, moderna e sem exageros.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "id": "3d",
+            "text": "Visual refinado e imponente.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
             "styleCategory": "Elegante",
             "points": 3
           },
           {
-            "id": "1e",
-            "text": "Delicadeza em tecidos suaves e fluidos.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+            "id": "3e",
+            "text": "Visual romântico, feminino e delicado.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
             "styleCategory": "Romântico",
             "points": 2
           },
           {
-            "id": "1f",
-            "text": "Sensualidade com destaque para o corpo.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            "id": "3f",
+            "text": "Visual sensual, com saia justa e decote.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
             "styleCategory": "Sexy",
             "points": 3
           },
           {
-            "id": "1g",
-            "text": "Impacto visual com peças estruturadas e assimétricas.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+            "id": "3g",
+            "text": "Visual marcante e urbano (jeans + jaqueta).",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
             "styleCategory": "Dramático",
             "points": 3
           },
           {
-            "id": "1h",
-            "text": "Mix criativo com formas ousadas e originais.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+            "id": "3h",
+            "text": "Visual criativo, colorido e ousado.",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
             "styleCategory": "Criativo",
             "points": 4
           }
@@ -199,7 +204,7 @@
       }
     },
     {
-      "id": "step02-continue-button",
+      "id": "step12-continue-button",
       "type": "button-inline",
       "properties": {
         "text": "Próxima Questão →",
@@ -230,15 +235,20 @@
     "validationMessage": "Selecione 3 opções para avançar."
   },
   "analytics": {
-    "trackingId": "step-02-quiz-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "trackingId": "step-12-quiz-question",
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
     "utmParams": true,
     "customEvents": []
   },
   "logic": {
     "navigation": {
-      "nextStep": "step-03",
-      "prevStep": "step-01",
+      "nextStep": "step-13",
+      "prevStep": "step-11",
       "allowBack": true,
       "autoAdvance": false
     },

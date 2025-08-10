@@ -1,7 +1,6 @@
-import React from "react";
-import type { BlockComponentProps } from "@/types/blocks";
 import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
+import type { BlockComponentProps, BlockData } from "@/types/blocks";
+import React from "react";
 
 interface Props extends BlockComponentProps {
   block: BlockData;
@@ -9,6 +8,7 @@ interface Props extends BlockComponentProps {
   onUpdate?: (updates: Partial<BlockData>) => void;
   isSelected?: boolean;
   onSelect?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)

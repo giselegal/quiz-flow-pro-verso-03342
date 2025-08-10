@@ -38,6 +38,11 @@ import SpacerInlineBlock from "../components/editor/blocks/SpacerInlineBlock";
 import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
 import TextInlineBlock from "../components/editor/blocks/TextInlineBlock";
 
+// Novos componentes para o Quiz
+import BonusShowcaseBlock from "../components/blocks/inline/BonusShowcaseBlock";
+import LoadingAnimationBlock from "../components/blocks/inline/LoadingAnimationBlock";
+import ResultStyleCardBlock from "../components/blocks/inline/ResultStyleCardBlock";
+
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
@@ -73,6 +78,11 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "quiz-results": QuizResultsEditor,
   "style-results": StyleResultsEditor,
   "final-step": FinalStepEditor,
+
+  // Novos componentes Quiz
+  "result-style-card": ResultStyleCardBlock,
+  "bonus-showcase": BonusShowcaseBlock,
+  "loading-animation": LoadingAnimationBlock,
 
   // Legacy inline components (para compatibilidade)
   text: TextInline,

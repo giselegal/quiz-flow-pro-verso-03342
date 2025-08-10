@@ -1,14 +1,19 @@
 {
   "templateVersion": "2.0",
   "metadata": {
-    "id": "quiz-step-02",
-    "name": "Q1 - QUAL O SEU TIPO DE R",
-    "description": "Questão 1 de 13",
+    "id": "quiz-step-03",
+    "name": "Q2 - RESUMA A SUA PERSONA",
+    "description": "Questão 2 de 13",
     "category": "quiz-question",
     "type": "question",
-    "tags": ["quiz", "style", "quiz-question", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question",
+      "gisele-galvao"
+    ],
+    "createdAt": "2025-08-10T03:45:03.512Z",
+    "updatedAt": "2025-08-10T03:45:03.512Z",
     "author": "giselegal"
   },
   "design": {
@@ -64,14 +69,14 @@
   },
   "blocks": [
     {
-      "id": "step02-header",
+      "id": "step03-header",
       "type": "quiz-intro-header",
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 5,
+        "progressValue": 11,
         "progressTotal": 100,
         "showProgress": true,
         "showBackButton": true,
@@ -80,10 +85,10 @@
       }
     },
     {
-      "id": "step02-question-title",
+      "id": "step03-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+        "content": "RESUMA A SUA PERSONALIDADE:",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -94,10 +99,10 @@
       }
     },
     {
-      "id": "step02-question-counter",
+      "id": "step03-question-counter",
       "type": "text-inline",
       "properties": {
-        "content": "Questão 1 de 13",
+        "content": "Questão 2 de 13",
         "fontSize": "text-sm",
         "textAlign": "text-center",
         "color": "#6B7280",
@@ -107,70 +112,62 @@
       }
     },
     {
-      "id": "step02-options-grid",
+      "id": "step03-options-grid",
       "type": "options-grid",
       "properties": {
         "options": [
           {
-            "id": "1a",
-            "text": "Conforto, leveza e praticidade no vestir.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+            "id": "2a",
+            "text": "Informal, espontânea, alegre, essencialista.",
             "styleCategory": "Natural",
             "points": 1
           },
           {
-            "id": "1b",
-            "text": "Discrição, caimento clássico e sobriedade.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "id": "2b",
+            "text": "Conservadora, séria, organizada.",
             "styleCategory": "Clássico",
             "points": 2
           },
           {
-            "id": "1c",
-            "text": "Praticidade com um toque de estilo atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            "id": "2c",
+            "text": "Informada, ativa, prática.",
             "styleCategory": "Contemporâneo",
             "points": 2
           },
           {
-            "id": "1d",
-            "text": "Elegância refinada, moderna e sem exageros.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "id": "2d",
+            "text": "Exigente, sofisticada, seletiva.",
             "styleCategory": "Elegante",
             "points": 3
           },
           {
-            "id": "1e",
-            "text": "Delicadeza em tecidos suaves e fluidos.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+            "id": "2e",
+            "text": "Feminina, meiga, delicada, sensível.",
             "styleCategory": "Romântico",
             "points": 2
           },
           {
-            "id": "1f",
-            "text": "Sensualidade com destaque para o corpo.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            "id": "2f",
+            "text": "Glamorosa, vaidosa, sensual.",
             "styleCategory": "Sexy",
             "points": 3
           },
           {
-            "id": "1g",
-            "text": "Impacto visual com peças estruturadas e assimétricas.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+            "id": "2g",
+            "text": "Cosmopolita, moderna e audaciosa.",
             "styleCategory": "Dramático",
             "points": 3
           },
           {
-            "id": "1h",
-            "text": "Mix criativo com formas ousadas e originais.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+            "id": "2h",
+            "text": "Exótica, aventureira, livre.",
             "styleCategory": "Criativo",
             "points": 4
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
+        "columns": 1,
+        "imageSize": 0,
+        "showImages": false,
         "multipleSelection": true,
         "minSelections": 3,
         "maxSelections": 3,
@@ -199,7 +196,7 @@
       }
     },
     {
-      "id": "step02-continue-button",
+      "id": "step03-continue-button",
       "type": "button-inline",
       "properties": {
         "text": "Próxima Questão →",
@@ -230,15 +227,20 @@
     "validationMessage": "Selecione 3 opções para avançar."
   },
   "analytics": {
-    "trackingId": "step-02-quiz-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "trackingId": "step-03-quiz-question",
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
     "utmParams": true,
     "customEvents": []
   },
   "logic": {
     "navigation": {
-      "nextStep": "step-03",
-      "prevStep": "step-01",
+      "nextStep": "step-04",
+      "prevStep": "step-02",
       "allowBack": true,
       "autoAdvance": false
     },
