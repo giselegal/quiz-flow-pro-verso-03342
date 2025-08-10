@@ -160,6 +160,15 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
 
   const options = parseOptions(properties?.options || []);
 
+  // LOG DE DEBUG - vamos ver o que está acontecendo
+  console.log("🔍 QuizOptionsGridBlock DEBUG:", {
+    id,
+    propertiesOptions: properties?.options,
+    optionsLength: options?.length,
+    firstOption: options?.[0],
+    properties: Object.keys(properties || {}),
+  });
+
   // Determinar o número mínimo de seleções com base nas propriedades
   // Por padrão são 3 opções obrigatórias conforme requisito
   const minSelections = properties?.minSelections || 3;

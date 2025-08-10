@@ -146,6 +146,15 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
   testId = "quiz-question",
   ...props
 }) => {
+  // LOG DE DEBUG - verificar se as opções estão chegando
+  console.log("🔍 QuizQuestion DEBUG:", {
+    question,
+    optionsLength: options?.length,
+    firstOption: options?.[0],
+    multipleSelection,
+    showNextButton,
+  });
+
   const [selectedOptionIds, setSelectedOptionIds] = useState<string[]>(initialSelections);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
