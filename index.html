@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!</title>
+    <meta
+      property="og:title"
+      content="Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!"
+    />
+    <meta
+      property="og:description"
+      content="Cansada do guarda-roupa lotado e nada combina? Faça o quiz da Gisele Galvão e descubra seu estilo com clareza e confiança. Resultado imediato!"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://giselegalvao.com.br/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Descubra Seu Estilo com Gisele Galvão | Vista-se de Você!"
+    />
+
+    <!-- Facebook Pixel será carregado dinamicamente via React -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      // Pixel ID será inicializado dinamicamente baseado na rota
+    </script>
+
+    <!-- Preload da imagem LCP -->
+    <link
+      rel="preload"
+      href="https://res.cloudinary.com/dqljyf76t/image/upload/f_avif,q_60,w_345,c_limit,fl_progressive/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.avif"
+      as="image"
+      type="image/avif"
+      fetchpriority="high"
+      importance="high"
+    />
+
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://connect.facebook.net" crossorigin />
+    <link
+      rel="preconnect"
+      href="https://www.googletagmanager.com"
+      crossorigin
+    />
+
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://connect.facebook.net" />
+
+    <!-- Preload Playfair Display woff2 direto do Google Fonts para garantir swap e performance -->
+    <link
+      rel="preload"
+      as="font"
+      href="https://fonts.gstatic.com/s/playfairdisplay/v30/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYh2I.woff2"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicons/favicon-16x16.png"
+    />
+    <!-- Favicon padrão 16x16 -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicons/favicon-32x32.png"
+    />
+    <!-- Ícone do Windows Tile -->
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- fallback -->
+    <link
+      rel="shortcut icon"
+      href="/favicons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link rel="manifest" href="/favicons/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#B89B7A" />
+    <meta name="theme-color" content="#B89B7A" />
+    <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
+
+    <!-- Facebook Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      fbq("init", "1311550759901086");
+      fbq("track", "PageView");
+    </script>
+
+    <!-- Vite irá injetar os assets corretos no build -->
+    <script type="module" src="/src/main.tsx"></script>
+
+    <style>
+      .content-placeholder {
+        width: 100%;
+        max-width: 345px;
+        aspect-ratio: 1.47;
+        margin: 20px auto;
+        background-color: #f6f3ef;
+        border-radius: 0.5rem;
+      }
+      .js-loading {
+        opacity: 0;
+        transition: opacity 0.3s ease-in;
+      }
+      .will-animate {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      #root {
+        min-height: 100vh;
+        width: 100%;
+      }
+      .loading-fallback {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-color: #f9fafb;
+      }
+      .loading-spinner {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        border: 2px solid #e5e7eb;
+        border-top-color: #b29670;
+        animation: spin 0.8s linear infinite;
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .font-playfair {
+        font-family: "Playfair Display", serif;
+      }
+    </style>
+
+    <!-- Lovable Personalização/AB Test -->
+    <script src="https://cdn.lovable.dev/loader.js" async></script>
+  </head>
+  <body>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=&ev=PageView&noscript=1"
+    /></noscript>
+    <div id="root" class="js-loading">
+      <div class="loading-fallback">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+    <script>
+      document.getElementById("root")?.classList.remove("js-loading");
+    </script>
+  </body>
+</html>
