@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { useEditor } from "@/context/EditorContext";
 import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
 import { getStep02Template } from "@/components/steps/Step02Template";
+import { useEditor } from "@/context/EditorContext";
+import React, { useEffect } from "react";
 
 const DebugStep02: React.FC = () => {
-  const { 
+  const {
     stageActions: { setActiveStage },
     blockActions: { getBlocksForStage },
     activeStageId,
@@ -31,14 +31,21 @@ const DebugStep02: React.FC = () => {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Debug Step02 - Options Grid</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Dados do Editor Context</h2>
           <div className="bg-gray-100 p-4 rounded text-sm">
-            <p><strong>Etapa Ativa:</strong> {activeStageId}</p>
-            <p><strong>Blocos na Etapa 2:</strong> {step02Blocks.length}</p>
-            <p><strong>Options Grid Block:</strong> {optionsGridBlock ? "✅ Encontrado" : "❌ Não encontrado"}</p>
+            <p>
+              <strong>Etapa Ativa:</strong> {activeStageId}
+            </p>
+            <p>
+              <strong>Blocos na Etapa 2:</strong> {step02Blocks.length}
+            </p>
+            <p>
+              <strong>Options Grid Block:</strong>{" "}
+              {optionsGridBlock ? "✅ Encontrado" : "❌ Não encontrado"}
+            </p>
           </div>
 
           {optionsGridBlock && (
@@ -54,8 +61,13 @@ const DebugStep02: React.FC = () => {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Dados do Template</h2>
           <div className="bg-gray-100 p-4 rounded text-sm">
-            <p><strong>Template Blocos:</strong> {step02Template.length}</p>
-            <p><strong>Template Options Grid:</strong> {templateOptionsGrid ? "✅ Encontrado" : "❌ Não encontrado"}</p>
+            <p>
+              <strong>Template Blocos:</strong> {step02Template.length}
+            </p>
+            <p>
+              <strong>Template Options Grid:</strong>{" "}
+              {templateOptionsGrid ? "✅ Encontrado" : "❌ Não encontrado"}
+            </p>
           </div>
 
           {templateOptionsGrid && (

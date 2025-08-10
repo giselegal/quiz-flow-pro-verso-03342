@@ -4,16 +4,15 @@
  * Arquivo para debug de renderização das opções
  */
 
-import React from "react";
 import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
 import { getStep02Template } from "@/components/steps/Step02Template";
 
 const TestOptionsRendering = () => {
   console.log("🔍 TESTE: Iniciando teste de renderização de opções");
-  
+
   const step02Template = getStep02Template();
   const optionsBlock = step02Template.find(block => block.type === "options-grid");
-  
+
   console.log("🔍 TESTE: Bloco de opções encontrado:", optionsBlock);
   console.log("🔍 TESTE: Propriedades do bloco:", optionsBlock?.properties);
   console.log("🔍 TESTE: Opções específicas:", optionsBlock?.properties?.options);
@@ -24,7 +23,11 @@ const TestOptionsRendering = () => {
         <h2 className="text-red-800 font-bold">❌ ERRO: Bloco de opções não encontrado!</h2>
         <p className="text-red-600">Template Step02 não contém bloco options-grid</p>
         <pre className="mt-4 text-sm bg-red-100 p-2 rounded">
-          {JSON.stringify(step02Template.map(b => ({ id: b.id, type: b.type })), null, 2)}
+          {JSON.stringify(
+            step02Template.map(b => ({ id: b.id, type: b.type })),
+            null,
+            2
+          )}
         </pre>
       </div>
     );
@@ -35,10 +38,18 @@ const TestOptionsRendering = () => {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h2 className="text-blue-800 font-bold mb-2">🔍 DEBUG: Dados do Bloco</h2>
         <div className="text-sm space-y-2">
-          <p><strong>ID:</strong> {optionsBlock.id}</p>
-          <p><strong>Tipo:</strong> {optionsBlock.type}</p>
-          <p><strong>Número de opções:</strong> {optionsBlock.properties?.options?.length || 0}</p>
-          <p><strong>Primeira opção:</strong></p>
+          <p>
+            <strong>ID:</strong> {optionsBlock.id}
+          </p>
+          <p>
+            <strong>Tipo:</strong> {optionsBlock.type}
+          </p>
+          <p>
+            <strong>Número de opções:</strong> {optionsBlock.properties?.options?.length || 0}
+          </p>
+          <p>
+            <strong>Primeira opção:</strong>
+          </p>
           <pre className="bg-blue-100 p-2 rounded text-xs">
             {JSON.stringify(optionsBlock.properties?.options?.[0], null, 2)}
           </pre>

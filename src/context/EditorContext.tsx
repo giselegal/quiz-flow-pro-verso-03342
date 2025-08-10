@@ -153,12 +153,55 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   });
 
   const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
-    // ✅ INICIALIZAR BLOCOS VAZIOS PARA CADA ETAPA
+    // ✅ INICIALIZAR BLOCOS COM TEMPLATES ESPECÍFICOS PARA AS PRIMEIRAS ETAPAS
     const initialBlocks: Record<string, EditorBlock[]> = {};
+
+    // Carregar template especificamente para as primeiras etapas
     for (let i = 1; i <= 21; i++) {
-      initialBlocks[`step-${i}`] = [];
+      const stageId = `step-${i}`;
+
+      // Carregar template imediatamente para as primeiras etapas
+      if (i <= 3) {
+        try {
+          const templateBlocks = getStepTemplate(i);
+          console.log(
+            `🎨 Inicialização: Carregando template para etapa ${i}:`,
+            templateBlocks?.length || 0
+          );
+
+          if (templateBlocks && templateBlocks.length > 0) {
+            initialBlocks[stageId] = templateBlocks.map(
+              (block: { id: any; type: any; properties: any; content: any }, index: number) => {
+                console.log(
+                  `🔧 Inicialização: Processando bloco ${index} da etapa ${i}:`,
+                  block.type
+                );
+                return {
+                  id: block.id || `${stageId}-block-${index + 1}`,
+                  type: block.type as any,
+                  content: block.properties || block.content || {},
+                  order: index + 1,
+                  properties: block.properties || {},
+                };
+              }
+            );
+            console.log(
+              `✅ Inicialização: ${initialBlocks[stageId].length} blocos carregados para etapa ${i}`
+            );
+          } else {
+            console.warn(`⚠️ Inicialização: Nenhum template encontrado para etapa ${i}`);
+            initialBlocks[stageId] = [];
+          }
+        } catch (error) {
+          console.error(`❌ Inicialização: Erro ao carregar template da etapa ${i}:`, error);
+          initialBlocks[stageId] = [];
+        }
+      } else {
+        initialBlocks[stageId] = [];
+      }
     }
-    console.log("✅ EditorProvider: Blocos vazios inicializados para 21 etapas");
+
+    console.log("✅ EditorProvider: Blocos inicializados com templates das primeiras etapas");
     return initialBlocks;
   });
 
@@ -795,16 +838,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     console.log("📋 EditorContext: activeStageId:", activeStageId);
     console.log("📋 EditorContext: currentBlocks.length:", currentBlocks.length);
 
-    // Só carregar se a etapa ativa não tiver blocos
+    // Só carregar se a etapa ativa não tiver blocos (evitar sobrescrever blocos já carregados)
     if (activeStageId && currentBlocks.length === 0) {
       console.log(`🎨 EditorContext: Carregando template automaticamente para ${activeStageId}`);
       loadStageTemplate(activeStageId);
-    } else {
+    } else if (currentBlocks.length > 0) {
       console.log(
-        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentBlocks.length} blocos ou etapa inválida`
+        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentBlocks.length} blocos carregados - mantendo dados`
       );
+    } else {
+      console.log(`📋 EditorContext: Etapa ${activeStageId} inválida ou sem dados para carregar`);
     }
-  }, [activeStageId, currentBlocks.length, loadStageTemplate]);
+  }, [activeStageId]); // ✅ Remover currentBlocks.length das dependências para evitar loops
 
   // ═══════════════════════════════════════════════
   // 🎯 CONTEXT VALUE (INTERFACE COMPLETA)

@@ -128,14 +128,6 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
 
-  console.log("🎯 QuizOptionsGridBlock - RENDERIZANDO:", {
-    id,
-    properties: properties,
-    hasOptions: !!properties?.options,
-    optionsType: typeof properties?.options,
-    optionsLength: Array.isArray(properties?.options) ? properties?.options.length : 'não é array',
-  });
-
   // Extrair as opções - pode ser array de objetos ou string
   const parseOptions = (options: any) => {
     console.log("QuizOptionsGridBlock - parseOptions input:", options);
@@ -167,12 +159,6 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   };
 
   const options = parseOptions(properties?.options || []);
-
-  console.log("🎯 QuizOptionsGridBlock - APÓS PARSE:", {
-    parsedOptionsLength: options.length,
-    parsedOptions: options,
-    primeirosElementos: options.slice(0, 3),
-  });
 
   // Determinar o número mínimo de seleções com base nas propriedades
   // Por padrão são 3 opções obrigatórias conforme requisito

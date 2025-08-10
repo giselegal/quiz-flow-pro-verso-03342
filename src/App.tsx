@@ -1,4 +1,6 @@
 import ErrorBoundary from "@/components/common/ErrorBoundary";
+import DebugStep02 from "@/components/debug/DebugStep02";
+import TestOptionsRendering from "@/components/debug/TestOptionsRendering";
 import { Toaster } from "@/components/ui/toaster";
 import { AdminAuthProvider } from "@/context/AdminAuthContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -9,11 +11,10 @@ import EditorPage from "@/pages/editor-fixed";
 import TemplatesIA from "@/pages/TemplatesIA";
 import TestButton from "@/pages/test-button";
 import TestPropertiesPanel from "@/pages/test-properties";
-import TestOptionsRendering from "@/components/debug/TestOptionsRendering";
-import DebugStep02 from "@/components/debug/DebugStep02";
 import { Route, Router, Switch } from "wouter";
 import MigrationPanel from "./components/admin/MigrationPanel";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import PixelInitializer from "./components/PixelInitializer";
 import QuizPageUser from "./components/QuizPageUser";
 import DashboardPage from "./pages/admin/DashboardPage";
 import AuthPage from "./pages/AuthPage";
@@ -21,7 +22,6 @@ import FunnelsPage from "./pages/FunnelsPage";
 import Home from "./pages/Home";
 import { ResultConfigPage } from "./pages/ResultConfigPage";
 import ResultPage from "./pages/ResultPage";
-import PixelInitializer from "./components/PixelInitializer";
 
 function App() {
   console.log("🔧 DEBUG: App component iniciado");
