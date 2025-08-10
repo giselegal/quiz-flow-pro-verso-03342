@@ -1,7 +1,7 @@
 // EditorDatabaseAdapter removed - using direct context state management
-import { getTemplateByStep, STEP_TEMPLATES } from "@/config/stepTemplatesMapping";
-import { EditorBlock, FunnelStage } from "@/types/editor";
-import { TemplateManager } from "@/utils/TemplateManager";
+import { getTemplateByStep, STEP_TEMPLATES } from "../config/stepTemplatesMapping";
+import { EditorBlock, FunnelStage } from "../types/editor";
+import { TemplateManager } from "../utils/TemplateManager";
 import React, {
   createContext,
   ReactNode,
@@ -154,56 +154,94 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   });
 
   const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
-    // ✅ INICIALIZAR BLOCOS COM TEMPLATES ESPECÍFICOS PARA AS PRIMEIRAS ETAPAS
+    // ✅ INICIALIZAR BLOCOS VAZIOS - CARREGAR TEMPLATES JSON ASSÍNCRONO
     const initialBlocks: Record<string, EditorBlock[]> = {};
 
-    // Carregar template especificamente para as primeiras etapas
+    // Inicializar todas as etapas com arrays vazios
+    for (let i = 1; i <= 21; i++) {
+      const stageId = `step-${i}`;
+      initialBlocks[stageId] = [];
+    }
+
+    console.log("✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono");
+    return initialBlocks;
+  });
+
+  // ✅ EFEITO PARA CARREGAR TEMPLATES JSON ASSÍNCRONO
+  useEffect(() => {
+    const loadInitialTemplates = async () => {
+      console.log("🔄 EditorProvider: Iniciando carregamento de templates JSON...");
+      
+      // Carregar templates para as primeiras 3 etapas imediatamente
+      for (let i = 1; i <= 3; i++) {
+        const stageId = `step-${i}`;
+        
+        try {
+          console.log(`🔄 Carregando template JSON para ${stageId}...`);
+          const blocks = await TemplateManager.loadStepBlocks(stageId);
+          
+          if (blocks && blocks.length > 0) {
+            setStageBlocks(prev => ({
+              ...prev,
+              [stageId]: blocks.map((block, index) => ({
+                id: block.id || `${stageId}-block-${index + 1}`,
+                type: block.type,
+                content: block.content || block.properties || {},
+                order: index + 1,
+                properties: block.properties || block.content || {},
+              }))
+            }));
+            console.log(`✅ Template ${stageId} carregado: ${blocks.length} blocos`);
+          } else {
+            console.warn(`⚠️ Nenhum bloco encontrado para ${stageId}`);
+          }
+        } catch (error) {
+          console.error(`❌ Erro ao carregar ${stageId}:`, error);
+        }
+      }
+    };
+
+    loadInitialTemplates();
+  }, []); // Executar apenas uma vez na inicialização
+
+  const [stageBlocksLegacy] = useState<Record<string, EditorBlock[]>>(() => {
+    // ✅ SISTEMA LEGADO MANTIDO COMO FALLBACK
+    const legacyBlocks: Record<string, EditorBlock[]> = {};
+
+    // Carregar template legacy especificamente para as primeiras etapas como fallback
     for (let i = 1; i <= 21; i++) {
       const stageId = `step-${i}`;
 
-      // Carregar template imediatamente para as primeiras etapas
       if (i <= 3) {
         try {
           const templateBlocks = getTemplateByStep(i)?.templateFunction();
-          console.log(
-            `🎨 Inicialização: Carregando template para etapa ${i}:`,
-            templateBlocks?.length || 0
-          );
+          console.log(`🔄 Legacy: Carregando template para etapa ${i}:`, templateBlocks?.length || 0);
 
           if (templateBlocks && templateBlocks.length > 0) {
-            initialBlocks[stageId] = templateBlocks.map(
-              (block: { id: any; type: any; properties: any; content: any }, index: number) => {
-                console.log(
-                  `🔧 Inicialização: Processando bloco ${index} da etapa ${i}:`,
-                  block.type
-                );
-                return {
-                  id: block.id || `${stageId}-block-${index + 1}`,
-                  type: block.type as any,
-                  content: block.properties || block.content || {},
-                  order: index + 1,
-                  properties: block.properties || {},
-                };
-              }
+            legacyBlocks[stageId] = templateBlocks.map(
+              (block: { id: any; type: any; properties: any; content: any }, index: number) => ({
+                id: block.id || `${stageId}-legacy-block-${index + 1}`,
+                type: block.type as any,
+                content: block.properties || block.content || {},
+                order: index + 1,
+                properties: block.properties || {},
+              })
             );
-            console.log(
-              `✅ Inicialização: ${initialBlocks[stageId].length} blocos carregados para etapa ${i}`
-            );
+            console.log(`✅ Legacy: ${legacyBlocks[stageId].length} blocos carregados para etapa ${i}`);
           } else {
-            console.warn(`⚠️ Inicialização: Nenhum template encontrado para etapa ${i}`);
-            initialBlocks[stageId] = [];
+            legacyBlocks[stageId] = [];
           }
         } catch (error) {
-          console.error(`❌ Inicialização: Erro ao carregar template da etapa ${i}:`, error);
-          initialBlocks[stageId] = [];
+          console.error(`❌ Legacy: Erro ao carregar template da etapa ${i}:`, error);
+          legacyBlocks[stageId] = [];
         }
       } else {
-        initialBlocks[stageId] = [];
+        legacyBlocks[stageId] = [];
       }
     }
 
-    console.log("✅ EditorProvider: Blocos inicializados com templates das primeiras etapas");
-    return initialBlocks;
+    console.log("✅ EditorProvider: Sistema legacy inicializado como fallback");
+    return legacyBlocks;
   });
 
   const [activeStageId, setActiveStageId] = useState<string>("step-1");
