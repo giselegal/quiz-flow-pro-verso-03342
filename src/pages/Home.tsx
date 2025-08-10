@@ -4,14 +4,10 @@ import { useAuth } from "@/context/AuthContext";
 import {
   ArrowRight,
   BarChart3,
-  Heart,
   Layout,
-  MousePointer,
-  Sparkles,
   Target,
   TrendingUp,
   Users,
-  Zap,
 } from "lucide-react";
 import React, { useEffect } from "react";
 import { useLocation } from "wouter";
