@@ -137,10 +137,10 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
           <div className="mb-4">
             {option.originalPrice && option.originalPrice > option.currentPrice && (
               <div className="relative mb-2">
-                <span className="text-lg text-gray-500 line-through">
+                <span style={{ color: '#8B7355' }}>
                   {formatPrice(option.originalPrice)}
                 </span>
-                <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-red-500 transform -translate-y-1/2 -rotate-3"></div>
+                <div style={{ backgroundColor: '#FAF9F7' }}></div>
               </div>
             )}
             <div className="text-3xl font-bold text-[#aa6b5d]">
@@ -173,7 +173,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
             option.excludedFeatures.map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3 opacity-50">
                 <X className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-gray-500 line-through">{feature}</span>
+                <span style={{ color: '#8B7355' }}>{feature}</span>
               </div>
             ))}
         </div>
@@ -217,9 +217,9 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         {/* Table comparison - implementação simplificada */}
         <div className="max-w-full mx-auto">
           <div className="overflow-x-auto">
-            <div className="min-w-[800px] bg-white rounded-lg shadow-lg border border-gray-200">
+            <div style={{ borderColor: '#E5DDD5' }}>
               {/* Headers */}
-              <div className="grid grid-cols-4 gap-4 p-4 bg-gray-50 border-b">
+              <div style={{ backgroundColor: '#FAF9F7' }}>
                 <div className="font-semibold text-[#432818]">Recursos</div>
                 {priceOptions.slice(0, 3).map(option => (
                   <div key={option.id} className="text-center">

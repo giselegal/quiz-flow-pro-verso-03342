@@ -20,8 +20,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   if (!selectedBlock) {
     return (
-      <div className="h-full bg-white border-l border-gray-200 p-4 flex items-center justify-center">
-        <p className="text-gray-500">Selecione um bloco para editar suas propriedades</p>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <p style={{ color: '#8B7355' }}>Selecione um bloco para editar suas propriedades</p>
       </div>
     );
   }
@@ -37,8 +37,8 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   };
 
   return (
-    <div className="h-full bg-white border-l border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <h3 className="text-lg font-medium">Propriedades</h3>
         <Button variant="ghost" size="sm" onClick={onClose}>
           <X className="w-4 h-4" />
@@ -48,7 +48,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       <div className="flex-1 p-4 space-y-4 overflow-y-auto">
         <div>
           <Label htmlFor="block-type">Tipo</Label>
-          <Input id="block-type" value={selectedBlock.type} disabled className="bg-gray-50" />
+          <Input id="block-type" value={selectedBlock.type} disabled style={{ backgroundColor: '#FAF9F7' }} />
         </div>
 
         {selectedBlock.type === "text" && (
@@ -79,7 +79,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 id="heading-level"
                 value={selectedBlock.content?.level || "h2"}
                 onChange={e => handlePropertyChange("level", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                style={{ borderColor: '#E5DDD5' }}
               >
                 <option value="h1">H1</option>
                 <option value="h2">H2</option>
@@ -137,7 +137,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           </>
         )}
 
-        <div className="pt-4 border-t border-gray-200">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <Button
             variant="destructive"
             onClick={() => onDeleteBlock(selectedBlock.id)}

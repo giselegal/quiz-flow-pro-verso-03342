@@ -49,12 +49,12 @@ export function SortableItem({
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab text-gray-400 hover:text-gray-600"
+          style={{ color: '#6B4F43' }}
         >
           <GripVertical className="h-4 w-4" />
         </button>
 
-        <span className="text-xs text-gray-500 capitalize px-2">{component.type}</span>
+        <span style={{ color: '#8B7355' }}>{component.type}</span>
 
         <Button
           variant="ghost"
@@ -75,7 +75,7 @@ export function SortableItem({
             e.stopPropagation();
             onDelete();
           }}
-          className="h-6 w-6 p-0 text-red-500 hover:text-red-700 hover:bg-red-50"
+          style={{ color: '#432818' }}
         >
           <Trash2 className="h-3 w-3" />
         </Button>

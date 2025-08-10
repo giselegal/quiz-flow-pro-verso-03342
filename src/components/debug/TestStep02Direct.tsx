@@ -18,7 +18,7 @@ const TestStep02Direct: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">Teste Direto Step02</h1>
 
       <div className="space-y-4">
-        <div className="bg-blue-50 p-4 rounded">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <h2 className="font-bold">Template Data:</h2>
           <p>Total blocos: {step02Template.length}</p>
           <p>Options block encontrado: {optionsBlock ? "✅ Sim" : "❌ Não"}</p>
@@ -41,7 +41,7 @@ const TestStep02Direct: React.FC = () => {
         )}
 
         {optionsBlock?.properties?.options && (
-          <div className="bg-gray-50 p-4 rounded">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <h2 className="font-bold">Todas as Opções:</h2>
             <div className="grid grid-cols-2 gap-2 mt-2">
               {optionsBlock.properties.options.map((option: any, index: number) => (

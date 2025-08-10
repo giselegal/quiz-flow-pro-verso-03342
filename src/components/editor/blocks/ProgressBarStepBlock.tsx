@@ -79,12 +79,12 @@ const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
             <span className="text-sm font-medium text-[#432818]">
               Etapa {currentStep} de {totalSteps}
             </span>
-            <span className="text-sm text-gray-600">
+            <span style={{ color: '#6B4F43' }}>
               {Math.round((currentStep / totalSteps) * 100)}%
             </span>
           </div>
 
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
@@ -93,7 +93,7 @@ const ProgressBarStepBlock: React.FC<BlockComponentProps> = ({
         </div>
 
         {showLabels && (
-          <div className="flex justify-between text-xs text-gray-600">
+          <div style={{ color: '#6B4F43' }}>
             {(stepLabels || []).map((label: string, index: number) => (
               <span key={index} className={index < currentStep ? "text-[#B89B7A] font-medium" : ""}>
                 {label}

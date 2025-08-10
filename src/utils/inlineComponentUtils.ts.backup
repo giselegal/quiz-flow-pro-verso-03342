@@ -2,25 +2,18 @@ export const getPersonalizedText = (
   text: string,
   pattern: string,
   username: string,
-  useUsername: boolean,
+  useUsername: boolean
 ): string => {
   if (!useUsername || !username) return text;
   return pattern.replace("{{username}}", username);
 };
 
-export const trackComponentView = (
-  componentId: string,
-  componentType: string,
-) => {
+export const trackComponentView = (componentId: string, componentType: string) => {
   // Analytics tracking implementation
   console.log(`Component view: ${componentType} (${componentId})`);
 };
 
-export const trackComponentClick = (
-  componentId: string,
-  componentType: string,
-  action: string,
-) => {
+export const trackComponentClick = (componentId: string, componentType: string, action: string) => {
   // Analytics tracking implementation
   console.log(`Component click: ${componentType} (${componentId}) - ${action}`);
 };
@@ -28,12 +21,10 @@ export const trackComponentClick = (
 export const trackComponentConversion = (
   componentId: string,
   componentType: string,
-  value: number,
+  value: number
 ) => {
   // Conversion tracking implementation
-  console.log(
-    `Component conversion: ${componentType} (${componentId}) - Value: ${value}`,
-  );
+  console.log(`Component conversion: ${componentType} (${componentId}) - Value: ${value}`);
 };
 
 export const RESPONSIVE_PATTERNS = {
@@ -44,7 +35,7 @@ export const RESPONSIVE_PATTERNS = {
 
 export const getThemeClasses = (theme: string) => {
   const themes = {
-    primary: "bg-blue-500 text-white",
+    primary: "bg-[#B89B7A]/100 text-white",
     secondary: "bg-gray-500 text-white",
     brand: "bg-[#B89B7A] text-white",
   };

@@ -117,14 +117,14 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div className="space-y-2">
-                <div className="text-lg text-gray-600">12x de apenas</div>
+                <div style={{ color: '#6B4F43' }}>12x de apenas</div>
                 <div className="text-4xl md:text-5xl font-bold" style={{ color: accentColor }}>
                   {installmentPrice}
                 </div>
                 <div className="text-2xl font-semibold" style={{ color: textColor }}>
                   ou {fullPrice} à vista
                 </div>
-                <div className="text-lg text-gray-500 line-through">De {originalPrice}</div>
+                <div style={{ color: '#8B7355' }}>De {originalPrice}</div>
                 <div className="text-xl font-bold text-green-600">{savings}</div>
               </div>
             </CardHeader>
@@ -143,7 +143,7 @@ const QuizOfferPricingBlock: React.FC<BlockComponentProps> = ({
                           className="w-6 h-6 mt-0.5 flex-shrink-0"
                           style={{ color: accentColor }}
                         />
-                        <span className="text-gray-700">{benefit}</span>
+                        <span style={{ color: '#6B4F43' }}>{benefit}</span>
                       </div>
                     ))}
                   </div>

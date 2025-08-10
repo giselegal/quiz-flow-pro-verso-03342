@@ -71,7 +71,7 @@ const DebugStep02: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Dados do Editor Context</h2>
-          <div className="bg-gray-100 p-4 rounded text-sm">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <p>
               <strong>Etapa Ativa:</strong> {activeStageId}
             </p>
@@ -85,7 +85,7 @@ const DebugStep02: React.FC = () => {
           </div>
 
           {optionsGridBlock && (
-            <div className="bg-blue-50 p-4 rounded">
+            <div style={{ backgroundColor: '#FAF9F7' }}>
               <h3 className="font-semibold mb-2">Options Grid Block Properties</h3>
               <pre className="text-xs overflow-auto">
                 {JSON.stringify(optionsGridBlock.properties, null, 2)}
@@ -96,7 +96,7 @@ const DebugStep02: React.FC = () => {
 
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Dados do Template</h2>
-          <div className="bg-gray-100 p-4 rounded text-sm">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <p>
               <strong>Template Blocos:</strong> {step02Template.length}
             </p>
@@ -120,7 +120,7 @@ const DebugStep02: React.FC = () => {
       {/* Renderização Direta do QuizOptionsGridBlock */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Teste de Renderização Direta</h2>
-        <div className="border border-gray-300 p-6 rounded-lg">
+        <div style={{ borderColor: '#E5DDD5' }}>
           {optionsGridBlock ? (
             <QuizOptionsGridBlock
               id={optionsGridBlock.id}
@@ -140,7 +140,7 @@ const DebugStep02: React.FC = () => {
               }}
             />
           ) : (
-            <div className="text-red-500">❌ Nenhum Options Grid encontrado</div>
+            <div style={{ color: '#432818' }}>❌ Nenhum Options Grid encontrado</div>
           )}
         </div>
       </div>

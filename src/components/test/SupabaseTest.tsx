@@ -198,14 +198,14 @@ export const SupabaseTest: React.FC = () => {
             </Button>
           </div>
 
-          <div className="max-h-60 overflow-y-auto border rounded p-4 bg-gray-50">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             {results.map((result, index) => (
               <div key={index} className="text-sm font-mono">
                 {result}
               </div>
             ))}
             {results.length === 0 && (
-              <div className="text-gray-500 text-sm">
+              <div style={{ color: '#8B7355' }}>
                 Nenhum teste executado ainda. Clique nos botões acima para começar.
               </div>
             )}

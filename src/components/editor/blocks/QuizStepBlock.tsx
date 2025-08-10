@@ -465,7 +465,7 @@ const QuizStepBlock: React.FC<QuizStepBlockProps> = ({
 
             {/* Validation message */}
             {isRequired && isMultipleChoice && (
-              <div className="text-center mt-2 text-sm text-gray-600">
+              <div style={{ color: '#6B4F43' }}>
                 {minSelections === maxSelections
                   ? `Selecione ${minSelections} opções`
                   : `Selecione entre ${minSelections} e ${maxSelections} opções`}

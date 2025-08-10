@@ -146,7 +146,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                 type="button"
                 variant="ghost"
                 onClick={onDelete}
-                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                style={{ color: '#432818' }}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>

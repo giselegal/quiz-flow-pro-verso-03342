@@ -103,7 +103,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                     value === "transparent" ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300"
                   )}
                 >
-                  <span className="text-sm text-gray-600">Sem cor de fundo</span>
+                  <span style={{ color: '#6B4F43' }}>Sem cor de fundo</span>
                 </button>
               </div>
             )}
@@ -117,7 +117,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                   onChange(e.target.value);
                   setIsOpen(false);
                 }}
-                className="w-full h-10 rounded border border-gray-300 cursor-pointer"
+                style={{ borderColor: '#E5DDD5' }}
               />
             </div>
           </div>

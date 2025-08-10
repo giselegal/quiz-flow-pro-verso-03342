@@ -51,7 +51,7 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
         />
       </div>
 
-      <div className="flex justify-between text-xs text-gray-500">
+      <div style={{ color: '#8B7355' }}>
         <span>
           {min}
           {unit}

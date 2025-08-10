@@ -38,7 +38,7 @@ export const SimpleSortableItem: React.FC<SimpleSortableItemProps> = ({
       <div
         {...attributes}
         {...listeners}
-        className="cursor-grab hover:cursor-grabbing text-gray-400 hover:text-gray-600"
+        style={{ color: '#6B4F43' }}
       >
         <GripVertical className="w-4 h-4" />
       </div>

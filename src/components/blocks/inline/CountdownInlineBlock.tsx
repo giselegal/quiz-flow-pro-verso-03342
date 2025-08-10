@@ -80,7 +80,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
   // Safety check for block and properties
   if (!block) {
     console.warn("⚠️ CountdownInlineBlock: block is undefined");
-    return <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>;
+    return <div style={{ color: '#432818' }}>Error: Block not found</div>;
   }
 
   // Safe destructuring with fallbacks
@@ -198,7 +198,7 @@ const CountdownInlineBlock: React.FC<InlineBlockProps> = ({
           isSelected && "ring-2 ring-[#432818] ring-offset-2"
         )}
       >
-        <div className="text-lg font-medium text-gray-600">{expiredMessage}</div>
+        <div style={{ color: '#6B4F43' }}>{expiredMessage}</div>
       </div>
     );
   }

@@ -39,7 +39,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
         <h3 className="text-lg font-medium mb-2">
           {data.question || "Pergunta de múltipla escolha"}
         </h3>
-        <p className="text-sm text-gray-500">
+        <p style={{ color: '#8B7355' }}>
           {data.minSelections && data.maxSelections
             ? `Selecione de ${data.minSelections} a ${data.maxSelections} opções`
             : "Selecione uma ou mais opções"}
@@ -50,7 +50,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
         {options.map((option, index) => (
           <div
             key={`option-${option}-${index}`}
-            className="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition-colors"
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             {(displayType === "image" || displayType === "both") && (
               <div className="mb-2">
@@ -61,8 +61,8 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
                     className="w-full h-32 object-cover rounded-md"
                   />
                 ) : (
-                  <div className="w-full h-32 bg-gray-200 flex items-center justify-center rounded-md">
-                    <span className="text-sm text-gray-500">Sem imagem</span>
+                  <div style={{ backgroundColor: '#E5DDD5' }}>
+                    <span style={{ color: '#8B7355' }}>Sem imagem</span>
                   </div>
                 )}
               </div>
@@ -70,7 +70,7 @@ const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({
 
             {(displayType === "text" || displayType === "both") && (
               <div className="flex items-center">
-                <div className="w-5 h-5 border border-gray-300 rounded mr-3"></div>
+                <div style={{ borderColor: '#E5DDD5' }}></div>
                 <span>{option}</span>
               </div>
             )}

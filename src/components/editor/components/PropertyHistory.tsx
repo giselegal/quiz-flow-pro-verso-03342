@@ -122,7 +122,7 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                     variant="ghost"
                     size="sm"
                     onClick={onClearHistory}
-                    className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                    style={{ color: '#432818' }}
                     title="Limpar histórico"
                   >
                     <Trash2 className="w-3 h-3" />
@@ -166,10 +166,10 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between">
-                                <p className="text-sm font-medium text-gray-900 truncate">
+                                <p style={{ color: '#432818' }}>
                                   {entry.description}
                                 </p>
-                                <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                <div style={{ color: '#8B7355' }}>
                                   <Clock className="w-3 h-3" />
                                   <span>{formatTime(entry.timestamp)}</span>
                                 </div>
@@ -202,8 +202,8 @@ export const PropertyHistory: React.FC<PropertyHistoryProps> = ({
                 </div>
               </ScrollArea>
 
-              <div className="p-3 border-t border-gray-200 bg-gray-50">
-                <div className="flex items-center justify-between text-xs text-gray-600">
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <div style={{ color: '#6B4F43' }}>
                   <span>
                     Posição: {currentIndex + 1} de {history.length}
                   </span>

@@ -181,7 +181,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
           >
             {formatNumber(value)}
           </div>
-          {showLabels && <div className="text-xs text-gray-600 mt-1">{label}</div>}
+          {showLabels && <div style={{ color: '#6B4F43' }}>{label}</div>}
         </div>
         {!isLast && <div className={`mx-2 text-xl font-bold ${colors.text}`}>:</div>}
       </div>
@@ -192,10 +192,10 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
     return (
       <div className={`py-8 ${className || ""}`} style={style}>
         {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
-        <Card className="p-6 text-center bg-gray-100 border border-gray-300">
-          <AlertCircle className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">Tempo Esgotado</h3>
-          <p className="text-gray-600">
+        <Card style={{ borderColor: '#E5DDD5' }}>
+          <AlertCircle style={{ color: '#8B7355' }} />
+          <h3 style={{ color: '#6B4F43' }}>Tempo Esgotado</h3>
+          <p style={{ color: '#6B4F43' }}>
             Esta oferta especial expirou. Entre em contato para verificar novas oportunidades.
           </p>
         </Card>

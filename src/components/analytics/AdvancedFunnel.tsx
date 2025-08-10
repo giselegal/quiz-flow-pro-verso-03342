@@ -133,8 +133,8 @@ const AdvancedFunnel: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Funil Avançado</h2>
-          <p className="text-gray-600">Análise detalhada do comportamento dos usuários</p>
+          <h2 style={{ color: '#432818' }}>Funil Avançado</h2>
+          <p style={{ color: '#6B4F43' }}>Análise detalhada do comportamento dos usuários</p>
         </div>
 
         <div className="flex gap-2">
@@ -185,7 +185,7 @@ const AdvancedFunnel: React.FC = () => {
               <CardContent>
                 <div className="text-2xl font-bold">37.4%</div>
                 <div className="flex items-center text-xs text-muted-foreground">
-                  <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
+                  <TrendingDown style={{ color: '#432818' }} />
                   -2.1% vs mês anterior
                 </div>
               </CardContent>
@@ -230,7 +230,7 @@ const AdvancedFunnel: React.FC = () => {
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium">{stage.stage}</span>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-600">
+                          <span style={{ color: '#6B4F43' }}>
                             {stage.count.toLocaleString()}
                           </span>
                           <Badge variant={stage.dropoffRate > 30 ? "destructive" : "secondary"}>
@@ -240,7 +240,7 @@ const AdvancedFunnel: React.FC = () => {
                       </div>
                       <Progress value={stage.percentage} className="h-2" />
                       {index > 0 && stage.dropoffRate > 20 && (
-                        <p className="text-xs text-red-600">
+                        <p style={{ color: '#432818' }}>
                           ⚠️ Alto abandono: {stage.dropoffRate}%
                         </p>
                       )}
@@ -377,7 +377,7 @@ const AdvancedFunnel: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                  <AlertTriangle style={{ color: '#432818' }} />
                   Pontos Críticos
                 </CardTitle>
                 <CardDescription>Etapas com maior necessidade de otimização</CardDescription>
@@ -390,12 +390,12 @@ const AdvancedFunnel: React.FC = () => {
                         <h4 className="font-medium">{stage.stage}</h4>
                         <Badge variant="destructive">{stage.dropoffRate}% abandono</Badge>
                       </div>
-                      <div className="text-sm text-gray-600 mb-3">
+                      <div style={{ color: '#6B4F43' }}>
                         {stage.count.toLocaleString()} usuários • {stage.avgTimeSpent} tempo médio
                       </div>
                       <div className="space-y-2">
                         <h5 className="text-sm font-medium">Sugestões de melhoria:</h5>
-                        <ul className="text-xs text-gray-600 space-y-1">
+                        <ul style={{ color: '#6B4F43' }}>
                           {stage.stage.includes("Oferta") && (
                             <>
                               <li>• Revisar copy da proposta de valor</li>
@@ -427,7 +427,7 @@ const AdvancedFunnel: React.FC = () => {
                 <div className="space-y-4">
                   <div className="p-4 border rounded-lg">
                     <h4 className="font-medium mb-2">Teste 1: Página de Oferta</h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p style={{ color: '#6B4F43' }}>
                       Testar diferentes headlines na proposta de valor
                     </p>
                     <div className="flex gap-2">
@@ -439,7 +439,7 @@ const AdvancedFunnel: React.FC = () => {
 
                   <div className="p-4 border rounded-lg">
                     <h4 className="font-medium mb-2">Teste 2: CTA Buttons</h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p style={{ color: '#6B4F43' }}>
                       Comparar cores e textos dos botões de ação
                     </p>
                     <div className="flex gap-2">
@@ -451,7 +451,7 @@ const AdvancedFunnel: React.FC = () => {
 
                   <div className="p-4 border rounded-lg">
                     <h4 className="font-medium mb-2">Teste 3: Quiz Flow</h4>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p style={{ color: '#6B4F43' }}>
                       Testar diferentes sequências de perguntas
                     </p>
                     <div className="flex gap-2">

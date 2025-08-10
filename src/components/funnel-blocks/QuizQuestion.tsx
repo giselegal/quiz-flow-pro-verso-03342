@@ -402,7 +402,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
               {/* Pontuação se disponível */}
               {option.points && (
-                <span className="text-sm text-gray-500">{option.points} pontos</span>
+                <span style={{ color: '#8B7355' }}>{option.points} pontos</span>
               )}
             </div>
           )}
@@ -423,14 +423,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
       {/* Barra de Progresso */}
       {progressConfig?.showProgress && (
         <div className="w-full max-w-2xl mx-auto mb-8">
-          <div className="bg-gray-200 rounded-full h-2">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressConfig.progressValue || 0}%` }}
             />
           </div>
           {questionNumber && totalQuestions && (
-            <p className="text-sm text-gray-600 mt-2 text-center">
+            <p style={{ color: '#6B4F43' }}>
               Pergunta {questionNumber} de {totalQuestions}
             </p>
           )}
@@ -454,7 +454,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               {question}
             </h2>
 
-            {description && <p className="text-lg text-gray-600 leading-relaxed">{description}</p>}
+            {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
           </div>
         )}
 
@@ -466,11 +466,11 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           {options && options.length > 0 ? (
             options.map((option, index) => renderOption(option, index))
           ) : (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-600">
+            <div style={{ borderColor: '#E5DDD5' }}>
+              <p style={{ color: '#432818' }}>
                 ⚠️ Nenhuma opção encontrada. Array de opções está vazio ou indefinido.
               </p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p style={{ color: '#6B4F43' }}>
                 Debug: options.length = {options?.length || 0}
               </p>
             </div>
@@ -479,8 +479,8 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
 
         {/* Erro de Validação */}
         {validationError && showValidation && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-600 text-sm">{validationError}</p>
+          <div style={{ borderColor: '#E5DDD5' }}>
+            <p style={{ color: '#432818' }}>{validationError}</p>
           </div>
         )}
 

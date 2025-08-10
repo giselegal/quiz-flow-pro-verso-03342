@@ -8,9 +8,9 @@ interface SidebarProps {
 
 export function Sidebar({ children }: SidebarProps) {
   return (
-    <div className="w-64 bg-gray-50 border-r border-gray-200 h-full">
+    <div style={{ borderColor: '#E5DDD5' }}>
       <div className="p-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Components</h2>
+        <h2 style={{ color: '#432818' }}>Components</h2>
         <ScrollArea className="h-full">
           <div className="space-y-2">
             <Button variant="outline" className="w-full justify-start">

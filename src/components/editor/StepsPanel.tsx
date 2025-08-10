@@ -186,7 +186,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
     <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold text-gray-900">Etapas Quiz</CardTitle>
+          <CardTitle style={{ color: '#432818' }}>Etapas Quiz</CardTitle>
           <Badge variant="secondary" className="text-xs">
             {steps.length}
           </Badge>
@@ -245,7 +245,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   ) : (
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-medium text-gray-900 truncate">{step.name}</h4>
+                        <h4 style={{ color: '#432818' }}>{step.name}</h4>
                         <div className="flex items-center space-x-1">
                           {step.blocksCount > 0 && (
                             <Badge variant="outline" className="text-xs px-1">
@@ -257,7 +257,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           )}
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p style={{ color: '#8B7355' }}>
                         {(() => {
                           const stepInfo = getStepReferenceInfo(step.id);
                           const typeLabel =
@@ -310,7 +310,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => onStepDelete(step.id)}
-                          className="text-red-600 hover:text-red-700"
+                          style={{ color: '#432818' }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Excluir
@@ -330,7 +330,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
             {/* Add New Step Button */}
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center space-x-2 p-3 border-dashed border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+              style={{ borderColor: '#E5DDD5' }}
               onClick={onStepAdd}
             >
               <Plus className="w-4 h-4" />

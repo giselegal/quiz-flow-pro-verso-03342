@@ -80,7 +80,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
       data-block-type={block.type}
     >
       <div className="flex items-center justify-center gap-2 mb-4">
-        <Scale className="w-6 h-6 text-gray-600" />
+        <Scale style={{ color: '#6B4F43' }} />
         <h3 className="text-xl font-bold text-[#432818] text-center">
           <InlineEditableText
             value={title}
@@ -90,7 +90,7 @@ const TermsBlock: React.FC<BlockComponentProps> = ({
           />
         </h3>
       </div>
-      <div className="text-sm text-gray-700 leading-relaxed">
+      <div style={{ color: '#6B4F43' }}>
         <InlineEditableText
           value={content}
           onChange={(value: string) => handlePropertyChange("content", value)}

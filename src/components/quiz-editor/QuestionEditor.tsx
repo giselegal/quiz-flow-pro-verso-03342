@@ -107,7 +107,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             variant="outline"
             size="sm"
             onClick={onDelete}
-            className="text-red-600 hover:text-red-700"
+            style={{ color: '#432818' }}
           >
             <Trash className="w-4 h-4" />
           </Button>
@@ -169,7 +169,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
             {editedQuestion.options.map((option, index) => (
               <div
                 key={option.id || index}
-                className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg"
+                style={{ borderColor: '#E5DDD5' }}
               >
                 <div className="flex-1">
                   <Input
@@ -183,7 +183,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => handleRemoveOption(index)}
-                  className="text-red-600 hover:text-red-700"
+                  style={{ color: '#432818' }}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>

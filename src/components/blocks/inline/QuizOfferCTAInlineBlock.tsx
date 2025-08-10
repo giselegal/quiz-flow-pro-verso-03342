@@ -37,7 +37,7 @@ const QuizOfferCTAInlineBlock: React.FC<BlockComponentProps> = ({
         <ShoppingCart className="w-5 h-5" />
         <span>{buttonText}</span>
       </button>
-      <p className="text-center text-sm text-gray-600">{subText}</p>
+      <p style={{ color: '#6B4F43' }}>{subText}</p>
     </div>
   );
 };

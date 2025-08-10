@@ -58,9 +58,9 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
   if (!block || !block.properties) {
     console.warn("QuizIntroBlock: block ou block.properties não foi fornecido", { block });
     return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">Erro: Configuração do bloco inválida</p>
-        <p className="text-sm text-red-500 mt-1">
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>
+        <p style={{ color: '#432818' }}>
           O componente QuizIntroBlock precisa de um objeto 'block' com 'properties' válidas.
         </p>
       </div>
@@ -232,7 +232,7 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
               autoFocus
               required
             />
-            {error && <p className="mt-2 text-sm text-red-500 font-medium">{error}</p>}
+            {error && <p style={{ color: '#432818' }}>{error}</p>}
           </div>
 
           <button

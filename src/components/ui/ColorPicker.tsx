@@ -101,7 +101,7 @@ export function ColorPicker({
             </div>
           )}
         </div>
-        <span className="text-xs text-gray-600 text-center leading-tight max-w-[60px] truncate">
+        <span style={{ color: '#6B4F43' }}>
           {colorOption.label}
         </span>
       </button>
@@ -135,20 +135,20 @@ export function ColorPicker({
           <PopoverContent className="w-80 p-4 max-h-96 overflow-y-auto">
             <div className="space-y-4">
               {/* Informações da cor atual */}
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div style={{ backgroundColor: '#FAF9F7' }}>
                 <ColorPreview color={value} size="w-8 h-8" />
                 <div className="flex-1">
-                  <div className="text-sm font-medium text-gray-900">
+                  <div style={{ color: '#432818' }}>
                     {ColorUtils.getColorLabel(value)}
                   </div>
-                  <div className="text-xs text-gray-500 uppercase">
+                  <div style={{ color: '#8B7355' }}>
                     {value === "transparent" ? "Transparente" : value}
                   </div>
                 </div>
               </div>
 
               {/* Tabs */}
-              <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+              <div style={{ backgroundColor: '#E5DDD5' }}>
                 <button
                   onClick={() => setActiveTab("popular")}
                   className={cn(
@@ -221,7 +221,7 @@ export function ColorPicker({
                       type="color"
                       value={isValidColor && value !== "transparent" ? value : "#B89B7A"}
                       onChange={e => handleColorSelect(e.target.value)}
-                      className="w-full h-12 rounded-lg border-2 border-gray-200 cursor-pointer"
+                      style={{ borderColor: '#E5DDD5' }}
                     />
                   </div>
 
@@ -234,7 +234,7 @@ export function ColorPicker({
                       className="font-mono text-sm"
                     />
                     {!isValidColor && inputValue && (
-                      <p className="text-xs text-red-500 mt-1">
+                      <p style={{ color: '#432818' }}>
                         Use formato #RRGGBB ou "transparent"
                       </p>
                     )}
@@ -242,7 +242,7 @@ export function ColorPicker({
 
                   <button
                     onClick={() => handleColorSelect("transparent")}
-                    className="w-full p-2 text-sm text-gray-600 hover:text-[#B89B7A] border border-gray-200 rounded-lg hover:border-[#B89B7A] transition-colors"
+                    style={{ borderColor: '#E5DDD5' }}
                   >
                     Usar Transparente
                   </button>
@@ -255,8 +255,8 @@ export function ColorPicker({
 
       {/* Preview Area */}
       {showPreview && isValidColor && (
-        <div className="p-3 bg-gray-50 rounded-lg border">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ color: '#6B4F43' }}>
             <span>Preview:</span>
             <div
               className="px-3 py-1 rounded-md font-medium transition-colors"

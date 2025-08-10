@@ -39,7 +39,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
             <h3 className="font-medium mb-2">{block.content?.title || "Benefícios"}</h3>
             <ul className="list-disc list-inside">
               {items.map((item, index) => (
-                <li key={index} className="text-gray-700">
+                <li key={index} style={{ color: '#6B4F43' }}>
                   {item}
                 </li>
               ))}
@@ -55,7 +55,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
               isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-200"
             }`}
           >
-            <p className="text-gray-600">Tipo de bloco: {block.type}</p>
+            <p style={{ color: '#6B4F43' }}>Tipo de bloco: {block.type}</p>
           </div>
         );
     }

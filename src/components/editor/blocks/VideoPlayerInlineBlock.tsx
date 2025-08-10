@@ -387,7 +387,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                 placeholder="Título do vídeo..."
                 fontSize="lg"
                 fontWeight="bold"
-                className="text-gray-800"
+                style={{ color: '#432818' }}
               />
             </div>
           )}
@@ -400,7 +400,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                 onChange={value => handlePropertyChange("description", value)}
                 placeholder="Descrição do vídeo..."
                 fontSize="sm"
-                className="text-gray-600 leading-relaxed"
+                style={{ color: '#6B4F43' }}
                 multiline={true}
                 maxLines={4}
               />
@@ -409,16 +409,16 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Video Settings */}
           {isEditing && (
-            <div className="space-y-3 p-3 bg-gray-50 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-700">Configurações</h4>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <h4 style={{ color: '#6B4F43' }}>Configurações</h4>
 
               {/* Video Type */}
               <div>
-                <label className="block text-xs text-gray-600 mb-1">Tipo de Vídeo</label>
+                <label style={{ color: '#6B4F43' }}>Tipo de Vídeo</label>
                 <select
                   value={videoType}
                   onChange={e => handlePropertyChange("videoType", e.target.value)}
-                  className="w-full text-xs border border-gray-300 rounded px-2 py-1"
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="youtube">YouTube</option>
                   <option value="vimeo">Vimeo</option>
@@ -429,11 +429,11 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
               {/* Aspect Ratio */}
               <div>
-                <label className="block text-xs text-gray-600 mb-1">Proporção</label>
+                <label style={{ color: '#6B4F43' }}>Proporção</label>
                 <select
                   value={aspectRatio}
                   onChange={e => handlePropertyChange("aspectRatio", e.target.value)}
-                  className="w-full text-xs border border-gray-300 rounded px-2 py-1"
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="16:9">16:9 (Widescreen)</option>
                   <option value="4:3">4:3 (Standard)</option>
@@ -450,7 +450,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   onChange={e => handlePropertyChange("autoplay", e.target.checked)}
                   className="text-xs"
                 />
-                <label htmlFor="autoplay" className="text-xs text-gray-600">
+                <label htmlFor="autoplay" style={{ color: '#6B4F43' }}>
                   Reprodução automática
                 </label>
               </div>
@@ -459,7 +459,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Video Stats */}
           <div className="mt-auto pt-3 border-t border-gray-100">
-            <div className="text-xs text-gray-500 space-y-1">
+            <div style={{ color: '#8B7355' }}>
               <div>Formato: {aspectRatio}</div>
               <div>Tipo: {videoType}</div>
               <div>Status: {isPlaying ? "Reproduzindo" : "Pausado"}</div>

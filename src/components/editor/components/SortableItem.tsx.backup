@@ -23,14 +23,9 @@ export function SortableItem({
   onDuplicate,
   children,
 }: SortableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -44,7 +39,7 @@ export function SortableItem({
       style={style}
       className={`group relative rounded-lg border-2 transition-all ${
         isSelected
-          ? "border-blue-500 bg-[#B89B7A]/10 shadow-md"
+          ? "border-[#B89B7A] bg-[#B89B7A]/10 shadow-md"
           : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
       }`}
       onClick={onClick}
@@ -59,14 +54,12 @@ export function SortableItem({
           <GripVertical className="h-4 w-4" />
         </button>
 
-        <span className="text-xs text-gray-500 capitalize px-2">
-          {component.type}
-        </span>
+        <span className="text-xs text-gray-500 capitalize px-2">{component.type}</span>
 
         <Button
           variant="ghost"
           size="sm"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onDuplicate();
           }}
@@ -78,7 +71,7 @@ export function SortableItem({
         <Button
           variant="ghost"
           size="sm"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             onDelete();
           }}
@@ -93,7 +86,7 @@ export function SortableItem({
 
       {/* Indicador de seleção */}
       {isSelected && (
-        <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-blue-500 bg-[#B89B7A]/100/5"></div>
+        <div className="absolute inset-0 pointer-events-none rounded-lg border-2 border-[#B89B7A] bg-[#B89B7A]/100/5"></div>
       )}
     </div>
   );

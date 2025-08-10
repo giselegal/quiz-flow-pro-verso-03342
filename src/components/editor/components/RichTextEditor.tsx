@@ -44,8 +44,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   }, [value, isEditing]);
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
-      <div className="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50">
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <Button
           type="button"
           size="sm"

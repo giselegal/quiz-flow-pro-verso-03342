@@ -143,7 +143,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
           <h2 className="text-3xl font-bold mb-2" style={{ color: textColor }}>
             {title}
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitle}</p>
+          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
         </div>
 
         {/* Table Layout */}
@@ -159,7 +159,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
             </thead>
             <tbody>
               {plans.map((plan, index) => (
-                <tr key={plan.id} className="border-b hover:bg-gray-50">
+                <tr key={plan.id} style={{ backgroundColor: '#FAF9F7' }}>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">{plan.name}</span>
@@ -173,10 +173,10 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
                       <span className="text-2xl font-bold" style={{ color: accentColor }}>
                         {plan.price}
                       </span>
-                      {plan.period && <span className="text-gray-500 ml-1">/{plan.period}</span>}
+                      {plan.period && <span style={{ color: '#8B7355' }}>/{plan.period}</span>}
                     </div>
                     {plan.originalPrice && showDiscount && (
-                      <div className="text-sm text-gray-500 line-through">{plan.originalPrice}</div>
+                      <div style={{ color: '#8B7355' }}>{plan.originalPrice}</div>
                     )}
                   </td>
                   <td className="p-4">
@@ -234,7 +234,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
         <h2 className="text-3xl font-bold mb-2" style={{ color: textColor }}>
           {title}
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitle}</p>
+        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
       </div>
 
       {/* Cards Grid */}
@@ -273,11 +273,11 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
                 <span className="text-4xl font-bold" style={{ color: accentColor }}>
                   {plan.price}
                 </span>
-                {plan.period && <span className="text-gray-500 text-lg">/{plan.period}</span>}
+                {plan.period && <span style={{ color: '#8B7355' }}>/{plan.period}</span>}
               </div>
 
               {plan.originalPrice && showDiscount && (
-                <div className="text-lg text-gray-500 line-through mb-2">{plan.originalPrice}</div>
+                <div style={{ color: '#8B7355' }}>{plan.originalPrice}</div>
               )}
 
               {plan.badge && (
@@ -330,7 +330,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
               </button>
 
               {plan.footerText && (
-                <p className="text-xs text-gray-500 text-center mt-3">{plan.footerText}</p>
+                <p style={{ color: '#8B7355' }}>{plan.footerText}</p>
               )}
             </CardContent>
           </Card>
@@ -338,7 +338,7 @@ const PriceComparisonBlock: React.FC<PriceComparisonBlockProps> = ({
       </div>
 
       {plans.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
+        <div style={{ color: '#8B7355' }}>
           <p>Nenhum plano configurado. Adicione planos nas propriedades do bloco.</p>
         </div>
       )}

@@ -22,7 +22,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({ block, onUpdate }) 
           placeholder="https://exemplo.com/imagem.jpg"
         />
         {content.imageUrl && (
-          <div className="mt-2 p-2 bg-gray-50 rounded">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.imageUrl}
               alt="Pré-visualização"

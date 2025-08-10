@@ -21,7 +21,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   // 🛡️ Validação e logging de debug
   if (!isValidBlock(block)) {
     console.error("❌ ResultCardInlineBlock: Bloco inválido recebido", block);
-    return <div className="p-2 bg-red-100 text-red-600 text-xs rounded">Erro: Bloco inválido</div>;
+    return <div style={{ color: '#432818' }}>Erro: Bloco inválido</div>;
   }
 
   logBlockDebug("ResultCardInlineBlock", block);
@@ -113,7 +113,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
             >
               {percentage}%
             </div>
-            <div className="text-xs text-gray-500 uppercase tracking-wide">Compatibilidade</div>
+            <div style={{ color: '#8B7355' }}>Compatibilidade</div>
           </div>
         )}
       </div>
@@ -126,12 +126,12 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
       </h3>
 
       {/* Descrição */}
-      <p className="text-gray-600 text-sm leading-relaxed mb-4">{description}</p>
+      <p style={{ color: '#6B4F43' }}>{description}</p>
 
       {/* Barra de progresso */}
       {showProgress && (
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             <span>Compatibilidade</span>
             <span>{percentage}%</span>
           </div>
@@ -148,7 +148,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Indicador de tendência */}
       <div className="flex items-center justify-center mt-4 pt-3 border-t border-gray-100">
         <TrendingUp className="w-4 h-4 text-green-500 mr-2" />
-        <span className="text-xs text-gray-500">Tendência em alta</span>
+        <span style={{ color: '#8B7355' }}>Tendência em alta</span>
       </div>
     </div>
   );

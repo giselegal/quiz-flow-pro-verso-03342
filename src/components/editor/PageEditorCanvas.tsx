@@ -16,10 +16,10 @@ export const PageEditorCanvas: React.FC<PageEditorCanvasProps> = ({
   selectedBlockId,
 }) => {
   return (
-    <div className="flex-1 p-4 bg-gray-50">
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm min-h-96 p-6">
         {blocks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-64 text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
+          <div style={{ borderColor: '#E5DDD5' }}>
             <p className="mb-4">Nenhum bloco adicionado ainda</p>
             <Button onClick={() => onAddBlock("text")} variant="outline">
               <Plus className="w-4 h-4 mr-2" />
@@ -38,7 +38,7 @@ export const PageEditorCanvas: React.FC<PageEditorCanvasProps> = ({
                 }`}
                 onClick={() => onSelectBlock(block.id)}
               >
-                <div className="text-sm text-gray-500 mb-2">Bloco: {block.type}</div>
+                <div style={{ color: '#8B7355' }}>Bloco: {block.type}</div>
                 <div>
                   {block.properties?.title || block.properties?.text || "Conteúdo do bloco"}
                 </div>

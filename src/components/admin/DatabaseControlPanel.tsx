@@ -75,8 +75,8 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Sistema de Componentes</h3>
-          <p className="text-sm text-gray-500">Gerenciar modo banco/local e migração</p>
+          <h3 style={{ color: '#432818' }}>Sistema de Componentes</h3>
+          <p style={{ color: '#8B7355' }}>Gerenciar modo banco/local e migração</p>
         </div>
 
         {/* Status Badge */}
@@ -91,31 +91,31 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
 
       {/* Quiz ID Control */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Quiz ID</label>
+        <label style={{ color: '#6B4F43' }}>Quiz ID</label>
         <div className="flex gap-2">
           <input
             type="text"
             value={databaseMode.quizId}
             onChange={e => handleQuizIdChange(e.target.value)}
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+            style={{ borderColor: '#E5DDD5' }}
             placeholder="ex: quiz-demo-id"
           />
           <button
             onClick={() => databaseMode.setQuizId(`quiz-${Date.now()}`)}
-            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200"
+            style={{ color: '#6B4F43' }}
           >
             🎲 Gerar
           </button>
         </div>
-        <p className="text-xs text-gray-500 mt-1">ID único do quiz no banco de dados</p>
+        <p style={{ color: '#8B7355' }}>ID único do quiz no banco de dados</p>
       </div>
 
       {/* Mode Toggle */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h4 className="text-sm font-medium text-gray-900">Modo de Operação</h4>
-            <p className="text-xs text-gray-500">
+            <h4 style={{ color: '#432818' }}>Modo de Operação</h4>
+            <p style={{ color: '#8B7355' }}>
               {databaseMode.isEnabled
                 ? "Componentes salvos no banco de dados"
                 : "Componentes carregados de templates locais"}
@@ -165,7 +165,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
           </button>
 
           {migrationStatus === "success" && (
-            <p className="text-xs text-green-700 mt-2">
+            <p style={{ color: '#6B4F43' }}>
               ✅ Migração concluída! Modo banco ativado automaticamente.
             </p>
           )}
@@ -180,35 +180,35 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
 
       {/* Statistics */}
       <div className="space-y-4">
-        <h4 className="text-sm font-medium text-gray-900">Estatísticas</h4>
+        <h4 style={{ color: '#432818' }}>Estatísticas</h4>
 
         {loading ? (
           <div className="text-center py-4">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#B89B7A] mx-auto"></div>
-            <p className="text-xs text-gray-500 mt-2">Carregando...</p>
+            <p style={{ color: '#8B7355' }}>Carregando...</p>
           </div>
         ) : stats ? (
           <div className="grid grid-cols-2 gap-4">
             {/* Total Components */}
-            <div className="text-center p-3 bg-gray-50 rounded-md">
-              <div className="text-xl font-bold text-gray-900">{stats.totalComponents || 0}</div>
-              <div className="text-xs text-gray-500">Componentes</div>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ color: '#432818' }}>{stats.totalComponents || 0}</div>
+              <div style={{ color: '#8B7355' }}>Componentes</div>
             </div>
 
             {/* Total Steps */}
-            <div className="text-center p-3 bg-gray-50 rounded-md">
-              <div className="text-xl font-bold text-gray-900">{stats.totalSteps || 0}</div>
-              <div className="text-xs text-gray-500">Etapas</div>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ color: '#432818' }}>{stats.totalSteps || 0}</div>
+              <div style={{ color: '#8B7355' }}>Etapas</div>
             </div>
 
             {/* Components by Type */}
             {stats.componentsByType && Object.keys(stats.componentsByType).length > 0 && (
               <div className="col-span-2">
-                <h5 className="text-xs font-medium text-gray-700 mb-2">Por Tipo:</h5>
+                <h5 style={{ color: '#6B4F43' }}>Por Tipo:</h5>
                 <div className="space-y-1">
                   {Object.entries(stats.componentsByType).map(([type, count]) => (
                     <div key={type} className="flex justify-between text-xs">
-                      <span className="text-gray-600">{type}</span>
+                      <span style={{ color: '#6B4F43' }}>{type}</span>
                       <span className="font-medium">{count as number}</span>
                     </div>
                   ))}
@@ -217,19 +217,19 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
             )}
 
             {/* Mode Info */}
-            <div className="col-span-2 mt-4 p-3 bg-gray-50 rounded-md">
-              <div className="text-xs text-gray-600">
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ color: '#6B4F43' }}>
                 <strong>Modo:</strong> {stats.mode || "local"}
               </div>
               {stats.error && (
-                <div className="text-xs text-red-600 mt-1">
+                <div style={{ color: '#432818' }}>
                   <strong>Erro:</strong> {stats.error}
                 </div>
               )}
             </div>
           </div>
         ) : (
-          <div className="text-center py-4 text-xs text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             Nenhuma estatística disponível
           </div>
         )}
@@ -238,15 +238,15 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
         <button
           onClick={loadStats}
           disabled={loading}
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
+          style={{ borderColor: '#E5DDD5' }}
         >
           {loading ? "⏳ Carregando..." : "🔄 Atualizar Estatísticas"}
         </button>
       </div>
 
       {/* Quick Actions */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <h4 className="text-sm font-medium text-gray-900 mb-3">Ações Rápidas</h4>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <h4 style={{ color: '#432818' }}>Ações Rápidas</h4>
 
         <div className="grid grid-cols-2 gap-2">
           <button
@@ -258,7 +258,7 @@ export const DatabaseControlPanel: React.FC<DatabaseControlPanelProps> = ({ clas
 
           <button
             onClick={() => console.log("Debug:", { databaseMode, stats })}
-            className="px-3 py-2 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+            style={{ color: '#6B4F43' }}
           >
             🐛 Debug Info
           </button>

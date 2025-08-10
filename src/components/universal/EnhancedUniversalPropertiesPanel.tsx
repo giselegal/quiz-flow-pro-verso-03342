@@ -310,7 +310,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="flex items-center justify-between py-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818] cursor-pointer">
-              {label} {required && <span className="text-red-500">*</span>}
+              {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <Switch
               id={key}
@@ -326,7 +326,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
+              {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -356,7 +356,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
+              {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -377,7 +377,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
+              {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -396,7 +396,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label className="text-sm font-medium text-[#432818]">
-              {label} {required && <span className="text-red-500">*</span>}
+              {label} {required && <span style={{ color: '#432818' }}>*</span>}
             </Label>
             <div className="border border-[#B89B7A]/30 rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
               {arrayValue.length > 0 ? (
@@ -430,7 +430,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
       default:
         return (
-          <div key={key} className="space-y-2 text-red-500 text-sm">
+          <div key={key} style={{ color: '#432818' }}>
             ⚠️ Tipo não suportado: {type}
           </div>
         );

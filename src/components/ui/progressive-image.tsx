@@ -108,7 +108,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           style={{ objectFit: fit }}
         />
       ) : (
-        <div className="flex items-center justify-center w-full h-full bg-gray-100 text-gray-400 text-sm py-4">
+        <div style={{ backgroundColor: '#E5DDD5' }}>
           Não foi possível carregar a imagem
         </div>
       )}

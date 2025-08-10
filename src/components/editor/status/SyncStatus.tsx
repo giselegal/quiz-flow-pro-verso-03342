@@ -51,7 +51,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
     }
 
     if (autoSaveState.errorCount > 0) {
-      return <AlertCircle className="w-4 h-4 text-red-500" />;
+      return <AlertCircle style={{ color: '#432818' }} />;
     }
 
     return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -170,7 +170,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+          <div style={{ color: '#6B4F43' }}>
             Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : "Desabilitado"}
           </div>
           <Button size="sm" variant="outline" onClick={onToggleAutoSave} className="h-7 text-xs">
@@ -180,7 +180,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
         {/* Informações de erro */}
         {autoSaveState.errorCount > 0 && (
-          <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+          <div style={{ color: '#432818' }}>
             <div className="flex items-center space-x-1">
               <AlertCircle className="w-3 h-3" />
               <span>Falhas no auto-save: {autoSaveState.errorCount}</span>
@@ -191,7 +191,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
         {/* Última sincronização */}
         {autoSaveState.lastSave && (
-          <div className="text-xs text-gray-500 flex items-center space-x-1">
+          <div style={{ color: '#8B7355' }}>
             <History className="w-3 h-3" />
             <span>Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}</span>
           </div>

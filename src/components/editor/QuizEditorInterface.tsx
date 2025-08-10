@@ -58,7 +58,7 @@ export const QuizEditorInterface: React.FC<QuizEditorInterfaceProps> = ({ onSave
       <h2 className="text-xl font-semibold mb-4">Editor de Quiz</h2>
 
       <div className="space-y-4">
-        <p className="text-gray-600">Configure e personalize seu quiz aqui.</p>
+        <p style={{ color: '#6B4F43' }}>Configure e personalize seu quiz aqui.</p>
 
         <div className="flex gap-2">
           <Button onClick={handleSave} disabled={isLoading} variant="outline">

@@ -52,7 +52,7 @@ const StageSection: React.FC<StageSectionProps> = ({
               e.stopPropagation();
               onDelete(stage.id);
             }}
-            className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+            style={{ color: '#432818' }}
           >
             <Trash2 className="h-3 w-3" />
           </Button>

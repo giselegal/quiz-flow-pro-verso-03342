@@ -40,7 +40,7 @@ const HeroSectionBlockPreview: React.FC<HeroSectionBlockPreviewProps> = ({
           {content.heroImage ? (
             <img src={content.heroImage} alt="Estilo" className="w-full h-auto rounded-lg" />
           ) : (
-            <div className="bg-gray-100 h-48 flex items-center justify-center rounded-lg">
+            <div style={{ backgroundColor: '#E5DDD5' }}>
               <p className="text-gray-400">Adicione uma imagem principal</p>
             </div>
           )}

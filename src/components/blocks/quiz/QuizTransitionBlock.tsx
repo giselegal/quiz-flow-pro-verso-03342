@@ -218,7 +218,7 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
 
       case "progress":
         return (
-          <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className={`h-full bg-[#B89B7A] rounded-full transition-all duration-1000 ${
                 animationActive ? "w-full" : "w-0"

@@ -395,8 +395,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Galeria de Templates</h2>
-          <p className="text-gray-600">Escolha um template ou crie o seu próprio</p>
+          <h2 style={{ color: '#432818' }}>Galeria de Templates</h2>
+          <p style={{ color: '#6B4F43' }}>Escolha um template ou crie o seu próprio</p>
         </div>
 
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -589,7 +589,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             {/* Conteúdo */}
             <div className="p-4 flex-1">
               <div className="flex items-start justify-between mb-2">
-                <h3 className="font-semibold text-gray-900 line-clamp-1">{template.name}</h3>
+                <h3 style={{ color: '#432818' }}>{template.name}</h3>
                 <div className="flex items-center gap-1 ml-2">
                   <TooltipProvider>
                     <Tooltip>
@@ -615,7 +615,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 </div>
               </div>
 
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{template.description}</p>
+              <p style={{ color: '#6B4F43' }}>{template.description}</p>
 
               <div className="flex flex-wrap gap-1 mb-3">
                 <Badge variant="secondary" className="text-xs">
@@ -634,7 +634,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               </div>
 
               {/* Metadados */}
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+              <div style={{ color: '#8B7355' }}>
                 <div className="flex items-center gap-2">
                   {template.rating && (
                     <div className="flex items-center gap-1">
@@ -703,8 +703,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {sortedTemplates.length === 0 && (
         <div className="text-center py-12">
           <LayoutTemplate className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhum template encontrado</h3>
-          <p className="text-gray-600 mb-4">
+          <h3 style={{ color: '#432818' }}>Nenhum template encontrado</h3>
+          <p style={{ color: '#6B4F43' }}>
             {searchTerm || selectedCategory !== "all" || showFavoritesOnly
               ? "Tente ajustar os filtros de busca"
               : "Crie seu primeiro template personalizado"}

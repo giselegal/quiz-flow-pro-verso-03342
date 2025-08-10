@@ -6,17 +6,17 @@ const FunnelsPage: React.FC = () => {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Funis</h1>
+          <h1 style={{ color: '#432818' }}>Funis</h1>
           <Button onClick={() => setLocation("/editor-fixed")}>Criar Novo Funil</Button>
         </div>
 
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Nenhum funil encontrado</h2>
-            <p className="text-gray-600 mb-6">Comece criando seu primeiro funil de conversão</p>
+            <h2 style={{ color: '#6B4F43' }}>Nenhum funil encontrado</h2>
+            <p style={{ color: '#6B4F43' }}>Comece criando seu primeiro funil de conversão</p>
             <Button onClick={() => setLocation("/editor-fixed")}>Criar Primeiro Funil</Button>
           </div>
         </div>

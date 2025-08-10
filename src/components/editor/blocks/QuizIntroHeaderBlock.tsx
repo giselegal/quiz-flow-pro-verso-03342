@@ -66,8 +66,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600">Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
@@ -114,8 +114,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       <div className="relative w-full min-h-[120px] flex items-center justify-center">
         {/* Back Button - Absolute positioned to not affect centering */}
         {showBackButton && (
-          <button className="absolute left-4 top-1/2 transform -translate-y-1/2 p-2 rounded-lg hover:bg-gray-100 transition-colors z-10">
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
+          <button style={{ backgroundColor: '#E5DDD5' }}>
+            <ArrowLeft style={{ color: '#6B4F43' }} />
           </button>
         )}
 
@@ -140,7 +140,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Progress Bar - Só mostra se showProgress for true */}
       {showProgress && (
         <>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-gradient-to-r from-[#B89B7A] to-[#8a7766] h-2 rounded-full transition-all duration-300"
               style={{ width: `${Math.min(progressValue, progressMax)}%` }}
@@ -150,7 +150,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
           {/* Progress Text - Oculto conforme solicitado */}
           {/* 
           <div className="text-center mt-2">
-            <span className="text-sm text-gray-600">
+            <span style={{ color: '#6B4F43' }}>
               {Math.round(progressValue)}% completo
             </span>
           </div>

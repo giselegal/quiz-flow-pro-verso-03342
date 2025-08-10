@@ -140,7 +140,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
     return (
       <div
-        className="p-4 border-2 border-red-300 rounded-lg text-center text-red-500"
+        style={{ borderColor: '#B89B7A' }}
         onClick={onClick}
       >
         <p>Erro ao renderizar: {block.type}</p>

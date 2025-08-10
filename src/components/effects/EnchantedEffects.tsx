@@ -126,7 +126,7 @@ export const MorphingProgress: React.FC<MorphingProgressProps> = ({ progress, ph
   };
 
   return (
-    <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+    <div style={{ backgroundColor: '#E5DDD5' }}>
       <motion.div
         className={`h-full bg-gradient-to-r ${phaseColors[phase]} relative`}
         initial={{ width: 0 }}

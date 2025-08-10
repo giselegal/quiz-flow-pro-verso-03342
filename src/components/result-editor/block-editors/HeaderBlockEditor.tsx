@@ -45,7 +45,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           placeholder="https://exemplo.com/seu-logo.png"
         />
         {content.logo && (
-          <div className="mt-2 p-2 bg-gray-50 rounded">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img src={content.logo} alt="Logo" className="h-10 object-contain mx-auto" />
           </div>
         )}

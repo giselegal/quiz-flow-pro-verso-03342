@@ -107,7 +107,7 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
           className="cursor-pointer"
         />
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="text-stone-400 mb-4">
             <Upload size={48} />
           </div>

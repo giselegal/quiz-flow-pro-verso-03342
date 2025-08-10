@@ -22,12 +22,12 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
   return (
     <div className="flex h-full">
       {/* Sidebar */}
-      <div className="w-80 border-r border-gray-200 bg-white p-4">
+      <div style={{ borderColor: '#E5DDD5' }}>
         <h3 className="text-lg font-semibold mb-4">Blocos</h3>
         <div className="space-y-2">
           <button
             onClick={onShowTemplates}
-            className="w-full p-2 text-left border rounded hover:bg-gray-50"
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             + Adicionar Bloco
           </button>
@@ -38,7 +38,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
       <div className="flex-1 p-4">
         <div className="bg-white rounded-lg border min-h-96 p-6">
           {blocks.length === 0 ? (
-            <div className="text-center text-gray-500 py-12">
+            <div style={{ color: '#8B7355' }}>
               <p>Nenhum bloco adicionado ainda.</p>
               <p>Use o painel da esquerda para adicionar blocos.</p>
             </div>
@@ -55,7 +55,7 @@ export const ResultPageVisualEditor: React.FC<ResultPageVisualEditorProps> = ({
                   onClick={() => onSelectBlock(block.id)}
                 >
                   <div className="font-medium">{block.type}</div>
-                  <div className="text-sm text-gray-500">ID: {block.id}</div>
+                  <div style={{ color: '#8B7355' }}>ID: {block.id}</div>
                 </div>
               ))}
             </div>

@@ -99,7 +99,7 @@ const StageList: React.FC<StageListProps> = ({
                     e.stopPropagation();
                     onStageDelete(stage.id);
                   }}
-                  className="text-red-500 hover:text-red-700 p-1 h-auto"
+                  style={{ color: '#432818' }}
                 >
                   <Trash2 className="w-3 h-3" />
                 </Button>

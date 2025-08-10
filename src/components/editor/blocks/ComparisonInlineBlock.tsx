@@ -98,7 +98,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
     >
       {/* Before Section */}
       <div
-        className="absolute top-0 left-0 h-full bg-red-50 border-r border-red-200 flex flex-col justify-center items-center p-4"
+        style={{ borderColor: '#E5DDD5' }}
         style={{ width: `${dragPosition}%` }}
       >
         <h4
@@ -145,7 +145,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
           {afterTitle}
         </h4>
         <p
-          className="text-sm text-green-700 text-center cursor-pointer"
+          style={{ color: '#6B4F43' }}
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {

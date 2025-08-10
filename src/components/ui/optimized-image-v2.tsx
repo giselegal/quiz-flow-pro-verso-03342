@@ -92,8 +92,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <span className="text-sm text-gray-500">Imagem indisponível</span>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <span style={{ color: '#8B7355' }}>Imagem indisponível</span>
         </div>
       )}
     </div>

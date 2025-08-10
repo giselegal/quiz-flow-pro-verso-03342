@@ -87,7 +87,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
 
       {/* Drag Indicator */}
       {isDragging && (
-        <div className="absolute inset-0 bg-amber-500 bg-opacity-10 rounded-md border-2 border-amber-500 border-dashed" />
+        <div style={{ backgroundColor: '#FAF9F7' }} />
       )}
     </div>
   );

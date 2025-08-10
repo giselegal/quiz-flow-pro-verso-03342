@@ -50,7 +50,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="outline"
           size="sm"
           onClick={onReset}
-          className="text-amber-600 hover:text-amber-700"
+          style={{ color: '#6B4F43' }}
         >
           <RefreshCw className="w-4 h-4 mr-2" />
           Resetar

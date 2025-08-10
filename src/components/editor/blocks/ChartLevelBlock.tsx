@@ -92,7 +92,7 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
         }}
       >
         <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-          <span className="text-gray-800">{displayValue}%</span>
+          <span style={{ color: '#432818' }}>{displayValue}%</span>
         </div>
       </div>
       <p className="text-lg text-[#432818]">
@@ -103,7 +103,7 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
           placeholder="Rótulo do nível"
         />
       </p>
-      <div className="text-sm text-gray-500">Progresso: {displayValue}%</div>
+      <div style={{ color: '#8B7355' }}>Progresso: {displayValue}%</div>
     </div>
   );
 };

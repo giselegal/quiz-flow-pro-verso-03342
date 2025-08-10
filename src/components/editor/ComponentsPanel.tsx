@@ -53,8 +53,8 @@ const getMarginClass = (value, type) => {
 
 const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => {
   return (
-    <div className="bg-white border-r border-gray-200 p-4">
-      <h3 className="font-medium text-gray-900 mb-4">Componentes</h3>
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <h3 style={{ color: '#432818' }}>Componentes</h3>
       <div className="space-y-2">
         {blockDefinitions.map(block => {
           const IconComponent = block.icon;
@@ -62,12 +62,12 @@ const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => 
             <button
               key={block.type}
               onClick={() => onAddComponent(block.type)}
-              className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg border border-gray-200 transition-colors"
+              style={{ borderColor: '#E5DDD5' }}
             >
               <IconComponent size={20} />
               <div>
-                <div className="font-medium text-sm text-gray-900">{block.name}</div>
-                <div className="text-xs text-gray-500">{block.description}</div>
+                <div style={{ color: '#432818' }}>{block.name}</div>
+                <div style={{ color: '#8B7355' }}>{block.description}</div>
               </div>
             </button>
           );

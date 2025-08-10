@@ -122,7 +122,7 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
         </div>
 
         <p
-          className="text-xs text-green-700 mt-1 line-clamp-2"
+          style={{ color: '#6B4F43' }}
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {

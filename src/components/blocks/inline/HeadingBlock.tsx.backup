@@ -69,9 +69,9 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
   const getMarginClass = () => {
     const marginMap = {
       none: "",
-      sm: "my-2",
-      md: "my-4",
-      lg: "my-6",
+      sm: "m-2",
+      md: "m-4",
+      lg: "m-6",
     };
     return marginMap[margin] || marginMap.md;
   };
@@ -90,18 +90,21 @@ const HeadingBlock: React.FC<BlockComponentProps> = ({
   return (
     <HeadingTag
       className={cn(
-        "heading-block w-full transition-all duration-200",
+        "heading-block w-full transition-all duration-200 outline-none",
         fontSize ? "" : getDefaultFontSize(),
         getWeightClass(),
         getAlignClass(),
         getMarginClass(),
         getFontFamilyClass(),
-        isSelected && "ring-2 ring-brand/50 bg-brand/5 rounded-md"
+        isSelected && "ring-2 ring-blue-500 ring-opacity-50 rounded-md"
       )}
       style={{
         color,
         fontSize: fontSize || undefined,
       }}
+      contentEditable={isSelected}
+      suppressContentEditableWarning
+      onBlur={e => handlePropertyUpdate("text", e.target.textContent || "")}
       onClick={onClick}
     >
       {text}

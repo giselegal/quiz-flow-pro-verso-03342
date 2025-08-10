@@ -188,7 +188,7 @@ const QuizResultsBlockCore: React.FC<QuizResultsBlockProps> = ({
         )}
 
         <div className="prose prose-lg prose-stone mx-auto">
-          <p className="text-gray-700">{safeResult.description}</p>
+          <p style={{ color: '#6B4F43' }}>{safeResult.description}</p>
         </div>
       </div>
 

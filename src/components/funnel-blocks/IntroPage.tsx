@@ -210,14 +210,14 @@ export const IntroPage: React.FC<IntroPageProps> = ({
       {/* Barra de Progresso */}
       {progressConfig?.showProgress && (
         <div className="w-full max-w-md mx-auto mb-8">
-          <div className="bg-gray-200 rounded-full h-2">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressConfig.progressValue || 0}%` }}
             />
           </div>
           {progressConfig.currentStep && progressConfig.totalSteps && (
-            <p className="text-sm text-gray-600 mt-2 text-center">
+            <p style={{ color: '#6B4F43' }}>
               Etapa {progressConfig.currentStep} de {progressConfig.totalSteps}
             </p>
           )}
@@ -257,7 +257,7 @@ export const IntroPage: React.FC<IntroPageProps> = ({
         )}
 
         {/* Descrição */}
-        {description && <p className="text-lg text-gray-700 mb-8 leading-relaxed">{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {/* Imagem (se posição for middle) */}
         {imageUrl && imagePosition === "top" && (
@@ -284,7 +284,7 @@ export const IntroPage: React.FC<IntroPageProps> = ({
               className={`text-lg py-6 ${error ? "border-red-500" : ""}`}
               data-testid="name-input"
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {error && <p style={{ color: '#432818' }}>{error}</p>}
           </div>
         )}
 

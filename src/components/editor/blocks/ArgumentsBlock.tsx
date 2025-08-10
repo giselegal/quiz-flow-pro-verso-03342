@@ -102,14 +102,14 @@ const ArgumentsBlock: React.FC<BlockComponentProps> = ({
       </h3>
       <div className="space-y-3">
         {(items || []).map((item: any, index: number) => (
-          <div key={index} className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg">
+          <div key={index} style={{ backgroundColor: '#FAF9F7' }}>
             {getIcon(item.icon)}
             <p className="flex-1 text-[#432818]">{item.text}</p>
           </div>
         ))}
       </div>
       {(!items || items.length === 0) && (
-        <div className="bg-gray-100 p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center">
+        <div style={{ color: '#8B7355' }}>
           <Book className="w-12 h-12 mb-4 opacity-50" />
           <p>Configure os argumentos no painel de propriedades.</p>
         </div>

@@ -239,7 +239,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         </h2>
 
         {/* Descrição */}
-        {description && <p className="text-lg text-gray-600 mb-8 leading-relaxed">{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {/* Opções */}
         <div className="space-y-4 mb-8">
@@ -276,7 +276,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
             ) : (
               <div className="space-y-4">
                 <div
-                  className="w-full p-4 border-2 border-gray-300 rounded-lg min-h-[80px] bg-gray-50 text-gray-500 flex items-center justify-center cursor-pointer hover:border-[#B89B7A]/40"
+                  style={{ borderColor: '#E5DDD5' }}
                   onClick={onClick}
                   title="Configure a área de texto no Painel de Propriedades"
                 >
@@ -300,7 +300,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         )}
 
         {/* Informação adicional */}
-        <div className="mt-8 text-sm text-gray-500 text-center">
+        <div style={{ color: '#8B7355' }}>
           <p>💭 Esta pergunta nos ajuda a personalizar ainda mais seu resultado</p>
         </div>
       </div>

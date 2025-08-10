@@ -234,7 +234,7 @@ const SystemIntegrationTest: React.FC = () => {
       case "success":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "error":
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <XCircle style={{ color: '#432818' }} />;
       case "running":
         return <Clock className="w-5 h-5 text-[#B89B7A] animate-spin" />;
       default:
@@ -274,15 +274,15 @@ const SystemIntegrationTest: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-4 border rounded-lg bg-green-50">
               <div className="text-2xl font-bold text-green-600">{successCount}</div>
-              <div className="text-sm text-gray-600">Sucessos</div>
+              <div style={{ color: '#6B4F43' }}>Sucessos</div>
             </div>
-            <div className="text-center p-4 border rounded-lg bg-red-50">
-              <div className="text-2xl font-bold text-red-600">{errorCount}</div>
-              <div className="text-sm text-gray-600">Erros</div>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ color: '#432818' }}>{errorCount}</div>
+              <div style={{ color: '#6B4F43' }}>Erros</div>
             </div>
             <div className="text-center p-4 border rounded-lg bg-[#B89B7A]/10">
               <div className="text-2xl font-bold text-[#B89B7A]">{runningCount}</div>
-              <div className="text-sm text-gray-600">Executando</div>
+              <div style={{ color: '#6B4F43' }}>Executando</div>
             </div>
           </div>
 
@@ -297,12 +297,12 @@ const SystemIntegrationTest: React.FC = () => {
                     {getStatusIcon(test.status)}
                     <div>
                       <div className="font-medium">{test.name}</div>
-                      <div className="text-sm text-gray-600">{test.message}</div>
+                      <div style={{ color: '#6B4F43' }}>{test.message}</div>
                     </div>
                   </div>
                   <div className="text-right">
                     {test.duration && (
-                      <div className="text-sm text-gray-500">{test.duration}ms</div>
+                      <div style={{ color: '#8B7355' }}>{test.duration}ms</div>
                     )}
                     <Button
                       size="sm"

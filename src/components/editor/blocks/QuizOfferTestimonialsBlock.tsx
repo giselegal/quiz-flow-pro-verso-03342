@@ -123,7 +123,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
                       <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
+                  <p style={{ color: '#6B4F43' }}>"{testimonial.text}"</p>
                   <p className="font-semibold" style={{ color: textColor }}>
                     {testimonial.name}
                   </p>
@@ -134,7 +134,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
 
           {showStats && (
             <div className="text-center mt-8">
-              <div className="flex items-center justify-center gap-6 text-gray-600">
+              <div style={{ color: '#6B4F43' }}>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
                   {totalCustomers}

@@ -36,10 +36,10 @@ const QuizOfferPricingInlineBlock: React.FC<BlockComponentProps> = ({
       )}
       onClick={onClick}
     >
-      <p className="text-sm text-red-600 font-medium mb-2">{urgencyText}</p>
-      <p className="text-lg text-gray-500 line-through mb-1">De {originalPrice}</p>
+      <p style={{ color: '#432818' }}>{urgencyText}</p>
+      <p style={{ color: '#8B7355' }}>De {originalPrice}</p>
       <p className="text-3xl font-bold text-[#432818] mb-2">{offerPrice}</p>
-      <span className="inline-block bg-green-100 text-green-800 text-sm font-bold px-3 py-1 rounded-full">
+      <span style={{ backgroundColor: '#E5DDD5' }}>
         {discount}
       </span>
     </div>

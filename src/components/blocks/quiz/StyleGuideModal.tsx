@@ -33,11 +33,11 @@ const StyleGuideModal: React.FC<StyleGuideModalProps> = ({ style, onClose }) => 
           <img src={styleData.guideImage} alt={`Guia ${style}`} className="w-full h-auto" />
         </div>
 
-        <div className="p-4 border-t border-gray-200">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
             <div>
               <h3 className="font-semibold text-[#432818]">{style}</h3>
-              <p className="text-sm text-gray-600">{styleData.description}</p>
+              <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
             </div>
             <Button onClick={onClose} className="bg-[#B89B7A] hover:bg-[#A08766] min-w-[120px]">
               Fechar

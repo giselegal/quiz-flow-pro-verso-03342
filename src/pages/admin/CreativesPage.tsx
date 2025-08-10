@@ -69,7 +69,7 @@ const CreativesPage: React.FC = () => {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center border border-[#D4C4A0]"
+                style={{ backgroundColor: '#E5DDD5' }}
               >
                 <Image className="w-8 h-8 text-[#B89B7A]" />
               </div>

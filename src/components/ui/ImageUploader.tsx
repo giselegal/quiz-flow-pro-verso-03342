@@ -162,7 +162,7 @@ export function ImageUploader({
                       onDragLeave={handleDragLeave}
                     >
                       <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p style={{ color: '#6B4F43' }}>
                         Arraste uma imagem aqui ou clique para selecionar
                       </p>
                       <Button
@@ -183,7 +183,7 @@ export function ImageUploader({
                           if (file) handleFileSelect(file);
                         }}
                       />
-                      <p className="text-xs text-gray-500 mt-2">Máximo: {maxSize}MB</p>
+                      <p style={{ color: '#8B7355' }}>Máximo: {maxSize}MB</p>
                     </div>
                   </TabsContent>
 
@@ -213,7 +213,7 @@ export function ImageUploader({
                   variant="outline"
                   size="sm"
                   onClick={clearImage}
-                  className="text-red-600 hover:text-red-700"
+                  style={{ color: '#432818' }}
                 >
                   <X className="w-4 h-4" />
                 </Button>
@@ -221,7 +221,7 @@ export function ImageUploader({
             )}
           </div>
 
-          {!value && <p className="text-xs text-gray-500">{placeholder}</p>}
+          {!value && <p style={{ color: '#8B7355' }}>{placeholder}</p>}
         </div>
       </div>
 

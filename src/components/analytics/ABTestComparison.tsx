@@ -239,7 +239,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     if (variantA > variantB) {
       return <TrendingUp className="h-4 w-4 text-green-600" />;
     } else if (variantB > variantA) {
-      return <TrendingDown className="h-4 w-4 text-red-600" />;
+      return <TrendingDown style={{ color: '#432818' }} />;
     }
     return <div className="h-4 w-4" />;
   };

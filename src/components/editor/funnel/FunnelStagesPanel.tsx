@@ -247,7 +247,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         >
                           Etapa {stage.order}
                         </span>
-                        <div className="text-sm text-gray-600 mt-1">{stage.name}</div>
+                        <div style={{ color: '#6B4F43' }}>{stage.name}</div>
                       </div>
                     </div>
 

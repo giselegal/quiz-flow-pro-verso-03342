@@ -108,7 +108,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     size="sm"
                     variant="ghost"
                     onClick={() => handleRemoveItem(index)}
-                    className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
+                    style={{ color: '#432818' }}
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
@@ -203,7 +203,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
       </div>
 
       {value.length === 0 && (
-        <div className="text-center py-4 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="text-2xl mb-2">📝</div>
           <p className="text-sm">Nenhum item adicionado</p>
           <Button size="sm" onClick={handleAddItem} className="mt-2">
@@ -337,16 +337,16 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
       <div className="flex-1 p-4 space-y-4 overflow-auto">
         {Object.entries(blockDefinition.properties).map(([key, property]) => (
           <div key={key} className="space-y-2">
-            <Label className="text-sm font-medium text-gray-700">{property.label}</Label>
+            <Label style={{ color: '#6B4F43' }}>{property.label}</Label>
             {renderPropertyInput(key, property)}
             {property.description && (
-              <p className="text-xs text-gray-500">{property.description}</p>
+              <p style={{ color: '#8B7355' }}>{property.description}</p>
             )}
           </div>
         ))}
 
         {Object.keys(blockDefinition.properties).length === 0 && (
-          <div className="text-center py-8 text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             <div className="text-4xl mb-2">⚙️</div>
             <p className="text-sm">Nenhuma propriedade disponível</p>
           </div>

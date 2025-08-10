@@ -92,7 +92,7 @@ const OptionsArrayEditor: React.FC<{
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">Opções ({value.length})</span>
+        <span style={{ color: '#6B4F43' }}>Opções ({value.length})</span>
         <Button onClick={addOption} size="sm" variant="outline">
           <Plus className="w-3 h-3 mr-1" />
           Adicionar
@@ -101,13 +101,13 @@ const OptionsArrayEditor: React.FC<{
 
       <div className="space-y-1 max-h-80 overflow-y-auto">
         {value.map((option, index) => (
-          <Card key={option.id} className="p-2 border border-gray-200">
+          <Card key={option.id} style={{ borderColor: '#E5DDD5' }}>
             <div className="space-y-1">
               {/* Header com controles */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <GripVertical className="w-4 h-4 text-gray-400 cursor-move" />
-                  <span className="text-xs font-medium text-gray-600">Opção {index + 1}</span>
+                  <span style={{ color: '#6B4F43' }}>Opção {index + 1}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Button
@@ -132,7 +132,7 @@ const OptionsArrayEditor: React.FC<{
                     onClick={() => removeOption(index)}
                     size="sm"
                     variant="ghost"
-                    className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                    style={{ color: '#432818' }}
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>
@@ -222,7 +222,7 @@ const OptionsArrayEditor: React.FC<{
       </div>
 
       {value.length === 0 && (
-        <div className="text-center py-6 text-gray-500">
+        <div style={{ color: '#8B7355' }}>
           <p className="text-sm">Nenhuma opção adicionada</p>
           <p className="text-xs text-gray-400 mt-1">
             Clique em "Adicionar" para criar a primeira opção
@@ -272,7 +272,7 @@ const ColorPicker: React.FC<{
         />
       </PopoverContent>
     </Popover>
-    <span className="text-xs text-gray-500">{value || "Nenhuma cor"}</span>
+    <span style={{ color: '#8B7355' }}>{value || "Nenhuma cor"}</span>
   </div>
 );
 
@@ -283,9 +283,9 @@ const PropertyGroup: React.FC<{
   children: React.ReactNode;
   defaultExpanded?: boolean;
 }> = ({ title, icon, children, defaultExpanded = true }) => (
-  <Card className="border border-gray-200 shadow-sm">
+  <Card style={{ borderColor: '#E5DDD5' }}>
     <CardHeader className="pb-3">
-      <CardTitle className="text-sm font-medium flex items-center gap-2 text-gray-700">
+      <CardTitle style={{ color: '#6B4F43' }}>
         {icon}
         {title}
       </CardTitle>
@@ -303,9 +303,9 @@ const PropertyField: React.FC<{
 }> = ({ label, description, required, children }) => (
   <div className="space-y-2">
     <div className="flex items-center gap-2">
-      <Label className="text-sm font-medium text-gray-700">
+      <Label style={{ color: '#6B4F43' }}>
         {label}
-        {required && <span className="text-red-500">*</span>}
+        {required && <span style={{ color: '#432818' }}>*</span>}
       </Label>
       {description && (
         <TooltipProvider>
@@ -391,7 +391,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
       case "boolean":
         return (
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">{currentValue ? "Ativado" : "Desativado"}</span>
+            <span style={{ color: '#6B4F43' }}>{currentValue ? "Ativado" : "Desativado"}</span>
             <Switch
               checked={currentValue || false}
               onCheckedChange={checked => handlePropertyChange(key, checked)}
@@ -443,7 +443,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               step={property.step || 1}
               className="w-full"
             />
-            <div className="flex justify-between text-xs text-gray-500">
+            <div style={{ color: '#8B7355' }}>
               <span>{property.min || 0}</span>
               <span className="font-medium">{currentValue || property.default || 0}</span>
               <span>{property.max || 100}</span>
@@ -477,7 +477,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               <Plus className="w-4 h-4 mr-2" />
               Adicionar {property.label}
             </Button>
-            <div className="text-xs text-gray-500">
+            <div style={{ color: '#8B7355' }}>
               Editor de array genérico (em desenvolvimento)
             </div>
           </div>
@@ -520,7 +520,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   };
 
   return (
-    <div className="h-full w-full flex flex-col bg-gray-50">
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       {/* 🎨 Header Premium */}
       <div className="p-2 bg-gradient-to-r from-stone-700 to-yellow-700 text-white">
         <div className="flex items-center justify-between">
@@ -597,7 +597,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
         </Tabs>
         {/* 🚨 Fallback para propriedades não categorizadas */}
         {Object.keys(blockDefinition.properties).length === 0 && (
-          <div className="text-center py-12 text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             <Settings className="w-12 h-12 mx-auto mb-4 text-gray-300" />
             <p className="text-sm font-medium">Nenhuma propriedade disponível</p>
             <p className="text-xs text-gray-400 mt-1">

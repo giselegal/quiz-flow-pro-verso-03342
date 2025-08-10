@@ -89,14 +89,14 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
           placeholder="Título do gráfico"
         />
       </h3>
-      <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 text-sm rounded-md">
+      <div style={{ color: '#8B7355' }}>
         <div className="text-center">
           <ChartArea className="w-12 h-12 opacity-50 mx-auto mb-2" />
           <p>Visualização do Gráfico de Área</p>
           <p className="text-xs mt-1">Dados: {Array.isArray(data) ? data.length : 0} pontos</p>
         </div>
       </div>
-      <p className="text-xs text-gray-600 mt-2">Configure os dados no painel de propriedades.</p>
+      <p style={{ color: '#6B4F43' }}>Configure os dados no painel de propriedades.</p>
     </div>
   );
 };

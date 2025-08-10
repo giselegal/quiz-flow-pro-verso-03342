@@ -328,10 +328,10 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
                 {formatNumber(currentValue, isDecimal)}
                 {stat.suffix}
               </div>
-              <CardTitle className="text-lg font-semibold text-gray-900">{stat.label}</CardTitle>
+              <CardTitle style={{ color: '#432818' }}>{stat.label}</CardTitle>
             </div>
 
-            {stat.description && <p className="text-sm text-gray-600">{stat.description}</p>}
+            {stat.description && <p style={{ color: '#6B4F43' }}>{stat.description}</p>}
 
             {showProgress && stat.isPercentage && (
               <div className="space-y-2">
@@ -344,7 +344,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
                     } as any
                   }
                 />
-                <div className="flex justify-between text-xs text-gray-500">
+                <div style={{ color: '#8B7355' }}>
                   <span>0%</span>
                   <span>100%</span>
                 </div>
@@ -352,7 +352,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             )}
 
             {showTrends && stat.changeLabel && stat.change && (
-              <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div style={{ color: '#8B7355' }}>
                 <Badge variant="outline" className="text-xs">
                   {stat.changeLabel}
                 </Badge>
@@ -444,7 +444,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
         </div>
 
         {/* Trust indicators */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm text-gray-500">
+        <div style={{ color: '#8B7355' }}>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-green-500" />
             <span>Dados atualizados em tempo real</span>
@@ -454,7 +454,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             <span>Empresa certificada</span>
           </div>
           <div className="flex items-center gap-2">
-            <Heart className="w-4 h-4 text-red-500" />
+            <Heart style={{ color: '#432818' }} />
             <span>Mais de 10 anos de experiência</span>
           </div>
         </div>

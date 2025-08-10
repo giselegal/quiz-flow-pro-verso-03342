@@ -16,7 +16,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({ style, onUpdate }) =>
         <Label htmlFor="backgroundColor">Cor de Fundo</Label>
         <div className="flex gap-2">
           <div
-            className="w-10 h-10 rounded-md border border-gray-200"
+            style={{ borderColor: '#E5DDD5' }}
             style={{ backgroundColor: style.backgroundColor || "transparent" }}
           />
           <Input
@@ -32,7 +32,7 @@ const StyleProperties: React.FC<StylePropertiesProps> = ({ style, onUpdate }) =>
         <Label htmlFor="textColor">Cor do Texto</Label>
         <div className="flex gap-2">
           <div
-            className="w-10 h-10 rounded-md border border-gray-200"
+            style={{ borderColor: '#E5DDD5' }}
             style={{ backgroundColor: style.textColor || "#000000" }}
           />
           <Input

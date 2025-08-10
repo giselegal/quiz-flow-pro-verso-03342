@@ -15,8 +15,8 @@ const EditableSection: React.FC<EditableSectionProps> = ({ title, content, onCha
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <p className="text-sm text-gray-500">Seção editável: {title}</p>
-          <pre className="text-xs bg-gray-50 p-2 rounded overflow-auto max-h-32">
+          <p style={{ color: '#8B7355' }}>Seção editável: {title}</p>
+          <pre style={{ backgroundColor: '#FAF9F7' }}>
             {JSON.stringify(content, null, 2)}
           </pre>
         </div>

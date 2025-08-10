@@ -78,7 +78,7 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
     >
       {/* 📊 Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === "development" && container.stats && (
-        <div className="mb-4 p-2 bg-gray-100 rounded text-xs">
+        <div style={{ backgroundColor: '#E5DDD5' }}>
           <strong>🔧 Hook Stats:</strong>
           <ul>
             <li>📱 Mobile: {container.isMobile ? "Sim" : "Não"}</li>
@@ -105,7 +105,7 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
                 };
                 templates.saveAsTemplate(currentBlock, `Step ${stepId} Template`);
               }}
-              className="text-sm bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors"
+              style={{ backgroundColor: '#B89B7A' }}
             >
               💾 Salvar como Template ({templates.availableTemplates.length} disponíveis)
             </button>
@@ -118,7 +118,7 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
         {/* Aqui vai o conteúdo real do step */}
         <div className="space-y-4">
           <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <p className="text-gray-600 mb-4">Este é um step otimizado usando hooks compostos!</p>
+            <p style={{ color: '#6B4F43' }}>Este é um step otimizado usando hooks compostos!</p>
 
             {/* 📊 Informações de performance */}
             <div className="grid grid-cols-2 gap-4 text-sm">
@@ -144,14 +144,14 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
 
           {/* 🔮 Status do preload */}
           {performance.preloadStatus.isPreloading && (
-            <div className="text-center text-sm text-gray-500">🔮 Preparando próximo step...</div>
+            <div style={{ color: '#8B7355' }}>🔮 Preparando próximo step...</div>
           )}
         </div>
       </div>
 
       {/* 🎛️ Controles */}
       <div className="mt-8 flex justify-between items-center">
-        <div className="text-sm text-gray-500">Debounce: {performance.debounceTime}ms</div>
+        <div style={{ color: '#8B7355' }}>Debounce: {performance.debounceTime}ms</div>
 
         <button
           onClick={onNext}
@@ -186,7 +186,7 @@ export const SimpleOptimizedStep: React.FC<OptimizedStepProps> = ({ stepId, onNe
 
       <button
         onClick={onNext}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        style={{ backgroundColor: '#B89B7A' }}
       >
         Continuar
       </button>

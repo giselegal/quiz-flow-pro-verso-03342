@@ -336,7 +336,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
             {validationResult.errors.length > 0 ? (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1 text-red-600">
+                  <div style={{ color: '#432818' }}>
                     <AlertCircle className="w-4 h-4" />
                     <span className="text-sm font-medium">{validationResult.errors.length}</span>
                   </div>
@@ -385,7 +385,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
         <div className="flex items-center gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex items-center gap-1 text-sm text-gray-600">
+              <div style={{ color: '#6B4F43' }}>
                 <History className="w-4 h-4" />
                 {history.length}
               </div>
@@ -410,7 +410,7 @@ const EditorHistory: React.FC<EditorHistoryProps> = ({
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <div style={{ color: '#8B7355' }}>
                     <Clock className="w-3 h-3" />
                     {getTimeSinceLastSave()}
                   </div>

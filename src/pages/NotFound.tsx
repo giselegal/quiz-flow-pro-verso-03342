@@ -9,10 +9,10 @@ const NotFound = () => {
   }, [location]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div style={{ backgroundColor: '#E5DDD5' }}>
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
+        <p style={{ color: '#6B4F43' }}>Oops! Page not found</p>
         <a href="/" className="text-[#B89B7A] hover:text-[#A38A69] underline">
           Return to Home
         </a>

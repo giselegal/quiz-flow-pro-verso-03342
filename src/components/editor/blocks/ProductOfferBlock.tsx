@@ -91,7 +91,7 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {/* Imagem do Produto */}
         {productImage && (
-          <div className="aspect-video bg-gray-100">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <img src={productImage} alt={productName} className="w-full h-full object-cover" />
           </div>
         )}
@@ -110,7 +110,7 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
             <InlineEditableText
               value={originalPrice}
               onChange={(value: string) => handlePropertyChange("originalPrice", value)}
-              className="text-sm text-gray-500 line-through"
+              style={{ color: '#8B7355' }}
               placeholder="Preço original"
             />
             <InlineEditableText
@@ -136,11 +136,11 @@ const ProductOfferBlock: React.FC<BlockComponentProps> = ({
                         );
                         handlePropertyChange("features", updatedFeatures);
                       }}
-                      className="text-sm text-gray-700"
+                      style={{ color: '#6B4F43' }}
                       placeholder="Benefício do produto"
                     />
                   ) : (
-                    <span className="text-sm text-gray-700">{feature.text}</span>
+                    <span style={{ color: '#6B4F43' }}>{feature.text}</span>
                   )}
                 </div>
               ))}

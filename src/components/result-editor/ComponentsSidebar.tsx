@@ -13,10 +13,10 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
   const categories = getCategories();
 
   return (
-    <div className="h-full border-r border-gray-200 bg-white">
+    <div style={{ borderColor: '#E5DDD5' }}>
       <div className="p-4 border-b">
-        <h2 className="font-semibold text-gray-900">Componentes</h2>
-        <p className="text-sm text-gray-500 mt-1">Clique para adicionar</p>
+        <h2 style={{ color: '#432818' }}>Componentes</h2>
+        <p style={{ color: '#8B7355' }}>Clique para adicionar</p>
       </div>
 
       <ScrollArea className="h-full">
@@ -27,7 +27,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
             return (
               <Card key={category}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-700">{category}</CardTitle>
+                  <CardTitle style={{ color: '#6B4F43' }}>{category}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {categoryBlocks.map((block: BlockDefinition) => {
@@ -42,7 +42,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
                         <IconComponent className="w-4 h-4 mr-3 shrink-0" />
                         <div className="min-w-0">
                           <div className="font-medium text-sm">{block.name}</div>
-                          <div className="text-xs text-gray-500 truncate">{block.description}</div>
+                          <div style={{ color: '#8B7355' }}>{block.description}</div>
                         </div>
                       </Button>
                     );

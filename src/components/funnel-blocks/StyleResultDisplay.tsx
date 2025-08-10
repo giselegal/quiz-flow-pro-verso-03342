@@ -124,7 +124,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
           </h1>
 
           {subtitleText && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitleText}</p>
+            <p style={{ color: '#6B4F43' }}>{subtitleText}</p>
           )}
         </div>
 
@@ -182,7 +182,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
                 <h2 className="text-4xl md:text-5xl font-bold text-[#B89B7A] mb-6">{styleName}</h2>
 
                 {/* Descrição */}
-                <p className="text-lg text-gray-700 leading-relaxed mb-8">{styleDescription}</p>
+                <p style={{ color: '#6B4F43' }}>{styleDescription}</p>
 
                 {/* Características */}
                 {showCharacteristics && characteristics.length > 0 && (
@@ -214,7 +214,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
                       {styleKeywords.map((keyword, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-full"
+                          style={{ color: '#6B4F43' }}
                         >
                           #{keyword}
                         </span>
@@ -227,10 +227,10 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
                 {showPercentage && (
                   <div className="mb-8">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium text-gray-600">Compatibilidade</span>
+                      <span style={{ color: '#6B4F43' }}>Compatibilidade</span>
                       <span className="text-sm font-bold text-[#B89B7A]">{percentMatch}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div style={{ backgroundColor: '#E5DDD5' }}>
                       <div
                         className="bg-gradient-to-r from-[#B89B7A] to-[#D4B896] h-3 rounded-full transition-all duration-1000"
                         style={{ width: `${percentMatch}%` }}
@@ -261,7 +261,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
               {continueButtonText}
             </button>
 
-            <p className="text-sm text-gray-500 mt-4">
+            <p style={{ color: '#8B7355' }}>
               Veja como transformar seu guarda-roupa com esse estilo
             </p>
           </div>

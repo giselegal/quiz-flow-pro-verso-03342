@@ -267,7 +267,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = props => {
                 <h2 className="text-2xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
 
                 {/* Descrição */}
-                <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+                <p style={{ color: '#6B4F43' }}>
                   {description}
                 </p>
 
@@ -293,7 +293,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = props => {
                                 </svg>
                               </div>
                             ) : (
-                              <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                              <div style={{ backgroundColor: '#FAF9F7' }}>
                                 <svg
                                   className="w-4 h-4 text-white"
                                   fill="currentColor"
@@ -308,7 +308,7 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = props => {
                               </div>
                             )}
                           </div>
-                          <span className="text-lg font-medium text-gray-800">{feature.title}</span>
+                          <span style={{ color: '#432818' }}>{feature.title}</span>
                         </div>
                       ))}
                     </div>
@@ -316,10 +316,10 @@ export const GuaranteeSection: React.FC<GuaranteeSectionProps> = props => {
                 )}
 
                 {/* Texto Adicional */}
-                {additionalText && <p className="text-base text-gray-600 mb-4">{additionalText}</p>}
+                {additionalText && <p style={{ color: '#6B4F43' }}>{additionalText}</p>}
 
                 {/* Texto Legal */}
-                {legalText && <p className="text-sm text-gray-500 italic">{legalText}</p>}
+                {legalText && <p style={{ color: '#8B7355' }}>{legalText}</p>}
               </div>
             </div>
           </CardContent>

@@ -243,7 +243,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                   </div>
 
                   {faq.category && showCategories && (
-                    <Badge variant="secondary" className="mb-2 text-xs bg-gray-100 text-gray-600">
+                    <Badge variant="secondary" style={{ color: '#6B4F43' }}>
                       {faq.category}
                     </Badge>
                   )}
@@ -268,7 +268,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                 >
                   <div className="px-4 md:px-6 pb-4 md:pb-6">
                     <div className="border-t border-gray-100 pt-4">
-                      <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+                      <p style={{ color: '#6B4F43' }}>
                         {faq.answer}
                       </p>
 
@@ -340,7 +340,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
             />
           </h2>
           {subtitle && (
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p style={{ color: '#6B4F43' }}>
               <InlineEditableText
                 value={subtitle}
                 onChange={(value: string) => handlePropertyChange("subtitle", value)}
@@ -364,7 +364,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                 placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="pl-10 border-gray-200 focus:border-[#B89B7A] focus:ring-[#B89B7A]"
+                style={{ borderColor: '#E5DDD5' }}
                 onClick={e => e.stopPropagation()}
               />
             </div>
@@ -418,7 +418,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
         ) : (
           <div className="text-center py-12">
             <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">Nenhuma pergunta encontrada para "{searchTerm}"</p>
+            <p style={{ color: '#8B7355' }}>Nenhuma pergunta encontrada para "{searchTerm}"</p>
             <button
               className="mt-4 text-[#B89B7A] hover:underline"
               onClick={e => {
@@ -435,7 +435,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
 
       {/* Stats */}
       <div className="max-w-4xl mx-auto mt-8 text-center">
-        <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
+        <div style={{ color: '#8B7355' }}>
           <div className="flex items-center gap-1">
             <MessageSquare className="w-4 h-4" />
             <span>{filteredFAQs.length} pergunta(s)</span>

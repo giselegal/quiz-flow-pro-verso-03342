@@ -23,7 +23,7 @@ const SupabaseTestPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="p-4 bg-yellow-100 flex items-center gap-2">
+      <div className="p-4 bg-stone-100 flex items-center gap-2">
         <label htmlFor="debug-toggle" className="text-sm font-medium">
           Modo de depuração
         </label>
@@ -31,7 +31,7 @@ const SupabaseTestPage: React.FC = () => {
           id="debug-toggle"
           type="checkbox"
           checked={debugMode}
-          onChange={(e) => setDebugMode(e.target.checked)}
+          onChange={e => setDebugMode(e.target.checked)}
           className="rounded border-gray-300"
         />
       </div>

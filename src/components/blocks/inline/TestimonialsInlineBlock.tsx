@@ -35,7 +35,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
       <h3 className="font-semibold mb-4 text-center">{title}</h3>
       <div className="space-y-4">
         {testimonials.map((testimonial: any, index: number) => (
-          <div key={index} className="bg-gray-50 p-4 rounded-lg">
+          <div key={index} style={{ backgroundColor: '#FAF9F7' }}>
             <p className="text-sm mb-2">"{testimonial.text}"</p>
             <p className="font-medium text-xs">- {testimonial.name}</p>
           </div>

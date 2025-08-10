@@ -87,7 +87,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
 
               return (
                 <div key={category}>
-                  <h4 className="text-sm font-medium text-gray-700 mb-2 capitalize">
+                  <h4 style={{ color: '#6B4F43' }}>
                     {category === "content" && "📝 Conteúdo"}
                     {category === "interactive" && "🎯 Interativo"}
                     {category === "headers" && "📱 Cabeçalhos"}
@@ -110,7 +110,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                     {categoryComponents.map(component => (
                       <div
                         key={component.type_key}
-                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
+                        style={{ backgroundColor: '#FAF9F7' }}
                       >
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                               {component.type_key}
                             </Badge>
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p style={{ color: '#8B7355' }}>
                             {Object.keys(component.default_properties).length} propriedades
                           </p>
                         </div>
@@ -156,7 +156,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                     Aplicar
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500">Header + contador de questão personalizado</p>
+                <p style={{ color: '#8B7355' }}>Header + contador de questão personalizado</p>
                 <div className="flex gap-1 mt-2">
                   <Badge variant="secondary" className="text-xs">
                     gisele-header
@@ -180,7 +180,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                     Aplicar
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500">
+                <p style={{ color: '#8B7355' }}>
                   Header + pergunta + opções + botão continuar
                 </p>
                 <div className="flex gap-1 mt-2 flex-wrap">
@@ -212,7 +212,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                     Aplicar
                   </Button>
                 </div>
-                <p className="text-xs text-gray-500">
+                <p style={{ color: '#8B7355' }}>
                   Header + pergunta + campo de entrada + botão
                 </p>
                 <div className="flex gap-1 mt-2 flex-wrap">
@@ -237,7 +237,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
         {/* COMPONENTES DA ETAPA ATUAL */}
         {stepComponents[currentStepNumber] && stepComponents[currentStepNumber].length > 0 && (
           <div className="mt-6 pt-4 border-t">
-            <h4 className="text-sm font-medium text-gray-700 mb-3">
+            <h4 style={{ color: '#6B4F43' }}>
               📍 Etapa {currentStepNumber} ({stepComponents[currentStepNumber].length} componentes)
             </h4>
             <div className="space-y-2">
@@ -246,7 +246,7 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
                 .map(component => (
                   <div
                     key={component.id}
-                    className="flex items-center justify-between p-2 bg-blue-50 rounded"
+                    style={{ backgroundColor: '#FAF9F7' }}
                   >
                     <div className="flex-1">
                       <span className="text-sm font-medium">{component.display_name}</span>

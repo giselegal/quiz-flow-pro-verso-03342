@@ -91,7 +91,7 @@ const QuoteBlock: React.FC<BlockComponentProps> = ({
         "
       </blockquote>
       {author && (
-        <p className="text-sm text-gray-600 text-right">
+        <p style={{ color: '#6B4F43' }}>
           -{" "}
           <InlineEditableText
             value={author}

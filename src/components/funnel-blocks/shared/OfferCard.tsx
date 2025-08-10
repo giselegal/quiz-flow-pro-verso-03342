@@ -78,7 +78,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
               )}
             />
           ))}
-        {reviewCount && <span className="text-xs text-gray-500 ml-1">({reviewCount})</span>}
+        {reviewCount && <span style={{ color: '#8B7355' }}>({reviewCount})</span>}
       </div>
     );
   };
@@ -106,7 +106,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
           {/* Desconto sobre imagem */}
           {discount && (
-            <div className="absolute top-2 left-2 bg-red-500 text-white py-1 px-2 rounded text-xs font-bold">
+            <div style={{ backgroundColor: '#FAF9F7' }}>
               {discount}
             </div>
           )}
@@ -123,20 +123,20 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
       <CardContent className="space-y-4 pt-0">
         {/* Descrição */}
-        {description && <p className="text-gray-700 text-sm">{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {/* Preço */}
         {price && (
           <div className="space-y-1">
             {originalPrice && (
-              <div className="text-sm text-gray-500 line-through">De R$ {originalPrice}</div>
+              <div style={{ color: '#8B7355' }}>De R$ {originalPrice}</div>
             )}
 
             <div className="flex items-end gap-2">
               <span className="text-2xl font-bold text-primary">R$ {price}</span>
 
               {installments && (
-                <span className="text-xs text-gray-600">
+                <span style={{ color: '#6B4F43' }}>
                   ou {installments.count}x de R$ {installments.value}
                 </span>
               )}
@@ -152,7 +152,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                 <div className="flex-shrink-0 mr-2 mt-1">
                   <Check className="h-3 w-3 text-green-500" />
                 </div>
-                <span className="text-gray-700">{feature}</span>
+                <span style={{ color: '#6B4F43' }}>{feature}</span>
               </li>
             ))}
           </ul>
@@ -161,7 +161,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         {/* Contagem regressiva */}
         {showCountdown && (
           <div className="pt-2">
-            <p className="text-xs text-center text-gray-500 mb-2">Esta oferta expira em:</p>
+            <p style={{ color: '#8B7355' }}>Esta oferta expira em:</p>
             <CountdownTimer hours={countdownHours} variant="compact" className="mx-auto" />
           </div>
         )}

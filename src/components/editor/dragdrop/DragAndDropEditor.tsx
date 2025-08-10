@@ -102,13 +102,13 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
         return (
           <div className="space-y-2">
             <div className="h-3 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div style={{ backgroundColor: '#E5DDD5' }}></div>
           </div>
         );
       case "image-display-inline":
         return (
-          <div className="h-16 bg-gray-200 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
-            <span className="text-gray-500 text-xs">📷 Imagem</span>
+          <div style={{ borderColor: '#E5DDD5' }}>
+            <span style={{ color: '#8B7355' }}>📷 Imagem</span>
           </div>
         );
       case "button-inline":
@@ -121,14 +121,14 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
         return (
           <div className="grid grid-cols-2 gap-2">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-8 bg-gray-100 rounded border"></div>
+              <div key={i} style={{ backgroundColor: '#E5DDD5' }}></div>
             ))}
           </div>
         );
       default:
         return (
           <div className="h-12 bg-gradient-to-r from-gray-100 to-gray-200 rounded flex items-center justify-center">
-            <span className="text-gray-600 text-xs">{block.type}</span>
+            <span style={{ color: '#6B4F43' }}>{block.type}</span>
           </div>
         );
     }
@@ -185,7 +185,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
                 <div className="w-2 h-2 bg-green-500 rounded-full" title="Componente disponível" />
               ) : (
                 <div
-                  className="w-2 h-2 bg-red-500 rounded-full"
+                  style={{ backgroundColor: '#FAF9F7' }}
                   title="Componente não encontrado"
                 />
               )}
@@ -220,7 +220,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                      style={{ color: '#432818' }}
                       onClick={handleDelete}
                     >
                       <Trash2 className="w-3 h-3" />
@@ -239,7 +239,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
             {renderBlockPreview()}
 
             {/* Informações adicionais */}
-            <div className="flex items-center justify-between text-xs text-gray-500">
+            <div style={{ color: '#8B7355' }}>
               <span>ID: {block.id.slice(-8)}</span>
               {block.properties && Object.keys(block.properties).length > 0 && (
                 <span>{Object.keys(block.properties).length} props</span>
@@ -316,7 +316,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
     <div className={cn("h-full flex flex-col", className)}>
       <TooltipProvider>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex items-center gap-2">
             <Move3D className="w-5 h-5 text-[#B89B7A]" />
             <h3 className="text-lg font-medium text-[#432818]">Editor de Blocos</h3>
@@ -370,7 +370,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
 
           {/* Estado vazio */}
           {blocks.length === 0 && (
-            <div className="flex items-center justify-center h-64 text-gray-500">
+            <div style={{ color: '#8B7355' }}>
               <div className="text-center">
                 <Move3D className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium">Nenhum bloco adicionado</p>
@@ -385,8 +385,8 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
         </div>
 
         {/* Footer com dicas */}
-        <div className="border-t border-gray-200 p-4 bg-gray-50">
-          <div className="flex items-center justify-between text-sm text-gray-600">
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ color: '#6B4F43' }}>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <GripVertical className="w-3 h-3" />

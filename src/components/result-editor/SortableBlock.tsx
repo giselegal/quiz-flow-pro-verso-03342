@@ -45,7 +45,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
         return <p className="text-sm line-clamp-2">{content.text || "Parágrafo de texto"}</p>;
       case "image":
         return content.imageUrl ? (
-          <div className="h-20 bg-gray-100 flex items-center justify-center overflow-hidden">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <img
               src={content.imageUrl}
               alt={content.alt || "Imagem"}
@@ -53,7 +53,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
             />
           </div>
         ) : (
-          <div className="h-20 bg-gray-100 flex items-center justify-center text-gray-400">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             Imagem
           </div>
         );
@@ -64,7 +64,7 @@ export const SortableBlock: React.FC<SortableBlockProps> = ({
           </div>
         );
       default:
-        return <div className="text-sm text-gray-500">{block.type}</div>;
+        return <div style={{ color: '#8B7355' }}>{block.type}</div>;
     }
   };
 

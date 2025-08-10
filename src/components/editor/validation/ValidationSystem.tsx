@@ -358,7 +358,7 @@ export const ValidationSummary: React.FC<{
           <h3 className="text-sm font-semibold mb-3">Resumo de Validação</h3>
           <div className="space-y-2">
             {summary.errors > 0 && (
-              <div className="flex items-center gap-2 text-red-600">
+              <div style={{ color: '#432818' }}>
                 <AlertCircle className="h-4 w-4" />
                 <span className="text-sm">{summary.errors} erro(s) crítico(s)</span>
               </div>
@@ -388,7 +388,7 @@ export const ValidationSummary: React.FC<{
             .map((result, index) => (
               <Alert key={index} className="bg-white">
                 <div className="flex items-start gap-2">
-                  {result.severity === "error" && <AlertCircle className="h-4 w-4 text-red-500" />}
+                  {result.severity === "error" && <AlertCircle style={{ color: '#432818' }} />}
                   {result.severity === "warning" && (
                     <AlertTriangle className="h-4 w-4 text-yellow-500" />
                   )}
@@ -410,7 +410,7 @@ export const ValidationSummary: React.FC<{
       {isValidating && (
         <div className="text-center py-4">
           <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-            <div className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-gray-600 rounded-full"></div>
+            <div style={{ borderColor: '#E5DDD5' }}></div>
             Validando funil...
           </div>
         </div>

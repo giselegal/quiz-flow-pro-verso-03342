@@ -315,7 +315,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 
       {/* 6. UX: Error State */}
       {hasError && errorMessage && (
-        <div className="absolute top-0 left-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-t-lg z-10">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           ⚠️ {errorMessage}
         </div>
       )}
@@ -343,7 +343,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
             )}
 
             {/* Control Buttons */}
-            <div className="flex items-center bg-white rounded-full shadow-lg border border-gray-200 overflow-hidden">
+            <div style={{ borderColor: '#E5DDD5' }}>
               {/* Edit Button */}
               <button
                 onClick={e => {
@@ -365,10 +365,10 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
                       e.stopPropagation();
                       handleDuplicate();
                     }}
-                    className="p-1 hover:bg-gray-100 transition-colors"
+                    style={{ backgroundColor: '#E5DDD5' }}
                     title="Duplicar"
                   >
-                    <Copy className="w-3 h-3 text-gray-600" />
+                    <Copy style={{ color: '#6B4F43' }} />
                   </button>
                 )}
 
@@ -379,20 +379,20 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
                         e.stopPropagation();
                         onMove("up");
                       }}
-                      className="p-1 hover:bg-gray-100 transition-colors"
+                      style={{ backgroundColor: '#E5DDD5' }}
                       title="Mover para cima"
                     >
-                      <Move className="w-3 h-3 text-gray-600 rotate-180" />
+                      <Move style={{ color: '#6B4F43' }} />
                     </button>
                     <button
                       onClick={e => {
                         e.stopPropagation();
                         onMove("down");
                       }}
-                      className="p-1 hover:bg-gray-100 transition-colors"
+                      style={{ backgroundColor: '#E5DDD5' }}
                       title="Mover para baixo"
                     >
-                      <Move className="w-3 h-3 text-gray-600" />
+                      <Move style={{ color: '#6B4F43' }} />
                     </button>
                   </>
                 )}
@@ -406,7 +406,7 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
                     className="p-1 hover:bg-red-100 transition-colors"
                     title="Deletar"
                   >
-                    <Trash2 className="w-3 h-3 text-red-600" />
+                    <Trash2 style={{ color: '#432818' }} />
                   </button>
                 )}
               </div>

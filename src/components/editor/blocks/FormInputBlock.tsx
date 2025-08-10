@@ -68,8 +68,8 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }

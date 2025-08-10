@@ -193,7 +193,7 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
           <input
             type="text"
             placeholder={nameInputPlaceholder}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:border-transparent"
+            style={{ borderColor: '#E5DDD5' }}
             disabled={disabled}
           />
         </div>

@@ -40,7 +40,7 @@ const QuizResultComponent: React.FC<QuizResultComponentProps> = ({ data, style, 
         {data.showPercentages && <div className="mt-1 font-medium">65%</div>}
 
         {data.showDescriptions && (
-          <p className="mt-3 text-gray-600">
+          <p style={{ color: '#6B4F43' }}>
             Você se destaca pela sofisticação e refinamento em suas escolhas.
           </p>
         )}
@@ -56,7 +56,7 @@ const QuizResultComponent: React.FC<QuizResultComponentProps> = ({ data, style, 
             <div key={index} className="flex items-center justify-between">
               <span className="font-medium">{style}</span>
               {data.showPercentages && (
-                <span className="text-sm text-gray-600">{30 - index * 5}%</span>
+                <span style={{ color: '#6B4F43' }}>{30 - index * 5}%</span>
               )}
             </div>
           ))}

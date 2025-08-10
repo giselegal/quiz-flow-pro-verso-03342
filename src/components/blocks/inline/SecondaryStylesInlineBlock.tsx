@@ -35,7 +35,7 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
         {secondaryStyles.map((style: any, index: number) => (
           <div
             key={index}
-            className="text-center p-4 rounded-lg border bg-gray-50 hover:bg-gray-100 transition-colors"
+            style={{ backgroundColor: '#E5DDD5' }}
           >
             {/* Círculo com porcentagem */}
             <div className="relative inline-block mb-3">
@@ -51,15 +51,15 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
             <h4 className="font-medium text-[#432818] mb-1">{style.name}</h4>
 
             {/* Descrição opcional */}
-            {style.description && <p className="text-sm text-gray-600">{style.description}</p>}
+            {style.description && <p style={{ color: '#6B4F43' }}>{style.description}</p>}
           </div>
         ))}
       </div>
 
       {/* Área editável quando selecionado */}
       {isSelected && onPropertyChange && (
-        <div className="mt-4 pt-4 border-t border-gray-200">
-          <div className="text-xs text-gray-500 text-center">
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ color: '#8B7355' }}>
             <p>
               💡 <strong>Editável:</strong> Personalize os estilos secundários
             </p>

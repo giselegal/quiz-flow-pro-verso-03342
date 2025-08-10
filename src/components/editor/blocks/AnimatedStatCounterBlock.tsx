@@ -63,7 +63,7 @@ const AnimatedStatCounterBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div className="bg-red-100 p-2 text-red-600 text-sm rounded">
+      <div style={{ color: '#432818' }}>
         ⚠️ Erro: Propriedades do bloco não encontradas
       </div>
     );

@@ -35,7 +35,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
   if (!isValidBlock(block)) {
     console.warn("⚠️ Invalid block received:", block);
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">Block inválido</div>
+      <div style={{ borderColor: '#E5DDD5' }}>Block inválido</div>
     );
   }
 
@@ -72,7 +72,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
           {options.map(option => (
             <div
               key={option.id}
-              className="p-3 border rounded hover:bg-gray-50 cursor-pointer transition-colors"
+              style={{ backgroundColor: '#FAF9F7' }}
               onClick={() => {
                 if (autoAdvance) {
                   console.log(
@@ -119,8 +119,8 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
               className="max-w-full h-auto rounded"
             />
           ) : (
-            <div className="bg-gray-100 h-40 flex items-center justify-center rounded">
-              <span className="text-gray-500">Imagem não definida</span>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
+              <span style={{ color: '#8B7355' }}>Imagem não definida</span>
             </div>
           )}
         </div>
@@ -128,8 +128,8 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
 
     default:
       return (
-        <div className="unknown-block p-4 bg-gray-50 border border-gray-200 rounded">
-          <p className="text-gray-600">Tipo de bloco desconhecido: {block.type}</p>
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <p style={{ color: '#6B4F43' }}>Tipo de bloco desconhecido: {block.type}</p>
         </div>
       );
   }

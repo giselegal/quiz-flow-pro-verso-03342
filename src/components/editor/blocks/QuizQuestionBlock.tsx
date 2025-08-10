@@ -103,17 +103,17 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       onClick={handleClick}
     >
       <div className="space-y-4">
-        {content.title && <h3 className="text-lg font-medium text-gray-900">{content.title}</h3>}
+        {content.title && <h3 style={{ color: '#432818' }}>{content.title}</h3>}
 
-        {content.text && <p className="text-gray-700">{content.text}</p>}
+        {content.text && <p style={{ color: '#6B4F43' }}>{content.text}</p>}
 
         <div className="space-y-2">
           {options.map((option: any) => (
             <div
               key={option.id}
-              className="p-3 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors cursor-pointer"
+              style={{ backgroundColor: '#E5DDD5' }}
             >
-              <span className="text-gray-800">{option.text}</span>
+              <span style={{ color: '#432818' }}>{option.text}</span>
             </div>
           ))}
         </div>

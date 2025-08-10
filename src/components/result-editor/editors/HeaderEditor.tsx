@@ -58,7 +58,7 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ content, onUpdate }) => {
         {content.logoUrl && (
           <div className="mt-2">
             <p className="text-sm text-[#8F7A6A] mb-1">Pré-visualização:</p>
-            <div className="p-2 bg-gray-50 rounded">
+            <div style={{ backgroundColor: '#FAF9F7' }}>
               <img
                 src={content.logoUrl}
                 alt="Logo"

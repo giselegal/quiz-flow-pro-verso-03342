@@ -26,7 +26,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         ))}
 
         {components.length === 0 && (
-          <div className="flex items-center justify-center h-64 text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             <p>Nenhum componente adicionado ainda</p>
           </div>
         )}

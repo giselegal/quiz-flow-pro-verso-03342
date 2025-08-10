@@ -95,7 +95,7 @@ const ABTestPage: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="default" className="bg-green-100 text-green-800">
+                  <Badge variant="default" style={{ backgroundColor: '#E5DDD5' }}>
                     Ativo
                   </Badge>
                   <Button variant="outline" size="sm">

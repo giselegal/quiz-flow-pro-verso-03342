@@ -258,7 +258,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
 
   return (
     isVisible && (
-      <div className="fixed top-0 left-0 w-full h-full bg-gray-100 bg-opacity-75 z-50 overflow-auto">
+      <div style={{ backgroundColor: '#E5DDD5' }}>
         <div className="container mx-auto p-4">
           <h2 className="text-2xl font-bold mb-4">Image Diagnostic Debugger</h2>
 
@@ -376,7 +376,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                       {issue.dimensions?.display?.height}
                     </p>
                     {issue.issues?.map((error, i) => (
-                      <p key={i} className="text-red-500">
+                      <p key={i} style={{ color: '#432818' }}>
                         <AlertTriangle className="inline-block h-4 w-4 mr-1" />
                         {error}
                       </p>
@@ -411,7 +411,7 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                           {analysisResults[index].isOptimized ? (
                             <CheckCircle className="inline-block h-4 w-4 text-green-500" />
                           ) : (
-                            <AlertTriangle className="inline-block h-4 w-4 text-red-500" />
+                            <AlertTriangle style={{ color: '#432818' }} />
                           )}
                         </p>
                         <p className="text-sm">
@@ -419,14 +419,14 @@ const ImageDiagnosticDebugger: React.FC<ImageDiagnosticDebuggerProps> = ({ isVis
                           {analysisResults[index].isResponsive ? (
                             <CheckCircle className="inline-block h-4 w-4 text-green-500" />
                           ) : (
-                            <AlertTriangle className="inline-block h-4 w-4 text-red-500" />
+                            <AlertTriangle style={{ color: '#432818' }} />
                           )}
                         </p>
                         {analysisResults[index].suggestedImprovements &&
                           analysisResults[index].suggestedImprovements!.length > 0 && (
                             <>
                               <p className="text-sm font-medium">Suggested Improvements:</p>
-                              <ul className="list-disc list-inside text-sm text-red-500">
+                              <ul style={{ color: '#432818' }}>
                                 {analysisResults[index].suggestedImprovements!.map(
                                   (improvement, i) => (
                                     <li key={i}>{improvement}</li>

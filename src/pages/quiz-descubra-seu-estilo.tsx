@@ -700,7 +700,7 @@ const FaqSectionAdvanced = () => {
             </button>
 
             {openItem === index && (
-              <div className="px-6 py-4 text-gray-700 bg-[#B89B7A]/10 border-t border-orange-100 text-base leading-relaxed">
+              <div style={{ color: '#6B4F43' }}>
                 {item.answer}
               </div>
             )}

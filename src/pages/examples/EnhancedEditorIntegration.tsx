@@ -19,13 +19,13 @@ const EditorPage: React.FC = () => {
   // Verificar se a rota está correta
   if (!match || !funnelId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div style={{ backgroundColor: '#FAF9F7' }}>
         <Card className="w-96">
           <CardHeader>
             <CardTitle className="text-center">Erro</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="text-gray-600 mb-4">Funil não encontrado</p>
+            <p style={{ color: '#6B4F43' }}>Funil não encontrado</p>
             <Button onClick={() => window.history.back()}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Voltar
@@ -120,7 +120,7 @@ const FunnelManagementPage: React.FC = () => {
             {/* Aqui você pode importar e usar o AdvancedAnalytics diretamente */}
             <Card>
               <CardContent className="p-6">
-                <p className="text-center text-gray-600">Dashboard de Analytics estará aqui</p>
+                <p style={{ color: '#6B4F43' }}>Dashboard de Analytics estará aqui</p>
               </CardContent>
             </Card>
           </div>
@@ -148,7 +148,7 @@ const FunnelManagementPage: React.FC = () => {
                           {renderStatusBadge(funnel.status)}
                         </div>
 
-                        <div className="flex items-center gap-6 text-sm text-gray-600">
+                        <div style={{ color: '#6B4F43' }}>
                           <div className="flex items-center gap-1">
                             <Eye className="h-4 w-4" />
                             {funnel.views} visualizações
@@ -207,7 +207,7 @@ const FunnelManagementPage: React.FC = () => {
     }
   };
 
-  return <div className="min-h-screen bg-gray-50">{renderView()}</div>;
+  return <div style={{ backgroundColor: '#FAF9F7' }}>{renderView()}</div>;
 };
 
 // Hook personalizado para facilitar integração
@@ -354,7 +354,7 @@ const ExistingComponentExample: React.FC = () => {
         <CardContent className="p-6">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-600">Carregando funil...</p>
+            <p style={{ color: '#6B4F43' }}>Carregando funil...</p>
           </div>
         </CardContent>
       </Card>
@@ -366,8 +366,8 @@ const ExistingComponentExample: React.FC = () => {
       <Card>
         <CardContent className="p-6">
           <div className="text-center">
-            <div className="text-red-500 mb-2">❌</div>
-            <p className="text-sm text-red-600 mb-4">{error}</p>
+            <div style={{ color: '#432818' }}>❌</div>
+            <p style={{ color: '#432818' }}>{error}</p>
             <Button onClick={refresh} size="sm">
               Tentar Novamente
             </Button>
@@ -436,7 +436,7 @@ const ExistingComponentExample: React.FC = () => {
         </div>
 
         {funnelData && (
-          <div className="mt-4 p-3 bg-gray-50 rounded text-xs">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <p>
               <strong>ID:</strong> {funnelData.id}
             </p>

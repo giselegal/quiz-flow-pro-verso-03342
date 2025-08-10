@@ -69,15 +69,15 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600">Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }
 
   if (!block.properties) {
     return (
-      <div className="bg-red-100 p-2 text-red-600 text-sm rounded">
+      <div style={{ color: '#432818' }}>
         ⚠️ Erro: Propriedades do bloco não encontradas
       </div>
     );
@@ -434,7 +434,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Empty state */}
       {!text && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100/80 rounded-lg text-gray-500 text-sm">
+        <div style={{ color: '#8B7355' }}>
           <MousePointer2 className="w-4 h-4 mr-2" />
           Clique para selecionar e editar no painel
         </div>

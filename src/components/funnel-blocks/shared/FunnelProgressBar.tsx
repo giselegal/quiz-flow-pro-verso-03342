@@ -40,7 +40,7 @@ const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
   return (
     <div className={cn("w-full", className)}>
       {/* Barra principal */}
-      <div className="w-full bg-gray-100 rounded-full overflow-hidden">
+      <div style={{ backgroundColor: '#E5DDD5' }}>
         <div
           className={cn(
             "bg-current rounded-full",
@@ -56,7 +56,7 @@ const FunnelProgressBar: React.FC<FunnelProgressBarProps> = ({
 
       {/* Labels e porcentagem */}
       {(showLabels || showPercentage) && (
-        <div className="flex justify-between mt-2 text-xs text-gray-500">
+        <div style={{ color: '#8B7355' }}>
           {showLabels && (
             <div className="flex justify-between w-full">
               <span>Etapa {currentStep}</span>

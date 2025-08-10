@@ -92,11 +92,11 @@ export function ComponentsDemo() {
   return (
     <div className="h-screen flex">
       {/* Lista de Blocos */}
-      <div className="w-80 border-r border-gray-200 bg-gray-50 p-4">
+      <div style={{ borderColor: '#E5DDD5' }}>
         <div className="space-y-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">Demo - Sistema Modernizado</h2>
-            <p className="text-sm text-gray-600">
+            <h2 style={{ color: '#432818' }}>Demo - Sistema Modernizado</h2>
+            <p style={{ color: '#6B4F43' }}>
               Teste os novos componentes criados com Shadcn UI + React Hook Form + Zod
             </p>
           </div>
@@ -104,7 +104,7 @@ export function ComponentsDemo() {
           <Separator />
 
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-700">Blocos Disponíveis</h3>
+            <h3 style={{ color: '#6B4F43' }}>Blocos Disponíveis</h3>
             {blocks.map(block => (
               <Card
                 key={block.id}
@@ -131,7 +131,7 @@ export function ComponentsDemo() {
           <Separator />
 
           <div className="space-y-2">
-            <h3 className="text-sm font-medium text-gray-700">Funcionalidades</h3>
+            <h3 style={{ color: '#6B4F43' }}>Funcionalidades</h3>
             <div className="text-xs space-y-1">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -160,9 +160,9 @@ export function ComponentsDemo() {
       </div>
 
       {/* Preview (opcional) */}
-      <div className="w-96 border-l border-gray-200 bg-white p-4">
+      <div style={{ borderColor: '#E5DDD5' }}>
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900">Preview</h3>
+          <h3 style={{ color: '#432818' }}>Preview</h3>
 
           {selectedBlock && (
             <Card>
@@ -171,7 +171,7 @@ export function ComponentsDemo() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <pre className="text-xs bg-gray-100 p-2 rounded-md overflow-auto max-h-64">
+                  <pre style={{ backgroundColor: '#E5DDD5' }}>
                     {JSON.stringify(selectedBlock.properties, null, 2)}
                   </pre>
                 </div>
@@ -179,7 +179,7 @@ export function ComponentsDemo() {
             </Card>
           )}
 
-          <div className="text-xs text-gray-500 space-y-2">
+          <div style={{ color: '#8B7355' }}>
             <h4 className="font-medium">Status:</h4>
             <div className="space-y-1">
               <div>✅ Schemas Zod criados</div>

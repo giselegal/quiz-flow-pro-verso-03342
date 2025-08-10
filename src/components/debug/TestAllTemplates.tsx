@@ -21,21 +21,21 @@ const TestAllTemplates: React.FC = () => {
           {step08?.[0] && <p>Primeiro bloco ID: {step08[0].id}</p>}
         </div>
 
-        <div className="bg-blue-50 p-4 rounded">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <h2 className="font-bold">Step18 Template:</h2>
           <p>Status: {step18 ? "✅ OK" : "❌ ERRO"}</p>
           <p>Blocos: {step18?.length || 0}</p>
           {step18?.[0] && <p>Primeiro bloco ID: {step18[0].id}</p>}
         </div>
 
-        <div className="bg-purple-50 p-4 rounded">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <h2 className="font-bold">Step19 Template:</h2>
           <p>Status: {step19 ? "✅ OK" : "❌ ERRO"}</p>
           <p>Blocos: {step19?.length || 0}</p>
           {step19?.[0] && <p>Primeiro bloco ID: {step19[0].id}</p>}
         </div>
 
-        <div className="bg-gray-50 p-4 rounded">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <h2 className="font-bold">Teste JavaScript Console:</h2>
           <button
             onClick={() => {
@@ -49,7 +49,7 @@ const TestAllTemplates: React.FC = () => {
                 alert("❌ Erro: " + (error instanceof Error ? error.message : String(error)));
               }
             }}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            style={{ backgroundColor: '#B89B7A' }}
           >
             Testar no Console
           </button>

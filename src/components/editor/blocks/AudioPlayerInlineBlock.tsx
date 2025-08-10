@@ -508,7 +508,7 @@ const AudioPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Stats (Editor Mode) */}
         {isSelected && (
-          <div className="mt-3 flex items-center justify-center gap-4 text-xs text-gray-500 p-2 bg-gray-50 rounded-lg">
+          <div style={{ color: '#8B7355' }}>
             <span>Style: {playerStyle}</span>
             <span>•</span>
             <span>Duration: {formatTime(duration)}</span>

@@ -14,7 +14,7 @@ export const BuildInfo: React.FC = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-1 right-1 text-xs text-gray-500 bg-white/80 p-1 rounded">
+    <div style={{ color: '#8B7355' }}>
       v{VERSION.buildNumber} • {new Date(VERSION.lastUpdated).toLocaleDateString()}
     </div>
   );

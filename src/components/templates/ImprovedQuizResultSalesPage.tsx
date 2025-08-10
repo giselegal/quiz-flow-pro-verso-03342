@@ -327,7 +327,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                           <span className="text-2xl sm:text-3xl font-bold line-through text-[#6B5B4E] opacity-70">
                             R$ 175,00
                           </span>
-                          <div className="absolute top-1/2 left-0 right-0 h-1 bg-red-500 transform -translate-y-1/2 -rotate-12"></div>
+                          <div style={{ backgroundColor: '#FAF9F7' }}></div>
                         </div>
                       </div>
                     </div>
@@ -363,7 +363,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                     <div className="mb-6">
                       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-4">
                         <div className="text-center">
-                          <p className="text-sm text-gray-500 mb-1">De</p>
+                          <p style={{ color: '#8B7355' }}>De</p>
                           <p className="text-xl sm:text-2xl line-through text-[#6B5B4E] opacity-70">
                             R$ 175,00
                           </p>
@@ -488,8 +488,8 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Antes */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-red-200">
-              <h3 className="text-lg font-semibold text-red-600 mb-4 text-center">
+            <div style={{ borderColor: '#E5DDD5' }}>
+              <h3 style={{ color: '#432818' }}>
                 ❌ Quando você não conhece seu estilo...
               </h3>
               <ul className="space-y-3">
@@ -500,7 +500,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                   "Tem dificuldade em criar uma imagem coerente e autêntica",
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+                    <XCircle style={{ color: '#432818' }} />
                     <span className="text-sm">{item}</span>
                   </li>
                 ))}

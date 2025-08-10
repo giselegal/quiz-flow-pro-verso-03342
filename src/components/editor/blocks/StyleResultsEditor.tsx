@@ -90,8 +90,8 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                 </Select>
               </div>
 
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-500 mb-2">Pré-visualização:</p>
+              <div style={{ backgroundColor: '#FAF9F7' }}>
+                <p style={{ color: '#8B7355' }}>Pré-visualização:</p>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0">
                     <img
@@ -102,7 +102,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   </div>
                   <div>
                     <h4 className="font-medium">{selectedStyle}</h4>
-                    <p className="text-sm text-gray-600 line-clamp-2">{styleData.description}</p>
+                    <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   onCheckedChange={checked => updateConfig({ showAllStyles: checked })}
                 />
               </div>
-              <p className="text-sm text-gray-500">
+              <p style={{ color: '#8B7355' }}>
                 Se ativado, mostra todos os estilos e suas pontuações, não apenas os 3 principais
               </p>
 
@@ -136,7 +136,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   onCheckedChange={checked => updateConfig({ showGuideImage: checked })}
                 />
               </div>
-              <p className="text-sm text-gray-500">
+              <p style={{ color: '#8B7355' }}>
                 Se ativado, mostra a imagem do guia de estilo associado ao resultado
               </p>
             </CardContent>
@@ -158,7 +158,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   />
                 </div>
               ) : (
-                <p className="text-center text-gray-500 py-10">
+                <p style={{ color: '#8B7355' }}>
                   Imagem do guia não disponível para este estilo
                 </p>
               )}

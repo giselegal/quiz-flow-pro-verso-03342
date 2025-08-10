@@ -194,7 +194,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
         <Button
           onClick={onSave}
           size="sm"
-          className="bg-white text-amber-600 hover:bg-amber-50 font-medium px-6 shadow-md"
+          style={{ backgroundColor: '#FAF9F7' }}
         >
           <Save className="mr-2 h-4 w-4" />
           Salvar

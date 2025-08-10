@@ -92,7 +92,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     return (
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-[#432818]">{content.title || "Título"}</h1>
-        {content.subtitle && <p className="text-lg text-gray-600">{content.subtitle}</p>}
+        {content.subtitle && <p style={{ color: '#6B4F43' }}>{content.subtitle}</p>}
       </div>
     );
   };
@@ -123,7 +123,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     }
 
     return (
-      <p className="text-base leading-relaxed text-gray-700">
+      <p style={{ color: '#6B4F43' }}>
         {content.text || "Clique para editar este texto..."}
       </p>
     );
@@ -171,12 +171,12 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             className="mx-auto rounded-lg max-w-full h-auto"
           />
         ) : (
-          <div className="bg-gray-100 rounded-lg p-8 text-center">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <ImageIcon className="w-12 h-12 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-500">Clique para adicionar imagem</p>
+            <p style={{ color: '#8B7355' }}>Clique para adicionar imagem</p>
           </div>
         )}
-        {content.caption && <p className="text-sm text-gray-600 mt-2">{content.caption}</p>}
+        {content.caption && <p style={{ color: '#6B4F43' }}>{content.caption}</p>}
       </div>
     );
   };
@@ -292,11 +292,11 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
 
     return (
       <blockquote className="border-l-4 border-[#B89B7A] pl-6 italic">
-        <p className="text-lg text-gray-700 mb-2">
+        <p style={{ color: '#6B4F43' }}>
           "{content.quote || "Clique para adicionar uma citação..."}"
         </p>
         {content.author && (
-          <cite className="text-sm text-gray-600 font-medium">— {content.author}</cite>
+          <cite style={{ color: '#6B4F43' }}>— {content.author}</cite>
         )}
       </blockquote>
     );
@@ -410,7 +410,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             }}
             variant="secondary"
             size="sm"
-            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+            style={{ color: '#432818' }}
           >
             <Trash2 className="w-3 h-3" />
           </Button>

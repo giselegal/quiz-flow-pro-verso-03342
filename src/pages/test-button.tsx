@@ -28,7 +28,7 @@ const TestButton = () => {
     <div className="p-8 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-8 text-center">Teste do Botão CTA</h1>
 
-      <div className="border-2 border-dashed border-gray-300 p-4 rounded-lg">
+      <div style={{ borderColor: '#E5DDD5' }}>
         <ButtonInlineFixed
           block={testBlock}
           isSelected={false}
@@ -36,11 +36,11 @@ const TestButton = () => {
         />
       </div>
 
-      <div className="mt-4 text-sm text-gray-600">
+      <div style={{ color: '#6B4F43' }}>
         <p>
           <strong>Propriedades do teste:</strong>
         </p>
-        <pre className="bg-gray-100 p-2 rounded text-xs overflow-auto">
+        <pre style={{ backgroundColor: '#E5DDD5' }}>
           {JSON.stringify(testBlock.properties, null, 2)}
         </pre>
       </div>

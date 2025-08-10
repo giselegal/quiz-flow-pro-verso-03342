@@ -92,7 +92,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ analyticsData, loading
       <div className="bg-white p-1.5 border border-gray-100 shadow-lg rounded-md">
         <p className="text-[7px] font-medium mb-0.5">Questão {data.questionId}</p>
         <p className="text-[7px] font-semibold">{data.uniqueUsers} usuários</p>
-        <p className="text-[6px] text-gray-500 mt-0.5">{data.retentionFromStart}% retenção total</p>
+        <p style={{ color: '#8B7355' }}>{data.retentionFromStart}% retenção total</p>
         {data.dropoffRate > 0 && (
           <p className="text-[6px] text-rose-500 mt-0.5">{data.dropoffRate}% abandonaram aqui</p>
         )}

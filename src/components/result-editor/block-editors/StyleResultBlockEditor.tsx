@@ -34,7 +34,7 @@ const StyleResultBlockEditor: React.FC<StyleResultBlockEditorProps> = ({ block, 
           placeholder="URL da imagem personalizada"
         />
         {content.customImage && (
-          <div className="mt-2 p-2 bg-gray-50 rounded">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.customImage}
               alt="Imagem personalizada"
@@ -44,7 +44,7 @@ const StyleResultBlockEditor: React.FC<StyleResultBlockEditorProps> = ({ block, 
         )}
       </div>
 
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div style={{ backgroundColor: '#FAF9F7' }}>
         <p className="text-sm text-[#8F7A6A]">
           <strong>Nota:</strong> Este componente exibirá automaticamente o estilo predominante do
           usuário. Você pode personalizar a descrição e a imagem aqui.

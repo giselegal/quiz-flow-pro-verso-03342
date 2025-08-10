@@ -175,12 +175,12 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           {showCaption && caption && (
-            <p className="text-sm text-gray-600 text-center italic">{caption}</p>
+            <p style={{ color: '#6B4F43' }}>{caption}</p>
           )}
         </div>
       ) : (
-        <div className="flex items-center justify-center bg-gray-100 rounded-lg p-8 min-h-[120px]">
-          <div className="text-center text-gray-500">
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ color: '#8B7355' }}>
             <ImageIcon className="w-8 h-8 mx-auto mb-2" />
             <p className="text-sm">Clique para selecionar e adicionar imagem no painel</p>
           </div>

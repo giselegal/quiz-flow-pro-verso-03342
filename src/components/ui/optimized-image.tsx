@@ -152,7 +152,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
       {/* Loading placeholder */}
       {!isLoaded && placeholder === "empty" && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+        <div style={{ backgroundColor: '#E5DDD5' }} />
       )}
 
       {/* Main image */}

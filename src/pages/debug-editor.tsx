@@ -18,7 +18,7 @@ const DebugEditorContext: React.FC = () => {
   });
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
+    <div style={{ backgroundColor: '#E5DDD5' }}>
       <h1 className="text-2xl font-bold mb-4">Debug Editor Context</h1>
 
       <div className="bg-white p-4 rounded-lg shadow mb-4">
@@ -48,7 +48,7 @@ const DebugEditorContext: React.FC = () => {
             ))}
           </ul>
         ) : (
-          <p className="text-red-500">❌ Nenhuma etapa encontrada!</p>
+          <p style={{ color: '#432818' }}>❌ Nenhuma etapa encontrada!</p>
         )}
       </div>
     </div>

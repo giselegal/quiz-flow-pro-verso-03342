@@ -41,8 +41,8 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             className="max-w-full h-auto rounded"
           />
         ) : (
-          <div className="bg-gray-100 h-40 w-full flex items-center justify-center rounded">
-            <p className="text-gray-500">Imagem não definida</p>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
+            <p style={{ color: '#8B7355' }}>Imagem não definida</p>
           </div>
         );
 
@@ -53,14 +53,14 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             {data.options && data.options.length > 0 ? (
               <div className="space-y-2">
                 {data.options.map((option: string, index: number) => (
-                  <div key={index} className="p-3 border rounded hover:bg-gray-50 cursor-pointer">
+                  <div key={index} style={{ backgroundColor: '#FAF9F7' }}>
                     {option}
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-3 border rounded bg-gray-50 text-center">
-                <p className="text-gray-500">Opções não definidas</p>
+              <div style={{ backgroundColor: '#FAF9F7' }}>
+                <p style={{ color: '#8B7355' }}>Opções não definidas</p>
               </div>
             )}
           </div>
@@ -81,7 +81,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 </div>
               ))
             ) : (
-              <div className="text-gray-500">Opções não definidas</div>
+              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
             )}
           </div>
         );
@@ -102,7 +102,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 </div>
               ))
             ) : (
-              <div className="text-gray-500">Opções não definidas</div>
+              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
             )}
           </div>
         );

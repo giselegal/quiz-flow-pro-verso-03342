@@ -37,7 +37,7 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Header com nome do estilo */}
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-[#432818] mb-2">{title}</h3>
-        <p className="text-gray-600 italic">{styleData.description}</p>
+        <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
       </div>
 
       {/* Paleta de cores */}
@@ -47,7 +47,7 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
           {styleData.colors.map((color: string, index: number) => (
             <div
               key={index}
-              className="w-12 h-12 rounded-full border-2 border-gray-300 shadow-sm"
+              style={{ borderColor: '#E5DDD5' }}
               style={{ backgroundColor: color }}
               title={color}
             />
@@ -67,7 +67,7 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
               >
                 ✓
               </span>
-              <span className="text-gray-700 leading-relaxed">{characteristic}</span>
+              <span style={{ color: '#6B4F43' }}>{characteristic}</span>
             </li>
           ))}
         </ul>
@@ -75,8 +75,8 @@ const StyleCharacteristicsInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Área editável quando selecionado */}
       {isSelected && onPropertyChange && (
-        <div className="mt-6 pt-4 border-t border-gray-200">
-          <div className="text-xs text-gray-500 text-center">
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ color: '#8B7355' }}>
             <p>
               💡 <strong>Editável:</strong> Personalize as características do estilo
             </p>

@@ -51,13 +51,13 @@ const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
 
               <h4 className="text-lg font-semibold text-[#432818] mb-2">{bonus.title}</h4>
 
-              {bonus.description && <p className="text-gray-600 text-sm">{bonus.description}</p>}
+              {bonus.description && <p style={{ color: '#6B4F43' }}>{bonus.description}</p>}
             </div>
           ))}
         </div>
 
         {bonuses.length === 0 && (
-          <div className="text-center p-8 text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             Configure os bônus nas propriedades do componente
           </div>
         )}

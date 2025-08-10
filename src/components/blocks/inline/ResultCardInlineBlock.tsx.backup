@@ -1,15 +1,17 @@
-import React from "react";
-import { cn } from "@/lib/utils";
-import { Award, TrendingUp } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-import { safeGetBlockProperties, isValidBlock, logBlockDebug } from "@/utils/blockUtils";
+import { isValidBlock, logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
+import { Award, TrendingUp } from "lucide-react";
+import React from "react";
 
 /**
  * ResultCardInlineBlock - Componente modular inline horizontal
  * Card compacto de resultado de quiz
  * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
  */
+
+
 const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
@@ -36,7 +38,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
     cardVariant = "elevated", // elevated, flat, outlined
     size = "medium", // small, medium, large
     backgroundColor = "white",
-    accentColor = "#B89B7A",
+    accentColor = "#432818",
   } = properties;
 
   // Variantes de card
@@ -77,7 +79,7 @@ const ResultCardInlineBlock: React.FC<BlockComponentProps> = ({
         // Variante
         cardVariants[cardVariant as keyof typeof cardVariants],
         // Estados do editor
-        isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
+        isSelected && "ring-2 ring-[#432818] ring-offset-2",
         "cursor-pointer hover:scale-[1.02]",
         className
       )}

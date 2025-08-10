@@ -262,7 +262,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
                     size="sm"
                     variant="ghost"
                     onClick={() => setIsDeleteConfirmOpen(template.id)}
-                    className="text-red-500"
+                    style={{ color: '#432818' }}
                   >
                     <Trash2 className="w-4 h-4 mr-1" />
                     Excluir

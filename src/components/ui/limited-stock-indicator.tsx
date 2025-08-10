@@ -42,7 +42,7 @@ export const LimitedStockIndicator: React.FC<LimitedStockIndicatorProps> = ({
           Restam apenas {stockLeft} unidades
         </span>
       </div>
-      <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+      <div style={{ backgroundColor: '#E5DDD5' }}>
         <div
           className="h-full bg-gradient-to-r from-red-500 to-[#D68047] transition-all duration-500"
           style={{ width: `${percentLeft}%` }}

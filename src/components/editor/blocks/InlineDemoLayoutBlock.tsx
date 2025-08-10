@@ -178,7 +178,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
               placeholder="Título da demonstração..."
               fontSize="xl"
               fontWeight="bold"
-              className="text-gray-800"
+              style={{ color: '#432818' }}
             />
           </div>
 
@@ -187,7 +187,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
             onChange={value => handlePropertyChange("subtitle", value)}
             placeholder="Subtítulo explicativo..."
             fontSize="sm"
-            className="text-gray-600"
+            style={{ color: '#6B4F43' }}
             multiline={true}
             maxLines={2}
           />
@@ -195,8 +195,8 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
 
         {/* Device Preview Controls */}
         {showDevicePreview && (
-          <div className="flex items-center justify-center gap-4 p-3 bg-gray-50 rounded-lg">
-            <span className="text-sm font-medium text-gray-700">Preview:</span>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
+            <span style={{ color: '#6B4F43' }}>Preview:</span>
 
             {["mobile", "tablet", "desktop"].map(device => (
               <button
@@ -221,11 +221,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         {/* Configuration */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-[#B89B7A]/10 rounded-lg">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Items</label>
+            <label style={{ color: '#6B4F43' }}>Items</label>
             <select
               value={itemCount}
               onChange={e => handlePropertyChange("itemCount", parseInt(e.target.value))}
-              className="w-full text-sm border border-gray-300 rounded px-2 py-1"
+              style={{ borderColor: '#E5DDD5' }}
             >
               {[1, 2, 3, 4, 5, 6].map(n => (
                 <option key={n} value={n}>
@@ -236,11 +236,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Gap</label>
+            <label style={{ color: '#6B4F43' }}>Gap</label>
             <select
               value={gap}
               onChange={e => handlePropertyChange("gap", e.target.value)}
-              className="w-full text-sm border border-gray-300 rounded px-2 py-1"
+              style={{ borderColor: '#E5DDD5' }}
             >
               <option value="sm">Pequeno</option>
               <option value="md">Médio</option>
@@ -249,11 +249,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1">Breakpoint</label>
+            <label style={{ color: '#6B4F43' }}>Breakpoint</label>
             <select
               value={breakpoint}
               onChange={e => handlePropertyChange("breakpoint", e.target.value)}
-              className="w-full text-sm border border-gray-300 rounded px-2 py-1"
+              style={{ borderColor: '#E5DDD5' }}
             >
               <option value="sm">sm</option>
               <option value="md">md</option>
@@ -270,10 +270,10 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           )}
         >
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-sm font-medium text-gray-700">
+            <h3 style={{ color: '#6B4F43' }}>
               Preview {activeDevice} ({itemCount} items)
             </h3>
-            <div className="text-xs text-gray-500">
+            <div style={{ color: '#8B7355' }}>
               Gap: {gap} | Breakpoint: {breakpoint}
             </div>
           </div>
@@ -292,9 +292,9 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
                 }}
               >
                 <div className="space-y-2">
-                  <div className="font-medium text-gray-800">{item.title}</div>
-                  <div className="text-sm text-gray-600">{item.content}</div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div style={{ color: '#432818' }}>{item.title}</div>
+                  <div style={{ color: '#6B4F43' }}>{item.content}</div>
+                  <div style={{ color: '#8B7355' }}>
                     <Eye className="w-3 h-3" />
                     <span>Inline Block</span>
                   </div>
@@ -323,7 +323,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
               <Grid className="w-4 h-4" />
               Vantagens
             </h4>
-            <ul className="text-sm text-green-700 space-y-1">
+            <ul style={{ color: '#6B4F43' }}>
               <li>• Componentes lado a lado</li>
               <li>• Responsividade nativa</li>
               <li>• Distribuição inteligente</li>

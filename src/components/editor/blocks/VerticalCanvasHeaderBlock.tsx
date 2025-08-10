@@ -104,7 +104,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
             />
           ) : (
             <div
-              className="bg-gray-200 rounded flex items-center justify-center text-gray-500 text-sm"
+              style={{ color: '#8B7355' }}
               style={{ width: logoWidth, height: logoHeight }}
             >
               Logo
@@ -115,7 +115,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
         {/* Progress Section */}
         {showProgress && (
           <div className="flex-1 max-w-md mx-4">
-            <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
+            <div style={{ color: '#6B4F43' }}>
               <span>Progresso</span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>

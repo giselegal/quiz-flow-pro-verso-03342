@@ -410,7 +410,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             }}
             placeholder="Digite seu texto..."
           />
-          <div className="text-xs text-gray-500 mt-1">
+          <div style={{ color: '#8B7355' }}>
             Cmd/Ctrl + Enter para salvar • Esc para cancelar
           </div>
         </div>

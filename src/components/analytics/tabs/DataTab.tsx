@@ -84,7 +84,7 @@ export const DataTab: React.FC<DataTabProps> = ({ analyticsData, loading }) => {
             </Table>
           </div>
           {analyticsData?.events?.length > 50 && (
-            <div className="text-center mt-4 text-sm text-gray-500">
+            <div style={{ color: '#8B7355' }}>
               Mostrando os 50 eventos mais recentes. Exporte o CSV para visualizar todos os dados.
             </div>
           )}

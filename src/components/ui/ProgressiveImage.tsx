@@ -114,14 +114,14 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
       {/* Error fallback */}
       {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-          <span className="text-gray-500">Imagem indisponível</span>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <span style={{ color: '#8B7355' }}>Imagem indisponível</span>
         </div>
       )}
 
       {/* Loading skeleton when neither image is loaded */}
       {!isLoaded && !isLowQualityLoaded && (
-        <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+        <div style={{ backgroundColor: '#E5DDD5' }} />
       )}
     </div>
   );

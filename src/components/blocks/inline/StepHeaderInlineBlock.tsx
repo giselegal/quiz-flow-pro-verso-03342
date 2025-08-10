@@ -103,7 +103,7 @@ const StepHeaderInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Texto do progresso (opcional) */}
           {progressValue > 0 && (
             <div className="text-center mt-2">
-              <span className="text-xs text-gray-500">
+              <span style={{ color: '#8B7355' }}>
                 {Math.round((progressValue / progressMax) * 100)}% concluído
               </span>
             </div>

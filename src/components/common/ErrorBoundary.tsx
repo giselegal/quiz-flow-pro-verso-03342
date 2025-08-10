@@ -50,13 +50,13 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-            <div className="text-red-500 mb-4">
+            <div style={{ color: '#432818' }}>
               <AlertTriangle size={48} className="mx-auto" />
             </div>
 
-            <h2 className="text-xl font-bold text-gray-800 mb-2">Oops! Algo deu errado</h2>
+            <h2 style={{ color: '#432818' }}>Oops! Algo deu errado</h2>
 
-            <p className="text-gray-600 mb-6">
+            <p style={{ color: '#6B4F43' }}>
               O editor encontrou um erro inesperado. Não se preocupe, seus dados estão seguros.
             </p>
 
@@ -72,10 +72,10 @@ export class ErrorBoundary extends Component<Props, State> {
 
             {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mt-6 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+                <summary style={{ color: '#8B7355' }}>
                   Detalhes do erro (desenvolvimento)
                 </summary>
-                <pre className="mt-2 text-xs bg-gray-100 p-3 rounded overflow-auto max-h-32">
+                <pre style={{ backgroundColor: '#E5DDD5' }}>
                   {this.state.error.toString()}
                   {this.state.errorInfo?.componentStack}
                 </pre>

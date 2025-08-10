@@ -309,7 +309,7 @@ const OverviewPage: React.FC = () => {
                 <div className="font-bold" style={{ color: "#432818" }}>
                   19.4%
                 </div>
-                <div className="text-xs text-red-500 flex items-center">
+                <div style={{ color: '#432818' }}>
                   <ArrowDownRight className="h-3 w-3 mr-1" />
                   -1.2%
                 </div>
@@ -375,7 +375,7 @@ const OverviewPage: React.FC = () => {
             <div className="group p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex items-center justify-between mb-2">
                 <div className="font-semibold text-slate-800">Descubra sua Personalidade</div>
-                <Badge className="bg-blue-100 text-blue-700 border-0 text-xs">
+                <Badge style={{ backgroundColor: '#E5DDD5' }}>
                   <TrendingUp className="h-3 w-3 mr-1" />
                   Hot
                 </Badge>
@@ -388,10 +388,10 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Funil 3 */}
-            <div className="group p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200/50 hover:shadow-md transition-all cursor-pointer">
+            <div style={{ borderColor: '#E5DDD5' }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="font-semibold text-slate-800">Quiz Profissional</div>
-                <Badge className="bg-amber-100 text-amber-700 border-0 text-xs">
+                <Badge style={{ color: '#6B4F43' }}>
                   <MousePointer className="h-3 w-3 mr-1" />
                   Rising
                 </Badge>
@@ -406,7 +406,7 @@ const OverviewPage: React.FC = () => {
             <div className="pt-2">
               <Button
                 variant="outline"
-                className="w-full border-slate-300 hover:border-indigo-300 hover:bg-indigo-50"
+                style={{ backgroundColor: '#FAF9F7' }}
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Ver Todos os Funis
@@ -446,7 +446,7 @@ const OverviewPage: React.FC = () => {
 
               <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl">
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center mt-1">
+                  <div style={{ backgroundColor: '#FAF9F7' }}>
                     <Users className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -461,9 +461,9 @@ const OverviewPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/50 rounded-xl">
+              <div style={{ borderColor: '#E5DDD5' }}>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center mt-1">
+                  <div style={{ backgroundColor: '#FAF9F7' }}>
                     <Target className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -504,7 +504,7 @@ const OverviewPage: React.FC = () => {
 
               <Button
                 variant="outline"
-                className="w-full justify-start border-slate-300 hover:border-blue-300 hover:bg-blue-50"
+                style={{ backgroundColor: '#FAF9F7' }}
               >
                 <Share className="h-4 w-4 mr-2" />
                 Compartilhar Dashboard
@@ -512,7 +512,7 @@ const OverviewPage: React.FC = () => {
 
               <Button
                 variant="outline"
-                className="w-full justify-start border-slate-300 hover:border-amber-300 hover:bg-amber-50"
+                style={{ backgroundColor: '#FAF9F7' }}
               >
                 <Calendar className="h-4 w-4 mr-2" />
                 Agendar Análise

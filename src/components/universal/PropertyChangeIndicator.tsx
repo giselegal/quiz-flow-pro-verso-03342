@@ -40,7 +40,7 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="absolute -top-1 -right-1 bg-blue-500 rounded-full p-1 shadow-lg"
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             <Loader2 className="w-3 h-3 text-white animate-spin" />
           </motion.div>

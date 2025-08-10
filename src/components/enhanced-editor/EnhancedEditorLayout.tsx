@@ -31,19 +31,19 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
           <div className="space-y-2">
             <button
               onClick={() => handleAddBlock("text")}
-              className="w-full text-left p-2 hover:bg-gray-100 rounded"
+              style={{ backgroundColor: '#E5DDD5' }}
             >
               Texto
             </button>
             <button
               onClick={() => handleAddBlock("image")}
-              className="w-full text-left p-2 hover:bg-gray-100 rounded"
+              style={{ backgroundColor: '#E5DDD5' }}
             >
               Imagem
             </button>
             <button
               onClick={() => handleAddBlock("button")}
-              className="w-full text-left p-2 hover:bg-gray-100 rounded"
+              style={{ backgroundColor: '#E5DDD5' }}
             >
               Botão
             </button>
@@ -75,7 +75,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
 
         <div className="canvas flex-1 p-4">
           {blocks.length === 0 ? (
-            <div className="text-center text-gray-500 mt-8">
+            <div style={{ color: '#8B7355' }}>
               <p>Nenhum bloco adicionado ainda</p>
               <p className="text-sm">Use o painel lateral para adicionar componentes</p>
             </div>
@@ -91,7 +91,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
                   }`}
                   onClick={() => onBlockSelect?.(block.id)}
                 >
-                  <div className="text-xs text-gray-500 mb-2">{block.type}</div>
+                  <div style={{ color: '#8B7355' }}>{block.type}</div>
                   {block.content.title && <h3>{block.content.title}</h3>}
                   {block.content.text && <p>{block.content.text}</p>}
                 </div>

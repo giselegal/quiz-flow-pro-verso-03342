@@ -86,8 +86,8 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Selecionar Template</h2>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <h2 style={{ color: '#432818' }}>Selecionar Template</h2>
 
         {/* Category filters */}
         <div className="flex flex-wrap gap-2">
@@ -116,7 +116,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       {/* Templates grid */}
       <div className="flex-1 overflow-y-auto p-4">
         {filteredTemplates.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             <p>Nenhum template encontrado para esta categoria.</p>
           </div>
         ) : (
@@ -146,7 +146,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
     >
       <CardHeader>
         <CardTitle className="text-sm font-medium">{template.name}</CardTitle>
-        <CardDescription className="text-xs text-gray-500">{template.description}</CardDescription>
+        <CardDescription style={{ color: '#8B7355' }}>{template.description}</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <img
@@ -156,7 +156,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
         />
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <span className="text-gray-700 text-xs">{template.category}</span>
+        <span style={{ color: '#6B4F43' }}>{template.category}</span>
         {isSelected && <CheckCircle className="w-4 h-4 text-green-500" />}
       </CardFooter>
     </Card>

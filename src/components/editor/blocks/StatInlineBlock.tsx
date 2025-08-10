@@ -257,7 +257,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
               fontSize={size === "large" ? "3xl" : size === "small" ? "xl" : "2xl"}
               fontWeight="bold"
               textAlign={layout === "vertical" ? "center" : "left"}
-              className="text-gray-800"
+              style={{ color: '#432818' }}
             />
           </div>
 
@@ -269,7 +269,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
               placeholder="Estatística..."
               fontSize={size === "large" ? "base" : "sm"}
               textAlign={layout === "vertical" ? "center" : "left"}
-              className="text-gray-600"
+              style={{ color: '#6B4F43' }}
             />
           </div>
         </div>

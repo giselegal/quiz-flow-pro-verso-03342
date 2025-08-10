@@ -52,7 +52,7 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <Label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+      <Label htmlFor={inputId} style={{ color: '#6B4F43' }}>
         {label}
       </Label>
       
@@ -67,7 +67,7 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
             onChange={handleInputChange}
             placeholder={placeholder}
             rows={rows}
-            className="resize-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
           />
         ) : (
           <Input
@@ -76,13 +76,13 @@ export const EnhancedPropertyInput: React.FC<EnhancedPropertyInputProps> = ({
             value={currentValue}
             onChange={handleInputChange}
             placeholder={placeholder}
-            className="focus:ring-2 focus:ring-blue-500/20 transition-all"
+            style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
           />
         )}
       </PropertyChangeIndicator>
       
       {description && (
-        <p className="text-xs text-gray-500">{description}</p>
+        <p style={{ color: '#8B7355' }}>{description}</p>
       )}
     </div>
   );

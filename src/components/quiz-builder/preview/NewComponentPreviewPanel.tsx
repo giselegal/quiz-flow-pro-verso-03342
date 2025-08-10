@@ -51,7 +51,7 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
   if (!activeStage) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-gray-500">Selecione uma etapa para visualizar seus componentes.</p>
+        <p style={{ color: '#8B7355' }}>Selecione uma etapa para visualizar seus componentes.</p>
       </div>
     );
   }
@@ -60,8 +60,8 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
 
   return (
     <div className="h-full bg-[#F9F5F1] flex flex-col">
-      <div className="bg-white border-b border-gray-200 px-4 py-2">
-        <h3 className="text-sm font-medium text-gray-600">
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <h3 style={{ color: '#6B4F43' }}>
           Visualizando: {activeStage.title || `Etapa ${activeStage.order + 1}`}
         </h3>
       </div>
@@ -74,11 +74,11 @@ export const NewComponentPreviewPanel: React.FC<ComponentPreviewPanelProps> = ({
           )}
         >
           {sortedComponents.length === 0 ? (
-            <div className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center">
-              <p className="text-gray-500 mb-2">
+            <div style={{ borderColor: '#E5DDD5' }}>
+              <p style={{ color: '#8B7355' }}>
                 Adicione componentes para esta etapa usando o painel lateral.
               </p>
-              <Button variant="outline" size="sm" onClick={() => {}} className="text-gray-500">
+              <Button variant="outline" size="sm" onClick={() => {}} style={{ color: '#8B7355' }}>
                 <Plus className="w-4 h-4 mr-1" /> Adicionar Componente
               </Button>
             </div>

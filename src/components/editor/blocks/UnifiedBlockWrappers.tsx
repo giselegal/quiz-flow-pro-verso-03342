@@ -73,8 +73,8 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">Erro: Propriedades do bloco inválidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Propriedades do bloco inválidas</p>
       </div>
     );
   }
@@ -110,8 +110,8 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div className="p-4 border-2 border-red-300 bg-red-50 rounded-lg">
-        <p className="text-red-600 font-medium">Erro: Propriedades do bloco inválidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Propriedades do bloco inválidas</p>
       </div>
     );
   }

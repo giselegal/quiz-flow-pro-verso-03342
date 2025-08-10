@@ -35,15 +35,15 @@ const FunnelPainSection: React.FC<FunnelPainSectionProps> = ({
       onClick={onClick}
     >
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">{title}</h2>
-        <p className="text-gray-600 text-lg">{description}</p>
+        <h2 style={{ color: '#432818' }}>{title}</h2>
+        <p style={{ color: '#6B4F43' }}>{description}</p>
       </div>
 
       <div className="space-y-4 mb-8">
         {painPoints.map((point, index) => (
           <div key={index} className="flex items-start gap-3">
-            <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0" />
-            <p className="text-gray-700">{point}</p>
+            <div style={{ backgroundColor: '#FAF9F7' }} />
+            <p style={{ color: '#6B4F43' }}>{point}</p>
           </div>
         ))}
       </div>

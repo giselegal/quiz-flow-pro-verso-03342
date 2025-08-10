@@ -53,7 +53,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
             <div
               {...attributes}
               {...listeners}
-              className="cursor-grab hover:cursor-grabbing p-1 rounded hover:bg-gray-100"
+              style={{ backgroundColor: '#E5DDD5' }}
             >
               <GripVertical className="w-4 h-4 text-[#B89B7A]" />
             </div>
@@ -81,7 +81,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
                 e.stopPropagation();
                 onDelete();
               }}
-              className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+              style={{ color: '#432818' }}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

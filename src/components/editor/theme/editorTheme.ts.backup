@@ -51,26 +51,26 @@ export const editorTheme = {
     },
 
     button: {
-      primary: "bg-blue-600 hover:bg-blue-700 text-white",
+      primary: "bg-[#B89B7A] hover:bg-[#A38A69] text-white",
       secondary: "bg-gray-100 hover:bg-gray-200 text-gray-700",
       ghost: "hover:bg-gray-100 text-gray-600",
       destructive: "bg-red-600 hover:bg-red-700 text-white",
     },
 
     input: {
-      base: "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
+      base: "border-gray-300 focus:border-[#B89B7A] focus:ring-[#B89B7A]",
       error: "border-red-300 focus:border-red-500 focus:ring-red-500",
     },
 
     status: {
       active: "bg-green-100 text-green-800 border-green-200",
       inactive: "bg-gray-100 text-gray-800 border-gray-200",
-      warning: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      warning: "bg-stone-100 text-stone-800 border-yellow-200",
       error: "bg-red-100 text-red-800 border-red-200",
     },
 
     history: {
-      current: "bg-blue-50 border-blue-200 text-blue-900",
+      current: "bg-[#B89B7A]/10 border-[#B89B7A]/30 text-[#432818]",
       past: "bg-white hover:bg-gray-50 text-gray-700",
       future: "bg-gray-50 text-gray-400",
     },
@@ -119,15 +119,11 @@ export const editorTheme = {
 };
 
 // Helper functions
-export const getStatusColor = (
-  status: "active" | "inactive" | "warning" | "error",
-) => {
+export const getStatusColor = (status: "active" | "inactive" | "warning" | "error") => {
   return editorTheme.components.status[status];
 };
 
-export const getButtonVariant = (
-  variant: "primary" | "secondary" | "ghost" | "destructive",
-) => {
+export const getButtonVariant = (variant: "primary" | "secondary" | "ghost" | "destructive") => {
   return editorTheme.components.button[variant];
 };
 

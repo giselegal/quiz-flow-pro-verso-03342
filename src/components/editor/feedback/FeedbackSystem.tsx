@@ -220,13 +220,13 @@ const Toast: React.FC<{
       case "success":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
       case "error":
-        return <AlertCircle className="h-5 w-5 text-red-500" />;
+        return <AlertCircle style={{ color: '#432818' }} />;
       case "warning":
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case "info":
         return <Info className="h-5 w-5 text-[#B89B7A]" />;
       case "loading":
-        return <Loader2 className="h-5 w-5 text-gray-500 animate-spin" />;
+        return <Loader2 style={{ color: '#8B7355' }} />;
     }
   };
 
@@ -255,8 +255,8 @@ const Toast: React.FC<{
       <div className="flex items-start">
         <div className="flex-shrink-0">{getIcon()}</div>
         <div className="ml-3 w-0 flex-1">
-          <p className="text-sm font-medium text-gray-900">{toast.title}</p>
-          {toast.description && <p className="mt-1 text-sm text-gray-500">{toast.description}</p>}
+          <p style={{ color: '#432818' }}>{toast.title}</p>
+          {toast.description && <p style={{ color: '#8B7355' }}>{toast.description}</p>}
           {toast.action && (
             <div className="mt-3">
               <button
@@ -270,7 +270,7 @@ const Toast: React.FC<{
         </div>
         <div className="ml-4 flex-shrink-0 flex">
           <button
-            className="rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none"
+            style={{ color: '#8B7355' }}
             onClick={() => onRemove(toast.id)}
           >
             <X className="h-5 w-5" />
@@ -309,7 +309,7 @@ export const AutoSaveIndicator: React.FC<{
       case "saved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "error":
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
+        return <AlertCircle style={{ color: '#432818' }} />;
       default:
         return pendingChanges ? (
           <Clock className="h-4 w-4 text-yellow-500" />
@@ -335,7 +335,7 @@ export const AutoSaveIndicator: React.FC<{
   return (
     <div className="flex items-center gap-2 px-3 py-1 bg-white rounded-md border text-sm">
       {getStatusIcon()}
-      <span className="text-gray-600">{getStatusText()}</span>
+      <span style={{ color: '#6B4F43' }}>{getStatusText()}</span>
     </div>
   );
 };
@@ -349,9 +349,9 @@ export const ConnectionIndicator: React.FC<{
   }
 
   return (
-    <div className="flex items-center gap-2 px-3 py-1 bg-red-50 border border-red-200 rounded-md text-sm">
-      <WifiOff className="h-4 w-4 text-red-500" />
-      <span className="text-red-600">
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <WifiOff style={{ color: '#432818' }} />
+      <span style={{ color: '#432818' }}>
         {!connectionState.isOnline ? "Sem conexão" : "Conectando..."}
       </span>
     </div>
@@ -389,9 +389,9 @@ export const LoadingOverlay: React.FC<{
         <div className="flex items-center justify-center mb-4">
           <Loader2 className="h-8 w-8 animate-spin text-[#B89B7A]" />
         </div>
-        {message && <p className="text-center text-gray-700 mb-4">{message}</p>}
+        {message && <p style={{ color: '#6B4F43' }}>{message}</p>}
         {progress !== undefined && (
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-[#B89B7A]/100 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}

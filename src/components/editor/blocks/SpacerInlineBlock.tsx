@@ -210,11 +210,11 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           <>
             {/* Direction Indicator */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="bg-white rounded-full p-1 shadow-sm border border-gray-200">
+              <div style={{ borderColor: '#E5DDD5' }}>
                 {direction === "vertical" ? (
-                  <ArrowUpDown className="w-3 h-3 text-gray-500" />
+                  <ArrowUpDown style={{ color: '#8B7355' }} />
                 ) : (
-                  <ArrowLeftRight className="w-3 h-3 text-gray-500" />
+                  <ArrowLeftRight style={{ color: '#8B7355' }} />
                 )}
               </div>
             </div>
@@ -234,18 +234,18 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="absolute -right-12 top-1/2 transform -translate-y-1/2 flex flex-col gap-1">
             <button
               onClick={() => adjustSize(true)}
-              className="p-1 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              style={{ borderColor: '#E5DDD5' }}
               title="Aumentar"
             >
-              <Maximize2 className="w-3 h-3 text-gray-600" />
+              <Maximize2 style={{ color: '#6B4F43' }} />
             </button>
 
             <button
               onClick={() => adjustSize(false)}
-              className="p-1 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              style={{ borderColor: '#E5DDD5' }}
               title="Diminuir"
             >
-              <Minimize2 className="w-3 h-3 text-gray-600" />
+              <Minimize2 style={{ color: '#6B4F43' }} />
             </button>
 
             <button
@@ -255,24 +255,24 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
                   direction === "vertical" ? "horizontal" : "vertical"
                 )
               }
-              className="p-1 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              style={{ borderColor: '#E5DDD5' }}
               title="Alternar direção"
             >
-              <Move className="w-3 h-3 text-gray-600" />
+              <Move style={{ color: '#6B4F43' }} />
             </button>
           </div>
         )}
 
         {/* Settings Panel (Editor Mode) */}
         {isSelected && (
-          <div className="absolute -bottom-20 left-0 right-0 bg-white border border-gray-200 rounded-lg p-3 shadow-lg z-10">
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="block font-medium text-gray-700 mb-1">Tamanho</label>
+                <label style={{ color: '#6B4F43' }}>Tamanho</label>
                 <select
                   value={height}
                   onChange={e => handlePropertyChange("height", e.target.value)}
-                  className="w-full border border-gray-300 rounded px-2 py-1"
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="xs">Extra Pequeno</option>
                   <option value="sm">Pequeno</option>
@@ -284,11 +284,11 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div>
-                <label className="block font-medium text-gray-700 mb-1">Direção</label>
+                <label style={{ color: '#6B4F43' }}>Direção</label>
                 <select
                   value={direction}
                   onChange={e => handlePropertyChange("direction", e.target.value)}
-                  className="w-full border border-gray-300 rounded px-2 py-1"
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="vertical">Vertical</option>
                   <option value="horizontal">Horizontal</option>
@@ -296,11 +296,11 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
 
               <div>
-                <label className="block font-medium text-gray-700 mb-1">Borda</label>
+                <label style={{ color: '#6B4F43' }}>Borda</label>
                 <select
                   value={borderStyle}
                   onChange={e => handlePropertyChange("borderStyle", e.target.value)}
-                  className="w-full border border-gray-300 rounded px-2 py-1"
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="none">Nenhuma</option>
                   <option value="dashed">Tracejada</option>
@@ -317,7 +317,7 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
                     onChange={e => handlePropertyChange("responsive", e.target.checked)}
                     className="rounded"
                   />
-                  <span className="text-gray-700">Responsivo</span>
+                  <span style={{ color: '#6B4F43' }}>Responsivo</span>
                 </label>
               </div>
             </div>

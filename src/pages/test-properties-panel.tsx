@@ -28,14 +28,14 @@ const TestPropertiesPanel = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div style={{ backgroundColor: '#E5DDD5' }}>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Teste do Painel de Propriedades</h1>
 
         <div className="mb-6 space-x-4">
           <button
             onClick={() => setIsVisible(!isVisible)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            style={{ backgroundColor: '#B89B7A' }}
           >
             {isVisible ? "Esconder" : "Mostrar"} Painel
           </button>
@@ -61,7 +61,7 @@ const TestPropertiesPanel = () => {
                 properties: { content: "Título teste", level: "h1" },
               })
             }
-            className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             Bloco Título
           </button>
@@ -82,7 +82,7 @@ const TestPropertiesPanel = () => {
 
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h2 className="text-lg font-semibold mb-3">Bloco Selecionado:</h2>
-          <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+          <pre style={{ backgroundColor: '#E5DDD5' }}>
             {JSON.stringify(selectedBlock, null, 2)}
           </pre>
         </div>
@@ -93,7 +93,7 @@ const TestPropertiesPanel = () => {
               <div className="bg-white p-6 rounded-lg shadow">
                 <h2 className="text-lg font-semibold mb-4">Área de Visualização</h2>
                 {selectedBlock && (
-                  <div className="border-2 border-dashed border-gray-300 p-4 rounded">
+                  <div style={{ borderColor: '#E5DDD5' }}>
                     {selectedBlock.type === "text" && (
                       <p
                         style={{

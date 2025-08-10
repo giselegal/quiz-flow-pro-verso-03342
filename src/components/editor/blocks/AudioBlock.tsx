@@ -79,7 +79,7 @@ const AudioBlock: React.FC<BlockComponentProps> = ({
           Seu navegador não suporta o elemento de áudio.
         </audio>
       ) : (
-        <div className="bg-gray-100 p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center max-w-md mx-auto">
+        <div style={{ color: '#8B7355' }}>
           <Mic className="w-12 h-12 mb-4 opacity-50" />
           <p>Adicione uma URL de áudio nas propriedades.</p>
         </div>

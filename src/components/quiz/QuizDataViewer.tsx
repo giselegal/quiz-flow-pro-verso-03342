@@ -74,7 +74,7 @@ export const QuizDataViewer: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p className="text-gray-500">Nenhuma sessão de quiz ativa.</p>
+            <p style={{ color: '#8B7355' }}>Nenhuma sessão de quiz ativa.</p>
             <p className="text-sm text-gray-400 mt-2">
               Inicie um quiz para ver os dados em tempo real.
             </p>
@@ -134,7 +134,7 @@ export const QuizDataViewer: React.FC = () => {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Target className="w-4 h-4 text-purple-500" />
+                  <Target style={{ color: '#B89B7A' }} />
                   <span className="text-sm font-medium">Questões</span>
                 </div>
                 <p className="text-lg font-bold">{currentStats.questionsAnswered}</p>
@@ -177,13 +177,13 @@ export const QuizDataViewer: React.FC = () => {
                         </h4>
                         <Badge variant="outline">{(answer.responseTime / 1000).toFixed(1)}s</Badge>
                       </div>
-                      <div className="text-sm text-gray-600 mb-2">
+                      <div style={{ color: '#6B4F43' }}>
                         <strong>Respostas:</strong> {answer.optionTexts.join(", ")}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div style={{ color: '#8B7355' }}>
                         <strong>Pontos de Estilo:</strong> {JSON.stringify(answer.stylePoints)}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div style={{ color: '#8B7355' }}>
                         <strong>Timestamp:</strong> {formatTime(answer.timestamp)}
                       </div>
                     </div>
@@ -209,7 +209,7 @@ export const QuizDataViewer: React.FC = () => {
                     .map((click: any, index: number) => (
                       <div
                         key={index}
-                        className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded"
+                        style={{ backgroundColor: '#FAF9F7' }}
                       >
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">
@@ -219,7 +219,7 @@ export const QuizDataViewer: React.FC = () => {
                             {click.elementText || click.elementId || "Elemento sem texto"}
                           </span>
                         </div>
-                        <div className="text-xs text-gray-500">{formatTime(click.timestamp)}</div>
+                        <div style={{ color: '#8B7355' }}>{formatTime(click.timestamp)}</div>
                       </div>
                     ))}
                 </div>
@@ -305,7 +305,7 @@ export const QuizDataViewer: React.FC = () => {
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-96">
-                <pre className="text-xs bg-gray-100 p-4 rounded overflow-auto">
+                <pre style={{ backgroundColor: '#E5DDD5' }}>
                   {JSON.stringify(session, null, 2)}
                 </pre>
               </ScrollArea>

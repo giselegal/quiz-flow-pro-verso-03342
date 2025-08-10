@@ -58,9 +58,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="w-full h-40 border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center p-4">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <ImagePlus className="w-12 h-12 text-gray-400 mb-2" />
-          <p className="text-sm text-gray-500 mb-2">Clique para fazer upload de uma imagem</p>
+          <p style={{ color: '#8B7355' }}>Clique para fazer upload de uma imagem</p>
           <input
             type="file"
             accept="image/*"

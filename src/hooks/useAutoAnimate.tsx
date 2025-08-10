@@ -51,7 +51,7 @@ export const AnimatedOptionsEditor: React.FC<{
               <span className="font-medium">{option.text}</span>
               <button
                 onClick={() => removeOption(index)}
-                className="text-red-500 hover:text-red-700 transition-colors"
+                style={{ color: '#432818' }}
               >
                 🗑️ Remover
               </button>

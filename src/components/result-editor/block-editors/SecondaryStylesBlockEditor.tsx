@@ -26,7 +26,7 @@ const SecondaryStylesBlockEditor: React.FC<SecondaryStylesBlockEditorProps> = ({
         />
       </div>
 
-      <div className="p-4 bg-gray-50 rounded-lg">
+      <div style={{ backgroundColor: '#FAF9F7' }}>
         <p className="text-sm text-[#8F7A6A]">
           <strong>Nota:</strong> Este componente exibirá automaticamente os estilos secundários do
           usuário. Você pode personalizar o título aqui.

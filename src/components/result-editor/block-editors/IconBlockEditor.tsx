@@ -97,7 +97,7 @@ const IconBlockEditor: React.FC<IconBlockEditorProps> = ({ block, onUpdate }) =>
 
             <div className="space-y-2">
               <Label htmlFor="iconText">Ícone selecionado</Label>
-              <div className="p-4 text-center bg-gray-50 rounded-md">
+              <div style={{ backgroundColor: '#FAF9F7' }}>
                 <span
                   style={{
                     fontSize: content.size || "48px",

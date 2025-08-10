@@ -32,7 +32,7 @@ const TestimonialsBlockEditor: React.FC<TestimonialsBlockEditorProps> = ({ block
           placeholder="https://exemplo.com/depoimentos.jpg"
         />
         {content.testimonialsImage && (
-          <div className="mt-2 p-2 bg-gray-50 rounded">
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.testimonialsImage}
               alt="Depoimentos"

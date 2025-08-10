@@ -199,7 +199,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         {/* Mensagem atual */}
         {!isCompleted && messages.length > 0 && (
           <p
-            className="text-lg text-gray-600 mb-8 min-h-[2rem] transition-all duration-300"
+            style={{ color: '#6B4F43' }}
             key={currentMessageIndex}
           >
             {messages[currentMessageIndex]}
@@ -209,7 +209,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         {/* Barra de progresso */}
         {showProgress && (
           <div className="mb-8">
-            <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+            <div style={{ backgroundColor: '#E5DDD5' }}>
               <div
                 className="h-full rounded-full transition-all duration-100 ease-out"
                 style={{
@@ -219,13 +219,13 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
                 }}
               />
             </div>
-            <p className="text-sm text-gray-500 mt-2">{Math.round(progress)}% concluído</p>
+            <p style={{ color: '#8B7355' }}>{Math.round(progress)}% concluído</p>
           </div>
         )}
 
         {/* Informação adicional */}
         {!isCompleted && (
-          <div className="text-sm text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             <p>⏱️ Isso levará apenas alguns segundos...</p>
           </div>
         )}

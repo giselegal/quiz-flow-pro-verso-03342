@@ -36,7 +36,7 @@ const QuizTransition: React.FC<QuizTransitionProps> = ({ isCompleting, onComplet
 
       <h2 className="text-2xl font-bold mb-4 text-center">Quiz Concluído!</h2>
 
-      <p className="text-gray-600 text-center mb-8">
+      <p style={{ color: '#6B4F43' }}>
         Aguarde enquanto preparamos seus resultados...
       </p>
 

@@ -56,7 +56,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ stages, components, previewRe
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500 mb-2">Nenhuma etapa adicionada ao quiz ainda.</p>
+          <p style={{ color: '#8B7355' }}>Nenhuma etapa adicionada ao quiz ainda.</p>
           <p className="text-gray-400 text-sm">
             Adicione etapas no modo editor para visualizar aqui.
           </p>
@@ -94,7 +94,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ stages, components, previewRe
           <h2 className="text-lg font-medium text-[#432818]">
             Prévia: {currentStage?.title || "Etapa sem título"}
           </h2>
-          <div className="text-sm text-gray-500">
+          <div style={{ color: '#8B7355' }}>
             Etapa {currentStageIndex + 1} de {sortedStages.length}
           </div>
         </div>

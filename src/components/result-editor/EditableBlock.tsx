@@ -71,16 +71,16 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     >
       {/* Toolbar for selected block */}
       {isSelected && (
-        <div className="absolute -top-12 left-0 right-0 flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-md z-10">
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex items-center gap-2">
             <div
               {...attributes}
               {...listeners}
-              className="cursor-grab hover:cursor-grabbing p-1 rounded hover:bg-gray-100"
+              style={{ backgroundColor: '#E5DDD5' }}
             >
-              <GripVertical className="w-4 h-4 text-gray-500" />
+              <GripVertical style={{ color: '#8B7355' }} />
             </div>
-            <span className="text-xs font-medium text-gray-700">{block.type}</span>
+            <span style={{ color: '#6B4F43' }}>{block.type}</span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -117,7 +117,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 e.stopPropagation();
                 onDelete();
               }}
-              className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+              style={{ color: '#432818' }}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

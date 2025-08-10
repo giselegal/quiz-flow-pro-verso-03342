@@ -108,7 +108,7 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">{subtitle}</p>
+          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
 
           {/* Hero Image */}
           {showImage && (

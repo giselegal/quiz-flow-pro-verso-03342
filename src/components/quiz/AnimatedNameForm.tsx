@@ -61,7 +61,7 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
           {showError && (
             <motion.p
               id="name-error"
-              className="text-red-500 text-xs mt-1"
+              style={{ color: '#432818' }}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -97,7 +97,7 @@ const AnimatedNameForm: React.FC<AnimatedNameFormProps> = ({ onSubmit }) => {
         </span>
       </motion.button>
 
-      <p className="text-xs text-center text-gray-500 pt-1">
+      <p style={{ color: '#8B7355' }}>
         Ao clicar, você concorda com nossa{" "}
         <a
           href="#"

@@ -78,9 +78,9 @@ export const DomainSettings: React.FC<DomainSettingsProps> = ({ settings, onUpda
       case "verified":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
       case "error":
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <XCircle style={{ color: '#432818' }} />;
       default:
-        return <Globe className="w-5 h-5 text-gray-500" />;
+        return <Globe style={{ color: '#8B7355' }} />;
     }
   };
 

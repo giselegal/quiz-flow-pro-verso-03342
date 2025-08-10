@@ -137,13 +137,13 @@ export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ classN
 
           <TabsContent value="quiz" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p className="text-gray-500">Quiz Editor - Em desenvolvimento</p>
+              <p style={{ color: '#8B7355' }}>Quiz Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
 
           <TabsContent value="sales" className="flex-1 mt-0">
             <div className="h-full flex items-center justify-center">
-              <p className="text-gray-500">Sales Page Editor - Em desenvolvimento</p>
+              <p style={{ color: '#8B7355' }}>Sales Page Editor - Em desenvolvimento</p>
             </div>
           </TabsContent>
         </Tabs>

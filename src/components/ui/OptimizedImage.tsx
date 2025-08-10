@@ -140,7 +140,7 @@ export default function OptimizedImage({
           )}
 
           {/* Shimmer loading effect */}
-          <div className="absolute inset-0 bg-gray-100 animate-pulse rounded" />
+          <div style={{ backgroundColor: '#E5DDD5' }} />
         </>
       )}
 
@@ -174,8 +174,8 @@ export default function OptimizedImage({
       />
 
       {error && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded">
-          <span className="text-sm text-gray-500">Imagem não disponível</span>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <span style={{ color: '#8B7355' }}>Imagem não disponível</span>
         </div>
       )}
     </div>

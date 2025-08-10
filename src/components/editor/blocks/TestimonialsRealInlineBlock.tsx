@@ -117,7 +117,7 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
       <Quote className="w-6 h-6 text-pink-400 mb-3 flex-shrink-0" />
 
       {/* Depoimento */}
-      <p className="text-gray-700 text-sm md:text-base mb-4 flex-grow leading-relaxed">
+      <p style={{ color: '#6B4F43' }}>
         "{testimonial.text}"
       </p>
 
@@ -134,9 +134,9 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
           className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-pink-200"
         />
         <div>
-          <p className="font-semibold text-gray-900 text-sm">{testimonial.name}</p>
+          <p style={{ color: '#432818' }}>{testimonial.name}</p>
           {testimonial.occupation && (
-            <p className="text-gray-600 text-xs">{testimonial.occupation}</p>
+            <p style={{ color: '#6B4F43' }}>{testimonial.occupation}</p>
           )}
         </div>
       </div>
@@ -156,7 +156,7 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
     >
       {/* Título */}
       <div className="mb-6">
-        <h3 className="text-xl md:text-2xl font-bold text-center text-gray-800 mb-2">{title}</h3>
+        <h3 style={{ color: '#432818' }}>{title}</h3>
         <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 mx-auto rounded-full" />
       </div>
 

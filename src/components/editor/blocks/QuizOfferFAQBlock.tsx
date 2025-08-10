@@ -116,7 +116,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
                   <h4 className="text-xl font-semibold mb-3" style={{ color: textColor }}>
                     {item.question}
                   </h4>
-                  <p className="text-gray-700 leading-relaxed">{item.answer}</p>
+                  <p style={{ color: '#6B4F43' }}>{item.answer}</p>
                 </CardContent>
               </Card>
             ))}

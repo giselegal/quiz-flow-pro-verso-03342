@@ -248,7 +248,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           />
 
           {/* Top Bar - Otimizado */}
-          <div className="bg-gradient-to-r from-amber-50/95 via-yellow-50/90 to-amber-50/95 border-b border-amber-200/50 backdrop-blur-md px-3 py-2 shadow-sm">
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <h1 className="text-lg font-semibold text-stone-700">

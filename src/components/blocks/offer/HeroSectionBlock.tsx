@@ -136,7 +136,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             )}
 
             {description && (
-              <p className="text-lg text-gray-700 mb-8 leading-relaxed">{description}</p>
+              <p style={{ color: '#6B4F43' }}>{description}</p>
             )}
 
             <Button
@@ -149,7 +149,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             </Button>
 
             {showSocialProof && socialProofText && (
-              <div className="mt-8 flex items-center justify-center md:justify-start gap-2 text-sm text-gray-600">
+              <div style={{ color: '#6B4F43' }}>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-500 fill-current" />
                   <Star className="w-4 h-4 text-yellow-500 fill-current" />

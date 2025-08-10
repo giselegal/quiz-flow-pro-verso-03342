@@ -32,11 +32,11 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ resultPageConfig, selectedS
   return (
     <div className="h-full overflow-auto bg-[#FAF9F7] p-4">
       <div className="border rounded-lg shadow-sm overflow-hidden">
-        <div className="p-2 bg-gray-100 border-b flex items-center space-x-2">
+        <div style={{ backgroundColor: '#E5DDD5' }}>
           <div className="w-3 h-3 rounded-full bg-red-400"></div>
           <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
           <div className="w-3 h-3 rounded-full bg-green-400"></div>
-          <span className="text-xs text-gray-500 ml-2">Visualização</span>
+          <span style={{ color: '#8B7355' }}>Visualização</span>
         </div>
 
         <div className="overflow-auto h-[calc(100vh-180px)]">

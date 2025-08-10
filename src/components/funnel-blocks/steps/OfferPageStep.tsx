@@ -45,8 +45,8 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
         <div className="bg-white rounded-lg shadow-xl p-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
-            <p className="text-xl text-gray-600">{subtitle}</p>
+            <h1 style={{ color: '#432818' }}>{title}</h1>
+            <p style={{ color: '#6B4F43' }}>{subtitle}</p>
           </div>
 
           {/* Countdown Timer */}
@@ -78,7 +78,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
           <div className="text-center mb-8">
             {price.original && price.discounted && (
               <div className="mb-4">
-                <span className="text-2xl text-gray-500 line-through mr-4">
+                <span style={{ color: '#8B7355' }}>
                   {price.currency || "R$"} {price.original}
                 </span>
                 <span className="text-4xl font-bold text-green-600">
@@ -93,7 +93,7 @@ const OfferPageStep: React.FC<OfferPageStepProps> = ({
             {onBack && (
               <button
                 onClick={onBack}
-                className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50"
+                style={{ borderColor: '#E5DDD5' }}
               >
                 Voltar
               </button>

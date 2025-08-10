@@ -156,9 +156,9 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
         <div className="mb-8 text-center">
           <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-4">{title}</h1>
 
-          {subtitle && <h2 className="text-xl md:text-2xl text-gray-600 mb-6">{subtitle}</h2>}
+          {subtitle && <h2 style={{ color: '#6B4F43' }}>{subtitle}</h2>}
 
-          {description && <p className="text-lg text-gray-700 max-w-2xl mx-auto">{description}</p>}
+          {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
         </div>
 
         {/* Card Principal da Oferta */}
@@ -167,7 +167,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
             {/* Badge de Desconto */}
             {highlightDiscount && priceConfig.discount && (
               <div className="text-center mb-6">
-                <Badge className="px-6 py-2 text-xl font-bold bg-red-500 text-white">
+                <Badge style={{ backgroundColor: '#FAF9F7' }}>
                   {priceConfig.discount}
                 </Badge>
               </div>
@@ -178,7 +178,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
               {/* Preço Original */}
               {priceConfig.originalPrice && (
                 <div className="mb-2">
-                  <span className="text-lg text-gray-500 line-through">
+                  <span style={{ color: '#8B7355' }}>
                     De: {priceConfig.originalPrice}
                   </span>
                 </div>
@@ -193,7 +193,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
                 {/* Parcelamento */}
                 {priceConfig.installments && (
                   <div className="mt-2">
-                    <span className="text-lg text-gray-600">
+                    <span style={{ color: '#6B4F43' }}>
                       ou {priceConfig.installments.quantity}x de {priceConfig.installments.value}
                     </span>
                   </div>
@@ -231,7 +231,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
                             </svg>
                           </div>
                         ) : (
-                          <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                          <div style={{ backgroundColor: '#FAF9F7' }}>
                             <svg
                               className="w-4 h-4 text-white"
                               fill="currentColor"
@@ -270,7 +270,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
                 {buttonText}
               </Button>
 
-              {buttonSubtext && <p className="text-sm text-gray-500 mt-3">{buttonSubtext}</p>}
+              {buttonSubtext && <p style={{ color: '#8B7355' }}>{buttonSubtext}</p>}
             </div>
 
             {/* Garantia */}
@@ -294,7 +294,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
         {/* Urgência */}
         {urgencyText && (
           <div className="mt-8 text-center">
-            <div className="inline-block px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg">
+            <div style={{ backgroundColor: '#FAF9F7' }}>
               <p className="font-semibold text-lg">⏰ {urgencyText}</p>
             </div>
           </div>
@@ -303,7 +303,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
         {/* Escassez */}
         {scarcityText && (
           <div className="mt-4 text-center">
-            <p className="text-gray-600 font-medium">{scarcityText}</p>
+            <p style={{ color: '#6B4F43' }}>{scarcityText}</p>
           </div>
         )}
       </div>

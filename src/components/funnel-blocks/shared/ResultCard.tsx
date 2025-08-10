@@ -75,7 +75,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               {badgeText}
             </Badge>
           )}
-          {category && <div className="text-sm text-gray-500 mb-1">{category}</div>}
+          {category && <div style={{ color: '#8B7355' }}>{category}</div>}
           <h3 className="text-lg font-bold">{title}</h3>
         </CardHeader>
       )}
@@ -83,14 +83,14 @@ export const ResultCard: React.FC<ResultCardProps> = ({
       <CardContent className={imageUrl ? "pt-4" : ""}>
         {imageUrl && <h3 className="text-lg font-bold mb-3">{title}</h3>}
 
-        {description && <p className="text-gray-700 mb-4">{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {features.length > 0 && (
           <ul className="space-y-1 mb-4">
             {features.map((feature, index) => (
               <li key={index} className="flex items-start">
                 <span className="text-primary mr-2">•</span>
-                <span className="text-sm text-gray-700">{feature}</span>
+                <span style={{ color: '#6B4F43' }}>{feature}</span>
               </li>
             ))}
           </ul>

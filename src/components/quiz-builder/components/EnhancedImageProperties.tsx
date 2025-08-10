@@ -59,7 +59,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
             <Card className="border border-dashed p-6 text-center">
               <div className="flex flex-col items-center gap-2">
                 <Upload className="h-8 w-8 text-gray-400" />
-                <p className="text-sm text-gray-500">
+                <p style={{ color: '#8B7355' }}>
                   Arraste uma imagem ou clique para fazer upload
                 </p>
                 <Button className="mt-2" size="sm">
@@ -85,7 +85,7 @@ const EnhancedImageProperties: React.FC<EnhancedImagePropertiesProps> = ({ data,
               {[1, 2, 3, 4, 5, 6].map(i => (
                 <div
                   key={i}
-                  className="aspect-square bg-gray-100 rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-200"
+                  style={{ backgroundColor: '#E5DDD5' }}
                   onClick={() =>
                     onUpdate({
                       ...data,

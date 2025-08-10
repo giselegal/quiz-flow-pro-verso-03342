@@ -46,7 +46,7 @@ const QuizCategoryTab: React.FC<QuizCategoryTabProps> = ({
           >
             <div>
               <h3 className="font-medium text-[#432818]">{category.name}</h3>
-              <p className="text-xs text-gray-500">{category.description}</p>
+              <p style={{ color: '#8B7355' }}>{category.description}</p>
             </div>
             {isOpen ? (
               <ChevronDown className="w-5 h-5 text-[#B89B7A]" />

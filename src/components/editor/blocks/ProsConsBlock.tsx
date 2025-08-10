@@ -161,7 +161,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
   );
 
   const ConsSection = () => (
-    <div className="bg-red-50 rounded-lg p-6 border border-red-200">
+    <div style={{ borderColor: '#E5DDD5' }}>
       <h3
         className="text-xl font-semibold mb-4 flex items-center gap-2"
         style={{ color: consColor }}
@@ -217,7 +217,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
               {title}
             </h2>
           )}
-          {subtitle && <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitle}</p>}
+          {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
         </div>
       )}
 
@@ -233,8 +233,8 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
       {/* Summary */}
       {pros.length > 0 && cons.length > 0 && (
-        <div className="mt-6 p-4 bg-gray-100 rounded-lg text-center">
-          <p className="text-sm text-gray-600">
+        <div style={{ backgroundColor: '#E5DDD5' }}>
+          <p style={{ color: '#6B4F43' }}>
             <span className="font-medium" style={{ color: prosColor }}>
               {pros.length} vantagens
             </span>

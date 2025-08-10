@@ -61,7 +61,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">4:23</div>
-            <p className="text-xs text-red-600">-0:12 vs mês anterior</p>
+            <p style={{ color: '#432818' }}>-0:12 vs mês anterior</p>
           </CardContent>
         </Card>
 
@@ -89,7 +89,7 @@ const AnalyticsPage: React.FC = () => {
                 <h3 className="font-semibold text-[#432818]">Funil de Descoberta de Estilo</h3>
                 <div className="flex items-center gap-4 mt-2 text-sm">
                   <span className="text-[#8F7A6A]">2,847 visitantes</span>
-                  <Badge className="bg-green-100 text-green-800">87.2% conversão</Badge>
+                  <Badge style={{ backgroundColor: '#E5DDD5' }}>87.2% conversão</Badge>
                   <span className="text-[#8F7A6A]">R$ 18,745 receita</span>
                 </div>
               </div>

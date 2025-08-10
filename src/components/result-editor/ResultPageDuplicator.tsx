@@ -194,7 +194,7 @@ export const ResultPageDuplicator: React.FC<ResultPageDuplicatorProps> = ({
                   </CardContent>
                 </Card>
 
-                <div className="text-sm text-gray-500">
+                <div style={{ color: '#8B7355' }}>
                   <p>Após salvar, você poderá configurar quais blocos aparecem em cada variante.</p>
                 </div>
               </div>

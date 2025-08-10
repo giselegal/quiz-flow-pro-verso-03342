@@ -103,12 +103,12 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       >
         <CardHeader className="flex-shrink-0 pb-3 bg-red-100/50">
           <CardTitle className="text-lg font-semibold text-red-700 flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+            <div style={{ backgroundColor: '#FAF9F7' }}></div>
             ⚠️ Erro nas Etapas
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 p-4">
-          <div className="h-full flex items-center justify-center text-red-600">
+          <div style={{ color: '#432818' }}>
             <div className="text-center space-y-4">
               <div className="text-4xl animate-bounce">🚨</div>
               <p className="font-medium">Etapas não carregaram</p>
@@ -116,7 +116,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               <Button
                 onClick={() => window.location.reload()}
                 variant="outline"
-                className="border-red-300 text-red-700 hover:bg-red-50"
+                style={{ borderColor: '#B89B7A' }}
               >
                 🔄 Recarregar
               </Button>
@@ -139,7 +139,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         className
       )}
     >
-      <CardHeader className="flex-shrink-0 pb-3 bg-green-100/50 border-b border-green-200">
+      <CardHeader style={{ backgroundColor: '#E5DDD5' }}>
         <CardTitle className="text-lg font-semibold text-green-800 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>✅ Etapas do Funil
           <span className="ml-auto text-sm bg-green-200 text-green-800 px-2 py-1 rounded font-bold">

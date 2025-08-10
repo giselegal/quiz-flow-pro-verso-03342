@@ -46,9 +46,9 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
               placeholder="Digite o título"
             />
           ) : (
-            <h1 className="text-2xl font-bold text-gray-900">{content.title || "Título"}</h1>
+            <h1 style={{ color: '#432818' }}>{content.title || "Título"}</h1>
           )}
-          {content.subtitle && <p className="text-lg text-gray-600 mt-2">{content.subtitle}</p>}
+          {content.subtitle && <p style={{ color: '#6B4F43' }}>{content.subtitle}</p>}
         </div>
       );
 
@@ -64,7 +64,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
               placeholder="Digite o texto"
             />
           ) : (
-            <p className="text-gray-700 leading-relaxed">{content.text || "Texto de exemplo"}</p>
+            <p style={{ color: '#6B4F43' }}>{content.text || "Texto de exemplo"}</p>
           )}
         </div>
       );
@@ -79,12 +79,12 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
               className="max-w-full h-auto rounded-lg mx-auto"
             />
           ) : (
-            <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-              <span className="text-gray-500">Imagem</span>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
+              <span style={{ color: '#8B7355' }}>Imagem</span>
             </div>
           )}
           {content.description && (
-            <p className="text-sm text-gray-600 mt-2">{content.description}</p>
+            <p style={{ color: '#6B4F43' }}>{content.description}</p>
           )}
         </div>
       );
@@ -112,7 +112,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
                 </li>
               ))
             ) : (
-              <li className="text-gray-500">Nenhum benefício adicionado</li>
+              <li style={{ color: '#8B7355' }}>Nenhum benefício adicionado</li>
             )}
           </ul>
         </div>
@@ -127,12 +127,12 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
             {faqItems.length > 0 && isFAQItemArray(faqItems) ? (
               faqItems.map((item: FAQItem, index: number) => (
                 <div key={index} className="border-b pb-3">
-                  <h4 className="font-medium text-gray-900 mb-2">{item.question}</h4>
-                  <p className="text-gray-600">{item.answer}</p>
+                  <h4 style={{ color: '#432818' }}>{item.question}</h4>
+                  <p style={{ color: '#6B4F43' }}>{item.answer}</p>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">Nenhuma pergunta adicionada</p>
+              <p style={{ color: '#8B7355' }}>Nenhuma pergunta adicionada</p>
             )}
           </div>
         </div>
@@ -140,11 +140,11 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 
     case "testimonials":
       return (
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <blockquote className="text-lg italic text-gray-800 mb-4">
+        <div style={{ backgroundColor: '#FAF9F7' }}>
+          <blockquote style={{ color: '#432818' }}>
             "{content.quote || "Depoimento incrível sobre o produto..."}"
           </blockquote>
-          <cite className="text-gray-600 font-medium">
+          <cite style={{ color: '#6B4F43' }}>
             — {content.quoteAuthor || "Nome do Cliente"}
           </cite>
         </div>
@@ -154,9 +154,9 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
       return (
         <div className="bg-white border-2 border-[#B89B7A]/30 rounded-lg p-6 text-center">
           {content.regularPrice && (
-            <div className="text-gray-500 line-through text-lg">R$ {content.regularPrice}</div>
+            <div style={{ color: '#8B7355' }}>R$ {content.regularPrice}</div>
           )}
-          <div className="text-3xl font-bold text-blue-600 mb-4">
+          <div style={{ color: '#B89B7A' }}>
             R$ {content.salePrice || "97"}
           </div>
           <button className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
@@ -167,7 +167,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 
     default:
       return (
-        <div className="p-4 bg-gray-100 rounded-lg text-center text-gray-600">
+        <div style={{ color: '#6B4F43' }}>
           Bloco: {block.type}
           {content.title && <div className="font-medium">{content.title}</div>}
           {content.text && <div className="text-sm">{content.text}</div>}

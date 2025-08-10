@@ -80,20 +80,20 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
     >
       <div className="w-full text-center space-y-6">
         {/* Título Principal */}
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{title}</h2>
+        <h2 style={{ color: '#432818' }}>{title}</h2>
 
         {/* Subtítulo */}
-        <p className="text-lg text-gray-600 leading-relaxed">{subtitle}</p>
+        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
 
         {/* Recursos */}
         <div className="flex flex-wrap justify-center gap-4 py-4">
           {features.map((feature: string, index: number) => (
             <div
               key={index}
-              className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border border-gray-200"
+              style={{ borderColor: '#E5DDD5' }}
             >
               <Star className="w-4 h-4 text-[#B89B7A]" />
-              <span className="text-sm font-medium text-gray-700">{feature}</span>
+              <span style={{ color: '#6B4F43' }}>{feature}</span>
             </div>
           ))}
         </div>
@@ -101,10 +101,10 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Preço */}
         <div className="text-center py-4">
           <div className="flex items-center justify-center gap-3">
-            <span className="text-lg text-gray-500 line-through">{originalPrice}</span>
+            <span style={{ color: '#8B7355' }}>{originalPrice}</span>
             <span className="text-3xl font-bold text-[#B89B7A]">{price}</span>
           </div>
-          <p className="text-sm text-red-600 font-medium mt-2">{urgencyText}</p>
+          <p style={{ color: '#432818' }}>{urgencyText}</p>
         </div>
 
         {/* Botão Principal */}
@@ -127,7 +127,7 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
         </button>
 
         {/* Garantia */}
-        <p className="text-sm text-gray-500 mt-4">
+        <p style={{ color: '#8B7355' }}>
           <Shield className="w-4 h-4 inline mr-1" />
           Garantia incondicional de 30 dias
         </p>

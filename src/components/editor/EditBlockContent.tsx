@@ -97,11 +97,11 @@ const EditBlockContent: React.FC<EditBlockContentProps> = ({
   const renderBlock = () => {
     // For now, just render a simple preview for all block types
     return (
-      <div className="p-4 border border-gray-300 bg-gray-50 rounded-lg">
-        <p className="text-gray-600">
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <p style={{ color: '#6B4F43' }}>
           Bloco tipo: <strong>{block.type}</strong>
         </p>
-        <pre className="text-xs mt-2 bg-gray-100 p-2 rounded max-h-32 overflow-y-auto">
+        <pre style={{ backgroundColor: '#E5DDD5' }}>
           {JSON.stringify(block.properties || {}, null, 2)}
         </pre>
       </div>

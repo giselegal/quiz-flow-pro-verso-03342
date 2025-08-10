@@ -157,7 +157,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 border-red-200 hover:bg-red-50 hover:text-red-600 text-red-500"
+              style={{ color: '#432818' }}
               onClick={onClearData}
             >
               <Trash2 className="h-3.5 w-3.5 mr-2" />

@@ -93,7 +93,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
   const getPerformanceBadge = (conversionRate: string) => {
     const rate = parseFloat(conversionRate);
-    if (rate >= 2.0) return <Badge className="bg-green-100 text-green-800">Excelente</Badge>;
+    if (rate >= 2.0) return <Badge style={{ backgroundColor: '#E5DDD5' }}>Excelente</Badge>;
     if (rate >= 1.0) return <Badge className="bg-stone-100 text-stone-700">Bom</Badge>;
     if (rate >= 0.5) return <Badge className="bg-[#B89B7A]/20 text-orange-800">Regular</Badge>;
     return <Badge className="bg-red-100 text-red-800">Baixo</Badge>;
@@ -104,8 +104,8 @@ export const CreativePerformanceDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard de Criativos</h1>
-          <p className="text-gray-600">Análise de performance dos criativos de campanha</p>
+          <h1 style={{ color: '#432818' }}>Dashboard de Criativos</h1>
+          <p style={{ color: '#6B4F43' }}>Análise de performance dos criativos de campanha</p>
         </div>
 
         <div className="flex gap-2">
@@ -128,8 +128,8 @@ export const CreativePerformanceDashboard: React.FC = () => {
           <CardContent className="flex items-center p-6">
             <Eye className="h-8 w-8 text-[#B89B7A]" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Visualizações</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p style={{ color: '#6B4F43' }}>Visualizações</p>
+              <p style={{ color: '#432818' }}>
                 {totalStats.page_views.toLocaleString()}
               </p>
             </div>
@@ -140,8 +140,8 @@ export const CreativePerformanceDashboard: React.FC = () => {
           <CardContent className="flex items-center p-6">
             <Users className="h-8 w-8 text-green-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Leads</p>
-              <p className="text-2xl font-bold text-gray-900">{totalStats.leads}</p>
+              <p style={{ color: '#6B4F43' }}>Leads</p>
+              <p style={{ color: '#432818' }}>{totalStats.leads}</p>
             </div>
           </CardContent>
         </Card>
@@ -150,8 +150,8 @@ export const CreativePerformanceDashboard: React.FC = () => {
           <CardContent className="flex items-center p-6">
             <DollarSign className="h-8 w-8 text-stone-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Vendas</p>
-              <p className="text-2xl font-bold text-gray-900">{totalStats.purchases}</p>
+              <p style={{ color: '#6B4F43' }}>Vendas</p>
+              <p style={{ color: '#432818' }}>{totalStats.purchases}</p>
             </div>
           </CardContent>
         </Card>
@@ -160,8 +160,8 @@ export const CreativePerformanceDashboard: React.FC = () => {
           <CardContent className="flex items-center p-6">
             <TrendingUp className="h-8 w-8 text-[#B89B7A]" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Receita</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p style={{ color: '#6B4F43' }}>Receita</p>
+              <p style={{ color: '#432818' }}>
                 {formatCurrency(totalStats.revenue)}
               </p>
             </div>
@@ -184,7 +184,7 @@ export const CreativePerformanceDashboard: React.FC = () => {
                 <h3 className="font-semibold text-lg text-green-900">
                   {bestPerformingCreative.creative_name}
                 </h3>
-                <p className="text-green-700">
+                <p style={{ color: '#6B4F43' }}>
                   Taxa de Conversão:{" "}
                   <span className="font-bold">{bestPerformingCreative.conversion_rate}%</span>
                 </p>
@@ -202,19 +202,19 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
       {/* Lista de Criativos */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Performance por Criativo</h2>
+        <h2 style={{ color: '#432818' }}>Performance por Criativo</h2>
 
         {isLoading ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto"></div>
-            <p className="mt-4 text-gray-600">Carregando dados...</p>
+            <p style={{ color: '#6B4F43' }}>Carregando dados...</p>
           </div>
         ) : creativesList.length === 0 ? (
           <Card>
             <CardContent className="text-center py-8">
               <BarChart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum dado encontrado</h3>
-              <p className="text-gray-600">
+              <h3 style={{ color: '#432818' }}>Nenhum dado encontrado</h3>
+              <p style={{ color: '#6B4F43' }}>
                 Ainda não há dados de performance para o período selecionado.
                 <br />
                 Execute algumas campanhas e volte aqui para ver os resultados!
@@ -234,20 +234,20 @@ export const CreativePerformanceDashboard: React.FC = () => {
                           <span className="text-sm font-bold text-[#432818]">#{index + 1}</span>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-lg text-gray-900">
+                          <h3 style={{ color: '#432818' }}>
                             {creative.creative_name}
                           </h3>
                           <div className="flex items-center gap-2">
                             {getPerformanceBadge(creative.conversion_rate)}
-                            <span className="text-sm text-gray-600">
+                            <span style={{ color: '#6B4F43' }}>
                               Conv. Rate: {creative.conversion_rate}%
                             </span>
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600">Receita</p>
-                        <p className="text-xl font-bold text-gray-900">
+                        <p style={{ color: '#6B4F43' }}>Receita</p>
+                        <p style={{ color: '#432818' }}>
                           {formatCurrency(creative.revenue)}
                         </p>
                       </div>
@@ -255,38 +255,38 @@ export const CreativePerformanceDashboard: React.FC = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
                       <div>
-                        <p className="text-sm text-gray-600">Visualizações</p>
-                        <p className="text-lg font-semibold text-gray-900">{creative.page_views}</p>
+                        <p style={{ color: '#6B4F43' }}>Visualizações</p>
+                        <p style={{ color: '#432818' }}>{creative.page_views}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Quiz Iniciados</p>
-                        <p className="text-lg font-semibold text-gray-900">
+                        <p style={{ color: '#6B4F43' }}>Quiz Iniciados</p>
+                        <p style={{ color: '#432818' }}>
                           {creative.quiz_starts}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Quiz Completos</p>
-                        <p className="text-lg font-semibold text-gray-900">
+                        <p style={{ color: '#6B4F43' }}>Quiz Completos</p>
+                        <p style={{ color: '#432818' }}>
                           {creative.quiz_completions}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Leads</p>
-                        <p className="text-lg font-semibold text-gray-900">{creative.leads}</p>
+                        <p style={{ color: '#6B4F43' }}>Leads</p>
+                        <p style={{ color: '#432818' }}>{creative.leads}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-600">Vendas</p>
-                        <p className="text-lg font-semibold text-gray-900">{creative.purchases}</p>
+                        <p style={{ color: '#6B4F43' }}>Vendas</p>
+                        <p style={{ color: '#432818' }}>{creative.purchases}</p>
                       </div>
                     </div>
 
                     {/* Barra de progresso da conversão */}
                     <div className="mt-4">
-                      <div className="flex justify-between text-sm text-gray-600 mb-1">
+                      <div style={{ color: '#6B4F43' }}>
                         <span>Taxa de Conversão</span>
                         <span>{creative.conversion_rate}%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div style={{ backgroundColor: '#E5DDD5' }}>
                         <div
                           className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
                           style={{

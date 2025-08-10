@@ -33,7 +33,7 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute -inset-1 bg-blue-500/20 border-2 border-blue-500 rounded-lg pointer-events-none"
+          style={{ backgroundColor: '#FAF9F7' }}
         />
       )}
       
@@ -43,18 +43,18 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="absolute -top-8 left-0 flex items-center gap-1 bg-white border border-gray-200 rounded-md shadow-lg px-2 py-1 z-10"
+          style={{ borderColor: '#E5DDD5' }}
         >
-          <span className="text-xs text-gray-600 font-medium">{blockType}</span>
+          <span style={{ color: '#6B4F43' }}>{blockType}</span>
           
           {onEdit && (
             <Button
               size="sm"
               variant="ghost"
               onClick={onEdit}
-              className="h-6 w-6 p-0 hover:bg-blue-50"
+              style={{ backgroundColor: '#FAF9F7' }}
             >
-              <Edit3 className="w-3 h-3 text-blue-600" />
+              <Edit3 style={{ color: '#B89B7A' }} />
             </Button>
           )}
           
@@ -63,16 +63,16 @@ export const BlockSelectionIndicator: React.FC<BlockSelectionIndicatorProps> = (
               size="sm"
               variant="ghost"
               onClick={onDelete}
-              className="h-6 w-6 p-0 hover:bg-red-50"
+              style={{ backgroundColor: '#FAF9F7' }}
             >
-              <Trash2 className="w-3 h-3 text-red-600" />
+              <Trash2 style={{ color: '#432818' }} />
             </Button>
           )}
         </motion.div>
       )}
       
       {/* Efeito hover sutil */}
-      <div className="absolute inset-0 group-hover:bg-gray-100/30 rounded-lg transition-colors pointer-events-none" />
+      <div style={{ backgroundColor: '#E5DDD5' }} />
     </div>
   );
 };

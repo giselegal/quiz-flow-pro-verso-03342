@@ -66,7 +66,7 @@ export default function ComponentPalette() {
             key={component.id}
             draggable
             onDragStart={e => handleDragStart(e, component.id)}
-            className="cursor-move rounded border bg-white p-3 text-sm hover:bg-gray-50 hover:shadow-sm"
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             <div className="flex items-center gap-2">
               <span>{component.icon}</span>
@@ -76,7 +76,7 @@ export default function ComponentPalette() {
         ))}
       </div>
 
-      <div className="pt-4 text-xs text-gray-500">
+      <div style={{ color: '#8B7355' }}>
         💡 Arraste os componentes para o canvas para começar a editar
       </div>
     </div>

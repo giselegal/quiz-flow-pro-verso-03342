@@ -100,7 +100,7 @@ export const DragDropTestPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8">Teste de Drag and Drop</h1>
 
@@ -146,9 +146,9 @@ export const DragDropTestPage: React.FC = () => {
             {/* Canvas principal */}
             <div className="col-span-9">
               <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-                <div className="p-4 border-b bg-gray-50">
+                <div style={{ backgroundColor: '#FAF9F7' }}>
                   <h2 className="text-lg font-semibold">Canvas de Teste</h2>
-                  <p className="text-sm text-gray-600">Arraste componentes da sidebar para aqui</p>
+                  <p style={{ color: '#6B4F43' }}>Arraste componentes da sidebar para aqui</p>
                 </div>
 
                 <CanvasDropZone
@@ -172,12 +172,12 @@ export const DragDropTestPage: React.FC = () => {
               <h3 className="text-lg font-semibold mb-3">Blocos Criados (Debug)</h3>
               <div className="space-y-2">
                 {blocks.map((block, index) => (
-                  <div key={block.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded">
+                  <div key={block.id} style={{ backgroundColor: '#FAF9F7' }}>
                     <span className="text-sm font-mono">{index + 1}.</span>
                     <span className="font-medium">{block.type}</span>
-                    <span className="text-xs text-gray-500 font-mono">{block.id}</span>
+                    <span style={{ color: '#8B7355' }}>{block.id}</span>
                     <button
-                      className="ml-auto text-red-600 text-xs hover:text-red-800"
+                      style={{ color: '#432818' }}
                       onClick={() => handleDeleteBlock(block.id)}
                     >
                       Deletar

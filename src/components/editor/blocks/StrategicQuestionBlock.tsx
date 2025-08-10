@@ -172,7 +172,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
         {options.map((option: any, index: number) => (
           <div
             key={option.id || index}
-            className="p-4 rounded-lg border-2 border-gray-200 hover:border-gray-300 transition-colors cursor-pointer text-center"
+            style={{ borderColor: '#E5DDD5' }}
           >
             <InlineEditText
               value={option.text}

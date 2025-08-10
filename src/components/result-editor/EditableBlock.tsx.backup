@@ -35,14 +35,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
   isPreviewMode = false,
   primaryStyle,
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     disabled: isPreviewMode,
   });
@@ -72,9 +65,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
       style={style}
       className={cn(
         "relative border-2 cursor-pointer transition-all duration-200",
-        isSelected
-          ? "border-blue-500 shadow-lg"
-          : "border-gray-200 hover:border-gray-300",
+        isSelected ? "border-[#B89B7A] shadow-lg" : "border-gray-200 hover:border-gray-300"
       )}
       onClick={handleClick}
     >
@@ -89,9 +80,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             >
               <GripVertical className="w-4 h-4 text-gray-500" />
             </div>
-            <span className="text-xs font-medium text-gray-700">
-              {block.type}
-            </span>
+            <span className="text-xs font-medium text-gray-700">{block.type}</span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -100,7 +89,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     onMove("up");
                   }}
@@ -111,7 +100,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     onMove("down");
                   }}
@@ -124,7 +113,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
             <Button
               size="sm"
               variant="ghost"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onDelete();
               }}

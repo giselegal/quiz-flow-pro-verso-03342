@@ -137,7 +137,7 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
         {subtitle && <h3 className="text-xl md:text-2xl text-[#6B5B73] mb-6">{subtitle}</h3>}
 
         {description && (
-          <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">{description}</p>
+          <p style={{ color: '#6B4F43' }}>{description}</p>
         )}
 
         <Button
@@ -154,7 +154,7 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
           {buttonText}
         </Button>
 
-        <div className="mt-6 text-sm text-gray-500">
+        <div style={{ color: '#8B7355' }}>
           <p>✅ Acesso imediato • ✅ Garantia de 7 dias • ✅ Suporte especializado</p>
         </div>
       </div>

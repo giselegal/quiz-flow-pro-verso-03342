@@ -38,7 +38,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({ data, style, isSelected
           <>
             {/* Loading placeholder */}
             {!imageLoaded && (
-              <div className="bg-gray-200 animate-pulse w-full aspect-[4/3] rounded-md flex items-center justify-center">
+              <div style={{ backgroundColor: '#E5DDD5' }}>
                 <span className="text-gray-400 text-sm">Carregando...</span>
               </div>
             )}
@@ -57,7 +57,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({ data, style, isSelected
             />
           </>
         ) : (
-          <div className="bg-gray-200 text-gray-500 flex items-center justify-center h-40 rounded-md">
+          <div style={{ color: '#8B7355' }}>
             <p>Imagem não disponível</p>
           </div>
         )}

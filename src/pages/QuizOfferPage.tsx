@@ -257,7 +257,7 @@ const FaqSectionNew = () => {
           >
             <button
               onClick={() => toggleItem(index)}
-              className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
+              style={{ backgroundColor: '#FAF9F7' }}
             >
               <span className="font-medium text-[#432818] text-lg">{item.question}</span>
               <ChevronRight
@@ -267,7 +267,7 @@ const FaqSectionNew = () => {
             </button>
 
             {openItem === index && (
-              <div className="px-6 py-4 text-gray-700 bg-gray-50 border-t border-gray-100 text-base">
+              <div style={{ color: '#6B4F43' }}>
                 {item.answer}
               </div>
             )}
@@ -439,7 +439,7 @@ const QuizOfferPage: React.FC = () => {
               {/* Badge credibilidade */}
               <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
                 <Award size={18} className="text-green-600" />
-                <span className="text-sm font-semibold text-green-700">
+                <span style={{ color: '#6B4F43' }}>
                   3000+ mulheres transformadas
                 </span>
               </div>

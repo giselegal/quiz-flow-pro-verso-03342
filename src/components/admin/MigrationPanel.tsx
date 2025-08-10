@@ -135,7 +135,7 @@ export function MigrationPanel() {
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {status.tablesCreated.map(table => (
-                      <Badge key={table} variant="default" className="bg-green-100 text-green-800">
+                      <Badge key={table} variant="default" style={{ backgroundColor: '#E5DDD5' }}>
                         {table}
                       </Badge>
                     ))}
@@ -146,7 +146,7 @@ export function MigrationPanel() {
               {/* Tabelas Ausentes */}
               {status.missingTables.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-red-600 mb-2">
+                  <h4 style={{ color: '#432818' }}>
                     ❌ Tabelas Ausentes ({status.missingTables.length})
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -228,7 +228,7 @@ export function MigrationPanel() {
                 </h4>
                 <div className="bg-green-50 p-3 rounded-md">
                   {migrationResult.executed.map((item, index) => (
-                    <div key={index} className="text-sm text-green-700">
+                    <div key={index} style={{ color: '#6B4F43' }}>
                       • {item}
                     </div>
                   ))}
@@ -239,10 +239,10 @@ export function MigrationPanel() {
             {/* Erros */}
             {migrationResult.errors.length > 0 && (
               <div>
-                <h4 className="font-medium text-red-600 mb-2">
+                <h4 style={{ color: '#432818' }}>
                   ❌ Erros ({migrationResult.errors.length})
                 </h4>
-                <div className="bg-red-50 p-3 rounded-md">
+                <div style={{ backgroundColor: '#FAF9F7' }}>
                   {migrationResult.errors.map((error, index) => (
                     <div key={index} className="text-sm text-red-700">
                       • {error}
