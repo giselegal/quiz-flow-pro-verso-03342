@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
@@ -12,7 +12,7 @@ import {
   RESPONSIVE_PATTERNS,
   getThemeClasses,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
+} from "../../../utils/inlineComponentUtils";
 import {
   BRAND_COLORS,
   TYPOGRAPHY,
@@ -20,7 +20,7 @@ import {
   ANIMATIONS,
   EFFECTS,
   RESPONSIVE_PATTERNS as BRAND_RESPONSIVE,
-} from "@/utils/brandDesignSystem";
+} from "../../../utils/brandDesignSystem";
 import {
   ArrowRight,
   ShoppingCart,

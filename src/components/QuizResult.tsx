@@ -1,5 +1,5 @@
-import { useAuth } from "@/context/AuthContext";
-import { QuizResult as QuizResultType } from "@/hooks/useQuizResults";
+import { useAuth } from "../context/AuthContext";
+import { QuizResult as QuizResultType } from "../hooks/useQuizResults";
 import React from "react";
 
 interface QuizResultProps {

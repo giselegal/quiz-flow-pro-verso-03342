@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
 import { RefreshCw, Save, Eye } from "lucide-react";
 import EditableSection from "./EditableSection";
-import { useResultPageEditor } from "@/hooks/useResultPageEditor";
+import { useResultPageEditor } from "../../hooks/useResultPageEditor";
 
 interface ResultPageEditorProps {
   selectedStyle: {

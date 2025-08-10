@@ -1,6 +1,6 @@
 // 🚀 Demonstração do Editor Avançado - Fase 2 Completa
-import AdvancedEditor from "@/components/editor/AdvancedEditor";
-import { BlockData } from "@/types/blocks";
+import AdvancedEditor from "../../components/editor/AdvancedEditor";
+import { BlockData } from "../../types/blocks";
 import React from "react";
 
 // Dados de exemplo para demonstração

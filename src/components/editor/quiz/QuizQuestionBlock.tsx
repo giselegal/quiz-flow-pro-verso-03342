@@ -2,12 +2,12 @@
 // Bloco específico para renderizar questões baseadas na configuração JSON
 
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
-import { useEditor } from "@/context/EditorContext";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Progress } from "../../../components/ui/progress";
+import { Badge } from "../../../components/ui/badge";
+import { QUIZ_CONFIGURATION } from "../../../config/quizConfiguration";
+import { useEditor } from "../../../context/EditorContext";
 import { CheckCircle2, Circle, ArrowRight, RotateCcw } from "lucide-react";
 
 interface QuizQuestionBlockProps {

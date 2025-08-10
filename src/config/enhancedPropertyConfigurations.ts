@@ -1,4 +1,4 @@
-import { BlockDefinition } from "@/types/editor";
+import { BlockDefinition } from "../types/editor";
 import { Grid, Type } from "lucide-react";
 import React from "react";
 

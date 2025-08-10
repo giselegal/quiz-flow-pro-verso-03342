@@ -1,8 +1,8 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "../../../lib/utils";
+import { Button } from "../../../components/ui/button";
+import { Card, CardContent, CardHeader, CardFooter } from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
 
 interface ResultCardProps {
   title: string;

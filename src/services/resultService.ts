@@ -1,5 +1,5 @@
-import type { Database } from "@/integrations/supabase/types";
-import { supabase } from "@/lib/supabase";
+import type { Database } from "../integrations/supabase/types";
+import { supabase } from "../lib/supabase";
 
 export type QuizResult = Database["public"]["Tables"]["quiz_results"]["Row"];
 

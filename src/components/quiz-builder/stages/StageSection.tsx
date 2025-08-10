@@ -1,7 +1,7 @@
 import React from "react";
-import { QuizStage } from "@/types/quizBuilder";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { QuizStage } from "../../../types/quizBuilder";
+import { Card } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
 
 interface StageSectionProps {

@@ -1,9 +1,9 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { StyleResult } from "@/types/quiz";
-import { styleConfig } from "@/config/styleConfig";
-import OptimizedImage from "@/components/ui/optimized-image";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Card } from "../../components/ui/card";
+import { StyleResult } from "../../types/quiz";
+import { styleConfig } from "../../config/styleConfig";
+import OptimizedImage from "../../components/ui/optimized-image";
+import { LoadingSpinner } from "../../components/ui/loading-spinner";
 
 interface ResultSkeletonProps {
   primaryStyle?: StyleResult;

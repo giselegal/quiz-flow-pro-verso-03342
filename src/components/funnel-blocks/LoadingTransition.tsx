@@ -1,4 +1,4 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from "../../config/containerConfig";
 import React, { useEffect, useState } from "react";
 import { BlockComponentProps, LoadingType, Alignment, InteractionCallbacks } from "./types";
 

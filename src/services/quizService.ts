@@ -1,4 +1,4 @@
-import { QuizQuestion, StyleResult } from "@/types/quiz";
+import { QuizQuestion, StyleResult } from "../types/quiz";
 
 // Note: Quiz questions are now hardcoded in the frontend for simplicity
 // This eliminates the need for complex dynamic quiz management

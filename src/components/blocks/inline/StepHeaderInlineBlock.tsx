@@ -1,7 +1,7 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
-import type { BlockComponentProps } from "@/types/blocks";
+import { cn } from "../../../lib/utils";
+import { Progress } from "../../../components/ui/progress";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * StepHeaderInlineBlock - Componente modular inline horizontal

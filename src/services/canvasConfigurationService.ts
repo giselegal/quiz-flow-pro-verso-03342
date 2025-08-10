@@ -1,7 +1,7 @@
 // Simplified Canvas Configuration Service
 // Generates BlockData with proper content and order properties
 
-import { BlockData } from "@/types/blocks";
+import { BlockData } from "../types/blocks";
 
 export const createSimpleBlockData = (
   id: string,

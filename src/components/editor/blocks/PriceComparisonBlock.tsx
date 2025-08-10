@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
 import { Check, Star, X } from "lucide-react";
-import type { BlockComponentProps, BlockData } from "@/types/blocks";
+import type { BlockComponentProps, BlockData } from "../../../types/blocks";
 
 interface PricingPlan {
   id: string;

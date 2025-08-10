@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { OptimizedImage } from "@/components/ui/optimized-image";
-import { cn } from "@/lib/utils";
+import { Card } from "../../components/ui/card";
+import { OptimizedImage } from "../../components/ui/optimized-image";
+import { cn } from "../../lib/utils";
 
 interface BeforeAfterTransformationProps {
   beforeImage?: string;

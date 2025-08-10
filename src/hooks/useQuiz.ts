@@ -1,6 +1,6 @@
-import { StyleResult, QuizResult } from "@/types/quiz";
+import { StyleResult, QuizResult } from "../types/quiz";
 import { useState, useEffect, useCallback } from "react"; // Adicionado useCallback
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "../components/ui/use-toast";
 import { useLocation } from "wouter";
 import { useQuizLogic } from "./useQuizLogic"; // Importar o hook de lógica principal
 

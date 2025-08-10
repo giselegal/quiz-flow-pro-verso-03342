@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
+import { cn } from "../../../lib/utils";
+import type { BlockComponentProps } from "../../../types/blocks";
 import { Check } from "lucide-react";
 import React from "react";
 

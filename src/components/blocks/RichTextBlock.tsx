@@ -1,5 +1,5 @@
 import React from "react";
-import { BlockComponentProps } from "@/types/blocks";
+import { BlockComponentProps } from "../../types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {

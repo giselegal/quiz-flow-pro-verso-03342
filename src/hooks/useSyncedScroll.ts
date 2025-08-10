@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import { useScrollSync } from "@/context/ScrollSyncContext";
+import { useScrollSync } from "../context/ScrollSyncContext";
 
 interface UseSyncedScrollOptions {
   source: "canvas" | "components" | "properties";

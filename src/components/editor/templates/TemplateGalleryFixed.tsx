@@ -1,5 +1,5 @@
 // 📋 Template Gallery - Sistema de Gerenciamento de Templates
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,24 +8,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../../../components/ui/dialog";
 import React, { useState } from "react";
 // Update the import path below if your Input component is located elsewhere, for example:
 import { Input } from "../../ui/input";
 // Or, if using a library like 'shadcn/ui':
 // import { Input } from 'shadcn-ui';
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
+import { Badge } from "../../../components/ui/badge";
+import { Label } from "../../../components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { BlockData } from "@/types/blocks";
+} from "../../../components/ui/select";
+import { Textarea } from "../../../components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip";
+import { BlockData } from "../../../types/blocks";
 import {
   Clock,
   Copy,

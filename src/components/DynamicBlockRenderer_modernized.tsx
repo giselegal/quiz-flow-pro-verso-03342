@@ -1,5 +1,5 @@
 import React from "react";
-import { safeGetBlockProperties, logBlockDebug, isValidBlock } from "@/utils/blockUtils";
+import { safeGetBlockProperties, logBlockDebug, isValidBlock } from "../utils/blockUtils";
 
 interface QuestionBlockProps {
   question: string;

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 interface VideoBlockProps extends BlockComponentProps {

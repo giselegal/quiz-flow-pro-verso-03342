@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../../types/quiz";
 import BenefitList from "./sales/BenefitList";
 import Testimonials from "./sales/Testimonials";
 import Guarantee from "./sales/Guarantee";
 import Logo from "../ui/logo";
-import { OfferContent } from "@/types/resultPageConfig";
+import { OfferContent } from "../../types/resultPageConfig";
 import { motion } from "framer-motion";
 
 interface OfferCardProps {

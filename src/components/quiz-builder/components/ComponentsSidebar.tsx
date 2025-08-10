@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { QuizComponentType, QuizStage } from "@/types/quizBuilder";
+import { Button } from "../../../components/ui/button";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { QuizComponentType, QuizStage } from "../../../types/quizBuilder";
 import {
   Type,
   Image as ImageIcon,

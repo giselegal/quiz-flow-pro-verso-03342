@@ -1,7 +1,7 @@
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
+import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
+import { useContainerProperties } from "../../../hooks/useContainerProperties";
+import { cn } from "../../../lib/utils";
+import { Block } from "../../../types/editor";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import React from "react";

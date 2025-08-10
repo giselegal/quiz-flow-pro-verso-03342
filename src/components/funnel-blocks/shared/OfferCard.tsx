@@ -1,7 +1,7 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { cn } from "../../../lib/utils";
+import { Button } from "../../../components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../../../components/ui/card";
 import { Check, Star } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 

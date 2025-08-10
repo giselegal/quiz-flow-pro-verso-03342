@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
-import { InlineBlockProps } from "@/types/inlineBlocks";
+import { cn } from "../../../lib/utils";
+import type { BlockComponentProps } from "../../../types/blocks";
+import { InlineBlockProps } from "../../../types/inlineBlocks";
 import React, { useEffect, useState } from "react";
 
 interface Props extends BlockComponentProps {

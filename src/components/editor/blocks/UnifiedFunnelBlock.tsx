@@ -1,7 +1,7 @@
 import React from "react";
-import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
-import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
-import type { BlockComponentProps } from "@/types/blocks";
+import FunnelHeroSection from "../../../components/funnel/base/FunnelHeroSection";
+import FunnelPainSection from "../../../components/funnel/base/FunnelPainSection";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * UnifiedFunnelBlock - Wrapper que usa componentes base do funil real

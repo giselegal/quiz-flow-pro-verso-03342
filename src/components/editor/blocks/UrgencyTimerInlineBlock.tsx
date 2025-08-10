@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
+import type { BlockComponentProps } from "../../../types/blocks";
 import { AlertTriangle, Clock } from "lucide-react";
 import React, { useEffect, useState } from "react";
 

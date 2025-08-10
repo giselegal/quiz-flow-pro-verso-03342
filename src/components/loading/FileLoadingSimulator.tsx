@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "../../components/ui/progress";
 
 interface FileLoadingSimulatorProps {
   totalFiles?: number;

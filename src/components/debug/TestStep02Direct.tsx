@@ -1,4 +1,4 @@
-import { getStep02Template } from "@/components/steps/Step02Template";
+import { getStep02Template } from "../../components/steps/Step02Template";
 import React from "react";
 
 const TestStep02Direct: React.FC = () => {

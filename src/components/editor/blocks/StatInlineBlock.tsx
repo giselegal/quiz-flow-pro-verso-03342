@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
+} from "../../../utils/inlineComponentUtils";
 import { Users, TrendingUp, Heart, Clock, Star, Award, Target, Zap, BarChart3 } from "lucide-react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)

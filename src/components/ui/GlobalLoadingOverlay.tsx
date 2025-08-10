@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useGlobalLoading } from "@/hooks/useGlobalLoading";
+import { useGlobalLoading } from "../../hooks/useGlobalLoading";
 import { LoadingSpinner } from "./loading-spinner";
 
 export const GlobalLoadingOverlay: React.FC = () => {

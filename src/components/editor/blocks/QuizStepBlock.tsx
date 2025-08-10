@@ -13,8 +13,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Plus, Minus, GripVertical } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "../../../components/ui/button";
+import { Progress } from "../../../components/ui/progress";
 import RichTextBlock from "./RichTextBlock";
 
 export interface QuizOption {

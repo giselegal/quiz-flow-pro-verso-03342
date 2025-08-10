@@ -1,4 +1,4 @@
-import type { Block } from "@/types/editor";
+import type { Block } from "../types/editor";
 
 /**
  * Interfaces para Templates JSON

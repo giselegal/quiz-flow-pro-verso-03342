@@ -6,7 +6,7 @@
  */
 
 // @ts-nocheck
-import type { FunnelStep as FunnelStage } from "@/types/funnel";
+import type { FunnelStep as FunnelStage } from "../types/funnel";
 
 // 🚀 ETAPAS PADRÃO DO QUIZ
 export const defaultFunnelStages: FunnelStage[] = [

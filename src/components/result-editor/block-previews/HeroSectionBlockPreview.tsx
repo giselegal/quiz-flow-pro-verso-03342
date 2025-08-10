@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../../../types/quiz";
 
 interface HeroSectionBlockPreviewProps {
   content: {

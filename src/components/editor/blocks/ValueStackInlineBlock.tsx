@@ -2,7 +2,7 @@
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { CheckCircle } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface ValueItem {
   name: string;

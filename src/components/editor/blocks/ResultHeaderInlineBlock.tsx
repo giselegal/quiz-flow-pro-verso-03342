@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
-import type { BlockComponentProps } from "@/types/blocks";
+import { Progress } from "../../../components/ui/progress";
+import { Card } from "../../../components/ui/card";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

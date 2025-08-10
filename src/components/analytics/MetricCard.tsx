@@ -1,8 +1,8 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { cn } from "../../lib/utils";
 import * as LucideIcons from "lucide-react";
-import { dynamicIconImport } from "@/utils/dynamicIconImport";
+import { dynamicIconImport } from "../../utils/dynamicIconImport";
 
 interface MetricCardProps {
   title: string;

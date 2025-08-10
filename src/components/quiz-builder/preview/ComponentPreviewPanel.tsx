@@ -1,9 +1,9 @@
 import React from "react";
-import { QuizComponentData, QuizStage } from "@/types/quizBuilder";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import { QuizComponentData, QuizStage } from "../../../types/quizBuilder";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { cn } from "../../../lib/utils";
 import ComponentRenderer from "./ComponentRenderer";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Plus } from "lucide-react";
 
 interface ComponentPreviewPanelProps {

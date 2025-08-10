@@ -3,7 +3,7 @@
  * Detecta conflitos e inconsistências no sistema de mapeamento
  */
 
-import { getAllBlockTypes, getBlockComponent } from "@/config/editorBlocksMapping";
+import { getAllBlockTypes, getBlockComponent } from "../config/editorBlocksMapping";
 
 export interface ComponentHealth {
   totalComponents: number;

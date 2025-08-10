@@ -3,9 +3,9 @@ import {
   QuizComponentData,
   QuizComponentType,
   QuizStage,
-} from "@/types/quizBuilder";
-import { generateId } from "@/utils/idGenerator";
-import { ResultPageConfig } from "@/types/resultPageConfig";
+} from "../types/quizBuilder";
+import { generateId } from "../utils/idGenerator";
+import { ResultPageConfig } from "../types/resultPageConfig";
 
 // Function to create a basic quiz builder state with initial stages
 export const generateInitialStages = () => {

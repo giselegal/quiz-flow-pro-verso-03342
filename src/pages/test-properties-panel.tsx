@@ -1,4 +1,4 @@
-import { EnhancedUniversalPropertiesPanel } from "@/components/universal/EnhancedUniversalPropertiesPanel";
+import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
 import React, { useState } from "react";
 
 const TestPropertiesPanel = () => {

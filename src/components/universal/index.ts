@@ -6,5 +6,5 @@ import SimplifiedUniversalPropertiesPanel from "./SimplifiedUniversalPropertiesP
 export { EnhancedUniversalPropertiesPanel, SimplifiedUniversalPropertiesPanel };
 
 // Define EnhancedUniversalPropertiesPanel como a exportação padrão
-// Isso permite que você o importe como: import MeuPainel from "@/components/universal";
+// Isso permite que você o importe como: import MeuPainel from "../../components/universal";
 export default EnhancedUniversalPropertiesPanel;

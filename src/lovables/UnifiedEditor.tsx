@@ -1,5 +1,5 @@
-import { UnifiedVisualEditor, EditorTab } from "@/components/unified-editor/UnifiedVisualEditor";
-import { StyleResult } from "@/types/quiz";
+import { UnifiedVisualEditor, EditorTab } from "../components/unified-editor/UnifiedVisualEditor";
+import { StyleResult } from "../types/quiz";
 
 export default {
   name: "unified-editor",

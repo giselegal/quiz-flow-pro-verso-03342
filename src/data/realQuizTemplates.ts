@@ -1,4 +1,4 @@
-import { QuizTemplate } from "@/types/quizBuilder";
+import { QuizTemplate } from "../types/quizBuilder";
 
 interface QuestionScoringConfig {
   [key: string]: {

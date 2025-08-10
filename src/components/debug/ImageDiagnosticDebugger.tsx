@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { getAllImages } from "@/data/imageBank";
-import { optimizeCloudinaryUrl } from "@/utils/imageUtils";
-import { ImageAnalysis, ImageDiagnosticResult } from "@/utils/images/types";
-import { Button } from "@/components/ui/button";
+import { getAllImages } from "../../data/imageBank";
+import { optimizeCloudinaryUrl } from "../../utils/imageUtils";
+import { ImageAnalysis, ImageDiagnosticResult } from "../../utils/images/types";
+import { Button } from "../../components/ui/button";
 import { Copy, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
+import { useToast } from "../../components/ui/use-toast";
+import { Label } from "../../components/ui/label";
+import { Input } from "../../components/ui/input";
+import { Slider } from "../../components/ui/slider";
+import { Switch } from "../../components/ui/switch";
 
 interface ImageDiagnosticDebuggerProps {
   isVisible: boolean;

@@ -3,17 +3,17 @@
  * Permite alterar cor de fundo e outras propriedades visuais do canvas
  */
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ColorPicker } from "@/components/ui/ColorPicker";
-import { Label } from "@/components/ui/label";
+import { Button } from "../../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { ColorPicker } from "../../../components/ui/ColorPicker";
+import { Label } from "../../../components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../../components/ui/select";
 import { Monitor, Palette, Settings, Smartphone, Tablet } from "lucide-react";
 import React, { useState } from "react";
 

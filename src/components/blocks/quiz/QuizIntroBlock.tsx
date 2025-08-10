@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { useQuizTracking } from "@/hooks/useQuizTracking";
+import { Input } from "../../../components/ui/input";
+import { cn } from "../../../lib/utils";
+import { useQuizTracking } from "../../../hooks/useQuizTracking";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
@@ -33,7 +33,7 @@ export interface QuizIntroBlockProps extends BlockComponentProps {
   onStart?: (nome: string) => void;
 }
 
-import { getMarginClass, type MarginProps } from "@/utils/marginUtils";
+import { getMarginClass, type MarginProps } from "../../../utils/marginUtils";
 
 // Variáveis de margem para compatibilidade com o sistema de controles deslizantes
 let marginTop: number | undefined = 0;

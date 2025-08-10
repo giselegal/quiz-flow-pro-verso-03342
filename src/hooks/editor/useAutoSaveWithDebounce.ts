@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "../../hooks/use-toast";
 
 interface UseAutoSaveWithDebounceOptions {
   data: any;

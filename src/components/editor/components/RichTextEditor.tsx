@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Bold, Italic, Underline, Link, List, ListOrdered } from "lucide-react";
 
 interface RichTextEditorProps {

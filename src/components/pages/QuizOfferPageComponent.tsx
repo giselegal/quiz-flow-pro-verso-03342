@@ -1,6 +1,6 @@
 import React from "react";
 import { Check, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 
 const QuizOfferPageComponent: React.FC = () => {
   const benefits = [

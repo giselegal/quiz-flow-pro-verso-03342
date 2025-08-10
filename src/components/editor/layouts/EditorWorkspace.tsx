@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Plus } from "lucide-react";
-import { BlockType } from "@/types/editor";
+import { BlockType } from "../../../types/editor";
 
 interface EditorWorkspaceProps {
   blocks: any[];

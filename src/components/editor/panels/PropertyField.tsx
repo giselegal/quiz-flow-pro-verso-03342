@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-// import { Switch } from '@/components/ui/switch';
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
+// import { Switch } from "../../../components/ui/switch";
 import { Switch } from "@radix-ui/react-switch"; // Update to correct import if using Radix UI
-import { Slider } from "@/components/ui/slider";
+import { Slider } from "../../../components/ui/slider";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+} from "../../../components/ui/select";
+import { Button } from "../../../components/ui/button";
+import { Label } from "../../../components/ui/label";
 import { Info, Upload } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 interface PropertyFieldProps {
   property: {

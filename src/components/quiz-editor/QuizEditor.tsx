@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { QuizQuestion } from "@/types/quiz";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { QuizQuestion } from "../../types/quiz";
 import QuestionEditor from "./QuestionEditor";
 import { Plus } from "lucide-react";
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Block } from "@/types/editor";
+import { Block } from "../../types/editor";
 import { SortableBlock } from "./SortableBlock";
 import {
   DndContext,
@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
-import { ResultPageBlock } from "@/types/quizResult";
+import { ResultPageBlock } from "../../types/quizResult";
 
 interface DraggableBlockListProps {
   blocks: Block[];

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { Upload } from "lucide-react";
-import { EditableContent } from "@/types/editor";
+import { EditableContent } from "../../../types/editor";
 
 interface ImageBlockProps {
   content: EditableContent;

@@ -4,8 +4,8 @@
  * Arquivo para debug de renderização das opções
  */
 
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
-import { getStep02Template } from "@/components/steps/Step02Template";
+import QuizOptionsGridBlock from "../../components/blocks/quiz/QuizOptionsGridBlock";
+import { getStep02Template } from "../../components/steps/Step02Template";
 
 const TestOptionsRendering = () => {
   console.log("🔍 TESTE: Iniciando teste de renderização de opções");

@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { InlineEditText } from "./InlineEditText";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface QuizTitleBlockProps extends BlockComponentProps {
   onPropertyChange?: (key: string, value: any) => void;

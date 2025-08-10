@@ -1,5 +1,5 @@
 import React from "react";
-import { BlockDefinition } from "@/types/editor";
+import { BlockDefinition } from "../types/editor";
 import { Type, Grid, Palette, Settings } from "lucide-react";
 
 // 🎯 Exemplo de Block Definition com propriedades categorizadas para quiz

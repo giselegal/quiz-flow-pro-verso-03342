@@ -1,12 +1,12 @@
 import React from "react";
-import { Block } from "@/types/editor";
-import { StyleResult } from "@/types/quiz";
+import { Block } from "../../types/editor";
+import { StyleResult } from "../../types/quiz";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { GripVertical, Trash2, ArrowUp, ArrowDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import BlockRenderer from "./BlockRenderer";
 
 export interface EditableBlockProps {

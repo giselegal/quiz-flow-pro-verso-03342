@@ -1,5 +1,5 @@
 import { trackButtonClick } from "./analytics";
-import { ABTestVariant, ABTestConfig } from "@/types/abtest";
+import { ABTestVariant, ABTestConfig } from "../types/abtest";
 
 // Configuração do teste A/B para landing pages
 export const LANDING_PAGE_AB_TEST: ABTestConfig = {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { toast } from "@/components/ui/use-toast";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
+import { toast } from "../../components/ui/use-toast";
 
 interface QuizEditorInterfaceProps {
   onSave?: () => void;

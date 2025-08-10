@@ -13,7 +13,7 @@ import {
   BlockType,
   validateBlockData,
   safeValidateBlockData,
-} from "@/schemas/blockSchemas";
+} from "../schemas/blockSchemas";
 
 export interface Block {
   id: string;

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from "lucide-react";
 import type { BlockComponentProps } from "../../../types/blocks";
 import { userResponseService } from "../../../services/userResponseService";

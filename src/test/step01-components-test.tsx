@@ -1,8 +1,8 @@
 // Teste dos componentes Step 1 - Verificação de integração
 // src/test/step01-components-test.tsx
 
-import { IntroBlock } from "@/components/steps/step01/IntroBlock";
-import { IntroPropertiesPanel } from "@/components/steps/step01/IntroPropertiesPanel";
+import { IntroBlock } from "../components/steps/step01/IntroBlock";
+import { IntroPropertiesPanel } from "../components/steps/step01/IntroPropertiesPanel";
 
 // Mock data para teste
 const mockBlock = {

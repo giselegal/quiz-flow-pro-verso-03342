@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
-import { useQuizTracking } from "@/hooks/useQuizTracking";
+import { cn } from "../../../lib/utils";
+import { useQuizTracking } from "../../../hooks/useQuizTracking";
 
 /**
  * QuizBenefitsBlock - Bloco de benefícios/instruções do quiz para uso no editor visual

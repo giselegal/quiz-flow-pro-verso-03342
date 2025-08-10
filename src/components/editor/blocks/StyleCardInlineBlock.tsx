@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { Sparkles, Edit3 } from "lucide-react";
 
 interface StyleCardInlineBlockProps {

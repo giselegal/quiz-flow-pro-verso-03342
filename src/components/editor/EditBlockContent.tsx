@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { Block } from "@/types/editor";
-import { StyleResult } from "@/types/quiz";
+import { Block } from "../../types/editor";
+import { StyleResult } from "../../types/quiz";
 
 // Import specific block editors (commented out missing components)
 // import TextInlineBlock from "./blocks/inline/TextInlineBlock";

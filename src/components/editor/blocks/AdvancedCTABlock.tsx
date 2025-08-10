@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { Shield, ShoppingCart, Lock, ArrowDown } from "lucide-react";
 
 interface AdvancedCTABlockProps {

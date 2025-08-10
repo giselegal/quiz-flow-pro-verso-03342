@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { BlockComponentProps } from "@/types/blocks";
+import { cn } from "../../../lib/utils";
+import { BlockComponentProps } from "../../../types/blocks";
 
 
 const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({

@@ -6,14 +6,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { useUtmParameters } from "@/hooks/useUtmParameters";
+} from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Label } from "../../components/ui/label";
+import { Separator } from "../../components/ui/separator";
+import { useUtmParameters } from "../../hooks/useUtmParameters";
 import { CopyIcon, CheckCircleIcon, ArrowRightIcon } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "../../components/ui/use-toast";
 
 export const UtmSettingsTab: React.FC = () => {
   const { domainBase, setBaseDomain, generateUtmLink } = useUtmParameters();

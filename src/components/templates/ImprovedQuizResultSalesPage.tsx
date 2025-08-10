@@ -1,23 +1,23 @@
 "use client";
 
 import React, { lazy, Suspense, useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { useToast } from "../../components/ui/use-toast";
+import { LoadingSpinner } from "../../components/ui/loading-spinner";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "../../components/ui/carousel";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "../../components/ui/accordion";
 import {
   ShoppingCart,
   Heart,
@@ -30,7 +30,7 @@ import {
   Gift,
   Zap,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "../../utils/analytics";
 
 // Types
 interface StyleResult {
@@ -64,7 +64,7 @@ const getStyleDescription = (styleType: string): string => {
 };
 
 // Lazy load componentes menos críticos
-const Testimonials = lazy(() => import("@/components/quiz-result/sales/Testimonials"));
+const Testimonials = lazy(() => import("../../components/quiz-result/sales/Testimonials"));
 
 interface ImprovedQuizResultSalesPageProps {
   primaryStyle: StyleResult;

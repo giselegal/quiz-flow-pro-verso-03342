@@ -1,4 +1,4 @@
-import { type BankImage, getAllImages, getImageById } from "@/data/imageBank";
+import { type BankImage, getAllImages, getImageById } from "../../data/imageBank";
 import { optimizeCloudinaryUrl } from "./optimization";
 import { PreloadOptions, ImageCacheEntry } from "./types";
 import { updateImageCache, hasImageWithStatus } from "./caching";

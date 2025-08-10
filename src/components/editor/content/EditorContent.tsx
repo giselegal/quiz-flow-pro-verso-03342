@@ -1,6 +1,6 @@
 import React from "react";
 import { DragEndEvent } from "@dnd-kit/core";
-import { EditorBlock } from "@/types/editor";
+import { EditorBlock } from "../../../types/editor";
 
 interface EditorContentProps {
   blocks: EditorBlock[];

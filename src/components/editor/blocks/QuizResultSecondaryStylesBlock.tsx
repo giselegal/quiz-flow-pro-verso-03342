@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Crown, Star, Award } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import { Card, CardContent, CardHeader } from "../../../components/ui/card";
+import { AnimatedWrapper } from "../../../components/ui/animated-wrapper";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

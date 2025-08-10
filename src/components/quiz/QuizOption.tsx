@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import { QuizOption as QuizOptionType } from "@/types/quiz";
-import { highlightStrategicWords } from "@/utils/textHighlight";
+import { cn } from "../../lib/utils";
+import { QuizOption as QuizOptionType } from "../../types/quiz";
+import { highlightStrategicWords } from "../../utils/textHighlight";
 import { QuizOptionImage } from "./QuizOptionImage";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "../../hooks/use-mobile";
 import { Check } from "lucide-react";
 import { RippleEffect, PulseEffect } from "../effects/InteractionEffects";
 import { ParticleSystem } from "../effects/ParticleSystem";

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "@/utils/images/preloading";
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { preloadCriticalImages } from "../utils/images/preloading";
+import FixedIntroImage from "../components/ui/FixedIntroImage";
 import {
   ChevronRight,
   Check,
@@ -27,7 +27,7 @@ import {
   Flame,
   Eye,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "../utils/analytics";
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `

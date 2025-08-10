@@ -1,9 +1,9 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from "../../config/containerConfig";
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { Heart, ArrowRight, CheckCircle } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
 import { DeviceView, StyleProps, QuestionOption } from "./types";
 
 interface StrategicQuestionProps extends StyleProps {

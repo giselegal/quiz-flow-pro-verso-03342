@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { Button } from "@/components/ui/button";
-import { useQuizBuilder } from "@/hooks/useQuizBuilder";
-import { useEditor } from "@/hooks/useEditor";
+import { useUnifiedProperties } from "../../hooks/useUnifiedProperties";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "../../components/ui/resizable";
+import { Button } from "../../components/ui/button";
+import { useQuizBuilder } from "../../hooks/useQuizBuilder";
+import { useEditor } from "../../hooks/useEditor";
 import { ComponentsSidebar } from "./ComponentsSidebar";
 import BuilderLayout from "./components/BuilderLayout";
 import { StagesPanel } from "./StagesPanel";
 import { PropertiesPanel } from "./PropertiesPanel";
-import { QuizComponentType, QuizComponentData } from "@/types/quizBuilder";
-import { StyleResult, StyleType } from "@/types/quiz";
+import { QuizComponentType, QuizComponentData } from "../../types/quizBuilder";
+import { StyleResult, StyleType } from "../../types/quiz";
 
 const QuizBuilder: React.FC = () => {
   const {

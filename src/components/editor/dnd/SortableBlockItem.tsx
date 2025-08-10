@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
+import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
+import { useContainerProperties } from "../../../hooks/useContainerProperties";
+import { cn } from "../../../lib/utils";
+import { Block } from "../../../types/editor";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import React from "react";

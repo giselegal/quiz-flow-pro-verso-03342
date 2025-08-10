@@ -1,4 +1,4 @@
-import { Block } from "@/types/editor";
+import { Block } from "../../../types/editor";
 import { useDroppable } from "@dnd-kit/core";
 import React from "react";
 import { generateSemanticId } from "../../../utils/semanticIdGenerator";

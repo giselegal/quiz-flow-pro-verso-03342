@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { ChevronRight, Sparkles, ArrowRight } from "lucide-react";
-import { useQuizTracking } from "@/hooks/useQuizTracking";
+import { useQuizTracking } from "../../../hooks/useQuizTracking";
 
 /**
  * QuizTransitionBlock - Componente de transição do quiz 100% reutilizável e editável

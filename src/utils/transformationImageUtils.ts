@@ -1,4 +1,4 @@
-import { preloadCriticalImages, getLowQualityPlaceholder } from "@/utils/imageManager";
+import { preloadCriticalImages, getLowQualityPlaceholder } from "../utils/imageManager";
 
 /**
  * Pré-carrega imagens de antes e depois para melhorar a experiência do usuário

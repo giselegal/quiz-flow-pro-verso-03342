@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleResult } from "@/types/quiz";
-import { Card } from "@/components/ui/card";
+import { StyleResult } from "../../types/quiz";
+import { Card } from "../../components/ui/card";
 
 interface EditableComponentProps {
   components: {

@@ -1,4 +1,4 @@
-import { BlockDefinition } from "@/types/blocks";
+import { BlockDefinition } from "../types/blocks";
 
 // Basic block definitions without defaultContent
 const headerBlockDefinition: BlockDefinition = {

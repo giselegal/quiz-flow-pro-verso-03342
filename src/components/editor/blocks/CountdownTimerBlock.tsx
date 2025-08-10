@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps, CountdownTimerBlock } from "@/types/blocks";
+import { Card, CardContent } from "../../../components/ui/card";
+import { cn } from "../../../lib/utils";
+import type { BlockComponentProps, CountdownTimerBlock } from "../../../types/blocks";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, Flame, Timer } from "lucide-react";
 import React, { useEffect, useState } from "react";

@@ -1,4 +1,4 @@
-import { QuizResult } from "@/hooks/useQuizResults";
+import { QuizResult } from "../hooks/useQuizResults";
 import { styleConfig } from "./styleConfig";
 
 /**

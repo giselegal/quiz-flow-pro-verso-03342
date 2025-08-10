@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
-import { EditableContent } from "@/types/editor";
-import { cn } from "@/lib/utils";
+import { EditableContent } from "../../../types/editor";
+import { cn } from "../../../lib/utils";
 
 interface QuizQuestionBlockProps {
   content?: EditableContent;

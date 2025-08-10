@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { ArrowRight, ShieldCheck, Clock } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "../../../utils/analytics";
 
 interface FinalCTABlockProps {
   mainText?: string;

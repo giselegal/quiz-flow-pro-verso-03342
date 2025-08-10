@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoadingState } from "@/hooks/useLoadingState";
+import { useLoadingState } from "../hooks/useLoadingState";
 
 interface QuizWelcomeProps {
   onStart: () => void;

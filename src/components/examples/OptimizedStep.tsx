@@ -12,7 +12,7 @@ import {
   useQuizStepContainer,
   useSmartDebounce,
   useTemplateActions,
-} from "@/hooks";
+} from "../../hooks";
 import React from "react";
 
 interface OptimizedStepProps {

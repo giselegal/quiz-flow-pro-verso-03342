@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../../lib/utils";
 import { Edit3, Eye, Settings, Move, Copy, Trash2, MoreHorizontal } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../../types/blocks";
 
 interface InlineBaseWrapperProps extends BlockComponentProps {
   children: React.ReactNode;

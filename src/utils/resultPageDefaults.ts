@@ -1,4 +1,4 @@
-import { ResultPageConfig } from "@/types/resultPageConfig";
+import { ResultPageConfig } from "../types/resultPageConfig";
 
 export const createDefaultConfig = (styleType: string): ResultPageConfig => {
   return {

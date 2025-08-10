@@ -1,7 +1,7 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EditorProvider } from "@/context/EditorContext";
-import { useResultPageConfig } from "@/hooks/useResultPageConfig";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../../components/ui/resizable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { EditorProvider } from "../../../context/EditorContext";
+import { useResultPageConfig } from "../../../hooks/useResultPageConfig";
 import React, { useState } from "react";
 import { EditorCanvas } from "../canvas/EditorCanvas";
 import PropertiesPanel from "../properties/PropertiesPanel";

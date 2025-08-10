@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
-import type { BlockComponentProps } from "@/types/blocks";
-import { RESPONSIVE_PATTERNS, INLINE_ANIMATIONS } from "@/utils/inlineComponentUtils";
+import type { BlockComponentProps } from "../../../types/blocks";
+import { RESPONSIVE_PATTERNS, INLINE_ANIMATIONS } from "../../../utils/inlineComponentUtils";
 import {
   ArrowUpDown,
   ArrowLeftRight,

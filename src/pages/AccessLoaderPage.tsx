@@ -1,5 +1,5 @@
 import React from "react";
-import FileLoadingScreen from "@/components/loaders/FileLoadingScreen";
+import FileLoadingScreen from "../components/loaders/FileLoadingScreen";
 
 const AccessLoaderPage: React.FC = () => {
   const handleFileLoaded = () => {

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { blockDefinitions } from "@/config/blockDefinitions";
+import { blockDefinitions } from "../../config/blockDefinitions";
 
 interface ComponentsPanelProps {
   onAddComponent: (type: string) => void;

@@ -1,8 +1,8 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from "../../config/containerConfig";
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from "../../components/ui/card";
 import { Gift, Star } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
 import { DeviceView, StyleProps } from "./types";
 
 interface BonusItem {

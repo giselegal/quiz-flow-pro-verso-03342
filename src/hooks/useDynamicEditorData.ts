@@ -1,4 +1,4 @@
-import { Block, BlockType } from "@/types/editor";
+import { Block, BlockType } from "../types/editor";
 import { useCallback, useState } from "react";
 
 interface DynamicEditorDataReturn {

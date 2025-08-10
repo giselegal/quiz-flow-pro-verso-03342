@@ -1,4 +1,4 @@
-import { SimpleComponent, QuizOption, BonusItem, FaqItem } from "@/interfaces/quiz";
+import { SimpleComponent, QuizOption, BonusItem, FaqItem } from "../interfaces/quiz";
 import PlaceholderUtils from "./placeholderUtils";
 
 // Dados padrão para componentes

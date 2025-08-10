@@ -1,8 +1,8 @@
 // src/components/editor/quiz/QuizIntroHeaderBlock.tsx
 // Componente configurável de cabeçalho para o quiz
 
-import { Badge } from "@/components/ui/badge";
-import { useEditor } from "@/context/EditorContext";
+import { Badge } from "../../../components/ui/badge";
+import { useEditor } from "../../../context/EditorContext";
 import React from "react";
 
 interface QuizIntroHeaderBlockProps {

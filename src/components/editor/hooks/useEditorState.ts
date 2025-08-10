@@ -1,4 +1,4 @@
-import { EditorBlock } from "@/types/editor";
+import { EditorBlock } from "../../../types/editor";
 import { useCallback, useState } from "react";
 import { generateSemanticId } from "../../../utils/semanticIdGenerator";
 

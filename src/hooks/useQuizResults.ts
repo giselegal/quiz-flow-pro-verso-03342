@@ -1,4 +1,4 @@
-import { QuestionOption } from "@/components/funnel-blocks/types";
+import { QuestionOption } from "../components/funnel-blocks/types";
 
 export interface CategoryScore {
   category: string;

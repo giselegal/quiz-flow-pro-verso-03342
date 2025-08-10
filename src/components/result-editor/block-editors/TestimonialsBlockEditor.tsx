@@ -1,7 +1,7 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Block } from "@/types/editor";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
+import { Block } from "../../../types/editor";
 
 interface TestimonialsBlockEditorProps {
   block: Block;

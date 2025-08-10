@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 
 const FunnelsPage: React.FC = () => {
   const [, setLocation] = useLocation();

@@ -1,9 +1,9 @@
 import React from "react";
 import QuizQuestion from "../QuizQuestion";
-import { UserResponse } from "@/types/quiz";
+import { UserResponse } from "../../types/quiz";
 import { QuizHeader } from "./QuizHeader";
 import { StrategicQuestions } from "./StrategicQuestions";
-import { useScrollTracking } from "@/hooks/useScrollTracking";
+import { useScrollTracking } from "../../hooks/useScrollTracking";
 
 interface QuizContentWithTrackingProps {
   user: any;

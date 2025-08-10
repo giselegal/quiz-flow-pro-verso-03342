@@ -1,9 +1,9 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from "../../config/containerConfig";
 import React from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { Star, Play, Pause, Volume2, VolumeX } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
 import { DeviceView, StyleProps } from "./types";
 
 interface VideoSectionProps extends StyleProps {

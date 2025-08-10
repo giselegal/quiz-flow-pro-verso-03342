@@ -1,12 +1,12 @@
 // src/components/steps/step01/IntroBlock.tsx
 // Componente principal da etapa 1 - Introdução baseada no JSON
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
-import { BlockComponentProps } from "@/types/blocks";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import { Card } from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
+import { QUIZ_CONFIGURATION } from "../../../config/quizConfiguration";
+import { BlockComponentProps } from "../../../types/blocks";
 import React, { useEffect, useState } from "react";
 
 export const IntroBlock: React.FC<BlockComponentProps> = ({

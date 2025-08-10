@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { EditorComponent } from "@/interfaces/editor";
-import { SimpleComponent } from "@/interfaces/quiz";
-import styles from "@/styles/editor.module.css";
+import { Badge } from "../../components/ui/badge";
+import { ScrollArea } from "../../components/ui/scroll-area";
+import { EditorComponent } from "../../interfaces/editor";
+import { SimpleComponent } from "../../interfaces/quiz";
+import styles from "../../styles/editor.module.css";
 import {
   BarChart3,
   Clock,

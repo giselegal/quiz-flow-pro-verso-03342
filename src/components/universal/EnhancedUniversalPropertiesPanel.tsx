@@ -1,36 +1,36 @@
 // @ts-nocheck
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+} from "../../components/ui/select";
+import { Switch } from "../../components/ui/switch";
 // ✅ Importa controles visuais NO-CODE
-import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
-import ColorPicker from "@/components/visual-controls/ColorPicker";
-import SizeSlider from "@/components/visual-controls/SizeSlider";
+import AlignmentButtons from "../../components/visual-controls/AlignmentButtons";
+import ColorPicker from "../../components/visual-controls/ColorPicker";
+import SizeSlider from "../../components/visual-controls/SizeSlider";
 // ✅ Importa componentes de feedback melhorados
 import { EnhancedPropertyInput } from "./EnhancedPropertyInput";
 import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
 // ✅ Importa painel específico do quiz
-import { QuizConfigurationPanel } from "@/components/editor/quiz/QuizConfigurationPanel";
-import { QuizHeaderPropertiesPanel } from "@/components/editor/quiz/QuizHeaderPropertiesPanel";
-import { IntroPropertiesPanel } from "@/components/steps/step01/IntroPropertiesPanel";
+import { QuizConfigurationPanel } from "../../components/editor/quiz/QuizConfigurationPanel";
+import { QuizHeaderPropertiesPanel } from "../../components/editor/quiz/QuizHeaderPropertiesPanel";
+import { IntroPropertiesPanel } from "../../components/steps/step01/IntroPropertiesPanel";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
   UnifiedBlock,
   UnifiedProperty,
   useUnifiedProperties,
-} from "@/hooks/useUnifiedProperties";
-import { BlockDefinition } from "@/types/editor"; // Mantido para compatibilidade da interface
+} from "../../hooks/useUnifiedProperties";
+import { BlockDefinition } from "../../types/editor"; // Mantido para compatibilidade da interface
 import {
   EyeOff,
   Layout,

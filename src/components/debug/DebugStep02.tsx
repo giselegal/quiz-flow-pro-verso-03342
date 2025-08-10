@@ -1,6 +1,6 @@
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
-import { getStep02Template } from "@/components/steps/Step02Template";
-import { useEditor } from "@/context/EditorContext";
+import QuizOptionsGridBlock from "../../components/blocks/quiz/QuizOptionsGridBlock";
+import { getStep02Template } from "../../components/steps/Step02Template";
+import { useEditor } from "../../context/EditorContext";
 import React, { useEffect } from "react";
 
 // 🛡️ Helper para garantir props corretas

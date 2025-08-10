@@ -1,5 +1,5 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from "../../../components/ui/card";
 import { motion } from "framer-motion";
 import { CheckCircle2, Shield } from "lucide-react";
 

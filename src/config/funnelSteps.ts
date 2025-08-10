@@ -1,4 +1,4 @@
-import type { FunnelStepType } from "@/types/funnel";
+import type { FunnelStepType } from "../types/funnel";
 
 export interface FunnelStepConfig {
   id: string;

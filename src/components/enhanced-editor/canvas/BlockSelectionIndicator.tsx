@@ -6,7 +6,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Edit3, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 
 interface BlockSelectionIndicatorProps {
   isSelected: boolean;

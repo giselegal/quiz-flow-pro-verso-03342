@@ -1,5 +1,5 @@
 import React from "react";
-import FileLoadingSimulator from "@/components/loading/FileLoadingSimulator";
+import FileLoadingSimulator from "../components/loading/FileLoadingSimulator";
 
 interface LoadingAccessPageProps {
   route?: string;

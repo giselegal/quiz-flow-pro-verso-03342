@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { Crown, Star, Quote, Award } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import type { BlockData } from "../../../types/blocks";
 
 interface MentorSectionInlineBlockProps {
   block: BlockData;

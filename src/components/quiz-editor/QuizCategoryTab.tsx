@@ -1,9 +1,9 @@
 import React from "react";
 import { ChevronDown, ChevronRight, Edit } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { QuizCategory, QUIZ_CATEGORIES } from "@/types/quizEditor";
-import { QuizQuestion } from "@/types/quiz";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "../../components/ui/button";
+import { QuizCategory, QUIZ_CATEGORIES } from "../../types/quizEditor";
+import { QuizQuestion } from "../../types/quiz";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../../components/ui/collapsible";
 
 interface CategoryInfo {
   id: QuizCategory;

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
+import FunnelHeroSection from "../../../../components/funnel/base/FunnelHeroSection";
 
 // Interface local para máxima independência
 interface Block {

@@ -1,7 +1,7 @@
 import React from "react";
-import { QuizComponentData, QuizStage } from "@/types/quizBuilder";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import { QuizComponentData, QuizStage } from "../../../types/quizBuilder";
+import { ScrollArea } from "../../../components/ui/scroll-area";
+import { cn } from "../../../lib/utils";
 import {
   DndContext,
   closestCenter,
@@ -12,7 +12,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { DraggableComponent } from "./DraggableComponent";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Plus } from "lucide-react";
 
 interface ComponentPreviewPanelProps {

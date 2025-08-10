@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../types/quiz";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 

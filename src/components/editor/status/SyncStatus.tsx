@@ -1,7 +1,7 @@
 import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import {
   Cloud,
   CloudOff,
@@ -14,7 +14,7 @@ import {
   Wifi,
   WifiOff,
 } from "lucide-react";
-import { type AutoSaveState } from "@/services/schemaDrivenFunnelService";
+import { type AutoSaveState } from "../../../services/schemaDrivenFunnelService";
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;

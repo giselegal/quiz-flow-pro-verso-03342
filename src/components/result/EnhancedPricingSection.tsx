@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import {
   ShoppingCart,
   Clock,
@@ -15,7 +15,7 @@ import {
   Gift,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "../../utils/analytics";
 
 // Design tokens otimizados
 const tokens = {

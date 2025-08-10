@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Badge } from "../../../components/ui/badge";
+import { Progress } from "../../../components/ui/progress";
 import { InlineEditableText } from "./InlineEditableText";
-import { useDynamicData } from "@/hooks/useDynamicData";
+import { useDynamicData } from "../../../hooks/useDynamicData";
 import {
   TrendingUp,
   Users,
@@ -21,7 +21,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import type { BlockComponentProps, BlockData } from "@/types/blocks";
+import type { BlockComponentProps, BlockData } from "../../../types/blocks";
 
 interface Stat {
   id: string;

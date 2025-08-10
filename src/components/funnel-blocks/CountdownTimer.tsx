@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { Clock, Zap, AlertCircle, TrendingUp } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
 import { DeviceView, StyleProps } from "./types";
 
 interface CountdownTimerProps extends StyleProps {

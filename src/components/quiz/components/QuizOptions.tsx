@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import quizStyles from "@/styles/quiz.module.css";
+import quizStyles from "../../../styles/quiz.module.css";
 
 interface QuizOption {
   id: string;

@@ -1,4 +1,4 @@
-import { trackSaleConversion } from "@/utils/analytics";
+import { trackSaleConversion } from "../utils/analytics";
 
 // Declare window interface extensions
 declare global {

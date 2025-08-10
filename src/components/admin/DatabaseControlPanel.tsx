@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { useEditor } from "@/context/EditorContext";
+import { useEditor } from "../../context/EditorContext";
 
 interface DatabaseControlPanelProps {
   className?: string;

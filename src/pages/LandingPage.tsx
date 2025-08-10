@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "wouter";
 import { LANDING_PAGE_AB_TEST, getABTestRedirectUrl } from "../utils/abtest";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LoadingSpinner } from "../components/ui/loading-spinner";
 
 /**
  * Página de entrada que redireciona baseado no teste A/B

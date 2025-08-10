@@ -1,7 +1,7 @@
 import React from "react";
-import { QuizStage, QuizComponentType } from "@/types/quizBuilder";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { QuizStage, QuizComponentType } from "../../../types/quizBuilder";
+import { Button } from "../../../components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "../../../components/ui/tooltip";
 import {
   Eye,
   EyeOff,

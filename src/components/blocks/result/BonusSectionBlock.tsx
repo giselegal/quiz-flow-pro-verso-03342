@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import BonusSection from "@/components/result/BonusSection";
+import BonusSection from "../../../components/result/BonusSection";
 
 /**
  * BLOCO EDITÁVEL: Seção de Bônus

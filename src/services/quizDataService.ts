@@ -1,4 +1,4 @@
-import { QuizResult, StyleType } from "@/types/quiz";
+import { QuizResult, StyleType } from "../types/quiz";
 import { trackPixelEvent } from "../utils/facebookPixel";
 
 export interface QuizSession {

@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, ComponentType } from "react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
+import { LoadingSpinner } from "../../components/ui/loading-spinner";
+import { usePerformanceOptimization } from "../../hooks/usePerformanceOptimization";
 
 interface LazyComponentWrapperProps {
   fallback?: React.ReactNode;

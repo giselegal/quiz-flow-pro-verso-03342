@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Card } from "../../../components/ui/card";
 
 export const InteractiveDemo: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);

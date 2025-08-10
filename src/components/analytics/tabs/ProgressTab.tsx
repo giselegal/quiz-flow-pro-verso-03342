@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
 import {
   BarChart,
   Bar,
@@ -20,11 +20,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Progress } from "@/components/ui/progress";
-import { GridLayout } from "@/components/shared/GridLayout";
-import { getUserProgressData } from "@/utils/analyticsHelpers";
+} from "../../../components/ui/table";
+import { ChartConfig, ChartContainer } from "../../../components/ui/chart";
+import { Progress } from "../../../components/ui/progress";
+import { GridLayout } from "../../../components/shared/GridLayout";
+import { getUserProgressData } from "../../../utils/analyticsHelpers";
 
 interface ProgressTabProps {
   analyticsData: any;

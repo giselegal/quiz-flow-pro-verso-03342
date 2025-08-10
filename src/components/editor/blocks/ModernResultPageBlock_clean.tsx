@@ -1,10 +1,10 @@
 // @ts-nocheck
 import React, { useMemo } from "react";
-import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
+import { cn } from "../../../lib/utils";
+import { Progress } from "../../../components/ui/progress";
+import { Card } from "../../../components/ui/card";
 import { Award, Star, CheckCircle, ArrowRight } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * ModernResultPageBlock - Componente de página de resultado moderna (Etapa 20)

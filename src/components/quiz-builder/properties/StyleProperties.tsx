@@ -1,8 +1,8 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { QuizComponentStyle } from "@/types/quizBuilder";
-import { Slider } from "@/components/ui/slider";
+import { Label } from "../../../components/ui/label";
+import { Input } from "../../../components/ui/input";
+import { QuizComponentStyle } from "../../../types/quizBuilder";
+import { Slider } from "../../../components/ui/slider";
 
 interface StylePropertiesProps {
   style: QuizComponentStyle;

@@ -1,6 +1,6 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
 import { BlockEditorProps } from "./types";
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)

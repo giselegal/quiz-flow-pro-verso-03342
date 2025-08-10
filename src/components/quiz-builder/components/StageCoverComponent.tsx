@@ -1,7 +1,7 @@
 import React from "react";
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { QuizComponentData } from "../../../types/quizBuilder";
+import { Card } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
 
 interface StageCoverComponentProps {
   data?: QuizComponentData["data"];

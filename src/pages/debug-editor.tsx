@@ -1,5 +1,5 @@
 import React from "react";
-import { useEditor } from "@/context/EditorContext";
+import { useEditor } from "../context/EditorContext";
 
 const DebugEditorContext: React.FC = () => {
   console.log("🔥 DebugEditorContext: COMPONENTE RENDERIZANDO!");

@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
-import { EditorBlock, EditorConfig, EditableContent } from "@/types/editor";
-import { EditorActions } from "@/types/editorActions";
-import { getDefaultContentForType } from "@/utils/editorDefaults";
-import { generateId } from "@/utils/idGenerator";
+import { EditorBlock, EditorConfig, EditableContent } from "../../types/editor";
+import { EditorActions } from "../../types/editorActions";
+import { getDefaultContentForType } from "../../utils/editorDefaults";
+import { generateId } from "../../utils/idGenerator";
 
 export const useEditorBlocks = (
   config: EditorConfig,

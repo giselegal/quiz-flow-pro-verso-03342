@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EditorBlock } from "@/types/editor";
+import { EditorBlock } from "../../types/editor";
 import { Button } from "../ui/button";
 import {
   Plus,
@@ -11,7 +11,7 @@ import {
   Shield,
   MousePointer,
 } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
 
 interface AddBlockButtonProps {
   onAddBlock: (type: EditorBlock["type"]) => void;

@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { dynamicIconImport } from "@/utils/dynamicIconImport";
+import { cn } from "../../../lib/utils";
+import { dynamicIconImport } from "../../../utils/dynamicIconImport";
 
 interface IconBlockPreviewProps {
   content: {

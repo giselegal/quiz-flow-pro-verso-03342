@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { Check, X, Star, Shield, Zap } from "lucide-react";
-import type { BlockComponentProps, BlockData } from "@/types/blocks";
+import type { BlockComponentProps, BlockData } from "../../../types/blocks";
 
 interface ProsConsBlockProps extends BlockComponentProps {
   block: BlockData & {

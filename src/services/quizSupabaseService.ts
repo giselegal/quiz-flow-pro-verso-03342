@@ -1,5 +1,5 @@
-import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+import { supabase } from "../integrations/supabase/client";
+import type { Database } from "../integrations/supabase/types";
 
 // Type definitions
 type QuizUser = Database["public"]["Tables"]["quiz_users"]["Row"];

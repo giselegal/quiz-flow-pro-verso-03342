@@ -1,4 +1,4 @@
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../types/quiz";
 
 // Define StyleCategory to match existing types
 export type StyleCategory =

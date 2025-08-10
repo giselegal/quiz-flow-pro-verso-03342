@@ -1,7 +1,7 @@
 import React from "react";
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { QuizComponentData } from "../../../types/quizBuilder";
+import { Card } from "../../../components/ui/card";
+import { cn } from "../../../lib/utils";
 
 interface ComponentRendererProps {
   component: QuizComponentData;

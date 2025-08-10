@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { QuizQuestion, QuizAnswer, QuizResult } from "@/types/quiz";
-import { calculateQuizResult } from "@/lib/quizEngine";
+import { QuizQuestion, QuizAnswer, QuizResult } from "../types/quiz";
+import { calculateQuizResult } from "../lib/quizEngine";
 
 interface EditorQuizContextType {
   currentQuestionIndex: number;

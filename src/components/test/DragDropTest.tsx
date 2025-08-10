@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import DroppableCanvas from "../editor/dnd/DroppableCanvas";
 
 const DragDropTest: React.FC = () => {

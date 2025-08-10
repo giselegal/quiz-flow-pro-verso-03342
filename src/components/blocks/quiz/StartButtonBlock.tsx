@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 /**
  * StartButtonBlock - Botão de início isolado para uso no editor visual

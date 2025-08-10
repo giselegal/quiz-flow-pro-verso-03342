@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useRef } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { quizDataService, useQuizData } from "@/services/quizDataService";
+import { useAuth } from "../context/AuthContext";
+import { quizDataService, useQuizData } from "../services/quizDataService";
 
 // Hook para auto-tracking de cliques em elementos do quiz com integração completa
 export const useQuizTracking = (questionIndex?: number) => {

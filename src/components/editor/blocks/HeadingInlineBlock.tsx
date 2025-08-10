@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { Type, Settings } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * HeadingInlineBlock - Componente modular inline horizontal

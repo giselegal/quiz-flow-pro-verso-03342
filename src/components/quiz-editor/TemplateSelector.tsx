@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "../../components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,22 +16,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { TemplateListItem } from "@/types/quizTemplate";
+} from "../../components/ui/dialog";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Textarea } from "../../components/ui/textarea";
+import { TemplateListItem } from "../../types/quizTemplate";
 import {
   getAllTemplates,
   createTemplate,
   duplicateTemplate,
   deleteTemplate,
-} from "@/services/templates/templateService";
+} from "../../services/templates/templateService";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Plus, Copy, Trash2, Edit, Check, X } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
-import { styleQuizTemplate } from "@/services/templates/styleQuizTemplate";
+import { toast } from "../../components/ui/use-toast";
+import { styleQuizTemplate } from "../../services/templates/styleQuizTemplate";
 
 interface TemplateSelectorProps {
   onSelectTemplate: (templateId: string) => void;

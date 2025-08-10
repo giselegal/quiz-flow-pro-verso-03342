@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
+import { cn } from "../../lib/utils";
 
 const sidebarVariants = cva(
   "fixed left-0 top-0 z-40 flex h-screen flex-col border-r bg-background transition-all dark:border-slate-700 lg:left-0",

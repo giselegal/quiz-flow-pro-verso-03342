@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import { AdminSidebar } from "../../components/admin/AdminSidebar";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LoadingSpinner } from "../../components/ui/loading-spinner";
 
 // Lazy loading das páginas do dashboard
 const DashboardOverview = lazy(() => import("./OverviewPage"));

@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuestionScroll } from "@/hooks/useQuestionScroll";
+import { useQuestionScroll } from "../hooks/useQuestionScroll";
 
 interface QuizQuestionProps {
   question: any;

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { StyleResult } from "@/types/quiz";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { StyleResult } from "../../../types/quiz";
+import { Card } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import BenefitList from "./BenefitList";
 import Testimonials from "./Testimonials";
 import Guarantee from "./Guarantee";
 import Logo from "../../ui/logo";
-import { OfferContent } from "@/types/resultPageConfig";
-import { useUtmParameters } from "@/hooks/useUtmParameters";
-import BuildInfo from "@/components/BuildInfo";
-import SecurePurchaseElement from "@/components/result/SecurePurchaseElement";
+import { OfferContent } from "../../../types/resultPageConfig";
+import { useUtmParameters } from "../../../hooks/useUtmParameters";
+import BuildInfo from "../../../components/BuildInfo";
+import SecurePurchaseElement from "../../../components/result/SecurePurchaseElement";
 
 interface OfferCardProps {
   primaryStyle: StyleResult;

@@ -7,10 +7,10 @@
  * Pode ser aplicado em todas as etapas do /editor-fixed
  */
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
+import { useIsMobile } from "../../hooks/use-mobile";
+import { useContainerProperties } from "../../hooks/useContainerProperties";
+import { useDebounce } from "../../hooks/useDebounce";
+import { usePerformanceOptimization } from "../../hooks/usePerformanceOptimization";
 import React, { useCallback, useMemo } from "react";
 
 interface ProductionReadyStepProps {

@@ -1,7 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import AdminLayout from "@/components/admin/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AdminLayout from "../components/admin/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 
 interface TestDataItem {
   name: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
 import {
   BarChart,
   Bar,
@@ -11,9 +11,9 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Progress } from "@/components/ui/progress";
-import { GridLayout } from "@/components/shared/GridLayout";
+import { ChartConfig, ChartContainer } from "../../../components/ui/chart";
+import { Progress } from "../../../components/ui/progress";
+import { GridLayout } from "../../../components/shared/GridLayout";
 
 interface FunnelTabProps {
   analyticsData: any;

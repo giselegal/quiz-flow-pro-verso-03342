@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "@/utils/images/preloading";
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import MentorSection from "@/components/result/MentorSection";
+import { preloadCriticalImages } from "../utils/images/preloading";
+import FixedIntroImage from "../components/ui/FixedIntroImage";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import MentorSection from "../components/result/MentorSection";
 import {
   ChevronRight,
   Check,
@@ -30,8 +30,8 @@ import {
   Flame,
   Eye,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
-import { storeUserForHotmart } from "@/utils/hotmartWebhook";
+import { trackButtonClick } from "../utils/analytics";
+import { storeUserForHotmart } from "../utils/hotmartWebhook";
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `

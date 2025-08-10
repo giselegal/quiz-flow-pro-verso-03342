@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import LiveQuizEditor from "@/components/live-editor/LiveQuizEditor";
-import { useLiveEditor } from "@/hooks/useLiveEditor";
+import LiveQuizEditor from "../../components/live-editor/LiveQuizEditor";
+import { useLiveEditor } from "../../hooks/useLiveEditor";
 
 const LiveEditorPage: React.FC = () => {
   const [, setLocation] = useLocation();

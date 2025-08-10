@@ -1,4 +1,4 @@
-import { Block, BlockType } from "@/types/editor";
+import { Block, BlockType } from "../types/editor";
 import { useState } from "react";
 
 export const useEditor = () => {

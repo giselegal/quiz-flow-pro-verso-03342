@@ -1,22 +1,22 @@
-import { BlockDefinition } from "@/types/editor";
+import { BlockDefinition } from "../types/editor";
 import { AlignLeft, Heading, Image, Minus, Square, Type } from "lucide-react";
 
 // Import real components instead of placeholder
-import ImageDisplayInlineBlock from "@/components/blocks/inline/ImageDisplayInlineBlock";
-// import StyleCardInlineBlock from "@/components/blocks/inline/StyleCardInlineBlock";
-import QuizOptionsGridBlock from "@/components/blocks/quiz/QuizOptionsGridBlock";
-import BadgeInlineBlock from "@/components/editor/blocks/BadgeInlineBlock";
-import DecorativeBarInlineBlock from "@/components/editor/blocks/DecorativeBarInlineBlock";
-import FinalStepEditor from "@/components/editor/blocks/FinalStepEditor";
-import FormInputBlock from "@/components/editor/blocks/FormInputBlock";
-import HeadingInlineBlock from "@/components/editor/blocks/HeadingInlineBlock";
-import LegalNoticeInlineBlock from "@/components/editor/blocks/LegalNoticeInlineBlock";
-import QuizIntroHeaderBlock from "@/components/editor/blocks/QuizIntroHeaderBlock";
-import QuizProgressBlock from "@/components/editor/blocks/QuizProgressBlock";
-import QuizResultsEditor from "@/components/editor/blocks/QuizResultsEditor";
-import SpacerInlineBlock from "@/components/editor/blocks/SpacerInlineBlock";
-import StyleResultsEditor from "@/components/editor/blocks/StyleResultsEditor";
-import TextInlineBlock from "@/components/editor/blocks/TextInlineBlock";
+import ImageDisplayInlineBlock from "../components/blocks/inline/ImageDisplayInlineBlock";
+// import StyleCardInlineBlock from "../components/blocks/inline/StyleCardInlineBlock";
+import QuizOptionsGridBlock from "../components/blocks/quiz/QuizOptionsGridBlock";
+import BadgeInlineBlock from "../components/editor/blocks/BadgeInlineBlock";
+import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
+import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
+import FormInputBlock from "../components/editor/blocks/FormInputBlock";
+import HeadingInlineBlock from "../components/editor/blocks/HeadingInlineBlock";
+import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
+import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
+import QuizProgressBlock from "../components/editor/blocks/QuizProgressBlock";
+import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
+import SpacerInlineBlock from "../components/editor/blocks/SpacerInlineBlock";
+import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
+import TextInlineBlock from "../components/editor/blocks/TextInlineBlock";
 
 export const blockDefinitions: BlockDefinition[] = [
   {

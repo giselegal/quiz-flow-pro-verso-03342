@@ -44,4 +44,4 @@ const getMarginClass = (value, type) => {
   return `${prefix}-32`; // Máximo suportado
 };
 
-export { default } from "@/components/pages/QuizOfferPageComponent";
+export { default } from "../../../components/pages/QuizOfferPageComponent";

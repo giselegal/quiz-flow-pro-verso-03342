@@ -1,9 +1,9 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from "../../components/ui/card";
 import { Gift, Star } from "lucide-react";
-import { optimizeCloudinaryUrl } from "@/utils/imageUtils";
+import { optimizeCloudinaryUrl } from "../../utils/imageUtils";
 import { motion } from "framer-motion";
-import ProgressiveImage from "@/components/ui/progressive-image";
+import ProgressiveImage from "../../components/ui/progressive-image";
 
 const BonusSection: React.FC = () => {
   // Criar imagem otimizada de alta qualidade

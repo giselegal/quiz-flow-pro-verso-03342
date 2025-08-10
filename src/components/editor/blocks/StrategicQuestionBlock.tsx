@@ -1,10 +1,10 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "../../../lib/utils";
+import { Button } from "../../../components/ui/button";
+import { Progress } from "../../../components/ui/progress";
+import { Badge } from "../../../components/ui/badge";
 import { InlineEditText } from "./InlineEditText";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 interface StrategicQuestionBlockProps extends BlockComponentProps {
   onPropertyChange?: (key: string, value: any) => void;

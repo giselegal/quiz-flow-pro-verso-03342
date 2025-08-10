@@ -1,12 +1,12 @@
-import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
-import { useEditor } from "@/context/EditorContext";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { BlockDefinition } from "@/types/editor";
+import { DraggableComponentItem } from "../../components/editor/dnd/DraggableComponentItem";
+import { Badge } from "../../components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { generateBlockDefinitions } from "../../config/enhancedBlockRegistry";
+import { QUIZ_CONFIGURATION } from "../../config/quizConfiguration";
+import { useEditor } from "../../context/EditorContext";
+import { useSyncedScroll } from "../../hooks/useSyncedScroll";
+import { BlockDefinition } from "../../types/editor";
 import {
   ChevronDown,
   ChevronRight,

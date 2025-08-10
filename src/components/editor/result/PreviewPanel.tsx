@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../../../types/quiz";
 import { Monitor, Smartphone, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "../../../components/ui/button";
+import { cn } from "../../../lib/utils";
 
 interface PreviewPanelProps {
   primaryStyle: StyleResult;

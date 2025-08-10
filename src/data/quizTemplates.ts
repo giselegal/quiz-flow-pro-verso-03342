@@ -3,7 +3,7 @@
  * Cada template contém uma estrutura completa de quiz que pode ser carregada rapidamente
  */
 
-import { QuizStage } from "@/types/quizBuilder";
+import { QuizStage } from "../types/quizBuilder";
 
 export interface QuizTemplate {
   id: string;

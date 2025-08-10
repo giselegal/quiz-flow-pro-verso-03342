@@ -1,5 +1,5 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { useEditor } from "@/context/EditorContext";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../components/ui/resizable";
+import { useEditor } from "../../context/EditorContext";
 import React from "react";
 import { CanvasDropZone } from "./canvas/CanvasDropZone";
 import { PropertyPanel } from "./PropertyPanel";

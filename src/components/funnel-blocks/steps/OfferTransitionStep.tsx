@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { FunnelStepProps } from "@/types/funnel";
+import { Button } from "../../../components/ui/button";
+import { FunnelStepProps } from "../../../types/funnel";
 
 interface OfferTransitionStepProps extends FunnelStepProps {
   data?: {

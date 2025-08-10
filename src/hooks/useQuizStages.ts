@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { QuizStage } from "@/types/quizBuilder";
+import { QuizStage } from "../types/quizBuilder";
 
 export const useQuizStages = () => {
   const [stages, setStages] = useState<QuizStage[]>([]);

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { MetricCard } from "@/components/analytics/MetricCard";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../components/ui/tabs";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { Progress } from "../../components/ui/progress";
+import { MetricCard } from "../../components/analytics/MetricCard";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "../../components/ui/select";
 import {
   BarChart,
   Bar,
@@ -43,10 +43,10 @@ import {
   Zap,
   Award,
 } from "lucide-react";
-import { LANDING_PAGE_AB_TEST } from "@/utils/abtest";
-import { FUNNEL_CONFIGS } from "@/services/pixelManager";
-import { toast } from "@/components/ui/use-toast";
-import { getAnalyticsEvents } from "@/utils/analytics";
+import { LANDING_PAGE_AB_TEST } from "../../utils/abtest";
+import { FUNNEL_CONFIGS } from "../../services/pixelManager";
+import { toast } from "../../components/ui/use-toast";
+import { getAnalyticsEvents } from "../../utils/analytics";
 import ABTestAlerts from "./ABTestAlerts";
 
 interface ABTestMetrics {

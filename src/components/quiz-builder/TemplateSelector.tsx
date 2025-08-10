@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { quizTemplates, QuizTemplate } from "@/data/quizTemplates";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { quizTemplates, QuizTemplate } from "../../data/quizTemplates";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "../../components/ui/dialog";
+import { ScrollArea } from "../../components/ui/scroll-area";
 import { Check, Plus } from "lucide-react";
 
 interface TemplateSelectorProps {

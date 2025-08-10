@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { FunnelStepProps } from "@/types/funnel";
+import { Button } from "../../../components/ui/button";
+import { FunnelStepProps } from "../../../types/funnel";
 
 interface QuizOptionProps {
   id: string;

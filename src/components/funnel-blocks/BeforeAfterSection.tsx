@@ -1,9 +1,9 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from "../../config/containerConfig";
 import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { ChevronLeft, ChevronRight, Users, Quote } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { AnimatedWrapper } from "../../components/ui/animated-wrapper";
 import { DeviceView, StyleProps } from "./types";
 
 interface TransformationItem {

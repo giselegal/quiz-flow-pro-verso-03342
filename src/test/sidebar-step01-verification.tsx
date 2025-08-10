@@ -1,8 +1,8 @@
 // Verificação de componentes Step01 na sidebar
 // src/test/sidebar-step01-verification.tsx
 
-import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { generateBlockDefinitions } from "../config/enhancedBlockRegistry";
+import { QUIZ_CONFIGURATION } from "../config/quizConfiguration";
 
 // Função para gerar blocos do quiz (simulando o que está na sidebar)
 const generateQuizBlocks = () => {

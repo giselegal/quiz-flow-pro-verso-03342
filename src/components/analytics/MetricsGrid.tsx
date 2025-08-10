@@ -1,6 +1,6 @@
 import React from "react";
 import { MetricCard } from "./MetricCard";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "../../components/ui/skeleton";
 import * as LucideIcons from "lucide-react";
 
 interface MetricsGridProps {

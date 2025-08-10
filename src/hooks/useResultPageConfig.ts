@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ResultPageConfig } from "@/types/resultPageConfig";
+import { ResultPageConfig } from "../types/resultPageConfig";
 
 interface ResultPageConfigHook {
   resultPageConfig: ResultPageConfig;

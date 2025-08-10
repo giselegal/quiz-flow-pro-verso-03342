@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import {
   optimizeCloudinaryUrl,
   getResponsiveImageSources,
   getLowQualityPlaceholder,
-} from "@/utils/imageUtils";
-import { getImageMetadata, isImagePreloaded, getOptimizedImage } from "@/utils/imageManager";
+} from "../../utils/imageUtils";
+import { getImageMetadata, isImagePreloaded, getOptimizedImage } from "../../utils/imageManager";
 
 interface OptimizedImageProps {
   src: string;

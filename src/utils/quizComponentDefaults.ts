@@ -1,4 +1,4 @@
-import { QuizComponentType } from "@/types/quizBuilder";
+import { QuizComponentType } from "../types/quizBuilder";
 
 export const getDefaultData = (type: QuizComponentType) => {
   switch (type) {

@@ -1,14 +1,14 @@
 import React from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Textarea } from "../../../components/ui/textarea";
+import { Label } from "../../../components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Block } from "@/types/editor";
+} from "../../../components/ui/select";
+import { Block } from "../../../types/editor";
 
 interface TextBlockEditorProps {
   block: Block;

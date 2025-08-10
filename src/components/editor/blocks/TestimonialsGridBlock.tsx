@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from "react";
 import { Star } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import type { BlockData } from "../../../types/blocks";
 
 interface TestimonialsGridBlockProps {
   block?: BlockData;

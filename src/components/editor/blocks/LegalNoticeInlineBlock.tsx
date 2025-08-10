@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 import React from "react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)

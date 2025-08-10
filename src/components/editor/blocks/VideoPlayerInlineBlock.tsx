@@ -1,17 +1,17 @@
 // @ts-nocheck
 import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import InlineBaseWrapper from "./base/InlineBaseWrapper";
 import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
-import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from "@/utils/brandDesignSystem";
+} from "../../../utils/inlineComponentUtils";
+import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from "../../../utils/brandDesignSystem";
 import {
   Play,
   Pause,

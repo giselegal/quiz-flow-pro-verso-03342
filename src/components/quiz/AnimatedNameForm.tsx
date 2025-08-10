@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { Input } from "../../components/ui/input";
+import { cn } from "../../lib/utils";
 
 interface AnimatedNameFormProps {
   onSubmit: (name: string) => void;

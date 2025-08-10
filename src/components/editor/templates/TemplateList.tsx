@@ -1,9 +1,9 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { giseleStyleTemplate } from "@/services/templates/giseleStyleTemplate";
-import { useResultPageConfig } from "@/hooks/useResultPageConfig";
-import { toast } from "@/components/ui/use-toast";
+import { Button } from "../../../components/ui/button";
+import { Card } from "../../../components/ui/card";
+import { giseleStyleTemplate } from "../../../services/templates/giseleStyleTemplate";
+import { useResultPageConfig } from "../../../hooks/useResultPageConfig";
+import { toast } from "../../../components/ui/use-toast";
 
 interface TemplateListProps {
   onSelectTemplate?: () => void;

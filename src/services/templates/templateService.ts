@@ -1,4 +1,4 @@
-import { QuizTemplate, TemplateListItem } from "@/types/quizTemplate";
+import { QuizTemplate, TemplateListItem } from "../../types/quizTemplate";
 import { styleQuizTemplate } from "./styleQuizTemplate";
 
 // Chave para armazenamento local

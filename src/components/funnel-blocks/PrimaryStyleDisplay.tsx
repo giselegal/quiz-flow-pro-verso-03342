@@ -1,7 +1,7 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
+import { getOptimizedContainerClasses } from "../../config/containerConfig";
 import React from "react";
-import { cn } from "@/lib/utils";
-import { StyleResult } from "@/types/quiz";
+import { cn } from "../../lib/utils";
+import { StyleResult } from "../../types/quiz";
 
 interface PrimaryStyleDisplayProps {
   primaryStyle: StyleResult;

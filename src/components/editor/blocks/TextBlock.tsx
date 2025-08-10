@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { EditableContent } from "@/types/editor";
+import { EditableContent } from "../../../types/editor";
 
 interface TextBlockProps {
   content: EditableContent;

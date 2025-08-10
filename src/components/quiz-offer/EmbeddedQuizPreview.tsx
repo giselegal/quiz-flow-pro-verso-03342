@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { QuizOption } from "../quiz/QuizOption";
-import { QuizOption as QuizOptionType } from "@/types/quiz";
+import { QuizOption as QuizOptionType } from "../../types/quiz";
 
 const SAMPLE_OPTIONS: QuizOptionType[] = [
   {

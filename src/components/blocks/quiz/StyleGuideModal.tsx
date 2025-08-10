@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { styleConfig } from "@/data/styleConfig";
+import { Button } from "../../../components/ui/button";
+import { styleConfig } from "../../../data/styleConfig";
 import { XIcon } from "lucide-react";
 import React from "react";
 

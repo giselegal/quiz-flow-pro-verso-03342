@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { Edit3, Bell, MessageSquare, User, DollarSign, AlertCircle } from "lucide-react";
 
 type NotificationType = "message" | "user" | "payment" | "alert" | "general";

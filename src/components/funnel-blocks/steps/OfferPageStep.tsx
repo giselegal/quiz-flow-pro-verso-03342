@@ -1,6 +1,6 @@
 import React from "react";
 import FunnelProgressBar from "../shared/FunnelProgressBar";
-import { CountdownTimer } from "@/components/ui/countdown-timer";
+import { CountdownTimer } from "../../../components/ui/countdown-timer";
 
 interface OfferPageStepProps {
   stepNumber?: number;

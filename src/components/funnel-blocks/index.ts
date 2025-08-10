@@ -30,4 +30,4 @@ export { default as FunnelConfigProvider, useFunnelConfig } from "./editor/Funne
 export { useFunnelNavigation } from "./hooks/useFunnelNavigation";
 
 // Tipos
-export * from "@/types/funnel";
+export * from "../../types/funnel";

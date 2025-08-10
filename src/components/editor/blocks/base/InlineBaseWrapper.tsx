@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { BlockData } from "@/types/blocks";
+import { cn } from "../../../../lib/utils";
+import { BlockData } from "../../../../types/blocks";
 
 export interface InlineBaseWrapperProps {
   children: ReactNode;

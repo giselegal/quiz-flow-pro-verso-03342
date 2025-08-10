@@ -1,4 +1,4 @@
-import { QuizComponentData } from "@/types/quizBuilder";
+import { QuizComponentData } from "../types/quizBuilder";
 import { useCallback, useState } from "react";
 
 export const useQuizComponents = () => {

@@ -1,4 +1,4 @@
-import { BlockData, BlockComponentProps } from "@/types/blocks";
+import { BlockData, BlockComponentProps } from "../types/blocks";
 import { generateSemanticId } from "../utils/semanticIdGenerator";
 
 /**

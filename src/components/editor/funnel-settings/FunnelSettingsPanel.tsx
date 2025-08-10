@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { useFunnelSettingsHistory } from "@/hooks/editor/useFunnelSettingsHistory";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Button } from "../../../components/ui/button";
+import { useToast } from "../../../hooks/use-toast";
+import { useFunnelSettingsHistory } from "../../../hooks/editor/useFunnelSettingsHistory";
 import { SEOSettings } from "./sections/SEOSettings";
 import { AnalyticsSettings } from "./sections/AnalyticsSettings";
 import { WebhookSettings } from "./sections/WebhookSettings";
 import { DomainSettings } from "./sections/DomainSettings";
-import { FunnelSettings, defaultFunnelSettings } from "@/types/funnelSettings";
-import { FunnelSettingsService } from "@/services/funnelSettingsService";
+import { FunnelSettings, defaultFunnelSettings } from "../../../types/funnelSettings";
+import { FunnelSettingsService } from "../../../services/funnelSettingsService";
 import { Save, Undo, Redo, RotateCcw } from "lucide-react";
 
 interface FunnelSettingsPanelProps {

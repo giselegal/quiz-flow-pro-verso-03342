@@ -4,7 +4,7 @@
  */
 
 import caktoquizQuestions from "./caktoquizQuestions";
-import { QuizQuestion } from "@/types/quiz";
+import { QuizQuestion } from "../types/quiz";
 
 // ETAPA 1: Quiz Intro (componente QuizIntro)
 export const LIVE_QUIZ_INTRO = {

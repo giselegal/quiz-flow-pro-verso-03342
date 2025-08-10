@@ -1,8 +1,8 @@
 // Hook de integração com Supabase para o Quiz
-import { useToast } from "@/components/ui/use-toast";
-import { calculateQuizResult } from "@/lib/quizEngine";
-import { quizSupabaseService } from "@/services/quizSupabaseService";
-import { QuizAnswer, QuizQuestion, QuizResult } from "@/types/quiz";
+import { useToast } from "../components/ui/use-toast";
+import { calculateQuizResult } from "../lib/quizEngine";
+import { quizSupabaseService } from "../services/quizSupabaseService";
+import { QuizAnswer, QuizQuestion, QuizResult } from "../types/quiz";
 import { useCallback, useEffect, useState } from "react";
 
 // Interface para a sessão mantida em memória

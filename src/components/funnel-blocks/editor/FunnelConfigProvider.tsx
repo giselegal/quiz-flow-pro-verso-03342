@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import type { FunnelConfig, FunnelStepConfig } from "@/types/funnel";
+import type { FunnelConfig, FunnelStepConfig } from "../../../types/funnel";
 
 // Contexto para configuração do funil
 interface FunnelConfigContextType {

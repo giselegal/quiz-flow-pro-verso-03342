@@ -1,4 +1,4 @@
-import { QuizAnswer, QuizQuestion, QuizResult } from "@/types/quiz";
+import { QuizAnswer, QuizQuestion, QuizResult } from "../types/quiz";
 
 export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuestion[]): QuizResult {
   // Simple scoring algorithm

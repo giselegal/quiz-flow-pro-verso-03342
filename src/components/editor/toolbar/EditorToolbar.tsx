@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/ui/logo";
+import { Button } from "../../../components/ui/button";
+import Logo from "../../../components/ui/logo";
 import { motion } from "framer-motion";
 import {
   Save,
@@ -13,7 +13,7 @@ import {
   Monitor,
   LayoutGrid,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 
 interface EditorToolbarProps {
   isPreviewing: boolean;

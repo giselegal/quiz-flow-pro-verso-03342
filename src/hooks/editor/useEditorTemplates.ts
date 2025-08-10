@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { EditorConfig } from "@/types/editor";
-import { EditorTemplateActions } from "@/types/editorActions";
+import { EditorConfig } from "../../types/editor";
+import { EditorTemplateActions } from "../../types/editorActions";
 
 export const useEditorTemplates = (
   config: EditorConfig,

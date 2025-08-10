@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { sharedStyles } from "@/styles/sharedStyles";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { sharedStyles } from "../styles/sharedStyles";
 import { ContentContainer } from "./shared/ContentContainer";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "../components/ui/card";
 import { ArrowRight, Sparkles, Users, Award } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 
 interface QuizIntroProps {
   onStart: (userName: string) => void;

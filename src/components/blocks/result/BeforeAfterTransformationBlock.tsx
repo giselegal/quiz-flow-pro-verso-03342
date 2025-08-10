@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import BeforeAfterTransformation from "@/components/result/BeforeAfterTransformation";
+import BeforeAfterTransformation from "../../../components/result/BeforeAfterTransformation";
 
 /**
  * BLOCO EDITÁVEL: Transformação Antes e Depois

@@ -4,8 +4,8 @@
  */
 
 import React, { useState } from "react";
-import { BlockData } from "@/types/blocks";
-import { Button } from "@/components/ui/button";
+import { BlockData } from "../types/blocks";
+import { Button } from "../components/ui/button";
 
 // Exemplo de estrutura de dados para uma questão configurada
 const exemploQuestaoConfigurada = {

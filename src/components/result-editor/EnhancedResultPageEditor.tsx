@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { StyleResult, QuizFunnel } from "@/types/quiz";
-import { Block, EditorBlock } from "@/types/editor";
+import { StyleResult, QuizFunnel } from "../../types/quiz";
+import { Block, EditorBlock } from "../../types/editor";
 import { ResultPageVisualEditor } from "./ResultPageVisualEditor";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import { Eye, EyeOff, Save, RefreshCw } from "lucide-react";
 
 interface EnhancedResultPageEditorProps {

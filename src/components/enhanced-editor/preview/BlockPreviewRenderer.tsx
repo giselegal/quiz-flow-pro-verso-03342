@@ -1,6 +1,6 @@
 import React from "react";
-import { EditorBlock } from "@/types/editor";
-import { StyleResult } from "@/types/quiz";
+import { EditorBlock } from "../../../types/editor";
+import { StyleResult } from "../../../types/quiz";
 
 interface BlockPreviewRendererProps {
   block: EditorBlock;

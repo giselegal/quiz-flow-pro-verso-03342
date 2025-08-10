@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "@/utils/images/preloading";
-import { usePageConfig } from "@/hooks/usePageConfig";
-import DynamicBlockRenderer from "@/components/DynamicBlockRenderer";
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { preloadCriticalImages } from "../utils/images/preloading";
+import { usePageConfig } from "../hooks/usePageConfig";
+import DynamicBlockRenderer from "../components/DynamicBlockRenderer";
+import FixedIntroImage from "../components/ui/FixedIntroImage";
 import {
   ChevronRight,
   Check,
@@ -23,7 +23,7 @@ import {
   ArrowDown,
   Hourglass,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "../utils/analytics";
 
 // CSS simplificado e otimizado
 const customStyles = `

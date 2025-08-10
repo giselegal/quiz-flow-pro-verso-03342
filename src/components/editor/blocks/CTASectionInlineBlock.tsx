@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { InlineEditableText } from "./InlineEditableText";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { ShoppingCart, ArrowDown, Lock } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

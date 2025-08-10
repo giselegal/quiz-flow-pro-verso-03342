@@ -8,7 +8,7 @@
  * Use: /src/components/universal/EnhancedUniversalPropertiesPanel.tsx
  */
 
-import { getInlineComponentProperties } from "@/hooks/useUnifiedProperties";
+import { getInlineComponentProperties } from "../../../hooks/useUnifiedProperties";
 import React, { useCallback } from "react";
 
 interface Block {

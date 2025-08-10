@@ -1,10 +1,10 @@
 // Component consolidation - Merge duplicate components and create unified system
 import React from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeletons";
+import { cn } from "../../lib/utils";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
+import { Skeleton } from "../../components/ui/skeletons";
 
 // Unified Loading States
 interface LoadingStateProps {

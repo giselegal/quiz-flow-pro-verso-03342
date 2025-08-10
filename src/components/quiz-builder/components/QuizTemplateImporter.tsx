@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,25 +7,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "../../../components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { styleQuizTemplate } from "@/services/templates/styleQuizTemplate";
-import { styleQuizTemplate2 } from "@/services/templates/styleQuizTemplate2";
-import { QuizBuilderState } from "@/types/quizBuilder";
-import { QuizTemplate } from "@/types/quizTemplate";
-import { createBuilderStateFromQuiz } from "@/services/quizBuilderService";
-import caktoquizQuestions from "@/data/caktoquizQuestions";
-import { QuizQuestion } from "@/types/quiz";
-import { toast } from "@/components/ui/use-toast";
+} from "../../../components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { styleQuizTemplate } from "../../../services/templates/styleQuizTemplate";
+import { styleQuizTemplate2 } from "../../../services/templates/styleQuizTemplate2";
+import { QuizBuilderState } from "../../../types/quizBuilder";
+import { QuizTemplate } from "../../../types/quizTemplate";
+import { createBuilderStateFromQuiz } from "../../../services/quizBuilderService";
+import caktoquizQuestions from "../../../data/caktoquizQuestions";
+import { QuizQuestion } from "../../../types/quiz";
+import { toast } from "../../../components/ui/use-toast";
 import { Loader2 } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { LoadingSpinner } from "../../../components/ui/loading-spinner";
 
 interface QuizTemplateImporterProps {
   isOpen: boolean;

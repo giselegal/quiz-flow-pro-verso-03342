@@ -1,4 +1,4 @@
-import { safeLocalStorage } from "@/utils/safeLocalStorage";
+import { safeLocalStorage } from "../utils/safeLocalStorage";
 
 // Utilitário para usar localStorage de forma segura no SSR
 export const localStorage = {

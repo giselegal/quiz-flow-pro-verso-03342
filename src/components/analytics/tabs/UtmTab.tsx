@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
 import {
   PieChart,
   Pie,
@@ -20,9 +20,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { GridLayout } from "@/components/shared/GridLayout";
+} from "../../../components/ui/table";
+import { ChartConfig, ChartContainer } from "../../../components/ui/chart";
+import { GridLayout } from "../../../components/shared/GridLayout";
 type UtmData = {
   source: string;
   medium: string;

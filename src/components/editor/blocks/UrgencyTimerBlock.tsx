@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { InlineEditableText } from "./InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

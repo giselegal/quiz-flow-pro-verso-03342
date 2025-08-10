@@ -1,14 +1,14 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from "../../../../components/ui/label";
+import { Input } from "../../../../components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
+} from "../../../../components/ui/select";
+import { PopoverTrigger, Popover, PopoverContent } from "../../../../components/ui/popover";
 
 interface StylePropertiesEditorProps {
   style: any;

@@ -1,4 +1,4 @@
-import type { QuizOption, StyleType } from "@/types/quiz";
+import type { QuizOption, StyleType } from "../types/quiz";
 
 // Mapeamento exato das opções A-H para os estilos
 // Baseado no sistema original do CaktoQuiz

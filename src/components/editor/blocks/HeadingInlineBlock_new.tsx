@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useMemo, useCallback } from "react";
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
+import { cn } from "../../../lib/utils";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * HeadingInlineBlock - Componente de título responsivo

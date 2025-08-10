@@ -55,7 +55,7 @@ export interface LoadingTransitionBlockProps {
   onProgress?: (progress: number) => void;
 }
 
-import { getMarginClass } from "@/utils/marginUtils";
+import { getMarginClass } from "../../../utils/marginUtils";
 
 const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
   blockId = "loading-transition-block",

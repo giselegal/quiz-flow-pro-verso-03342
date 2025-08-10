@@ -1,8 +1,8 @@
 import React from "react";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { StyleResult } from "@/types/quiz";
+import { useContainerProperties } from "../../hooks/useContainerProperties";
+import { useDebounce } from "../../hooks/useDebounce";
+import { useIsMobile } from "../../hooks/use-mobile";
+import { StyleResult } from "../../types/quiz";
 
 interface Step20ResultProps {
   primaryStyle?: StyleResult;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { useGlobalStyles } from "@/hooks/useGlobalStyles";
-import { preloadImagesByUrls } from "@/utils/imageManager";
+import { useGlobalStyles } from "../../hooks/useGlobalStyles";
+import { preloadImagesByUrls } from "../../utils/imageManager";
 
 // Lista de CDNs de imagens usados no aplicativo
 const IMAGE_CDNS = ["https://res.cloudinary.com", "https://images.unsplash.com"];

@@ -1,4 +1,4 @@
-import { ComponentCategories, ComponentType } from "@/interfaces/editor";
+import { ComponentCategories, ComponentType } from "../interfaces/editor";
 import {
   Type,
   Image as ImageIcon,

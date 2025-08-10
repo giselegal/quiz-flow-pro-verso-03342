@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { FunnelStepProps } from "@/types/funnel";
-import { Button } from "@/components/ui/button";
+import { cn } from "../../../lib/utils";
+import { FunnelStepProps } from "../../../types/funnel";
+import { Button } from "../../../components/ui/button";
 
 /**
  * ProcessingStep - Etapa de processamento

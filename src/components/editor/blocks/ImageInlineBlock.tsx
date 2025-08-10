@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { Image as ImageIcon, Edit3 } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from "../../../types/blocks";
 
 /**
  * ImageInlineBlock - Componente modular inline horizontal

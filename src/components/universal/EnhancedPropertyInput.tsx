@@ -4,11 +4,11 @@
  */
 
 import React from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import { Input } from "../../components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
+import { Label } from "../../components/ui/label";
 import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
-import { usePropertyDebounce } from "@/hooks/usePropertyDebounce";
+import { usePropertyDebounce } from "../../hooks/usePropertyDebounce";
 
 interface EnhancedPropertyInputProps {
   label: string;

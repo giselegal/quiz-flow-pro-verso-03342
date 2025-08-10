@@ -1,8 +1,8 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import { useQuiz } from "@/hooks/useQuiz";
-import { styleConfig } from "@/config/styleConfig";
-import { Progress } from "@/components/ui/progress";
+import { cn } from "../../../lib/utils";
+import { useQuiz } from "../../../hooks/useQuiz";
+import { styleConfig } from "../../../config/styleConfig";
+import { Progress } from "../../../components/ui/progress";
 
 interface StyleCardBlockProps {
   showProgress?: boolean;

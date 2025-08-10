@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { QuizStage, QuizComponentData } from "@/types/quizBuilder";
-import { Button } from "@/components/ui/button";
-import { QuizContainer } from "@/components/quiz/QuizContainer";
+import { QuizStage, QuizComponentData } from "../../../types/quizBuilder";
+import { Button } from "../../../components/ui/button";
+import { QuizContainer } from "../../../components/quiz/QuizContainer";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../../../types/quiz";
 import ResultPreview from "./ResultPreview";
 import StagePreview from "./StagePreview";
 

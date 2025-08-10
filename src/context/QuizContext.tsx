@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import { useQuizLogic } from "../hooks/useQuizLogic";
-import { useToast } from "@/components/ui/use-toast";
-import { QuizResult, StyleResult } from "@/types/quiz";
+import { useToast } from "../components/ui/use-toast";
+import { QuizResult, StyleResult } from "../types/quiz";
 
 // Define the context type
 type QuizContextType = ReturnType<typeof useQuizLogic> & {

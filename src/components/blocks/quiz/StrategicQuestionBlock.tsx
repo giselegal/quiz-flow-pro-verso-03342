@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 
 /**
  * StrategicQuestionBlock - Componente para questões estratégicas (Etapas 13-18)

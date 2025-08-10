@@ -1,5 +1,5 @@
 import React from "react";
-import quizStyles from "@/styles/quiz.module.css";
+import quizStyles from "../../../styles/quiz.module.css";
 
 interface QuizButtonProps {
   text?: string;

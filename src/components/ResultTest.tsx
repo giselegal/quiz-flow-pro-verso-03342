@@ -1,7 +1,7 @@
 import React from "react";
-import { styleConfig } from "@/config/styleConfig";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { styleConfig } from "../config/styleConfig";
+import { Card } from "../components/ui/card";
+import { Progress } from "../components/ui/progress";
 
 // Dados mock para teste
 const mockResult = {

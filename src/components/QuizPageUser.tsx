@@ -1,6 +1,6 @@
 import React from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useLoadingState } from "@/hooks/useLoadingState";
+import { useAuth } from "../context/AuthContext";
+import { useLoadingState } from "../hooks/useLoadingState";
 
 const UserQuizPage: React.FC = () => {
   const { user } = useAuth();

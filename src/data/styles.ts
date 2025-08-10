@@ -1,4 +1,4 @@
-import type { Style, StyleType } from "@/types/quiz";
+import type { Style, StyleType } from "../types/quiz";
 
 // Definição dos 8 estilos do CaktoQuiz
 export const STYLES: Record<StyleType, Style> = {

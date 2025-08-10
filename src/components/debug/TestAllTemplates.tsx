@@ -1,6 +1,6 @@
-import { getStep08Template } from "@/components/steps/Step08Template";
-import { getStep18Template } from "@/components/steps/Step18Template";
-import { getStep19Template } from "@/components/steps/Step19Template";
+import { getStep08Template } from "../../components/steps/Step08Template";
+import { getStep18Template } from "../../components/steps/Step18Template";
+import { getStep19Template } from "../../components/steps/Step19Template";
 import React from "react";
 
 const TestAllTemplates: React.FC = () => {

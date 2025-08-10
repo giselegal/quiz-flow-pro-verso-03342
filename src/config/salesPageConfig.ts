@@ -1,4 +1,4 @@
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from "../types/quiz";
 
 export interface SalesPageConfig {
   title: string;

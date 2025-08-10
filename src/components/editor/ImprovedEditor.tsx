@@ -1,14 +1,14 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../../components/ui/resizable";
+import { Separator } from "../../components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../components/ui/tooltip";
+import { cn } from "../../lib/utils";
 import { FileText, Layers, PanelLeft, PanelRight } from "lucide-react";
 import React, { useCallback, useMemo, useState } from "react";
 
 // Importar nossos novos componentes
-import type { BlockData } from "@/types/blocks";
+import type { BlockData } from "../../types/blocks";
 import EditorHistory from "./history/EditorHistory";
 import ResponsivePreview from "./preview/ResponsivePreview";
 import EnhancedPropertiesPanel from "./properties/EnhancedPropertiesPanel";

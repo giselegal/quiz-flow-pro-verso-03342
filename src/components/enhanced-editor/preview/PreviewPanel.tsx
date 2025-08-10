@@ -1,8 +1,8 @@
 import React from "react";
-import { Block } from "@/types/editor";
-import { cn } from "@/lib/utils";
-import { StyleResult } from "@/types/quiz";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Block } from "../../../types/editor";
+import { cn } from "../../../lib/utils";
+import { StyleResult } from "../../../types/quiz";
+import { ScrollArea } from "../../../components/ui/scroll-area";
 import { BlockPreviewRenderer } from "./BlockPreviewRenderer";
 import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";

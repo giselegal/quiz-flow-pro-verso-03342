@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../../lib/utils";
 import { ArrowRightLeft, Eye, EyeOff } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import type { BlockData } from "../../../types/blocks";
 
 interface BeforeAfterInlineBlockProps {
   block: BlockData;

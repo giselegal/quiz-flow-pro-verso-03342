@@ -1,10 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
+import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
+import { Card, CardContent, CardHeader } from "../../../components/ui/card";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../../../components/ui/tooltip";
+import { getBlockComponent } from "../../../config/enhancedBlockRegistry";
+import { cn } from "../../../lib/utils";
+import type { BlockData } from "../../../types/blocks";
 import {
   closestCenter,
   defaultDropAnimationSideEffects,

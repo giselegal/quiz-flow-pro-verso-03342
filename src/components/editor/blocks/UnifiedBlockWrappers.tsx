@@ -1,6 +1,6 @@
 import React from "react";
-import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
-import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
+import FunnelHeroSection from "../../../components/funnel/base/FunnelHeroSection";
+import FunnelPainSection from "../../../components/funnel/base/FunnelPainSection";
 
 // Interface que todos os blocos do editor devem implementar
 interface BlockComponentProps {

@@ -1,9 +1,9 @@
 import React from "react";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Label } from "../../../components/ui/label";
+import { Textarea } from "../../../components/ui/textarea";
+import { Alert, AlertDescription } from "../../../components/ui/alert";
 import { AlertTriangle } from "lucide-react";
-import { Block } from "@/types/editor";
+import { Block } from "../../../types/editor";
 
 interface CustomCodeBlockEditorProps {
   block: Block;

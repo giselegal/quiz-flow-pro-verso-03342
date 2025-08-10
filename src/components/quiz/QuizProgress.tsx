@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuizHooks } from "@/hooks/useQuizHooks";
+import { useQuizHooks } from "../../hooks/useQuizHooks";
 
 interface QuizProgressProps {
   currentQuestionIndex: number;

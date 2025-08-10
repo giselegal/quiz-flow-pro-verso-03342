@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
-import { useHistory } from "@/hooks/useHistory";
-import { FunnelSettings, defaultFunnelSettings } from "@/types/funnelSettings";
-import { FunnelSettingsService } from "@/services/funnelSettingsService";
+import { useHistory } from "../../hooks/useHistory";
+import { FunnelSettings, defaultFunnelSettings } from "../../types/funnelSettings";
+import { FunnelSettingsService } from "../../services/funnelSettingsService";
 import { useAutoSaveWithDebounce } from "./useAutoSaveWithDebounce";
 
 export const useFunnelSettingsHistory = (funnelId: string, initialSettings: FunnelSettings) => {

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
+import { Card } from "../../components/ui/card";
+import { Badge } from "../../components/ui/badge";
 import { Pencil, Save, X, Plus, Trash2, Image as ImageIcon, Type, List, Quote } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 interface EditableBlockProps {
   type: "header" | "text" | "image" | "benefits" | "quote" | "cta";

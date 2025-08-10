@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { EditorBlock } from "@/types/editor";
-import { useToast } from "@/components/ui/use-toast";
+import { EditorBlock } from "../../types/editor";
+import { useToast } from "../../components/ui/use-toast";
 
 export const useEditorHistory = (initialBlocks: EditorBlock[]) => {
   const { toast } = useToast();

@@ -1,4 +1,4 @@
-import { useEditor } from "@/context/EditorContext";
+import { useEditor } from "../../context/EditorContext";
 import React from "react";
 
 interface PropertiesPanelDebugProps {
