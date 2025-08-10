@@ -2,23 +2,23 @@ import { Type } from "lucide-react";
 import React, { useState } from "react";
 
 // Editor Components
-import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
-import { DndProvider } from "@/components/editor/dnd/DndProvider";
-import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
-import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
-import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
+import { CanvasDropZone } from "../components/editor/canvas/CanvasDropZone";
+import CombinedComponentsPanel from "../components/editor/CombinedComponentsPanel";
+import { DndProvider } from "../components/editor/dnd/DndProvider";
+import { FunnelSettingsPanel } from "../components/editor/funnel-settings/FunnelSettingsPanel";
+import { FunnelStagesPanel } from "../components/editor/funnel/FunnelStagesPanel";
+import { FourColumnLayout } from "../components/editor/layout/FourColumnLayout";
+import { EditorToolbar } from "../components/enhanced-editor/toolbar/EditorToolbar";
+import EnhancedUniversalPropertiesPanel from "../components/universal/EnhancedUniversalPropertiesPanel";
 
 // Configuration & Registry
-import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
+import { generateBlockDefinitions, getRegistryStats } from "../config/enhancedBlockRegistry";
 
 // Context & Hooks
-import { useEditor } from "@/context/EditorContext";
-import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { usePropertyHistory } from "@/hooks/usePropertyHistory";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { useEditor } from "../context/EditorContext";
+import { useKeyboardShortcuts } from "../hooks/useKeyboardShortcuts";
+import { usePropertyHistory } from "../hooks/usePropertyHistory";
+import { useSyncedScroll } from "../hooks/useSyncedScroll";
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
