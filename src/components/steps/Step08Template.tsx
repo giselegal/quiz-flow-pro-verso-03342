@@ -227,5 +227,3 @@ export const getStep08Template = () => {
     },
   ];
 };
-
-export default Step08;

@@ -31,7 +31,7 @@ export const getStep19Template = () => {
         marginBottom: 20,
       },
     },
-    
+
     // 📊 RESULTADO DETALHADO
     {
       id: "step19-result-display",
@@ -44,7 +44,7 @@ export const getStep19Template = () => {
         marginBottom: 30,
       },
     },
-    
+
     // 🎯 CALL TO ACTION
     {
       id: "step19-cta-button",
@@ -64,4 +64,3 @@ export const getStep19Template = () => {
     },
   ];
 };
-
