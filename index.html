@@ -73,13 +73,6 @@
 
     <!-- Preload Playfair Display woff2 direto do Google Fonts para garantir swap e performance -->
     <link
-      rel="preload"
-      as="font"
-      href="https://fonts.gstatic.com/s/playfairdisplay/v30/nuFiD-vYSZviVYUb_rj3ij__anPXDTzYh2I.woff2"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
       rel="stylesheet"
     />
@@ -114,34 +107,6 @@
     <meta name="theme-color" content="#B89B7A" />
     <meta http-equiv="Cache-Control" content="public, max-age=31536000" />
 
-    <!-- Facebook Pixel Code -->
-    <script>
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod
-            ? n.callMethod.apply(n, arguments)
-            : n.queue.push(arguments);
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = "2.0";
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(
-        window,
-        document,
-        "script",
-        "https://connect.facebook.net/en_US/fbevents.js"
-      );
-      fbq("init", "1311550759901086");
-      fbq("track", "PageView");
-    </script>
 
     <!-- Vite irá injetar os assets corretos no build -->
     <script type="module" src="/src/main.tsx"></script>
@@ -203,8 +168,6 @@
       }
     </style>
 
-    <!-- Lovable Personalização/AB Test -->
-    <script src="https://cdn.lovable.dev/loader.js" async></script>
   </head>
   <body>
     <noscript
@@ -221,6 +184,17 @@
     </div>
     <script>
       document.getElementById("root")?.classList.remove("js-loading");
+      // Unregister any existing service workers to avoid caching/fetch conflicts
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          for (const reg of regs) {
+            reg.unregister().catch(() => {});
+          }
+        });
+        if (typeof caches !== "undefined") {
+          caches.keys().then(keys => keys.forEach(k => caches.delete(k))).catch(() => {});
+        }
+      }
     </script>
   </body>
 </html>
