@@ -25,35 +25,35 @@ import {
 
 const OverviewPage: React.FC = () => {
   return (
-    <div className="p-6 space-y-8 bg-gradient-to-br from-amber-50 via-white to-orange-50/30 min-h-screen">
+    <div className="p-6 space-y-8 min-h-screen" style={{ backgroundColor: '#FEFEFE' }}>
       {/* Header sofisticado */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-amber-600 to-orange-700 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-lg flex items-center justify-center">
               <Zap className="h-4 w-4 text-white" />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-900 to-orange-800 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#432818] to-[#B89B7A] bg-clip-text text-transparent">
               QuizFlow Dashboard
             </h1>
-            <Badge variant="secondary" className="bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 border-0">
+            <Badge variant="secondary" className="bg-gradient-to-r from-[#B89B7A]/10 to-[#aa6b5d]/10 text-[#432818] border-0">
               <Crown className="h-3 w-3 mr-1" />
               Pro
             </Badge>
           </div>
-          <p className="text-amber-800/80 text-lg">Transforme dados em insights • Simplifique • Interaja • Converta</p>
+          <p className="text-[#432818]/80 text-lg">Transforme dados em insights • Simplifique • Interaja • Converta</p>
         </div>
         
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-amber-300 text-amber-700 hover:border-amber-400 hover:bg-amber-50">
+          <Button variant="outline" className="border-[#B89B7A] text-[#432818] hover:border-[#aa6b5d] hover:bg-[#B89B7A]/5">
             <Filter className="h-4 w-4 mr-2" />
             Filtros
           </Button>
-          <Button variant="outline" className="border-amber-300 text-amber-700 hover:border-amber-400 hover:bg-amber-50">
+          <Button variant="outline" className="border-[#B89B7A] text-[#432818] hover:border-[#aa6b5d] hover:bg-[#B89B7A]/5">
             <Download className="h-4 w-4 mr-2" />
             Exportar
           </Button>
-          <Button className="bg-gradient-to-r from-amber-600 to-orange-700 hover:from-amber-700 hover:to-orange-800 text-white shadow-lg">
+          <Button className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] hover:from-[#aa6b5d] hover:to-[#B89B7A] text-white shadow-lg">
             <Share className="h-4 w-4 mr-2" />
             Compartilhar
           </Button>
@@ -63,89 +63,89 @@ const OverviewPage: React.FC = () => {
       {/* Métricas Principais com design sofisticado */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total de Respostas */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-indigo-100 hover:from-blue-100 hover:to-indigo-200">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-orange-100 hover:from-amber-100 hover:to-orange-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-700">Interações Totais</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold text-amber-800">Interações Totais</CardTitle>
+            <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <Users className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-800 mb-1">12,847</div>
+            <div className="text-3xl font-bold text-amber-900 mb-1">12,847</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+18.2%</span>
-              <span className="text-slate-500 ml-1">vs mês anterior</span>
+              <span className="text-amber-700/80 ml-1">vs mês anterior</span>
             </div>
             <div className="mt-3">
               <Progress value={78} className="h-2" />
-              <p className="text-xs text-slate-500 mt-1">78% da meta mensal</p>
+              <p className="text-xs text-amber-600/80 mt-1">78% da meta mensal</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Taxa de Conversão */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-emerald-50 to-green-100 hover:from-emerald-100 hover:to-green-200">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-orange-50 to-amber-100 hover:from-orange-100 hover:to-amber-200">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-700">Taxa de Conversão</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold text-amber-800">Taxa de Conversão</CardTitle>
+            <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <Target className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-800 mb-1">34.8%</div>
+            <div className="text-3xl font-bold text-amber-900 mb-1">34.8%</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+5.7%</span>
-              <span className="text-slate-500 ml-1">vs mês anterior</span>
+              <span className="text-amber-700/80 ml-1">vs mês anterior</span>
             </div>
             <div className="mt-3">
               <Progress value={89} className="h-2" />
-              <p className="text-xs text-slate-500 mt-1">89% acima da média</p>
+              <p className="text-xs text-amber-600/80 mt-1">89% acima da média</p>
             </div>
           </CardContent>
         </Card>
 
         {/* Receita Gerada */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-orange-100 hover:from-amber-100 hover:to-orange-200">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-100 to-orange-200 hover:from-amber-200 hover:to-orange-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-700">Receita Gerada</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold text-amber-900">Receita Gerada</CardTitle>
+            <div className="w-10 h-10 bg-gradient-to-r from-amber-600 to-orange-700 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <DollarSign className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-800 mb-1">R$ 87.420</div>
+            <div className="text-3xl font-bold text-amber-900 mb-1">R$ 87.420</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+24.5%</span>
-              <span className="text-slate-500 ml-1">vs mês anterior</span>
+              <span className="text-amber-800/80 ml-1">vs mês anterior</span>
             </div>
             <div className="mt-3">
               <Progress value={92} className="h-2" />
-              <p className="text-xs text-slate-500 mt-1">92% da meta mensal</p>
+              <p className="text-xs text-amber-700/80 mt-1">92% da meta mensal</p>
             </div>
           </CardContent>
         </Card>
 
         {/* ROI Médio */}
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-purple-50 to-violet-100 hover:from-purple-100 hover:to-violet-200">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-orange-100 to-amber-200 hover:from-orange-200 hover:to-amber-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-700">ROI Médio</CardTitle>
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-violet-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+            <CardTitle className="text-sm font-semibold text-amber-900">ROI Médio</CardTitle>
+            <div className="w-10 h-10 bg-gradient-to-r from-orange-600 to-amber-700 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-800 mb-1">487%</div>
+            <div className="text-3xl font-bold text-amber-900 mb-1">487%</div>
             <div className="flex items-center text-sm">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+31.2%</span>
-              <span className="text-slate-500 ml-1">vs mês anterior</span>
+              <span className="text-amber-800/80 ml-1">vs mês anterior</span>
             </div>
             <div className="mt-3">
               <Progress value={95} className="h-2" />
-              <p className="text-xs text-slate-500 mt-1">Performance excepcional</p>
+              <p className="text-xs text-amber-700/80 mt-1">Performance excepcional</p>
             </div>
           </CardContent>
         </Card>
@@ -155,25 +155,25 @@ const OverviewPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Performance por Estilo */}
         <Card className="border-0 shadow-lg overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-slate-50 to-indigo-50 border-b border-slate-200">
-            <CardTitle className="flex items-center gap-2 text-slate-800">
-              <BarChart3 className="h-5 w-5 text-indigo-600" />
+          <CardHeader className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
+            <CardTitle className="flex items-center gap-2 text-amber-900">
+              <BarChart3 className="h-5 w-5 text-amber-700" />
               Performance por Categoria
-              <Badge className="ml-auto bg-indigo-100 text-indigo-700 border-0">Tempo Real</Badge>
+              <Badge className="ml-auto bg-amber-100 text-amber-800 border-0">Tempo Real</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
             {/* Estilo Elegante */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl border border-rose-200/50">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200/50">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full"></div>
                 <div>
-                  <div className="font-semibold text-slate-800">Estilo Elegante</div>
-                  <div className="text-sm text-slate-500">2,847 interações</div>
+                  <div className="font-semibold text-amber-900">Estilo Elegante</div>
+                  <div className="text-sm text-amber-700">2,847 interações</div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-slate-800">42.3%</div>
+                <div className="font-bold text-amber-900">42.3%</div>
                 <div className="text-xs text-emerald-600 flex items-center">
                   <ArrowUpRight className="h-3 w-3 mr-1" />
                   +5.2%
@@ -182,16 +182,16 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Estilo Casual */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border border-orange-200/50">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full"></div>
                 <div>
-                  <div className="font-semibold text-slate-800">Estilo Casual</div>
-                  <div className="text-sm text-slate-500">1,923 interações</div>
+                  <div className="font-semibold text-amber-900">Estilo Casual</div>
+                  <div className="text-sm text-amber-700">1,923 interações</div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-slate-800">28.7%</div>
+                <div className="font-bold text-amber-900">28.7%</div>
                 <div className="text-xs text-emerald-600 flex items-center">
                   <ArrowUpRight className="h-3 w-3 mr-1" />
                   +3.1%
@@ -200,16 +200,16 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Estilo Criativo */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl border border-purple-200/50">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl border border-amber-300/50">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-gradient-to-r from-purple-400 to-violet-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-gradient-to-r from-amber-600 to-orange-700 rounded-full"></div>
                 <div>
-                  <div className="font-semibold text-slate-800">Estilo Criativo</div>
-                  <div className="text-sm text-slate-500">1,654 interações</div>
+                  <div className="font-semibold text-amber-900">Estilo Criativo</div>
+                  <div className="text-sm text-amber-700">1,654 interações</div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-slate-800">19.4%</div>
+                <div className="font-bold text-amber-900">19.4%</div>
                 <div className="text-xs text-red-500 flex items-center">
                   <ArrowDownRight className="h-3 w-3 mr-1" />
                   -1.2%
@@ -218,16 +218,16 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Outros estilos */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-200/50">
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-100 to-amber-100 rounded-xl border border-orange-300/50">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-gradient-to-r from-orange-600 to-amber-700 rounded-full"></div>
                 <div>
-                  <div className="font-semibold text-slate-800">Outros Estilos</div>
-                  <div className="text-sm text-slate-500">823 interações</div>
+                  <div className="font-semibold text-amber-900">Outros Estilos</div>
+                  <div className="text-sm text-amber-700">823 interações</div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-slate-800">9.6%</div>
+                <div className="font-bold text-amber-900">9.6%</div>
                 <div className="text-xs text-emerald-600 flex items-center">
                   <ArrowUpRight className="h-3 w-3 mr-1" />
                   +2.3%
@@ -239,11 +239,11 @@ const OverviewPage: React.FC = () => {
 
         {/* Funis de Alto Performance */}
         <Card className="border-0 shadow-lg overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-slate-50 to-purple-50 border-b border-slate-200">
-            <CardTitle className="flex items-center gap-2 text-slate-800">
-              <Sparkles className="h-5 w-5 text-purple-600" />
+          <CardHeader className="bg-gradient-to-r from-orange-50 to-amber-50 border-b border-orange-200">
+            <CardTitle className="flex items-center gap-2 text-amber-900">
+              <Sparkles className="h-5 w-5 text-orange-700" />
               Top Funis da Semana
-              <Badge className="ml-auto bg-purple-100 text-purple-700 border-0">Hot</Badge>
+              <Badge className="ml-auto bg-orange-100 text-orange-800 border-0">Hot</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
