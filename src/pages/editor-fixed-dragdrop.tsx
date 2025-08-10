@@ -1,4 +1,7 @@
-// @ts-nocheck
+import React, { useState } from "react";
+import { Type } from "lucide-react";
+
+// Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
@@ -7,29 +10,36 @@ import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel"
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
+
+// Configuration & Registry
 import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
 
+// Context & Hooks
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties"; // ✅ ADICIONADO IMPORT
-import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts"; // ✅ ADICIONADO ATALHOS
-import { usePropertyHistory } from "@/hooks/usePropertyHistory"; // ✅ ADICIONADO HISTÓRICO
-import { Type } from "lucide-react";
-import React, { useState } from "react";
+import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
+import { usePropertyHistory } from "@/hooks/usePropertyHistory";
 
+/**
+ * Editor Fixed - Versão Corrigida do Editor Principal
+ * 
+ * Editor de funil com drag & drop completo, incluindo:
+ * - Layout de 4 colunas responsivo
+ * - Sistema avançado de drag & drop
+ * - Painel universal de propriedades
+ * - Atalhos de teclado e histórico de mudanças
+ * - Preview mode e viewport responsivo
+ */
 const EditorFixedPageWithDragDrop: React.FC = () => {
-  console.log("🔥 EditorFixedPage: PÁGINA RENDERIZANDO COM DRAG&DROP!");
-
-  // Hook para scroll sincronizado
+  // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: "canvas" });
-
-  // Estado para controlar o painel de configurações
+  const propertyHistory = usePropertyHistory();
+  
+  // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
 
-  // ✅ HISTÓRICO DE PROPRIEDADES para undo/redo
-  const propertyHistory = usePropertyHistory();
-
-  // ✅ USAR NOVA ESTRUTURA UNIFICADA DO EDITORCONTEXT
+  // Editor Context - Estado centralizado do editor
   const {
     stages,
     activeStageId,
@@ -48,53 +58,19 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
 
-  console.log("🔥 EditorFixedPage: Dados do editor:", {
-    stages: stages?.length || 0,
-    activeStageId,
-    selectedBlockId,
-    currentBlocks: currentBlocks?.length || 0,
-    totalBlocks,
-    stageCount,
-  });
-
-  // ✅ VERIFICAÇÃO DE SINCRONIZAÇÃO DOS IMPORTS - Movido após as declarações
+  // Registry de componentes disponíveis
   const registryStats = getRegistryStats();
   const allBlockDefinitions = generateBlockDefinitions();
-  console.log("🎯 VERIFICAÇÃO DE SINCRONIZAÇÃO:", {
-    registryBlocks: registryStats.totalBlocks,
-    registryCategories: registryStats.categories,
-    blockDefinitionsCount: allBlockDefinitions.length,
-    stepComponents: allBlockDefinitions.filter(d => d.category === "steps").length,
-    unifiedPropertiesHook: typeof useUnifiedProperties,
-  });
 
-  // 🔍 DEBUG ESPECÍFICO PARA PAINEL DE PROPRIEDADES
-  console.log("🎯 DEBUG Painel Propriedades:", {
-    selectedBlockId: selectedBlockId,
-    selectedBlock: selectedBlock
-      ? {
-          id: selectedBlock.id,
-          type: selectedBlock.type,
-          hasContent: !!selectedBlock.content,
-          hasProperties: !!selectedBlock.properties,
-          propertiesKeys: selectedBlock.properties ? Object.keys(selectedBlock.properties) : [],
-          propertiesValues: selectedBlock.properties,
-          contentKeys: selectedBlock.content ? Object.keys(selectedBlock.content) : [],
-          contentValues: selectedBlock.content,
-        }
-      : null,
-    currentBlocksDetailed: currentBlocks?.map(b => ({ id: b.id, type: b.type })) || [],
-    shouldShowPanel: !isPreviewing && selectedBlock,
-  });
-
-  // Função para obter blockDefinition com propriedades reais
+  // Função utilitária para obter definição de bloco com propriedades padrão
   const getBlockDefinitionForType = (type: string) => {
     const definition = allBlockDefinitions.find(def => def.type === type);
+    
     if (definition) {
       return definition;
     }
 
-    // Fallback com propriedades padrão para qualquer componente
+    // Fallback para componentes não registrados
     return {
       type: type,
       name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
@@ -133,7 +109,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     };
   };
 
-  // ✅ VIEWPORT RESPONSIVE CONFIGURATION
+  // Configuração de viewport responsivo
   const getCanvasClassName = () => {
     const baseClasses =
       "transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20";
@@ -150,21 +126,29 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-  // Handler para salvar (placeholder)
+  // Handlers de eventos
   const handleSave = () => {
     console.log("💾 Salvando editor...");
   };
 
-  // Handler para deletar bloco
   const handleDeleteBlock = (blockId: string) => {
     if (window.confirm("Tem certeza que deseja deletar este bloco?")) {
       deleteBlock(blockId);
       setSelectedBlockId(null);
-      console.log(`🗑️ Bloco ${blockId} deletado`);
     }
   };
 
-  // ✅ ATALHOS DE TECLADO para melhor UX
+  const handleStageSelect = (stageId: string) => {
+    // O EditorContext já gerencia internamente
+  };
+
+  const getStepNumberFromStageId = (stageId: string | null): number => {
+    if (!stageId) return 1;
+    const match = stageId.match(/step-(\d+)/);
+    return match ? parseInt(match[1], 10) : 1;
+  };
+
+  // Configurar atalhos de teclado
   useKeyboardShortcuts({
     onUndo: propertyHistory.undo,
     onRedo: propertyHistory.redo,
@@ -174,20 +158,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     hasSelectedBlock: !!selectedBlockId,
   });
 
-  // ✅ NAVEGAÇÃO SIMPLIFICADA (CALLBACK OPCIONAL)
-  const handleStageSelect = (stageId: string) => {
-    console.log("🔄 Editor: Callback de mudança de etapa recebido:", stageId);
-    // O EditorContext já gerencia tudo internamente
-    // Este callback é apenas para compatibilidade
-  };
-
-  // Função para extrair número da etapa do stageId
-  const getStepNumberFromStageId = (stageId: string | null): number => {
-    if (!stageId) return 1;
-    const match = stageId.match(/step-(\d+)/);
-    return match ? parseInt(match[1], 10) : 1;
-  };
-
   return (
     <DndProvider
       blocks={(currentBlocks || []).map(block => ({
@@ -196,8 +166,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         properties: block.properties || {},
       }))}
       onBlocksReorder={newBlocksData => {
-        console.log("🔄 Reordenando blocos:", newBlocksData);
-
         const newBlockIds = newBlocksData.map(b => b.id);
         const oldBlockIds = (currentBlocks || []).map(b => b.id);
 
@@ -206,23 +174,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           return;
         }
 
-        // Usar a nova função reorderBlocks do contexto
         reorderBlocks(newBlockIds, activeStageId || undefined);
-        console.log("✅ Blocos reordenados com sucesso usando EditorContext");
       }}
       onBlockAdd={(blockType, position) => {
-        console.log(`➕ Adicionando bloco ${blockType} na posição ${position}`);
-
         if (position !== undefined && position >= 0) {
-          // Usar a nova função addBlockAtPosition para inserção atômica
-          const blockId = addBlockAtPosition(blockType, position, activeStageId || undefined);
-          console.log(
-            `✅ Bloco ${blockType} (${blockId}) adicionado na posição ${position} usando EditorContext`
-          );
+          addBlockAtPosition(blockType, position, activeStageId || undefined);
         } else {
-          // Fallback para adicionar no final
-          const blockId = addBlock(blockType, activeStageId || undefined);
-          console.log(`✅ Bloco ${blockType} (${blockId}) adicionado no final`);
+          addBlock(blockType, activeStageId || undefined);
         }
       }}
       onBlockSelect={blockId => {
@@ -301,7 +259,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   }}
                   blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
                   onUpdate={(blockId, updates) => {
-                    console.log("🔧 Painel onUpdate chamado:", { blockId, updates });
                     updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}
