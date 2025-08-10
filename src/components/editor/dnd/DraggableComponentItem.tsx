@@ -75,7 +75,12 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       <div className="flex items-center gap-2 w-full">
         <div className="flex-shrink-0 text-primary">{icon}</div>
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-stone-900 truncate">{title}</h4>
+          <div className="flex items-center gap-2">
+            <h4 className="text-sm font-medium text-stone-900 truncate">{title}</h4>
+            {blockType.includes('step01') && (
+              <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">STEP1</span>
+            )}
+          </div>
           {category && (
             <span className="text-xs text-stone-500 uppercase tracking-wide">{category}</span>
           )}
