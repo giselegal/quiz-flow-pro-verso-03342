@@ -93,7 +93,67 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   // Gerar blocos do quiz baseados na configuração JSON
   const generateQuizBlocks = (): BlockDefinition[] => {
-    return QUIZ_CONFIGURATION.steps.map((step, index) => ({
+    // Primeiro, criar o bloco de cabeçalho padrão
+    const headerBlock: BlockDefinition = {
+      type: "quiz-intro-header",
+      name: "Cabeçalho do Quiz",
+      description: "Cabeçalho configurável com logo e barra decorativa",
+      category: "Questões do Quiz",
+      icon: Settings,
+      component: "QuizIntroHeaderBlock" as any,
+      properties: {
+        enabled: {
+          type: "boolean" as const,
+          default: true,
+          label: "Habilitar Cabeçalho",
+          description: "Ativar ou desativar o cabeçalho",
+          category: "general" as const,
+        },
+        showLogo: {
+          type: "boolean" as const,
+          default: true,
+          label: "Mostrar Logo",
+          description: "Exibir logo no cabeçalho",
+          category: "general" as const,
+        },
+        showDecorativeBar: {
+          type: "boolean" as const,
+          default: true,
+          label: "Barra Decorativa",
+          description: "Exibir barra decorativa",
+          category: "general" as const,
+        },
+        scale: {
+          type: "range" as const,
+          default: 100,
+          label: "Escala",
+          description: "Tamanho geral do componente (50% - 110%)",
+          category: "layout" as const,
+          min: 50,
+          max: 110,
+        }
+      },
+      label: "Cabeçalho do Quiz",
+      defaultProps: {
+        enabled: true,
+        showLogo: true,
+        showDecorativeBar: true,
+        logoUrl: "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png",
+        logoAlt: "Logo",
+        logoSize: 100,
+        barColor: "#B89B7A",
+        barHeight: 4,
+        barPosition: "bottom",
+        scale: 100,
+        alignment: "center",
+        backgroundColor: "transparent",
+        backgroundOpacity: 100,
+      },
+      tags: [`quiz`, `header`, `cabeçalho`]
+    };
+
+    // Depois, criar os blocos das etapas
+    const stepBlocks = QUIZ_CONFIGURATION.steps.map((step, index) => ({
       type: `quiz-${step.type}`,
       name: `${step.title}`,
       description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
@@ -102,25 +162,34 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       component: "QuizQuestionBlock" as any,
       properties: {
         stepIndex: {
-          type: "number",
+          type: "number" as const,
           default: index,
           label: "Índice da Etapa",
           description: "Posição da etapa no quiz",
-          category: "general",
+          category: "general" as const,
         },
         stepType: {
-          type: "string",
+          type: "string" as const,
           default: step.type,
           label: "Tipo da Etapa",
           description: "Categoria da etapa do quiz",
-          category: "general",
+          category: "general" as const,
         },
         showProgress: {
-          type: "boolean",
+          type: "boolean" as const,
           default: step.progressBar?.show !== false,
           label: "Mostrar Progresso",
           description: "Exibir barra de progresso",
-          category: "behavior",
+          category: "behavior" as const,
+        },
+        scale: {
+          type: "range" as const,
+          default: 100,
+          label: "Escala",
+          description: "Tamanho geral do componente (50% - 110%)",
+          category: "layout" as const,
+          min: 50,
+          max: 110,
         }
       },
       label: step.title,
@@ -131,7 +200,8 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         columns: step.rules?.colunas || 1,
         multiSelect: step.rules?.multiSelect || 1,
         questions: step.questions || [],
-        styles: step.styles || []
+        styles: step.styles || [],
+        scale: 100
       },
       defaultContent: {
         questions: step.questions || [],
@@ -140,6 +210,8 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       },
       tags: [`quiz`, `${step.type}`, `etapa-${index + 1}`]
     }));
+
+    return [headerBlock, ...stepBlocks];
   };
 
   // Obter todas as definições de blocos do registry validado + blocos do quiz

@@ -1,60 +1,66 @@
 // src/components/editor/quiz/QuizBlockRegistry.tsx
 // Registro e mapeamento dos blocos específicos do quiz
 
-import { QuizQuestionBlock } from "./QuizQuestionBlock";
 import React from "react";
+import { QuizIntroHeaderBlock } from "./QuizIntroHeaderBlock";
+import { QuizQuestionBlock } from "./QuizQuestionBlock";
 
 // Mapeamento de componentes do quiz
 export const QUIZ_BLOCK_COMPONENTS = {
   QuizQuestionBlock: QuizQuestionBlock,
+  QuizIntroHeaderBlock: QuizIntroHeaderBlock,
   "quiz-intro": QuizQuestionBlock,
   "quiz-questions": QuizQuestionBlock,
   "quiz-strategicQuestions": QuizQuestionBlock,
   "quiz-result": QuizQuestionBlock,
+  "quiz-intro-header": QuizIntroHeaderBlock,
 } as const;
 
 // Função para renderizar componentes do quiz
 export const renderQuizBlock = (type: string, props: any) => {
   const Component = QUIZ_BLOCK_COMPONENTS[type as keyof typeof QUIZ_BLOCK_COMPONENTS];
-  
+
   if (Component) {
-    return React.createElement(Component, props);
+    return React.createElement(Component as any, props);
   }
-  
+
   // Fallback para tipos de quiz não reconhecidos
-  if (type.startsWith('quiz-')) {
+  if (type.startsWith("quiz-")) {
+    if (type.includes("header")) {
+      return React.createElement(QuizIntroHeaderBlock, props);
+    }
     return React.createElement(QuizQuestionBlock, props);
   }
-  
+
   return null;
 };
 
 // Verificar se um tipo é um bloco de quiz
 export const isQuizBlock = (type: string): boolean => {
-  return type.startsWith('quiz-') || Object.keys(QUIZ_BLOCK_COMPONENTS).includes(type);
+  return type.startsWith("quiz-") || Object.keys(QUIZ_BLOCK_COMPONENTS).includes(type);
 };
 
 // Obter informações do bloco de quiz
 export const getQuizBlockInfo = (type: string) => {
-  const quizType = type.replace('quiz-', '');
-  
+  const quizType = type.replace("quiz-", "");
+
   const typeLabels: Record<string, { name: string; description: string }> = {
     intro: {
       name: "Introdução",
-      description: "Tela de boas-vindas e coleta de nome"
+      description: "Tela de boas-vindas e coleta de nome",
     },
     questions: {
       name: "Questões Principais",
-      description: "Perguntas com multi-seleção sobre preferências"
+      description: "Perguntas com multi-seleção sobre preferências",
     },
     strategicQuestions: {
       name: "Questões Estratégicas",
-      description: "Perguntas com seleção única sobre contexto"
+      description: "Perguntas com seleção única sobre contexto",
     },
     result: {
       name: "Resultado",
-      description: "Exibição do resultado personalizado"
-    }
+      description: "Exibição do resultado personalizado",
+    },
   };
 
   return typeLabels[quizType] || { name: type, description: "Bloco do quiz" };

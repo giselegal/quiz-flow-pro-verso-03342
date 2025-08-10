@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // ✅ Importa controles visuais NO-CODE
 import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
@@ -22,6 +21,7 @@ import { EnhancedPropertyInput } from "./EnhancedPropertyInput";
 import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
 // ✅ Importa painel específico do quiz
 import { QuizConfigurationPanel } from "@/components/editor/quiz/QuizConfigurationPanel";
+import { QuizHeaderPropertiesPanel } from "@/components/editor/quiz/QuizHeaderPropertiesPanel";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
@@ -32,14 +32,12 @@ import {
 import { BlockDefinition } from "@/types/editor"; // Mantido para compatibilidade da interface
 import {
   EyeOff,
-  HelpCircle,
   Layout,
   Paintbrush,
   Palette,
   RotateCcw,
   Settings,
   Trash2,
-  Trophy,
   Type,
 } from "lucide-react";
 import React from "react";
@@ -315,7 +313,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="flex items-center justify-between py-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818] cursor-pointer">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Switch
               id={key}
@@ -331,7 +329,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -361,7 +359,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -382,7 +380,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -401,7 +399,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <div className="border border-[#B89B7A]/30 rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
               {arrayValue.length > 0 ? (
@@ -435,7 +433,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
       default:
         return (
-          <div key={key} style={{ color: '#432818' }}>
+          <div key={key} style={{ color: "#432818" }}>
             ⚠️ Tipo não suportado: {type}
           </div>
         );
@@ -445,18 +443,27 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Normalizar o tipo e ID para exibição
   const displayType = actualBlock.type; // Ou blockDefinition?.name || actualBlock.type; se blockDefinition for relevante
   const displayId = actualBlock.id;
-  
+
   // Verificar se é um bloco de quiz
-  const isQuizBlock = actualBlock?.type?.startsWith('quiz-') || actualBlock?.component === 'QuizQuestionBlock';
+  const isQuizBlock =
+    actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
+  const isQuizHeader = 
+    actualBlock?.type === "quiz-intro-header" || actualBlock?.component === "QuizIntroHeaderBlock";
+
+  // Se for um cabeçalho do quiz, mostrar o painel específico do cabeçalho
+  if (isQuizHeader) {
+    return (
+      <div className="w-80 h-fit">
+        <QuizHeaderPropertiesPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
+      </div>
+    );
+  }
 
   // Se for um bloco de quiz, mostrar o painel específico do quiz
   if (isQuizBlock) {
     return (
       <div className="w-80 h-fit">
-        <QuizConfigurationPanel
-          selectedBlock={actualBlock}
-          onUpdate={onUpdate}
-        />
+        <QuizConfigurationPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
       </div>
     );
   }
