@@ -1,0 +1,236 @@
+{
+  "templateVersion": "2.0",
+  "metadata": {
+    "id": "quiz-step-21",
+    "name": "Resultado Final",
+    "description": "Apresentação do resultado e CTA",
+    "category": "result",
+    "type": "result",
+    "tags": [
+      "quiz",
+      "style",
+      "result",
+      "gisele-galvao"
+    ],
+    "createdAt": "2025-08-10T03:45:03.520Z",
+    "updatedAt": "2025-08-10T03:45:03.520Z",
+    "author": "giselegal"
+  },
+  "design": {
+    "primaryColor": "#B89B7A",
+    "secondaryColor": "#432818",
+    "accentColor": "#aa6b5d",
+    "backgroundColor": "#FAF9F7",
+    "fontFamily": "'Playfair Display', 'Inter', serif",
+    "button": {
+      "background": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
+      "textColor": "#fff",
+      "borderRadius": "10px",
+      "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)"
+    },
+    "card": {
+      "background": "#fff",
+      "borderRadius": "16px",
+      "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)"
+    },
+    "progressBar": {
+      "color": "#B89B7A",
+      "background": "#F3E8E6",
+      "height": "6px"
+    },
+    "animations": {
+      "questionTransition": "fade, scale",
+      "optionSelect": "glow, scale",
+      "button": "hover:scale-105, active:scale-95"
+    },
+    "imageOptionSize": {
+      "default": {
+        "width": 256,
+        "height": 256,
+        "aspect": "square"
+      },
+      "strategic": {
+        "width": 400,
+        "height": 256,
+        "aspect": "landscape"
+      }
+    }
+  },
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "responsive",
+    "backgroundColor": "#FAF9F7",
+    "responsive": true,
+    "animations": {
+      "questionTransition": "fade, scale",
+      "optionSelect": "glow, scale",
+      "button": "hover:scale-105, active:scale-95"
+    }
+  },
+  "blocks": [
+    {
+      "id": "step21-header",
+      "type": "quiz-intro-header",
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "progressValue": 100,
+        "progressTotal": 100,
+        "showProgress": true,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step21-result-title",
+      "type": "text-inline",
+      "properties": {
+        "content": "🎉 SEU ESTILO PREDOMINANTE É:",
+        "fontSize": "text-3xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "fontFamily": "'Playfair Display', serif",
+        "containerWidth": "full",
+        "spacing": "large"
+      }
+    },
+    {
+      "id": "step21-result-card",
+      "type": "result-style-card",
+      "properties": {
+        "styles": {
+          "Natural": {
+            "name": "Natural",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+            "description": "Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico."
+          },
+          "Clássico": {
+            "name": "Clássico",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp",
+            "description": "Você aprecia a elegância atemporal, com peças de qualidade e caimento perfeito."
+          },
+          "Contemporâneo": {
+            "name": "Contemporâneo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CONTEMPOR%C3%82NEO_vcklxe.webp",
+            "description": "Você busca um equilíbrio entre o clássico e o moderno, com peças práticas e atuais."
+          },
+          "Elegante": {
+            "name": "Elegante",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_ELEGANTE_asez1q.webp",
+            "description": "Você tem um olhar refinado para detalhes sofisticados e peças de alta qualidade."
+          },
+          "Romântico": {
+            "name": "Romântico",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_ROM%C3%82NTICO_ci4hgk.webp",
+            "description": "Você valoriza a delicadeza e os detalhes femininos, com muita suavidade."
+          },
+          "Sexy": {
+            "name": "Sexy",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071349/GUIA_SEXY_t5x2ov.webp",
+            "description": "Você gosta de valorizar suas curvas e exibir sua sensualidade com confiança."
+          },
+          "Dramático": {
+            "name": "Dramático",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745073346/GUIA_DRAM%C3%81TICO_mpn60d.webp",
+            "description": "Você tem personalidade forte e gosta de causar impacto com seu visual."
+          },
+          "Criativo": {
+            "name": "Criativo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_CRIATIVO_ntbzph.webp",
+            "description": "Você aprecia a originalidade e não tem medo de ousar em combinações únicas."
+          }
+        },
+        "containerWidth": "full",
+        "spacing": "large"
+      }
+    },
+    {
+      "id": "step21-bonus-section",
+      "type": "bonus-showcase",
+      "properties": {
+        "title": "🎁 BÔNUS INCLUSOS:",
+        "bonuses": [
+          {
+            "title": "Peças-chave para seu estilo",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
+            "description": "Guia completo das peças essenciais"
+          },
+          {
+            "title": "Visagismo facial",
+            "image": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
+            "description": "Análise personalizada do seu rosto"
+          }
+        ],
+        "containerWidth": "full",
+        "spacing": "large"
+      }
+    },
+    {
+      "id": "step21-cta-button",
+      "type": "button-inline",
+      "properties": {
+        "text": "🛍️ VER GUIA COMPLETO",
+        "textWhenDisabled": "Ver Guia Completo",
+        "variant": "primary",
+        "size": "extra-large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "backgroundGradient": "linear-gradient(to right, #B89B7A, #aa6b5d)",
+        "textColor": "#ffffff",
+        "borderRadius": "10px",
+        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
+        "fontSize": "text-xl",
+        "fontWeight": "font-bold",
+        "animation": "hover:scale-105, active:scale-95, pulse",
+        "href": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "containerWidth": "full",
+        "spacing": "large",
+        "marginTop": 32
+      }
+    }
+  ],
+  "validation": {
+    "required": false,
+    "minAnswers": 0,
+    "maxAnswers": 0,
+    "validationMessage": "Selecione uma opção para avançar."
+  },
+  "analytics": {
+    "trackingId": "step-21-result",
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
+    "utmParams": true,
+    "customEvents": [
+      "conversion",
+      "cta_clicked"
+    ]
+  },
+  "logic": {
+    "navigation": {
+      "nextStep": null,
+      "prevStep": "step-20",
+      "allowBack": true,
+      "autoAdvance": false
+    },
+    "scoring": null,
+    "conditions": {
+      "showResult": "calculated-from-scoring",
+      "personalizeContent": "based-on-strategic-answers"
+    }
+  }
+}
