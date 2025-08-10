@@ -447,7 +447,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Verificar se é um bloco de quiz
   const isQuizBlock =
     actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
-  const isQuizHeader = 
+  const isQuizHeader =
     actualBlock?.type === "quiz-intro-header" || actualBlock?.component === "QuizIntroHeaderBlock";
 
   // Se for um cabeçalho do quiz, mostrar o painel específico do cabeçalho

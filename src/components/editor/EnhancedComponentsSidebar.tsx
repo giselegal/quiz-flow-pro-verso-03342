@@ -3,10 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { BlockDefinition, PropertyType } from "@/types/editor";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { BlockDefinition } from "@/types/editor";
 import {
   ChevronDown,
   ChevronRight,
@@ -131,14 +131,15 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           category: "layout" as const,
           min: 50,
           max: 110,
-        }
+        },
       },
       label: "Cabeçalho do Quiz",
       defaultProps: {
         enabled: true,
         showLogo: true,
         showDecorativeBar: true,
-        logoUrl: "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png",
+        logoUrl:
+          "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png",
         logoAlt: "Logo",
         logoSize: 100,
         barColor: "#B89B7A",
@@ -149,7 +150,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         backgroundColor: "transparent",
         backgroundOpacity: 100,
       },
-      tags: [`quiz`, `header`, `cabeçalho`]
+      tags: [`quiz`, `header`, `cabeçalho`],
     };
 
     // Depois, criar os blocos das etapas
@@ -158,7 +159,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       name: `${step.title}`,
       description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
       category: "Questões do Quiz",
-      icon: step.type === 'questions' ? HelpCircle : step.type === 'result' ? Trophy : Settings,
+      icon: step.type === "questions" ? HelpCircle : step.type === "result" ? Trophy : Settings,
       component: "QuizQuestionBlock" as any,
       properties: {
         stepIndex: {
@@ -190,7 +191,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           category: "layout" as const,
           min: 50,
           max: 110,
-        }
+        },
       },
       label: step.title,
       defaultProps: {
@@ -201,14 +202,14 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         multiSelect: step.rules?.multiSelect || 1,
         questions: step.questions || [],
         styles: step.styles || [],
-        scale: 100
+        scale: 100,
       },
       defaultContent: {
         questions: step.questions || [],
         rules: step.rules || {},
-        progressBar: step.progressBar || {}
+        progressBar: step.progressBar || {},
       },
-      tags: [`quiz`, `${step.type}`, `etapa-${index + 1}`]
+      tags: [`quiz`, `${step.type}`, `etapa-${index + 1}`],
     }));
 
     return [headerBlock, ...stepBlocks];
@@ -292,7 +293,16 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   );
 
   // Ordenar categorias por relevância no quiz
-  const categoryOrder = ["Questões do Quiz", "Quiz", "Interativo", "CTA", "Conteúdo", "Legal", "Estrutura", "Outros"];
+  const categoryOrder = [
+    "Questões do Quiz",
+    "Quiz",
+    "Interativo",
+    "CTA",
+    "Conteúdo",
+    "Legal",
+    "Estrutura",
+    "Outros",
+  ];
 
   const orderedCategories = categoryOrder.filter(cat => groupedBlocks[cat]);
 
