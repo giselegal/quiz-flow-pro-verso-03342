@@ -60,6 +60,28 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
 
+  // 🔍 DEBUG - VERIFICAÇÃO DO ESTADO DO CONTEXTO
+  console.log("🔍 DEBUG Editor State:", {
+    activeStageId,
+    currentBlocks: currentBlocks?.length || 0,
+    stages: stages?.length || 0,
+    selectedBlockId,
+    stageCount,
+    totalBlocks
+  });
+
+  // 🔍 DEBUG - LOG DETALHADO DOS BLOCOS ATUAIS  
+  if (currentBlocks && currentBlocks.length > 0) {
+    console.log("📋 DEBUG Current Blocks:", currentBlocks.map(block => ({
+      id: block.id,
+      type: block.type,
+      hasProperties: !!block.properties,
+      hasContent: !!block.content
+    })));
+  } else {
+    console.log("⚠️ DEBUG: Nenhum bloco encontrado para a etapa atual!");
+  }
+
   // Registry de componentes disponíveis
   const registryStats = getRegistryStats();
   const allBlockDefinitions = generateBlockDefinitions();

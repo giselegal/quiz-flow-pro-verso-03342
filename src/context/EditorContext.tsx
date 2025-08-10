@@ -92,6 +92,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
+  console.log("🔥 DEBUG: Timestamp:", Date.now());
+  console.log("🔥 DEBUG: React.version:", React.version || "unknown");
 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
@@ -183,6 +185,27 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       console.log(
         "✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono"
       );
+      
+      // ✅ CARREGAR IMEDIATAMENTE O STEP-1 PARA EVITAR TELA VAZIA
+      const step1Template = getTemplateByStep(1);
+      if (step1Template?.templateFunction) {
+        try {
+          const step1Blocks = step1Template.templateFunction();
+          if (step1Blocks && step1Blocks.length > 0) {
+            initialBlocks["step-1"] = step1Blocks.map((block: any, index: number) => ({
+              id: block.id || `step-1-block-${index + 1}`,
+              type: block.type,
+              content: block.properties || block.content || {},
+              order: index + 1,
+              properties: block.properties || block.content || {},
+            }));
+            console.log("✅ Step-1 carregado imediatamente:", initialBlocks["step-1"].length, "blocos");
+          }
+        } catch (error) {
+          console.error("❌ Erro ao carregar step-1 imediatamente:", error);
+        }
+      }
+      
       return initialBlocks;
     }
   );
@@ -193,14 +216,37 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       console.log(
         "🔄 EditorProvider: Iniciando carregamento de templates JSON..."
       );
+      console.log("🔄 DEBUG: currentBlocks.length:", currentBlocks?.length || 0);
+      console.log("🔄 DEBUG: stageBlocks keys:", Object.keys(stageBlocks));
 
       // Carregar templates para as primeiras 3 etapas imediatamente
       for (let i = 1; i <= 3; i++) {
         const stageId = `step-${i}`;
+        const existingBlocks = stageBlocks[stageId] || [];
+        
+        // Pular se já tem blocos carregados
+        if (existingBlocks.length > 0) {
+          console.log(`⏩ ${stageId} já tem ${existingBlocks.length} blocos, pulando...`);
+          continue;
+        }
 
         try {
           console.log(`🔄 Carregando template JSON para ${stageId}...`);
-          const blocks = await TemplateManager.loadStepBlocks(stageId);
+          let blocks: any[] = [];
+          
+          // Tentar carregar JSON primeiro
+          try {
+            blocks = await TemplateManager.loadStepBlocks(stageId);
+            console.log(`📦 JSON template carregado para ${stageId}:`, blocks?.length || 0);
+          } catch (jsonError) {
+            console.warn(`⚠️ JSON falhou para ${stageId}, usando TSX fallback`);
+            // Fallback para TSX
+            const tsxTemplate = getTemplateByStep(i);
+            if (tsxTemplate?.templateFunction) {
+              blocks = tsxTemplate.templateFunction();
+              console.log(`📦 TSX fallback carregado para ${stageId}:`, blocks?.length || 0);
+            }
+          }
 
           if (blocks && blocks.length > 0) {
             setStageBlocks((prev) => ({
@@ -225,7 +271,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       }
     };
 
-    loadInitialTemplates();
+    // Executar após 100ms para dar tempo do provider inicializar
+    const timer = setTimeout(loadInitialTemplates, 100);
+    return () => clearTimeout(timer);
   }, []); // Executar apenas uma vez na inicialização
 
   const [stageBlocksLegacy] = useState<Record<string, EditorBlock[]>>(() => {
@@ -948,7 +996,6 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     [stageBlocks]
   );
 
-  // ═══════════════════════════════════════════════
   // 📊 COMPUTED VALUES (PERFORMANCE OTIMIZADA)
   // ═══════════════════════════════════════════════
   const currentBlocks = getBlocksForStage(activeStageId);
@@ -961,6 +1008,37 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     0
   );
   const stageCount = stages.length;
+
+  // 🚨 FALLBACK DE EMERGÊNCIA - Garantir que sempre tenha pelo menos um bloco
+  useEffect(() => {
+    if (activeStageId && currentBlocks.length === 0) {
+      console.log("🚨 EMERGENCY FALLBACK: Criando bloco básico para", activeStageId);
+      
+      // Criar um bloco básico de emergência
+      const emergencyBlock: EditorBlock = {
+        id: `${activeStageId}-emergency-block`,
+        type: "text-inline",
+        content: { 
+          content: `Etapa ${activeStageId.replace('step-', '')} - Carregando template...`,
+          fontSize: "text-lg",
+          textAlign: "text-center",
+          color: "#6B7280"
+        },
+        order: 1,
+        properties: { 
+          content: `Etapa ${activeStageId.replace('step-', '')} - Carregando template...`,
+          fontSize: "text-lg",
+          textAlign: "text-center",
+          color: "#6B7280"
+        },
+      };
+
+      setStageBlocks((prev) => ({
+        ...prev,
+        [activeStageId]: [emergencyBlock],
+      }));
+    }
+  }, [activeStageId, currentBlocks.length]);
 
   // ═══════════════════════════════════════════════
   // 🔌 FUNÇÕES DO MODO BANCO DE DADOS
@@ -1030,23 +1108,26 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
       "📋 EditorContext: currentBlocks.length:",
       currentBlocks.length
     );
+    console.log("📋 DEBUG: stageBlocks[activeStageId]:", stageBlocks[activeStageId]?.length || 0);
 
     // Só carregar se a etapa ativa não tiver blocos (evitar sobrescrever blocos já carregados)
-    if (activeStageId && currentBlocks.length === 0) {
+    const currentStageBlocks = stageBlocks[activeStageId] || [];
+    
+    if (activeStageId && currentStageBlocks.length === 0) {
       console.log(
         `🎨 EditorContext: Carregando template automaticamente para ${activeStageId}`
       );
       loadStageTemplate(activeStageId);
-    } else if (currentBlocks.length > 0) {
+    } else if (currentStageBlocks.length > 0) {
       console.log(
-        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentBlocks.length} blocos carregados - mantendo dados`
+        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentStageBlocks.length} blocos carregados - mantendo dados`
       );
     } else {
       console.log(
         `📋 EditorContext: Etapa ${activeStageId} inválida ou sem dados para carregar`
       );
     }
-  }, [activeStageId]); // ✅ Remover currentBlocks.length das dependências para evitar loops
+  }, [activeStageId, loadStageTemplate]); // ✅ Incluir loadStageTemplate nas dependências
 
   // ═══════════════════════════════════════════════
   // 🎯 CONTEXT VALUE (INTERFACE COMPLETA)
@@ -1103,6 +1184,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({
     stages.length,
     "etapas"
   );
+  console.log("🎯 DEBUG: activeStageId:", activeStageId);
+  console.log("🎯 DEBUG: currentBlocks length:", currentBlocks.length);
+  console.log("🎯 DEBUG: stageBlocks summary:", Object.keys(stageBlocks).map(key => `${key}:${stageBlocks[key].length}`));
 
   return (
     <EditorContext.Provider value={contextValue}>
