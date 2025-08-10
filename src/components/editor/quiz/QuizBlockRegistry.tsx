@@ -4,16 +4,19 @@
 import React from "react";
 import { QuizIntroHeaderBlock } from "./QuizIntroHeaderBlock";
 import { QuizQuestionBlock } from "./QuizQuestionBlock";
+import { IntroBlock } from "@/components/steps/step01/IntroBlock";
 
 // Mapeamento de componentes do quiz
 export const QUIZ_BLOCK_COMPONENTS = {
   QuizQuestionBlock: QuizQuestionBlock,
   QuizIntroHeaderBlock: QuizIntroHeaderBlock,
+  IntroBlock: IntroBlock,
   "quiz-intro": QuizQuestionBlock,
   "quiz-questions": QuizQuestionBlock,
   "quiz-strategicQuestions": QuizQuestionBlock,
   "quiz-result": QuizQuestionBlock,
   "quiz-intro-header": QuizIntroHeaderBlock,
+  "step01-intro": IntroBlock,
 } as const;
 
 // Função para renderizar componentes do quiz

@@ -1,5 +1,5 @@
 // EditorDatabaseAdapter removed - using direct context state management
-import { getAllSteps, getStepTemplate } from "@/config/stepTemplatesMapping";
+import { STEP_TEMPLATES, getTemplateByStep, getTotalSteps } from "@/config/stepTemplatesMapping";
 import { EditorBlock, FunnelStage } from "@/types/editor";
 import { TemplateManager } from "@/utils/TemplateManager";
 import React, {
@@ -107,7 +107,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     console.log("🚀 EditorProvider: Inicializando stages com templates específicos");
 
     // ✅ USAR TEMPLATES ESPECÍFICOS DAS ETAPAS
-    const allStepTemplates = getAllSteps();
+    const allStepTemplates = STEP_TEMPLATES;
     console.log("📋 EditorProvider: Templates carregados:", allStepTemplates.length);
     console.log(
       "📋 EditorProvider: Templates detalhados:",
@@ -142,7 +142,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         blocksCount: 0,
         lastModified: new Date(),
         isCustom: false,
-        templateBlocks: getStepTemplate(stepTemplate.stepNumber), // ✅ CARREGAR BLOCOS DO TEMPLATE
+        templateBlocks: getTemplateByStep(stepTemplate.stepNumber)?.templateFunction() || [], // ✅ CARREGAR BLOCOS DO TEMPLATE
       },
     }));
 
@@ -164,7 +164,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       // Carregar template imediatamente para as primeiras etapas
       if (i <= 3) {
         try {
-          const templateBlocks = getStepTemplate(i);
+          const templateBlocks = getTemplateByStep(i)?.templateFunction();
           console.log(
             `🎨 Inicialização: Carregando template para etapa ${i}:`,
             templateBlocks?.length || 0
@@ -269,7 +269,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       try {
         // 🚀 PRIORIZAR SISTEMA JSON
-        let templateBlocks;
+        let templateBlocks: any[] = [];
 
         try {
           console.log(`📄 Tentando carregar template JSON para step-${stepNumber}`);
@@ -278,7 +278,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         } catch (jsonError) {
           console.warn(`⚠️ JSON template falhou, usando TSX fallback:`, jsonError);
           // FALLBACK: usar sistema TSX antigo
-          templateBlocks = getStepTemplate(stepNumber);
+          templateBlocks = getTemplateByStep(stepNumber)?.templateFunction() || [];
           console.log(`📦 Template TSX fallback:`, templateBlocks?.length || 0, "blocos");
         }
 
