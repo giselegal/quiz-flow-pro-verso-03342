@@ -1,9 +1,8 @@
 // Verificação de componentes Step01 na sidebar
 // src/test/sidebar-step01-verification.tsx
 
-import React from 'react';
-import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
-import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
+import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
+import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 
 // Função para gerar blocos do quiz (simulando o que está na sidebar)
 const generateQuizBlocks = () => {
@@ -16,7 +15,7 @@ const generateQuizBlocks = () => {
 
   const introBlock = {
     type: "step01-intro",
-    name: "Introdução - Step 1", 
+    name: "Introdução - Step 1",
     description: "Componente de introdução para a primeira etapa do quiz",
     category: "Questões do Quiz",
   };
@@ -39,24 +38,27 @@ export const SidebarStep01Verification = () => {
   const allBlocks = [...quizBlocks, ...regularBlocks];
 
   // Agrupar por categoria
-  const groupedBlocks = allBlocks.reduce((groups, block) => {
-    const category = block.category || 'Outros';
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(block);
-    return groups;
-  }, {} as Record<string, any[]>);
+  const groupedBlocks = allBlocks.reduce(
+    (groups, block) => {
+      const category = block.category || "Outros";
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(block);
+      return groups;
+    },
+    {} as Record<string, any[]>
+  );
 
-  const step01Blocks = allBlocks.filter(block => 
-    block.type.includes('step01') || block.type.includes('intro')
+  const step01Blocks = allBlocks.filter(
+    block => block.type.includes("step01") || block.type.includes("intro")
   );
 
   return (
     <div className="p-6 space-y-6">
       <div>
         <h2 className="text-xl font-bold mb-4">Verificação dos Componentes Step01</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="border rounded-lg p-4">
             <h3 className="font-semibold mb-2">Estatísticas</h3>

@@ -140,16 +140,19 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
 
   const handlePropertyUpdate = (key: string, value: any) => {
     if (selectedBlock && onUpdate) {
-      onUpdate(selectedBlock.id, {
+      // Passar as atualizações como properties
+      const updatedProperties = {
         ...properties,
         [key]: value,
-      });
+      };
+
+      onUpdate(selectedBlock.id, { properties: updatedProperties });
     }
   };
 
   const resetToDefault = () => {
     if (selectedBlock && onUpdate) {
-      onUpdate(selectedBlock.id, {
+      const defaultProperties = {
         title: introStep.title,
         descriptionTop: introStep.descriptionTop,
         descriptionBottom: introStep.descriptionBottom,
@@ -164,7 +167,9 @@ export const IntroPropertiesPanel: React.FC<IntroPropertiesPanelProps> = ({
         alignment: "center",
         backgroundColor: "transparent",
         backgroundOpacity: 100,
-      });
+      };
+
+      onUpdate(selectedBlock.id, { properties: defaultProperties });
     }
   };
 

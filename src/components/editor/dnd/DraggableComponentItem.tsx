@@ -77,7 +77,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h4 className="text-sm font-medium text-stone-900 truncate">{title}</h4>
-            {blockType.includes('step01') && (
+            {blockType.includes("step01") && (
               <span className="bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded">STEP1</span>
             )}
           </div>
@@ -91,9 +91,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
       {description && <p className="text-xs text-stone-600 line-clamp-2 w-full">{description}</p>}
 
       {/* Drag Indicator */}
-      {isDragging && (
-        <div style={{ backgroundColor: '#FAF9F7' }} />
-      )}
+      {isDragging && <div style={{ backgroundColor: "#FAF9F7" }} />}
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { useEditor } from "@/context/EditorContext";
 import { cn } from "@/lib/utils";
-import { Copy, Eye, Loader2, Plus, Settings, Trash2 } from "lucide-react";
+import { Copy, Eye, Loader2, Plus, Settings, Trash2, Layers } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface FunnelStagesPanelProps {
@@ -24,6 +25,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     stages,
     activeStageId,
     stageActions: { setActiveStage, addStage, removeStage, updateStage },
+    blockActions: { getBlocksForStage },
     computed: { stageCount },
   } = useEditor();
 
@@ -112,6 +114,23 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         }
         break;
     }
+  };
+
+  // Função para obter componentes de uma etapa
+  const getStageComponents = (stageId: string) => {
+    const blocks = getBlocksForStage(stageId);
+    return blocks.map(block => ({
+      id: block.id,
+      type: block.type,
+      name: block.type.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+    }));
+  };
+
+  // Função para obter tipos únicos de componentes por etapa
+  const getStageComponentTypes = (stageId: string) => {
+    const blocks = getBlocksForStage(stageId);
+    const types = [...new Set(blocks.map(block => block.type))];
+    return types;
   };
 
   // ✅ VALIDAÇÃO: VERIFICAR SE HÁ ETAPAS OU LOADING
