@@ -69,6 +69,7 @@ export interface UnifiedBlock {
   id: string;
   type: string;
   properties?: Record<string, any>;
+  content?: Record<string, any>; // 🎯 FIX: Adicionar support para content
   children?: string[];
   parentId?: string;
 }
@@ -857,15 +858,21 @@ export const useUnifiedProperties = (
           // 📝 EDITOR DE OPÇÕES
           createProperty(
             "options",
-            currentBlock?.properties?.options || [
-              {
-                id: "option-a",
-                text: "Amo roupas confortáveis e práticas para o dia a dia.",
-                image: "",
-                points: 1,
-                category: "Casual",
-              },
-            ],
+            // 🎯 FIX: Não sobrescrever opções existentes com valor padrão
+            currentBlock?.properties?.options && currentBlock.properties.options.length > 0
+              ? currentBlock.properties.options // Usar opções existentes
+              : currentBlock?.content?.options && currentBlock.content.options.length > 0
+                ? currentBlock.content.options // Fallback para content.options
+                : [
+                    // Só usar padrão se não houver opções em lugar nenhum
+                    {
+                      id: "option-a",
+                      text: "Amo roupas confortáveis e práticas para o dia a dia.",
+                      image: "",
+                      points: 1,
+                      category: "Casual",
+                    },
+                  ],
             PropertyType.ARRAY,
             "Lista de Opções",
             PropertyCategory.CONTENT
