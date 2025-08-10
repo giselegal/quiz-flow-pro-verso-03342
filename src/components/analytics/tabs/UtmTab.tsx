@@ -170,13 +170,13 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
   }, [utmData]);
 
   // Colors for the pie chart
-  const COLORS = ["#8B5CF6", "#10b981", "#f59e0b", "#ef4444", "#0ea5e9", "#ec4899"];
+  const COLORS = ["#B89B7A", "#10b981", "#f59e0b", "#ef4444", "#0ea5e9", "#ec4899"];
 
   // Chart configuration
   const chartConfig: ChartConfig = {
     conversionRate: {
       label: "Taxa de Conversão (%)",
-      theme: { light: "#8B5CF6", dark: "#A78BFA" },
+      theme: { light: "#B89B7A", dark: "#A78BFA" },
     },
   };
 
@@ -269,7 +269,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
                     dataKey="conversionRate"
                     name="Taxa de Conversão (%)"
                     radius={[2, 2, 0, 0]}
-                    fill="#8B5CF6"
+                    fill="#B89B7A"
                   />
                 </BarChart>
               </ChartContainer>

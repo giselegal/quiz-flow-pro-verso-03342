@@ -32,9 +32,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     { color: "#374151", name: "Cinza Escuro" },
     { color: "#6B7280", name: "Cinza Médio" },
     { color: "#9CA3AF", name: "Cinza Claro" },
-    { color: "#EF4444", name: "Vermelho" },
+    { color: "#aa6b5d", name: "Vermelho" },
     { color: "#10B981", name: "Verde" },
-    { color: "#3B82F6", name: "Azul" },
+    { color: "#B89B7A", name: "Azul" },
   ];
 
   const displayValue = value === "transparent" ? "Transparente" : value;

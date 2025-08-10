@@ -45,8 +45,8 @@ export const NEUTRAL_COLORS: ColorOption[] = [
 export const ACCENT_COLORS: ColorOption[] = [
   { value: "#10B981", label: "Verde Sucesso", category: "accent" },
   { value: "#F59E0B", label: "Âmbar", category: "accent" },
-  { value: "#EF4444", label: "Vermelho", category: "accent" },
-  { value: "#8B5CF6", label: "Roxo", category: "accent" },
+  { value: "#aa6b5d", label: "Vermelho", category: "accent" },
+  { value: "#B89B7A", label: "Roxo", category: "accent" },
   { value: "#06B6D4", label: "Ciano", category: "accent" },
   { value: "#EC4899", label: "Rosa", category: "accent" },
 ];
@@ -55,8 +55,8 @@ export const ACCENT_COLORS: ColorOption[] = [
 export const SEMANTIC_COLORS: ColorOption[] = [
   { value: "#10B981", label: "Sucesso", category: "semantic" },
   { value: "#F59E0B", label: "Aviso", category: "semantic" },
-  { value: "#EF4444", label: "Erro", category: "semantic" },
-  { value: "#3B82F6", label: "Informação", category: "semantic" },
+  { value: "#aa6b5d", label: "Erro", category: "semantic" },
+  { value: "#B89B7A", label: "Informação", category: "semantic" },
 ];
 
 // 🎨 GRUPOS DE CORES ORGANIZADOS

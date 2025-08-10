@@ -25,17 +25,17 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
     intro: {
       emojis: ["✨", "🌟", "💫", "⭐"],
       count: 3,
-      colors: ["#8B5CF6", "#A78BFA"],
+      colors: ["#B89B7A", "#A78BFA"],
     },
     quiz: {
       emojis: ["💭", "🤔", "💡", "🧠"],
       count: 2,
-      colors: ["#6366F1", "#8B5CF6"],
+      colors: ["#6366F1", "#B89B7A"],
     },
     strategic: {
       emojis: ["🎯", "💎", "🚀", "⚡"],
       count: 4,
-      colors: ["#EF4444", "#F97316"],
+      colors: ["#aa6b5d", "#F97316"],
     },
     results: {
       emojis: ["🎉", "🎊", "🌟", "✨"],

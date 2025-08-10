@@ -213,7 +213,7 @@ export const useStepTemplateHandlers = (
               content: `Erro ao carregar template da Etapa ${stepNumber}`,
               fontSize: "text-lg",
               textAlign: "text-center",
-              color: "#EF4444",
+              color: "#aa6b5d",
               marginBottom: 16,
             },
           },

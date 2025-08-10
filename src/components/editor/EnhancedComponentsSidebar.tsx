@@ -5,16 +5,19 @@ import { Input } from "@/components/ui/input";
 import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { BlockDefinition } from "@/types/editor";
+import { BlockDefinition, PropertyType } from "@/types/editor";
+import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 import {
   ChevronDown,
   ChevronRight,
   FormInput,
   GripVertical,
+  HelpCircle,
   Layers,
   MousePointer,
   Scale,
   Search,
+  Settings,
   Trophy,
   Type,
 } from "lucide-react";
@@ -73,6 +76,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    "Questões do Quiz": true,
     Quiz: true,
     Interativo: true,
     CTA: true,
@@ -87,8 +91,59 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     blockActions: { addBlock, updateBlock },
   } = useEditor();
 
-  // Obter todas as definições de blocos do registry validado
-  const allBlocks = generateBlockDefinitions();
+  // Gerar blocos do quiz baseados na configuração JSON
+  const generateQuizBlocks = (): BlockDefinition[] => {
+    return QUIZ_CONFIGURATION.steps.map((step, index) => ({
+      type: `quiz-${step.type}`,
+      name: `${step.title}`,
+      description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
+      category: "Questões do Quiz",
+      icon: step.type === 'questions' ? HelpCircle : step.type === 'result' ? Trophy : Settings,
+      component: "QuizQuestionBlock" as any,
+      properties: {
+        stepIndex: {
+          type: "number",
+          default: index,
+          label: "Índice da Etapa",
+          description: "Posição da etapa no quiz",
+          category: "general",
+        },
+        stepType: {
+          type: "string",
+          default: step.type,
+          label: "Tipo da Etapa",
+          description: "Categoria da etapa do quiz",
+          category: "general",
+        },
+        showProgress: {
+          type: "boolean",
+          default: step.progressBar?.show !== false,
+          label: "Mostrar Progresso",
+          description: "Exibir barra de progresso",
+          category: "behavior",
+        }
+      },
+      label: step.title,
+      defaultProps: {
+        stepIndex: index,
+        stepType: step.type,
+        showProgress: step.progressBar?.show !== false,
+        columns: step.rules?.colunas || 1,
+        multiSelect: step.rules?.multiSelect || 1,
+        questions: step.questions || [],
+        styles: step.styles || []
+      },
+      defaultContent: {
+        questions: step.questions || [],
+        rules: step.rules || {},
+        progressBar: step.progressBar || {}
+      },
+      tags: [`quiz`, `${step.type}`, `etapa-${index + 1}`]
+    }));
+  };
+
+  // Obter todas as definições de blocos do registry validado + blocos do quiz
+  const allBlocks = [...generateQuizBlocks(), ...generateBlockDefinitions()];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -114,6 +169,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   // Agrupar blocos por categoria corrigida com ícones
   const categoryIcons: Record<string, React.ComponentType<any>> = {
+    "Questões do Quiz": HelpCircle,
     Quiz: Trophy,
     Interativo: FormInput,
     CTA: MousePointer,
@@ -125,30 +181,33 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   const groupedBlocks = filteredBlocks.reduce(
     (groups, block) => {
-      // Mapear tipos de componentes para categorias organizadas
-      let category = "Outros";
+      // Usar a categoria definida no bloco ou mapear tipos de componentes para categorias organizadas
+      let category = block.category || "Outros";
 
-      switch (block.type) {
-        case "quiz-intro-header":
-          category = "Quiz";
-          break;
-        case "text-inline":
-          category = "Conteúdo";
-          break;
-        case "image-display-inline":
-          category = "Conteúdo";
-          break;
-        case "button-inline":
-          category = "CTA";
-          break;
-        case "form-input":
-          category = "Interativo";
-          break;
-        case "legal-notice-inline":
-          category = "Legal";
-          break;
-        default:
-          category = "Estrutura";
+      // Se não tiver categoria definida, mapear baseado no tipo
+      if (category === "Outros") {
+        switch (block.type) {
+          case "quiz-intro-header":
+            category = "Quiz";
+            break;
+          case "text-inline":
+            category = "Conteúdo";
+            break;
+          case "image-display-inline":
+            category = "Conteúdo";
+            break;
+          case "button-inline":
+            category = "CTA";
+            break;
+          case "form-input":
+            category = "Interativo";
+            break;
+          case "legal-notice-inline":
+            category = "Legal";
+            break;
+          default:
+            category = "Estrutura";
+        }
       }
 
       if (!groups[category]) {
@@ -161,7 +220,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   );
 
   // Ordenar categorias por relevância no quiz
-  const categoryOrder = ["Quiz", "Interativo", "CTA", "Conteúdo", "Legal", "Estrutura", "Outros"];
+  const categoryOrder = ["Questões do Quiz", "Quiz", "Interativo", "CTA", "Conteúdo", "Legal", "Estrutura", "Outros"];
 
   const orderedCategories = categoryOrder.filter(cat => groupedBlocks[cat]);
 

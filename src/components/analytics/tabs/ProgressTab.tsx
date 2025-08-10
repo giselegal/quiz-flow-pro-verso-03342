@@ -65,7 +65,7 @@ export const ProgressTab: React.FC<ProgressTabProps> = ({ analyticsData, loading
   const chartConfig: ChartConfig = {
     uniqueUsers: {
       label: "Usuários",
-      theme: { light: "#8B5CF6", dark: "#A78BFA" },
+      theme: { light: "#B89B7A", dark: "#A78BFA" },
     },
     retentionFromStart: {
       label: "Retenção",

@@ -9,7 +9,7 @@ interface RippleEffectProps {
 
 export const RippleEffect: React.FC<RippleEffectProps> = ({
   trigger,
-  color = "#8B5CF6",
+  color = "#B89B7A",
   duration = 600,
   onComplete,
 }) => {
@@ -62,7 +62,7 @@ interface PulseEffectProps {
 export const PulseEffect: React.FC<PulseEffectProps> = ({
   active,
   intensity = "medium",
-  color = "#8B5CF6",
+  color = "#B89B7A",
 }) => {
   const pulseScale = {
     low: "scale(1.02)",

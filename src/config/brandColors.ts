@@ -66,9 +66,9 @@ export const STRATEGIC_COLORS = {
 
   // Vermelho - apenas para CTAs de urgência/erro
   urgency: {
-    primary: "#EF4444", // red-500
+    primary: "#aa6b5d", // red-500
     light: "#FEE2E2", // red-100
-    dark: "#DC2626", // red-600
+    dark: "#432818", // red-600
   },
 
   // Amarelo - apenas para avisos

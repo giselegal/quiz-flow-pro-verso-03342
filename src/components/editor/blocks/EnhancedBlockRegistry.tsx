@@ -257,13 +257,13 @@ export const BLOCK_CATEGORIES = {
     name: "Básico",
     icon: "📝",
     description: "Componentes fundamentais",
-    color: "#3B82F6",
+    color: "#B89B7A",
   },
   quiz: {
     name: "Quiz",
     icon: "🧠",
     description: "Elementos de quiz e questionários",
-    color: "#8B5CF6",
+    color: "#B89B7A",
   },
   vendas: {
     name: "Vendas",
@@ -281,7 +281,7 @@ export const BLOCK_CATEGORIES = {
     name: "Credibilidade",
     icon: "💬",
     description: "Depoimentos e prova social",
-    color: "#EF4444",
+    color: "#aa6b5d",
   },
   cta: {
     name: "Call to Action",

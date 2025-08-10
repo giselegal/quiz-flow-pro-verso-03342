@@ -178,7 +178,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
       value: dynamicData.stats.transformations,
       prefix: "",
       icon: "Crown",
-      color: "#8B5CF6",
+      color: "#B89B7A",
       description: "Mudanças de estilo realizadas",
       trend: "neutral" as const,
       isAnimated: true,

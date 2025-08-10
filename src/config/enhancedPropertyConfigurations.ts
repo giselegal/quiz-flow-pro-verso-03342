@@ -138,7 +138,7 @@ export const enhancedPropertyConfigurations = {
         label: "Cor de Seleção",
         description: "Cor quando a opção está selecionada",
         category: "styling" as const,
-        default: "#8B5CF6",
+        default: "#B89B7A",
       },
 
       // ⚙️ COMPORTAMENTO

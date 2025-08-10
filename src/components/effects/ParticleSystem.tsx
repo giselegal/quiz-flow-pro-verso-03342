@@ -29,9 +29,9 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({
   const createParticles = () => {
     const particleCount = type === "celebration" ? 20 : type === "strategic" ? 15 : 8;
     const colors = {
-      selection: ["#8B5CF6", "#A78BFA", "#C4B5FD"],
+      selection: ["#B89B7A", "#A78BFA", "#C4B5FD"],
       celebration: ["#F59E0B", "#EAB308", "#FDE047", "#84CC16"],
-      strategic: ["#EF4444", "#F97316", "#F59E0B", "#EAB308"],
+      strategic: ["#aa6b5d", "#F97316", "#F59E0B", "#EAB308"],
     };
 
     const newParticles: Particle[] = [];

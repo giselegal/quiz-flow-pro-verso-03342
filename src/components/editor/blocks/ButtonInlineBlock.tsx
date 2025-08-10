@@ -259,9 +259,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         borderColor: "#F59E0B",
       },
       danger: {
-        backgroundColor: "#EF4444",
+        backgroundColor: "#aa6b5d",
         color: "#FFFFFF",
-        borderColor: "#EF4444",
+        borderColor: "#aa6b5d",
       },
       outline: {
         backgroundColor: "transparent",

@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // ✅ Importa controles visuais NO-CODE
 import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
@@ -19,6 +20,8 @@ import SizeSlider from "@/components/visual-controls/SizeSlider";
 // ✅ Importa componentes de feedback melhorados
 import { EnhancedPropertyInput } from "./EnhancedPropertyInput";
 import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
+// ✅ Importa painel específico do quiz
+import { QuizConfigurationPanel } from "@/components/editor/quiz/QuizConfigurationPanel";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
@@ -29,12 +32,14 @@ import {
 import { BlockDefinition } from "@/types/editor"; // Mantido para compatibilidade da interface
 import {
   EyeOff,
+  HelpCircle,
   Layout,
   Paintbrush,
   Palette,
   RotateCcw,
   Settings,
   Trash2,
+  Trophy,
   Type,
 } from "lucide-react";
 import React from "react";
@@ -440,6 +445,21 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Normalizar o tipo e ID para exibição
   const displayType = actualBlock.type; // Ou blockDefinition?.name || actualBlock.type; se blockDefinition for relevante
   const displayId = actualBlock.id;
+  
+  // Verificar se é um bloco de quiz
+  const isQuizBlock = actualBlock?.type?.startsWith('quiz-') || actualBlock?.component === 'QuizQuestionBlock';
+
+  // Se for um bloco de quiz, mostrar o painel específico do quiz
+  if (isQuizBlock) {
+    return (
+      <div className="w-80 h-fit">
+        <QuizConfigurationPanel
+          selectedBlock={actualBlock}
+          onUpdate={onUpdate}
+        />
+      </div>
+    );
+  }
 
   return (
     <Card className="w-80 h-fit border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
