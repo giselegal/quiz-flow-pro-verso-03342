@@ -40,11 +40,18 @@ const MockButton = ({ id }: { id: string }) => {
 
       if (buttonId === id) {
         setIsDisabled(!enabled);
-        setText(enabled ? "Quero Descobrir Meu Estilo!" : "Digite seu nome para continuar");
+        setText(
+          enabled
+            ? "Quero Descobrir Meu Estilo!"
+            : "Digite seu nome para continuar"
+        );
       }
     };
 
-    window.addEventListener("step01-button-state-change", handleButtonStateChange as EventListener);
+    window.addEventListener(
+      "step01-button-state-change",
+      handleButtonStateChange as EventListener
+    );
 
     return () => {
       window.removeEventListener(

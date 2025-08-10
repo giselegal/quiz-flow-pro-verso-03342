@@ -218,7 +218,10 @@ export default ConnectedStyleResultsBlock;
 import ConnectedQuizResultsBlock from "../components/blocks/quiz/ConnectedQuizResultsBlock";
 import ConnectedStyleResultsBlock from "../components/blocks/quiz/ConnectedStyleResultsBlock";
 
-export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
+export const ENHANCED_BLOCK_REGISTRY: Record<
+  string,
+  React.ComponentType<any>
+> = {
   // ... outros componentes
 
   // Componentes originais (para editor)
@@ -284,7 +287,7 @@ const loadStage = useCallback(
 
         if (result) {
           // Percorrer todos os blocos e substituir placeholders
-          const updatedBlocks = blocks.map(block => {
+          const updatedBlocks = blocks.map((block) => {
             // Copiar conteúdo para não mutar o original
             const newContent = { ...block.content };
 

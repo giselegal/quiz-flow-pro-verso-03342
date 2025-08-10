@@ -6,7 +6,8 @@
     <title>🧪 DEBUG - Propriedades de Container</title>
     <style>
       body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         margin: 0;
         padding: 20px;
         background: #f5f5f5;
@@ -72,8 +73,8 @@
     <div class="debug-container">
       <h1>🧪 DEBUG - Propriedades de Container</h1>
       <p>
-        <strong>Objetivo:</strong> Verificar se as propriedades de container aparecem no painel de
-        propriedades e se funcionam corretamente.
+        <strong>Objetivo:</strong> Verificar se as propriedades de container
+        aparecem no painel de propriedades e se funcionam corretamente.
       </p>
 
       <div class="current-problem">
@@ -90,14 +91,21 @@
         <p>O painel de propriedades deveria mostrar:</p>
         <ul>
           <li>
-            <strong>Largura do Container:</strong> Dropdown (Completa, Grande, Média, Pequena)
+            <strong>Largura do Container:</strong> Dropdown (Completa, Grande,
+            Média, Pequena)
           </li>
-          <li><strong>Posição do Container:</strong> Dropdown (Esquerda, Centralizado, Direita)</li>
           <li>
-            <strong>Espaçamento Interno:</strong> Dropdown (Nenhum, Compacto, Normal, Confortável,
-            Espaçoso)
+            <strong>Posição do Container:</strong> Dropdown (Esquerda,
+            Centralizado, Direita)
           </li>
-          <li><strong>Cor de Fundo:</strong> Dropdown (Transparente, Branco, Cinza, Marca)</li>
+          <li>
+            <strong>Espaçamento Interno:</strong> Dropdown (Nenhum, Compacto,
+            Normal, Confortável, Espaçoso)
+          </li>
+          <li>
+            <strong>Cor de Fundo:</strong> Dropdown (Transparente, Branco,
+            Cinza, Marca)
+          </li>
           <li><strong>Margem Superior:</strong> Slider 0-80px</li>
           <li><strong>Margem Inferior:</strong> Slider 0-80px</li>
         </ul>
@@ -108,7 +116,9 @@
         <ol>
           <li>
             Abrir
-            <a href="http://localhost:8081/editor" target="_blank">http://localhost:8081/editor</a>
+            <a href="http://localhost:8081/editor" target="_blank"
+              >http://localhost:8081/editor</a
+            >
           </li>
           <li>Navegar para Etapa 1</li>
           <li>Clicar em qualquer componente (ex: título principal)</li>
@@ -123,8 +133,8 @@
         <h4>✅ Backend Implementado:</h4>
         <div class="property-list">
           UniversalBlockRenderer.tsx - ✅ Processa propriedades de container
-          useContainerProperties.ts - ✅ Converte para classes CSS Step01Template.tsx - ✅
-          Propriedades adicionadas nos componentes
+          useContainerProperties.ts - ✅ Converte para classes CSS
+          Step01Template.tsx - ✅ Propriedades adicionadas nos componentes
         </div>
 
         <h4>❌ Frontend Pendente:</h4>
@@ -138,9 +148,10 @@
         <h3>🐛 Propriedades Adicionadas no Step01Template</h3>
         <p>Estas propriedades foram adicionadas a todos os componentes:</p>
         <div class="property-list">
-          containerWidth: "large" // Largura do container containerPosition: "center" // Posição do
-          container spacing: "normal" // Espaçamento interno backgroundColor: "transparent" // Cor
-          de fundo marginTop: 0 // Margem superior marginBottom: 32 // Margem inferior gridColumns:
+          containerWidth: "large" // Largura do container containerPosition:
+          "center" // Posição do container spacing: "normal" // Espaçamento
+          interno backgroundColor: "transparent" // Cor de fundo marginTop: 0 //
+          Margem superior marginBottom: 32 // Margem inferior gridColumns:
           "auto" // Sistema de grid
         </div>
       </div>
@@ -163,7 +174,10 @@
         <p>Para fazer funcionar, é preciso:</p>
         <ol>
           <li>Atualizar <code>useUnifiedProperties.ts</code></li>
-          <li>Adicionar as propriedades de container às <code>baseProperties</code></li>
+          <li>
+            Adicionar as propriedades de container às
+            <code>baseProperties</code>
+          </li>
           <li>Garantir que o painel reconheça os novos campos</li>
           <li>Testar a integração completa</li>
         </ol>
@@ -174,7 +188,9 @@
       // Log para debug
       console.log("🧪 DEBUG: Página de teste carregada");
       console.log("📋 Para testar, acesse: http://localhost:8081/editor");
-      console.log("🎯 Procure por controles de container no painel de propriedades");
+      console.log(
+        "🎯 Procure por controles de container no painel de propriedades"
+      );
 
       // Verificar se o servidor está rodando
       fetch("http://localhost:8081/api/health")

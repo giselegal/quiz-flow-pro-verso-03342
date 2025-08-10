@@ -36,10 +36,13 @@ const summary = {
   step: 1,
   name: "Introdução",
   blocksCount: blocksData.length,
-  blocks: blocksData.map(b => ({ id: b.id, type: b.type })),
+  blocks: blocksData.map((b) => ({ id: b.id, type: b.type })),
   implemented: true,
   timestamp: new Date().toISOString(),
 };
 
-fs.writeFileSync("step01-implementation-summary.json", JSON.stringify(summary, null, 2));
+fs.writeFileSync(
+  "step01-implementation-summary.json",
+  JSON.stringify(summary, null, 2)
+);
 console.log("💾 Resumo salvo em: step01-implementation-summary.json");

@@ -15,7 +15,10 @@ const [stages, setStages] = useState<FunnelStage[]>(() => {
   // ✅ INICIALIZAÇÃO SÍNCRONA: 21 etapas criadas no useState
   console.log("🚀 EditorProvider: Inicializando stages no useState");
   // ... 21 templates predefinidos
-  console.log("✅ EditorProvider: 21 stages criadas no useState:", initialStages.length);
+  console.log(
+    "✅ EditorProvider: 21 stages criadas no useState:",
+    initialStages.length
+  );
   return initialStages;
 });
 ```
@@ -97,7 +100,10 @@ if (!stages || stages.length === 0) {
 ```typescript
 // ✅ Logs detalhados em cada componente
 console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
-console.log("✅ EditorProvider: 21 stages criadas no useState:", initialStages.length);
+console.log(
+  "✅ EditorProvider: 21 stages criadas no useState:",
+  initialStages.length
+);
 console.log("🔍 FunnelStagesPanel - Stages:", stages?.length || 0);
 ```
 

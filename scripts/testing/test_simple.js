@@ -10,13 +10,13 @@ const BASE_URL = "http://localhost:5000";
 
 // Função simples para teste
 function testEndpoint(path) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const url = `${BASE_URL}${path}`;
     console.log(`🧪 Testando: ${url}`);
 
-    const req = http.get(url, res => {
+    const req = http.get(url, (res) => {
       let data = "";
-      res.on("data", chunk => (data += chunk));
+      res.on("data", (chunk) => (data += chunk));
       res.on("end", () => {
         const status = res.statusCode;
         const emoji = status === 200 ? "✅" : "❌";
@@ -33,7 +33,7 @@ function testEndpoint(path) {
       });
     });
 
-    req.on("error", err => {
+    req.on("error", (err) => {
       console.log(`❌ Erro: ${err.message}`);
       console.log("─".repeat(50));
       resolve({ status: 0, error: err.message });
@@ -62,7 +62,7 @@ async function main() {
 
   for (const endpoint of endpoints) {
     await testEndpoint(endpoint);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Pausa 1s
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Pausa 1s
   }
 
   console.log("🏁 Teste finalizado!");

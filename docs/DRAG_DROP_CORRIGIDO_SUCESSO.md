@@ -62,20 +62,22 @@ import { DndProvider } from "./dnd/DndProvider";
 
 ```tsx
 <DndProvider
-  blocks={currentBlocks.map(block => ({
+  blocks={currentBlocks.map((block) => ({
     id: block.id,
     type: block.type,
     properties: block.properties || {},
   }))}
-  onBlocksReorder={newBlocks => {
+  onBlocksReorder={(newBlocks) => {
     console.log("🔄 Reordenando blocos via schema editor:", newBlocks);
     // TODO: Implementar reordenação no EditorContext
   }}
   onBlockAdd={(blockType, position) => {
     const blockId = addBlock(blockType);
-    console.log(`➕ Bloco ${blockType} adicionado via schema editor na posição ${position}`);
+    console.log(
+      `➕ Bloco ${blockType} adicionado via schema editor na posição ${position}`
+    );
   }}
-  onBlockSelect={blockId => {
+  onBlockSelect={(blockId) => {
     setSelectedBlockId(blockId);
   }}
   selectedBlockId={selectedBlockId || undefined}

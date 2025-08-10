@@ -69,7 +69,10 @@ const getStageSelectOptions = () => {
     label: `${stage.name} (${stage.id})`,
   }));
 
-  return createSelectOptions([{ value: "", label: "Selecionar Etapa..." }, ...stageOptions]);
+  return createSelectOptions([
+    { value: "", label: "Selecionar Etapa..." },
+    ...stageOptions,
+  ]);
 };
 ```
 

@@ -15,12 +15,16 @@ const fs = require("fs");
 const path = require("path");
 
 console.log("🔍 CHECKUP SISTEMÁTICO: 5 CAMADAS DE COMPONENTES EDITÁVEIS");
-console.log("========================================================================");
+console.log(
+  "========================================================================"
+);
 
 // 🏗️ CAMADA 1: Extrair componentes do ENHANCED_BLOCK_REGISTRY
 function extractRegistryComponents() {
   console.log("\n📊 CAMADA 1: REGISTRY - ENHANCED_BLOCK_REGISTRY");
-  console.log("========================================================================");
+  console.log(
+    "========================================================================"
+  );
 
   try {
     const registryPath = "src/config/enhancedBlockRegistry.ts";
@@ -31,7 +35,9 @@ function extractRegistryComponents() {
     const match = registryContent.match(registryRegex);
 
     if (!match) {
-      console.log("❌ Erro: Não foi possível extrair o ENHANCED_BLOCK_REGISTRY");
+      console.log(
+        "❌ Erro: Não foi possível extrair o ENHANCED_BLOCK_REGISTRY"
+      );
       return [];
     }
 
@@ -50,10 +56,12 @@ function extractRegistryComponents() {
 
     console.log(`✅ Total de componentes registrados: ${components.length}`);
     components.forEach((comp, i) => {
-      console.log(`${String(i + 1).padStart(2)}. ${comp.key.padEnd(30)} → ${comp.component}`);
+      console.log(
+        `${String(i + 1).padStart(2)}. ${comp.key.padEnd(30)} → ${comp.component}`
+      );
     });
 
-    return components.map(comp => comp.key);
+    return components.map((comp) => comp.key);
   } catch (error) {
     console.log("❌ Erro ao ler registry:", error.message);
     return [];
@@ -63,7 +71,9 @@ function extractRegistryComponents() {
 // 🎛️ CAMADA 2: Extrair cases do useUnifiedProperties
 function extractPropertiesSchemas() {
   console.log("\n🎛️ CAMADA 2: PROPERTIES SCHEMA - useUnifiedProperties");
-  console.log("========================================================================");
+  console.log(
+    "========================================================================"
+  );
 
   try {
     const propertiesPath = "src/hooks/useUnifiedProperties.ts";
@@ -80,7 +90,9 @@ function extractPropertiesSchemas() {
 
     const uniqueCases = [...new Set(cases)].sort();
 
-    console.log(`✅ Total de cases no useUnifiedProperties: ${uniqueCases.length}`);
+    console.log(
+      `✅ Total de cases no useUnifiedProperties: ${uniqueCases.length}`
+    );
     uniqueCases.forEach((caseItem, i) => {
       console.log(`${String(i + 1).padStart(2)}. ${caseItem}`);
     });
@@ -95,7 +107,9 @@ function extractPropertiesSchemas() {
 // 🧩 CAMADA 3: Verificar implementação de BlockComponentProps
 function checkBlockComponentPropsImplementation() {
   console.log("\n🧩 CAMADA 3: COMPONENT IMPLEMENTATION - BlockComponentProps");
-  console.log("========================================================================");
+  console.log(
+    "========================================================================"
+  );
 
   try {
     // Procurar arquivos que implementam BlockComponentProps
@@ -141,10 +155,12 @@ function checkBlockComponentPropsImplementation() {
     });
 
     if (implementingComponents.length > 20) {
-      console.log(`... e mais ${implementingComponents.length - 20} componentes`);
+      console.log(
+        `... e mais ${implementingComponents.length - 20} componentes`
+      );
     }
 
-    return implementingComponents.map(comp => comp.file);
+    return implementingComponents.map((comp) => comp.file);
   } catch (error) {
     console.log("❌ Erro ao verificar implementação:", error.message);
     return [];
@@ -154,20 +170,32 @@ function checkBlockComponentPropsImplementation() {
 // 🔧 CAMADA 4: Verificar integração com Container
 function checkContainerIntegration() {
   console.log("\n🔧 CAMADA 4: CONTAINER INTEGRATION - Verificação");
-  console.log("========================================================================");
+  console.log(
+    "========================================================================"
+  );
 
   try {
     const wrapperPath = "src/components/editor/canvas/SortableBlockWrapper.tsx";
     const wrapperContent = fs.readFileSync(wrapperPath, "utf8");
 
     const hasGetBlockComponent = wrapperContent.includes("getBlockComponent");
-    const hasUseContainerProperties = wrapperContent.includes("useContainerProperties");
-    const hasProcessedProperties = wrapperContent.includes("processedProperties");
+    const hasUseContainerProperties = wrapperContent.includes(
+      "useContainerProperties"
+    );
+    const hasProcessedProperties = wrapperContent.includes(
+      "processedProperties"
+    );
 
     console.log(`✅ SortableBlockWrapper integração:`);
-    console.log(`   ${hasGetBlockComponent ? "✅" : "❌"} getBlockComponent importado`);
-    console.log(`   ${hasUseContainerProperties ? "✅" : "❌"} useContainerProperties usado`);
-    console.log(`   ${hasProcessedProperties ? "✅" : "❌"} processedProperties implementado`);
+    console.log(
+      `   ${hasGetBlockComponent ? "✅" : "❌"} getBlockComponent importado`
+    );
+    console.log(
+      `   ${hasUseContainerProperties ? "✅" : "❌"} useContainerProperties usado`
+    );
+    console.log(
+      `   ${hasProcessedProperties ? "✅" : "❌"} processedProperties implementado`
+    );
 
     return {
       hasGetBlockComponent,
@@ -175,7 +203,10 @@ function checkContainerIntegration() {
       hasProcessedProperties,
     };
   } catch (error) {
-    console.log("❌ Erro ao verificar integração com container:", error.message);
+    console.log(
+      "❌ Erro ao verificar integração com container:",
+      error.message
+    );
     return {
       hasGetBlockComponent: false,
       hasUseContainerProperties: false,
@@ -187,21 +218,33 @@ function checkContainerIntegration() {
 // 🎛️ CAMADA 5: Verificar integração com Editor
 function checkEditorIntegration() {
   console.log("\n🎛️ CAMADA 5: EDITOR INTEGRATION - Verificação");
-  console.log("========================================================================");
+  console.log(
+    "========================================================================"
+  );
 
   try {
     // Verificar se o editor usa EnhancedUniversalPropertiesPanel
     const editorPath = "src/components/editor/editor-fixed-dragdrop.tsx";
     const editorContent = fs.readFileSync(editorPath, "utf8");
 
-    const hasPropertiesPanel = editorContent.includes("EnhancedUniversalPropertiesPanel");
-    const hasUseUnifiedProperties = editorContent.includes("useUnifiedProperties");
+    const hasPropertiesPanel = editorContent.includes(
+      "EnhancedUniversalPropertiesPanel"
+    );
+    const hasUseUnifiedProperties = editorContent.includes(
+      "useUnifiedProperties"
+    );
     const hasEditorContext = editorContent.includes("EditorContext");
 
     console.log(`✅ Editor principal integração:`);
-    console.log(`   ${hasPropertiesPanel ? "✅" : "❌"} EnhancedUniversalPropertiesPanel usado`);
-    console.log(`   ${hasUseUnifiedProperties ? "✅" : "❌"} useUnifiedProperties integrado`);
-    console.log(`   ${hasEditorContext ? "✅" : "❌"} EditorContext disponível`);
+    console.log(
+      `   ${hasPropertiesPanel ? "✅" : "❌"} EnhancedUniversalPropertiesPanel usado`
+    );
+    console.log(
+      `   ${hasUseUnifiedProperties ? "✅" : "❌"} useUnifiedProperties integrado`
+    );
+    console.log(
+      `   ${hasEditorContext ? "✅" : "❌"} EditorContext disponível`
+    );
 
     return {
       hasPropertiesPanel,
@@ -210,7 +253,11 @@ function checkEditorIntegration() {
     };
   } catch (error) {
     console.log("❌ Erro ao verificar integração com editor:", error.message);
-    return { hasPropertiesPanel: false, hasUseUnifiedProperties: false, hasEditorContext: false };
+    return {
+      hasPropertiesPanel: false,
+      hasUseUnifiedProperties: false,
+      hasEditorContext: false,
+    };
   }
 }
 
@@ -223,42 +270,64 @@ function crossAnalysis(
   editorIntegration
 ) {
   console.log("\n📊 ANÁLISE CRUZADA: COMPARAÇÃO DAS 5 CAMADAS");
-  console.log("========================================================================");
+  console.log(
+    "========================================================================"
+  );
 
   console.log("\n🔍 COMPONENTES NO REGISTRY MAS SEM SCHEMA DE PROPRIEDADES:");
-  const missingSchemas = registryComponents.filter(comp => !propertiesSchemas.includes(comp));
+  const missingSchemas = registryComponents.filter(
+    (comp) => !propertiesSchemas.includes(comp)
+  );
   if (missingSchemas.length > 0) {
     missingSchemas.forEach((comp, i) => {
-      console.log(`${String(i + 1).padStart(2)}. ❌ ${comp} - FALTA case no useUnifiedProperties`);
+      console.log(
+        `${String(i + 1).padStart(2)}. ❌ ${comp} - FALTA case no useUnifiedProperties`
+      );
     });
   } else {
-    console.log("✅ Todos os componentes do registry têm schema de propriedades");
+    console.log(
+      "✅ Todos os componentes do registry têm schema de propriedades"
+    );
   }
 
   console.log("\n🔍 SCHEMAS DE PROPRIEDADES SEM COMPONENTE NO REGISTRY:");
-  const orphanSchemas = propertiesSchemas.filter(schema => !registryComponents.includes(schema));
+  const orphanSchemas = propertiesSchemas.filter(
+    (schema) => !registryComponents.includes(schema)
+  );
   if (orphanSchemas.length > 0) {
     orphanSchemas.forEach((schema, i) => {
-      console.log(`${String(i + 1).padStart(2)}. ⚠️ ${schema} - Schema sem componente registrado`);
+      console.log(
+        `${String(i + 1).padStart(2)}. ⚠️ ${schema} - Schema sem componente registrado`
+      );
     });
   } else {
     console.log("✅ Todos os schemas têm componentes registrados");
   }
 
   // Análise de componentes completos (registrado + schema)
-  const completeComponents = registryComponents.filter(comp => propertiesSchemas.includes(comp));
+  const completeComponents = registryComponents.filter((comp) =>
+    propertiesSchemas.includes(comp)
+  );
 
   console.log("\n🎯 COMPONENTES COMPLETOS (Registry + Schema):");
-  console.log(`✅ ${completeComponents.length} componentes têm ambos registry e schema:`);
+  console.log(
+    `✅ ${completeComponents.length} componentes têm ambos registry e schema:`
+  );
   completeComponents.forEach((comp, i) => {
     console.log(`${String(i + 1).padStart(2)}. ✅ ${comp}`);
   });
 
   console.log("\n📈 RESUMO ESTATÍSTICO:");
-  console.log("========================================================================");
-  console.log(`📊 CAMADA 1 - Registry: ${registryComponents.length} componentes`);
+  console.log(
+    "========================================================================"
+  );
+  console.log(
+    `📊 CAMADA 1 - Registry: ${registryComponents.length} componentes`
+  );
   console.log(`📊 CAMADA 2 - Properties: ${propertiesSchemas.length} schemas`);
-  console.log(`📊 CAMADA 3 - Implementation: ${implementingComponents.length}+ componentes`);
+  console.log(
+    `📊 CAMADA 3 - Implementation: ${implementingComponents.length}+ componentes`
+  );
   console.log(
     `📊 CAMADA 4 - Container: ${containerIntegration.hasGetBlockComponent && containerIntegration.hasUseContainerProperties ? "✅" : "❌"} Integrado`
   );
@@ -279,7 +348,9 @@ function crossAnalysis(
     completeComponents,
     missingSchemas,
     orphanSchemas,
-    successRate: Math.round((completeComponents.length / registryComponents.length) * 100),
+    successRate: Math.round(
+      (completeComponents.length / registryComponents.length) * 100
+    ),
   };
 }
 
@@ -301,13 +372,15 @@ async function main() {
     );
 
     console.log("\n🎯 CONCLUSÕES E RECOMENDAÇÕES:");
-    console.log("========================================================================");
+    console.log(
+      "========================================================================"
+    );
 
     if (analysis.missingSchemas.length > 0) {
       console.log(
         `⚠️ AÇÃO NECESSÁRIA: Adicionar ${analysis.missingSchemas.length} cases no useUnifiedProperties para:`
       );
-      analysis.missingSchemas.forEach(comp => console.log(`   - ${comp}`));
+      analysis.missingSchemas.forEach((comp) => console.log(`   - ${comp}`));
     }
 
     if (analysis.orphanSchemas.length > 0) {
@@ -317,7 +390,9 @@ async function main() {
     }
 
     if (analysis.successRate === 100) {
-      console.log(`🎉 PERFEITO! Todos os componentes passam pelas 5 camadas necessárias!`);
+      console.log(
+        `🎉 PERFEITO! Todos os componentes passam pelas 5 camadas necessárias!`
+      );
     } else {
       console.log(
         `🔧 PRECISA MELHORAR: ${100 - analysis.successRate}% dos componentes não estão completos`

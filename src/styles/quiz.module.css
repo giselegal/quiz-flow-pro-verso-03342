@@ -20,7 +20,8 @@
   --quiz-neutral: #6b7280;
 
   /* Tipografia */
-  --quiz-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --quiz-font:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --quiz-font-display: "Playfair Display", serif;
   --quiz-text-title: 1.875rem;
   --quiz-text-subtitle: 1.25rem;

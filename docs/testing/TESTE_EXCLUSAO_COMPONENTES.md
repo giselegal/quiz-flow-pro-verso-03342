@@ -49,7 +49,7 @@
 // 1. Forçar hover em todos os componentes para mostrar botões
 console.log("Mostrando botões de todos os componentes...");
 const blocks = document.querySelectorAll(".group, [data-block-id]");
-blocks.forEach(block => {
+blocks.forEach((block) => {
   block.classList.add("hover:opacity-90");
   // Simular hover
   const event = new MouseEvent("mouseenter", { bubbles: true });
@@ -61,7 +61,8 @@ const deleteButtons = document.querySelectorAll("button");
 const trashButtons = [];
 deleteButtons.forEach((btn, i) => {
   const hasTrashIcon =
-    btn.innerHTML.includes("Trash2") || btn.querySelector('svg[class*="lucide-trash"]');
+    btn.innerHTML.includes("Trash2") ||
+    btn.querySelector('svg[class*="lucide-trash"]');
   if (hasTrashIcon) {
     trashButtons.push(btn);
     console.log(`Botão de exclusão ${i}:`, btn);
@@ -96,10 +97,12 @@ if (trashButtons.length > 0) {
 
 2. **Destacar visualmente os componentes:**
    ```javascript
-   document.querySelectorAll("[data-block-id], .sortable-block").forEach(el => {
-     el.style.border = "3px solid blue";
-     el.style.position = "relative";
-   });
+   document
+     .querySelectorAll("[data-block-id], .sortable-block")
+     .forEach((el) => {
+       el.style.border = "3px solid blue";
+       el.style.position = "relative";
+     });
    ```
 
 **PROBLEMAS POSSÍVEIS:**

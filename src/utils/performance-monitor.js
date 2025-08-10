@@ -22,12 +22,14 @@ export const monitorPerformance = () => {
 
   try {
     // Monitorar Largest Contentful Paint (LCP)
-    const lcpObserver = new PerformanceObserver(entryList => {
+    const lcpObserver = new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       const lastEntry = entries[entries.length - 1];
       const lcp = lastEntry.startTime;
 
-      console.log(`📊 LCP: ${Math.round(lcp)}ms ${lcp < PERFORMANCE_THRESHOLD.LCP ? "✅" : "⚠️"}`);
+      console.log(
+        `📊 LCP: ${Math.round(lcp)}ms ${lcp < PERFORMANCE_THRESHOLD.LCP ? "✅" : "⚠️"}`
+      );
 
       // Se o LCP for ruim, aplicar otimizações
       if (lcp > PERFORMANCE_THRESHOLD.LCP && !optimizationsApplied) {
@@ -41,7 +43,7 @@ export const monitorPerformance = () => {
 
     // Monitorar Cumulative Layout Shift (CLS)
     let clsValue = 0;
-    const clsObserver = new PerformanceObserver(entryList => {
+    const clsObserver = new PerformanceObserver((entryList) => {
       for (const entry of entryList.getEntries()) {
         // Apenas processa se não for uma entrada retroativa
         if (!entry.hadRecentInput) {
@@ -64,7 +66,7 @@ export const monitorPerformance = () => {
     clsObserver.observe({ type: "layout-shift", buffered: true });
 
     // Monitorar First Input Delay (FID)
-    const fidObserver = new PerformanceObserver(entryList => {
+    const fidObserver = new PerformanceObserver((entryList) => {
       for (const entry of entryList.getEntries()) {
         const fid = entry.processingStart - entry.startTime;
 
@@ -87,10 +89,14 @@ export const monitorPerformance = () => {
     window.addEventListener("load", () => {
       setTimeout(() => {
         if (performanceIssuesDetected) {
-          console.log("🔧 Otimizações aplicadas devido a problemas de desempenho detectados.");
+          console.log(
+            "🔧 Otimizações aplicadas devido a problemas de desempenho detectados."
+          );
           reportPerformanceIssues();
         } else {
-          console.log("✅ Desempenho está bom. Nenhuma otimização adicional necessária.");
+          console.log(
+            "✅ Desempenho está bom. Nenhuma otimização adicional necessária."
+          );
         }
       }, 3000);
     });
@@ -129,7 +135,7 @@ export const reduceImageQuality = () => {
     // Encontrar todas as imagens na página
     const images = document.querySelectorAll("img");
 
-    images.forEach(img => {
+    images.forEach((img) => {
       const src = img.src;
 
       // Modificar apenas URLs do Cloudinary
@@ -152,7 +158,9 @@ export const reduceImageQuality = () => {
       }
     });
 
-    console.log(`✅ Qualidade de imagens reduzida para ${images.length} imagens`);
+    console.log(
+      `✅ Qualidade de imagens reduzida para ${images.length} imagens`
+    );
   } catch (error) {
     console.error("Erro ao reduzir qualidade das imagens:", error);
   }
@@ -177,7 +185,7 @@ export const disableNonEssentialAnimations = () => {
       ".animate-bounce, .animate-pulse, .animate-spin, .animate-ping, .hover-scale"
     );
 
-    animatedElements.forEach(el => {
+    animatedElements.forEach((el) => {
       el.classList.remove(
         "animate-bounce",
         "animate-pulse",
@@ -187,7 +195,9 @@ export const disableNonEssentialAnimations = () => {
       );
     });
 
-    console.log(`✅ Animações desativadas para ${animatedElements.length} elementos`);
+    console.log(
+      `✅ Animações desativadas para ${animatedElements.length} elementos`
+    );
   } catch (error) {
     console.error("Erro ao desativar animações:", error);
   }
@@ -203,7 +213,7 @@ export const disconnectNonEssentialObservers = () => {
     }
 
     // Limitar apenas a intervalos de alta frequência
-    highTimers.forEach(id => {
+    highTimers.forEach((id) => {
       try {
         // Tentar limpar o intervalo se for de alta frequência
         if (id > 10) {
@@ -227,7 +237,7 @@ export const applyLayoutStabilityOptimizations = () => {
     // Fixar tamanhos para elementos que causam layout shifts
     const dynamicElements = document.querySelectorAll("img, iframe, video");
 
-    dynamicElements.forEach(el => {
+    dynamicElements.forEach((el) => {
       // Preservar dimensões e proporções
       if (el.getAttribute("width") && el.getAttribute("height")) {
         const width = el.getAttribute("width");
@@ -239,7 +249,9 @@ export const applyLayoutStabilityOptimizations = () => {
       }
     });
 
-    console.log(`✅ Estabilidade de layout aprimorada para ${dynamicElements.length} elementos`);
+    console.log(
+      `✅ Estabilidade de layout aprimorada para ${dynamicElements.length} elementos`
+    );
   } catch (error) {
     console.error("Erro ao otimizar estabilidade de layout:", error);
   }
@@ -249,14 +261,18 @@ export const applyLayoutStabilityOptimizations = () => {
 export const applyInputResponseOptimizations = () => {
   try {
     // Remover event listeners de hover não essenciais
-    const interactiveElements = document.querySelectorAll('button, a, [role="button"]');
+    const interactiveElements = document.querySelectorAll(
+      'button, a, [role="button"]'
+    );
 
-    interactiveElements.forEach(el => {
+    interactiveElements.forEach((el) => {
       // Aplicar estilo de clicável sem hover
       el.style.cursor = "pointer";
     });
 
-    console.log(`✅ Resposta de input otimizada para ${interactiveElements.length} elementos`);
+    console.log(
+      `✅ Resposta de input otimizada para ${interactiveElements.length} elementos`
+    );
   } catch (error) {
     console.error("Erro ao otimizar resposta a inputs:", error);
   }

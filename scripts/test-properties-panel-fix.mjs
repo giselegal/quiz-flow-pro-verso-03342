@@ -14,21 +14,30 @@ const checkPropertiesFixApplied = () => {
   console.log("📝 Verificando correção do painel de propriedades...");
 
   try {
-    const editorContent = fs.readFileSync("./src/pages/editor-fixed.tsx", "utf8");
+    const editorContent = fs.readFileSync(
+      "./src/pages/editor-fixed.tsx",
+      "utf8"
+    );
 
     // Verificar se a função getBlockDefinitionForType foi adicionada
-    const hasGetBlockDefinitionFunction = editorContent.includes("getBlockDefinitionForType");
+    const hasGetBlockDefinitionFunction = editorContent.includes(
+      "getBlockDefinitionForType"
+    );
 
     // Verificar se está usando generateBlockDefinitions
-    const usesGenerateBlockDefinitions = editorContent.includes("generateBlockDefinitions");
+    const usesGenerateBlockDefinitions = editorContent.includes(
+      "generateBlockDefinitions"
+    );
 
     // Verificar se não está mais usando properties: {} vazio EM DEFINIÇÕES
     // (ignorar uso em objetos Block que é correto)
     const lines = editorContent.split("\n");
     const hasEmptyPropertiesInDefinition = lines.some(
-      line =>
+      (line) =>
         line.includes("properties: {},") &&
-        (line.includes("type:") || line.includes("name:") || line.includes("description:"))
+        (line.includes("type:") ||
+          line.includes("name:") ||
+          line.includes("description:"))
     );
 
     // Verificar se está usando a função no DynamicPropertiesPanel
@@ -44,10 +53,18 @@ const checkPropertiesFixApplied = () => {
     console.log(
       `✅ Função getBlockDefinitionForType: ${hasGetBlockDefinitionFunction ? "SIM" : "NÃO"}`
     );
-    console.log(`✅ Usa generateBlockDefinitions: ${usesGenerateBlockDefinitions ? "SIM" : "NÃO"}`);
-    console.log(`✅ Removeu properties vazias: ${!hasEmptyPropertiesInDefinition ? "SIM" : "NÃO"}`);
-    console.log(`✅ Usa função no painel: ${usesFunctionInPanel ? "SIM" : "NÃO"}`);
-    console.log(`✅ Tem propriedades padrão: ${hasDefaultProperties ? "SIM" : "NÃO"}`);
+    console.log(
+      `✅ Usa generateBlockDefinitions: ${usesGenerateBlockDefinitions ? "SIM" : "NÃO"}`
+    );
+    console.log(
+      `✅ Removeu properties vazias: ${!hasEmptyPropertiesInDefinition ? "SIM" : "NÃO"}`
+    );
+    console.log(
+      `✅ Usa função no painel: ${usesFunctionInPanel ? "SIM" : "NÃO"}`
+    );
+    console.log(
+      `✅ Tem propriedades padrão: ${hasDefaultProperties ? "SIM" : "NÃO"}`
+    );
 
     return (
       hasGetBlockDefinitionFunction &&
@@ -73,10 +90,14 @@ const checkPropertiesPanelStructure = () => {
     );
 
     // Verificar se renderiza propriedades corretamente
-    const rendersProperties = panelContent.includes("Object.entries(blockDefinition.properties)");
+    const rendersProperties = panelContent.includes(
+      "Object.entries(blockDefinition.properties)"
+    );
 
     // Verificar se tem fallback para propriedades vazias
-    const hasFallbackMessage = panelContent.includes("Nenhuma propriedade disponível");
+    const hasFallbackMessage = panelContent.includes(
+      "Nenhuma propriedade disponível"
+    );
 
     // Verificar se tem tipos de input corretos
     const hasInputTypes =
@@ -87,12 +108,23 @@ const checkPropertiesPanelStructure = () => {
     // Verificar se tem função de atualização
     const hasUpdateFunction = panelContent.includes("handlePropertyChange");
 
-    console.log(`✅ Renderiza propriedades: ${rendersProperties ? "SIM" : "NÃO"}`);
-    console.log(`✅ Tem fallback para vazio: ${hasFallbackMessage ? "SIM" : "NÃO"}`);
+    console.log(
+      `✅ Renderiza propriedades: ${rendersProperties ? "SIM" : "NÃO"}`
+    );
+    console.log(
+      `✅ Tem fallback para vazio: ${hasFallbackMessage ? "SIM" : "NÃO"}`
+    );
     console.log(`✅ Tem tipos de input: ${hasInputTypes ? "SIM" : "NÃO"}`);
-    console.log(`✅ Tem função de update: ${hasUpdateFunction ? "SIM" : "NÃO"}`);
+    console.log(
+      `✅ Tem função de update: ${hasUpdateFunction ? "SIM" : "NÃO"}`
+    );
 
-    return rendersProperties && hasFallbackMessage && hasInputTypes && hasUpdateFunction;
+    return (
+      rendersProperties &&
+      hasFallbackMessage &&
+      hasInputTypes &&
+      hasUpdateFunction
+    );
   } catch (error) {
     console.log("❌ Erro ao verificar painel:", error.message);
     return false;
@@ -104,10 +136,15 @@ const checkRegistryDefinitions = () => {
   console.log("\n📝 Verificando definições do registry...");
 
   try {
-    const registryContent = fs.readFileSync("./src/config/enhancedBlockRegistry.ts", "utf8");
+    const registryContent = fs.readFileSync(
+      "./src/config/enhancedBlockRegistry.ts",
+      "utf8"
+    );
 
     // Verificar se tem função generateBlockDefinitions
-    const hasGenerateFunction = registryContent.includes("generateBlockDefinitions");
+    const hasGenerateFunction = registryContent.includes(
+      "generateBlockDefinitions"
+    );
 
     // Verificar se mapeia categorias
     const hasCategories = registryContent.includes("getBlockCategory");
@@ -115,7 +152,9 @@ const checkRegistryDefinitions = () => {
     // Verificar se retorna array de definições
     const returnsDefinitions = registryContent.includes("BlockDefinition[]");
 
-    console.log(`✅ Tem função generateBlockDefinitions: ${hasGenerateFunction ? "SIM" : "NÃO"}`);
+    console.log(
+      `✅ Tem função generateBlockDefinitions: ${hasGenerateFunction ? "SIM" : "NÃO"}`
+    );
     console.log(`✅ Mapeia categorias: ${hasCategories ? "SIM" : "NÃO"}`);
     console.log(`✅ Retorna definições: ${returnsDefinitions ? "SIM" : "NÃO"}`);
 
@@ -135,13 +174,23 @@ const main = () => {
 
     console.log("\n📊 RESUMO DO TESTE:");
     console.log(`🎯 Correção aplicada: ${fixApplied ? "OK" : "PROBLEMA"}`);
-    console.log(`🎯 Estrutura do painel: ${panelStructure ? "OK" : "PROBLEMA"}`);
-    console.log(`🎯 Definições do registry: ${registryDefinitions ? "OK" : "PROBLEMA"}`);
+    console.log(
+      `🎯 Estrutura do painel: ${panelStructure ? "OK" : "PROBLEMA"}`
+    );
+    console.log(
+      `🎯 Definições do registry: ${registryDefinitions ? "OK" : "PROBLEMA"}`
+    );
 
-    const overallScore = [fixApplied, panelStructure, registryDefinitions].filter(Boolean).length;
+    const overallScore = [
+      fixApplied,
+      panelStructure,
+      registryDefinitions,
+    ].filter(Boolean).length;
     const percentage = Math.round((overallScore / 3) * 100);
 
-    console.log(`\n📈 STATUS DO PAINEL: ${percentage}% (${overallScore}/3 verificações passaram)`);
+    console.log(
+      `\n📈 STATUS DO PAINEL: ${percentage}% (${overallScore}/3 verificações passaram)`
+    );
 
     if (percentage === 100) {
       console.log("\n✅ PAINEL DE PROPRIEDADES CORRIGIDO!");

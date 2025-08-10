@@ -97,37 +97,74 @@
     <div class="test-section">
       <div class="test-title">📊 Status do Componente</div>
 
-      <div class="test-result success">✅ Componente registrado no enhancedBlockRegistry.ts</div>
-      <div class="test-result success">✅ Propriedades definidas no blockDefinitions.ts</div>
-      <div class="test-result success">✅ Hook useUnifiedProperties atualizado</div>
-      <div class="test-result info">ℹ️ Aguardando teste no editor /editor-fixed</div>
+      <div class="test-result success">
+        ✅ Componente registrado no enhancedBlockRegistry.ts
+      </div>
+      <div class="test-result success">
+        ✅ Propriedades definidas no blockDefinitions.ts
+      </div>
+      <div class="test-result success">
+        ✅ Hook useUnifiedProperties atualizado
+      </div>
+      <div class="test-result info">
+        ℹ️ Aguardando teste no editor /editor-fixed
+      </div>
     </div>
 
     <div class="test-section">
       <div class="test-title">🎛️ Simulação dos Controles</div>
-      <p>Esta é uma simulação visual de como os controles devem funcionar no editor:</p>
+      <p>
+        Esta é uma simulação visual de como os controles devem funcionar no
+        editor:
+      </p>
 
       <div class="control-panel">
         <div class="control-group">
           <label for="height">Altura (1-50px)</label>
-          <input type="range" id="height" min="1" max="50" value="4" oninput="updateBar()" />
+          <input
+            type="range"
+            id="height"
+            min="1"
+            max="50"
+            value="4"
+            oninput="updateBar()"
+          />
           <span id="height-value">4px</span>
         </div>
 
         <div class="control-group">
           <label for="color">Cor Principal</label>
-          <input type="color" id="color" value="#B89B7A" oninput="updateBar()" />
+          <input
+            type="color"
+            id="color"
+            value="#B89B7A"
+            oninput="updateBar()"
+          />
         </div>
 
         <div class="control-group">
           <label for="borderRadius">Borda Arredondada (0-25px)</label>
-          <input type="range" id="borderRadius" min="0" max="25" value="3" oninput="updateBar()" />
+          <input
+            type="range"
+            id="borderRadius"
+            min="0"
+            max="25"
+            value="3"
+            oninput="updateBar()"
+          />
           <span id="borderRadius-value">3px</span>
         </div>
 
         <div class="control-group">
           <label for="marginTop">Margem Superior (0-100px)</label>
-          <input type="range" id="marginTop" min="0" max="100" value="8" oninput="updateBar()" />
+          <input
+            type="range"
+            id="marginTop"
+            min="0"
+            max="100"
+            value="8"
+            oninput="updateBar()"
+          />
           <span id="marginTop-value">8px</span>
         </div>
 
@@ -146,7 +183,12 @@
 
         <div class="control-group">
           <label for="showShadow">Mostrar Sombra</label>
-          <input type="checkbox" id="showShadow" checked oninput="updateBar()" />
+          <input
+            type="checkbox"
+            id="showShadow"
+            checked
+            oninput="updateBar()"
+          />
         </div>
       </div>
 
@@ -171,12 +213,20 @@
 
       <h4>📝 Propriedades do Componente:</h4>
       <ul>
-        <li><strong>height</strong> (RANGE 1-50px) - Controla a altura da barra</li>
+        <li>
+          <strong>height</strong> (RANGE 1-50px) - Controla a altura da barra
+        </li>
         <li><strong>width</strong> (TEXT) - Largura da barra (padrão: 100%)</li>
         <li><strong>color</strong> (COLOR) - Cor principal da barra</li>
-        <li><strong>borderRadius</strong> (RANGE 0-25px) - Bordas arredondadas</li>
-        <li><strong>marginTop</strong> (RANGE 0-100px) - Espaçamento superior</li>
-        <li><strong>marginBottom</strong> (RANGE 0-100px) - Espaçamento inferior</li>
+        <li>
+          <strong>borderRadius</strong> (RANGE 0-25px) - Bordas arredondadas
+        </li>
+        <li>
+          <strong>marginTop</strong> (RANGE 0-100px) - Espaçamento superior
+        </li>
+        <li>
+          <strong>marginBottom</strong> (RANGE 0-100px) - Espaçamento inferior
+        </li>
         <li><strong>showShadow</strong> (SWITCH) - Liga/desliga a sombra</li>
       </ul>
 
@@ -212,13 +262,18 @@
         barElement.style.borderRadius = borderRadius + "px";
         barElement.style.marginTop = marginTop + "px";
         barElement.style.marginBottom = marginBottom + "px";
-        barElement.style.boxShadow = showShadow ? "0 2px 6px rgba(184, 155, 122, 0.4)" : "none";
+        barElement.style.boxShadow = showShadow
+          ? "0 2px 6px rgba(184, 155, 122, 0.4)"
+          : "none";
 
         // Atualizar labels
         document.getElementById("height-value").textContent = height + "px";
-        document.getElementById("borderRadius-value").textContent = borderRadius + "px";
-        document.getElementById("marginTop-value").textContent = marginTop + "px";
-        document.getElementById("marginBottom-value").textContent = marginBottom + "px";
+        document.getElementById("borderRadius-value").textContent =
+          borderRadius + "px";
+        document.getElementById("marginTop-value").textContent =
+          marginTop + "px";
+        document.getElementById("marginBottom-value").textContent =
+          marginBottom + "px";
       }
 
       function adjustColor(color, amount) {
@@ -242,7 +297,9 @@
       }
 
       console.log("🎨 Teste do Decorative Bar carregado!");
-      console.log("📊 Status: Componente deve estar funcionando no /editor-fixed");
+      console.log(
+        "📊 Status: Componente deve estar funcionando no /editor-fixed"
+      );
     </script>
   </body>
 </html>

@@ -39,7 +39,11 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       console.log(`Resposta selecionada: ${answer}`);
 
       // Tracking com analytics
-      trackButtonClick("quiz_answer_selected", `Pergunta ${questionNumber}`, "quiz_page");
+      trackButtonClick(
+        "quiz_answer_selected",
+        `Pergunta ${questionNumber}`,
+        "quiz_page"
+      );
 
       setTimeout(() => {
         onAnswerSelect(answer);
@@ -87,7 +91,9 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             onClick={() => handleAnswerClick(option)}
             disabled={isAnimating}
           >
-            <span className="mr-3 font-bold">{String.fromCharCode(65 + index)})</span>
+            <span className="mr-3 font-bold">
+              {String.fromCharCode(65 + index)})
+            </span>
             {option}
           </Button>
         ))}
@@ -119,7 +125,7 @@ const useQuizState = (totalQuestions: number) => {
 
   // Digite "useCallback" + Tab:
   const selectAnswer = React.useCallback((answer: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       answers: {
         ...prev.answers,
@@ -129,7 +135,7 @@ const useQuizState = (totalQuestions: number) => {
   }, []);
 
   const nextQuestion = React.useCallback(() => {
-    setState(prev => {
+    setState((prev) => {
       const nextQuestionIndex = prev.currentQuestion + 1;
       const isCompleted = nextQuestionIndex >= totalQuestions;
 
@@ -142,7 +148,7 @@ const useQuizState = (totalQuestions: number) => {
   }, [totalQuestions]);
 
   const previousQuestion = React.useCallback(() => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       currentQuestion: Math.max(0, prev.currentQuestion - 1),
     }));
@@ -187,7 +193,11 @@ interface QuizTimerProps {
   isActive: boolean;
 }
 
-const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) => {
+const QuizTimer: React.FC<QuizTimerProps> = ({
+  duration,
+  onTimeUp,
+  isActive,
+}) => {
   // Digite "useState" + Tab:
   const [timeLeft, setTimeLeft] = React.useState(duration);
 
@@ -196,7 +206,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
     if (!isActive) return;
 
     const interval = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           onTimeUp();
           return 0;
@@ -221,7 +231,9 @@ const QuizTimer: React.FC<QuizTimerProps> = ({ duration, onTimeUp, isActive }) =
 
   return (
     <div className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg">
-      <div className="text-2xl font-mono font-bold text-gray-800">{formattedTime}</div>
+      <div className="text-2xl font-mono font-bold text-gray-800">
+        {formattedTime}
+      </div>
       <div className="flex-1">
         <div className="w-full bg-gray-300 rounded-full h-2">
           <div
@@ -288,7 +300,11 @@ const QuizResult: React.FC<QuizResultProps> = ({
       await onShareResult();
 
       // Tracking
-      trackButtonClick("quiz_result_shared", `Score: ${percentage}%`, "quiz_result");
+      trackButtonClick(
+        "quiz_result_shared",
+        `Score: ${percentage}%`,
+        "quiz_result"
+      );
     } catch (error) {
       console.error("Erro ao compartilhar:", error);
     } finally {
@@ -307,7 +323,9 @@ const QuizResult: React.FC<QuizResultProps> = ({
   return (
     <Card className="p-8 max-w-2xl mx-auto text-center">
       <div className="mb-6">
-        <div className="text-6xl font-bold text-blue-600 mb-2">{percentage}%</div>
+        <div className="text-6xl font-bold text-blue-600 mb-2">
+          {percentage}%
+        </div>
         <h2 className="text-2xl font-bold mb-2">{resultMessage}</h2>
         <p className="text-gray-600">
           Você acertou {score} de {totalQuestions} perguntas em {formattedTime}
@@ -318,7 +336,14 @@ const QuizResult: React.FC<QuizResultProps> = ({
       <div className="mb-8">
         <div className="relative w-32 h-32 mx-auto">
           <svg className="w-full h-full transform -rotate-90">
-            <circle cx="64" cy="64" r="56" fill="none" stroke="#e5e7eb" strokeWidth="8" />
+            <circle
+              cx="64"
+              cy="64"
+              r="56"
+              fill="none"
+              stroke="#e5e7eb"
+              strokeWidth="8"
+            />
             <circle
               cx="64"
               cy="64"
@@ -332,7 +357,9 @@ const QuizResult: React.FC<QuizResultProps> = ({
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-800">{percentage}%</span>
+            <span className="text-2xl font-bold text-gray-800">
+              {percentage}%
+            </span>
           </div>
         </div>
       </div>
@@ -423,7 +450,10 @@ interface QuizData {
 
 interface QuizAppProps {
   quizData: QuizData;
-  onComplete: (result: { score: number; answers: Record<number, string> }) => void;
+  onComplete: (result: {
+    score: number;
+    answers: Record<number, string>;
+  }) => void;
 }
 
 const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
@@ -434,7 +464,8 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
   const [startTime] = React.useState(Date.now());
 
   // Usando hooks customizados
-  const { progress, saveProgress, clearProgress, hasProgress } = useQuizProgress(quizData.id);
+  const { progress, saveProgress, clearProgress, hasProgress } =
+    useQuizProgress(quizData.id);
 
   // Digite "useEffect" + Tab - Restaurar progresso salvo:
   React.useEffect(() => {
@@ -463,7 +494,7 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
 
   const handleNext = React.useCallback(() => {
     if (currentQuestion < quizData.questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     } else {
       // Quiz completo
       setIsCompleted(true);
@@ -483,7 +514,7 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
 
   const handlePrevious = React.useCallback(() => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+      setCurrentQuestion((prev) => prev - 1);
     }
   }, [currentQuestion]);
 
@@ -526,7 +557,9 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-center mb-2">{quizData.title}</h1>
+        <h1 className="text-3xl font-bold text-center mb-2">
+          {quizData.title}
+        </h1>
 
         {/* Timer se houver limite de tempo */}
         {quizData.timeLimit && (
@@ -549,16 +582,29 @@ const QuizApp: React.FC<QuizAppProps> = ({ quizData, onComplete }) => {
 
       {/* Navegação */}
       <div className="flex justify-between mt-8">
-        <Button onClick={handlePrevious} disabled={currentQuestion === 0} variant="outline">
+        <Button
+          onClick={handlePrevious}
+          disabled={currentQuestion === 0}
+          variant="outline"
+        >
           Anterior
         </Button>
 
         <Button onClick={handleNext} disabled={!canProceed}>
-          {currentQuestion === quizData.questions.length - 1 ? "Finalizar" : "Próxima"}
+          {currentQuestion === quizData.questions.length - 1
+            ? "Finalizar"
+            : "Próxima"}
         </Button>
       </div>
     </div>
   );
 };
 
-export { QuizQuestion, QuizTimer, QuizResult, QuizApp, useQuizState, useQuizProgress };
+export {
+  QuizQuestion,
+  QuizTimer,
+  QuizResult,
+  QuizApp,
+  useQuizState,
+  useQuizProgress,
+};

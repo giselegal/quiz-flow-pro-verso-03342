@@ -58,7 +58,7 @@ export const ExemplosHooks = () => {
 
   // 6. Digite: useCallback + Tab
   const handleClick = useCallback(() => {
-    setCount(prev => prev + 1);
+    setCount((prev) => prev + 1);
   }, []);
 
   // 7. Digite: useMemo + Tab
@@ -83,11 +83,11 @@ const useCounter = (initialValue = 0) => {
   const [count, setCount] = useState(initialValue);
 
   const increment = useCallback(() => {
-    setCount(prev => prev + 1);
+    setCount((prev) => prev + 1);
   }, []);
 
   const decrement = useCallback(() => {
-    setCount(prev => prev - 1);
+    setCount((prev) => prev - 1);
   }, []);
 
   const reset = useCallback(() => {
@@ -102,7 +102,7 @@ const useToggle = (initialValue = false) => {
   const [value, setValue] = useState(initialValue);
 
   const toggle = useCallback(() => {
-    setValue(prev => !prev);
+    setValue((prev) => !prev);
   }, []);
 
   return [value, toggle] as const;
@@ -161,7 +161,7 @@ export const QuizQuestion = () => {
     <div className="quiz-question">
       <h3>Qual seu estilo preferido?</h3>
       <div className="options">
-        {options.map(option => (
+        {options.map((option) => (
           <button
             key={option}
             onClick={() => handleAnswerSelect(option)}
@@ -186,7 +186,7 @@ export const Timer = () => {
 
     if (isRunning && time > 0) {
       interval = setInterval(() => {
-        setTime(prevTime => prevTime - 1);
+        setTime((prevTime) => prevTime - 1);
       }, 1000);
     } else if (time === 0) {
       toggleRunning(); // Para o timer quando chega a zero
@@ -207,7 +207,9 @@ export const Timer = () => {
   return (
     <div className="timer">
       <h2>Tempo restante: {formattedTime}</h2>
-      <button onClick={toggleRunning}>{isRunning ? "Pausar" : "Iniciar"}</button>
+      <button onClick={toggleRunning}>
+        {isRunning ? "Pausar" : "Iniciar"}
+      </button>
     </div>
   );
 };
@@ -256,7 +258,7 @@ export const FormularioContato = () => {
           id="nome"
           type="text"
           value={nome}
-          onChange={e => setNome(e.target.value)}
+          onChange={(e) => setNome(e.target.value)}
           className={errors.nome ? "error" : ""}
         />
         {errors.nome && <span className="error-text">{errors.nome}</span>}
@@ -268,7 +270,7 @@ export const FormularioContato = () => {
           id="email"
           type="email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
           className={errors.email ? "error" : ""}
         />
         {errors.email && <span className="error-text">{errors.email}</span>}
@@ -361,7 +363,9 @@ export const AplicacaoCompleta = () => {
       </div>
 
       <div className="toggle">
-        <button onClick={toggleVisible}>{isVisible ? "Ocultar" : "Mostrar"}</button>
+        <button onClick={toggleVisible}>
+          {isVisible ? "Ocultar" : "Mostrar"}
+        </button>
         {isVisible && <p>Conteúdo visível!</p>}
       </div>
 
@@ -369,7 +373,7 @@ export const AplicacaoCompleta = () => {
         <input
           type="text"
           value={userName}
-          onChange={e => setUserName(e.target.value)}
+          onChange={(e) => setUserName(e.target.value)}
           placeholder="Digite seu nome"
         />
         <button onClick={handleSaveUser}>Salvar</button>

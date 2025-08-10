@@ -158,21 +158,24 @@ async function createTablesCorrectProject() {
         // Método alternativo: dividir em comandos menores
         const commands = createTablesSQL
           .split(";")
-          .map(cmd => cmd.trim())
-          .filter(cmd => cmd.length > 0 && !cmd.startsWith("--"));
+          .map((cmd) => cmd.trim())
+          .filter((cmd) => cmd.length > 0 && !cmd.startsWith("--"));
 
         let successCount = 0;
         for (const command of commands) {
           try {
-            const cmdResponse = await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-                apikey: SUPABASE_SERVICE_KEY,
-              },
-              body: JSON.stringify({ sql: command + ";" }),
-            });
+            const cmdResponse = await fetch(
+              `${SUPABASE_URL}/rest/v1/rpc/exec_sql`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+                  apikey: SUPABASE_SERVICE_KEY,
+                },
+                body: JSON.stringify({ sql: command + ";" }),
+              }
+            );
 
             if (cmdResponse.ok) {
               successCount++;
@@ -198,7 +201,9 @@ async function createTablesCorrectProject() {
         .limit(1);
 
       if (funnelsError) {
-        console.log(`❌ Erro ao acessar tabela funnels: ${funnelsError.message}`);
+        console.log(
+          `❌ Erro ao acessar tabela funnels: ${funnelsError.message}`
+        );
         console.log(`   Código: ${funnelsError.code}`);
       } else {
         console.log(`✅ Tabela 'funnels' criada e acessível via chave anônima`);
@@ -210,20 +215,30 @@ async function createTablesCorrectProject() {
         .limit(1);
 
       if (pagesError) {
-        console.log(`❌ Erro ao acessar tabela funnel_pages: ${pagesError.message}`);
+        console.log(
+          `❌ Erro ao acessar tabela funnel_pages: ${pagesError.message}`
+        );
         console.log(`   Código: ${pagesError.code}`);
       } else {
-        console.log(`✅ Tabela 'funnel_pages' criada e acessível via chave anônima`);
+        console.log(
+          `✅ Tabela 'funnel_pages' criada e acessível via chave anônima`
+        );
       }
 
       if (!funnelsError && !pagesError) {
-        console.log("\n🎉 SUCESSO! Todas as tabelas foram criadas e estão funcionais!");
+        console.log(
+          "\n🎉 SUCESSO! Todas as tabelas foram criadas e estão funcionais!"
+        );
         console.log("\n📝 Próximos passos:");
         console.log("   1. Execute: node check-tables.cjs");
         console.log("   2. Teste a criação de funnels no editor");
-        console.log("   3. As tabelas agora usam UUID para compatibilidade total");
+        console.log(
+          "   3. As tabelas agora usam UUID para compatibilidade total"
+        );
       } else {
-        console.log("\n⚠️  Tabelas podem ter sido criadas, mas há problemas de acesso.");
+        console.log(
+          "\n⚠️  Tabelas podem ter sido criadas, mas há problemas de acesso."
+        );
         console.log("💡 Isso pode ser normal devido às políticas RLS.");
         console.log("   Execute: node check-tables.cjs para verificar");
       }
@@ -235,10 +250,8 @@ async function createTablesCorrectProject() {
     console.log("\n🔍 Verificando com chave de serviço...");
 
     try {
-      const { data: adminFunnels, error: adminFunnelsError } = await supabaseAdmin
-        .from("funnels")
-        .select("*")
-        .limit(1);
+      const { data: adminFunnels, error: adminFunnelsError } =
+        await supabaseAdmin.from("funnels").select("*").limit(1);
 
       const { data: adminPages, error: adminPagesError } = await supabaseAdmin
         .from("funnel_pages")
@@ -249,8 +262,10 @@ async function createTablesCorrectProject() {
         console.log("✅ Tabelas confirmadas via chave de serviço");
       } else {
         console.log("❌ Problemas detectados via chave de serviço");
-        if (adminFunnelsError) console.log(`   funnels: ${adminFunnelsError.message}`);
-        if (adminPagesError) console.log(`   funnel_pages: ${adminPagesError.message}`);
+        if (adminFunnelsError)
+          console.log(`   funnels: ${adminFunnelsError.message}`);
+        if (adminPagesError)
+          console.log(`   funnel_pages: ${adminPagesError.message}`);
       }
     } catch (err) {
       console.log(`❌ Erro na verificação admin: ${err.message}`);
@@ -258,7 +273,9 @@ async function createTablesCorrectProject() {
   } catch (error) {
     console.error("❌ Erro geral:", error.message);
     console.log("\n💡 Solução manual:");
-    console.log(`   1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw`);
+    console.log(
+      `   1. Acesse: https://supabase.com/dashboard/project/pwtjuuhchtbzttrzoutw`
+    );
     console.log('   2. Vá para "SQL Editor"');
     console.log("   3. Execute o SQL do arquivo create-funnel-tables.sql");
   }

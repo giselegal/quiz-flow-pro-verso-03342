@@ -15,7 +15,9 @@
     mark: function (name) {
       this.markerTimings[name] = performance.now() - this.startTime;
       if (console && console.log)
-        console.log(`Marker: ${name} - ${this.markerTimings[name].toFixed(2)}ms`);
+        console.log(
+          `Marker: ${name} - ${this.markerTimings[name].toFixed(2)}ms`
+        );
     },
   };
 
@@ -51,6 +53,7 @@
 
   // Adicionar estilo para animação do spinner
   var styleElement = document.createElement("style");
-  styleElement.textContent = "@keyframes spin { to { transform: rotate(360deg); } }";
+  styleElement.textContent =
+    "@keyframes spin { to { transform: rotate(360deg); } }";
   document.head.appendChild(styleElement);
 })();

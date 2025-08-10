@@ -1,5 +1,8 @@
 // Test script para verificar se todos os componentes estão sendo renderizados
-import { getStepTemplate, getAllSteps } from "./src/config/stepTemplatesMapping.ts";
+import {
+  getStepTemplate,
+  getAllSteps,
+} from "./src/config/stepTemplatesMapping.ts";
 import { getEnhancedComponent } from "./src/config/enhancedBlockRegistry.ts";
 
 console.log("🔍 TESTANDO RENDERIZAÇÃO DE COMPONENTES NO /editor-fixed");
@@ -31,7 +34,9 @@ allSteps.forEach((step, index) => {
         console.log(`      ✅ ${blockIndex + 1}. ${blockType} - RENDERIZÁVEL`);
       } else {
         missingComponents.add(blockType);
-        console.log(`      ❌ ${blockIndex + 1}. ${blockType} - COMPONENTE FALTANDO`);
+        console.log(
+          `      ❌ ${blockIndex + 1}. ${blockType} - COMPONENTE FALTANDO`
+        );
       }
     });
   } catch (error) {
@@ -44,20 +49,26 @@ console.log("📊 RESULTADO DA ANÁLISE:");
 console.log(`   📦 Total de blocos: ${totalBlocks}`);
 console.log(`   ✅ Blocos renderizáveis: ${renderableBlocks}`);
 console.log(`   ❌ Blocos com problemas: ${totalBlocks - renderableBlocks}`);
-console.log(`   📈 Taxa de sucesso: ${Math.round((renderableBlocks / totalBlocks) * 100)}%`);
+console.log(
+  `   📈 Taxa de sucesso: ${Math.round((renderableBlocks / totalBlocks) * 100)}%`
+);
 
 if (missingComponents.size > 0) {
   console.log("\n⚠️  COMPONENTES FALTANDO:");
-  Array.from(missingComponents).forEach(component => {
+  Array.from(missingComponents).forEach((component) => {
     console.log(`   - ${component}`);
   });
 }
 
 console.log("\n🎯 CONCLUSÃO:");
 if (renderableBlocks === totalBlocks) {
-  console.log("   ✅ TODOS os componentes estão sendo renderizados corretamente!");
+  console.log(
+    "   ✅ TODOS os componentes estão sendo renderizados corretamente!"
+  );
 } else {
-  console.log(`   ⚠️  ${totalBlocks - renderableBlocks} componentes precisam de atenção.`);
+  console.log(
+    `   ⚠️  ${totalBlocks - renderableBlocks} componentes precisam de atenção.`
+  );
 }
 
 export {};

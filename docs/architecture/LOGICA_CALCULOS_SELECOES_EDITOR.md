@@ -56,11 +56,11 @@ const calculateResults = useCallback(
 
     // 1. CONTAR PONTOS POR CATEGORIA
     Object.entries(answers).forEach(([questionId, optionIds]) => {
-      const question = quizQuestions.find(q => q.id === questionId);
+      const question = quizQuestions.find((q) => q.id === questionId);
       if (!question) return;
 
-      optionIds.forEach(optionId => {
-        const option = question.options.find(o => o.id === optionId);
+      optionIds.forEach((optionId) => {
+        const option = question.options.find((o) => o.id === optionId);
         if (option) {
           styleCounter[option.styleCategory]++;
           totalSelections++;
@@ -73,7 +73,8 @@ const calculateResults = useCallback(
       .map(([category, score]) => ({
         category: category as StyleResult["category"],
         score,
-        percentage: totalSelections > 0 ? Math.round((score / totalSelections) * 100) : 0,
+        percentage:
+          totalSelections > 0 ? Math.round((score / totalSelections) * 100) : 0,
       }))
 
       // 3. ORDENAR COM CRITÉRIO DE DESEMPATE

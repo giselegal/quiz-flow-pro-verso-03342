@@ -61,7 +61,7 @@ if (conteudos.app) {
     },
   ];
 
-  rotasEncontradas.forEach(item => {
+  rotasEncontradas.forEach((item) => {
     const found = item.regex.test(conteudos.app);
     console.log(`  ${found ? "✅" : "❌"} ${item.rota} - ${item.desc}`);
   });
@@ -78,7 +78,7 @@ if (conteudos.routes) {
     { config: "ROUTES export", regex: /export const ROUTES/g },
   ];
 
-  configRoutes.forEach(item => {
+  configRoutes.forEach((item) => {
     const found = item.regex.test(conteudos.routes);
     console.log(`  ${found ? "✅" : "❌"} ${item.config}`);
   });
@@ -94,7 +94,7 @@ if (conteudos.resultPage) {
     { feature: "Dynamic Rendering", regex: /DynamicBlockRenderer/g },
   ];
 
-  componenteFeatures.forEach(item => {
+  componenteFeatures.forEach((item) => {
     const found = item.regex.test(conteudos.resultPage);
     console.log(`  ${found ? "✅" : "❌"} ${item.feature}`);
   });
@@ -108,7 +108,7 @@ if (conteudos.liveQuizSteps) {
     { step: "getResultSteps", regex: /getResultSteps.*=.*\(\)/g },
   ];
 
-  liveSteps.forEach(item => {
+  liveSteps.forEach((item) => {
     const found = item.regex.test(conteudos.liveQuizSteps);
     console.log(`  ${found ? "✅" : "❌"} ${item.step}`);
   });
@@ -135,7 +135,7 @@ if (conteudos.app) {
     const possiveisRotas = conteudos.app.match(/<Route.*resultado.*>/g);
     if (possiveisRotas) {
       console.log("⚠️  POSSÍVEIS VARIAÇÕES ENCONTRADAS:");
-      possiveisRotas.forEach(rota => {
+      possiveisRotas.forEach((rota) => {
         console.log(`   ${rota}`);
       });
     }
@@ -146,11 +146,16 @@ console.log("\n🔧 CONFIGURAÇÃO ATUAL:");
 
 // Verificar se a estrutura está correta
 const estruturaCorreta = {
-  "Router importado": conteudos.app && conteudos.app.includes("import.*Router.*from.*wouter"),
-  "ResultPage importado": conteudos.app && conteudos.app.includes("import.*ResultPage"),
-  "Rota /resultado definida": conteudos.app && conteudos.app.includes('path="/resultado"'),
-  "Component ResultPage ligado": conteudos.app && conteudos.app.includes("component={ResultPage}"),
-  "ROUTES.RESULTADO definido": conteudos.routes && conteudos.routes.includes("RESULTADO:"),
+  "Router importado":
+    conteudos.app && conteudos.app.includes("import.*Router.*from.*wouter"),
+  "ResultPage importado":
+    conteudos.app && conteudos.app.includes("import.*ResultPage"),
+  "Rota /resultado definida":
+    conteudos.app && conteudos.app.includes('path="/resultado"'),
+  "Component ResultPage ligado":
+    conteudos.app && conteudos.app.includes("component={ResultPage}"),
+  "ROUTES.RESULTADO definido":
+    conteudos.routes && conteudos.routes.includes("RESULTADO:"),
 };
 
 Object.entries(estruturaCorreta).forEach(([item, status]) => {
@@ -198,11 +203,18 @@ console.log("✅ RESUMO DA ANÁLISE:");
 const totalChecks = 5; // Número de verificações principais
 let checksPassaram = 0;
 
-if (conteudos.app && conteudos.app.includes('path="/resultado"')) checksPassaram++;
-if (conteudos.app && conteudos.app.includes("component={ResultPage}")) checksPassaram++;
-if (conteudos.app && conteudos.app.includes("import.*ResultPage")) checksPassaram++;
-if (conteudos.routes && conteudos.routes.includes("RESULTADO:")) checksPassaram++;
-if (conteudos.resultPage && conteudos.resultPage.includes("export default ResultPage"))
+if (conteudos.app && conteudos.app.includes('path="/resultado"'))
+  checksPassaram++;
+if (conteudos.app && conteudos.app.includes("component={ResultPage}"))
+  checksPassaram++;
+if (conteudos.app && conteudos.app.includes("import.*ResultPage"))
+  checksPassaram++;
+if (conteudos.routes && conteudos.routes.includes("RESULTADO:"))
+  checksPassaram++;
+if (
+  conteudos.resultPage &&
+  conteudos.resultPage.includes("export default ResultPage")
+)
   checksPassaram++;
 
 console.log(

@@ -36,7 +36,7 @@ function analyzeRegistries() {
 
   const registryAnalysis = {};
 
-  registries.forEach(registryPath => {
+  registries.forEach((registryPath) => {
     if (fs.existsSync(registryPath)) {
       const content = safeReadFile(registryPath);
       if (content) {
@@ -50,7 +50,9 @@ function analyzeRegistries() {
 
         console.log(`\\n📁 ${registryPath}`);
         console.log(`   📏 Tamanho: ${content.length} chars`);
-        console.log(`   📋 Vazio: ${registryAnalysis[registryPath].isEmpty ? "SIM" : "NÃO"}`);
+        console.log(
+          `   📋 Vazio: ${registryAnalysis[registryPath].isEmpty ? "SIM" : "NÃO"}`
+        );
         console.log(
           `   📤 Tem exports: ${registryAnalysis[registryPath].hasExport ? "SIM" : "NÃO"}`
         );
@@ -77,14 +79,14 @@ function analyzePropertiesHooks() {
 
   if (fs.existsSync(hooksDir)) {
     const files = fs.readdirSync(hooksDir);
-    files.forEach(file => {
+    files.forEach((file) => {
       if (file.includes("Properties") || file.includes("properties")) {
         propertiesHooks.push(path.join(hooksDir, file));
       }
     });
   }
 
-  propertiesHooks.forEach(hookPath => {
+  propertiesHooks.forEach((hookPath) => {
     const content = safeReadFile(hookPath);
     if (content) {
       console.log(`\\n📄 ${hookPath}`);
@@ -93,7 +95,9 @@ function analyzePropertiesHooks() {
         `   🎯 Função principal: ${content.includes("useUnifiedProperties") ? "useUnifiedProperties" : "outro"}`
       );
       console.log(`   📋 Cases: ${(content.match(/case\\s+"/g) || []).length}`);
-      console.log(`   ⚙️ Está sendo usado: ${content.includes("export") ? "SIM" : "NÃO"}`);
+      console.log(
+        `   ⚙️ Está sendo usado: ${content.includes("export") ? "SIM" : "NÃO"}`
+      );
     }
   });
 
@@ -113,12 +117,15 @@ function analyzePropertiesPanels() {
 
     const entries = fs.readdirSync(dir, { withFileTypes: true });
 
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       const fullPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) {
         findPanels(fullPath);
-      } else if (entry.name.includes("PropertiesPanel") && entry.name.endsWith(".tsx")) {
+      } else if (
+        entry.name.includes("PropertiesPanel") &&
+        entry.name.endsWith(".tsx")
+      ) {
         panels.push(fullPath);
       }
     });
@@ -126,7 +133,7 @@ function analyzePropertiesPanels() {
 
   findPanels("src");
 
-  panels.forEach(panelPath => {
+  panels.forEach((panelPath) => {
     const content = safeReadFile(panelPath);
     if (content) {
       console.log(`\\n📋 ${panelPath}`);
@@ -134,7 +141,9 @@ function analyzePropertiesPanels() {
       console.log(
         `   🎯 Hook usado: ${content.includes("useUnifiedProperties") ? "useUnifiedProperties" : "outro/nenhum"}`
       );
-      console.log(`   📤 É exportado: ${content.includes("export default") ? "SIM" : "NÃO"}`);
+      console.log(
+        `   📤 É exportado: ${content.includes("export default") ? "SIM" : "NÃO"}`
+      );
     }
   });
 
@@ -154,26 +163,27 @@ function analyzeImportConflicts() {
 
   const conflicts = {};
 
-  mainFiles.forEach(filePath => {
+  mainFiles.forEach((filePath) => {
     if (fs.existsSync(filePath)) {
       const content = safeReadFile(filePath);
       if (content) {
         console.log(`\\n📄 ${filePath}`);
 
         // Verificar imports de registries
-        const registryImports = content.match(/import.*from.*[Rr]egistry/g) || [];
+        const registryImports =
+          content.match(/import.*from.*[Rr]egistry/g) || [];
         console.log(`   📦 Registry imports: ${registryImports.length}`);
-        registryImports.forEach(imp => console.log(`      - ${imp}`));
+        registryImports.forEach((imp) => console.log(`      - ${imp}`));
 
         // Verificar imports de painéis
         const panelImports = content.match(/import.*PropertiesPanel/g) || [];
         console.log(`   🎛️ Panel imports: ${panelImports.length}`);
-        panelImports.forEach(imp => console.log(`      - ${imp}`));
+        panelImports.forEach((imp) => console.log(`      - ${imp}`));
 
         // Verificar imports de hooks
         const hookImports = content.match(/import.*use.*Properties/g) || [];
         console.log(`   🔗 Hook imports: ${hookImports.length}`);
-        hookImports.forEach(imp => console.log(`      - ${imp}`));
+        hookImports.forEach((imp) => console.log(`      - ${imp}`));
 
         conflicts[filePath] = {
           registryImports,
@@ -205,7 +215,9 @@ function analyzeActiveSystem() {
       if (content.includes("enhancedBlockRegistry")) {
         console.log("   📦 Registry: src/config/enhancedBlockRegistry.ts ✅");
       } else if (content.includes("EnhancedBlockRegistry")) {
-        console.log("   📦 Registry: src/components/editor/blocks/EnhancedBlockRegistry.tsx ⚠️");
+        console.log(
+          "   📦 Registry: src/components/editor/blocks/EnhancedBlockRegistry.tsx ⚠️"
+        );
       }
 
       // Painel usado
@@ -227,7 +239,9 @@ function analyzeActiveSystem() {
 
       // Registry usado
       if (content.includes("getBlockComponent")) {
-        const registryMatch = content.match(/from ["']([^"']*[Rr]egistry[^"']*)/);
+        const registryMatch = content.match(
+          /from ["']([^"']*[Rr]egistry[^"']*)/
+        );
         if (registryMatch) {
           console.log(`   📦 Registry: ${registryMatch[1]} ✅`);
         }
@@ -252,21 +266,26 @@ function generateCleanupRecommendations(registryAnalysis, panels) {
   Object.entries(registryAnalysis).forEach(([path, info]) => {
     if (info.isEmpty) {
       recommendations.push(`❌ REMOVER: ${path} (arquivo vazio)`);
-    } else if (path !== "src/config/enhancedBlockRegistry.ts" && info.hasComponents) {
-      recommendations.push(`⚠️ AVALIAR: ${path} (registry paralelo com componentes)`);
+    } else if (
+      path !== "src/config/enhancedBlockRegistry.ts" &&
+      info.hasComponents
+    ) {
+      recommendations.push(
+        `⚠️ AVALIAR: ${path} (registry paralelo com componentes)`
+      );
     }
   });
 
   // Painéis
   const activePanels = ["EnhancedUniversalPropertiesPanel"];
-  panels.forEach(panelPath => {
+  panels.forEach((panelPath) => {
     const panelName = path.basename(panelPath, ".tsx");
-    if (!activePanels.some(active => panelPath.includes(active))) {
+    if (!activePanels.some((active) => panelPath.includes(active))) {
       recommendations.push(`⚠️ AVALIAR: ${panelPath} (painel não usado)`);
     }
   });
 
-  recommendations.forEach(rec => console.log(rec));
+  recommendations.forEach((rec) => console.log(rec));
 
   return recommendations;
 }
@@ -280,7 +299,10 @@ async function main() {
     const conflicts = analyzeImportConflicts();
 
     analyzeActiveSystem();
-    const recommendations = generateCleanupRecommendations(registryAnalysis, panels);
+    const recommendations = generateCleanupRecommendations(
+      registryAnalysis,
+      panels
+    );
 
     console.log("\\n\\n📋 RESUMO DOS CONFLITOS ENCONTRADOS:");
     console.log("=====================================");
@@ -289,15 +311,21 @@ async function main() {
     const totalPanels = panels.length;
     const totalHooks = propertiesHooks.length;
 
-    console.log(`📦 Registries encontrados: ${totalRegistries} (deveria ser 1)`);
+    console.log(
+      `📦 Registries encontrados: ${totalRegistries} (deveria ser 1)`
+    );
     console.log(`🎛️ Painéis encontrados: ${totalPanels} (deveria ser 1-2)`);
     console.log(`🔗 Hooks encontrados: ${totalHooks} (deveria ser 1-2)`);
     console.log(`🧹 Recomendações de limpeza: ${recommendations.length}`);
 
     if (recommendations.length > 0) {
-      console.log("\\n⚠️ AÇÃO NECESSÁRIA: Limpar sistemas paralelos para evitar conflitos");
+      console.log(
+        "\\n⚠️ AÇÃO NECESSÁRIA: Limpar sistemas paralelos para evitar conflitos"
+      );
     } else {
-      console.log("\\n✅ SISTEMA LIMPO: Sem conflitos significativos detectados");
+      console.log(
+        "\\n✅ SISTEMA LIMPO: Sem conflitos significativos detectados"
+      );
     }
 
     console.log("\\n✅ Análise concluída!");

@@ -59,14 +59,14 @@ if (conteudos.modernComponents) {
     },
   ];
 
-  componentesModernos.forEach(comp => {
+  componentesModernos.forEach((comp) => {
     const found = conteudos.modernComponents.includes(`const ${comp.name}:`);
     console.log(
       `  ${found ? "✅" : "❌"} ${comp.name} - ${found ? "Implementado" : "Não encontrado"}`
     );
 
     if (found) {
-      comp.features.forEach(feature => {
+      comp.features.forEach((feature) => {
         const featureFound = conteudos.modernComponents.includes(feature);
         console.log(`    ${featureFound ? "✅" : "⚠️"} ${feature}`);
       });
@@ -86,7 +86,7 @@ if (conteudos.dynamicRenderer) {
     "social-proof",
   ];
 
-  integracoes.forEach(integration => {
+  integracoes.forEach((integration) => {
     const found = conteudos.dynamicRenderer.includes(`case '${integration}':`);
     console.log(
       `  ${found ? "✅" : "❌"} ${integration} - ${found ? "Integrado" : "Não integrado"}`
@@ -139,8 +139,9 @@ if (conteudos.modernComponents) {
     { feature: "TypeScript Types", regex: /React\.FC</g, desc: "Type safety" },
   ];
 
-  recursosTecnicos.forEach(recurso => {
-    const matches = (conteudos.modernComponents.match(recurso.regex) || []).length;
+  recursosTecnicos.forEach((recurso) => {
+    const matches = (conteudos.modernComponents.match(recurso.regex) || [])
+      .length;
     console.log(
       `  ${matches > 0 ? "✅" : "❌"} ${recurso.feature} (${matches}x) - ${recurso.desc}`
     );
@@ -162,9 +163,12 @@ if (conteudos.modernComponents) {
     { feature: "Font Weights", regex: /font-(bold|semibold|medium)/g },
   ];
 
-  recursosUX.forEach(recurso => {
-    const matches = (conteudos.modernComponents.match(recurso.regex) || []).length;
-    console.log(`  ${matches > 0 ? "✅" : "❌"} ${recurso.feature} (${matches}x)`);
+  recursosUX.forEach((recurso) => {
+    const matches = (conteudos.modernComponents.match(recurso.regex) || [])
+      .length;
+    console.log(
+      `  ${matches > 0 ? "✅" : "❌"} ${recurso.feature} (${matches}x)`
+    );
   });
 }
 
@@ -209,10 +213,17 @@ let funcionalidadesAvancadas = 0;
 
 if (conteudos.modernComponents) {
   // Contar componentes
-  const componentCount = (conteudos.modernComponents.match(/const \w+: React\.FC</g) || []).length;
-  const hookCount = (conteudos.modernComponents.match(/use(State|Effect)/g) || []).length;
-  const animationCount = (conteudos.modernComponents.match(/animate-|transition-/g) || []).length;
-  const responsiveCount = (conteudos.modernComponents.match(/md:|lg:/g) || []).length;
+  const componentCount = (
+    conteudos.modernComponents.match(/const \w+: React\.FC</g) || []
+  ).length;
+  const hookCount = (
+    conteudos.modernComponents.match(/use(State|Effect)/g) || []
+  ).length;
+  const animationCount = (
+    conteudos.modernComponents.match(/animate-|transition-/g) || []
+  ).length;
+  const responsiveCount = (conteudos.modernComponents.match(/md:|lg:/g) || [])
+    .length;
 
   console.log(
     `🧩 Componentes modernos: ${componentCount}/5 (${Math.round((componentCount / 5) * 100)}%)`
@@ -229,14 +240,20 @@ if (conteudos.modernComponents) {
 console.log(
   `\n🎯 Progress geral: ${recursosImplementados}/${totalRecursos} (${Math.round((recursosImplementados / totalRecursos) * 100)}%)`
 );
-console.log(`⚡ Funcionalidades avançadas: ${funcionalidadesAvancadas} implementadas`);
+console.log(
+  `⚡ Funcionalidades avançadas: ${funcionalidadesAvancadas} implementadas`
+);
 
 if (recursosImplementados === totalRecursos) {
   console.log("\n🎉 EXCELENTE! Todos os componentes modernos implementados!");
   console.log("✨ Editor agora possui recursos de classe mundial!");
-  console.log("🚀 Pronto para criar quizzes e páginas dinâmicas profissionais!");
+  console.log(
+    "🚀 Pronto para criar quizzes e páginas dinâmicas profissionais!"
+  );
 } else {
-  console.log(`\n⚠️  ${totalRecursos - recursosImplementados} componente(s) precisam de atenção`);
+  console.log(
+    `\n⚠️  ${totalRecursos - recursosImplementados} componente(s) precisam de atenção`
+  );
 }
 
 console.log("\n🔧 RECURSOS DESTACADOS:");

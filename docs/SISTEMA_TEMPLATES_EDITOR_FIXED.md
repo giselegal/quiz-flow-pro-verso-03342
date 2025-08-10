@@ -111,7 +111,7 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
 const allStepTemplates = getAllSteps();
 
 // ✅ PASSO 2: Criar 21 stages baseadas nos templates
-const initialStages = allStepTemplates.map(stepTemplate => ({
+const initialStages = allStepTemplates.map((stepTemplate) => ({
   id: `step-${stepTemplate.stepNumber}`,
   name: stepTemplate.name,
   order: stepTemplate.stepNumber,

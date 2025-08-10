@@ -10,28 +10,49 @@ const validateSteps1to19 = () => {
       id: "step-1-intro",
       title: "Etapa 1: Introdução e Coleta do Nome",
       status: "✅ CORRETA",
-      components: ["vertical-canvas-header", "text-inline", "form-input", "button-inline"],
+      components: [
+        "vertical-canvas-header",
+        "text-inline",
+        "form-input",
+        "button-inline",
+      ],
       description: "Componentes inline para captura do nome e início do quiz",
     },
     steps2to11: {
       id: "steps-2-11-questions",
       title: "Etapas 2-11: Questões Principais do Quiz",
       status: "✅ CORRETAS",
-      components: ["vertical-canvas-header", "heading-inline", "text-inline", "options-grid"],
-      description: "10 questões com imagens e texto, sistema de pontuação por estilo",
+      components: [
+        "vertical-canvas-header",
+        "heading-inline",
+        "text-inline",
+        "options-grid",
+      ],
+      description:
+        "10 questões com imagens e texto, sistema de pontuação por estilo",
     },
     step12: {
       id: "step-12-transition",
       title: "Etapa 12: Transição Principal",
       status: "✅ CORRETA",
-      components: ["vertical-canvas-header", "heading-inline", "text-inline", "progress-inline"],
+      components: [
+        "vertical-canvas-header",
+        "heading-inline",
+        "text-inline",
+        "progress-inline",
+      ],
       description: "Transição motivacional antes das questões estratégicas",
     },
     steps13to18: {
       id: "steps-13-18-strategic",
       title: "Etapas 13-18: Questões Estratégicas",
       status: "✅ CORRETAS",
-      components: ["vertical-canvas-header", "heading-inline", "text-inline", "options-grid"],
+      components: [
+        "vertical-canvas-header",
+        "heading-inline",
+        "text-inline",
+        "options-grid",
+      ],
       description: "6 questões de segmentação e qualificação comercial",
     },
     step19: {
@@ -98,14 +119,14 @@ const validateSteps20and21 = () => {
   console.log(`   📊 Total de componentes: ${step20Config.totalComponents}`);
   console.log(`   🎯 Objetivo: ${step20Config.purpose}`);
   console.log(`   📋 Componentes principais:`);
-  step20Config.components.forEach(comp => console.log(`      • ${comp}`));
+  step20Config.components.forEach((comp) => console.log(`      • ${comp}`));
   console.log("");
 
   console.log(`✅ CORRETA ${step21Config.title}`);
   console.log(`   📊 Total de componentes: ${step21Config.totalComponents}`);
   console.log(`   🎯 Objetivo: ${step21Config.purpose}`);
   console.log(`   📋 Componentes principais:`);
-  step21Config.components.forEach(comp => console.log(`      • ${comp}`));
+  step21Config.components.forEach((comp) => console.log(`      • ${comp}`));
   console.log("");
 
   return { step20Config, step21Config };
@@ -119,9 +140,15 @@ validateSteps20and21();
 
 console.log("🎉 RESUMO FINAL:");
 console.log("================");
-console.log("✅ Etapas 1-19: VALIDADAS - Usando configuração do schemaDrivenFunnelService");
-console.log("✅ Etapa 20: CONFIGURADA - Canvas com 9 componentes inline modulares");
-console.log("✅ Etapa 21: CONFIGURADA - Canvas com 10 componentes inline de conversão");
+console.log(
+  "✅ Etapas 1-19: VALIDADAS - Usando configuração do schemaDrivenFunnelService"
+);
+console.log(
+  "✅ Etapa 20: CONFIGURADA - Canvas com 9 componentes inline modulares"
+);
+console.log(
+  "✅ Etapa 21: CONFIGURADA - Canvas com 10 componentes inline de conversão"
+);
 console.log("\n🔧 Próximos passos:");
 console.log("1. Testar configurações no editor visual");
 console.log("2. Verificar responsividade mobile");

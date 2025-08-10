@@ -44,13 +44,20 @@ function identifyAndFixComponent(filePath) {
     }
 
     // Padrão 2: Componentes que recebem props diretamente
-    if (content.includes("React.FC<Props>") || content.includes("React.FC<InlineBlockProps>")) {
+    if (
+      content.includes("React.FC<Props>") ||
+      content.includes("React.FC<InlineBlockProps>")
+    ) {
       return fixDirectPropsPattern(filePath, content);
     }
 
     return { status: "unknown_pattern", file: fileName };
   } catch (error) {
-    return { status: "error", file: path.basename(filePath), error: error.message };
+    return {
+      status: "error",
+      file: path.basename(filePath),
+      error: error.message,
+    };
   }
 }
 
@@ -123,7 +130,8 @@ function fixDirectPropsPattern(filePath, content) {
   const fileName = path.basename(filePath);
 
   // Procura pela declaração do componente funcional
-  const componentPattern = /const\s+\w+:\s*React\.FC<[^>]+>\s*=\s*\(\{\s*([^}]*?)\s*\}\)\s*=>/s;
+  const componentPattern =
+    /const\s+\w+:\s*React\.FC<[^>]+>\s*=\s*\(\{\s*([^}]*?)\s*\}\)\s*=>/s;
   const match = content.match(componentPattern);
 
   if (!match) {
@@ -154,7 +162,10 @@ function fixDirectPropsPattern(filePath, content) {
   marginRight = 0`;
   }
 
-  const newComponentDeclaration = fullMatch.replace(propsSection, newPropsSection);
+  const newComponentDeclaration = fullMatch.replace(
+    propsSection,
+    newPropsSection
+  );
   content = content.replace(fullMatch, newComponentDeclaration);
 
   // Também corrige a função getMarginClass se necessário
@@ -211,13 +222,18 @@ for (const file of problematicFiles) {
 console.log(`\n📊 RESULTADOS FINAIS:`);
 console.log(`✅ Já corrigidos: ${results.already_fixed.length}`);
 console.log(`🔧 Corrigidos (block.style): ${results.fixed_block_style.length}`);
-console.log(`🎯 Corrigidos (props diretas): ${results.fixed_direct_props.length}`);
+console.log(
+  `🎯 Corrigidos (props diretas): ${results.fixed_direct_props.length}`
+);
 console.log(
   `⚠️  Padrões não reconhecidos: ${results.unknown_pattern.length + results.no_style_destructuring.length + results.no_component_pattern.length}`
 );
-console.log(`❌ Falhas: ${results.failed_block_style.length + results.error.length}`);
+console.log(
+  `❌ Falhas: ${results.failed_block_style.length + results.error.length}`
+);
 
-const totalFixed = results.fixed_block_style.length + results.fixed_direct_props.length;
+const totalFixed =
+  results.fixed_block_style.length + results.fixed_direct_props.length;
 if (totalFixed > 0) {
   console.log(`\n🎉 ${totalFixed} componentes foram corrigidos com sucesso!`);
 }

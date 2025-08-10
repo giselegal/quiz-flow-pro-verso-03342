@@ -31,15 +31,17 @@ function testarDashboard() {
   console.log(`✅ Templates encontrados: ${templates.length}`);
 
   // 3. Procurar botões de ação
-  const actionButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
-    const text = btn.textContent?.toLowerCase() || "";
-    return (
-      text.includes("usar template") ||
-      text.includes("duplicar") ||
-      text.includes("personalizado") ||
-      text.includes("criar")
-    );
-  });
+  const actionButtons = Array.from(document.querySelectorAll("button")).filter(
+    (btn) => {
+      const text = btn.textContent?.toLowerCase() || "";
+      return (
+        text.includes("usar template") ||
+        text.includes("duplicar") ||
+        text.includes("personalizado") ||
+        text.includes("criar")
+      );
+    }
+  );
 
   console.log(`✅ Botões de ação encontrados: ${actionButtons.length}`);
   actionButtons.forEach((btn, i) => {
@@ -47,13 +49,19 @@ function testarDashboard() {
   });
 
   // 4. Verificar cards de funis
-  const funnelCards = document.querySelectorAll('[class*="Card"], .card, [class*="template"]');
+  const funnelCards = document.querySelectorAll(
+    '[class*="Card"], .card, [class*="template"]'
+  );
   console.log(`✅ Cards de funis/templates: ${funnelCards.length}`);
 
   // 5. Testar clique no primeiro botão disponível (SEM executar)
   if (actionButtons.length > 0) {
-    console.log(`✅ Botão principal encontrado: "${actionButtons[0].textContent?.trim()}"`);
-    console.log("💡 Para testar navegação, clique manualmente no botão e veja se vai para /editor");
+    console.log(
+      `✅ Botão principal encontrado: "${actionButtons[0].textContent?.trim()}"`
+    );
+    console.log(
+      "💡 Para testar navegação, clique manualmente no botão e veja se vai para /editor"
+    );
 
     // Preparar listener para mudança de URL
     window.testNavigation = () => {
@@ -62,7 +70,9 @@ function testarDashboard() {
         console.log("🔄 Navegação detectada para:", args[2]);
         originalPushState.apply(history, args);
       };
-      console.log("🎯 Listener de navegação ativado. Clique em um botão agora.");
+      console.log(
+        "🎯 Listener de navegação ativado. Clique em um botão agora."
+      );
     };
 
     return true;
@@ -90,17 +100,23 @@ function testarEditor() {
   }
 
   // 2. Verificar estrutura do editor
-  const sidebars = document.querySelectorAll('[class*="sidebar"], [class*="panel"], aside');
+  const sidebars = document.querySelectorAll(
+    '[class*="sidebar"], [class*="panel"], aside'
+  );
   console.log(`✅ Sidebars encontradas: ${sidebars.length}`);
 
   // 3. Verificar canvas/área de edição
   const canvas = document.querySelector(
     '[class*="canvas"], [class*="preview"], main, [class*="editor"]'
   );
-  console.log(`✅ Canvas principal: ${canvas ? "Encontrado" : "Não encontrado"}`);
+  console.log(
+    `✅ Canvas principal: ${canvas ? "Encontrado" : "Não encontrado"}`
+  );
 
   // 4. Verificar abas
-  const tabs = document.querySelectorAll('[role="tab"], [class*="tab"], [data-state="active"]');
+  const tabs = document.querySelectorAll(
+    '[role="tab"], [class*="tab"], [data-state="active"]'
+  );
   console.log(`✅ Abas encontradas: ${tabs.length}`);
   tabs.forEach((tab, i) => {
     console.log(
@@ -118,10 +134,14 @@ function testarEditor() {
   const propertiesPanel = document.querySelector(
     '[class*="properties"], [class*="config"], [class*="settings"]'
   );
-  console.log(`✅ Painel de propriedades: ${propertiesPanel ? "Encontrado" : "Não encontrado"}`);
+  console.log(
+    `✅ Painel de propriedades: ${propertiesPanel ? "Encontrado" : "Não encontrado"}`
+  );
 
   // 7. Listar tipos de componentes disponíveis
-  const componentLabels = Array.from(document.querySelectorAll("span, div, p")).filter(el => {
+  const componentLabels = Array.from(
+    document.querySelectorAll("span, div, p")
+  ).filter((el) => {
     const text = el.textContent?.toLowerCase() || "";
     return (
       text.includes("text") ||
@@ -131,7 +151,9 @@ function testarEditor() {
     );
   });
 
-  console.log(`✅ Tipos de componentes identificados: ${componentLabels.length}`);
+  console.log(
+    `✅ Tipos de componentes identificados: ${componentLabels.length}`
+  );
   componentLabels.slice(0, 10).forEach((label, i) => {
     console.log(`   ${i + 1}. "${label.textContent?.trim()}"`);
   });
@@ -174,10 +196,14 @@ function testar21Etapas() {
   const responsiveElements = document.querySelectorAll(
     '[class*="sm:"], [class*="md:"], [class*="lg:"], [class*="xl:"]'
   );
-  console.log(`✅ Elementos com classes responsivas: ${responsiveElements.length}`);
+  console.log(
+    `✅ Elementos com classes responsivas: ${responsiveElements.length}`
+  );
 
   // 6. Verificar se há navegação entre páginas
-  const navigationButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
+  const navigationButtons = Array.from(
+    document.querySelectorAll("button")
+  ).filter((btn) => {
     const text = btn.textContent?.toLowerCase() || "";
     return (
       text.includes("próxima") ||
@@ -202,7 +228,7 @@ function testarSalvamento() {
   // 1. Verificar localStorage
   const storageKeys = Object.keys(localStorage);
   const relevantKeys = storageKeys.filter(
-    key =>
+    (key) =>
       key.includes("funnel") ||
       key.includes("schema") ||
       key.includes("editor") ||
@@ -210,7 +236,7 @@ function testarSalvamento() {
   );
 
   console.log(`✅ Chaves relevantes no localStorage: ${relevantKeys.length}`);
-  relevantKeys.forEach(key => {
+  relevantKeys.forEach((key) => {
     try {
       const data = localStorage.getItem(key);
       const size = data ? (data.length / 1024).toFixed(2) : "0";
@@ -221,10 +247,16 @@ function testarSalvamento() {
   });
 
   // 2. Verificar botões de salvamento
-  const saveButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
-    const text = btn.textContent?.toLowerCase() || "";
-    return text.includes("salvar") || text.includes("save") || text.includes("publicar");
-  });
+  const saveButtons = Array.from(document.querySelectorAll("button")).filter(
+    (btn) => {
+      const text = btn.textContent?.toLowerCase() || "";
+      return (
+        text.includes("salvar") ||
+        text.includes("save") ||
+        text.includes("publicar")
+      );
+    }
+  );
   console.log(`✅ Botões de salvamento: ${saveButtons.length}`);
   saveButtons.forEach((btn, i) => {
     console.log(`   ${i + 1}. "${btn.textContent?.trim()}"`);
@@ -237,7 +269,7 @@ function testarSalvamento() {
   console.log(`✅ Indicadores de auto-save: ${autoSaveIndicators.length}`);
 
   // 4. Testar se há dados salvos
-  const hasSavedData = relevantKeys.some(key => {
+  const hasSavedData = relevantKeys.some((key) => {
     try {
       const data = localStorage.getItem(key);
       return data && data.length > 100; // Dados substanciais
@@ -250,12 +282,17 @@ function testarSalvamento() {
 
   // 5. Verificar se há funções globais de salvamento
   const globalSaveFunctions = [];
-  if (typeof window.saveFunnel === "function") globalSaveFunctions.push("saveFunnel");
-  if (typeof window.autoSave === "function") globalSaveFunctions.push("autoSave");
-  if (typeof window.forceSave === "function") globalSaveFunctions.push("forceSave");
+  if (typeof window.saveFunnel === "function")
+    globalSaveFunctions.push("saveFunnel");
+  if (typeof window.autoSave === "function")
+    globalSaveFunctions.push("autoSave");
+  if (typeof window.forceSave === "function")
+    globalSaveFunctions.push("forceSave");
 
-  console.log(`✅ Funções globais de salvamento: ${globalSaveFunctions.length}`);
-  globalSaveFunctions.forEach(fn => console.log(`   - ${fn}()`));
+  console.log(
+    `✅ Funções globais de salvamento: ${globalSaveFunctions.length}`
+  );
+  globalSaveFunctions.forEach((fn) => console.log(`   - ${fn}()`));
 
   return saveButtons.length > 0 || hasSavedData;
 }
@@ -277,7 +314,7 @@ function executarTestesCompletos() {
 
   const resultados = {};
 
-  testes.forEach(teste => {
+  testes.forEach((teste) => {
     try {
       resultados[teste.nome] = teste.funcao();
     } catch (error) {
@@ -297,12 +334,18 @@ function executarTestesCompletos() {
     console.log(`${nome}: ${passou ? "✅ PASSOU" : "❌ FALHOU"}`);
   });
 
-  console.log(`\n📈 SUCESSO: ${testesPassaram}/${totalTestes} (${porcentagem}%)`);
+  console.log(
+    `\n📈 SUCESSO: ${testesPassaram}/${totalTestes} (${porcentagem}%)`
+  );
 
   if (porcentagem >= 75) {
-    console.log("🎉 SISTEMA APROVADO! Funcionalidades principais operacionais.");
+    console.log(
+      "🎉 SISTEMA APROVADO! Funcionalidades principais operacionais."
+    );
   } else {
-    console.log("⚠️ SISTEMA PARCIALMENTE FUNCIONAL. Algumas melhorias necessárias.");
+    console.log(
+      "⚠️ SISTEMA PARCIALMENTE FUNCIONAL. Algumas melhorias necessárias."
+    );
   }
 
   return resultados;

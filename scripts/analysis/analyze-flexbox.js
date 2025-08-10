@@ -5,7 +5,8 @@ import path from "path";
 
 console.log("📦 ANÁLISE DE FLEXBOX - ETAPAS 20 E 21\n");
 
-const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir =
+  "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
 
 // Componentes das etapas 20 e 21
 const step20Components = [
@@ -30,7 +31,12 @@ const step21Components = [
 // Padrões de Flexbox para detectar
 const flexPatterns = {
   container: [/\bflex\b/g, /\binline-flex\b/g],
-  direction: [/\bflex-row\b/g, /\bflex-col\b/g, /\bflex-row-reverse\b/g, /\bflex-col-reverse\b/g],
+  direction: [
+    /\bflex-row\b/g,
+    /\bflex-col\b/g,
+    /\bflex-row-reverse\b/g,
+    /\bflex-col-reverse\b/g,
+  ],
   wrap: [/\bflex-wrap\b/g, /\bflex-nowrap\b/g, /\bflex-wrap-reverse\b/g],
   justify: [
     /\bjustify-start\b/g,
@@ -70,12 +76,23 @@ const flexPatterns = {
     /\bgrow\b/g,
     /\bshrink\b/g,
   ],
-  gap: [/\bgap-\d+\b/g, /\bgap-x-\d+\b/g, /\bgap-y-\d+\b/g, /\bspace-x-\d+\b/g, /\bspace-y-\d+\b/g],
+  gap: [
+    /\bgap-\d+\b/g,
+    /\bgap-x-\d+\b/g,
+    /\bgap-y-\d+\b/g,
+    /\bspace-x-\d+\b/g,
+    /\bspace-y-\d+\b/g,
+  ],
 };
 
 // Padrões alternativos (Grid, Block, etc.)
 const alternativePatterns = {
-  grid: [/\bgrid\b/g, /\binline-grid\b/g, /\bgrid-cols-\d+\b/g, /\bgrid-rows-\d+\b/g],
+  grid: [
+    /\bgrid\b/g,
+    /\binline-grid\b/g,
+    /\bgrid-cols-\d+\b/g,
+    /\bgrid-rows-\d+\b/g,
+  ],
   block: [/\bblock\b/g, /\binline-block\b/g, /\binline\b/g],
   position: [/\babsolute\b/g, /\brelative\b/g, /\bfixed\b/g, /\bsticky\b/g],
 };
@@ -101,7 +118,7 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   // Analisar uso de Flexbox
   Object.entries(flexPatterns).forEach(([category, patterns]) => {
     const categoryMatches = [];
-    patterns.forEach(pattern => {
+    patterns.forEach((pattern) => {
       const matches = content.match(pattern) || [];
       categoryMatches.push(...matches);
     });
@@ -113,7 +130,7 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   // Analisar alternativas
   Object.entries(alternativePatterns).forEach(([category, patterns]) => {
     const categoryMatches = [];
-    patterns.forEach(pattern => {
+    patterns.forEach((pattern) => {
       const matches = content.match(pattern) || [];
       categoryMatches.push(...matches);
     });
@@ -138,7 +155,10 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   if (flexboxUsage.gap) score += 10; // Gaps definidos
 
   // Penalizações por uso excessivo de alternativas problemáticas
-  if (alternatives.grid && alternatives.grid.length > flexboxUsage.container?.length) {
+  if (
+    alternatives.grid &&
+    alternatives.grid.length > flexboxUsage.container?.length
+  ) {
     score -= 5;
     issues.push("Uso excessivo de Grid em vez de Flexbox");
   }
@@ -164,7 +184,7 @@ function analyzeFlexboxUsage(filePath, componentName, step) {
   ];
 
   let responsiveFlexCount = 0;
-  responsiveFlexPatterns.forEach(pattern => {
+  responsiveFlexPatterns.forEach((pattern) => {
     const matches = content.match(pattern) || [];
     responsiveFlexCount += matches.length;
   });
@@ -194,13 +214,23 @@ console.log("📊 ETAPA 20 - RESULTADO");
 console.log("==================================================");
 
 const step20Results = [];
-step20Components.forEach(component => {
+step20Components.forEach((component) => {
   const filePath = path.join(componentsDir, component);
-  const analysis = analyzeFlexboxUsage(filePath, component.replace(".tsx", ""), 20);
+  const analysis = analyzeFlexboxUsage(
+    filePath,
+    component.replace(".tsx", ""),
+    20
+  );
   step20Results.push(analysis);
 
   const emoji =
-    analysis.score >= 80 ? "🟢" : analysis.score >= 60 ? "🟡" : analysis.score >= 40 ? "🟠" : "🔴";
+    analysis.score >= 80
+      ? "🟢"
+      : analysis.score >= 60
+        ? "🟡"
+        : analysis.score >= 40
+          ? "🟠"
+          : "🔴";
   const flexType =
     Object.keys(analysis.flexboxUsage).length > 0
       ? "FLEXBOX"
@@ -210,7 +240,9 @@ step20Components.forEach(component => {
           ? "BLOCK"
           : "UNKNOWN";
 
-  console.log(`${emoji} ${analysis.name} - Score: ${analysis.score}/100 (${flexType})`);
+  console.log(
+    `${emoji} ${analysis.name} - Score: ${analysis.score}/100 (${flexType})`
+  );
 
   // Mostrar uso de flexbox
   if (Object.keys(analysis.flexboxUsage).length > 0) {
@@ -232,7 +264,7 @@ step20Components.forEach(component => {
 
   // Mostrar problemas
   if (analysis.issues.length > 0) {
-    analysis.issues.forEach(issue => {
+    analysis.issues.forEach((issue) => {
       console.log(`   ⚠️  ${issue}`);
     });
   }
@@ -244,13 +276,23 @@ console.log("📊 ETAPA 21 - OFERTA");
 console.log("==================================================");
 
 const step21Results = [];
-step21Components.forEach(component => {
+step21Components.forEach((component) => {
   const filePath = path.join(componentsDir, component);
-  const analysis = analyzeFlexboxUsage(filePath, component.replace(".tsx", ""), 21);
+  const analysis = analyzeFlexboxUsage(
+    filePath,
+    component.replace(".tsx", ""),
+    21
+  );
   step21Results.push(analysis);
 
   const emoji =
-    analysis.score >= 80 ? "🟢" : analysis.score >= 60 ? "🟡" : analysis.score >= 40 ? "🟠" : "🔴";
+    analysis.score >= 80
+      ? "🟢"
+      : analysis.score >= 60
+        ? "🟡"
+        : analysis.score >= 40
+          ? "🟠"
+          : "🔴";
   const flexType =
     Object.keys(analysis.flexboxUsage).length > 0
       ? "FLEXBOX"
@@ -260,7 +302,9 @@ step21Components.forEach(component => {
           ? "BLOCK"
           : "UNKNOWN";
 
-  console.log(`${emoji} ${analysis.name} - Score: ${analysis.score}/100 (${flexType})`);
+  console.log(
+    `${emoji} ${analysis.name} - Score: ${analysis.score}/100 (${flexType})`
+  );
 
   // Mostrar uso de flexbox
   if (Object.keys(analysis.flexboxUsage).length > 0) {
@@ -282,7 +326,7 @@ step21Components.forEach(component => {
 
   // Mostrar problemas
   if (analysis.issues.length > 0) {
-    analysis.issues.forEach(issue => {
+    analysis.issues.forEach((issue) => {
       console.log(`   ⚠️  ${issue}`);
     });
   }
@@ -294,13 +338,15 @@ step21Components.forEach(component => {
 console.log("📈 RESUMO GERAL");
 console.log("==================================================");
 
-const allResults = [...step20Results, ...step21Results].filter(r => r.exists);
-const flexboxComponents = allResults.filter(r => Object.keys(r.flexboxUsage).length > 0);
+const allResults = [...step20Results, ...step21Results].filter((r) => r.exists);
+const flexboxComponents = allResults.filter(
+  (r) => Object.keys(r.flexboxUsage).length > 0
+);
 const gridComponents = allResults.filter(
-  r => r.alternatives.grid && r.alternatives.grid.length > 0
+  (r) => r.alternatives.grid && r.alternatives.grid.length > 0
 );
 const blockComponents = allResults.filter(
-  r => r.alternatives.block && r.alternatives.block.length > 0
+  (r) => r.alternatives.block && r.alternatives.block.length > 0
 );
 
 console.log(
@@ -314,18 +360,29 @@ console.log(
 );
 
 const avgFlexScore =
-  flexboxComponents.reduce((sum, comp) => sum + comp.score, 0) / (flexboxComponents.length || 1);
-console.log(`\n🏆 Score médio dos componentes Flexbox: ${Math.round(avgFlexScore)}/100`);
+  flexboxComponents.reduce((sum, comp) => sum + comp.score, 0) /
+  (flexboxComponents.length || 1);
+console.log(
+  `\n🏆 Score médio dos componentes Flexbox: ${Math.round(avgFlexScore)}/100`
+);
 
 const step20FlexScore =
-  step20Results.filter(r => r.exists).reduce((sum, comp) => sum + comp.score, 0) /
-  step20Results.filter(r => r.exists).length;
+  step20Results
+    .filter((r) => r.exists)
+    .reduce((sum, comp) => sum + comp.score, 0) /
+  step20Results.filter((r) => r.exists).length;
 const step21FlexScore =
-  step21Results.filter(r => r.exists).reduce((sum, comp) => sum + comp.score, 0) /
-  step21Results.filter(r => r.exists).length;
+  step21Results
+    .filter((r) => r.exists)
+    .reduce((sum, comp) => sum + comp.score, 0) /
+  step21Results.filter((r) => r.exists).length;
 
-console.log(`📊 Etapa 20 - Score Flexbox médio: ${Math.round(step20FlexScore)}/100`);
-console.log(`📊 Etapa 21 - Score Flexbox médio: ${Math.round(step21FlexScore)}/100`);
+console.log(
+  `📊 Etapa 20 - Score Flexbox médio: ${Math.round(step20FlexScore)}/100`
+);
+console.log(
+  `📊 Etapa 21 - Score Flexbox médio: ${Math.round(step21FlexScore)}/100`
+);
 
 // Recomendações
 console.log("\n💡 RECOMENDAÇÕES");

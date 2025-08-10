@@ -14,7 +14,7 @@ console.log("=".repeat(50));
 
 if (blockMatches) {
   const blockTypes = blockMatches
-    .map(match => {
+    .map((match) => {
       const typeMatch = match.match(/type:\s*['"`]([^'"`]+)['"`]/);
       return typeMatch ? typeMatch[1] : null;
     })
@@ -32,13 +32,17 @@ const categoryMatches = content.match(/category:\s*['"`]([^'"`]+)['"`]/g);
 
 if (categoryMatches) {
   const categories = [
-    ...new Set(categoryMatches.map(match => match.match(/['"`]([^'"`]+)['"`]/)[1])),
+    ...new Set(
+      categoryMatches.map((match) => match.match(/['"`]([^'"`]+)['"`]/)[1])
+    ),
   ];
   console.log(`\n🏷️ Categorias disponíveis: ${categories.length}`);
-  categories.forEach(category => {
+  categories.forEach((category) => {
     console.log(`- ${category}`);
   });
 }
 
-console.log('\n✅ Todos os componentes estão agora ativos na aba "Blocos" do editor!');
+console.log(
+  '\n✅ Todos os componentes estão agora ativos na aba "Blocos" do editor!'
+);
 console.log("🧪 Você pode testar cada um para decidir quais manter.");

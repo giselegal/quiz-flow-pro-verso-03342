@@ -72,7 +72,11 @@ export class QuizService {
   }
 
   static async getQuiz(id: string) {
-    const { data, error } = await supabase.from("quizzes").select("*").eq("id", id).single();
+    const { data, error } = await supabase
+      .from("quizzes")
+      .select("*")
+      .eq("id", id)
+      .single();
 
     if (error) {
       if (error.code === "PGRST116") {
@@ -113,7 +117,7 @@ export class QuizService {
   }
 
   static async createQuestions(questions: CreateQuestionData[]) {
-    const questionsData = questions.map(q => ({
+    const questionsData = questions.map((q) => ({
       quiz_id: q.quiz_id,
       question_text: q.question_text,
       question_type: q.question_type,
@@ -130,7 +134,10 @@ export class QuizService {
       order_index: q.order_index,
     }));
 
-    const { data, error } = await supabase.from("quiz_questions").insert(questionsData).select();
+    const { data, error } = await supabase
+      .from("quiz_questions")
+      .insert(questionsData)
+      .select();
 
     if (error) {
       throw new Error(`Erro ao criar perguntas: ${error.message}`);
@@ -153,7 +160,10 @@ export class QuizService {
     return data || [];
   }
 
-  static async updateQuestion(id: string, updates: Partial<CreateQuestionData>) {
+  static async updateQuestion(
+    id: string,
+    updates: Partial<CreateQuestionData>
+  ) {
     const { data, error } = await supabase
       .from("quiz_questions")
       .update(updates)
@@ -169,7 +179,10 @@ export class QuizService {
   }
 
   static async deleteQuestion(id: string) {
-    const { error } = await supabase.from("quiz_questions").delete().eq("id", id);
+    const { error } = await supabase
+      .from("quiz_questions")
+      .delete()
+      .eq("id", id);
 
     if (error) {
       throw new Error(`Erro ao deletar pergunta: ${error.message}`);

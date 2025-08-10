@@ -6,7 +6,8 @@ console.log("=".repeat(55));
 
 const refactorPlan = {
   componentType: "testimonials-result",
-  reason: "Componente com muitos elementos agrupados verticalmente não está independente",
+  reason:
+    "Componente com muitos elementos agrupados verticalmente não está independente",
 
   archivosAfectados: [
     "client/src/config/blockDefinitions.ts",

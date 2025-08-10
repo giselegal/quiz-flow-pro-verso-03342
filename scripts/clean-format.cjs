@@ -31,7 +31,7 @@ const stepFiles = [
 
 const basePath = "/workspaces/quiz-quest-challenge-verse/src/components/steps";
 
-stepFiles.forEach(fileName => {
+stepFiles.forEach((fileName) => {
   const filePath = path.join(basePath, fileName);
 
   if (!fs.existsSync(filePath)) {
@@ -51,7 +51,9 @@ stepFiles.forEach(fileName => {
   content = content.replace(
     /(properties:\s*\{[\s\S]*?)(,\s*)?(marginTop:\s*\d+|marginBottom:\s*\d+|spacing:\s*"[^"]*")\n\s*\}/g,
     (match, props, comma, lastProp) => {
-      return props.trim() + (comma || ",") + "\n        " + lastProp + "\n      }";
+      return (
+        props.trim() + (comma || ",") + "\n        " + lastProp + "\n      }"
+      );
     }
   );
 

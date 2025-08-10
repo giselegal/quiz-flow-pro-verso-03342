@@ -113,7 +113,8 @@ function analyzeFile(filePath) {
 
   // Análise de problemas
   analysis.analysis.issues = {
-    directManipulation: (content.match(patterns.directManipulation) || []).length,
+    directManipulation: (content.match(patterns.directManipulation) || [])
+      .length,
     eventListeners: (content.match(patterns.eventListeners) || []).length,
   };
 
@@ -136,35 +137,49 @@ function analyzeFile(filePath) {
   if (analysis.analysis.libraries.length > 0) score += 20;
 
   // Funcionalidades completas (+15)
-  const funcCount = Object.values(analysis.analysis.functionality).reduce((a, b) => a + b, 0);
+  const funcCount = Object.values(analysis.analysis.functionality).reduce(
+    (a, b) => a + b,
+    0
+  );
   if (funcCount >= 4) score += 15;
   else if (funcCount >= 2) score += 10;
 
   // Configuração adequada (+15)
-  const configCount = Object.values(analysis.analysis.configuration).reduce((a, b) => a + b, 0);
+  const configCount = Object.values(analysis.analysis.configuration).reduce(
+    (a, b) => a + b,
+    0
+  );
   if (configCount >= 3) score += 15;
   else if (configCount >= 2) score += 10;
 
   // Estado bem gerenciado (+10)
-  const stateCount = Object.values(analysis.analysis.state).reduce((a, b) => a + b, 0);
+  const stateCount = Object.values(analysis.analysis.state).reduce(
+    (a, b) => a + b,
+    0
+  );
   if (stateCount >= 2) score += 10;
   else if (stateCount >= 1) score += 5;
 
   // Sem problemas (+10)
-  const issuesCount = Object.values(analysis.analysis.issues).reduce((a, b) => a + b, 0);
+  const issuesCount = Object.values(analysis.analysis.issues).reduce(
+    (a, b) => a + b,
+    0
+  );
   if (issuesCount === 0) score += 10;
   else if (issuesCount <= 2) score += 5;
 
   // Acessibilidade (+15)
-  const accessibilityCount = Object.values(analysis.analysis.accessibility).reduce(
-    (a, b) => a + b,
-    0
-  );
+  const accessibilityCount = Object.values(
+    analysis.analysis.accessibility
+  ).reduce((a, b) => a + b, 0);
   if (accessibilityCount >= 3) score += 15;
   else if (accessibilityCount >= 1) score += 10;
 
   // Performance (+15)
-  const performanceCount = Object.values(analysis.analysis.performance).reduce((a, b) => a + b, 0);
+  const performanceCount = Object.values(analysis.analysis.performance).reduce(
+    (a, b) => a + b,
+    0
+  );
   if (performanceCount >= 3) score += 15;
   else if (performanceCount >= 1) score += 10;
 
@@ -176,7 +191,7 @@ function analyzeFile(filePath) {
 // Executar análise
 console.log("🔍 ANALISANDO ARQUIVOS...\n");
 
-dragDropFiles.forEach(file => {
+dragDropFiles.forEach((file) => {
   const analysis = analyzeFile(file);
   if (analysis) {
     analysisResults[file] = analysis;
@@ -190,8 +205,12 @@ dragDropFiles.forEach(file => {
             ? "🟠"
             : "🔴";
 
-    console.log(`${statusIcon} ${analysis.file} - Score: ${analysis.score}/100`);
-    console.log(`   📚 Bibliotecas: ${analysis.analysis.libraries.join(", ") || "Nenhuma"}`);
+    console.log(
+      `${statusIcon} ${analysis.file} - Score: ${analysis.score}/100`
+    );
+    console.log(
+      `   📚 Bibliotecas: ${analysis.analysis.libraries.join(", ") || "Nenhuma"}`
+    );
     console.log(
       `   ⚙️ Funcionalidades: ${Object.values(analysis.analysis.functionality).reduce((a, b) => a + b, 0)}`
     );
@@ -218,14 +237,22 @@ dragDropFiles.forEach(file => {
 console.log("\n📊 RESUMO GERAL");
 console.log("=".repeat(50));
 
-const scores = Object.values(analysisResults).map(r => r.score);
+const scores = Object.values(analysisResults).map((r) => r.score);
 const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
 
 console.log(`📈 Score médio: ${avgScore.toFixed(1)}/100`);
-console.log(`🟢 Arquivos excelentes (80+): ${scores.filter(s => s >= 80).length}`);
-console.log(`🟡 Arquivos bons (60-79): ${scores.filter(s => s >= 60 && s < 80).length}`);
-console.log(`🟠 Arquivos regulares (40-59): ${scores.filter(s => s >= 40 && s < 60).length}`);
-console.log(`🔴 Arquivos críticos (<40): ${scores.filter(s => s < 40).length}`);
+console.log(
+  `🟢 Arquivos excelentes (80+): ${scores.filter((s) => s >= 80).length}`
+);
+console.log(
+  `🟡 Arquivos bons (60-79): ${scores.filter((s) => s >= 60 && s < 80).length}`
+);
+console.log(
+  `🟠 Arquivos regulares (40-59): ${scores.filter((s) => s >= 40 && s < 60).length}`
+);
+console.log(
+  `🔴 Arquivos críticos (<40): ${scores.filter((s) => s < 40).length}`
+);
 
 // Recomendações
 console.log("\n🛠️ RECOMENDAÇÕES DE MELHORIA");

@@ -18,7 +18,9 @@ const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
 
   const {
     title = "Bônus Inclusos",
-    bonuses = [{ title: "Bônus 1", value: "R$ 97", description: "Descrição do bônus" }],
+    bonuses = [
+      { title: "Bônus 1", value: "R$ 97", description: "Descrição do bônus" },
+    ],
   } = properties;
 
   return (

@@ -228,7 +228,9 @@ onClick={() => {
 
 ```typescript
 // ❌ PROBLEMA: Estado declarado mas não usado
-const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">(
+  "desktop"
+);
 ```
 
 ### **3. Tipagem Fraca**

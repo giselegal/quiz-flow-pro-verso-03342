@@ -585,8 +585,8 @@ const MeuComponente: React.FC<BlockComponentProps> = ({
 ```typescript
 // EditorPreview.tsx
 const handlePropertyChange = (blockId: string, key: string, value: any) => {
-  setBlocks(blocks =>
-    blocks.map(block =>
+  setBlocks((blocks) =>
+    blocks.map((block) =>
       block.id === blockId
         ? {
             ...block,

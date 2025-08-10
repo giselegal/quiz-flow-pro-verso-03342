@@ -16,7 +16,7 @@ const HIGH_QUALITY_IMAGES = {
  * @param {string} url URL a ser verificada
  * @returns {boolean} True se a imagem parecer embaçada baseada na URL
  */
-export const isLikelyBlurryImage = url => {
+export const isLikelyBlurryImage = (url) => {
   if (!url) return false;
 
   // Verificar parâmetros que indicam um placeholder ou imagem de baixa qualidade
@@ -37,7 +37,7 @@ export const isLikelyBlurryImage = url => {
  * @param {string} url URL original da imagem
  * @returns {string} URL otimizada
  */
-export const getHighQualityImageUrl = url => {
+export const getHighQualityImageUrl = (url) => {
   if (!url) return url;
 
   // Verificar se temos uma substituição direta no mapa
@@ -55,7 +55,10 @@ export const getHighQualityImageUrl = url => {
     }
 
     // Substituir parâmetros de baixa qualidade
-    newUrl = newUrl.replace(/q_\d+/, "q_90").replace(/w_40/, "w_auto").replace(/w_80/, "w_auto");
+    newUrl = newUrl
+      .replace(/q_\d+/, "q_90")
+      .replace(/w_40/, "w_auto")
+      .replace(/w_80/, "w_auto");
 
     // Garantir formato automático para melhor qualidade
     if (!newUrl.includes("f_auto")) {
@@ -81,7 +84,9 @@ export const replaceBlurryIntroImages = () => {
   console.group("🔄 Substituindo imagens embaçadas na introdução");
 
   // 1. Identificar imagens da introdução
-  const introImages = document.querySelectorAll('.quiz-intro img, [data-section="intro"] img');
+  const introImages = document.querySelectorAll(
+    '.quiz-intro img, [data-section="intro"] img'
+  );
   console.log(`Encontradas ${introImages.length} imagens na introdução`);
 
   let stats = {

@@ -33,7 +33,9 @@ const InterBlockDropZone = ({ position, isActive }) => {
 
 // Renderização condicional apenas quando arrastando
 {
-  isDraggingSidebarComponent && <InterBlockDropZone position={index + 1} isActive={true} />;
+  isDraggingSidebarComponent && (
+    <InterBlockDropZone position={index + 1} isActive={true} />
+  );
 }
 ```
 

@@ -125,7 +125,9 @@ async function createTables() {
     });
 
     if (error) {
-      console.log("❌ Erro ao executar via RPC. Tentando método alternativo...\n");
+      console.log(
+        "❌ Erro ao executar via RPC. Tentando método alternativo...\n"
+      );
 
       // Método alternativo: usar a função sql diretamente
       const { data: sqlData, error: sqlError } = await supabase
@@ -150,7 +152,9 @@ async function createTables() {
   } catch (err) {
     console.error("❌ Erro inesperado:", err.message);
     console.log("\n📝 SOLUÇÃO MANUAL:");
-    console.log("1. Acesse: https://supabase.com/dashboard/project/txqljpitotmcxntprxiu");
+    console.log(
+      "1. Acesse: https://supabase.com/dashboard/project/txqljpitotmcxntprxiu"
+    );
     console.log('2. Vá para "SQL Editor"');
     console.log('3. Execute o conteúdo do arquivo "create-funnel-tables.sql"');
   }
@@ -243,7 +247,10 @@ async function verifyTables() {
       console.log('❌ Tabela "funnels" não existe');
       return false;
     } else if (funnelsError) {
-      console.log('⚠️  Erro ao acessar tabela "funnels":', funnelsError.message);
+      console.log(
+        '⚠️  Erro ao acessar tabela "funnels":',
+        funnelsError.message
+      );
     } else {
       console.log('✅ Tabela "funnels" existe e está acessível');
     }
@@ -258,7 +265,10 @@ async function verifyTables() {
       console.log('❌ Tabela "funnel_pages" não existe');
       return false;
     } else if (pagesError) {
-      console.log('⚠️  Erro ao acessar tabela "funnel_pages":', pagesError.message);
+      console.log(
+        '⚠️  Erro ao acessar tabela "funnel_pages":',
+        pagesError.message
+      );
     } else {
       console.log('✅ Tabela "funnel_pages" existe e está acessível');
     }

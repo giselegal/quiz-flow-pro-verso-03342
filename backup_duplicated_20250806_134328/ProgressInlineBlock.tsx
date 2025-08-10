@@ -12,7 +12,9 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({
   // Safety check for block and properties
   if (!block) {
     console.warn("⚠️ ProgressInlineBlock: block is undefined");
-    return <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>;
+    return (
+      <div className="p-2 bg-red-50 text-red-600">Error: Block not found</div>
+    );
   }
 
   // Safe destructuring with fallbacks
@@ -90,16 +92,29 @@ const ProgressInlineBlock: React.FC<InlineBlockProps> = ({
     >
       {showLabel && (
         <div className="flex justify-between items-center">
-          <span className={cn("font-medium text-gray-700", sizeClasses)}>{label}</span>
+          <span className={cn("font-medium text-gray-700", sizeClasses)}>
+            {label}
+          </span>
           {showPercentage && (
-            <span className={cn("text-gray-600", sizeClasses)}>{Math.round(percentage)}%</span>
+            <span className={cn("text-gray-600", sizeClasses)}>
+              {Math.round(percentage)}%
+            </span>
           )}
         </div>
       )}
 
-      <div className={cn("w-full rounded-full overflow-hidden", sizeClasses, backgroundClasses)}>
+      <div
+        className={cn(
+          "w-full rounded-full overflow-hidden",
+          sizeClasses,
+          backgroundClasses
+        )}
+      >
         <div
-          className={cn("h-full transition-all duration-300 ease-out", colorClasses)}
+          className={cn(
+            "h-full transition-all duration-300 ease-out",
+            colorClasses
+          )}
           style={{ width: `${percentage}%` }}
         />
       </div>

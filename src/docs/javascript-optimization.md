@@ -26,7 +26,11 @@ Para scripts como o Facebook Pixel e analytics, carregue de forma assíncrona e 
 <script src="https://connect.facebook.net/en_US/fbevents.js"></script>
 
 <!-- Depois -->
-<script async defer src="https://connect.facebook.net/en_US/fbevents.js"></script>
+<script
+  async
+  defer
+  src="https://connect.facebook.net/en_US/fbevents.js"
+></script>
 ```
 
 ### 2. Code Splitting
@@ -134,10 +138,18 @@ Os scripts externos devem ser carregados de forma assíncrona no `index.html`:
 
 ```html
 <!-- Facebook Pixel -->
-<script async defer src="https://connect.facebook.net/en_US/fbevents.js"></script>
+<script
+  async
+  defer
+  src="https://connect.facebook.net/en_US/fbevents.js"
+></script>
 
 <!-- Cloudflare Analytics -->
-<script async defer src="https://static.cloudflareinsights.com/beacon.min.js"></script>
+<script
+  async
+  defer
+  src="https://static.cloudflareinsights.com/beacon.min.js"
+></script>
 
 <!-- GPT Engineer -->
 <script async defer src="https://cdn.gpteng.co/gptengineer.js"></script>

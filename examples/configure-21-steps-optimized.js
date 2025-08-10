@@ -34,10 +34,26 @@ const QUIZ_DATA = {
       title: "Qual seu estilo de vida?",
       text: "Como você descreveria sua rotina diária?",
       options: [
-        { id: "a", text: "Prática e dinâmica", score: { natural: 3, classico: 1 } },
-        { id: "b", text: "Organizada e estruturada", score: { classico: 3, elegante: 1 } },
-        { id: "c", text: "Criativa e flexível", score: { romantico: 2, criativo: 3 } },
-        { id: "d", text: "Sofisticada e refinada", score: { elegante: 3, dramatico: 1 } },
+        {
+          id: "a",
+          text: "Prática e dinâmica",
+          score: { natural: 3, classico: 1 },
+        },
+        {
+          id: "b",
+          text: "Organizada e estruturada",
+          score: { classico: 3, elegante: 1 },
+        },
+        {
+          id: "c",
+          text: "Criativa e flexível",
+          score: { romantico: 2, criativo: 3 },
+        },
+        {
+          id: "d",
+          text: "Sofisticada e refinada",
+          score: { elegante: 3, dramatico: 1 },
+        },
       ],
     },
     {
@@ -45,10 +61,26 @@ const QUIZ_DATA = {
       title: "Qual sua peça favorita?",
       text: "Que tipo de roupa você se sente mais confortável?",
       options: [
-        { id: "a", text: "Jeans e camiseta básica", score: { natural: 3, contemporaneo: 1 } },
-        { id: "b", text: "Blazer e calça social", score: { classico: 3, elegante: 2 } },
-        { id: "c", text: "Vestido fluido e delicado", score: { romantico: 3, natural: 1 } },
-        { id: "d", text: "Peças estruturadas e marcantes", score: { dramatico: 3, elegante: 1 } },
+        {
+          id: "a",
+          text: "Jeans e camiseta básica",
+          score: { natural: 3, contemporaneo: 1 },
+        },
+        {
+          id: "b",
+          text: "Blazer e calça social",
+          score: { classico: 3, elegante: 2 },
+        },
+        {
+          id: "c",
+          text: "Vestido fluido e delicado",
+          score: { romantico: 3, natural: 1 },
+        },
+        {
+          id: "d",
+          text: "Peças estruturadas e marcantes",
+          score: { dramatico: 3, elegante: 1 },
+        },
       ],
     },
     {
@@ -56,9 +88,21 @@ const QUIZ_DATA = {
       title: "Cores que mais te atraem?",
       text: "Qual paleta de cores você prefere?",
       options: [
-        { id: "a", text: "Tons terrosos e neutros", score: { natural: 3, classico: 1 } },
-        { id: "b", text: "Cores sólidas e atemporais", score: { classico: 3, elegante: 2 } },
-        { id: "c", text: "Pastéis e tons suaves", score: { romantico: 3, criativo: 1 } },
+        {
+          id: "a",
+          text: "Tons terrosos e neutros",
+          score: { natural: 3, classico: 1 },
+        },
+        {
+          id: "b",
+          text: "Cores sólidas e atemporais",
+          score: { classico: 3, elegante: 2 },
+        },
+        {
+          id: "c",
+          text: "Pastéis e tons suaves",
+          score: { romantico: 3, criativo: 1 },
+        },
         {
           id: "d",
           text: "Cores vibrantes e contrastantes",
@@ -89,7 +133,8 @@ const QUIZ_DATA = {
   styles: {
     natural: {
       name: "Natural",
-      description: "Você valoriza o conforto e a praticidade sem abrir mão do estilo.",
+      description:
+        "Você valoriza o conforto e a praticidade sem abrir mão do estilo.",
       characteristics: ["Confortável", "Prática", "Autêntica", "Descomplicada"],
       colors: ["#8B7355", "#A0956B", "#6B5B73"],
       guideImage:
@@ -97,7 +142,8 @@ const QUIZ_DATA = {
     },
     classico: {
       name: "Clássico",
-      description: "Você prefere peças atemporais, elegantes e bem estruturadas.",
+      description:
+        "Você prefere peças atemporais, elegantes e bem estruturadas.",
       characteristics: ["Atemporal", "Elegante", "Sofisticada", "Refinada"],
       colors: ["#2C3E50", "#34495E", "#7F8C8D"],
       guideImage:
@@ -105,7 +151,8 @@ const QUIZ_DATA = {
     },
     romantico: {
       name: "Romântico",
-      description: "Você adora peças femininas, delicadas e com detalhes especiais.",
+      description:
+        "Você adora peças femininas, delicadas e com detalhes especiais.",
       characteristics: ["Feminina", "Delicada", "Suave", "Detalhista"],
       colors: ["#F8BBD9", "#E8A2C0", "#D7819F"],
       guideImage:
@@ -113,7 +160,8 @@ const QUIZ_DATA = {
     },
     dramatico: {
       name: "Dramático",
-      description: "Você gosta de peças marcantes, estruturadas e com presença.",
+      description:
+        "Você gosta de peças marcantes, estruturadas e com presença.",
       characteristics: ["Marcante", "Poderosa", "Estruturada", "Impactante"],
       colors: ["#000000", "#8B0000", "#4B0082"],
       guideImage:
@@ -137,7 +185,8 @@ const QUIZ_DATA = {
     },
     contemporaneo: {
       name: "Contemporâneo",
-      description: "Você acompanha tendências mas adapta ao seu estilo pessoal.",
+      description:
+        "Você acompanha tendências mas adapta ao seu estilo pessoal.",
       characteristics: ["Moderna", "Atualizada", "Versátil", "Inovadora"],
       colors: ["#95A5A6", "#BDC3C7", "#ECF0F1"],
       guideImage:
@@ -736,7 +785,10 @@ function saveConfiguration() {
   const config = createFunnelConfiguration();
 
   // Salvar configuração principal
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.json");
+  const configPath = path.join(
+    __dirname,
+    "src/config/optimized21StepsFunnel.json"
+  );
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
   // Salvar arquivo TypeScript para integração
@@ -756,12 +808,17 @@ export type StyleConfig = typeof OPTIMIZED_FUNNEL_CONFIG.quizData.styles.natural
 
 export default OPTIMIZED_FUNNEL_CONFIG;`;
 
-  const tsConfigPath = path.join(__dirname, "src/config/optimized21StepsFunnel.ts");
+  const tsConfigPath = path.join(
+    __dirname,
+    "src/config/optimized21StepsFunnel.ts"
+  );
   fs.writeFileSync(tsConfigPath, tsConfigContent);
 
   // Aplicar prettier
   try {
-    execSync(`npx prettier --write "${configPath}" "${tsConfigPath}"`, { stdio: "pipe" });
+    execSync(`npx prettier --write "${configPath}" "${tsConfigPath}"`, {
+      stdio: "pipe",
+    });
     console.log("✅ Configuração salva e formatada");
   } catch (error) {
     console.log("⚠️ Configuração salva (prettier falhou)");
@@ -774,7 +831,10 @@ function updateEditorIntegration() {
   console.log("🔧 Atualizando integração com o editor...");
 
   // Atualizar EditorContext para usar nova configuração
-  const editorContextPath = path.join(__dirname, "src/context/EditorContext.tsx");
+  const editorContextPath = path.join(
+    __dirname,
+    "src/context/EditorContext.tsx"
+  );
 
   if (fs.existsSync(editorContextPath)) {
     let content = fs.readFileSync(editorContextPath, "utf8");
@@ -785,7 +845,11 @@ function updateEditorIntegration() {
     if (!content.includes("OPTIMIZED_FUNNEL_CONFIG")) {
       const importIndex = content.indexOf("import React");
       if (importIndex !== -1) {
-        content = content.slice(0, importIndex) + importLine + "\n" + content.slice(importIndex);
+        content =
+          content.slice(0, importIndex) +
+          importLine +
+          "\n" +
+          content.slice(importIndex);
       }
     }
 
@@ -871,7 +935,7 @@ function generateSummary() {
     "image-display-inline",
     "legal-notice-inline",
   ];
-  components.forEach(comp => console.log(`  ✅ ${comp}`));
+  components.forEach((comp) => console.log(`  ✅ ${comp}`));
 
   console.log("\n🔄 FUNCIONALIDADES ATIVAS:");
   console.log("• Cálculo automático de estilo predominante");

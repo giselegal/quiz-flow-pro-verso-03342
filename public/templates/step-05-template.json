@@ -6,12 +6,7 @@
     "description": "Questão 4 de 13",
     "category": "quiz-question",
     "type": "question",
-    "tags": [
-      "quiz",
-      "style",
-      "quiz-question",
-      "gisele-galvao"
-    ],
+    "tags": ["quiz", "style", "quiz-question", "gisele-galvao"],
     "createdAt": "2025-08-10T03:45:03.512Z",
     "updatedAt": "2025-08-10T03:45:03.512Z",
     "author": "giselegal"
@@ -236,12 +231,7 @@
   },
   "analytics": {
     "trackingId": "step-05-quiz-question",
-    "events": [
-      "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
-    ],
+    "events": ["page_view", "interaction", "validation_error", "completion"],
     "utmParams": true,
     "customEvents": []
   },

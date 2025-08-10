@@ -30,7 +30,13 @@ const PRODUCTION_COMPONENTS = {
     QuizIntroHeaderBlock: {
       path: "/src/components/editor/blocks/QuizIntroHeaderBlock.tsx",
       functionality: "Header com logo, progresso, navegação",
-      properties: ["logoUrl", "logoAlt", "progressValue", "showProgress", "backgroundColor"],
+      properties: [
+        "logoUrl",
+        "logoAlt",
+        "progressValue",
+        "showProgress",
+        "backgroundColor",
+      ],
       calculations: "Controle de progresso dinâmico",
       priority: "CRÍTICO",
       status: "MANTÉM",
@@ -38,7 +44,13 @@ const PRODUCTION_COMPONENTS = {
     OptionsGridBlock: {
       path: "/src/components/editor/blocks/OptionsGridBlock.tsx",
       functionality: "Grid de opções para questões do quiz",
-      properties: ["question", "columns", "gap", "selectionMode", "primaryColor"],
+      properties: [
+        "question",
+        "columns",
+        "gap",
+        "selectionMode",
+        "primaryColor",
+      ],
       calculations: "Cálculo de pontuação por opção, validação de seleção",
       priority: "CRÍTICO",
       status: "MANTÉM",
@@ -59,7 +71,8 @@ const PRODUCTION_COMPONENTS = {
       path: "/src/components/editor/blocks/QuizResultsEditor.tsx",
       functionality: "Exibição de resultados calculados",
       properties: ["title", "showScores", "showPercentages", "primaryColor"],
-      calculations: "Processamento de respostas, cálculo de estilo predominante",
+      calculations:
+        "Processamento de respostas, cálculo de estilo predominante",
       priority: "CRÍTICO",
       status: "OTIMIZAR",
     },
@@ -67,7 +80,8 @@ const PRODUCTION_COMPONENTS = {
       path: "/src/components/editor/blocks/StyleResultsEditor.tsx",
       functionality: "Resultado específico de estilo com guia",
       properties: ["title", "showAllStyles", "showGuideImage", "primaryStyle"],
-      calculations: "Mapeamento estilo -> características, recomendações personalizadas",
+      calculations:
+        "Mapeamento estilo -> características, recomendações personalizadas",
       priority: "CRÍTICO",
       status: "OTIMIZAR",
     },
@@ -78,8 +92,15 @@ const PRODUCTION_COMPONENTS = {
     FinalStepEditor: {
       path: "/src/components/editor/blocks/FinalStepEditor.tsx",
       functionality: "Página final de oferta personalizada",
-      properties: ["stepNumber", "title", "subtitle", "showNavigation", "backgroundColor"],
-      calculations: "Personalização baseada no resultado, tracking de conversão",
+      properties: [
+        "stepNumber",
+        "title",
+        "subtitle",
+        "showNavigation",
+        "backgroundColor",
+      ],
+      calculations:
+        "Personalização baseada no resultado, tracking de conversão",
       priority: "CRÍTICO",
       status: "OTIMIZAR",
     },
@@ -174,7 +195,8 @@ const OPTIMIZED_STEP_ARCHITECTURE = {
       { type: "quiz-progress", config: "Loading visual" },
       { type: "button-inline", config: "Continuar análise" },
     ],
-    calculations: "Análise parcial dos resultados, preparação para questões estratégicas",
+    calculations:
+      "Análise parcial dos resultados, preparação para questões estratégicas",
     editableProperties: "Textos, timing, animações",
   },
 
@@ -225,15 +247,22 @@ const OPTIMIZED_STEP_ARCHITECTURE = {
     components: [
       { type: "quiz-intro-header", config: "Logo + badge de oferta" },
       { type: "final-step", config: "Header da oferta personalizada" },
-      { type: "heading-inline", config: "Título da oferta baseado no resultado" },
-      { type: "image-display-inline", config: "Produto específico para o estilo" },
+      {
+        type: "heading-inline",
+        config: "Título da oferta baseado no resultado",
+      },
+      {
+        type: "image-display-inline",
+        config: "Produto específico para o estilo",
+      },
       { type: "text-inline", config: "Benefícios personalizados" },
       { type: "options-grid", config: "Opções de pagamento" },
       { type: "form-input", config: "Dados para checkout (opcional)" },
       { type: "button-inline", config: "CTA de conversão final" },
       { type: "legal-notice-inline", config: "Garantias e termos" },
     ],
-    calculations: "Personalização da oferta, tracking de conversão, cálculo de desconto",
+    calculations:
+      "Personalização da oferta, tracking de conversão, cálculo de desconto",
     editableProperties: "Oferta, preços, produtos, textos, imagens, CTAs",
   },
 };
@@ -267,11 +296,11 @@ function scanComponentFiles() {
 
   const foundComponents = {};
 
-  componentDirs.forEach(dir => {
+  componentDirs.forEach((dir) => {
     const fullPath = path.join(__dirname, dir);
     if (fs.existsSync(fullPath)) {
       const files = fs.readdirSync(fullPath);
-      files.forEach(file => {
+      files.forEach((file) => {
         if (file.endsWith(".tsx") && !file.endsWith(".backup")) {
           const componentName = file.replace(".tsx", "");
           if (!foundComponents[componentName]) {
@@ -296,7 +325,7 @@ function identifyDuplicates(components) {
     if (paths.length > 1) {
       duplicates[name] = paths;
       console.log(`❌ DUPLICATA: ${name}`);
-      paths.forEach(p => console.log(`   - ${p}`));
+      paths.forEach((p) => console.log(`   - ${p}`));
     } else {
       unique[name] = paths[0];
     }
@@ -364,8 +393,8 @@ function generateCleanupPlan(duplicates, unique) {
 
   // Analisar duplicatas
   Object.entries(duplicates).forEach(([name, paths]) => {
-    const qualities = paths.map(p => analyzeComponentQuality(p));
-    const bestIndex = qualities.findIndex(q => q.quality === "GOOD") || 0;
+    const qualities = paths.map((p) => analyzeComponentQuality(p));
+    const bestIndex = qualities.findIndex((q) => q.quality === "GOOD") || 0;
 
     plan.toKeep.push(paths[bestIndex]);
     paths.forEach((path, index) => {
@@ -417,7 +446,7 @@ function generateOptimizedStructure() {
     "✅ legal-notice-inline - Avisos legais",
   ];
 
-  coreComponents.forEach(comp => console.log(comp));
+  coreComponents.forEach((comp) => console.log(comp));
 
   console.log("\n🎯 BENEFÍCIOS DA ESTRUTURA OTIMIZADA:\n");
   console.log("• Redução de 40+ componentes para 13 componentes core");
@@ -524,7 +553,9 @@ function runCompleteAudit() {
   console.log("4. Testar funcionalidades de cálculo");
   console.log("5. Validar editabilidade no painel de propriedades");
 
-  console.log("\n🚀 RESULTADO: Sistema otimizado e eficiente para as 21 etapas!");
+  console.log(
+    "\n🚀 RESULTADO: Sistema otimizado e eficiente para as 21 etapas!"
+  );
 
   return {
     components,

@@ -26,7 +26,7 @@ const improvedFiles = [
 console.log("\n📁 ARQUIVOS CRIADOS");
 console.log("=".repeat(30));
 
-newFiles.forEach(file => {
+newFiles.forEach((file) => {
   const fullPath = path.join("/workspaces/quiz-quest-challenge-verse", file);
   if (fs.existsSync(fullPath)) {
     const content = fs.readFileSync(fullPath, "utf8");
@@ -40,7 +40,7 @@ newFiles.forEach(file => {
 console.log("\n🔧 ARQUIVOS MELHORADOS");
 console.log("=".repeat(30));
 
-improvedFiles.forEach(file => {
+improvedFiles.forEach((file) => {
   const fullPath = path.join("/workspaces/quiz-quest-challenge-verse", file);
   if (fs.existsSync(fullPath)) {
     const content = fs.readFileSync(fullPath, "utf8");
@@ -111,9 +111,9 @@ const improvements = [
   },
 ];
 
-improvements.forEach(category => {
+improvements.forEach((category) => {
   console.log(`\n${category.categoria}:`);
-  category.items.forEach(item => {
+  category.items.forEach((item) => {
     console.log(`   ✓ ${item}`);
   });
 });
@@ -154,7 +154,7 @@ const metrics = [
   },
 ];
 
-metrics.forEach(metric => {
+metrics.forEach((metric) => {
   console.log(
     `${metric.metrica.padEnd(20)} | ${metric.antes.padEnd(8)} → ${metric.depois.padEnd(8)} | ${metric.melhoria}`
   );

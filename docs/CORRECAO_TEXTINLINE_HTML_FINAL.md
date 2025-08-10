@@ -7,11 +7,15 @@ O componente TextInlineBlock estava mostrando HTML cru ao invés de renderizar a
 **Texto problemático**:
 
 ```html
-<span style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;">Chega</span>
+<span
+  style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;"
+  >Chega</span
+>
 <span style="font-family: 'Playfair Display', serif;"
   >de um guarda-roupa lotado e da sensação de que</span
 >
-<span style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;"
+<span
+  style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;"
   >nada combina com você.</span
 >
 ```

@@ -226,7 +226,7 @@ const supabaseKey = "sua-chave-publica";
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Exemplo de uso
-export const saveQuiz = async quizData => {
+export const saveQuiz = async (quizData) => {
   const { data, error } = await supabase.from("quizzes").insert(quizData);
 
   return { data, error };

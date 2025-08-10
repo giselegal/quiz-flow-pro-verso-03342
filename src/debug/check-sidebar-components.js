@@ -27,7 +27,7 @@ console.log("=== DEBUG: Componentes da Sidebar ===");
 
 const quizBlocks = generateQuizBlocks();
 console.log("Quiz Blocks:", quizBlocks.length);
-quizBlocks.forEach(block => {
+quizBlocks.forEach((block) => {
   console.log(`- ${block.type}: ${block.name} (${block.category})`);
 });
 
@@ -50,7 +50,7 @@ const groupedBlocks = allBlocks.reduce((groups, block) => {
 console.log("\n=== Blocos por Categoria ===");
 Object.entries(groupedBlocks).forEach(([category, blocks]) => {
   console.log(`${category}: ${blocks.length} componentes`);
-  blocks.forEach(block => {
+  blocks.forEach((block) => {
     console.log(`  - ${block.type}: ${block.name}`);
   });
 });

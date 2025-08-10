@@ -130,12 +130,12 @@ User Action → State Update → Auto-save (3s delay) → localStorage
 ```css
 /* Cores principais */
 --primary-brown:
-  #432818 --secondary-beige: #b89b7a --background-light: #f9f5f1 --background-white: #ffffff
-    /* Tipografia */ --font-primary: Inter,
+  #432818 --secondary-beige: #b89b7a --background-light: #f9f5f1
+    --background-white: #ffffff /* Tipografia */ --font-primary: Inter,
   system-ui --font-weights: 400, 500, 600,
-  700 /* Espaçamentos */ --spacing-xs: 4px --spacing-sm: 8px --spacing-md: 16px --spacing-lg: 24px
-    --spacing-xl: 32px /* Border radius */ --radius-sm: 4px --radius-md: 8px --radius-lg: 12px
-    --radius-full: 9999px;
+  700 /* Espaçamentos */ --spacing-xs: 4px --spacing-sm: 8px --spacing-md: 16px
+    --spacing-lg: 24px --spacing-xl: 32px /* Border radius */ --radius-sm: 4px
+    --radius-md: 8px --radius-lg: 12px --radius-full: 9999px;
 ```
 
 ### 2. Breakpoints Responsivos

@@ -108,7 +108,11 @@
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">Analytics Dashboard</h2>
-          <Button onClick={() => setShowAnalyticsDashboard(false)} variant="outline" size="sm">
+          <Button
+            onClick={() => setShowAnalyticsDashboard(false)}
+            variant="outline"
+            size="sm"
+          >
             ✕
           </Button>
         </div>
@@ -133,7 +137,11 @@
       <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">Selecionar Template</h2>
-          <Button onClick={() => setShowTemplateSelector(false)} variant="outline" size="sm">
+          <Button
+            onClick={() => setShowTemplateSelector(false)}
+            variant="outline"
+            size="sm"
+          >
             ✕
           </Button>
         </div>

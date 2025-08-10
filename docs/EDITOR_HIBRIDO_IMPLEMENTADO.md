@@ -113,7 +113,7 @@ onDelete={() => actions.deleteBlock(selectedComponentId)}
 
 ```typescript
 // Converter blocks do useEditor para formato esperado pelo EditorCanvas
-const editorBlocks = blocks.map(block => ({
+const editorBlocks = blocks.map((block) => ({
   id: block.id,
   type: block.type,
   properties: block.content || block.properties || {},

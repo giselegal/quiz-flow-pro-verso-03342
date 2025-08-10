@@ -20,7 +20,7 @@ if (newBlockId) {
 2. EM sortedBlocks - CORRIGIR filtro:
 
 ```typescript
-const stepBlocks = blocks.filter(block => {
+const stepBlocks = blocks.filter((block) => {
   if (block.stepId) {
     return block.stepId === selectedStepId; // APENAS da etapa atual
   }

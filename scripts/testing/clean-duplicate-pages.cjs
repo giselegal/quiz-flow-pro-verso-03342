@@ -1,14 +1,19 @@
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
-const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const supabase = createClient(
+  process.env.REACT_APP_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY
+);
 
 async function cleanDuplicatePages() {
   try {
     console.log("🧹 Limpando páginas duplicadas...");
 
     // Primeiro, vamos ver todas as páginas
-    const { data: allPages, error: selectError } = await supabase.from("funnel_pages").select("*");
+    const { data: allPages, error: selectError } = await supabase
+      .from("funnel_pages")
+      .select("*");
 
     if (selectError) {
       console.error("❌ Erro ao buscar páginas:", selectError);
@@ -19,7 +24,7 @@ async function cleanDuplicatePages() {
 
     // Agrupar por ID para encontrar duplicatas
     const pageGroups = {};
-    allPages?.forEach(page => {
+    allPages?.forEach((page) => {
       if (!pageGroups[page.id]) {
         pageGroups[page.id] = [];
       }
@@ -27,7 +32,9 @@ async function cleanDuplicatePages() {
     });
 
     // Encontrar duplicatas
-    const duplicates = Object.entries(pageGroups).filter(([id, pages]) => pages.length > 1);
+    const duplicates = Object.entries(pageGroups).filter(
+      ([id, pages]) => pages.length > 1
+    );
 
     console.log("🔍 Páginas duplicadas encontradas:", duplicates.length);
 
@@ -39,7 +46,9 @@ async function cleanDuplicatePages() {
       const toDelete = pages.slice(1);
 
       for (const page of toDelete) {
-        console.log(`   🗑️ Deletando duplicata: funnel_id=${page.funnel_id}, title=${page.title}`);
+        console.log(
+          `   🗑️ Deletando duplicata: funnel_id=${page.funnel_id}, title=${page.title}`
+        );
 
         const { error: deleteError } = await supabase
           .from("funnel_pages")
@@ -56,15 +65,19 @@ async function cleanDuplicatePages() {
     }
 
     // Verificar se ainda há duplicatas
-    const { data: remainingPages } = await supabase.from("funnel_pages").select("id");
+    const { data: remainingPages } = await supabase
+      .from("funnel_pages")
+      .select("id");
 
-    const remainingIds = remainingPages?.map(p => p.id) || [];
+    const remainingIds = remainingPages?.map((p) => p.id) || [];
     const uniqueIds = [...new Set(remainingIds)];
 
     console.log("\n📊 Resultado final:");
     console.log(`   Total de páginas: ${remainingIds.length}`);
     console.log(`   IDs únicos: ${uniqueIds.length}`);
-    console.log(`   Duplicatas restantes: ${remainingIds.length - uniqueIds.length}`);
+    console.log(
+      `   Duplicatas restantes: ${remainingIds.length - uniqueIds.length}`
+    );
 
     if (remainingIds.length === uniqueIds.length) {
       console.log("✅ Limpeza concluída com sucesso! Não há mais duplicatas.");

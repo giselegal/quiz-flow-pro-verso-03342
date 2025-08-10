@@ -50,7 +50,9 @@ function emergencyDeleteFix() {
     document.head.appendChild(emergencyStyle);
 
     // 4. Procurar e destacar componentes
-    const blocks = document.querySelectorAll("[data-block-id], .sortable-block, .block-item");
+    const blocks = document.querySelectorAll(
+      "[data-block-id], .sortable-block, .block-item"
+    );
     console.log(`📦 Componentes encontrados: ${blocks.length}`);
 
     blocks.forEach((block, index) => {
@@ -100,7 +102,9 @@ function emergencyDeleteFix() {
 
         // Tentar encontrar o ID do bloco
         const blockElement = btn.closest("[data-block-id]");
-        const blockId = blockElement ? blockElement.getAttribute("data-block-id") : "test-block-1";
+        const blockId = blockElement
+          ? blockElement.getAttribute("data-block-id")
+          : "test-block-1";
 
         console.log("🎯 Tentando excluir bloco:", blockId);
 
@@ -135,10 +139,14 @@ async function deleteBlockDirectly(blockId) {
   console.log("🚀 Exclusão direta via API para:", blockId);
 
   try {
-    const funnelId = localStorage.getItem("currentFunnelId") || "funnel_1753399767385_kgc4wwjsc";
+    const funnelId =
+      localStorage.getItem("currentFunnelId") ||
+      "funnel_1753399767385_kgc4wwjsc";
 
     // Buscar funnel
-    const response = await fetch(`http://localhost:3001/api/schema-driven/funnels/${funnelId}`);
+    const response = await fetch(
+      `http://localhost:3001/api/schema-driven/funnels/${funnelId}`
+    );
     const funnel = await response.json();
 
     console.log("📋 Funnel carregado:", funnel.name);
@@ -147,7 +155,9 @@ async function deleteBlockDirectly(blockId) {
 
     // Remover bloco
     if (funnel.pages && funnel.pages[0]) {
-      funnel.pages[0].blocks = funnel.pages[0].blocks.filter(block => block.id !== blockId);
+      funnel.pages[0].blocks = funnel.pages[0].blocks.filter(
+        (block) => block.id !== blockId
+      );
       console.log("📦 Blocos depois:", funnel.pages[0].blocks.length);
 
       // Salvar

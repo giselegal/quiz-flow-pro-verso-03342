@@ -40,7 +40,9 @@ allButtons.forEach((btn, i) => {
   }
 });
 
-console.log(`🗑️  Total de botões de exclusão encontrados: ${deleteButtons.length}`);
+console.log(
+  `🗑️  Total de botões de exclusão encontrados: ${deleteButtons.length}`
+);
 
 // 4. Forçar visibilidade de todos os controles hover
 const style = document.createElement("style");
@@ -97,7 +99,7 @@ window.showAllControls = function () {
   console.log("👁️  Simulando hover em todos os componentes...");
 
   const groups = document.querySelectorAll(".group");
-  groups.forEach(group => {
+  groups.forEach((group) => {
     // Simular evento de mouse enter
     const event = new MouseEvent("mouseenter", { bubbles: true });
     group.dispatchEvent(event);
@@ -108,8 +110,12 @@ window.showAllControls = function () {
 };
 
 console.log("✅ Debug concluído! Comandos disponíveis:");
-console.log("   - testDelete() - Tenta excluir usando o primeiro botão encontrado");
-console.log("   - showAllControls() - Força visibilidade de todos os controles");
+console.log(
+  "   - testDelete() - Tenta excluir usando o primeiro botão encontrado"
+);
+console.log(
+  "   - showAllControls() - Força visibilidade de todos os controles"
+);
 console.log("   - deleteButtons - Array com botões de exclusão encontrados");
 
 // Executar automaticamente

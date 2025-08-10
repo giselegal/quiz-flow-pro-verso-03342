@@ -75,7 +75,10 @@ async function createTables() {
       console.log(`⚙️ Criando tabela ${table.name}...`);
 
       // Tentar inserir dados de teste para "criar" a tabela
-      const { data, error } = await supabase.from(table.name).select("*").limit(1);
+      const { data, error } = await supabase
+        .from(table.name)
+        .select("*")
+        .limit(1);
 
       if (error) {
         console.log(`❌ Tabela ${table.name} não existe:`, error.message);

@@ -7,7 +7,9 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-console.log("🔧 CORREÇÃO DE SINTAXE JSON NO ARQUIVO optimized21StepsFunnel.ts\n");
+console.log(
+  "🔧 CORREÇÃO DE SINTAXE JSON NO ARQUIVO optimized21StepsFunnel.ts\n"
+);
 
 const filePath = path.join(__dirname, "src/config/optimized21StepsFunnel.ts");
 
@@ -21,7 +23,9 @@ try {
   const pattern1 = /],\s*}\s*\{\s*("id")/g;
   const matches1 = content.match(pattern1);
   if (matches1) {
-    console.log(`   🔧 Encontrados ${matches1.length} problemas de estrutura array/objeto`);
+    console.log(
+      `   🔧 Encontrados ${matches1.length} problemas de estrutura array/objeto`
+    );
     content = content.replace(pattern1, "],\n    },\n    {\n        $1");
     fixCount += matches1.length;
   }
@@ -74,7 +78,9 @@ try {
   const pattern3 = /}\s*\n\s*{/g;
   const matches3 = content.match(pattern3);
   if (matches3) {
-    console.log(`   🔧 Encontrados ${matches3.length} problemas de vírgulas faltantes`);
+    console.log(
+      `   🔧 Encontrados ${matches3.length} problemas de vírgulas faltantes`
+    );
     content = content.replace(pattern3, "},\n    {");
     fixCount += matches3.length;
   }
@@ -83,7 +89,9 @@ try {
   const pattern4 = /,\s*,/g;
   const matches4 = content.match(pattern4);
   if (matches4) {
-    console.log(`   🔧 Encontrados ${matches4.length} problemas de vírgulas duplicadas`);
+    console.log(
+      `   🔧 Encontrados ${matches4.length} problemas de vírgulas duplicadas`
+    );
     content = content.replace(pattern4, ",");
     fixCount += matches4.length;
   }
@@ -98,14 +106,20 @@ try {
   const closeBrackets = (content.match(/\]/g) || []).length;
 
   console.log(`   📊 Chaves: ${openBraces} abertas, ${closeBraces} fechadas`);
-  console.log(`   📊 Colchetes: ${openBrackets} abertos, ${closeBrackets} fechados`);
+  console.log(
+    `   📊 Colchetes: ${openBrackets} abertos, ${closeBrackets} fechados`
+  );
 
   if (openBraces !== closeBraces) {
-    console.log(`   ⚠️ PROBLEMA: ${openBraces - closeBraces} chaves não balanceadas`);
+    console.log(
+      `   ⚠️ PROBLEMA: ${openBraces - closeBraces} chaves não balanceadas`
+    );
   }
 
   if (openBrackets !== closeBrackets) {
-    console.log(`   ⚠️ PROBLEMA: ${openBrackets - closeBrackets} colchetes não balanceados`);
+    console.log(
+      `   ⚠️ PROBLEMA: ${openBrackets - closeBrackets} colchetes não balanceados`
+    );
   }
 
   // Salvar arquivo corrigido

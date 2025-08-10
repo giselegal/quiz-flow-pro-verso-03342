@@ -112,7 +112,10 @@ function fixProgress(content, stepNumber) {
   const newProgress = progressMap[stepNumber];
   if (!newProgress) return content;
 
-  return content.replace(/progressValue:\s*\d+/g, `progressValue: ${newProgress}`);
+  return content.replace(
+    /progressValue:\s*\d+/g,
+    `progressValue: ${newProgress}`
+  );
 }
 
 // 🔧 FUNÇÃO PARA CORRIGIR NÚMERO DA ETAPA
@@ -174,4 +177,6 @@ if (correctedFiles > 0) {
   console.log("   ✅ Props padronizadas");
 }
 
-console.log("\n🚀 EXECUTAR: node final-report-21-templates.js para verificação final");
+console.log(
+  "\n🚀 EXECUTAR: node final-report-21-templates.js para verificação final"
+);

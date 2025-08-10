@@ -61,7 +61,7 @@ const requiredClasses = [
 ];
 
 const missingClasses = [];
-requiredClasses.forEach(className => {
+requiredClasses.forEach((className) => {
   if (!cssContent.includes(`.${className}`)) {
     missingClasses.push(className);
   }
@@ -69,7 +69,7 @@ requiredClasses.forEach(className => {
 
 if (missingClasses.length > 0) {
   console.log("❌ CLASSES CSS FALTANTES:");
-  missingClasses.forEach(cls => {
+  missingClasses.forEach((cls) => {
     console.log(`   - .${cls}`);
   });
   console.log("");
@@ -96,12 +96,14 @@ if (fixedWidths.length > 0) {
 
 // Verificar se o canvas mobile tem configuração adequada
 if (!cssContent.includes("canvasPreviewFrameMobile")) {
-  mobileIssues.push("Configuração específica para canvas mobile não encontrada");
+  mobileIssues.push(
+    "Configuração específica para canvas mobile não encontrada"
+  );
 }
 
 if (mobileIssues.length > 0) {
   console.log("⚠️  PROBLEMAS DE RESPONSIVIDADE:");
-  mobileIssues.forEach(issue => {
+  mobileIssues.forEach((issue) => {
     console.log(`   - ${issue}`);
   });
   console.log("");
@@ -129,7 +131,7 @@ if (!canvasContent.includes("mobile") && !canvasContent.includes("Mobile")) {
 
 if (structureIssues.length > 0) {
   console.log("❌ PROBLEMAS DE ESTRUTURA:");
-  structureIssues.forEach(issue => {
+  structureIssues.forEach((issue) => {
     console.log(`   - ${issue}`);
   });
   console.log("");
@@ -139,10 +141,12 @@ if (structureIssues.length > 0) {
 console.log("🔗 VERIFICAÇÃO DE CONSISTÊNCIA JSX ↔ CSS:\n");
 
 const classMatches = canvasContent.match(/styles\.(\w+)/g) || [];
-const usedClasses = [...new Set(classMatches.map(match => match.replace("styles.", "")))];
+const usedClasses = [
+  ...new Set(classMatches.map((match) => match.replace("styles.", ""))),
+];
 
 const inconsistencies = [];
-usedClasses.forEach(className => {
+usedClasses.forEach((className) => {
   if (!cssContent.includes(`.${className}`)) {
     inconsistencies.push(className);
   }
@@ -150,7 +154,7 @@ usedClasses.forEach(className => {
 
 if (inconsistencies.length > 0) {
   console.log("❌ CLASSES USADAS MAS NÃO DEFINIDAS:");
-  inconsistencies.forEach(cls => {
+  inconsistencies.forEach((cls) => {
     console.log(`   - styles.${cls}`);
   });
   console.log("");
@@ -160,12 +164,16 @@ if (inconsistencies.length > 0) {
 console.log("💡 SUGESTÕES DE MELHORIAS:\n");
 
 console.log("1. ✨ Adicionar classes CSS faltantes:");
-console.log("   - Criar todas as classes necessárias no editor-modular.module.css");
+console.log(
+  "   - Criar todas as classes necessárias no editor-modular.module.css"
+);
 
 console.log("\n2. 📱 Melhorar responsividade mobile:");
 console.log("   - Adicionar media queries específicas para mobile");
 console.log("   - Usar unidades relativas (%, vw, vh) em vez de px fixos");
-console.log("   - Implementar layout flexível para diferentes tamanhos de tela");
+console.log(
+  "   - Implementar layout flexível para diferentes tamanhos de tela"
+);
 
 console.log("\n3. 🎛️ Otimizar controles mobile:");
 console.log("   - Aumentar área de toque para botões");
@@ -180,7 +188,10 @@ console.log("\n🏁 ANÁLISE CONCLUÍDA!");
 
 // Gerar score de problemas
 const totalIssues =
-  missingClasses.length + mobileIssues.length + structureIssues.length + inconsistencies.length;
+  missingClasses.length +
+  mobileIssues.length +
+  structureIssues.length +
+  inconsistencies.length;
 const score = Math.max(0, 100 - totalIssues * 5);
 
 console.log(`\n📊 SCORE DE QUALIDADE MOBILE: ${score}/100`);
@@ -188,7 +199,9 @@ console.log(`\n📊 SCORE DE QUALIDADE MOBILE: ${score}/100`);
 if (score >= 90) {
   console.log("🟢 Excelente - Canvas mobile está bem implementado");
 } else if (score >= 70) {
-  console.log("🟡 Bom - Alguns ajustes necessários para melhor experiência mobile");
+  console.log(
+    "🟡 Bom - Alguns ajustes necessários para melhor experiência mobile"
+  );
 } else if (score >= 50) {
   console.log("🟠 Regular - Vários problemas precisam ser corrigidos");
 } else {

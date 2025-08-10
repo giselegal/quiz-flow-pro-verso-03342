@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-const componentsDir = "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
+const componentsDir =
+  "/workspaces/quiz-quest-challenge-verse/client/src/components/editor/blocks";
 
 function analyzeComponentResponsiveness(filePath) {
   try {
@@ -32,7 +33,7 @@ function analyzeComponentResponsiveness(filePath) {
       const matches = content.match(pattern);
       if (matches) {
         const uniqueMatches = [...new Set(matches)];
-        uniqueMatches.forEach(match => {
+        uniqueMatches.forEach((match) => {
           score -= penalty;
           issues.push({
             pattern: match,
@@ -44,10 +45,16 @@ function analyzeComponentResponsiveness(filePath) {
     });
 
     // Verificar se tem classes responsivas
-    const responsivePatterns = [/\bsm:/g, /\bmd:/g, /\blg:/g, /\bxl:/g, /\b2xl:/g];
+    const responsivePatterns = [
+      /\bsm:/g,
+      /\bmd:/g,
+      /\blg:/g,
+      /\bxl:/g,
+      /\b2xl:/g,
+    ];
     let hasResponsiveClasses = false;
 
-    responsivePatterns.forEach(pattern => {
+    responsivePatterns.forEach((pattern) => {
       if (content.match(pattern)) {
         hasResponsiveClasses = true;
       }
@@ -86,8 +93,8 @@ function main() {
 
   const files = fs
     .readdirSync(componentsDir)
-    .filter(file => file.endsWith(".tsx"))
-    .map(file => path.join(componentsDir, file));
+    .filter((file) => file.endsWith(".tsx"))
+    .map((file) => path.join(componentsDir, file));
 
   console.log(`📱 ANÁLISE DE RESPONSIVIDADE - ${files.length} COMPONENTES\n`);
 
@@ -102,10 +109,11 @@ function main() {
   results.sort((a, b) => a.score - b.score);
 
   // Estatísticas
-  const averageScore = results.reduce((sum, r) => sum + r.score, 0) / results.length;
-  const goodComponents = results.filter(r => r.score >= 80);
-  const okComponents = results.filter(r => r.score >= 60 && r.score < 80);
-  const badComponents = results.filter(r => r.score < 60);
+  const averageScore =
+    results.reduce((sum, r) => sum + r.score, 0) / results.length;
+  const goodComponents = results.filter((r) => r.score >= 80);
+  const okComponents = results.filter((r) => r.score >= 60 && r.score < 80);
+  const badComponents = results.filter((r) => r.score < 60);
 
   console.log("📊 ESTATÍSTICAS:");
   console.log(`   Score médio: ${averageScore.toFixed(1)}/100`);
@@ -122,12 +130,16 @@ function main() {
   // Top 15 piores
   console.log("❌ TOP 15 COMPONENTES MAIS PROBLEMÁTICOS:\n");
   results.slice(0, 15).forEach((result, index) => {
-    console.log(`${index + 1}. ${result.status} ${result.fileName} (${result.score}/100)`);
+    console.log(
+      `${index + 1}. ${result.status} ${result.fileName} (${result.score}/100)`
+    );
 
     if (result.issues.length > 0) {
       const topIssues = result.issues.slice(0, 3);
-      topIssues.forEach(issue => {
-        console.log(`     🔸 ${issue.problem}: ${issue.pattern} (-${issue.penalty})`);
+      topIssues.forEach((issue) => {
+        console.log(
+          `     🔸 ${issue.problem}: ${issue.pattern} (-${issue.penalty})`
+        );
       });
       if (result.issues.length > 3) {
         console.log(`     ... +${result.issues.length - 3} outros problemas`);
@@ -137,9 +149,9 @@ function main() {
   });
 
   // Problemas mais comuns
-  const allIssues = results.flatMap(r => r.issues);
+  const allIssues = results.flatMap((r) => r.issues);
   const problemCounts = {};
-  allIssues.forEach(issue => {
+  allIssues.forEach((issue) => {
     problemCounts[issue.problem] = (problemCounts[issue.problem] || 0) + 1;
   });
 
@@ -154,10 +166,12 @@ function main() {
   console.log("\n");
 
   // Componentes críticos
-  const criticalComponents = results.filter(r => r.score < 40);
+  const criticalComponents = results.filter((r) => r.score < 40);
   if (criticalComponents.length > 0) {
-    console.log(`🚨 COMPONENTES CRÍTICOS (Score < 40): ${criticalComponents.length}\n`);
-    criticalComponents.forEach(result => {
+    console.log(
+      `🚨 COMPONENTES CRÍTICOS (Score < 40): ${criticalComponents.length}\n`
+    );
+    criticalComponents.forEach((result) => {
       console.log(`   📱 ${result.fileName} (${result.score}/100)`);
     });
     console.log("");

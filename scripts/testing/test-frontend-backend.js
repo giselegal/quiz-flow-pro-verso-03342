@@ -11,7 +11,9 @@ async function testBackendConnection() {
 
     // Teste 2: Listar funnels
     console.log("2. Testando listagem de funnels...");
-    const funnelsResponse = await fetch("http://localhost:3001/api/schema-driven/funnels");
+    const funnelsResponse = await fetch(
+      "http://localhost:3001/api/schema-driven/funnels"
+    );
     const funnelsData = await funnelsResponse.json();
     console.log("✅ Funnels:", funnelsData.length, "encontrados");
 
@@ -31,13 +33,16 @@ async function testBackendConnection() {
       ],
     };
 
-    const createResponse = await fetch("http://localhost:3001/api/schema-driven/funnels", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(testFunnel),
-    });
+    const createResponse = await fetch(
+      "http://localhost:3001/api/schema-driven/funnels",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(testFunnel),
+      }
+    );
 
     if (!createResponse.ok) {
       const errorText = await createResponse.text();
@@ -69,7 +74,11 @@ async function testBackendConnection() {
 
     if (!updateResponse.ok) {
       const errorText = await updateResponse.text();
-      console.error("❌ Erro na atualização:", updateResponse.status, errorText);
+      console.error(
+        "❌ Erro na atualização:",
+        updateResponse.status,
+        errorText
+      );
       return;
     }
 
@@ -88,10 +97,14 @@ async function testBackendConnection() {
     if (deleteResponse.ok) {
       console.log("✅ Funnel deletado com sucesso");
     } else {
-      console.log("⚠️ Não foi possível deletar o funnel (pode não ter endpoint DELETE)");
+      console.log(
+        "⚠️ Não foi possível deletar o funnel (pode não ter endpoint DELETE)"
+      );
     }
 
-    console.log("🎉 Todos os testes passaram! A comunicação frontend-backend está funcionando.");
+    console.log(
+      "🎉 Todos os testes passaram! A comunicação frontend-backend está funcionando."
+    );
   } catch (error) {
     console.error("❌ Erro durante os testes:", error);
   }

@@ -115,7 +115,7 @@ function createBackup() {
       "src/config",
     ];
 
-    criticalDirs.forEach(dir => {
+    criticalDirs.forEach((dir) => {
       const fullPath = path.join(__dirname, dir);
       if (fs.existsSync(fullPath)) {
         execSync(`cp -r "${fullPath}" "${backupDir}/"`, { stdio: "pipe" });
@@ -136,7 +136,7 @@ function removeFiles(filePaths, reason = "") {
   let removedCount = 0;
   let errorCount = 0;
 
-  filePaths.forEach(filePath => {
+  filePaths.forEach((filePath) => {
     const fullPath = path.join(__dirname, filePath);
 
     try {
@@ -151,7 +151,11 @@ function removeFiles(filePaths, reason = "") {
     }
   });
 
-  logAction(`Remoção concluída`, `${removedCount} removidos, ${errorCount} erros`, "success");
+  logAction(
+    `Remoção concluída`,
+    `${removedCount} removidos, ${errorCount} erros`,
+    "success"
+  );
 }
 
 function updateImports() {
@@ -168,16 +172,21 @@ function updateImports() {
     QuizResultInlineBlock: null,
 
     // Atualizar caminhos para versões mantidas
-    "@/components/blocks/inline/BadgeInlineBlock": "@/components/editor/blocks/BadgeInlineBlock",
-    "@/components/blocks/inline/ButtonInlineBlock": "@/components/editor/blocks/ButtonInlineBlock",
-    "@/components/blocks/inline/FormInputBlock": "@/components/editor/blocks/FormInputBlock",
+    "@/components/blocks/inline/BadgeInlineBlock":
+      "@/components/editor/blocks/BadgeInlineBlock",
+    "@/components/blocks/inline/ButtonInlineBlock":
+      "@/components/editor/blocks/ButtonInlineBlock",
+    "@/components/blocks/inline/FormInputBlock":
+      "@/components/editor/blocks/FormInputBlock",
     "@/components/blocks/inline/HeadingInlineBlock":
       "@/components/editor/blocks/HeadingInlineBlock",
-    "@/components/blocks/inline/TextInlineBlock": "@/components/editor/blocks/TextInlineBlock",
-    "@/components/blocks/inline/SpacerInlineBlock": "@/components/editor/blocks/SpacerInlineBlock",
+    "@/components/blocks/inline/TextInlineBlock":
+      "@/components/editor/blocks/TextInlineBlock",
+    "@/components/blocks/inline/SpacerInlineBlock":
+      "@/components/editor/blocks/SpacerInlineBlock",
   };
 
-  CLEANUP_CONFIG.filesToUpdateImports.forEach(filePath => {
+  CLEANUP_CONFIG.filesToUpdateImports.forEach((filePath) => {
     const fullPath = path.join(__dirname, filePath);
 
     if (fs.existsSync(fullPath)) {
@@ -210,7 +219,11 @@ function updateImports() {
 }
 
 function updateBlockDefinitions() {
-  logAction("Atualizando blockDefinitions.ts com configuração otimizada...", "", "info");
+  logAction(
+    "Atualizando blockDefinitions.ts com configuração otimizada...",
+    "",
+    "info"
+  );
 
   const blockDefPath = path.join(__dirname, "src/config/blockDefinitions.ts");
 
@@ -228,9 +241,12 @@ function updateBlockDefinitions() {
       "quiz-result-inline",
     ];
 
-    componentsToRemove.forEach(componentType => {
+    componentsToRemove.forEach((componentType) => {
       // Remover bloco completo do componente (procurar por type e remover até próximo bloco)
-      const regex = new RegExp(`\\s*{[^}]*type:\\s*["']${componentType}["'][^}]*},?`, "gs");
+      const regex = new RegExp(
+        `\\s*{[^}]*type:\\s*["']${componentType}["'][^}]*},?`,
+        "gs"
+      );
       content = content.replace(regex, "");
     });
 
@@ -586,12 +602,19 @@ export function generateStepFromTemplate(stepNumber, questionData = null) {
 
 export default OPTIMIZED_STEP_TEMPLATES;`;
 
-  const templatePath = path.join(__dirname, "src/config/optimizedStepTemplates.ts");
+  const templatePath = path.join(
+    __dirname,
+    "src/config/optimizedStepTemplates.ts"
+  );
   fs.writeFileSync(templatePath, templateContent);
 
   try {
     execSync(`npx prettier --write "${templatePath}"`, { stdio: "pipe" });
-    logAction("Templates otimizados gerados e formatados", templatePath, "success");
+    logAction(
+      "Templates otimizados gerados e formatados",
+      templatePath,
+      "success"
+    );
   } catch (error) {
     logAction("Templates gerados (prettier falhou)", error.message, "warning");
   }
@@ -616,9 +639,12 @@ function updateUnifiedProperties() {
       "quiz-result-inline",
     ];
 
-    casesToRemove.forEach(caseType => {
+    casesToRemove.forEach((caseType) => {
       // Remover case completo
-      const regex = new RegExp(`\\s*case\\s*["']${caseType}["']:.*?(?=case|default:|\\s*})`, "gs");
+      const regex = new RegExp(
+        `\\s*case\\s*["']${caseType}["']:.*?(?=case|default:|\\s*})`,
+        "gs"
+      );
       content = content.replace(regex, "");
     });
 
@@ -637,10 +663,13 @@ function validateCleanup() {
   logAction("Validando limpeza...", "", "info");
 
   // Verificar se arquivos foram removidos
-  const removedFiles = [...CLEANUP_CONFIG.duplicatesToRemove, ...CLEANUP_CONFIG.specificToRemove];
+  const removedFiles = [
+    ...CLEANUP_CONFIG.duplicatesToRemove,
+    ...CLEANUP_CONFIG.specificToRemove,
+  ];
 
   let notRemoved = 0;
-  removedFiles.forEach(file => {
+  removedFiles.forEach((file) => {
     if (fs.existsSync(path.join(__dirname, file))) {
       notRemoved++;
       console.log(`   ⚠️ Ainda existe: ${file}`);
@@ -658,7 +687,11 @@ function validateCleanup() {
     execSync("npx tsc --noEmit --skipLibCheck", { stdio: "pipe" });
     logAction("Sintaxe TypeScript válida", "", "success");
   } catch (error) {
-    logAction("Possíveis erros de TypeScript", "Execute: npx tsc --noEmit", "warning");
+    logAction(
+      "Possíveis erros de TypeScript",
+      "Execute: npx tsc --noEmit",
+      "warning"
+    );
   }
 }
 
@@ -668,10 +701,18 @@ function generateSummaryReport() {
   console.log("================================");
 
   console.log("\n📊 ESTATÍSTICAS:");
-  console.log(`• Duplicatas removidas: ${CLEANUP_CONFIG.duplicatesToRemove.length}`);
-  console.log(`• Componentes específicos removidos: ${CLEANUP_CONFIG.specificToRemove.length}`);
-  console.log(`• Arquivos atualizados: ${CLEANUP_CONFIG.filesToUpdateImports.length}`);
-  console.log(`• Templates otimizados gerados: 4 (step01, questionTemplate, step20, step21)`);
+  console.log(
+    `• Duplicatas removidas: ${CLEANUP_CONFIG.duplicatesToRemove.length}`
+  );
+  console.log(
+    `• Componentes específicos removidos: ${CLEANUP_CONFIG.specificToRemove.length}`
+  );
+  console.log(
+    `• Arquivos atualizados: ${CLEANUP_CONFIG.filesToUpdateImports.length}`
+  );
+  console.log(
+    `• Templates otimizados gerados: 4 (step01, questionTemplate, step20, step21)`
+  );
 
   console.log("\n🎯 COMPONENTES CORE MANTIDOS:");
   const coreComponents = [
@@ -690,7 +731,7 @@ function generateSummaryReport() {
     "legal-notice-inline",
   ];
 
-  coreComponents.forEach(comp => console.log(`  ✅ ${comp}`));
+  coreComponents.forEach((comp) => console.log(`  ✅ ${comp}`));
 
   console.log("\n🚀 PRÓXIMOS PASSOS:");
   console.log("1. Testar o editor: http://localhost:8081/editor-fixed");
@@ -717,7 +758,10 @@ function runCleanup() {
     removeFiles(CLEANUP_CONFIG.duplicatesToRemove, "Removendo duplicatas");
 
     // 3. Remover componentes específicos
-    removeFiles(CLEANUP_CONFIG.specificToRemove, "Removendo componentes específicos");
+    removeFiles(
+      CLEANUP_CONFIG.specificToRemove,
+      "Removendo componentes específicos"
+    );
 
     // 4. Atualizar imports
     updateImports();

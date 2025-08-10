@@ -114,11 +114,15 @@ STEP_TEMPLATES_MAPPING = {
 
 ```typescript
 // src/context/EditorContext.tsx
-import { getStepTemplate, getStepInfo, getAllSteps } from "@/config/stepTemplatesMapping";
+import {
+  getStepTemplate,
+  getStepInfo,
+  getAllSteps,
+} from "@/config/stepTemplatesMapping";
 
 // Inicialização automática das 21 etapas
 const allSteps = getAllSteps(); // ✅ Carrega os 21 templates
-stages: allSteps.map(stepTemplate => ({
+stages: allSteps.map((stepTemplate) => ({
   id: `step-${stepTemplate.stepNumber}`,
   name: stepTemplate.name,
   templateBlocks: getStepTemplate(stepTemplate.stepNumber), // ✅ Blocos carregados

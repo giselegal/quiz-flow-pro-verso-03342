@@ -51,17 +51,19 @@ A coluna "Etapas do funil" não estava mostrando **quais componentes estão pres
 // Obter componentes de uma etapa
 const getStageComponents = (stageId: string) => {
   const blocks = getBlocksForStage(stageId);
-  return blocks.map(block => ({
+  return blocks.map((block) => ({
     id: block.id,
     type: block.type,
-    name: block.type.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+    name: block.type
+      .replace(/[-_]/g, " ")
+      .replace(/\b\w/g, (l) => l.toUpperCase()),
   }));
 };
 
 // Obter tipos únicos de componentes por etapa
 const getStageComponentTypes = (stageId: string) => {
   const blocks = getBlocksForStage(stageId);
-  const typeSet = new Set(blocks.map(block => block.type));
+  const typeSet = new Set(blocks.map((block) => block.type));
   return Array.from(typeSet);
 };
 ```

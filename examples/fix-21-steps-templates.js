@@ -631,7 +631,8 @@ const specialTemplates = {
     title: "Analisando seu Perfil...",
     stepNumber: 12,
     progress: 60,
-    description: "Estamos processando suas respostas para identificar seu estilo único.",
+    description:
+      "Estamos processando suas respostas para identificar seu estilo único.",
     image:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838151/20250509_2148_An%C3%A1lise_de_Dados_simple_compose_01jtvtb6j93t4r2hvdza0n0fqm_axmjjx.webp",
   },
@@ -668,10 +669,22 @@ const specialTemplates = {
     image:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838160/20250509_2151_Profiss%C3%A3o_e_Carreira_simple_compose_01jtvtecg7bmy8r4q9b6vhx3py_ktdzhz.webp",
     options: [
-      { value: "corporativo", label: "Corporativo/Executiva", segment: "executiva" },
+      {
+        value: "corporativo",
+        label: "Corporativo/Executiva",
+        segment: "executiva",
+      },
       { value: "criativa", label: "Área Criativa", segment: "criativa" },
-      { value: "saude-educacao", label: "Saúde/Educação", segment: "cuidadora" },
-      { value: "empreendedora", label: "Empreendedora", segment: "empreendedora" },
+      {
+        value: "saude-educacao",
+        label: "Saúde/Educação",
+        segment: "cuidadora",
+      },
+      {
+        value: "empreendedora",
+        label: "Empreendedora",
+        segment: "empreendedora",
+      },
     ],
   },
   "Step16Template.tsx": {
@@ -681,17 +694,30 @@ const specialTemplates = {
     image:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838163/20250509_2152_Objetivos_e_Metas_simple_compose_01jtvtfem6tx7rj7scv8k50qqm_z5qtgj.webp",
     options: [
-      { value: "confianca", label: "Ganhar mais confiança", goal: "autoestima" },
-      { value: "praticidade", label: "Ter mais praticidade", goal: "eficiencia" },
+      {
+        value: "confianca",
+        label: "Ganhar mais confiança",
+        goal: "autoestima",
+      },
+      {
+        value: "praticidade",
+        label: "Ter mais praticidade",
+        goal: "eficiencia",
+      },
       { value: "elegancia", label: "Ser mais elegante", goal: "sofisticacao" },
-      { value: "autenticidade", label: "Expressar minha personalidade", goal: "autenticidade" },
+      {
+        value: "autenticidade",
+        label: "Expressar minha personalidade",
+        goal: "autenticidade",
+      },
     ],
   },
   "Step17Template.tsx": {
     title: "Finalizando sua Análise...",
     stepNumber: 17,
     progress: 85,
-    description: "Estamos cruzando todos os dados para criar seu perfil de estilo personalizado.",
+    description:
+      "Estamos cruzando todos os dados para criar seu perfil de estilo personalizado.",
     image:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838166/20250509_2153_Finaliza%C3%A7%C3%A3o_simple_compose_01jtvtggn0nvy3q7bnz5z4mvcj_q4bgjl.webp",
   },
@@ -699,7 +725,8 @@ const specialTemplates = {
     title: "Calculando seu Resultado...",
     stepNumber: 18,
     progress: 90,
-    description: "Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...",
+    description:
+      "Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...",
     image:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838169/20250509_2154_C%C3%A1lculo_Final_simple_compose_01jtvthhq8wcbj2q6r9f8g3jrm_dqbdpt.webp",
   },
@@ -707,7 +734,8 @@ const specialTemplates = {
     title: "Preparando seu Resultado...",
     stepNumber: 19,
     progress: 95,
-    description: "Quase pronto! Estamos preparando seu relatório de estilo personalizado.",
+    description:
+      "Quase pronto! Estamos preparando seu relatório de estilo personalizado.",
     image:
       "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838172/20250509_2155_Prepara%C3%A7%C3%A3o_Resultado_simple_compose_01jtvtik6tcmy4r8h9m2k5zztw_wjkgse.webp",
   },
@@ -1003,7 +1031,10 @@ for (const fileName of filesToFix) {
       newTemplate = createQuestionTemplate(stepsConfig[fileName], stepNumber);
     } else if (specialTemplates[fileName]) {
       // Transição ou resultado
-      newTemplate = createTransitionTemplate(specialTemplates[fileName], stepNumber);
+      newTemplate = createTransitionTemplate(
+        specialTemplates[fileName],
+        stepNumber
+      );
     }
 
     // Combinar interface + template
@@ -1029,7 +1060,9 @@ console.log(`📊 Total processado: ${correctedFiles + errorFiles}`);
 if (correctedFiles > 0) {
   console.log("\n🎯 CORREÇÕES APLICADAS:");
   console.log("   ✅ Interfaces TypeScript completas");
-  console.log("   ✅ Props padronizadas (onNext, onBlockAdd, onAnswer, userAnswers)");
+  console.log(
+    "   ✅ Props padronizadas (onNext, onBlockAdd, onAnswer, userAnswers)"
+  );
   console.log("   ✅ Templates com dados e imagens corretas");
   console.log("   ✅ Configuração de perguntas do quiz");
   console.log("   ✅ Sistema de pontuação por estilo");
@@ -1037,4 +1070,6 @@ if (correctedFiles > 0) {
   console.log("   ✅ Etapas de transição com loading");
 }
 
-console.log("\n🚀 PRÓXIMO PASSO: Executar verificação final dos templates corrigidos");
+console.log(
+  "\n🚀 PRÓXIMO PASSO: Executar verificação final dos templates corrigidos"
+);

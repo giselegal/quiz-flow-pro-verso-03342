@@ -87,7 +87,9 @@ onBlockAdd(blockType, position);
 ```tsx
 // Mostra drop zones apenas quando relevante
 {
-  isDraggingSidebarComponent && <InterBlockDropZone position={index + 1} isActive={true} />;
+  isDraggingSidebarComponent && (
+    <InterBlockDropZone position={index + 1} isActive={true} />
+  );
 }
 ```
 

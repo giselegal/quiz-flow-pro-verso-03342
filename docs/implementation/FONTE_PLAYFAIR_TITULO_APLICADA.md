@@ -46,11 +46,15 @@ properties: {
 **Texto atualizado com fonte em TODOS os spans:**
 
 ```html
-<span style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;">Chega</span>
+<span
+  style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;"
+  >Chega</span
+>
 <span style="font-family: 'Playfair Display', serif;"
   >de um guarda-roupa lotado e da sensação de que</span
 >
-<span style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;"
+<span
+  style="color: #B89B7A; font-weight: 700; font-family: 'Playfair Display', serif;"
   >nada combina com você.</span
 >
 ```

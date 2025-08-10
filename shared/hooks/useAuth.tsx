@@ -3,7 +3,13 @@
 // Sistema de Quiz Quest Challenge Verse
 // =============================================================================
 
-import { useState, useEffect, useContext, createContext, ReactNode } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  ReactNode,
+} from "react";
 import { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase, createProfile, getCurrentProfile } from "../lib/supabase";
 import { Profile, AuthState, AuthUser } from "../types/supabase";
@@ -13,11 +19,20 @@ import { Profile, AuthState, AuthUser } from "../types/supabase";
 // =============================================================================
 
 interface AuthContextType extends AuthState {
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (email: string, password: string, metadata?: any) => Promise<{ error: AuthError | null }>;
+  signIn: (
+    email: string,
+    password: string
+  ) => Promise<{ error: AuthError | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    metadata?: any
+  ) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
-  updateProfile: (updates: Partial<Profile>) => Promise<{ error: string | null }>;
+  updateProfile: (
+    updates: Partial<Profile>
+  ) => Promise<{ error: string | null }>;
   refreshProfile: () => Promise<void>;
 }
 
@@ -226,18 +241,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return { error: "Usuário não autenticado" };
       }
 
-      const { error } = await supabase.from("profiles").update(updates).eq("id", user.id);
+      const { error } = await supabase
+        .from("profiles")
+        .update(updates)
+        .eq("id", user.id);
 
       if (error) {
         return { error: error.message };
       }
 
       // Atualizar o usuário local
-      setUser(prev =>
+      setUser((prev) =>
         prev
           ? {
               ...prev,
-              profile: prev.profile ? { ...prev.profile, ...updates } : undefined,
+              profile: prev.profile
+                ? { ...prev.profile, ...updates }
+                : undefined,
             }
           : null
       );
@@ -255,7 +275,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       const profile = await getCurrentProfile();
 
-      setUser(prev =>
+      setUser((prev) =>
         prev
           ? {
               ...prev,
@@ -327,7 +347,8 @@ export function usePermissions() {
 
   const isAdmin = user?.profile?.role === "admin";
   const isModerator = user?.profile?.role === "moderator" || isAdmin;
-  const isPro = user?.profile?.plan === "pro" || user?.profile?.plan === "enterprise";
+  const isPro =
+    user?.profile?.plan === "pro" || user?.profile?.plan === "enterprise";
   const isEnterprise = user?.profile?.plan === "enterprise";
 
   const can = {
@@ -358,7 +379,9 @@ export function usePermissions() {
 export function useSocialAuth() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const signInWithProvider = async (provider: "google" | "github" | "facebook") => {
+  const signInWithProvider = async (
+    provider: "google" | "github" | "facebook"
+  ) => {
     try {
       setIsLoading(true);
 
@@ -396,11 +419,15 @@ export function useSocialAuth() {
 /**
  * Verifica se o usuário tem uma role específica
  */
-export function hasRole(user: AuthUser | null, role: "user" | "admin" | "moderator"): boolean {
+export function hasRole(
+  user: AuthUser | null,
+  role: "user" | "admin" | "moderator"
+): boolean {
   if (!user?.profile) return false;
 
   if (role === "user") return true; // Qualquer usuário autenticado
-  if (role === "moderator") return ["moderator", "admin"].includes(user.profile.role);
+  if (role === "moderator")
+    return ["moderator", "admin"].includes(user.profile.role);
   if (role === "admin") return user.profile.role === "admin";
 
   return false;
@@ -409,7 +436,10 @@ export function hasRole(user: AuthUser | null, role: "user" | "admin" | "moderat
 /**
  * Verifica se o usuário tem um plano específico
  */
-export function hasPlan(user: AuthUser | null, plan: "free" | "pro" | "enterprise"): boolean {
+export function hasPlan(
+  user: AuthUser | null,
+  plan: "free" | "pro" | "enterprise"
+): boolean {
   if (!user?.profile) return false;
 
   const userPlan = user.profile.plan;

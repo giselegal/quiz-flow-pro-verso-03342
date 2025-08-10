@@ -23,7 +23,7 @@ try {
 
   console.log("\n📁 Verificando existência dos componentes:");
 
-  componentsToCheck.forEach(componentPath => {
+  componentsToCheck.forEach((componentPath) => {
     const exists = fs.existsSync(componentPath);
     const status = exists ? "✅" : "❌";
     console.log(`${status} ${componentPath}`);
@@ -37,7 +37,7 @@ try {
 
     const typeMatches = content.match(/type: ["']([^"']+)["']/g);
     if (typeMatches) {
-      typeMatches.forEach(match => {
+      typeMatches.forEach((match) => {
         const type = match.replace(/type: ["']|["']/g, "");
         console.log(`   • ${type}`);
       });

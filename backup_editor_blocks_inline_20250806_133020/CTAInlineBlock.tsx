@@ -97,14 +97,20 @@ const CTAInlineBlock: React.FC<CTAInlineBlockProps> = ({
         {variant === "urgent" && (
           <div className="flex items-center justify-center space-x-2 mb-2">
             <Zap className="w-5 h-5 animate-pulse" />
-            <span className="text-sm font-medium uppercase tracking-wide">Oferta Limitada</span>
+            <span className="text-sm font-medium uppercase tracking-wide">
+              Oferta Limitada
+            </span>
             <Zap className="w-5 h-5 animate-pulse" />
           </div>
         )}
 
-        <h3 className={cn("font-bold leading-tight", currentSize.title)}>{title}</h3>
+        <h3 className={cn("font-bold leading-tight", currentSize.title)}>
+          {title}
+        </h3>
 
-        <p className={cn("opacity-90 leading-relaxed", currentSize.subtitle)}>{subtitle}</p>
+        <p className={cn("opacity-90 leading-relaxed", currentSize.subtitle)}>
+          {subtitle}
+        </p>
 
         <button
           onClick={handleClick}

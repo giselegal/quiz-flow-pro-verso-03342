@@ -29,12 +29,18 @@ for (let i = 1; i <= 21; i++) {
     const hasTemplate = content.includes(`getStep${stepId}Template`);
     const hasCloudinaryImage = content.includes("cloudinary.com");
     const blockCount = (content.match(/{\s*id:/g) || []).length;
-    const hasCorrectProps = content.includes("onNext") && content.includes("onBlockAdd");
+    const hasCorrectProps =
+      content.includes("onNext") && content.includes("onBlockAdd");
 
     stepsData.push({
       step: i,
       fileName,
-      valid: hasInterface && hasTemplate && hasCloudinaryImage && blockCount > 0 && hasCorrectProps,
+      valid:
+        hasInterface &&
+        hasTemplate &&
+        hasCloudinaryImage &&
+        blockCount > 0 &&
+        hasCorrectProps,
       interface: hasInterface,
       template: hasTemplate,
       images: hasCloudinaryImage,
@@ -57,14 +63,16 @@ console.log("📋 STATUS DOS 21 TEMPLATES:\n");
 let validCount = 0;
 let invalidCount = 0;
 
-stepsData.forEach(step => {
+stepsData.forEach((step) => {
   if (step.valid) {
     console.log(
       `✅ Etapa ${step.step.toString().padStart(2, "0")} - ${step.blocks} blocos - ${step.fileName}`
     );
     validCount++;
   } else {
-    console.log(`❌ Etapa ${step.step.toString().padStart(2, "0")} - ${step.fileName}`);
+    console.log(
+      `❌ Etapa ${step.step.toString().padStart(2, "0")} - ${step.fileName}`
+    );
     if (step.error) {
       console.log(`    Erro: ${step.error}`);
     } else {
@@ -78,7 +86,9 @@ stepsData.forEach(step => {
 
 console.log("\n" + "=".repeat(80));
 console.log("📊 RESUMO FINAL:");
-console.log(`✅ Templates válidos: ${validCount}/21 (${((validCount / 21) * 100).toFixed(1)}%)`);
+console.log(
+  `✅ Templates válidos: ${validCount}/21 (${((validCount / 21) * 100).toFixed(1)}%)`
+);
 console.log(`❌ Templates inválidos: ${invalidCount}/21`);
 
 if (validCount === 21) {
@@ -86,7 +96,9 @@ if (validCount === 21) {
 
   console.log("\n🎯 CARACTERÍSTICAS CONFIRMADAS:");
   console.log("   ✅ Interfaces TypeScript completas");
-  console.log("   ✅ Props padronizadas (onNext, onBlockAdd, onAnswer, userAnswers)");
+  console.log(
+    "   ✅ Props padronizadas (onNext, onBlockAdd, onAnswer, userAnswers)"
+  );
   console.log("   ✅ Templates com funções getStepXXTemplate()");
   console.log("   ✅ Imagens hospedadas no Cloudinary");
   console.log("   ✅ Blocos de componentes configurados");
@@ -104,8 +116,12 @@ if (validCount === 21) {
   console.log("   🎯 Conteúdo personalizado por etapa");
   console.log("   ✨ Pronto para produção!");
 
-  console.log("\n📍 LOCALIZAÇÃO: /workspaces/quiz-quest-challenge-verse/src/components/steps/");
-  console.log("🔗 INTEGRAÇÃO: Configurado no editor-fixed com 21 etapas funcionais");
+  console.log(
+    "\n📍 LOCALIZAÇÃO: /workspaces/quiz-quest-challenge-verse/src/components/steps/"
+  );
+  console.log(
+    "🔗 INTEGRAÇÃO: Configurado no editor-fixed com 21 etapas funcionais"
+  );
   console.log(
     "📅 CONCLUÍDO: " +
       new Date().toLocaleDateString("pt-BR") +
@@ -117,12 +133,17 @@ if (validCount === 21) {
 } else {
   console.log(`\n⚠️ ${invalidCount} template(s) ainda precisam de correção:`);
   stepsData
-    .filter(s => !s.valid)
-    .forEach(step => {
+    .filter((s) => !s.valid)
+    .forEach((step) => {
       console.log(`   - ${step.fileName}`);
     });
 }
 
 // 📊 ESTATÍSTICAS GERAIS
-const totalBlocks = stepsData.reduce((sum, step) => sum + (step.blocks || 0), 0);
-console.log(`\n📈 ESTATÍSTICAS: ${totalBlocks} blocos totais em ${validCount} templates válidos`);
+const totalBlocks = stepsData.reduce(
+  (sum, step) => sum + (step.blocks || 0),
+  0
+);
+console.log(
+  `\n📈 ESTATÍSTICAS: ${totalBlocks} blocos totais em ${validCount} templates válidos`
+);

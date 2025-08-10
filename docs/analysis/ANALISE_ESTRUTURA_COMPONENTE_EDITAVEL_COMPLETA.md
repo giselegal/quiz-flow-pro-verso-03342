@@ -30,7 +30,10 @@ SortableBlockWrapper → useContainerProperties → Component → Visual Update
 import MyCustomBlock from "../components/editor/blocks/MyCustomBlock";
 
 // ✅ PASSO 2: Registrar no ENHANCED_BLOCK_REGISTRY
-export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
+export const ENHANCED_BLOCK_REGISTRY: Record<
+  string,
+  React.ComponentType<any>
+> = {
   // ... outros componentes
   "my-custom-block": MyCustomBlock, // 🎯 KEY = type usado no sistema
 };
@@ -282,7 +285,11 @@ console.log("🔧 useUnifiedProperties - generateDefaultProperties chamado:", {
   blockType,
   basePropertiesCount,
 });
-console.log("🔧 useUnifiedProperties - updateProperty chamado:", { key, value, blockId });
+console.log("🔧 useUnifiedProperties - updateProperty chamado:", {
+  key,
+  value,
+  blockId,
+});
 console.log("🔧 EditorContext updateBlock chamado:", { blockId, updates });
 console.log("🔧 SortableBlockWrapper - processedProperties:", {
   blockId,

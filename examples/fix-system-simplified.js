@@ -27,7 +27,10 @@ function createMissingComponents() {
   }
 
   // HeadingInline
-  const headingPath = path.join(__dirname, "src/components/blocks/inline/HeadingInline.tsx");
+  const headingPath = path.join(
+    __dirname,
+    "src/components/blocks/inline/HeadingInline.tsx"
+  );
   if (!fs.existsSync(headingPath)) {
     const headingContent = `import React from 'react';
 
@@ -74,7 +77,10 @@ export default HeadingInline;`;
   }
 
   // TextInline
-  const textPath = path.join(__dirname, "src/components/blocks/inline/TextInline.tsx");
+  const textPath = path.join(
+    __dirname,
+    "src/components/blocks/inline/TextInline.tsx"
+  );
   if (!fs.existsSync(textPath)) {
     const textContent = `import React from 'react';
 
@@ -121,7 +127,10 @@ export default TextInline;`;
   }
 
   // ButtonInline
-  const buttonPath = path.join(__dirname, "src/components/blocks/inline/ButtonInline.tsx");
+  const buttonPath = path.join(
+    __dirname,
+    "src/components/blocks/inline/ButtonInline.tsx"
+  );
   if (!fs.existsSync(buttonPath)) {
     const buttonContent = `import React from 'react';
 
@@ -184,7 +193,10 @@ export default ButtonInline;`;
 function fixStepConfiguration() {
   console.log("\n🔧 CORRIGINDO CONFIGURAÇÃO DAS ETAPAS...");
 
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.json");
+  const configPath = path.join(
+    __dirname,
+    "src/config/optimized21StepsFunnel.json"
+  );
 
   if (fs.existsSync(configPath)) {
     const config = JSON.parse(fs.readFileSync(configPath, "utf8"));

@@ -76,10 +76,10 @@ console.log("🎛️ Propriedades geradas:", testProperties);
 
 // Categorizar propriedades (simular o que o painel faz)
 const categorized = {
-  content: testProperties.filter(prop => prop.category === "content"),
-  style: testProperties.filter(prop => prop.category === "style"),
-  layout: testProperties.filter(prop => prop.category === "layout"),
-  advanced: testProperties.filter(prop => prop.category === "advanced"),
+  content: testProperties.filter((prop) => prop.category === "content"),
+  style: testProperties.filter((prop) => prop.category === "style"),
+  layout: testProperties.filter((prop) => prop.category === "layout"),
+  advanced: testProperties.filter((prop) => prop.category === "advanced"),
 };
 
 console.log("📊 Propriedades categorizadas:", categorized);
@@ -87,7 +87,7 @@ console.log("📊 Propriedades categorizadas:", categorized);
 // Verificar se cada categoria tem propriedades
 Object.entries(categorized).forEach(([category, props]) => {
   console.log(`📋 ${category}: ${props.length} propriedades`);
-  props.forEach(prop => {
+  props.forEach((prop) => {
     console.log(`   - ${prop.label} (${prop.type}): ${prop.value}`);
   });
 });

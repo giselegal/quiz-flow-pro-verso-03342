@@ -19,19 +19,27 @@ function checkAndFixImports() {
       "/workspaces/quiz-quest-challenge-verse/src/pages/editor-fixed.tsx",
     ];
 
-    files.forEach(filePath => {
+    files.forEach((filePath) => {
       if (fs.existsSync(filePath)) {
         let content = fs.readFileSync(filePath, "utf8");
 
         // Verifica e corrige o caminho de importação para EnhancedUniversalPropertiesPanel
-        if (content.includes("@/components/editor/properties/EnhancedUniversalPropertiesPanel")) {
+        if (
+          content.includes(
+            "@/components/editor/properties/EnhancedUniversalPropertiesPanel"
+          )
+        ) {
           content = content.replace(
             /@\/components\/editor\/properties\/EnhancedUniversalPropertiesPanel/g,
             "@/components/universal/EnhancedUniversalPropertiesPanel"
           );
           fs.writeFileSync(filePath, content, "utf8");
           console.log(`✅ Corrigido import em ${filePath}`);
-        } else if (content.includes("@/components/universal/EnhancedUniversalPropertiesPanel")) {
+        } else if (
+          content.includes(
+            "@/components/universal/EnhancedUniversalPropertiesPanel"
+          )
+        ) {
           console.log(`✓ Import correto já presente em ${filePath}`);
         }
       }

@@ -24,7 +24,9 @@ const SUPABASE_KEY =
   process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error("❌ Variáveis SUPABASE_URL e SUPABASE_ANON_KEY são obrigatórias");
+  console.error(
+    "❌ Variáveis SUPABASE_URL e SUPABASE_ANON_KEY são obrigatórias"
+  );
   process.exit(1);
 }
 
@@ -38,9 +40,15 @@ async function checkConnection() {
   try {
     console.log("🔌 Testando conexão com Supabase...");
 
-    const { data, error } = await supabase.from("_postgres_version").select("*").limit(1);
+    const { data, error } = await supabase
+      .from("_postgres_version")
+      .select("*")
+      .limit(1);
 
-    if (error && !error.message.includes('relation "_postgres_version" does not exist')) {
+    if (
+      error &&
+      !error.message.includes('relation "_postgres_version" does not exist')
+    ) {
       throw error;
     }
 
@@ -266,7 +274,9 @@ async function main() {
   // 4. Inserir dados iniciais
   const seeded = await insertInitialData();
   if (!seeded) {
-    console.warn("⚠️  Falha ao inserir dados iniciais (pode ser normal se já existem)");
+    console.warn(
+      "⚠️  Falha ao inserir dados iniciais (pode ser normal se já existem)"
+    );
   }
 
   // 5. Verificação final
@@ -279,12 +289,14 @@ async function main() {
   if (finalCheck.missing.length === 0) {
     console.log("🎯 Sistema de componentes reutilizáveis está pronto!");
   } else {
-    console.log("⚠️  Algumas tabelas ainda precisam ser criadas manualmente no Supabase");
+    console.log(
+      "⚠️  Algumas tabelas ainda precisam ser criadas manualmente no Supabase"
+    );
   }
 }
 
 // Executar script
-main().catch(error => {
+main().catch((error) => {
   console.error("💥 Erro fatal:", error);
   process.exit(1);
 });

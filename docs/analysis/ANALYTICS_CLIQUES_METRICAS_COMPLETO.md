@@ -293,7 +293,11 @@ ORDER BY click_count DESC;
 // Em SchemaDrivenEditorResponsive.tsx
 const handleSave = async () => {
   // Rastrear clique no botão salvar
-  await analyticsService.trackButtonClick(funnel?.id || "", "save_button", "Salvar Funil");
+  await analyticsService.trackButtonClick(
+    funnel?.id || "",
+    "save_button",
+    "Salvar Funil"
+  );
 
   // Salvar funil
   await saveFunnel(true);

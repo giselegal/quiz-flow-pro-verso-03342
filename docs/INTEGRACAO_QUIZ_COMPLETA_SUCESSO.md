@@ -35,11 +35,14 @@
 ```tsx
 // Detecção automática de blocos de quiz:
 const isQuizBlock =
-  actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
+  actualBlock?.type?.startsWith("quiz-") ||
+  actualBlock?.component === "QuizQuestionBlock";
 
 // Se for bloco de quiz, mostra QuizConfigurationPanel
 if (isQuizBlock) {
-  return <QuizConfigurationPanel selectedBlock={actualBlock} onUpdate={onUpdate} />;
+  return (
+    <QuizConfigurationPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
+  );
 }
 ```
 

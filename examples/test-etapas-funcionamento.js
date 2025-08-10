@@ -60,4 +60,6 @@ if (template && template.defaultSteps) {
   console.log("\n❌ PROBLEMA: Template não encontrado ou sem etapas!");
 }
 
-console.log("\n🎯 PRÓXIMO PASSO: Verificar se o FunnelStagesPanel está renderizando essas etapas");
+console.log(
+  "\n🎯 PRÓXIMO PASSO: Verificar se o FunnelStagesPanel está renderizando essas etapas"
+);

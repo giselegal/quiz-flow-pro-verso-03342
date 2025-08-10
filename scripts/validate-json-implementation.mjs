@@ -15,7 +15,7 @@ let templatesValid = true;
 let validTemplates = 0;
 
 console.log("📁 1. VERIFICAÇÃO DOS TEMPLATES JSON:");
-expectedTemplates.forEach(templateName => {
+expectedTemplates.forEach((templateName) => {
   const templatePath = path.join(templatesDir, templateName);
   if (fs.existsSync(templatePath)) {
     try {
@@ -38,7 +38,7 @@ console.log("\n🔧 2. VERIFICAÇÃO DO TEMPLATE MANAGER:");
 const templateManagerPath = "./src/utils/TemplateManager.ts";
 if (fs.existsSync(templateManagerPath)) {
   const content = fs.readFileSync(templateManagerPath, "utf8");
-  const hasAllMappings = expectedTemplates.every(template =>
+  const hasAllMappings = expectedTemplates.every((template) =>
     content.includes(template.replace("template.json", "template.json"))
   );
 
@@ -60,7 +60,9 @@ if (fs.existsSync(editorContextPath)) {
   const hasAsyncLoad = content.includes("await TemplateManager.loadStepBlocks");
   const hasPreload = content.includes("TemplateManager.preloadCommonTemplates");
 
-  console.log(`   ${hasTemplateManager ? "✅" : "❌"} Import do TemplateManager`);
+  console.log(
+    `   ${hasTemplateManager ? "✅" : "❌"} Import do TemplateManager`
+  );
   console.log(`   ${hasAsyncLoad ? "✅" : "❌"} Carregamento assíncrono`);
   console.log(`   ${hasPreload ? "✅" : "❌"} Pré-carregamento implementado`);
 } else {
@@ -81,7 +83,7 @@ const categories = {
 
 Object.entries(categories).forEach(([category, steps]) => {
   console.log(`   📋 ${category.toUpperCase()}:`);
-  steps.forEach(step => {
+  steps.forEach((step) => {
     const templateName = `step-${step.toString().padStart(2, "0")}-template.json`;
     const templatePath = path.join(templatesDir, templateName);
     if (fs.existsSync(templatePath)) {
@@ -101,13 +103,17 @@ Object.entries(categories).forEach(([category, steps]) => {
 // 5. Resumo final
 console.log("\n🎯 5. RESUMO FINAL:");
 console.log(`   📁 Templates JSON: ${validTemplates}/21 válidos`);
-console.log(`   ⚙️ Sistema: ${templatesValid ? "Funcionando" : "Com problemas"}`);
+console.log(
+  `   ⚙️ Sistema: ${templatesValid ? "Funcionando" : "Com problemas"}`
+);
 console.log(
   `   🚀 Status: ${validTemplates === 21 && templatesValid ? "IMPLEMENTAÇÃO COMPLETA!" : "Necessária revisão"}`
 );
 
 if (validTemplates === 21 && templatesValid) {
-  console.log("\n🎉 PARABÉNS! Sistema JSON implementado em todas as 21 etapas!");
+  console.log(
+    "\n🎉 PARABÉNS! Sistema JSON implementado em todas as 21 etapas!"
+  );
   console.log("   - EditorContext atualizado para usar templates JSON");
   console.log("   - Fallback TSX mantido para segurança");
   console.log("   - Pré-carregamento automático ativo");

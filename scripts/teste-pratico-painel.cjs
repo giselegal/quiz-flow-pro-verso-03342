@@ -192,7 +192,7 @@ function getComponentFileName(componentType) {
   return (
     componentType
       .split("-")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join("") + "Block"
   );
 }
@@ -210,18 +210,26 @@ async function runTests() {
   console.log("\\n\\n📈 RELATÓRIO FINAL");
   console.log("==================");
 
-  const functioning = results.filter(r => r.percentage >= 80);
-  const partial = results.filter(r => r.percentage >= 60 && r.percentage < 80);
-  const broken = results.filter(r => r.percentage < 60);
+  const functioning = results.filter((r) => r.percentage >= 80);
+  const partial = results.filter(
+    (r) => r.percentage >= 60 && r.percentage < 80
+  );
+  const broken = results.filter((r) => r.percentage < 60);
 
   console.log(`✅ FUNCIONANDO (≥80%): ${functioning.length} componentes`);
-  functioning.forEach(r => console.log(`   - ${r.componentType} (${r.percentage}%)`));
+  functioning.forEach((r) =>
+    console.log(`   - ${r.componentType} (${r.percentage}%)`)
+  );
 
   console.log(`⚠️ PARCIAL (60-79%): ${partial.length} componentes`);
-  partial.forEach(r => console.log(`   - ${r.componentType} (${r.percentage}%)`));
+  partial.forEach((r) =>
+    console.log(`   - ${r.componentType} (${r.percentage}%)`)
+  );
 
   console.log(`❌ QUEBRADO (<60%): ${broken.length} componentes`);
-  broken.forEach(r => console.log(`   - ${r.componentType} (${r.percentage}%)`));
+  broken.forEach((r) =>
+    console.log(`   - ${r.componentType} (${r.percentage}%)`)
+  );
 
   const totalScore = results.reduce((sum, r) => sum + r.percentage, 0);
   const averageScore = Math.round(totalScore / results.length);
@@ -237,9 +245,9 @@ async function runTests() {
   }
 
   // Listar problemas mais comuns
-  const allIssues = results.flatMap(r => r.issues);
+  const allIssues = results.flatMap((r) => r.issues);
   const issueCounts = {};
-  allIssues.forEach(issue => {
+  allIssues.forEach((issue) => {
     issueCounts[issue] = (issueCounts[issue] || 0) + 1;
   });
 
@@ -263,7 +271,7 @@ async function runTests() {
 
 // Executar se chamado diretamente
 if (require.main === module) {
-  runTests().then(summary => {
+  runTests().then((summary) => {
     console.log("\\n✅ Teste concluído!");
     process.exit(summary.averageScore >= 60 ? 0 : 1);
   });

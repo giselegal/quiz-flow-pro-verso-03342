@@ -76,7 +76,8 @@
 
     <script>
       // Configuração
-      document.getElementById("currentDate").textContent = new Date().toLocaleString("pt-BR");
+      document.getElementById("currentDate").textContent =
+        new Date().toLocaleString("pt-BR");
 
       // Verificar servidor
       async function checkServer() {
@@ -135,7 +136,7 @@
         let passedCritical = 0;
         let totalCritical = 0;
 
-        componentChecks.forEach(check => {
+        componentChecks.forEach((check) => {
           const passed = check.test();
           if (check.critical) {
             totalCritical++;
@@ -170,7 +171,8 @@
           setTimeout(() => {
             try {
               // Tentar acessar o conteúdo do iframe (pode falhar por CORS)
-              const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+              const iframeDoc =
+                iframe.contentDocument || iframe.contentWindow.document;
 
               resultsContainer.innerHTML = `
                             <div class="component-item">
@@ -230,7 +232,9 @@
           console.log("✅ Todos os testes passaram - Sistema funcionando!");
           monitorEditor();
         } else {
-          console.log("⚠️ Alguns testes falharam - Verificação manual necessária");
+          console.log(
+            "⚠️ Alguns testes falharam - Verificação manual necessária"
+          );
         }
       }
 

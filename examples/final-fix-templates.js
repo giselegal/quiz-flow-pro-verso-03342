@@ -35,7 +35,10 @@ for (const fileName of filesToCheck) {
     let hasChanges = false;
 
     // 1. VERIFICAR SE PRECISA ADICIONAR stepNumber (apenas se tiver type: "quiz-header")
-    if (content.includes('type: "quiz-header"') && !content.includes("stepNumber:")) {
+    if (
+      content.includes('type: "quiz-header"') &&
+      !content.includes("stepNumber:")
+    ) {
       console.log(`   🔧 Adicionando stepNumber para etapa ${stepNumber}`);
 
       // Encontrar o bloco quiz-header e adicionar stepNumber
@@ -58,7 +61,10 @@ for (const fileName of filesToCheck) {
 
     if (progressMap[stepNumber]) {
       const currentProgress = content.match(/progressValue:\s*(\d+)/);
-      if (currentProgress && parseInt(currentProgress[1]) !== progressMap[stepNumber]) {
+      if (
+        currentProgress &&
+        parseInt(currentProgress[1]) !== progressMap[stepNumber]
+      ) {
         console.log(
           `   🔧 Corrigindo progresso da etapa ${stepNumber}: ${currentProgress[1]} → ${progressMap[stepNumber]}`
         );
@@ -136,9 +142,13 @@ if (validSteps === 21) {
 }
 `;
 
-  console.log("🎯 RESULTADO ESPERADO: Todos os 21 templates com dados e imagens corretas!");
+  console.log(
+    "🎯 RESULTADO ESPERADO: Todos os 21 templates com dados e imagens corretas!"
+  );
 } else {
   console.log("\n✅ Todos os templates já estavam corretos!");
 }
 
-console.log("\n🚀 EXECUTE: node final-report-21-templates.js para verificação completa");
+console.log(
+  "\n🚀 EXECUTE: node final-report-21-templates.js para verificação completa"
+);

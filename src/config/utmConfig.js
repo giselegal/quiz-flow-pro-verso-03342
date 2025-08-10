@@ -105,7 +105,7 @@ export const generateCreativeUrls = () => {
     pageB: [],
   };
 
-  Object.values(UTM_CONFIG.creatives).forEach(creative => {
+  Object.values(UTM_CONFIG.creatives).forEach((creative) => {
     const utmParams = new URLSearchParams({
       utm_source: UTM_CONFIG.campaign.source,
       utm_medium: UTM_CONFIG.campaign.medium,
@@ -119,8 +119,12 @@ export const generateCreativeUrls = () => {
       creative_name: creative.name,
       url: `${baseUrls.pageA}?${utmParams}`,
       expected_performance: {
-        ctr: creative.expected_ctr * UTM_CONFIG.pages.pageA.expected_conversion_boost,
-        conversion: creative.expected_conversion * UTM_CONFIG.pages.pageA.expected_conversion_boost,
+        ctr:
+          creative.expected_ctr *
+          UTM_CONFIG.pages.pageA.expected_conversion_boost,
+        conversion:
+          creative.expected_conversion *
+          UTM_CONFIG.pages.pageA.expected_conversion_boost,
       },
     });
 
@@ -129,8 +133,12 @@ export const generateCreativeUrls = () => {
       creative_name: creative.name,
       url: `${baseUrls.pageB}?${utmParams}`,
       expected_performance: {
-        ctr: creative.expected_ctr * UTM_CONFIG.pages.pageB.expected_conversion_boost,
-        conversion: creative.expected_conversion * UTM_CONFIG.pages.pageB.expected_conversion_boost,
+        ctr:
+          creative.expected_ctr *
+          UTM_CONFIG.pages.pageB.expected_conversion_boost,
+        conversion:
+          creative.expected_conversion *
+          UTM_CONFIG.pages.pageB.expected_conversion_boost,
       },
     });
   });
@@ -142,9 +150,12 @@ export const generateCreativeUrls = () => {
 export const generateMockCreativeData = (days = 7) => {
   const mockData = {};
 
-  Object.values(UTM_CONFIG.creatives).forEach(creative => {
+  Object.values(UTM_CONFIG.creatives).forEach((creative) => {
     const baseViews = Math.floor(Math.random() * 500) + 200; // 200-700 views
-    const conversionRate = (creative.expected_conversion + (Math.random() * 0.5 - 0.25)).toFixed(1);
+    const conversionRate = (
+      creative.expected_conversion +
+      (Math.random() * 0.5 - 0.25)
+    ).toFixed(1);
     const leads = Math.floor(baseViews * (parseFloat(conversionRate) / 100));
     const purchases = Math.floor(leads * 0.15); // 15% dos leads compram
 
@@ -184,7 +195,7 @@ export const PERFORMANCE_ALERTS = {
 };
 
 // Função para análise automática de performance
-export const analyzeCreativePerformance = creativeData => {
+export const analyzeCreativePerformance = (creativeData) => {
   const analysis = {};
 
   Object.entries(creativeData).forEach(([creativeId, data]) => {
@@ -199,11 +210,15 @@ export const analyzeCreativePerformance = creativeData => {
       status = "excellent";
       recommendation = "ESCALAR: Aumentar budget e criar variações";
       action = "scale";
-    } else if (conversionRate <= PERFORMANCE_ALERTS.critical.conversion_rate_min) {
+    } else if (
+      conversionRate <= PERFORMANCE_ALERTS.critical.conversion_rate_min
+    ) {
       status = "critical";
       recommendation = "PAUSAR: Performance muito baixa";
       action = "pause";
-    } else if (conversionRate <= PERFORMANCE_ALERTS.warning.conversion_rate_min) {
+    } else if (
+      conversionRate <= PERFORMANCE_ALERTS.warning.conversion_rate_min
+    ) {
       status = "warning";
       recommendation = "OTIMIZAR: Testar variações ou ajustar público";
       action = "optimize";

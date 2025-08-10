@@ -55,7 +55,7 @@ const handleAddBlock = useCallback(
 
 // 2. CORREÇÃO: Filtro de blocos mais robusto
 const sortedBlocks = useMemo(() => {
-  const stepBlocks = blocks.filter(block => {
+  const stepBlocks = blocks.filter((block) => {
     // Se tem stepId, deve corresponder à etapa atual
     if (block.stepId) {
       return block.stepId === selectedStepId;

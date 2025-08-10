@@ -33,7 +33,10 @@ console.log("📄 1. TEMPLATE JSON CARREGADO:");
 console.log("   - Tipo:", stepTemplate.blocks[0].type);
 console.log("   - Opções:", stepTemplate.blocks[0].properties.options.length);
 console.log("   - Colunas:", stepTemplate.blocks[0].properties.columns);
-console.log("   - Multi-seleção:", stepTemplate.blocks[0].properties.multipleSelection);
+console.log(
+  "   - Multi-seleção:",
+  stepTemplate.blocks[0].properties.multipleSelection
+);
 
 // 2. Simular registry lookup
 const componentMapping = {
@@ -58,7 +61,7 @@ const generatedProperties = [
 ];
 
 console.log("\n🎛️ 3. PROPRIEDADES GERADAS PELO PAINEL:");
-generatedProperties.forEach(prop => {
+generatedProperties.forEach((prop) => {
   console.log(`   - ${prop.key}: ${prop.type} (atual: ${prop.current})`);
 });
 
@@ -89,7 +92,9 @@ console.log("   ✅ Fallback seguro: TSX como backup");
 
 console.log("\n🚀 SISTEMA FUNCIONANDO PERFEITAMENTE!");
 console.log("💡 Acesse http://localhost:8081/editor para testar");
-console.log('📍 Clique em "Etapa 2" → Selecione options-grid → Veja painel à direita');
+console.log(
+  '📍 Clique em "Etapa 2" → Selecione options-grid → Veja painel à direita'
+);
 
 // 7. Exemplo de como editar manualmente o JSON
 console.log("\n📝 EXEMPLO DE EDIÇÃO MANUAL DO JSON:");

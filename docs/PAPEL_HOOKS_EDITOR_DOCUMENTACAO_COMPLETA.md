@@ -41,7 +41,12 @@ const {
   selectedBlockId,
   setSelectedBlockId,
   updateBlocks,
-  actions: { handleAddBlock, handleUpdateBlock, handleDeleteBlock, handleReorderBlocks },
+  actions: {
+    handleAddBlock,
+    handleUpdateBlock,
+    handleDeleteBlock,
+    handleReorderBlocks,
+  },
 } = useBlockOperations();
 ```
 
@@ -54,8 +59,15 @@ const {
 #### **2.2 `useDynamicEditorData`** - Dados Dinâmicos
 
 ```typescript
-const { blocks, selectedBlockId, addBlock, updateBlock, deleteBlock, selectBlock, reorderBlocks } =
-  useDynamicEditorData();
+const {
+  blocks,
+  selectedBlockId,
+  addBlock,
+  updateBlock,
+  deleteBlock,
+  selectBlock,
+  reorderBlocks,
+} = useDynamicEditorData();
 ```
 
 **Papel**: Sistema de dados dinâmicos com IDs semânticos
@@ -93,11 +105,8 @@ const {
 #### **3.1 `useEditorActions`** - Ações com Histórico
 
 ```typescript
-const { handleAddBlock, handleUpdateBlock, handleDeleteBlock, handleSave } = useEditorActions(
-  blocks,
-  onBlocksChange,
-  addToHistory
-);
+const { handleAddBlock, handleUpdateBlock, handleDeleteBlock, handleSave } =
+  useEditorActions(blocks, onBlocksChange, addToHistory);
 ```
 
 **Papel**: Ações do editor com sistema de histórico

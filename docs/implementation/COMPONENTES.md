@@ -45,12 +45,16 @@ interface SchemaDrivenEditorResponsiveProps {
 // Estado principal do editor
 const [blocks, setBlocks] = useState<Block[]>([]);
 const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-const [viewMode, setViewMode] = useState<"mobile" | "tablet" | "desktop">("desktop");
+const [viewMode, setViewMode] = useState<"mobile" | "tablet" | "desktop">(
+  "desktop"
+);
 const [sidebarOpen, setSidebarOpen] = useState(false);
 
 // Estados de UI
 const [isLoading, setIsLoading] = useState(false);
-const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">("saved");
+const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">(
+  "saved"
+);
 const [isDragging, setIsDragging] = useState(false);
 ```
 
@@ -343,7 +347,8 @@ const {
 
 ```typescript
 // Hook para responsividade
-const { viewMode, setViewMode, isMobile, isTablet, isDesktop } = useResponsiveLayout();
+const { viewMode, setViewMode, isMobile, isTablet, isDesktop } =
+  useResponsiveLayout();
 ```
 
 ### useDragAndDrop
@@ -384,7 +389,10 @@ export const createBlock = (
 
 ```typescript
 // Validação de conteúdo por tipo
-export const validateBlockContent = (type: BlockType, content: EditableContent): boolean => {
+export const validateBlockContent = (
+  type: BlockType,
+  content: EditableContent
+): boolean => {
   switch (type) {
     case "quiz-question":
       return !!(content.question && content.options?.length);

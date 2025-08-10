@@ -9,18 +9,21 @@ const __dirname = path.dirname(__filename);
 
 console.log("🔧 CORREÇÃO DE IMPORTS QUEBRADOS NO enhancedBlockRegistry.ts\n");
 
-const registryPath = path.join(__dirname, "src/config/enhancedBlockRegistry.ts");
+const registryPath = path.join(
+  __dirname,
+  "src/config/enhancedBlockRegistry.ts"
+);
 const inlineDir = path.join(__dirname, "src/components/blocks/inline");
 
 // 1. Verificar quais arquivos realmente existem
 console.log("🔍 Verificando arquivos inline existentes...");
 const existingFiles = fs
   .readdirSync(inlineDir)
-  .filter(file => file.endsWith(".tsx"))
-  .map(file => file.replace(".tsx", ""));
+  .filter((file) => file.endsWith(".tsx"))
+  .map((file) => file.replace(".tsx", ""));
 
 console.log(`   📁 Encontrados ${existingFiles.length} arquivos:`);
-existingFiles.forEach(file => console.log(`      - ${file}.tsx`));
+existingFiles.forEach((file) => console.log(`      - ${file}.tsx`));
 
 // 2. Ler o arquivo atual
 let content = fs.readFileSync(registryPath, "utf8");
@@ -28,7 +31,7 @@ let content = fs.readFileSync(registryPath, "utf8");
 // 3. Encontrar imports problemáticos
 const importLines = content
   .split("\n")
-  .filter(line => line.includes("import") && line.includes("inline/"));
+  .filter((line) => line.includes("import") && line.includes("inline/"));
 
 console.log(`\n🔍 Verificando ${importLines.length} imports inline...`);
 
@@ -88,14 +91,21 @@ const neededComponents = [
 ];
 
 for (const component of neededComponents) {
-  if (existingFiles.includes(component) && !content.includes(`import ${component}`)) {
+  if (
+    existingFiles.includes(component) &&
+    !content.includes(`import ${component}`)
+  ) {
     console.log(`   ➕ Adicionando import para ${component}`);
     const importLine = `import ${component} from "../components/blocks/inline/${component}";`;
     // Adicionar após os outros imports inline
     const insertPoint = content.indexOf("// Componentes Inline mais usados");
     if (insertPoint !== -1) {
       const endOfImports = content.indexOf("\n\n", insertPoint);
-      content = content.slice(0, endOfImports) + "\n" + importLine + content.slice(endOfImports);
+      content =
+        content.slice(0, endOfImports) +
+        "\n" +
+        importLine +
+        content.slice(endOfImports);
     }
   }
 }

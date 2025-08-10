@@ -36,7 +36,7 @@
 <AdvancedPropertyPanel
   selectedBlock={block}
   onUpdateBlock={(id, updates) => updateBlock(id, updates)}
-  onDeleteBlock={id => deleteBlock(id)}
+  onDeleteBlock={(id) => deleteBlock(id)}
   onClose={() => setSelected(null)}
 />
 ```
@@ -49,8 +49,8 @@
   funnelConfig={{ name, description, isPublished, theme }}
   onBlockPropertyChange={(key, value) => updateProperties(key, value)}
   onNestedPropertyChange={(path, value) => updateNested(path, value)}
-  onFunnelConfigChange={config => updateFunnel(config)}
-  onDeleteBlock={id => deleteBlock(id)}
+  onFunnelConfigChange={(config) => updateFunnel(config)}
+  onDeleteBlock={(id) => deleteBlock(id)}
 />
 ```
 
@@ -123,8 +123,8 @@ interface DynamicPropertiesPanelProps {
 // Conversão de EditorBlock para BlockData
 const blockData = {
   id: selectedComponentId,
-  type: blocks.find(b => b.id === selectedComponentId)?.type || "",
-  properties: blocks.find(b => b.id === selectedComponentId)?.content || {},
+  type: blocks.find((b) => b.id === selectedComponentId)?.type || "",
+  properties: blocks.find((b) => b.id === selectedComponentId)?.content || {},
 };
 ```
 

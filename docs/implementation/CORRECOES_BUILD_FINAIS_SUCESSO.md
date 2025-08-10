@@ -60,7 +60,7 @@ build: { ... } // Vite usa automaticamente a raiz do projeto
 **Solução:** Implementado chunking inteligente e granular
 
 ```typescript
-manualChunks: id => {
+manualChunks: (id) => {
   // React ecosystem
   if (id.includes("react") || id.includes("react-dom")) {
     return "react-vendor";

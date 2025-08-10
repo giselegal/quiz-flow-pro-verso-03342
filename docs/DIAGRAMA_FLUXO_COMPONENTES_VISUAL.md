@@ -6,7 +6,7 @@
                     ╔══════════════════════════════════════════════════════════════╗
                     ║                    EDITOR FIXED LAYOUT                       ║
                     ╚══════════════════════════════════════════════════════════════╝
-                    
+
 ┏━━━━━━━━━━━━━┓    ┏━━━━━━━━━━━━━┓    ┏━━━━━━━━━━━━━━━━━━━━━━━┓    ┏━━━━━━━━━━━━━━━━━━━━┓
 ┃   ETAPAS    ┃    ┃ COMPONENTES ┃    ┃        CANVAS         ┃    ┃   PROPRIEDADES     ┃
 ┃  (Stages)   ┃    ┃  (Sidebar)  ┃    ┃    (Renderização)     ┃    ┃     (Panel)        ┃
@@ -128,7 +128,7 @@
       default: 'Clique aqui',
       validation: { maxLength: 50 }
     },
-    
+
     // Cor com picker
     backgroundColor: {
       type: 'color',
@@ -136,7 +136,7 @@
       default: '#B89B7A',
       category: 'appearance'
     },
-    
+
     // Seleção com opções
     size: {
       type: 'select',
@@ -148,7 +148,7 @@
       ],
       default: 'md'
     },
-    
+
     // Slider numérico
     borderRadius: {
       type: 'range',
@@ -159,14 +159,14 @@
       default: 8,
       unit: 'px'
     },
-    
+
     // Toggle simples
     disabled: {
       type: 'boolean',
       label: 'Desabilitado',
       default: false
     },
-    
+
     // Configuração responsiva
     padding: {
       type: 'responsive',
@@ -188,12 +188,12 @@ const PropertyPanel = () => {
         <label>Texto do Botão</label>
         <input type="text" maxLength={50} />
       </div>
-      
+
       <div className="property-group">
         <label>Cor de Fundo</label>
         <ColorPicker defaultValue="#B89B7A" />
       </div>
-      
+
       <div className="property-group">
         <label>Tamanho</label>
         <select>
@@ -202,12 +202,12 @@ const PropertyPanel = () => {
           <option value="lg">Grande</option>
         </select>
       </div>
-      
+
       <div className="property-group">
         <label>Bordas Arredondadas</label>
         <Slider min={0} max={50} step={1} unit="px" />
       </div>
-      
+
       <div className="property-group">
         <label>Desabilitado</label>
         <Switch />
@@ -316,17 +316,17 @@ sequenceDiagram
     S->>E: addBlock(type, stageId)
     E->>C: Adiciona novo bloco
     C->>U: Mostra bloco renderizado
-    
+
     U->>C: Clica no bloco
     C->>E: setSelectedBlockId(id)
     E->>P: Carrega propriedades
     P->>U: Mostra painel de controles
-    
+
     U->>P: Altera propriedade
     P->>E: updateBlock(id, properties)
     E->>C: Re-renderiza bloco
     C->>U: Mostra mudança visual
-    
+
     U->>P: Salva alterações
     P->>E: Persiste no estado
     E->>E: Salva localStorage/API
@@ -335,7 +335,7 @@ sequenceDiagram
 Esta arquitetura garante que qualquer componente adicionado ao registry automaticamente ganha:
 
 - ✅ **Painel de propriedades personalizado**
-- ✅ **Controles visuais apropriados** 
+- ✅ **Controles visuais apropriados**
 - ✅ **Validação automática**
 - ✅ **Preview em tempo real**
 - ✅ **Persistência de estado**

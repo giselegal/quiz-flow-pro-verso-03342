@@ -36,7 +36,7 @@ const removeFixedHeaderBlock = () => {
   const fixedHeaders = document.querySelectorAll(
     '.fixed-header, .sticky-header, [style*="position: fixed"]'
   );
-  fixedHeaders.forEach(header => {
+  fixedHeaders.forEach((header) => {
     if (header.closest(".funnel-2") || header.closest('[data-funnel="2"]')) {
       header.style.position = "relative";
       header.style.top = "auto";
@@ -46,7 +46,7 @@ const removeFixedHeaderBlock = () => {
 
   // Remover blocos desnecessários no topo
   const headerBlocks = document.querySelectorAll(".header-block, .top-banner");
-  headerBlocks.forEach(block => {
+  headerBlocks.forEach((block) => {
     if (block.closest(".funnel-2") && !block.classList.contains("essential")) {
       block.style.display = "none";
     }
@@ -55,14 +55,18 @@ const removeFixedHeaderBlock = () => {
 
 const cleanButtonElements = () => {
   // Limpar botões CTA removendo elementos desnecessários
-  const ctaButtons = document.querySelectorAll('.cta-button, .btn-primary, [class*="button"]');
+  const ctaButtons = document.querySelectorAll(
+    '.cta-button, .btn-primary, [class*="button"]'
+  );
 
-  ctaButtons.forEach(button => {
+  ctaButtons.forEach((button) => {
     if (!button.closest(".funnel-2")) return;
 
     // Remover ícones desnecessários
-    const unnecessaryIcons = button.querySelectorAll(".icon, .arrow, .decoration");
-    unnecessaryIcons.forEach(icon => {
+    const unnecessaryIcons = button.querySelectorAll(
+      ".icon, .arrow, .decoration"
+    );
+    unnecessaryIcons.forEach((icon) => {
       if (!icon.classList.contains("essential-icon")) {
         icon.remove();
       }
@@ -70,14 +74,14 @@ const cleanButtonElements = () => {
 
     // Simplificar texto do botão
     const textElements = button.querySelectorAll(".button-text, .btn-text");
-    textElements.forEach(text => {
+    textElements.forEach((text) => {
       text.style.fontWeight = "600";
       text.style.fontSize = "16px";
     });
 
     // Remover elementos decorativos
     const decorations = button.querySelectorAll(".sparkle, .glow, .pulse");
-    decorations.forEach(dec => dec.remove());
+    decorations.forEach((dec) => dec.remove());
   });
 };
 
@@ -93,13 +97,13 @@ const fixColorInconsistencies = () => {
 
   // Corrigir elementos com cores roxas
   const elements = document.querySelectorAll("*");
-  elements.forEach(el => {
+  elements.forEach((el) => {
     if (!el.closest(".funnel-2")) return;
 
     const computedStyle = window.getComputedStyle(el);
 
     // Corrigir cor de fundo
-    Object.keys(colorMap).forEach(oldColor => {
+    Object.keys(colorMap).forEach((oldColor) => {
       if (
         computedStyle.backgroundColor.includes(oldColor) ||
         el.style.backgroundColor.includes(oldColor)
@@ -107,11 +111,17 @@ const fixColorInconsistencies = () => {
         el.style.backgroundColor = colorMap[oldColor];
       }
 
-      if (computedStyle.color.includes(oldColor) || el.style.color.includes(oldColor)) {
+      if (
+        computedStyle.color.includes(oldColor) ||
+        el.style.color.includes(oldColor)
+      ) {
         el.style.color = colorMap[oldColor];
       }
 
-      if (computedStyle.borderColor.includes(oldColor) || el.style.borderColor.includes(oldColor)) {
+      if (
+        computedStyle.borderColor.includes(oldColor) ||
+        el.style.borderColor.includes(oldColor)
+      ) {
         el.style.borderColor = colorMap[oldColor];
       }
     });
@@ -119,9 +129,11 @@ const fixColorInconsistencies = () => {
 };
 
 const adjustImageProportions = () => {
-  const images = document.querySelectorAll('.funnel-2 img, [data-funnel="2"] img');
+  const images = document.querySelectorAll(
+    '.funnel-2 img, [data-funnel="2"] img'
+  );
 
-  images.forEach(img => {
+  images.forEach((img) => {
     // Definir proporções adequadas baseadas no contexto
     if (img.closest(".hero-section")) {
       // Imagens hero - proporção 16:9
@@ -164,9 +176,9 @@ const removeNonStrategicImages = () => {
   ];
 
   // Remover imagens decorativas desnecessárias
-  nonStrategicSelectors.forEach(selector => {
+  nonStrategicSelectors.forEach((selector) => {
     const images = document.querySelectorAll(`.funnel-2 ${selector}`);
-    images.forEach(img => {
+    images.forEach((img) => {
       // Manter apenas se for essencial
       if (
         !img.classList.contains("essential") &&
@@ -179,9 +191,13 @@ const removeNonStrategicImages = () => {
   });
 
   // Limitar quantidade de imagens por seção
-  const sections = document.querySelectorAll('.funnel-2 .section, .funnel-2 [class*="section"]');
-  sections.forEach(section => {
-    const images = section.querySelectorAll("img:not(.essential):not(.testimonial-photo)");
+  const sections = document.querySelectorAll(
+    '.funnel-2 .section, .funnel-2 [class*="section"]'
+  );
+  sections.forEach((section) => {
+    const images = section.querySelectorAll(
+      "img:not(.essential):not(.testimonial-photo)"
+    );
 
     // Manter apenas as 2 primeiras imagens por seção (exceto hero e depoimentos)
     if (
@@ -197,8 +213,10 @@ const removeNonStrategicImages = () => {
   });
 
   // Otimizar carregamento das imagens mantidas
-  const remainingImages = document.querySelectorAll('.funnel-2 img:not([style*="display: none"])');
-  remainingImages.forEach(img => {
+  const remainingImages = document.querySelectorAll(
+    '.funnel-2 img:not([style*="display: none"])'
+  );
+  remainingImages.forEach((img) => {
     img.loading = "lazy";
     img.decoding = "async";
   });
@@ -208,11 +226,11 @@ const removeNonStrategicImages = () => {
 const applyResponsiveAdjustments = () => {
   const mediaQuery = window.matchMedia("(max-width: 768px)");
 
-  const handleMobileAdjustments = e => {
+  const handleMobileAdjustments = (e) => {
     if (e.matches) {
       // Ajustes para mobile
       const images = document.querySelectorAll(".funnel-2 img");
-      images.forEach(img => {
+      images.forEach((img) => {
         img.style.maxHeight = "250px";
       });
     }

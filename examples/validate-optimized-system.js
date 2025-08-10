@@ -42,7 +42,8 @@ function validateCoreComponents() {
     "quiz-intro-header": "src/components/blocks/QuizIntroHeader.tsx",
     "heading-inline": "src/components/blocks/inline/HeadingInline.tsx",
     "text-inline": "src/components/blocks/inline/TextInline.tsx",
-    "decorative-bar-inline": "src/components/blocks/inline/DecorativeBarInline.tsx",
+    "decorative-bar-inline":
+      "src/components/blocks/inline/DecorativeBarInline.tsx",
     "form-input": "src/components/blocks/FormInput.tsx",
     "button-inline": "src/components/blocks/inline/ButtonInline.tsx",
     "options-grid": "src/components/blocks/OptionsGrid.tsx",
@@ -50,7 +51,8 @@ function validateCoreComponents() {
     "quiz-results": "src/components/blocks/QuizResults.tsx",
     "style-results": "src/components/blocks/StyleResults.tsx",
     "final-step": "src/components/blocks/FinalStep.tsx",
-    "image-display-inline": "src/components/blocks/inline/ImageDisplayInline.tsx",
+    "image-display-inline":
+      "src/components/blocks/inline/ImageDisplayInline.tsx",
     "legal-notice-inline": "src/components/blocks/inline/LegalNoticeInline.tsx",
   };
 
@@ -60,7 +62,7 @@ function validateCoreComponents() {
     invalid: [],
   };
 
-  coreComponents.forEach(component => {
+  coreComponents.forEach((component) => {
     const componentPath = path.join(__dirname, componentPaths[component]);
 
     if (fs.existsSync(componentPath)) {
@@ -72,7 +74,7 @@ function validateCoreComponents() {
         content.includes(
           component
             .split("-")
-            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
             .join("")
         )
       ) {
@@ -106,7 +108,7 @@ function validateConfiguration() {
     missing: [],
   };
 
-  configFiles.forEach(file => {
+  configFiles.forEach((file) => {
     const filePath = path.join(__dirname, file);
 
     if (fs.existsSync(filePath)) {
@@ -125,7 +127,10 @@ function validateOptimizedFunnel() {
   console.log("\n🔍 VALIDANDO FUNIL OTIMIZADO...");
 
   try {
-    const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.json");
+    const configPath = path.join(
+      __dirname,
+      "src/config/optimized21StepsFunnel.json"
+    );
 
     if (!fs.existsSync(configPath)) {
       console.log("  ❌ Arquivo de configuração não encontrado");
@@ -153,7 +158,9 @@ function validateOptimizedFunnel() {
       if (step.id && step.name && step.blocks && Array.isArray(step.blocks)) {
         validSteps++;
         stepTypes[step.type] = (stepTypes[step.type] || 0) + 1;
-        console.log(`  ✅ Etapa ${index + 1}: ${step.name} (${step.blocks.length} blocos)`);
+        console.log(
+          `  ✅ Etapa ${index + 1}: ${step.name} (${step.blocks.length} blocos)`
+        );
       } else {
         console.log(`  ❌ Etapa ${index + 1}: Estrutura inválida`);
       }
@@ -199,9 +206,12 @@ function validateBlockDefinitions() {
 
     let definedComponents = 0;
 
-    coreComponents.forEach(component => {
+    coreComponents.forEach((component) => {
       const componentKey = component.replace(/-/g, "");
-      if (content.includes(`'${component}'`) || content.includes(`"${component}"`)) {
+      if (
+        content.includes(`'${component}'`) ||
+        content.includes(`"${component}"`)
+      ) {
         definedComponents++;
         console.log(`  ✅ ${component} definido`);
       } else {
@@ -209,7 +219,9 @@ function validateBlockDefinitions() {
       }
     });
 
-    console.log(`\n  📊 Componentes definidos: ${definedComponents}/${coreComponents.length}`);
+    console.log(
+      `\n  📊 Componentes definidos: ${definedComponents}/${coreComponents.length}`
+    );
 
     return {
       valid: definedComponents >= coreComponents.length * 0.8, // 80% ok
@@ -248,7 +260,7 @@ function validateUnifiedProperties() {
 
     let passedChecks = 0;
 
-    checks.forEach(check => {
+    checks.forEach((check) => {
       if (check.pattern.test(content)) {
         passedChecks++;
         console.log(`  ✅ ${check.name}`);
@@ -281,7 +293,7 @@ function validateEditorIntegration() {
 
   let existingFiles = 0;
 
-  editorFiles.forEach(file => {
+  editorFiles.forEach((file) => {
     const filePath = path.join(__dirname, file);
 
     if (fs.existsSync(filePath)) {
@@ -292,7 +304,9 @@ function validateEditorIntegration() {
     }
   });
 
-  console.log(`\n  📊 Arquivos do editor: ${existingFiles}/${editorFiles.length}`);
+  console.log(
+    `\n  📊 Arquivos do editor: ${existingFiles}/${editorFiles.length}`
+  );
 
   return {
     valid: existingFiles >= editorFiles.length * 0.67, // 67% ok
@@ -314,7 +328,7 @@ function runPerformanceAnalysis() {
     const files = fs.readdirSync(dir);
     let count = 0;
 
-    files.forEach(file => {
+    files.forEach((file) => {
       const fullPath = path.join(dir, file);
       const stats = fs.statSync(fullPath);
 
@@ -375,19 +389,33 @@ function generateValidationReport() {
   );
 
   console.log("\n📋 DETALHES POR CATEGORIA:");
-  console.log(`  • Componentes Core: ${results.components.existing.length}/13 ✅`);
-  console.log(`  • Configuração: ${results.configuration.existing.length}/4 arquivos`);
-  console.log(`  • Funil Otimizado: ${results.funnel.valid ? "✅ VÁLIDO" : "❌ INVÁLIDO"}`);
-  console.log(`  • Block Definitions: ${results.blockDefinitions.valid ? "✅ OK" : "⚠️ REVISAR"}`);
+  console.log(
+    `  • Componentes Core: ${results.components.existing.length}/13 ✅`
+  );
+  console.log(
+    `  • Configuração: ${results.configuration.existing.length}/4 arquivos`
+  );
+  console.log(
+    `  • Funil Otimizado: ${results.funnel.valid ? "✅ VÁLIDO" : "❌ INVÁLIDO"}`
+  );
+  console.log(
+    `  • Block Definitions: ${results.blockDefinitions.valid ? "✅ OK" : "⚠️ REVISAR"}`
+  );
   console.log(
     `  • Unified Properties: ${results.unifiedProperties.valid ? "✅ OK" : "⚠️ REVISAR"}`
   );
-  console.log(`  • Integração Editor: ${results.editorIntegration.valid ? "✅ OK" : "⚠️ REVISAR"}`);
-  console.log(`  • Performance: ${results.performance.optimal ? "✅ ÓTIMA" : "⚠️ BOA"}`);
+  console.log(
+    `  • Integração Editor: ${results.editorIntegration.valid ? "✅ OK" : "⚠️ REVISAR"}`
+  );
+  console.log(
+    `  • Performance: ${results.performance.optimal ? "✅ ÓTIMA" : "⚠️ BOA"}`
+  );
 
   if (percentage >= 80) {
     console.log("\n🎉 SISTEMA TOTALMENTE VALIDADO!");
-    console.log("✅ Pronto para teste no editor: http://localhost:8081/editor-fixed");
+    console.log(
+      "✅ Pronto para teste no editor: http://localhost:8081/editor-fixed"
+    );
   } else if (percentage >= 60) {
     console.log("\n🔧 SISTEMA FUNCIONAL COM AJUSTES MENORES");
     console.log("⚠️ Recomenda-se revisar itens marcados");

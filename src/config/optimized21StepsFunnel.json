@@ -1414,7 +1414,12 @@
       "natural": {
         "name": "Natural",
         "description": "Você valoriza o conforto e a praticidade sem abrir mão do estilo.",
-        "characteristics": ["Confortável", "Prática", "Autêntica", "Descomplicada"],
+        "characteristics": [
+          "Confortável",
+          "Prática",
+          "Autêntica",
+          "Descomplicada"
+        ],
         "colors": ["#8B7355", "#A0956B", "#6B5B73"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp"
       },
@@ -1435,7 +1440,12 @@
       "dramatico": {
         "name": "Dramático",
         "description": "Você gosta de peças marcantes, estruturadas e com presença.",
-        "characteristics": ["Marcante", "Poderosa", "Estruturada", "Impactante"],
+        "characteristics": [
+          "Marcante",
+          "Poderosa",
+          "Estruturada",
+          "Impactante"
+        ],
         "colors": ["#000000", "#8B0000", "#4B0082"],
         "guideImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_DRAMATICO_ghi789.webp"
       },

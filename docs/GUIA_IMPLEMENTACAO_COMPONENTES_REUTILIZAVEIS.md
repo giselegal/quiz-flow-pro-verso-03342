@@ -102,9 +102,21 @@ VITE_SUPABASE_ANON_KEY=eyJhb...
 ```typescript
 // Todos os componentes do ENHANCED_BLOCK_REGISTRY aparecem automaticamente
 const availableComponents = [
-  { type_key: "text-inline", display_name: "Texto Inline", category: "content" },
-  { type_key: "quiz-intro-header", display_name: "Header do Quiz", category: "headers" },
-  { type_key: "options-grid", display_name: "Grade de Opções", category: "interactive" },
+  {
+    type_key: "text-inline",
+    display_name: "Texto Inline",
+    category: "content",
+  },
+  {
+    type_key: "quiz-intro-header",
+    display_name: "Header do Quiz",
+    category: "headers",
+  },
+  {
+    type_key: "options-grid",
+    display_name: "Grade de Opções",
+    category: "interactive",
+  },
   // ... todos os outros automaticamente
 ];
 ```

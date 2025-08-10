@@ -337,7 +337,10 @@ const missingSteps = [
 function completeOptimizedSteps() {
   console.log("🔧 COMPLETANDO AS 21 ETAPAS DO FUNIL OTIMIZADO...");
 
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.ts");
+  const configPath = path.join(
+    __dirname,
+    "src/config/optimized21StepsFunnel.ts"
+  );
 
   if (!fs.existsSync(configPath)) {
     console.log("  ❌ optimized21StepsFunnel.ts não encontrado");
@@ -347,7 +350,7 @@ function completeOptimizedSteps() {
   let content = fs.readFileSync(configPath, "utf8");
 
   // Função para gerar blocos padrão para uma etapa
-  const generateStepBlocks = step => {
+  const generateStepBlocks = (step) => {
     const baseBlocks = [
       {
         id: "header-progress",
@@ -509,7 +512,7 @@ function completeOptimizedSteps() {
   let existingStepsContent = stepsArrayMatch[1];
 
   // Adicionar as etapas faltantes
-  missingSteps.forEach(step => {
+  missingSteps.forEach((step) => {
     const stepConfig = {
       ...step,
       blocks: generateStepBlocks(step),
@@ -552,17 +555,19 @@ function completeOptimizedSteps() {
       }
     }
 
-    console.log(`  ✅ Etapa ${stepConfig.order} (${stepConfig.name}) adicionada`);
+    console.log(
+      `  ✅ Etapa ${stepConfig.order} (${stepConfig.name}) adicionada`
+    );
   });
 
   // Atualizar quizData com as novas perguntas
   const newQuestions = missingSteps
-    .filter(step => step.questionData && step.type === "question")
-    .map(step => step.questionData);
+    .filter((step) => step.questionData && step.type === "question")
+    .map((step) => step.questionData);
 
   const newStrategicQuestions = missingSteps
-    .filter(step => step.questionData && step.type === "strategic")
-    .map(step => step.questionData);
+    .filter((step) => step.questionData && step.type === "strategic")
+    .map((step) => step.questionData);
 
   // Substituir o conteúdo
   const newContent = content.replace(
@@ -576,11 +581,13 @@ function completeOptimizedSteps() {
 
   // Adicionar perguntas regulares
   if (newQuestions.length > 0) {
-    newQuestions.forEach(question => {
+    newQuestions.forEach((question) => {
       const questionString = `,
       ${JSON.stringify(question, null, 6)}`;
 
-      const questionsArrayEnd = finalContent.indexOf("],\n    strategicQuestions:");
+      const questionsArrayEnd = finalContent.indexOf(
+        "],\n    strategicQuestions:"
+      );
       if (questionsArrayEnd !== -1) {
         finalContent =
           finalContent.slice(0, questionsArrayEnd) +
@@ -592,7 +599,7 @@ function completeOptimizedSteps() {
 
   // Adicionar perguntas estratégicas
   if (newStrategicQuestions.length > 0) {
-    newStrategicQuestions.forEach(question => {
+    newStrategicQuestions.forEach((question) => {
       const questionString = `,
       ${JSON.stringify(question, null, 6)}`;
 
@@ -618,7 +625,10 @@ function completeOptimizedSteps() {
 function validateCompletion() {
   console.log("\n🔍 VALIDANDO COMPLETUDE DAS 21 ETAPAS...");
 
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.ts");
+  const configPath = path.join(
+    __dirname,
+    "src/config/optimized21StepsFunnel.ts"
+  );
   const content = fs.readFileSync(configPath, "utf8");
 
   // Contar etapas
@@ -629,7 +639,9 @@ function validateCompletion() {
 
   // Verificar se temos todas as 21 etapas
   const expectedSteps = Array.from({ length: 21 }, (_, i) => `"step-${i + 1}"`);
-  const missingSteps = expectedSteps.filter(step => !uniqueSteps.includes(step));
+  const missingSteps = expectedSteps.filter(
+    (step) => !uniqueSteps.includes(step)
+  );
 
   if (missingSteps.length === 0) {
     console.log("  ✅ Todas as 21 etapas estão presentes!");

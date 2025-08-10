@@ -6,12 +6,7 @@
     "description": "Apresentação do resultado e CTA",
     "category": "result",
     "type": "result",
-    "tags": [
-      "quiz",
-      "style",
-      "result",
-      "gisele-galvao"
-    ],
+    "tags": ["quiz", "style", "result", "gisele-galvao"],
     "createdAt": "2025-08-10T03:45:03.520Z",
     "updatedAt": "2025-08-10T03:45:03.520Z",
     "author": "giselegal"
@@ -208,17 +203,9 @@
   },
   "analytics": {
     "trackingId": "step-21-result",
-    "events": [
-      "page_view",
-      "interaction",
-      "validation_error",
-      "completion"
-    ],
+    "events": ["page_view", "interaction", "validation_error", "completion"],
     "utmParams": true,
-    "customEvents": [
-      "conversion",
-      "cta_clicked"
-    ]
+    "customEvents": ["conversion", "cta_clicked"]
   },
   "logic": {
     "navigation": {

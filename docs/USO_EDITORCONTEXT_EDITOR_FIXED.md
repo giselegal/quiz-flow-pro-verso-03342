@@ -239,7 +239,10 @@ const templateBlocks = getStepTemplate(stepNumber);
 
 ```typescript
 // Dados derivados são computados automaticamente
-const currentBlocks = useMemo(() => stageBlocks[activeStageId] || [], [stageBlocks, activeStageId]);
+const currentBlocks = useMemo(
+  () => stageBlocks[activeStageId] || [],
+  [stageBlocks, activeStageId]
+);
 ```
 
 **3. 📊 MINIMAL RE-RENDERS:**

@@ -6,7 +6,9 @@ async function testAPI() {
   try {
     // Test GET
     console.log("1. Testando GET /api/schema-driven/funnels");
-    const getResponse = await fetch("http://localhost:3001/api/schema-driven/funnels");
+    const getResponse = await fetch(
+      "http://localhost:3001/api/schema-driven/funnels"
+    );
     const getFunnels = await getResponse.json();
     console.log("   Status:", getResponse.status);
     console.log("   Funnels existentes:", getFunnels.length);
@@ -19,13 +21,16 @@ async function testAPI() {
       settings: { theme: "green", primaryColor: "#00cc66" },
     };
 
-    const postResponse = await fetch("http://localhost:3001/api/schema-driven/funnels", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postData),
-    });
+    const postResponse = await fetch(
+      "http://localhost:3001/api/schema-driven/funnels",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      }
+    );
 
     console.log("   Status:", postResponse.status);
     console.log("   Headers:", postResponse.headers.raw());
@@ -44,7 +49,9 @@ async function testAPI() {
 
     // Test GET again to see if it was created
     console.log("\n3. Verificando se foi criado (GET novamente)");
-    const getResponse2 = await fetch("http://localhost:3001/api/schema-driven/funnels");
+    const getResponse2 = await fetch(
+      "http://localhost:3001/api/schema-driven/funnels"
+    );
     const getFunnels2 = await getResponse2.json();
     console.log("   Funnels após criação:", getFunnels2.length);
 

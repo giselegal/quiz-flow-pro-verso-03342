@@ -6,7 +6,8 @@ import path from "path";
 const MASTER_TEMPLATE = {
   meta: {
     name: "Quiz Estilo Pessoal - Template Completo",
-    description: "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda.",
+    description:
+      "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda.",
     version: "1.2.3",
     author: "giselegal",
   },
@@ -102,7 +103,8 @@ const QUIZ_STRUCTURE = [
         id: "step01-description-top",
         type: "text-inline",
         properties: {
-          content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+          content:
+            "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
           fontSize: "text-xl",
           textAlign: "text-center",
           color: "#6B7280",
@@ -204,7 +206,8 @@ const QUIZ_STRUCTURE = [
           {
             id: "1c",
             text: "Praticidade com um toque de estilo atual.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
             styleCategory: "Contemporâneo",
             points: 2,
           },
@@ -283,14 +286,24 @@ const QUIZ_STRUCTURE = [
             styleCategory: "Romântico",
             points: 2,
           },
-          { id: "2f", text: "Glamorosa, vaidosa, sensual.", styleCategory: "Sexy", points: 3 },
+          {
+            id: "2f",
+            text: "Glamorosa, vaidosa, sensual.",
+            styleCategory: "Sexy",
+            points: 3,
+          },
           {
             id: "2g",
             text: "Cosmopolita, moderna e audaciosa.",
             styleCategory: "Dramático",
             points: 3,
           },
-          { id: "2h", text: "Exótica, aventureira, livre.", styleCategory: "Criativo", points: 4 },
+          {
+            id: "2h",
+            text: "Exótica, aventureira, livre.",
+            styleCategory: "Criativo",
+            points: 4,
+          },
         ],
       },
       {
@@ -299,14 +312,16 @@ const QUIZ_STRUCTURE = [
           {
             id: "3a",
             text: "Visual leve, despojado e natural.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
             styleCategory: "Natural",
             points: 1,
           },
           {
             id: "3b",
             text: "Visual clássico e tradicional.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
             styleCategory: "Clássico",
             points: 2,
           },
@@ -321,35 +336,40 @@ const QUIZ_STRUCTURE = [
           {
             id: "3d",
             text: "Visual refinado e imponente.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
             styleCategory: "Elegante",
             points: 3,
           },
           {
             id: "3e",
             text: "Visual romântico, feminino e delicado.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
             styleCategory: "Romântico",
             points: 2,
           },
           {
             id: "3f",
             text: "Visual sensual, com saia justa e decote.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
             styleCategory: "Sexy",
             points: 3,
           },
           {
             id: "3g",
             text: "Visual marcante e urbano (jeans + jaqueta).",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
             styleCategory: "Dramático",
             points: 3,
           },
           {
             id: "3h",
             text: "Visual criativo, colorido e ousado.",
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
             styleCategory: "Criativo",
             points: 4,
           },
@@ -358,8 +378,9 @@ const QUIZ_STRUCTURE = [
       // ... mais questões podem ser adicionadas seguindo o mesmo padrão
     ];
 
-    const currentQuestion = questions[Math.min(questionNumber - 1, questions.length - 1)];
-    const hasImages = currentQuestion.options.some(opt => opt.imageUrl);
+    const currentQuestion =
+      questions[Math.min(questionNumber - 1, questions.length - 1)];
+    const hasImages = currentQuestion.options.some((opt) => opt.imageUrl);
 
     return {
       step: stepNumber,
@@ -451,7 +472,8 @@ const QUIZ_STRUCTURE = [
           id: `step${stepNumber.toString().padStart(2, "0")}-continue-button`,
           type: "button-inline",
           properties: {
-            text: questionNumber === 13 ? "Ver Resultado →" : "Próxima Questão →",
+            text:
+              questionNumber === 13 ? "Ver Resultado →" : "Próxima Questão →",
             textWhenDisabled: "Selecione 3 opções para avançar",
             variant: "primary",
             size: "large",
@@ -567,10 +589,22 @@ const QUIZ_STRUCTURE = [
         imageUrl:
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp",
         options: [
-          { id: "strategic-1-1", text: "Completamente perdida, não sei o que combina comigo" },
-          { id: "strategic-1-2", text: "Tenho algumas ideias, mas não sei como aplicá-las" },
-          { id: "strategic-1-3", text: "Conheço meu estilo, mas quero refiná-lo" },
-          { id: "strategic-1-4", text: "Estou satisfeita, só buscando inspiração" },
+          {
+            id: "strategic-1-1",
+            text: "Completamente perdida, não sei o que combina comigo",
+          },
+          {
+            id: "strategic-1-2",
+            text: "Tenho algumas ideias, mas não sei como aplicá-las",
+          },
+          {
+            id: "strategic-1-3",
+            text: "Conheço meu estilo, mas quero refiná-lo",
+          },
+          {
+            id: "strategic-1-4",
+            text: "Estou satisfeita, só buscando inspiração",
+          },
         ],
       },
       {
@@ -587,15 +621,28 @@ const QUIZ_STRUCTURE = [
             id: "strategic-2-3",
             text: "Não consigo criar looks diferentes com as peças que tenho",
           },
-          { id: "strategic-2-4", text: "Compro peças por impulso que depois não uso" },
+          {
+            id: "strategic-2-4",
+            text: "Compro peças por impulso que depois não uso",
+          },
         ],
       },
       {
-        title: "Você já considerou investir em algum guia ou consultoria de estilo no passado?",
+        title:
+          "Você já considerou investir em algum guia ou consultoria de estilo no passado?",
         options: [
-          { id: "strategic-3-1", text: "Sim, já pesquisei mas não cheguei a comprar" },
-          { id: "strategic-3-2", text: "Sim, já investi em algum curso/guia/consultoria" },
-          { id: "strategic-3-3", text: "Não, esta é a primeira vez que considero isso" },
+          {
+            id: "strategic-3-1",
+            text: "Sim, já pesquisei mas não cheguei a comprar",
+          },
+          {
+            id: "strategic-3-2",
+            text: "Sim, já investi em algum curso/guia/consultoria",
+          },
+          {
+            id: "strategic-3-3",
+            text: "Não, esta é a primeira vez que considero isso",
+          },
           { id: "strategic-3-4", text: "Prefiro não responder" },
         ],
       },
@@ -616,7 +663,10 @@ const QUIZ_STRUCTURE = [
         options: [
           { id: "strategic-5-1", text: "Aprender a combinar melhor as peças" },
           { id: "strategic-5-2", text: "Ter mais confiança ao escolher looks" },
-          { id: "strategic-5-3", text: "Valorizar o corpo com as roupas certas" },
+          {
+            id: "strategic-5-3",
+            text: "Valorizar o corpo com as roupas certas",
+          },
           { id: "strategic-5-4", text: "Sentir-se autêntica e única" },
         ],
       },
@@ -707,7 +757,8 @@ const QUIZ_STRUCTURE = [
           id: `step${stepNumber}-continue-button`,
           type: "button-inline",
           properties: {
-            text: questionNumber === 5 ? "Finalizar Quiz →" : "Próxima Pergunta →",
+            text:
+              questionNumber === 5 ? "Finalizar Quiz →" : "Próxima Pergunta →",
             textWhenDisabled: "Selecione uma opção para avançar",
             variant: "primary",
             size: "large",
@@ -776,7 +827,8 @@ const QUIZ_STRUCTURE = [
           styles: {
             Natural: {
               name: "Natural",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
               description:
@@ -784,7 +836,8 @@ const QUIZ_STRUCTURE = [
             },
             Clássico: {
               name: "Clássico",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp",
               description:
@@ -792,7 +845,8 @@ const QUIZ_STRUCTURE = [
             },
             Contemporâneo: {
               name: "Contemporâneo",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CONTEMPOR%C3%82NEO_vcklxe.webp",
               description:
@@ -800,7 +854,8 @@ const QUIZ_STRUCTURE = [
             },
             Elegante: {
               name: "Elegante",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_ELEGANTE_asez1q.webp",
               description:
@@ -808,7 +863,8 @@ const QUIZ_STRUCTURE = [
             },
             Romântico: {
               name: "Romântico",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_ROM%C3%82NTICO_ci4hgk.webp",
               description:
@@ -816,7 +872,8 @@ const QUIZ_STRUCTURE = [
             },
             Sexy: {
               name: "Sexy",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071349/GUIA_SEXY_t5x2ov.webp",
               description:
@@ -824,14 +881,17 @@ const QUIZ_STRUCTURE = [
             },
             Dramático: {
               name: "Dramático",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745073346/GUIA_DRAM%C3%81TICO_mpn60d.webp",
-              description: "Você tem personalidade forte e gosta de causar impacto com seu visual.",
+              description:
+                "Você tem personalidade forte e gosta de causar impacto com seu visual.",
             },
             Criativo: {
               name: "Criativo",
-              image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+              image:
+                "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
               guideImage:
                 "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_CRIATIVO_ntbzph.webp",
               description:
@@ -926,11 +986,21 @@ async function generateCompleteQuizTemplates() {
       },
       blocks: stepConfig.blocks,
       validation: {
-        required: stepConfig.type === "question" || stepConfig.type === "strategicQuestion",
+        required:
+          stepConfig.type === "question" ||
+          stepConfig.type === "strategicQuestion",
         minAnswers:
-          stepConfig.type === "question" ? 3 : stepConfig.type === "strategicQuestion" ? 1 : 0,
+          stepConfig.type === "question"
+            ? 3
+            : stepConfig.type === "strategicQuestion"
+              ? 1
+              : 0,
         maxAnswers:
-          stepConfig.type === "question" ? 3 : stepConfig.type === "strategicQuestion" ? 1 : 0,
+          stepConfig.type === "question"
+            ? 3
+            : stepConfig.type === "strategicQuestion"
+              ? 1
+              : 0,
         validationMessage:
           stepConfig.type === "question"
             ? "Selecione 3 opções para avançar."
@@ -940,7 +1010,8 @@ async function generateCompleteQuizTemplates() {
         trackingId: `step-${stepConfig.step.toString().padStart(2, "0")}-${stepConfig.category}`,
         events: ["page_view", "interaction", "validation_error", "completion"],
         utmParams: true,
-        customEvents: stepConfig.type === "result" ? ["conversion", "cta_clicked"] : [],
+        customEvents:
+          stepConfig.type === "result" ? ["conversion", "cta_clicked"] : [],
       },
       logic: {
         navigation: {
@@ -987,7 +1058,9 @@ async function generateCompleteQuizTemplates() {
 
     fs.writeFileSync(filepath, JSON.stringify(template, null, 2));
 
-    console.log(`✅ ${filename} - ${stepConfig.name} (${stepConfig.blocks.length} blocos)`);
+    console.log(
+      `✅ ${filename} - ${stepConfig.name} (${stepConfig.blocks.length} blocos)`
+    );
   }
 
   console.log(`\n🎉 21 TEMPLATES COMPLETOS CRIADOS COM SUCESSO!`);

@@ -34,13 +34,16 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
 
   // Propriedades extraídas
   const label = getPropertyByKey("label")?.value || "Campo de Input";
-  const placeholder = getPropertyByKey("placeholder")?.value || "Digite aqui...";
+  const placeholder =
+    getPropertyByKey("placeholder")?.value || "Digite aqui...";
   const required = getPropertyByKey("required")?.value || false;
-  const enableButtonWhenFilled = getPropertyByKey("enableButtonWhenFilled")?.value !== false;
+  const enableButtonWhenFilled =
+    getPropertyByKey("enableButtonWhenFilled")?.value !== false;
   const minLength = getPropertyByKey("minLength")?.value || 1;
   const maxLength = getPropertyByKey("maxLength")?.value || 255;
   const validationPattern = getPropertyByKey("validationPattern")?.value || "";
-  const errorMessage = getPropertyByKey("errorMessage")?.value || "Por favor, preencha este campo";
+  const errorMessage =
+    getPropertyByKey("errorMessage")?.value || "Por favor, preencha este campo";
 
   // Configurações do botão
   const buttonText = getPropertyByKey("buttonText")?.value || "Continuar";
@@ -48,7 +51,8 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
   const buttonSize = getPropertyByKey("buttonSize")?.value || "medium";
 
   // Configurações de navegação
-  const nextStepAction = getPropertyByKey("nextStepAction")?.value || "next-step";
+  const nextStepAction =
+    getPropertyByKey("nextStepAction")?.value || "next-step";
   const specificStep = getPropertyByKey("specificStep")?.value || "";
   const targetUrl = getPropertyByKey("targetUrl")?.value || "";
 
@@ -117,7 +121,11 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
         if (targetUrl) {
           window.open(targetUrl, "_blank");
         }
-        onUpdate(blockId, { action: "url-opened", url: targetUrl, value: inputValue });
+        onUpdate(blockId, {
+          action: "url-opened",
+          url: targetUrl,
+          value: inputValue,
+        });
         break;
 
       case "submit":
@@ -152,7 +160,8 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
         "bg-[#D4C2A8] text-[#432818] hover:bg-[#C4B298] focus:ring-[#D4C2A8] disabled:bg-gray-200",
       outline:
         "border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white focus:ring-[#B89B7A] disabled:border-gray-300 disabled:text-gray-300",
-      ghost: "text-[#B89B7A] hover:bg-[#F3E8D3] focus:ring-[#B89B7A] disabled:text-gray-300",
+      ghost:
+        "text-[#B89B7A] hover:bg-[#F3E8D3] focus:ring-[#B89B7A] disabled:text-gray-300",
     };
 
     return `${baseClasses} ${sizeClasses[buttonSize]} ${styleClasses[buttonStyle]}`;
@@ -194,7 +203,11 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
         {inputValue && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
             {isValid ? (
-              <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-5 h-5 text-green-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -202,7 +215,11 @@ export const FormInputAdvanced: React.FC<FormInputAdvancedProps> = ({
                 />
               </svg>
             ) : (
-              <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-5 h-5 text-red-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"

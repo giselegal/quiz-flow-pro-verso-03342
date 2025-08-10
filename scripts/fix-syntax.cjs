@@ -31,7 +31,7 @@ const stepFiles = [
 
 const basePath = "/workspaces/quiz-quest-challenge-verse/src/components/steps";
 
-stepFiles.forEach(fileName => {
+stepFiles.forEach((fileName) => {
   const filePath = path.join(basePath, fileName);
 
   if (!fs.existsSync(filePath)) {
@@ -56,10 +56,16 @@ stepFiles.forEach(fileName => {
   content = content.replace(/,\s*\n\s*}/g, "\n      }");
 
   // Corrigir indentação
-  content = content.replace(/^(\s*)(marginTop:|marginBottom:|spacing:)/gm, "        $2");
+  content = content.replace(
+    /^(\s*)(marginTop:|marginBottom:|spacing:)/gm,
+    "        $2"
+  );
 
   // Garantir vírgulas onde necessário
-  content = content.replace(/([^,])\n\s*(marginTop:|marginBottom:|spacing:)/g, "$1,\n        $2");
+  content = content.replace(
+    /([^,])\n\s*(marginTop:|marginBottom:|spacing:)/g,
+    "$1,\n        $2"
+  );
 
   fs.writeFileSync(filePath, content, "utf8");
   console.log(`✅ ${fileName} - Corrigido`);

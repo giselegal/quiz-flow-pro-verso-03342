@@ -27,7 +27,9 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
       )}
       onClick={onClick}
     >
-      <h3 className="text-xl font-semibold mb-4 text-[#432818] text-center">{title}</h3>
+      <h3 className="text-xl font-semibold mb-4 text-[#432818] text-center">
+        {title}
+      </h3>
 
       <div className="grid gap-4 md:grid-cols-3">
         {secondaryStyles.map((style: any, index: number) => (
@@ -49,7 +51,9 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
             <h4 className="font-medium text-[#432818] mb-1">{style.name}</h4>
 
             {/* Descrição opcional */}
-            {style.description && <p className="text-sm text-gray-600">{style.description}</p>}
+            {style.description && (
+              <p className="text-sm text-gray-600">{style.description}</p>
+            )}
           </div>
         ))}
       </div>

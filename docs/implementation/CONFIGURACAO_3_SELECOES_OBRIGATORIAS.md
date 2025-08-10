@@ -57,7 +57,7 @@ validateQuestionResponse: (selectedOptions, questionId) => {
 #### 4. **Nova Função de Validação Completa**
 
 ```typescript
-validateAllQuestions: allAnswers => {
+validateAllQuestions: (allAnswers) => {
   // Verifica todas as 10 questões
   // Retorna erros específicos para cada questão incompleta
   // Bloqueia prosseguimento se alguma questão não tiver 3 seleções

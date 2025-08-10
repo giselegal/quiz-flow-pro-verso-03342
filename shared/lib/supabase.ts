@@ -11,7 +11,8 @@ import { Database } from "../types/supabase";
 // =============================================================================
 
 const SUPABASE_URL =
-  import.meta.env.VITE_SUPABASE_URL || "https://txqljpitotmcxntprxiu.supabase.co";
+  import.meta.env.VITE_SUPABASE_URL ||
+  "https://txqljpitotmcxntprxiu.supabase.co";
 const SUPABASE_ANON_KEY =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cWxqcGl0b3RtY3hudHByeGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjI3MzQsImV4cCI6MjA2NTQzODczNH0.rHGZV47KUnSJ0fDNXbL-OjuB50BsuzT2IeO_LL-P8ok";
@@ -75,7 +76,10 @@ export const supabaseAdmin: SupabaseClient<Database> | null = (() => {
  */
 export const checkSupabaseConnection = async (): Promise<boolean> => {
   try {
-    const { data, error } = await supabase.from("profiles").select("count").limit(1);
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("count")
+      .limit(1);
     if (error) {
       console.error("Erro na conexão com Supabase:", error.message);
       return false;
@@ -176,10 +180,12 @@ export const uploadFile = async (
   file: File
 ): Promise<{ url: string; path: string }> => {
   try {
-    const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(path, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
 
     if (error) throw error;
 
@@ -200,7 +206,10 @@ export const uploadFile = async (
 /**
  * Utilitário para deletar arquivos
  */
-export const deleteFile = async (bucket: string, path: string): Promise<void> => {
+export const deleteFile = async (
+  bucket: string,
+  path: string
+): Promise<void> => {
   try {
     const { error } = await supabase.storage.from(bucket).remove([path]);
 
@@ -261,7 +270,10 @@ export const REALTIME_CHANNELS = {
 /**
  * Subscreve a atualizações de um quiz específico
  */
-export const subscribeToQuizUpdates = (quizId: string, callback: (payload: any) => void) => {
+export const subscribeToQuizUpdates = (
+  quizId: string,
+  callback: (payload: any) => void
+) => {
   return supabase
     .channel(REALTIME_CHANNELS.QUIZ_UPDATES)
     .on(
@@ -280,7 +292,10 @@ export const subscribeToQuizUpdates = (quizId: string, callback: (payload: any) 
 /**
  * Subscreve a atualizações de tentativas de quiz
  */
-export const subscribeToQuizAttempts = (quizId: string, callback: (payload: any) => void) => {
+export const subscribeToQuizAttempts = (
+  quizId: string,
+  callback: (payload: any) => void
+) => {
   return supabase
     .channel(`quiz-attempts-${quizId}`)
     .on(

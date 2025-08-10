@@ -36,10 +36,30 @@ const COMPONENTS_TO_FIX = [
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
       },
       logoAlt: { type: "string", label: "Alt do Logo", default: "Logo" },
-      progressValue: { type: "number", label: "Progresso (%)", default: 0, min: 0, max: 100 },
-      showProgress: { type: "boolean", label: "Mostrar Progresso", default: true },
-      backgroundColor: { type: "color", label: "Cor de Fundo", default: "#F9F5F1" },
-      height: { type: "number", label: "Altura (px)", default: 80, min: 50, max: 200 },
+      progressValue: {
+        type: "number",
+        label: "Progresso (%)",
+        default: 0,
+        min: 0,
+        max: 100,
+      },
+      showProgress: {
+        type: "boolean",
+        label: "Mostrar Progresso",
+        default: true,
+      },
+      backgroundColor: {
+        type: "color",
+        label: "Cor de Fundo",
+        default: "#F9F5F1",
+      },
+      height: {
+        type: "number",
+        label: "Altura (px)",
+        default: 80,
+        min: 50,
+        max: 200,
+      },
     },
   },
   {
@@ -50,7 +70,11 @@ const COMPONENTS_TO_FIX = [
     importPath: "@/components/blocks/inline/FormInputBlock",
     properties: {
       label: { type: "string", label: "Rótulo", default: "Campo de Input" },
-      placeholder: { type: "string", label: "Placeholder", default: "Digite aqui..." },
+      placeholder: {
+        type: "string",
+        label: "Placeholder",
+        default: "Digite aqui...",
+      },
       required: { type: "boolean", label: "Obrigatório", default: false },
       type: {
         type: "select",
@@ -64,7 +88,11 @@ const COMPONENTS_TO_FIX = [
         ],
       },
       width: { type: "string", label: "Largura", default: "100%" },
-      backgroundColor: { type: "color", label: "Cor de Fundo", default: "#FFFFFF" },
+      backgroundColor: {
+        type: "color",
+        label: "Cor de Fundo",
+        default: "#FFFFFF",
+      },
       borderColor: { type: "color", label: "Cor da Borda", default: "#B89B7A" },
     },
   },
@@ -85,7 +113,11 @@ const COMPONENTS_TO_FIX = [
         label: "Texto de Copyright",
         default: "© 2025 Todos os direitos reservados",
       },
-      termsText: { type: "string", label: "Texto de Termos", default: "Termos de uso" },
+      termsText: {
+        type: "string",
+        label: "Texto de Termos",
+        default: "Termos de uso",
+      },
       fontSize: {
         type: "select",
         label: "Tamanho da Fonte",
@@ -132,7 +164,13 @@ const COMPONENTS_TO_FIX = [
           { value: "none", label: "Nenhum" },
         ],
       },
-      borderRadius: { type: "number", label: "Borda Arredondada", default: 8, min: 0, max: 50 },
+      borderRadius: {
+        type: "number",
+        label: "Borda Arredondada",
+        default: 8,
+        min: 0,
+        max: 50,
+      },
       shadow: { type: "boolean", label: "Sombra", default: false },
       alignment: {
         type: "select",
@@ -153,7 +191,11 @@ const COMPONENTS_TO_FIX = [
     component: "OptionsGridBlock",
     importPath: "@/components/editor/blocks/OptionsGridBlock",
     properties: {
-      question: { type: "textarea", label: "Pergunta", default: "Qual opção você escolhe?" },
+      question: {
+        type: "textarea",
+        label: "Pergunta",
+        default: "Qual opção você escolhe?",
+      },
       columns: {
         type: "select",
         label: "Colunas",
@@ -165,7 +207,13 @@ const COMPONENTS_TO_FIX = [
           { value: "4", label: "4 Colunas" },
         ],
       },
-      gap: { type: "number", label: "Espaçamento", default: 16, min: 0, max: 50 },
+      gap: {
+        type: "number",
+        label: "Espaçamento",
+        default: 16,
+        min: 0,
+        max: 50,
+      },
       selectionMode: {
         type: "select",
         label: "Seleção",
@@ -175,8 +223,16 @@ const COMPONENTS_TO_FIX = [
           { value: "multiple", label: "Múltipla" },
         ],
       },
-      primaryColor: { type: "color", label: "Cor Principal", default: "#B89B7A" },
-      accentColor: { type: "color", label: "Cor de Destaque", default: "#D4C2A8" },
+      primaryColor: {
+        type: "color",
+        label: "Cor Principal",
+        default: "#B89B7A",
+      },
+      accentColor: {
+        type: "color",
+        label: "Cor de Destaque",
+        default: "#D4C2A8",
+      },
       showImages: { type: "boolean", label: "Mostrar Imagens", default: true },
       imagePosition: {
         type: "select",
@@ -198,14 +254,46 @@ const COMPONENTS_TO_FIX = [
     component: "QuizProgressBlock",
     importPath: "@/components/editor/blocks/QuizProgressBlock",
     properties: {
-      currentStep: { type: "number", label: "Etapa Atual", default: 1, min: 1, max: 21 },
-      totalSteps: { type: "number", label: "Total de Etapas", default: 21, min: 1, max: 50 },
+      currentStep: {
+        type: "number",
+        label: "Etapa Atual",
+        default: 1,
+        min: 1,
+        max: 21,
+      },
+      totalSteps: {
+        type: "number",
+        label: "Total de Etapas",
+        default: 21,
+        min: 1,
+        max: 50,
+      },
       showNumbers: { type: "boolean", label: "Mostrar Números", default: true },
-      showPercentage: { type: "boolean", label: "Mostrar Percentual", default: true },
+      showPercentage: {
+        type: "boolean",
+        label: "Mostrar Percentual",
+        default: true,
+      },
       barColor: { type: "color", label: "Cor da Barra", default: "#B89B7A" },
-      backgroundColor: { type: "color", label: "Cor de Fundo", default: "#E5E7EB" },
-      height: { type: "number", label: "Altura (px)", default: 8, min: 4, max: 20 },
-      borderRadius: { type: "number", label: "Borda Arredondada", default: 4, min: 0, max: 20 },
+      backgroundColor: {
+        type: "color",
+        label: "Cor de Fundo",
+        default: "#E5E7EB",
+      },
+      height: {
+        type: "number",
+        label: "Altura (px)",
+        default: 8,
+        min: 4,
+        max: 20,
+      },
+      borderRadius: {
+        type: "number",
+        label: "Borda Arredondada",
+        default: 4,
+        min: 0,
+        max: 20,
+      },
       animated: { type: "boolean", label: "Animado", default: true },
     },
   },
@@ -217,11 +305,31 @@ const COMPONENTS_TO_FIX = [
     importPath: "@/components/editor/blocks/QuizResultsEditor",
     properties: {
       title: { type: "string", label: "Título", default: "Seus Resultados" },
-      showScores: { type: "boolean", label: "Mostrar Pontuações", default: true },
-      showPercentages: { type: "boolean", label: "Mostrar Percentuais", default: true },
-      showRanking: { type: "boolean", label: "Mostrar Ranking", default: false },
-      primaryColor: { type: "color", label: "Cor Principal", default: "#B89B7A" },
-      secondaryColor: { type: "color", label: "Cor Secundária", default: "#D4C2A8" },
+      showScores: {
+        type: "boolean",
+        label: "Mostrar Pontuações",
+        default: true,
+      },
+      showPercentages: {
+        type: "boolean",
+        label: "Mostrar Percentuais",
+        default: true,
+      },
+      showRanking: {
+        type: "boolean",
+        label: "Mostrar Ranking",
+        default: false,
+      },
+      primaryColor: {
+        type: "color",
+        label: "Cor Principal",
+        default: "#B89B7A",
+      },
+      secondaryColor: {
+        type: "color",
+        label: "Cor Secundária",
+        default: "#D4C2A8",
+      },
       layout: {
         type: "select",
         label: "Layout",
@@ -233,7 +341,11 @@ const COMPONENTS_TO_FIX = [
         ],
       },
       showImages: { type: "boolean", label: "Mostrar Imagens", default: true },
-      animatedEntry: { type: "boolean", label: "Entrada Animada", default: true },
+      animatedEntry: {
+        type: "boolean",
+        label: "Entrada Animada",
+        default: true,
+      },
     },
   },
   {
@@ -243,8 +355,16 @@ const COMPONENTS_TO_FIX = [
     component: "StyleResultsEditor",
     importPath: "@/components/editor/blocks/StyleResultsEditor",
     properties: {
-      title: { type: "string", label: "Título", default: "Seu Estilo Predominante" },
-      showAllStyles: { type: "boolean", label: "Mostrar Todos os Estilos", default: false },
+      title: {
+        type: "string",
+        label: "Título",
+        default: "Seu Estilo Predominante",
+      },
+      showAllStyles: {
+        type: "boolean",
+        label: "Mostrar Todos os Estilos",
+        default: false,
+      },
       showGuideImage: { type: "boolean", label: "Mostrar Guia", default: true },
       guideImageUrl: {
         type: "string",
@@ -274,8 +394,16 @@ const COMPONENTS_TO_FIX = [
           { value: "split", label: "Dividido" },
         ],
       },
-      showDescription: { type: "boolean", label: "Mostrar Descrição", default: true },
-      showPercentage: { type: "boolean", label: "Mostrar Percentual", default: true },
+      showDescription: {
+        type: "boolean",
+        label: "Mostrar Descrição",
+        default: true,
+      },
+      showPercentage: {
+        type: "boolean",
+        label: "Mostrar Percentual",
+        default: true,
+      },
     },
   },
   {
@@ -285,17 +413,43 @@ const COMPONENTS_TO_FIX = [
     component: "FinalStepEditor",
     importPath: "@/components/editor/blocks/FinalStepEditor",
     properties: {
-      stepNumber: { type: "number", label: "Número da Etapa", default: 21, min: 1, max: 50 },
-      title: { type: "string", label: "Título", default: "Seu Estilo Predominante" },
+      stepNumber: {
+        type: "number",
+        label: "Número da Etapa",
+        default: 21,
+        min: 1,
+        max: 50,
+      },
+      title: {
+        type: "string",
+        label: "Título",
+        default: "Seu Estilo Predominante",
+      },
       subtitle: {
         type: "string",
         label: "Subtítulo",
         default: "Descubra seu estilo de moda único",
       },
-      showNavigation: { type: "boolean", label: "Mostrar Navegação", default: true },
-      showProgress: { type: "boolean", label: "Mostrar Progresso", default: true },
-      backgroundColor: { type: "color", label: "Cor de Fundo", default: "#F9F5F1" },
-      accentColor: { type: "color", label: "Cor de Destaque", default: "#B89B7A" },
+      showNavigation: {
+        type: "boolean",
+        label: "Mostrar Navegação",
+        default: true,
+      },
+      showProgress: {
+        type: "boolean",
+        label: "Mostrar Progresso",
+        default: true,
+      },
+      backgroundColor: {
+        type: "color",
+        label: "Cor de Fundo",
+        default: "#F9F5F1",
+      },
+      accentColor: {
+        type: "color",
+        label: "Cor de Destaque",
+        default: "#B89B7A",
+      },
       layout: {
         type: "select",
         label: "Layout",
@@ -340,7 +494,9 @@ function formatWithPrettier(code) {
     fs.writeFileSync(tempFile, code);
 
     // Aplica prettier
-    execSync(`npx prettier --write "${tempFile}" --parser typescript`, { stdio: "pipe" });
+    execSync(`npx prettier --write "${tempFile}" --parser typescript`, {
+      stdio: "pipe",
+    });
 
     // Lê resultado formatado
     const formatted = fs.readFileSync(tempFile, "utf8");
@@ -379,7 +535,7 @@ function generatePropertyDefinition(key, config) {
 
   if (config.options) {
     definition += `        options: [\n`;
-    config.options.forEach(option => {
+    config.options.forEach((option) => {
       definition += `          { value: "${option.value}", label: "${option.label}" },\n`;
     });
     definition += `        ],\n`;
@@ -457,7 +613,7 @@ function generateHookPropertyDefinition(component) {
 
     if (config.options) {
       definition += `              options: [\n`;
-      config.options.forEach(option => {
+      config.options.forEach((option) => {
         definition += `                { value: "${option.value}", label: "${option.label}" },\n`;
       });
       definition += `              ],\n`;
@@ -489,18 +645,24 @@ function updateBlockDefinitions() {
 
   // Adicionar imports necessários
   const newImports = COMPONENTS_TO_FIX.map(
-    comp => `import ${comp.component} from "${comp.importPath}";`
+    (comp) => `import ${comp.component} from "${comp.importPath}";`
   ).join("\n");
 
   // Procurar onde adicionar imports
   const importIndex = content.indexOf("import SpacerInlineBlock");
   if (importIndex !== -1) {
     const endOfLine = content.indexOf("\n", importIndex);
-    content = content.slice(0, endOfLine + 1) + newImports + "\n" + content.slice(endOfLine + 1);
+    content =
+      content.slice(0, endOfLine + 1) +
+      newImports +
+      "\n" +
+      content.slice(endOfLine + 1);
   }
 
   // Adicionar definições de componentes
-  const newDefinitions = COMPONENTS_TO_FIX.map(generateComponentDefinition).join("\n\n");
+  const newDefinitions = COMPONENTS_TO_FIX.map(
+    generateComponentDefinition
+  ).join("\n\n");
 
   // Procurar onde adicionar definições (antes do export)
   const exportIndex = content.lastIndexOf("export const getCategories");
@@ -521,7 +683,10 @@ function updateBlockDefinitions() {
 
   // Salvar arquivo
   fs.writeFileSync(blockDefPath, content);
-  log(`✅ ${COMPONENTS_TO_FIX.length} componentes adicionados ao blockDefinitions.ts`, "success");
+  log(
+    `✅ ${COMPONENTS_TO_FIX.length} componentes adicionados ao blockDefinitions.ts`,
+    "success"
+  );
 
   return true;
 }
@@ -539,7 +704,9 @@ function updateUnifiedProperties() {
   let content = fs.readFileSync(hookPath, "utf8");
 
   // Procurar onde adicionar novos cases
-  const newCases = COMPONENTS_TO_FIX.map(generateHookPropertyDefinition).join("\n\n");
+  const newCases = COMPONENTS_TO_FIX.map(generateHookPropertyDefinition).join(
+    "\n\n"
+  );
 
   // Procurar o final do switch statement
   const defaultCaseIndex = content.indexOf("default:");
@@ -589,13 +756,19 @@ function generateSummaryReport() {
   log("\n🎉 RELATÓRIO DE CONFIGURAÇÃO EM LOTE", "success");
   log("=====================================", "info");
 
-  log(`📊 Total de componentes configurados: ${COMPONENTS_TO_FIX.length}`, "info");
+  log(
+    `📊 Total de componentes configurados: ${COMPONENTS_TO_FIX.length}`,
+    "info"
+  );
   log("", "info");
 
   log("📋 Componentes configurados:", "info");
   COMPONENTS_TO_FIX.forEach((comp, index) => {
     const propsCount = Object.keys(comp.properties).length;
-    log(`   ${index + 1}. ${comp.name} (${comp.type}) - ${propsCount} propriedades`, "info");
+    log(
+      `   ${index + 1}. ${comp.name} (${comp.type}) - ${propsCount} propriedades`,
+      "info"
+    );
   });
 
   log("", "info");

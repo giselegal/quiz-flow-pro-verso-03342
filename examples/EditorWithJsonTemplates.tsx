@@ -14,9 +14,9 @@ const { blocks } = useEffect(() => {
 
 // DEPOIS - usando templates JSON:
 
-export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const EditorProviderWithJsonTemplates: React.FC<{
+  children: ReactNode;
+}> = ({ children }) => {
   const [activeStepId, setActiveStepId] = useState("step-1");
 
   // Opção 1: Carregar template individual
@@ -28,7 +28,9 @@ export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> 
   } = useJsonTemplate(activeStepId, {
     preload: true,
     onLoad: (stepId, blocks) => {
-      console.log(`✅ Template ${stepId} carregado com ${blocks.length} blocos`);
+      console.log(
+        `✅ Template ${stepId} carregado com ${blocks.length} blocos`
+      );
     },
     onError: (stepId, error) => {
       console.error(`❌ Erro no template ${stepId}:`, error);
@@ -67,7 +69,11 @@ export const EditorProviderWithJsonTemplates: React.FC<{ children: ReactNode }> 
     // ... resto do context
   };
 
-  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
+  return (
+    <EditorContext.Provider value={contextValue}>
+      {children}
+    </EditorContext.Provider>
+  );
 };
 
 // Exemplo de uso em um componente:
@@ -87,7 +93,7 @@ export const ExampleUsage = () => {
       <button onClick={handleLoadStep2}>Carregar Etapa 2</button>
 
       <div className="blocks-container">
-        {blocks.map(block => (
+        {blocks.map((block) => (
           <div key={block.id}>
             Bloco: {block.type} - {JSON.stringify(block.properties)}
           </div>

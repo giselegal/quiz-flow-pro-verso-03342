@@ -11,7 +11,10 @@
 
 import { analyzeImageUrl } from "../utils/ImageChecker";
 import { imageCache } from "../utils/images/caching";
-import { checkRenderedImages, generateImageReport } from "../utils/images/diagnostic";
+import {
+  checkRenderedImages,
+  generateImageReport,
+} from "../utils/images/diagnostic";
 import { runImageUrlAnalysis } from "../utils/tests/imageUrlAnalyzer";
 
 /**
@@ -24,7 +27,9 @@ export const runDiagnosticDemo = () => {
   // 1. Verificar imagens renderizadas na página
   console.group("1️⃣ Verificação de Imagens Renderizadas");
   const renderedIssues = checkRenderedImages();
-  console.log(`Encontrados ${renderedIssues.length} problemas em imagens renderizadas.`);
+  console.log(
+    `Encontrados ${renderedIssues.length} problemas em imagens renderizadas.`
+  );
   console.groupEnd();
 
   // 2. Gerar relatório completo
@@ -39,16 +44,20 @@ export const runDiagnosticDemo = () => {
   console.log(`${Object.keys(cachedImages).length} imagens em cache.`);
 
   // Mostrar estatísticas de tamanho
-  const totalSize = Object.values(cachedImages).reduce((sum, entry) => sum + (entry.size || 0), 0);
+  const totalSize = Object.values(cachedImages).reduce(
+    (sum, entry) => sum + (entry.size || 0),
+    0
+  );
   console.log(`Tamanho total em cache: ${(totalSize / 1024).toFixed(2)} KB`);
 
   // Mostrar estatísticas de tempo de carregamento
   const loadTimes = Object.values(cachedImages)
-    .filter(entry => entry.loadTime)
-    .map(entry => entry.loadTime);
+    .filter((entry) => entry.loadTime)
+    .map((entry) => entry.loadTime);
 
   if (loadTimes.length > 0) {
-    const avgLoadTime = loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length;
+    const avgLoadTime =
+      loadTimes.reduce((sum, time) => sum + time, 0) / loadTimes.length;
     const maxLoadTime = Math.max(...loadTimes);
     console.log(`Tempo médio de carregamento: ${avgLoadTime.toFixed(2)}ms`);
     console.log(`Tempo máximo de carregamento: ${maxLoadTime}ms`);
@@ -60,8 +69,8 @@ export const runDiagnosticDemo = () => {
 
   // Obter algumas URLs de imagens da página para analisar
   const imgUrls = Array.from(document.querySelectorAll("img"))
-    .map(img => img.src)
-    .filter(src => src) // Filtrar URLs vazias
+    .map((img) => img.src)
+    .filter((src) => src) // Filtrar URLs vazias
     .slice(0, 3); // Limitar a 3 exemplos
 
   if (imgUrls.length > 0) {
@@ -110,7 +119,10 @@ export const analyzeIntroImages = () => {
       console.log("Elemento:", img);
       console.log("URL:", img.src);
       console.log("Tamanho renderizado:", `${img.width}x${img.height}px`);
-      console.log("Tamanho natural:", `${img.naturalWidth}x${img.naturalHeight}px`);
+      console.log(
+        "Tamanho natural:",
+        `${img.naturalWidth}x${img.naturalHeight}px`
+      );
 
       // Analisar a URL
       const analysis = analyzeImageUrl(img.src);

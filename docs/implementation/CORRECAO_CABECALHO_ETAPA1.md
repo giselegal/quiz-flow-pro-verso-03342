@@ -61,9 +61,13 @@ const {
 {
   showProgress && (
     <>
-      <div className="w-full bg-gray-200 rounded-full h-2">{/* barra de progresso */}</div>
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        {/* barra de progresso */}
+      </div>
       <div className="text-center mt-2">
-        <span className="text-sm text-gray-600">{Math.round(progressValue)}% completo</span>
+        <span className="text-sm text-gray-600">
+          {Math.round(progressValue)}% completo
+        </span>
       </div>
     </>
   );

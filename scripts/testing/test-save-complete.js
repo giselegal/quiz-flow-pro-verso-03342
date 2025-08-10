@@ -14,8 +14,11 @@ setTimeout(() => {
   const saveButtons = document.querySelectorAll("button");
   let saveButton = null;
 
-  saveButtons.forEach(btn => {
-    if (btn.textContent?.includes("Salvar") || btn.textContent?.includes("Salvando")) {
+  saveButtons.forEach((btn) => {
+    if (
+      btn.textContent?.includes("Salvar") ||
+      btn.textContent?.includes("Salvando")
+    ) {
       saveButton = btn;
       console.log(`✅ Botão Salvar encontrado: "${btn.textContent}"`);
       console.log(`   Disabled: ${btn.disabled}`);
@@ -41,9 +44,11 @@ setTimeout(() => {
     try {
       const parsed = JSON.parse(localFunnels);
       console.log(`📊 Quantidade de funnels: ${Object.keys(parsed).length}`);
-      Object.keys(parsed).forEach(key => {
+      Object.keys(parsed).forEach((key) => {
         const funnel = parsed[key];
-        console.log(`   - ${key}: "${funnel.name}" (${funnel.pages?.length || 0} páginas)`);
+        console.log(
+          `   - ${key}: "${funnel.name}" (${funnel.pages?.length || 0} páginas)`
+        );
       });
     } catch (e) {
       console.error("❌ Erro ao parsear localStorage:", e);
@@ -70,11 +75,13 @@ setTimeout(() => {
     console.log("\n📋 PASSO 4: Analisar resultado");
 
     // Filtrar logs relevantes
-    const saveLogs = logs.filter(log =>
+    const saveLogs = logs.filter((log) =>
       log.some(
-        arg =>
+        (arg) =>
           typeof arg === "string" &&
-          (arg.includes("DEBUG") || arg.includes("saveFunnel") || arg.includes("handleSave"))
+          (arg.includes("DEBUG") ||
+            arg.includes("saveFunnel") ||
+            arg.includes("handleSave"))
       )
     );
 
@@ -85,7 +92,9 @@ setTimeout(() => {
 
     // Verificar se houve mudanças no localStorage
     const newLocalFunnels = localStorage.getItem("schema-driven-funnels");
-    const newPendingChanges = localStorage.getItem("schema-driven-pending-changes");
+    const newPendingChanges = localStorage.getItem(
+      "schema-driven-pending-changes"
+    );
 
     console.log(`\n🔄 Estado após salvamento:`);
     console.log(`   Funnels no localStorage: ${!!newLocalFunnels}`);
@@ -94,7 +103,9 @@ setTimeout(() => {
     // Restaurar console.log original
     console.log = originalConsoleLog;
 
-    console.log("\n✅ Teste completo! Verifique os logs acima para diagnóstico.");
+    console.log(
+      "\n✅ Teste completo! Verifique os logs acima para diagnóstico."
+    );
   }, 3000);
 }, 2000);
 

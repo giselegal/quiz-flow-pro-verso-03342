@@ -34,7 +34,8 @@ const text =
 const text = properties.text || properties.title || "Título";
 
 // DEPOIS:
-const text = properties.content || properties.text || properties.title || "Título";
+const text =
+  properties.content || properties.text || properties.title || "Título";
 ```
 
 **RESULTADO**: Agora aceita `content` diretamente

@@ -22,7 +22,10 @@ const __dirname = path.dirname(__filename);
 function checkEditorFixedIntegration() {
   console.log("🔍 VERIFICANDO INTEGRAÇÃO DO EDITOR-FIXED...");
 
-  const editorFixedPath = path.join(__dirname, "src/pages/editor-fixed-dragdrop.tsx");
+  const editorFixedPath = path.join(
+    __dirname,
+    "src/pages/editor-fixed-dragdrop.tsx"
+  );
 
   if (!fs.existsSync(editorFixedPath)) {
     console.log("  ❌ editor-fixed-dragdrop.tsx não encontrado");
@@ -37,7 +40,9 @@ function checkEditorFixedIntegration() {
   const hasFunnelStagesPanel = content.includes("FunnelStagesPanel");
   const hasCanvasDropZone = content.includes("CanvasDropZone");
 
-  console.log(`  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`);
+  console.log(
+    `  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`
+  );
   console.log(`  ${hasEditorContext ? "✅" : "❌"} Hook useEditor`);
   console.log(`  ${hasFunnelStagesPanel ? "✅" : "❌"} FunnelStagesPanel`);
   console.log(`  ${hasCanvasDropZone ? "✅" : "❌"} CanvasDropZone`);
@@ -48,9 +53,12 @@ function checkEditorFixedIntegration() {
     hasFunnelStagesPanel,
     hasCanvasDropZone,
     score:
-      [hasOptimizedImport, hasEditorContext, hasFunnelStagesPanel, hasCanvasDropZone].filter(
-        Boolean
-      ).length * 25,
+      [
+        hasOptimizedImport,
+        hasEditorContext,
+        hasFunnelStagesPanel,
+        hasCanvasDropZone,
+      ].filter(Boolean).length * 25,
   };
 }
 
@@ -72,8 +80,12 @@ function checkEditorContextSteps() {
   const has21StepsInit = content.includes("for (let i = 1; i <= 21; i++)");
   const hasStepMapping = content.includes("getAllSteps");
 
-  console.log(`  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`);
-  console.log(`  ${hasLoadOptimizedSteps ? "✅" : "❌"} Função loadOptimizedSteps`);
+  console.log(
+    `  ${hasOptimizedImport ? "✅" : "❌"} Import da configuração otimizada`
+  );
+  console.log(
+    `  ${hasLoadOptimizedSteps ? "✅" : "❌"} Função loadOptimizedSteps`
+  );
   console.log(`  ${has21StepsInit ? "✅" : "❌"} Inicialização das 21 etapas`);
   console.log(`  ${hasStepMapping ? "✅" : "❌"} Mapeamento de templates`);
 
@@ -83,15 +95,22 @@ function checkEditorContextSteps() {
     has21StepsInit,
     hasStepMapping,
     score:
-      [hasOptimizedImport, hasLoadOptimizedSteps, has21StepsInit, hasStepMapping].filter(Boolean)
-        .length * 25,
+      [
+        hasOptimizedImport,
+        hasLoadOptimizedSteps,
+        has21StepsInit,
+        hasStepMapping,
+      ].filter(Boolean).length * 25,
   };
 }
 
 function checkOptimizedConfiguration() {
   console.log("\n🔍 VERIFICANDO CONFIGURAÇÃO OTIMIZADA DAS 21 ETAPAS...");
 
-  const configPath = path.join(__dirname, "src/config/optimized21StepsFunnel.ts");
+  const configPath = path.join(
+    __dirname,
+    "src/config/optimized21StepsFunnel.ts"
+  );
 
   if (!fs.existsSync(configPath)) {
     console.log("  ❌ optimized21StepsFunnel.ts não encontrado");
@@ -133,15 +152,23 @@ function checkOptimizedConfiguration() {
     hasCalculations,
     hasConversion,
     score:
-      [hasCorrectStepCount, hasQuizData, hasStyles, hasCalculations, hasConversion].filter(Boolean)
-        .length * 20,
+      [
+        hasCorrectStepCount,
+        hasQuizData,
+        hasStyles,
+        hasCalculations,
+        hasConversion,
+      ].filter(Boolean).length * 20,
   };
 }
 
 function checkFunnelStagesPanel() {
   console.log("\n🔍 VERIFICANDO FUNNELSTAGES PANEL...");
 
-  const panelPath = path.join(__dirname, "src/components/editor/funnel/FunnelStagesPanel.tsx");
+  const panelPath = path.join(
+    __dirname,
+    "src/components/editor/funnel/FunnelStagesPanel.tsx"
+  );
 
   if (!fs.existsSync(panelPath)) {
     console.log("  ❌ FunnelStagesPanel.tsx não encontrado");
@@ -166,8 +193,12 @@ function checkFunnelStagesPanel() {
     hasActiveStage,
     hasStageActions,
     score:
-      [hasEditorContext, hasStagesMapping, hasActiveStage, hasStageActions].filter(Boolean).length *
-      25,
+      [
+        hasEditorContext,
+        hasStagesMapping,
+        hasActiveStage,
+        hasStageActions,
+      ].filter(Boolean).length * 25,
   };
 }
 
@@ -193,7 +224,11 @@ function fixEditorContextIntegration() {
 
     const importIndex = content.indexOf("import React");
     if (importIndex !== -1) {
-      content = content.slice(0, importIndex) + importLine + "\n" + content.slice(importIndex);
+      content =
+        content.slice(0, importIndex) +
+        importLine +
+        "\n" +
+        content.slice(importIndex);
       console.log("  ✅ Import da configuração otimizada adicionado");
     }
   }
@@ -296,7 +331,9 @@ function fixEditorContextIntegration() {
   });`;
 
     content = content.replace(stagesInitRegex, newStagesInit);
-    console.log("  ✅ Inicialização dos stages atualizada para usar configuração otimizada");
+    console.log(
+      "  ✅ Inicialização dos stages atualizada para usar configuração otimizada"
+    );
   }
 
   fs.writeFileSync(contextPath, content);
@@ -533,7 +570,11 @@ function generateFixReport(results) {
   console.log(`  📋 Funnel Stages Panel: ${funnelStages.score}%`);
 
   const overallScore = Math.round(
-    (editorFixed.score + editorContext.score + optimizedConfig.score + funnelStages.score) / 4
+    (editorFixed.score +
+      editorContext.score +
+      optimizedConfig.score +
+      funnelStages.score) /
+      4
   );
 
   console.log(`\n🏆 SCORE GERAL: ${overallScore}%`);
@@ -552,11 +593,15 @@ function generateFixReport(results) {
   if (optimizedConfig.stepCount >= 21) {
     console.log(`  ✅ ${optimizedConfig.stepCount} etapas configuradas`);
   } else {
-    console.log(`  ⚠️ Apenas ${optimizedConfig.stepCount} etapas encontradas (esperado: 21)`);
+    console.log(
+      `  ⚠️ Apenas ${optimizedConfig.stepCount} etapas encontradas (esperado: 21)`
+    );
   }
 
   console.log("\n🔗 PRÓXIMOS PASSOS:");
-  console.log("  1. ✅ Verificar no browser: http://localhost:8081/editor-fixed");
+  console.log(
+    "  1. ✅ Verificar no browser: http://localhost:8081/editor-fixed"
+  );
   console.log("  2. ✅ Testar navegação entre as 21 etapas");
   console.log("  3. ✅ Verificar carregamento dos blocos");
   console.log("  4. ✅ Testar painel de propriedades");

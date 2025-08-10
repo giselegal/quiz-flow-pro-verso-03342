@@ -62,10 +62,12 @@ const layoutProblems = [
   },
 ];
 
-layoutProblems.forEach(problem => {
+layoutProblems.forEach((problem) => {
   const matches = (resultPageContent.match(problem.regex) || []).length;
   const status = matches > 0 ? "⚠️" : "✅";
-  console.log(`  ${status} ${problem.problema} (${matches}x) - ${problem.descricao}`);
+  console.log(
+    `  ${status} ${problem.problema} (${matches}x) - ${problem.descricao}`
+  );
 });
 
 console.log("\n🎨 PROBLEMAS DE CSS ESPECÍFICOS:\n");
@@ -142,9 +144,9 @@ const solutions = [
   },
 ];
 
-solutions.forEach(solution => {
+solutions.forEach((solution) => {
   console.log(`🎯 ${solution.area}:`);
-  solution.fixes.forEach(fix => {
+  solution.fixes.forEach((fix) => {
     console.log(`  ✨ ${fix}`);
   });
   console.log("");
@@ -237,7 +239,7 @@ const corrections = [
   "7. 🎭 Reduzir opacidade de elementos decorativos",
 ];
 
-corrections.forEach(correction => {
+corrections.forEach((correction) => {
   console.log(correction);
 });
 

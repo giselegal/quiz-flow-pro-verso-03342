@@ -27,7 +27,9 @@ async function testSaveExistingFunnel() {
 
     // 2. Pegar o primeiro funil
     const existingFunnel = funnels[0];
-    console.log(`\n2. Testing with funnel: ${existingFunnel.id} - "${existingFunnel.name}"`);
+    console.log(
+      `\n2. Testing with funnel: ${existingFunnel.id} - "${existingFunnel.name}"`
+    );
 
     // 3. Tentar fazer um PUT (update) como o frontend faria
     console.log("\n3. Attempting to save (PUT) the funnel...");
@@ -44,15 +46,20 @@ async function testSaveExistingFunnel() {
       pagesCount: updateData.pages?.length || 0,
     });
 
-    const saveResponse = await fetch(`${baseUrl}/funnels/${existingFunnel.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updateData),
-    });
+    const saveResponse = await fetch(
+      `${baseUrl}/funnels/${existingFunnel.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updateData),
+      }
+    );
 
-    console.log(`Response status: ${saveResponse.status} ${saveResponse.statusText}`);
+    console.log(
+      `Response status: ${saveResponse.status} ${saveResponse.statusText}`
+    );
 
     if (saveResponse.ok) {
       const result = await saveResponse.json();

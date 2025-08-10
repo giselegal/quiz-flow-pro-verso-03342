@@ -110,7 +110,7 @@ console.log("📋 RECURSOS MODERNOS QUE FALTAM:\n");
 
 Object.entries(recursosFaltantes).forEach(([categoria, recursos]) => {
   console.log(`🔧 ${categoria.toUpperCase()}:`);
-  recursos.forEach(recurso => {
+  recursos.forEach((recurso) => {
     console.log(`  ${recurso}`);
   });
   console.log("");
@@ -154,7 +154,7 @@ const prioridades = {
 
 Object.entries(prioridades).forEach(([nivel, features]) => {
   console.log(`${nivel}:`);
-  features.forEach(feature => {
+  features.forEach((feature) => {
     console.log(`  ✨ ${feature}`);
   });
   console.log("");
@@ -176,7 +176,7 @@ const stackRecomendado = {
 
 Object.entries(stackRecomendado).forEach(([area, tools]) => {
   console.log(`🔧 ${area}:`);
-  tools.forEach(tool => {
+  tools.forEach((tool) => {
     console.log(`  📦 ${tool}`);
   });
   console.log("");
@@ -197,7 +197,7 @@ const componentesEssenciais = [
   "💾 AutoSaveSystem - Salvamento automático",
 ];
 
-componentesEssenciais.forEach(componente => {
+componentesEssenciais.forEach((componente) => {
   console.log(`  ${componente}`);
 });
 

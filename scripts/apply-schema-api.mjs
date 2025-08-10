@@ -4,8 +4,10 @@ import { createClient } from "@supabase/supabase-js";
 // SCRIPT PARA APLICAR SCHEMA SUPABASE VIA API
 // ============================================================================
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL || "https://inabgbgrgzfxgkbdaush.supabase.co";
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_URL =
+  process.env.VITE_SUPABASE_URL || "https://inabgbgrgzfxgkbdaush.supabase.co";
+const SUPABASE_SERVICE_KEY =
+  process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
   console.error("❌ Variáveis Supabase não configuradas");
@@ -24,8 +26,10 @@ async function applySchemaViaAPI() {
     // ========================================================================
     console.log("📦 1. Criando tabela component_types...");
 
-    const { error: createComponentTypesError } = await supabase.rpc("exec_sql", {
-      sql: `
+    const { error: createComponentTypesError } = await supabase.rpc(
+      "exec_sql",
+      {
+        sql: `
         CREATE TABLE IF NOT EXISTS component_types (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           type_key TEXT UNIQUE NOT NULL,
@@ -49,7 +53,8 @@ async function applySchemaViaAPI() {
           last_used_at TIMESTAMPTZ
         );
       `,
-    });
+      }
+    );
 
     if (createComponentTypesError) {
       console.log("⚠️  Tentando método alternativo para component_types...");
@@ -101,7 +106,11 @@ async function applySchemaViaAPI() {
         description: "Componente de texto editável inline",
         category: "content",
         component_path: "/components/editor/blocks/TextInlineBlock",
-        default_properties: { content: "Texto exemplo", fontSize: "text-lg", color: "#432818" },
+        default_properties: {
+          content: "Texto exemplo",
+          fontSize: "text-lg",
+          color: "#432818",
+        },
         validation_schema: { content: { type: "string", required: true } },
       },
       {
@@ -138,7 +147,12 @@ async function applySchemaViaAPI() {
         description: "Grade de opções para quiz",
         category: "interactive",
         component_path: "/components/editor/blocks/OptionsGridBlock",
-        default_properties: { options: [], columns: 2, showImages: true, multipleSelection: false },
+        default_properties: {
+          options: [],
+          columns: 2,
+          showImages: true,
+          multipleSelection: false,
+        },
         validation_schema: { options: { type: "array", required: true } },
       },
       {
@@ -177,7 +191,10 @@ async function applySchemaViaAPI() {
         .upsert(componentType, { onConflict: "type_key" });
 
       if (error) {
-        console.log(`⚠️  Erro ao inserir ${componentType.type_key}:`, error.message);
+        console.log(
+          `⚠️  Erro ao inserir ${componentType.type_key}:`,
+          error.message
+        );
       } else {
         console.log(`✅ ${componentType.display_name} inserido`);
       }
@@ -258,7 +275,10 @@ async function applySchemaViaAPI() {
         .upsert(component, { onConflict: "type_key" });
 
       if (error) {
-        console.log(`⚠️  Erro ao inserir ${component.type_key}:`, error.message);
+        console.log(
+          `⚠️  Erro ao inserir ${component.type_key}:`,
+          error.message
+        );
       } else {
         console.log(`✅ ${component.display_name} inserido`);
       }
@@ -288,7 +308,7 @@ async function applySchemaViaAPI() {
 
       Object.entries(groupedByCategory).forEach(([category, components]) => {
         console.log(`\n🎯 ${category.toUpperCase()}:`);
-        components.forEach(comp => {
+        components.forEach((comp) => {
           console.log(`  ✅ ${comp.display_name} (${comp.type_key})`);
         });
       });

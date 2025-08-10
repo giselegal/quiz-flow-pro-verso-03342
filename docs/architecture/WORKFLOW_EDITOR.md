@@ -103,10 +103,12 @@ const addBlock = (blockData: Omit<BlockData, "id">) => {
     id: `block-${Date.now()}`,
   };
 
-  updateFunnelState(prev => ({
+  updateFunnelState((prev) => ({
     ...prev,
-    pages: prev.pages.map(page =>
-      page.id === currentPageId ? { ...page, blocks: [...page.blocks, newBlock] } : page
+    pages: prev.pages.map((page) =>
+      page.id === currentPageId
+        ? { ...page, blocks: [...page.blocks, newBlock] }
+        : page
     ),
   }));
 };
@@ -116,11 +118,13 @@ const addBlock = (blockData: Omit<BlockData, "id">) => {
 
 ```typescript
 const updateBlock = (blockId: string, updates: Partial<BlockData>) => {
-  updateFunnelState(prev => ({
+  updateFunnelState((prev) => ({
     ...prev,
-    pages: prev.pages.map(page => ({
+    pages: prev.pages.map((page) => ({
       ...page,
-      blocks: page.blocks.map(block => (block.id === blockId ? { ...block, ...updates } : block)),
+      blocks: page.blocks.map((block) =>
+        block.id === blockId ? { ...block, ...updates } : block
+      ),
     })),
   }));
 };
@@ -131,16 +135,20 @@ const updateBlock = (blockId: string, updates: Partial<BlockData>) => {
 ```typescript
 const deleteBlock = async (blockId: string) => {
   // 1. Deletar no backend
-  await schemaDrivenFunnelService.deleteBlock(funnel.id, currentPage.id, blockId);
+  await schemaDrivenFunnelService.deleteBlock(
+    funnel.id,
+    currentPage.id,
+    blockId
+  );
 
   // 2. Atualizar estado local
-  updateFunnelState(prev => ({
+  updateFunnelState((prev) => ({
     ...prev,
-    pages: prev.pages.map(page =>
+    pages: prev.pages.map((page) =>
       page.id === currentPage.id
         ? {
             ...page,
-            blocks: page.blocks.filter(block => block.id !== blockId),
+            blocks: page.blocks.filter((block) => block.id !== blockId),
           }
         : page
     ),
@@ -156,7 +164,10 @@ const deleteBlock = async (blockId: string) => {
 const saveFunnel = async (manual: boolean = true) => {
   setIsSaving(true);
   try {
-    const savedFunnel = await schemaDrivenFunnelService.saveFunnel(funnel, !manual);
+    const savedFunnel = await schemaDrivenFunnelService.saveFunnel(
+      funnel,
+      !manual
+    );
     setFunnel(savedFunnel);
 
     if (manual) {
@@ -248,8 +259,8 @@ const [redoStack, setRedoStack] = useState<any[]>([]);
 const handleUndo = () => {
   if (undoStack.length > 0) {
     const prevState = undoStack[undoStack.length - 1];
-    setUndoStack(prev => prev.slice(0, -1));
-    setRedoStack(prev => [...prev, currentPage]);
+    setUndoStack((prev) => prev.slice(0, -1));
+    setRedoStack((prev) => [...prev, currentPage]);
     updatePage(prevState.id, prevState);
   }
 };

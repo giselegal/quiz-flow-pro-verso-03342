@@ -25,24 +25,32 @@ try {
   // Verificar imports
   const imports = mappingContent.match(/import.*from.*"([^"]+)"/g) || [];
   console.log("📦 IMPORTS ENCONTRADOS:");
-  imports.forEach(imp => {
-    const isCorrect = imp.includes("./enhancedBlockRegistry") || imp.includes("../components");
+  imports.forEach((imp) => {
+    const isCorrect =
+      imp.includes("./enhancedBlockRegistry") || imp.includes("../components");
     const status = isCorrect ? "✅" : "❌";
     console.log(`   ${status} ${imp}`);
   });
 
   // Verificar exports
-  const exports = mappingContent.match(/export.*(?:const|function)\s+(\w+)/g) || [];
+  const exports =
+    mappingContent.match(/export.*(?:const|function)\s+(\w+)/g) || [];
   console.log("\n📤 EXPORTS ENCONTRADOS:");
-  exports.forEach(exp => console.log(`   ✅ ${exp}`));
+  exports.forEach((exp) => console.log(`   ✅ ${exp}`));
 
   // Verificar se tem UNIFIED_BLOCK_MAP
   const hasUnifiedMap = mappingContent.includes("UNIFIED_BLOCK_MAP");
-  console.log(`\n🗺️  UNIFIED_BLOCK_MAP: ${hasUnifiedMap ? "✅ Presente" : "❌ Ausente"}`);
+  console.log(
+    `\n🗺️  UNIFIED_BLOCK_MAP: ${hasUnifiedMap ? "✅ Presente" : "❌ Ausente"}`
+  );
 
   // Verificar função getBlockComponent
-  const hasGetBlockComponent = mappingContent.includes("export const getBlockComponent");
-  console.log(`🔧 getBlockComponent: ${hasGetBlockComponent ? "✅ Presente" : "❌ Ausente"}`);
+  const hasGetBlockComponent = mappingContent.includes(
+    "export const getBlockComponent"
+  );
+  console.log(
+    `🔧 getBlockComponent: ${hasGetBlockComponent ? "✅ Presente" : "❌ Ausente"}`
+  );
 } catch (error) {
   console.log("❌ Erro ao ler editorBlocksMapping.ts:", error.message);
 }
@@ -60,10 +68,14 @@ try {
 
   // Verificar ENHANCED_BLOCK_REGISTRY
   const hasRegistry = registryContent.includes("ENHANCED_BLOCK_REGISTRY");
-  console.log(`🗂️  ENHANCED_BLOCK_REGISTRY: ${hasRegistry ? "✅ Presente" : "❌ Ausente"}`);
+  console.log(
+    `🗂️  ENHANCED_BLOCK_REGISTRY: ${hasRegistry ? "✅ Presente" : "❌ Ausente"}`
+  );
 
   // Contar componentes no registry
-  const registryMatch = registryContent.match(/export const ENHANCED_BLOCK_REGISTRY[^}]+}/s);
+  const registryMatch = registryContent.match(
+    /export const ENHANCED_BLOCK_REGISTRY[^}]+}/s
+  );
   if (registryMatch) {
     const registryBlock = registryMatch[0];
     const componentCount = (registryBlock.match(/:\s*\w+Block/g) || []).length;
@@ -79,7 +91,7 @@ try {
   ];
 
   console.log("\n📤 EXPORTS ESSENCIAIS:");
-  essentialExports.forEach(exportName => {
+  essentialExports.forEach((exportName) => {
     const hasExport =
       registryContent.includes(`export const ${exportName}`) ||
       registryContent.includes(`export function ${exportName}`) ||
@@ -102,7 +114,7 @@ const filesToCheck = [
   "./src/components/universal/EnhancedUniversalPropertiesPanel.tsx",
 ];
 
-filesToCheck.forEach(filePath => {
+filesToCheck.forEach((filePath) => {
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, "utf-8");
@@ -122,12 +134,18 @@ filesToCheck.forEach(filePath => {
         content.includes("./enhancedBlockRegistry") ||
         content.includes("../config/enhancedBlockRegistry");
 
-      console.log(`   📦 Usa editorBlocksMapping: ${usesMapping ? "✅" : "❌"}`);
-      console.log(`   📦 Usa enhancedBlockRegistry: ${usesRegistry ? "✅" : "❌"}`);
+      console.log(
+        `   📦 Usa editorBlocksMapping: ${usesMapping ? "✅" : "❌"}`
+      );
+      console.log(
+        `   📦 Usa enhancedBlockRegistry: ${usesRegistry ? "✅" : "❌"}`
+      );
 
       // Procurar por getBlockComponent calls
       if (content.includes("getBlockComponent")) {
-        const importLine = content.match(/import.*getBlockComponent.*from.*"([^"]+)"/);
+        const importLine = content.match(
+          /import.*getBlockComponent.*from.*"([^"]+)"/
+        );
         if (importLine) {
           console.log(`   🔧 getBlockComponent vem de: ${importLine[1]}`);
         }
@@ -144,9 +162,15 @@ console.log("\n" + "=".repeat(60) + "\n");
 console.log("🎯 RECOMENDAÇÕES FINAIS:\n");
 
 console.log("📝 CENÁRIO IDEAL:");
-console.log("   1. enhancedBlockRegistry.ts = FONTE PRINCIPAL (registry de componentes)");
-console.log("   2. editorBlocksMapping.ts = CAMADA DE COMPATIBILIDADE (imports + fallbacks)");
-console.log("   3. Outros arquivos importam do editorBlocksMapping para ter acesso unificado");
+console.log(
+  "   1. enhancedBlockRegistry.ts = FONTE PRINCIPAL (registry de componentes)"
+);
+console.log(
+  "   2. editorBlocksMapping.ts = CAMADA DE COMPATIBILIDADE (imports + fallbacks)"
+);
+console.log(
+  "   3. Outros arquivos importam do editorBlocksMapping para ter acesso unificado"
+);
 
 console.log("\n🔧 ARQUITETURA RECOMENDADA:");
 console.log(
@@ -160,7 +184,9 @@ console.log("   ✅ Pontos únicos de mudança para manutenção");
 console.log("   ✅ Imports consistentes em todos os componentes");
 
 console.log("\n🎉 CONCLUSÃO:");
-console.log("   O mapping atual (editorBlocksMapping.ts importando do enhancedBlockRegistry.ts)");
+console.log(
+  "   O mapping atual (editorBlocksMapping.ts importando do enhancedBlockRegistry.ts)"
+);
 console.log("   está CORRETO e segue boas práticas de arquitetura!");
 
 console.log("\n📊 STATUS: ✅ MAPEAMENTO CORRETO CONFIRMADO");

@@ -35,7 +35,8 @@ const expectedStep1Model = {
     showShadow: true,
   },
   "text-inline-title": {
-    content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
+    content:
+      "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
     fontSize: "text-3xl",
     fontWeight: "font-bold",
     fontFamily: "Playfair Display, serif",
@@ -49,7 +50,8 @@ const expectedStep1Model = {
     alt: "Transforme seu guarda-roupa",
     width: 600,
     height: 400,
-    className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
+    className:
+      "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
     textAlign: "text-center",
     marginBottom: 32,
   },
@@ -139,39 +141,65 @@ if (fs.existsSync(editorPath)) {
   console.log("🔍 Verificando handleLoadStep1 no editor.tsx...\n");
 
   // Verificar se tem os tipos de componentes corretos
-  const hasQuizIntroHeader = editorContent.includes('type: "quiz-intro-header"');
-  const hasDecorativeBar = editorContent.includes('type: "decorative-bar-inline"');
+  const hasQuizIntroHeader = editorContent.includes(
+    'type: "quiz-intro-header"'
+  );
+  const hasDecorativeBar = editorContent.includes(
+    'type: "decorative-bar-inline"'
+  );
   const hasTextInline = editorContent.includes('type: "text-inline"');
-  const hasImageDisplayInline = editorContent.includes('type: "image-display-inline"');
+  const hasImageDisplayInline = editorContent.includes(
+    'type: "image-display-inline"'
+  );
   const hasFormInput = editorContent.includes('type: "form-input"');
   const hasButtonInline = editorContent.includes('type: "button-inline"');
   const hasLegalNotice = editorContent.includes('type: "legal-notice-inline"');
 
-  console.log(`✅ quiz-intro-header: ${hasQuizIntroHeader ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
-  console.log(`✅ decorative-bar-inline: ${hasDecorativeBar ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
-  console.log(`✅ text-inline: ${hasTextInline ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
+  console.log(
+    `✅ quiz-intro-header: ${hasQuizIntroHeader ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
+  );
+  console.log(
+    `✅ decorative-bar-inline: ${hasDecorativeBar ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
+  );
+  console.log(
+    `✅ text-inline: ${hasTextInline ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
+  );
   console.log(
     `✅ image-display-inline: ${hasImageDisplayInline ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
   );
-  console.log(`✅ form-input: ${hasFormInput ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
-  console.log(`✅ button-inline: ${hasButtonInline ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
-  console.log(`✅ legal-notice-inline: ${hasLegalNotice ? "ENCONTRADO" : "NÃO ENCONTRADO"}`);
+  console.log(
+    `✅ form-input: ${hasFormInput ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
+  );
+  console.log(
+    `✅ button-inline: ${hasButtonInline ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
+  );
+  console.log(
+    `✅ legal-notice-inline: ${hasLegalNotice ? "ENCONTRADO" : "NÃO ENCONTRADO"}`
+  );
 
   // Verificar imagens específicas
-  const hasCorrectLogo = editorContent.includes("LOGO_DA_MARCA_GISELE_r14oz2.webp");
+  const hasCorrectLogo = editorContent.includes(
+    "LOGO_DA_MARCA_GISELE_r14oz2.webp"
+  );
   const hasCorrectHeroImage = editorContent.includes(
     "20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.webp"
   );
 
   console.log(`\n🖼️  Logo correto: ${hasCorrectLogo ? "SIM" : "NÃO"}`);
-  console.log(`🖼️  Imagem hero correta: ${hasCorrectHeroImage ? "SIM" : "NÃO"}`);
+  console.log(
+    `🖼️  Imagem hero correta: ${hasCorrectHeroImage ? "SIM" : "NÃO"}`
+  );
 
   // Verificar cores da marca
   const hasCorrectBrandColor = editorContent.includes("#B89B7A");
   const hasCorrectTextColor = editorContent.includes("#432818");
 
-  console.log(`\n🎨 Cor da marca (#B89B7A): ${hasCorrectBrandColor ? "SIM" : "NÃO"}`);
-  console.log(`🎨 Cor do texto (#432818): ${hasCorrectTextColor ? "SIM" : "NÃO"}`);
+  console.log(
+    `\n🎨 Cor da marca (#B89B7A): ${hasCorrectBrandColor ? "SIM" : "NÃO"}`
+  );
+  console.log(
+    `🎨 Cor do texto (#432818): ${hasCorrectTextColor ? "SIM" : "NÃO"}`
+  );
 
   const allComponentsCorrect =
     hasQuizIntroHeader &&
@@ -185,15 +213,24 @@ if (fs.existsSync(editorPath)) {
   console.log(`\n📊 RESULTADO FINAL:`);
   console.log(`================`);
 
-  if (allComponentsCorrect && hasCorrectLogo && hasCorrectHeroImage && hasCorrectBrandColor) {
-    console.log(`🎉 PERFEITO! O editor está configurado corretamente com o modelo da Etapa 1!`);
+  if (
+    allComponentsCorrect &&
+    hasCorrectLogo &&
+    hasCorrectHeroImage &&
+    hasCorrectBrandColor
+  ) {
+    console.log(
+      `🎉 PERFEITO! O editor está configurado corretamente com o modelo da Etapa 1!`
+    );
     console.log(`\n🚀 PRÓXIMOS PASSOS:`);
     console.log(`   1. Acesse: http://localhost:5173/editor-fixed`);
     console.log(`   2. Clique em "Carregar Etapa 1"`);
     console.log(`   3. Verifique a renderização dos componentes`);
     console.log(`   4. Teste as propriedades no painel lateral`);
   } else {
-    console.log(`⚠️  Alguns componentes ou propriedades ainda precisam ser ajustados.`);
+    console.log(
+      `⚠️  Alguns componentes ou propriedades ainda precisam ser ajustados.`
+    );
   }
 } else {
   console.log("❌ Arquivo editor.tsx não encontrado");

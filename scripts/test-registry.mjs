@@ -16,7 +16,9 @@ const checkComponentFiles = () => {
 
   // Inline components
   const inlineDir = "./src/components/editor/blocks/inline";
-  const inlineFiles = fs.readdirSync(inlineDir).filter(f => f.endsWith(".tsx"));
+  const inlineFiles = fs
+    .readdirSync(inlineDir)
+    .filter((f) => f.endsWith(".tsx"));
   console.log(
     `✅ Encontrados ${inlineFiles.length} arquivos inline:`,
     inlineFiles.slice(0, 5).join(", "),
@@ -27,7 +29,10 @@ const checkComponentFiles = () => {
   const blocksDir = "./src/components/editor/blocks";
   const blockFiles = fs
     .readdirSync(blocksDir)
-    .filter(f => f.endsWith(".tsx") && !f.includes("Universal") && !f.includes("index"));
+    .filter(
+      (f) =>
+        f.endsWith(".tsx") && !f.includes("Universal") && !f.includes("index")
+    );
   console.log(
     `✅ Encontrados ${blockFiles.length} arquivos blocks:`,
     blockFiles.slice(0, 5).join(", "),
@@ -41,12 +46,20 @@ const checkComponentFiles = () => {
 const checkRegistryImports = () => {
   console.log("\n📝 Verificando imports no registry...");
 
-  const registryContent = fs.readFileSync("./src/config/enhancedBlockRegistry.ts", "utf8");
+  const registryContent = fs.readFileSync(
+    "./src/config/enhancedBlockRegistry.ts",
+    "utf8"
+  );
   const importLines = registryContent
     .split("\n")
-    .filter(line => line.trim().startsWith("import ") && line.includes("InlineBlock"));
+    .filter(
+      (line) =>
+        line.trim().startsWith("import ") && line.includes("InlineBlock")
+    );
 
-  console.log(`✅ Encontrados ${importLines.length} imports de componentes inline`);
+  console.log(
+    `✅ Encontrados ${importLines.length} imports de componentes inline`
+  );
 
   return importLines;
 };
@@ -67,7 +80,9 @@ const simulateRegistryLoad = () => {
 
     console.log(`✅ Estrutura do registry: ${hasRegistry ? "OK" : "ERRO"}`);
     console.log(`✅ Sistema de validação: ${hasValidation ? "OK" : "ERRO"}`);
-    console.log(`✅ Definição de componentes: ${hasComponents ? "OK" : "ERRO"}`);
+    console.log(
+      `✅ Definição de componentes: ${hasComponents ? "OK" : "ERRO"}`
+    );
 
     return hasRegistry && hasValidation && hasComponents;
   } catch (error) {

@@ -78,19 +78,25 @@
       <div class="test-steps">
         <strong>📋 PASSOS PARA TESTAR:</strong>
         <ol>
-          <li>No editor abaixo, clique em <strong>"+ Adicionar Bloco"</strong></li>
+          <li>
+            No editor abaixo, clique em <strong>"+ Adicionar Bloco"</strong>
+          </li>
           <li>Selecione um componente (ex: <strong>Texto Inline</strong>)</li>
           <li>Clique no componente adicionado para selecioná-lo</li>
-          <li>Verifique se o <strong>painel de propriedades</strong> aparece à direita</li>
+          <li>
+            Verifique se o <strong>painel de propriedades</strong> aparece à
+            direita
+          </li>
           <li>Tente editar as propriedades (texto, cor, tamanho, etc.)</li>
           <li>Teste com diferentes tipos: Cabeçalho, Botão, Imagem</li>
         </ol>
       </div>
 
       <div class="status info">
-        💡 <strong>Se o painel não aparecer ou não for editável:</strong> <br />• Abra o Console
-        (F12) e verifique erros JavaScript <br />• Confirme que o componente está selecionado
-        (destacado) <br />• Recarregue a página (Ctrl+F5)
+        💡 <strong>Se o painel não aparecer ou não for editável:</strong>
+        <br />• Abra o Console (F12) e verifique erros JavaScript <br />•
+        Confirme que o componente está selecionado (destacado) <br />•
+        Recarregue a página (Ctrl+F5)
       </div>
     </div>
 
@@ -110,7 +116,8 @@
 
     <script>
       // Atualizar timestamp
-      document.getElementById("timestamp").textContent = new Date().toLocaleString("pt-BR");
+      document.getElementById("timestamp").textContent =
+        new Date().toLocaleString("pt-BR");
 
       // Monitorar console do iframe (se possível)
       window.addEventListener("message", function (event) {

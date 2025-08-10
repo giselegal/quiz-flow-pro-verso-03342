@@ -11,7 +11,11 @@ const path = require("path");
 async function applyMigration() {
   console.log("🚀 Iniciando migração para Supabase...");
 
-  const migrationPath = path.join(__dirname, "migrations", "001_initial_schema.sql");
+  const migrationPath = path.join(
+    __dirname,
+    "migrations",
+    "001_initial_schema.sql"
+  );
 
   if (!fs.existsSync(migrationPath)) {
     console.error("❌ Arquivo de migração não encontrado:", migrationPath);

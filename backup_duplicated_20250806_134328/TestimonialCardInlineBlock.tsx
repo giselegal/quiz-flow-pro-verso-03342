@@ -15,7 +15,9 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // Validate block and properties
   if (!block || !block.properties) {
-    console.warn("TestimonialCardInlineBlock: block or block.properties is undefined");
+    console.warn(
+      "TestimonialCardInlineBlock: block or block.properties is undefined"
+    );
     return null;
   }
 
@@ -23,7 +25,8 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
 
   const name = properties.name || "Maria Silva";
   const testimonial =
-    properties.testimonial || "Transformou completamente minha forma de me vestir!";
+    properties.testimonial ||
+    "Transformou completamente minha forma de me vestir!";
   const avatar = properties.avatar || "https://via.placeholder.com/60x60";
   const rating = properties.rating || 5;
   const location = properties.location || "São Paulo, SP";
@@ -62,10 +65,13 @@ const TestimonialCardInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Rating stars */}
       <div className="flex space-x-1 mb-4">
-        {[1, 2, 3, 4, 5].map(star => (
+        {[1, 2, 3, 4, 5].map((star) => (
           <span
             key={star}
-            className={cn("text-lg", star <= rating ? "text-yellow-400" : "text-gray-300")}
+            className={cn(
+              "text-lg",
+              star <= rating ? "text-yellow-400" : "text-gray-300"
+            )}
           >
             ★
           </span>

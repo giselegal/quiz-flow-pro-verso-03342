@@ -44,7 +44,7 @@ function analyzeTypeSystemCompatibility() {
   const missingTypes = [];
   const foundTypes = [];
 
-  essentialTypes.forEach(type => {
+  essentialTypes.forEach((type) => {
     const typeRegex = new RegExp(`(interface|type|enum)\\s+${type}`, "g");
     if (typeRegex.test(editorTypes)) {
       foundTypes.push(type);
@@ -67,7 +67,7 @@ function analyzeTypeSystemCompatibility() {
   ];
 
   const foundInlineTypes = [];
-  inlineComponents.forEach(component => {
+  inlineComponents.forEach((component) => {
     if (editorTypes.includes(`"${component}"`)) {
       foundInlineTypes.push(component);
       console.log(`  ✅ Tipo ${component} já definido`);
@@ -96,7 +96,12 @@ function analyzeHooksCompatibility() {
   }
 
   // Verificar hooks essenciais para nosso sistema
-  const essentialHooks = ["useUnifiedProperties.ts", "useEditor.ts", "useQuiz.ts", "useHistory.ts"];
+  const essentialHooks = [
+    "useUnifiedProperties.ts",
+    "useEditor.ts",
+    "useQuiz.ts",
+    "useHistory.ts",
+  ];
 
   const optionalHooks = [
     "useAutoSave.ts",
@@ -108,7 +113,7 @@ function analyzeHooksCompatibility() {
   const foundEssential = [];
   const foundOptional = [];
 
-  essentialHooks.forEach(hook => {
+  essentialHooks.forEach((hook) => {
     const hookPath = path.join(hooksDir, hook);
     if (fs.existsSync(hookPath)) {
       foundEssential.push(hook);
@@ -118,7 +123,7 @@ function analyzeHooksCompatibility() {
     }
   });
 
-  optionalHooks.forEach(hook => {
+  optionalHooks.forEach((hook) => {
     const hookPath = path.join(hooksDir, hook);
     if (fs.existsSync(hookPath)) {
       foundOptional.push(hook);
@@ -130,7 +135,9 @@ function analyzeHooksCompatibility() {
     compatible: foundEssential.length >= essentialHooks.length * 0.75,
     foundEssential,
     foundOptional,
-    essentialCoverage: Math.round((foundEssential.length / essentialHooks.length) * 100),
+    essentialCoverage: Math.round(
+      (foundEssential.length / essentialHooks.length) * 100
+    ),
     bonusFeatures: foundOptional.length,
   };
 }
@@ -153,7 +160,7 @@ function analyzeComponentsCompatibility() {
   ];
 
   const foundEditors = [];
-  editorDirs.forEach(dir => {
+  editorDirs.forEach((dir) => {
     const fullPath = path.join(__dirname, dir);
     if (fs.existsSync(fullPath)) {
       foundEditors.push(dir);
@@ -167,7 +174,7 @@ function analyzeComponentsCompatibility() {
 
   if (fs.existsSync(inlineDir)) {
     const files = fs.readdirSync(inlineDir);
-    files.forEach(file => {
+    files.forEach((file) => {
       if (file.endsWith(".tsx")) {
         inlineComponents.push(file);
         console.log(`  ✅ Componente inline: ${file}`);
@@ -194,7 +201,7 @@ function analyzeConfigCompatibility() {
   ];
 
   const foundConfigs = [];
-  configFiles.forEach(file => {
+  configFiles.forEach((file) => {
     const filePath = path.join(__dirname, file);
     if (fs.existsSync(filePath)) {
       foundConfigs.push(file);
@@ -213,7 +220,7 @@ function analyzeConfigCompatibility() {
     const inlineComponents = ["heading-inline", "text-inline", "button-inline"];
 
     const foundInDefinitions = inlineComponents.filter(
-      comp => content.includes(`'${comp}'`) || content.includes(`"${comp}"`)
+      (comp) => content.includes(`'${comp}'`) || content.includes(`"${comp}"`)
     );
 
     hasInlineDefinitions = foundInDefinitions.length > 0;
@@ -242,7 +249,7 @@ function analyzeSystemIntegration() {
   ];
 
   const workingIntegrations = [];
-  integrationPoints.forEach(point => {
+  integrationPoints.forEach((point) => {
     const filePath = path.join(__dirname, point);
     if (fs.existsSync(filePath)) {
       workingIntegrations.push(point);
@@ -255,7 +262,9 @@ function analyzeSystemIntegration() {
   return {
     compatible: workingIntegrations.length >= integrationPoints.length * 0.75,
     workingIntegrations,
-    coverage: Math.round((workingIntegrations.length / integrationPoints.length) * 100),
+    coverage: Math.round(
+      (workingIntegrations.length / integrationPoints.length) * 100
+    ),
   };
 }
 
@@ -272,8 +281,10 @@ function analyzeConflicts() {
     // Procurar por definições duplicadas
     const typeMatches = content.match(/(?:interface|type|enum)\s+(\w+)/g);
     if (typeMatches) {
-      const typeNames = typeMatches.map(match => match.split(" ")[1]);
-      const duplicates = typeNames.filter((name, index) => typeNames.indexOf(name) !== index);
+      const typeNames = typeMatches.map((match) => match.split(" ")[1]);
+      const duplicates = typeNames.filter(
+        (name, index) => typeNames.indexOf(name) !== index
+      );
 
       if (duplicates.length > 0) {
         conflicts.push({
@@ -291,10 +302,11 @@ function analyzeConflicts() {
   if (fs.existsSync(hooksDir)) {
     const hookFiles = fs
       .readdirSync(hooksDir)
-      .filter(file => file.endsWith(".ts") || file.endsWith(".tsx"));
+      .filter((file) => file.endsWith(".ts") || file.endsWith(".tsx"));
 
     const duplicateHooks = hookFiles.filter(
-      file => hookFiles.filter(f => f.startsWith(file.split(".")[0])).length > 1
+      (file) =>
+        hookFiles.filter((f) => f.startsWith(file.split(".")[0])).length > 1
     );
 
     if (duplicateHooks.length > 0) {
@@ -303,7 +315,9 @@ function analyzeConflicts() {
         items: duplicateHooks,
         severity: "medium",
       });
-      console.log(`  ⚠️ Hooks com possível duplicação: ${duplicateHooks.join(", ")}`);
+      console.log(
+        `  ⚠️ Hooks com possível duplicação: ${duplicateHooks.join(", ")}`
+      );
     }
   }
 
@@ -334,10 +348,14 @@ function generateCompatibilityReport() {
     results.components.compatible ? 100 : 50,
     results.configs.compatible ? 100 : results.configs.coverage || 0,
     results.integration.compatible ? 100 : results.integration.coverage || 0,
-    results.conflicts.length === 0 ? 100 : Math.max(100 - results.conflicts.length * 20, 0),
+    results.conflicts.length === 0
+      ? 100
+      : Math.max(100 - results.conflicts.length * 20, 0),
   ];
 
-  const overallScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+  const overallScore = Math.round(
+    scores.reduce((a, b) => a + b, 0) / scores.length
+  );
 
   console.log("\n🏆 RELATÓRIO DE COMPATIBILIDADE");
   console.log("=".repeat(60));
@@ -353,7 +371,9 @@ function generateCompatibilityReport() {
   console.log(
     `  • Hooks: ${results.hooks.compatible ? "✅ OK" : "⚠️ REVISAR"} (${results.hooks.essentialCoverage}%)`
   );
-  console.log(`  • Componentes: ${results.components.compatible ? "✅ OK" : "⚠️ REVISAR"}`);
+  console.log(
+    `  • Componentes: ${results.components.compatible ? "✅ OK" : "⚠️ REVISAR"}`
+  );
   console.log(
     `  • Configurações: ${results.configs.compatible ? "✅ OK" : "⚠️ REVISAR"} (${results.configs.coverage}%)`
   );
@@ -365,9 +385,15 @@ function generateCompatibilityReport() {
   );
 
   console.log("\n🎁 RECURSOS DISPONÍVEIS:");
-  console.log(`  • Hooks opcionais: ${results.hooks.bonusFeatures || 0} encontrados`);
-  console.log(`  • Sistemas de editor: ${results.components.foundEditors.length} disponíveis`);
-  console.log(`  • Componentes inline: ${results.components.inlineCount} criados`);
+  console.log(
+    `  • Hooks opcionais: ${results.hooks.bonusFeatures || 0} encontrados`
+  );
+  console.log(
+    `  • Sistemas de editor: ${results.components.foundEditors.length} disponíveis`
+  );
+  console.log(
+    `  • Componentes inline: ${results.components.inlineCount} criados`
+  );
 
   if (overallScore >= 80) {
     console.log("\n🎉 SISTEMA ALTAMENTE COMPATÍVEL!");
@@ -446,7 +472,11 @@ try {
   const reportPath = path.join(__dirname, "compatibility-analysis-report.json");
   fs.writeFileSync(
     reportPath,
-    JSON.stringify({ results, overallScore, timestamp: new Date().toISOString() }, null, 2)
+    JSON.stringify(
+      { results, overallScore, timestamp: new Date().toISOString() },
+      null,
+      2
+    )
   );
 
   console.log(`\n💾 Relatório detalhado salvo em: ${reportPath}`);

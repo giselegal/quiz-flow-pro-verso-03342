@@ -13,7 +13,10 @@ console.log("📊 Verificação da Correção do Layout");
 console.log("=".repeat(70));
 
 // Carregar o DynamicBlockRenderer
-const rendererPath = path.join(__dirname, "src/components/DynamicBlockRenderer.tsx");
+const rendererPath = path.join(
+  __dirname,
+  "src/components/DynamicBlockRenderer.tsx"
+);
 if (!fs.existsSync(rendererPath)) {
   console.log("❌ DynamicBlockRenderer.tsx não encontrado");
   process.exit(1);
@@ -29,12 +32,20 @@ const componentesEspecificos = [
   {
     id: "header-component-real",
     desc: "Header da página de resultado",
-    elementos: ["Seu Resultado Personalizado", "Logo", "Descubra seu estilo único"],
+    elementos: [
+      "Seu Resultado Personalizado",
+      "Logo",
+      "Descubra seu estilo único",
+    ],
   },
   {
     id: "result-header-inline",
     desc: "Cabeçalho do resultado inline",
-    elementos: ["Parabéns! Descobrimos seu estilo", "Estilo Romântico Clássico", "92%"],
+    elementos: [
+      "Parabéns! Descobrimos seu estilo",
+      "Estilo Romântico Clássico",
+      "92%",
+    ],
   },
   {
     id: "before-after-component-real",
@@ -44,7 +55,12 @@ const componentesEspecificos = [
   {
     id: "motivation-component-real",
     desc: "Seção de motivação",
-    elementos: ["Por que Investir no Seu Estilo?", "Confiança", "Praticidade", "Economia"],
+    elementos: [
+      "Por que Investir no Seu Estilo?",
+      "Confiança",
+      "Praticidade",
+      "Economia",
+    ],
   },
   {
     id: "bonus-component-real",
@@ -59,7 +75,10 @@ const componentesEspecificos = [
   {
     id: "cta-section-inline",
     desc: "Seção CTA inline",
-    elementos: ["Descubra Como Aplicar Seu Estilo", "Quero meu Guia de Estilo Agora"],
+    elementos: [
+      "Descubra Como Aplicar Seu Estilo",
+      "Quero meu Guia de Estilo Agora",
+    ],
   },
   {
     id: "guarantee-component-real",
@@ -74,14 +93,19 @@ const componentesEspecificos = [
   {
     id: "value-stack-inline",
     desc: "Stack de valor inline",
-    elementos: ["Vista-se de Você — na Prática", "R$ 175,00", "R$ 39,00", "Garantir Meu Guia"],
+    elementos: [
+      "Vista-se de Você — na Prática",
+      "R$ 175,00",
+      "R$ 39,00",
+      "Garantir Meu Guia",
+    ],
   },
 ];
 
 let componentesEncontrados = 0;
 let totalComponentes = componentesEspecificos.length;
 
-componentesEspecificos.forEach(comp => {
+componentesEspecificos.forEach((comp) => {
   const casePattern = new RegExp(`case\\s+['"]\s*${comp.id}\s*['"]\\s*:`, "g");
   const caseFound = casePattern.test(rendererContent);
 
@@ -93,7 +117,7 @@ componentesEspecificos.forEach(comp => {
 
     // Verificar se elementos específicos estão presentes
     let elementosEncontrados = 0;
-    comp.elementos.forEach(elemento => {
+    comp.elementos.forEach((elemento) => {
       if (rendererContent.includes(elemento)) {
         elementosEncontrados++;
         console.log(`      ✅ "${elemento}"`);
@@ -102,7 +126,9 @@ componentesEspecificos.forEach(comp => {
       }
     });
 
-    console.log(`   📊 Elementos: ${elementosEncontrados}/${comp.elementos.length}`);
+    console.log(
+      `   📊 Elementos: ${elementosEncontrados}/${comp.elementos.length}`
+    );
   } else {
     console.log(`   ❌ Case não implementado`);
   }
@@ -120,7 +146,9 @@ console.log(
 // Verificar se o fallback ainda existe
 const defaultCasePattern = /case\s+['"]\s*default\s*['"]:|default\s*:/g;
 const fallbackFound = defaultCasePattern.test(rendererContent);
-console.log(`🔧 Fallback (default): ${fallbackFound ? "✅ Mantido" : "❌ Removido"}`);
+console.log(
+  `🔧 Fallback (default): ${fallbackFound ? "✅ Mantido" : "❌ Removido"}`
+);
 
 // Verificar se os imports modernos estão corretos
 const modernImports = [
@@ -132,7 +160,7 @@ const modernImports = [
 ];
 
 let importsCorretos = 0;
-modernImports.forEach(imp => {
+modernImports.forEach((imp) => {
   if (rendererContent.includes(imp)) {
     importsCorretos++;
     console.log(`📦 ${imp}: ✅`);
@@ -146,9 +174,13 @@ console.log(
 );
 
 if (componentesEncontrados === totalComponentes) {
-  console.log("\n🎉 EXCELENTE! Todos os componentes específicos foram implementados!");
+  console.log(
+    "\n🎉 EXCELENTE! Todos os componentes específicos foram implementados!"
+  );
   console.log("✨ O layout da página de resultado agora está completo!");
-  console.log("🚀 Os usuários verão conteúdo rico ao invés de mensagens genéricas!");
+  console.log(
+    "🚀 Os usuários verão conteúdo rico ao invés de mensagens genéricas!"
+  );
 } else {
   console.log(
     `\n⚠️  ${totalComponentes - componentesEncontrados} componente(s) ainda precisam ser implementados`

@@ -170,7 +170,7 @@ document.querySelectorAll('[id^="sidebar-"]').length;
 document.querySelectorAll('[id="canvas-drop-zone"]').length;
 
 // Remover CSS interferente
-document.querySelectorAll("*").forEach(el => {
+document.querySelectorAll("*").forEach((el) => {
   if (getComputedStyle(el).pointerEvents === "none") {
     el.style.pointerEvents = "auto";
   }
