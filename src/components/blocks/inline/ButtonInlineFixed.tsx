@@ -266,31 +266,83 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
     return `${prefix}-24`;
   };
 
-  // ✅ LÓGICA DE DESABILITAÇÃO DINÂMICA
-  const isButtonDisabled =
-    disabled ||
-    requiresValidInput ||
-    buttonState.dynamicDisabled ||
-    buttonState.dynamicRequiresValidInput;
+  // ✅ LÓGICA DE DESABILITAÇÃO DINÂMICA E CONDICIONAL
+  const isButtonDisabled = disabled || 
+    loading || 
+    (conditionalActivation && (requiresValidInput || buttonState.dynamicDisabled || buttonState.dynamicRequiresValidInput));
 
-  const handleButtonClick = () => {
+  // ✅ HANDLER DE CLIQUE COM NAVEGAÇÃO E AÇÕES
+  const handleButtonClick = async () => {
     // ⚠️ Bloquear clique se botão está desabilitado
     if (isButtonDisabled) {
       console.log("🚫 Botão desabilitado - clique bloqueado:", {
         disabled,
+        loading,
         requiresValidInput,
+        conditionalActivation,
         dynamicDisabled: buttonState.dynamicDisabled,
         dynamicRequiresValidInput: buttonState.dynamicRequiresValidInput,
       });
       return;
     }
 
-    onClick?.();
-    console.log("🎯 ButtonInline CTA clicado:", {
-      text,
-      blockId: block?.id,
-      isButtonDisabled,
-    });
+    // ✅ Executar ação personalizada baseada na propriedade 'action'
+    try {
+      switch (action) {
+        case "next-step":
+          if (nextStep) {
+            console.log("📝 Navegando para próxima etapa:", nextStep);
+            // Disparar evento de navegação
+            window.dispatchEvent(new CustomEvent('quiz-navigate', {
+              detail: { step: nextStep, scrollToTop }
+            }));
+          }
+          break;
+
+        case "url":
+          if (targetUrl) {
+            console.log("🌐 Navegando para URL:", targetUrl);
+            if (openInNewTab) {
+              window.open(targetUrl, '_blank');
+            } else {
+              window.location.href = targetUrl;
+            }
+          }
+          break;
+
+        case "submit":
+          console.log("📤 Enviando formulário/dados");
+          window.dispatchEvent(new CustomEvent('quiz-submit', {
+            detail: { buttonId: block?.id, step: nextStep }
+          }));
+          break;
+
+        case "custom":
+        default:
+          console.log("🔧 Ação customizada");
+          break;
+      }
+
+      // ✅ Callback original
+      onClick?.();
+
+      // ✅ Scroll para o topo se configurado
+      if (scrollToTop) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      console.log("🎯 ButtonInline CTA clicado:", {
+        text,
+        blockId: block?.id,
+        action,
+        nextStep,
+        targetUrl,
+        isButtonDisabled,
+      });
+
+    } catch (error) {
+      console.error("❌ Erro ao executar ação do botão:", error);
+    }
   };
 
   return (
@@ -309,40 +361,107 @@ const ButtonInline: React.FC<BlockComponentProps> = ({
       <button
         onClick={handleButtonClick}
         disabled={isButtonDisabled}
+        aria-label={ariaLabel || text}
+        title={title || text}
+        tabIndex={tabIndex}
         className={cn(
-          // Base styles
-          "inline-flex items-center justify-center font-bold transition-all duration-300",
-          "focus:outline-none focus:ring-4 focus:ring-[#B89B7A] focus:ring-opacity-50",
-          "border-2",
-
-          // Size
-          padding || sizeClasses[size as keyof typeof sizeClasses] || sizeClasses.large,
-
-          // Layout
-          fullWidth ? "w-full" : "w-auto",
-          borderRadius || "rounded-full",
-
-          // Typography
+          // ✨ BASE STYLES
+          "inline-flex items-center justify-center transition-all",
+          "focus:outline-none focus:ring-4 focus:ring-opacity-50",
+          
+          // ✨ TIPOGRAFIA EDITÁVEL
           fontSize || "text-lg",
           fontWeight || "font-bold",
+          fontFamily !== "inherit" && `font-[${fontFamily}]`,
+          letterSpacing !== "normal" && `tracking-${letterSpacing}`,
+          textTransform !== "none" && textTransform,
+          
+          // ✨ PADDING RESPONSIVO E CUSTOMIZÁVEL
+          getPaddingClasses(),
 
-          // Effects
-          boxShadow,
-          hoverEffect && "hover:shadow-xl hover:scale-105 active:scale-95",
+          // ✨ LAYOUT RESPONSIVO
+          fullWidth ? "w-full" : "w-auto",
+          mobileFullWidth && "w-full md:w-auto",
+          
+          // ✨ BORDAS E CANTOS ARREDONDADOS
+          borderRadius || "rounded-lg",
+          "border",
+          borderWidth && `border-[${borderWidth}]`,
 
-          // States - Usando lógica dinâmica de desabilitação
+          // ✨ EFEITOS E ANIMAÇÕES
+          hoverEffect && !isButtonDisabled && "hover:shadow-xl hover:scale-105 active:scale-95",
+          clickEffect && !isButtonDisabled && "active:scale-95",
+          glowEffect && !isButtonDisabled && "hover:shadow-2xl hover:shadow-current/25",
+          
+          // ✨ TRANSIÇÕES
+          `duration-${animationDuration?.replace('ms', '') || '300'}`,
+          transitionEasing && `ease-${transitionEasing.replace('ease-', '') || 'in-out'}`,
+
+          // ✨ ESTADOS RESPONSIVOS
           isButtonDisabled && "opacity-50 cursor-not-allowed",
-
-          // Hover effects - apenas se não estiver desabilitado
-          !isButtonDisabled && "hover:shadow-2xl hover:brightness-110"
+          loading && "cursor-wait",
+          
+          // ✨ RESPONSIVIDADE MOBILE/TABLET/DESKTOP
+          mobileFontSize && `${mobileFontSize} md:${fontSize || 'text-lg'}`,
+          
+          // ✨ HOVER EFFECTS - apenas se não estiver desabilitado
+          !isButtonDisabled && "hover:brightness-110",
+          
+          // ✨ FOCUS STYLES
+          `focus:ring-[${focusColor}]`,
+          
+          // ✨ POSITION E Z-INDEX
+          position,
+          zIndex !== "auto" && `z-${zIndex}`,
+          
+          // ✨ CLASSES DE ALINHAMENTO
+          textAlign,
+          `justify-${justifyContent}`,
+          `items-${alignItems}`,
         )}
         style={{
-          backgroundColor,
+          // ✨ CORES CUSTOMIZÁVEIS
+          ...getBackgroundStyle(),
           color: textColor,
-          borderColor: backgroundColor,
+          borderColor: borderColor,
+          
+          // ✨ DIMENSÕES CUSTOMIZÁVEIS
+          width: !fullWidth && width !== "auto" ? width : undefined,
+          height: height !== "auto" ? height : undefined,
+          minWidth: minWidth !== "120px" ? minWidth : undefined,
+          maxWidth: maxWidth !== "none" ? maxWidth : undefined,
+          
+          // ✨ TIPOGRAFIA AVANÇADA
+          fontFamily: fontFamily !== "inherit" ? fontFamily : undefined,
+          lineHeight: lineHeight !== "1.5" ? lineHeight : undefined,
+          
+          // ✨ SOMBRAS CUSTOMIZÁVEIS
+          boxShadow: boxShadow && !isButtonDisabled ? boxShadow : undefined,
+        }}
+        onMouseEnter={(e) => {
+          if (!isButtonDisabled && hoverBackgroundColor) {
+            e.currentTarget.style.backgroundColor = hoverBackgroundColor;
+            e.currentTarget.style.color = hoverTextColor || textColor;
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isButtonDisabled) {
+            e.currentTarget.style.backgroundColor = backgroundColor;
+            e.currentTarget.style.color = textColor;
+          }
         }}
       >
-        {text}
+        {loading ? (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+            <span>Carregando...</span>
+          </div>
+        ) : (
+          <span className="flex items-center gap-2">
+            {label && <span className="text-xs uppercase tracking-wide opacity-75">{label}</span>}
+            {text}
+          </span>
+        )}
       </button>
     </div>
   );

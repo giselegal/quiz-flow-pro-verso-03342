@@ -324,63 +324,111 @@ export const getStep01Template = () => {
       },
     },
 
-    // 🎯 9. BOTÃO CTA (baseado no JSON steps[0].buttonText e design.button)
+    // 🎯 9. BOTÃO CTA RESPONSIVO E EDITÁVEL (baseado no JSON steps[0].buttonText e design.button)
     {
       id: "cta-button-modular",
       type: "button-inline",
       properties: {
-        // ✨ CONFIGURAÇÕES DO TEXTO (do JSON)
+        // ✨ TEXTO E CONTEÚDO EDITÁVEIS
         text: "Quero Descobrir Meu Estilo!", // Texto quando habilitado
+        label: "", // Label opcional
 
-        // ✨ CONFIGURAÇÕES DE ESTILO (do JSON design.button)
+        // ✨ ESTILO E VARIANTE
         variant: "primary",
         size: "large",
+        
+        // ✨ CORES TOTALMENTE EDITÁVEIS
+        backgroundColor: "#B89B7A", // Cor principal do botão
+        textColor: "#ffffff", // Cor do texto
+        borderColor: "#B89B7A", // Cor da borda
+        hoverBackgroundColor: "#aa6b5d", // Cor ao passar mouse
+        hoverTextColor: "#ffffff", // Cor do texto ao passar mouse
+        focusColor: "#B89B7A", // Cor do foco
+
+        // ✨ TAMANHO E LAYOUT RESPONSIVO
         fullWidth: true,
+        width: "auto",
+        height: "auto",
+        minWidth: "200px",
+        maxWidth: "none",
 
-        // ✨ CONFIGURAÇÕES DE CORES (do JSON design.button)
-        backgroundColor: "#B89B7A", // do JSON design.button.background (gradient simplificado)
-        textColor: "#fff", // do JSON design.button.textColor
-        borderColor: "#B89B7A",
-        hoverBackgroundColor: "#aa6b5d", // accentColor do JSON
-        hoverTextColor: "#fff",
-        activeBackgroundColor: "#8B7355",
+        // ✨ TIPOGRAFIA EDITÁVEL
+        fontSize: "text-lg",
+        fontWeight: "font-bold",
+        fontFamily: "'Playfair Display', serif",
+        lineHeight: "1.5",
+        letterSpacing: "normal",
+        textTransform: "none",
 
-        // ✨ CONFIGURAÇÕES DE LAYOUT
+        // ✨ BORDAS E CANTOS ARREDONDADOS
+        borderRadius: "rounded-xl", // Cantos mais arredondados
+        borderWidth: "2px",
+        borderStyle: "solid",
+
+        // ✨ ESPAÇAMENTO EDITÁVEL
+        padding: "py-4 px-8",
+        paddingX: "",
+        paddingY: "",
+
+        // ✨ MARGENS EDITÁVEIS
+        marginTop: 0,
+        marginBottom: 32,
+        marginLeft: 0,
+        marginRight: 0,
+
+        // ✨ EFEITOS E SOMBRAS EDITÁVEIS
+        boxShadow: "shadow-xl",
+        hoverEffect: true, // Efeito ao passar mouse
+        clickEffect: true, // Efeito ao clicar
+        glowEffect: false, // Efeito de brilho
+        gradientBackground: false, // Fundo gradiente
+        gradientColors: ["#B89B7A", "#aa6b5d"],
+
+        // ✨ COMPORTAMENTO E VALIDAÇÃO EDITÁVEIS
+        requiresValidInput: true, // Requer input válido para ativar
+        conditionalActivation: true, // Ativação condicional
+        validationTarget: "name-input-modular", // ID do input alvo
+        disabled: false,
+        loading: false,
+
+        // ✨ NAVEGAÇÃO E AÇÃO EDITÁVEIS
+        action: "next-step", // Tipo de ação: "next-step", "url", "submit", "custom"
+        nextStep: "step-02", // Próxima etapa
+        targetUrl: "", // URL de destino (se action = "url")
+        openInNewTab: false, // Abrir em nova aba
+        scrollToTop: true, // Scroll para o topo após ação
+
+        // ✨ RESPONSIVIDADE EDITÁVEL
+        mobileFullWidth: true, // Largura total no mobile
+        mobileSize: "medium", // Tamanho no mobile
+        mobileFontSize: "text-base", // Fonte no mobile
+        tabletSize: "large", // Tamanho no tablet
+        desktopSize: "large", // Tamanho no desktop
+
+        // ✨ ANIMAÇÕES EDITÁVEIS
+        animationType: "none", // Tipo de animação
+        animationDuration: "300ms", // Duração da animação
+        animationDelay: "0ms", // Delay da animação
+        transitionEasing: "ease-in-out", // Tipo de transição
+
+        // ✨ LAYOUT AVANÇADO
         textAlign: "text-center",
+        justifyContent: "center",
+        alignItems: "center",
+        display: "flex",
+        position: "relative",
+        zIndex: "auto",
+
+        // ✨ ACESSIBILIDADE EDITÁVEL
+        ariaLabel: "Iniciar quiz de estilo pessoal",
+        title: "Clique para descobrir seu estilo",
+        tabIndex: 0,
+
+        // ✨ CONFIGURAÇÕES LEGADAS (compatibilidade)
         containerWidth: "medium",
         containerPosition: "center",
         gridColumns: "auto",
         spacing: "normal",
-
-        // ✨ CONFIGURAÇÕES DE APARÊNCIA (do JSON design.button)
-        borderRadius: "rounded-lg", // do JSON design.button.borderRadius
-        padding: "py-4 px-8",
-        fontSize: "text-lg",
-        fontWeight: "font-bold",
-        boxShadow: "shadow-lg", // baseado no JSON design.button.shadow
-
-        // ✨ CONFIGURAÇÕES DE MARGENS
-        marginTop: 0,
-        marginBottom: 32,
-
-        // ✨ CONFIGURAÇÕES DE COMPORTAMENTO
-        requiresValidInput: true,
-        action: "next-step",
-        disabled: false,
-
-        // ✨ CONFIGURAÇÕES DE EFEITOS (do JSON design.animations.button)
-        hoverEffect: true,
-        clickEffect: true,
-        loadingState: false,
-
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFullWidth: true,
-        mobilePadding: "py-3 px-6",
-        mobileFontSize: "text-base",
-
-        // ✨ CONFIGURAÇÕES DE TRANSIÇÃO
-        transitionDuration: "0.2s",
-        transitionEasing: "ease-in-out",
       },
     },
 
