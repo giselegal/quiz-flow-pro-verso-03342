@@ -1,0 +1,14 @@
+{
+  "name": "Bypass Scripts",
+  "description": "Scripts to bypass TypeScript configuration issues",
+  "scripts": {
+    "dev-bypass": "node start-bypass.js",
+    "build-bypass": "vite build --config vite.config.bypass.js",
+    "preview-bypass": "vite preview --config vite.config.bypass.js"
+  },
+  "instructions": [
+    "Run: node start-bypass.js",
+    "Or: npm run dev-bypass (if you add the script to package.json)",
+    "This bypasses the TS6310 error completely"
+  ]
+}
