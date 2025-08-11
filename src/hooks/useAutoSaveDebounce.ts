@@ -1,4 +1,5 @@
-import { useCallback, useRef, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 
 /**
  * Hook para debounce de auto-save com controle inteligente
@@ -12,8 +13,8 @@ export const useAutoSaveDebounce = (
   const [isActive, setIsActive] = useState(true);
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
-  const debounceRef = useRef<NodeJS.Timeout>();
-  const maxDelayRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<number | null>(null);
+  const maxDelayRef = useRef<number | null>(null);
   const lastSaveRef = useRef<number>(0);
   const isActiveRef = useRef<boolean>(true);
 
@@ -34,8 +35,9 @@ export const useAutoSaveDebounce = (
       clearTimeout(debounceRef.current);
     }
 
-    // Configurar novo timeout de debounce
-    debounceRef.current = setTimeout(async () => {
+    // Configurar novo timeout de debounce - OTIMIZADO
+    const strategy = PerformanceOptimizer.getSuggestedStrategy(delay, false);
+    debounceRef.current = PerformanceOptimizer.schedule(async () => {
       const now = Date.now();
 
       // Evitar saves muito frequentes (mínimo 5 segundos entre saves)
@@ -88,7 +90,7 @@ export const useAutoSaveDebounce = (
       clearTimeout(maxDelayRef.current);
     }
 
-    maxDelayRef.current = setTimeout(async () => {
+    maxDelayRef.current = PerformanceOptimizer.schedule(async () => {
       const now = Date.now();
 
       // Só fazer save forçado se passou tempo suficiente
