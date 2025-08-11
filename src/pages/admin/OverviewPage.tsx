@@ -3,33 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
-  ArrowDownRight,
-  ArrowUpRight,
-  BarChart3,
-  Calendar,
-  Crown,
-  DollarSign,
-  Download,
-  Eye,
-  Filter,
-  Heart,
-  MousePointer,
-  Share,
-  Sparkles,
-  Target,
-  TrendingUp,
-  Users,
-  Zap,
-  Plus,
-  Activity,
-  Clock,
-  Globe,
-  Lightbulb,
-  Star,
-  ChevronRight,
-  PlayCircle,
-  Settings,
-  Bell,
+    Activity,
+    ArrowUpRight,
+    BarChart3,
+    Bell,
+    ChevronRight,
+    Clock,
+    Crown,
+    DollarSign,
+    Download,
+    Eye,
+    Filter,
+    Globe,
+    Heart,
+    Lightbulb,
+    PlayCircle,
+    Plus,
+    Settings,
+    Sparkles,
+    Star,
+    Target,
+    TrendingUp,
+    Users,
+    Zap
 } from "lucide-react";
 import React from "react";
 
@@ -85,7 +81,7 @@ const OverviewPage: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-blue-50/30 cursor-pointer">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -95,6 +91,23 @@ const OverviewPage: React.FC = () => {
               </div>
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Plus className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-purple-50/30 cursor-pointer"
+          onClick={() => window.open('/step/21', '_blank')}
+        >
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600">Testar Etapa 21</p>
+                <p className="text-xs text-slate-500 mt-1">Página de oferta</p>
+              </div>
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <PlayCircle className="h-5 w-5 text-white" />
               </div>
             </div>
           </CardContent>
@@ -258,6 +271,41 @@ const OverviewPage: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Quiz Item - Oferta Etapa 21 */}
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-rose-50 to-pink-50 rounded-lg border border-rose-100">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-900">
+                      Página de Oferta - Etapa 21 (Modular)
+                    </h3>
+                    <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
+                      <span className="flex items-center">
+                        <Globe className="h-4 w-4 mr-1" />
+                        Sistema JSON Completo
+                      </span>
+                      <span className="flex items-center">
+                        <Star className="h-4 w-4 mr-1" />
+                        7 Componentes Modulares
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Badge className="bg-blue-100 text-blue-700 border-0">Demo</Badge>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => window.open('/step/21', '_blank')}
+                  >
+                    <PlayCircle className="h-4 w-4 mr-1" />
+                    Testar
+                  </Button>
+                </div>
+              </div>
+
               {/* Quiz Item */}
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100">
                 <div className="flex items-center space-x-4">
@@ -446,6 +494,15 @@ const OverviewPage: React.FC = () => {
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Criar Quiz
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+                onClick={() => window.open('/step/21', '_blank')}
+              >
+                <PlayCircle className="h-5 w-5 mr-2" />
+                Testar Etapa 21
               </Button>
               <Button
                 size="lg"
