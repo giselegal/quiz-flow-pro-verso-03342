@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -24,7 +24,7 @@ import {
 
 const AuthPage = () => {
   const { login, register, user } = useAuth();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
