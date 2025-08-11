@@ -1,30 +1,31 @@
-// 🎯 ETAPA 1 - CONFIGURAÇÃO MODULAR BASEADA EM JSON
-// Template baseado no JSON fornecido pelo usuário para Quiz de Estilo Pessoal
+// 🎯 ETAPA 1 - CONFIGURAÇÃO MODULAR BASEADA EM PRODUÇÃO
+// Template otimizado baseado no QuizIntro em produção com funcionalidades avançadas
+// 🎯 INTEGRAÇÃO RECOMENDADA: useBlockForm para gerenciamento de estado do formulário
 
 export const getStep01Template = () => {
   return [
-    // 🎯 1. CABEÇALHO DO QUIZ - QUIZ INTRO HEADER
+    // 🎯 1. CABEÇALHO DO QUIZ - QUIZ INTRO HEADER (OTIMIZADO PARA PRODUÇÃO)
     {
       id: "quiz-intro-header-modular",
       type: "quiz-intro-header",
       properties: {
-        // ✨ CONFIGURAÇÕES DO LOGO (baseado no JSON)
-        logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão - Quiz de Estilo Pessoal",
+        // ✨ URLS OTIMIZADAS DO CLOUDINARY (baseado na produção)
+        logoUrl: "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp",
+        logoUrlFallback: "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        logoAlt: "Logo Gisele Galvão",
         logoWidth: 120,
-        logoHeight: 120,
+        logoHeight: 50,
 
         // ✨ CONFIGURAÇÕES DE PROGRESSO
         progressValue: 0,
         progressMax: 100,
         showBackButton: false,
-        showProgress: true,
+        showProgress: false, // Desabilitado na introdução
 
-        // ✨ TEXTOS CONFIGURÁVEIS (do JSON meta)
-        title: "Quiz Estilo Pessoal - Template Completo",
-        subtitle: "Modelo completo para quiz de estilo pessoal, pronto para sistemas de moda",
-        description: "Versão 1.2.3 - by Gisele Legal",
+        // ✨ CONFIGURAÇÕES DE PERFORMANCE (baseado na produção)
+        loading: "eager",
+        fetchPriority: "high",
+        decoding: "async",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         containerWidth: "full",
@@ -32,16 +33,20 @@ export const getStep01Template = () => {
         gridColumns: "auto",
         spacing: "normal",
         marginTop: 0,
-        marginBottom: 16,
+        marginBottom: 8,
 
-        // ✨ CONFIGURAÇÕES DE CORES (do JSON design)
-        backgroundColor: "#FAF9F7", // backgroundColor do JSON
-        textColor: "#432818", // secondaryColor do JSON
+        // ✨ CONFIGURAÇÕES DE CORES (design system da produção)
+        backgroundColor: "#FEFEFE",
+        textColor: "#432818",
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileLogoWidth: 80,
-        mobileLogoHeight: 80,
+        mobileLogoWidth: 120,
+        mobileLogoHeight: 50,
         mobileFontSize: "text-lg",
+        
+        // ✨ ACESSIBILIDADE
+        ariaLabel: "Logo Gisele Galvão - Quiz de Estilo Pessoal",
+        role: "img",
       },
     },
 
@@ -76,19 +81,19 @@ export const getStep01Template = () => {
       },
     },
 
-    // 📝 3. TÍTULO PRINCIPAL (baseado no step intro do JSON)
+    // 📝 3. TÍTULO PRINCIPAL (BASEADO NA PRODUÇÃO)
     {
       id: "main-title-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO (do JSON steps[0] - intro)
-        content: "Bem-vinda ao Quiz de Estilo",
-        text: "Bem-vinda ao Quiz de Estilo",
+        // ✨ CONTEÚDO EXATO DA PRODUÇÃO
+        content: '<span class="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span class="text-[#B89B7A]">Você</span>.',
+        text: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.',
 
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (do JSON design.fontFamily)
-        fontSize: "text-4xl",
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (Playfair Display da produção)
+        fontSize: "text-2xl sm:text-3xl md:text-4xl",
         fontWeight: "font-bold",
-        fontFamily: "'Playfair Display', 'Inter', serif", // do JSON design.fontFamily
+        fontFamily: '"Playfair Display", serif',
         lineHeight: "1.2",
         letterSpacing: "normal",
 
@@ -96,8 +101,8 @@ export const getStep01Template = () => {
         textAlign: "text-center",
         textWidth: "w-full",
 
-        // ✨ CONFIGURAÇÕES DE CORES (do JSON design)
-        color: "#432818", // secondaryColor do JSON
+        // ✨ CONFIGURAÇÕES DE CORES (design system da produção)
+        color: "#432818",
         textColor: "#432818",
         backgroundColor: "transparent",
 
@@ -107,121 +112,99 @@ export const getStep01Template = () => {
         gridColumns: "full",
         spacing: "normal",
         marginTop: 0,
-        marginBottom: 20,
+        marginBottom: 8,
 
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFontSize: "text-3xl",
+        // ✨ CONFIGURAÇÕES RESPONSIVAS (da produção)
+        mobileFontSize: "text-2xl",
         mobileLineHeight: "1.3",
-        mobileMarginBottom: 16,
+        mobileMarginBottom: 8,
+        
+        // ✨ CLASSES CSS CUSTOMIZADAS
+        className: "playfair-display leading-tight px-2",
+        customStyle: { fontWeight: 400 },
       },
     },
 
-    // 📄 4. DESCRIÇÃO SUPERIOR (do JSON steps[0].descriptionTop)
-    {
-      id: "description-top-modular",
-      type: "text-inline",
-      properties: {
-        // ✨ CONTEÚDO (do JSON)
-        content: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
-        text: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
-
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
-        fontSize: "text-xl",
-        fontWeight: "font-normal",
-        fontFamily: "'Playfair Display', 'Inter', serif",
-        lineHeight: "1.6",
-        letterSpacing: "normal",
-
-        // ✨ CONFIGURAÇÕES DE ALINHAMENTO
-        textAlign: "text-center",
-        textWidth: "w-full",
-
-        // ✨ CONFIGURAÇÕES DE CORES
-        color: "#432818", // secondaryColor do JSON
-        textColor: "#432818",
-        backgroundColor: "transparent",
-
-        // ✨ CONFIGURAÇÕES DE LAYOUT
-        containerWidth: "medium",
-        containerPosition: "center",
-        gridColumns: "full",
-        spacing: "normal",
-        marginTop: 0,
-        marginBottom: 24,
-
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFontSize: "text-lg",
-        mobileLineHeight: "1.5",
-        mobileMarginBottom: 20,
-      },
-    },
-
-    // 🖼️ 5. IMAGEM DE INTRODUÇÃO (do JSON steps[0].imageIntro)
+    // �️ 4. IMAGEM DE INTRODUÇÃO (OTIMIZADA PARA LCP - BASEADA NA PRODUÇÃO)
     {
       id: "intro-image-modular",
       type: "image-display-inline",
       properties: {
-        // ✨ CONFIGURAÇÕES DA IMAGEM (do JSON)
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
-        alt: "Quiz de Estilo Pessoal - Imagem Introdutória",
-        width: 600,
-        height: 400,
+        // ✨ URLS OTIMIZADAS DO CLOUDINARY (múltiplos formatos para performance)
+        src: "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
+        srcWebp: "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.webp",
+        srcFallback: "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        alt: "Descubra seu estilo predominante e transforme seu guarda-roupa",
+        width: 300,
+        height: 204,
 
-        // ✨ CONFIGURAÇÕES DE ESTILO (baseado no JSON design.card)
-        className: "object-cover w-full max-w-2xl h-80 rounded-xl mx-auto shadow-lg",
-        borderRadius: 16, // do JSON design.card.borderRadius
-        shadow: true, // do JSON design.card.shadow
-        objectFit: "cover",
+        // ✨ CONFIGURAÇÕES DE PERFORMANCE (LCP otimizado)
+        loading: "eager",
+        fetchPriority: "high",
+        decoding: "async",
+        id: "lcp-image",
+
+        // ✨ CONFIGURAÇÕES DE ESTILO (da produção)
+        className: "w-full h-full object-contain",
+        borderRadius: 8, // rounded-lg da produção
+        shadow: true,
+        objectFit: "contain",
+        aspectRatio: "1.47",
+        maxHeight: "204px",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         textAlign: "text-center",
-        containerWidth: "large",
+        containerWidth: "medium",
         containerPosition: "center",
         gridColumns: "auto",
         spacing: "normal",
-        marginTop: 0,
+        marginTop: 2,
         marginBottom: 24,
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        backgroundColor: "#fff", // do JSON design.card.background
-        borderColor: "#B89B7A", // primaryColor do JSON
+        // ✨ CONFIGURAÇÕES DE CORES (da produção)
+        backgroundColor: "#F8F5F0", // background placeholder
+        borderColor: "transparent",
 
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileWidth: 350,
-        mobileHeight: 280,
-        mobileClassName: "object-cover w-full h-72 rounded-lg mx-auto shadow-md",
+        // ✨ CONFIGURAÇÕES RESPONSIVAS (da produção)
+        mobileWidth: 300,
+        mobileHeight: 204,
+        mobileClassName: "w-full h-full object-contain",
 
-        // ✨ CONFIGURAÇÕES DE EFEITOS
-        hoverEffect: true,
-        zoomOnHover: false,
-        lazyLoading: true,
+        // ✨ CONFIGURAÇÕES DE CONTAINER (da produção)
+        containerStyle: { 
+          aspectRatio: '1.47', 
+          maxHeight: '204px',
+          overflow: 'hidden'
+        },
+        
+        // ✨ WEB VITALS E PERFORMANCE
+        performanceMarks: ["lcp_rendered"],
       },
     },
 
-    // 📝 6. DESCRIÇÃO INFERIOR (do JSON steps[0].descriptionBottom)
+    // 📝 5. DESCRIÇÃO PRINCIPAL (TEXTO EXATO DA PRODUÇÃO)
     {
       id: "description-bottom-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO (do JSON)
-        content:
-          "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+        // ✨ CONTEÚDO EXATO DA PRODUÇÃO COM SPANS DESTACADOS
+        content: 'Em poucos minutos, descubra seu <span class="font-semibold text-[#B89B7A]">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class="font-semibold text-[#432818]">essência</span>, com praticidade e <span class="font-semibold text-[#432818]">confiança</span>.',
         text: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
 
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
-        fontSize: "text-lg",
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (da produção)
+        fontSize: "text-sm sm:text-base",
         fontWeight: "font-normal",
-        fontFamily: "'Playfair Display', 'Inter', serif",
-        lineHeight: "1.6",
+        fontFamily: "system-ui, sans-serif",
+        lineHeight: "1.6", // leading-relaxed
         letterSpacing: "normal",
 
         // ✨ CONFIGURAÇÕES DE ALINHAMENTO
         textAlign: "text-center",
         textWidth: "w-full",
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        color: "#432818", // secondaryColor do JSON
-        textColor: "#432818",
+        // ✨ CONFIGURAÇÕES DE CORES (da produção)
+        color: "#6B7280", // text-gray-600
+        textColor: "#6B7280",
         backgroundColor: "transparent",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
@@ -230,28 +213,31 @@ export const getStep01Template = () => {
         gridColumns: "full",
         spacing: "normal",
         marginTop: 0,
-        marginBottom: 32,
+        marginBottom: 32, // mt-8
 
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFontSize: "text-base",
-        mobileLineHeight: "1.5",
+        // ✨ CONFIGURAÇÕES RESPONSIVAS (da produção)
+        mobileFontSize: "text-sm",
+        mobileLineHeight: "1.6",
         mobileMarginBottom: 24,
+        
+        // ✨ CLASSES CSS DA PRODUÇÃO
+        className: "leading-relaxed px-2",
       },
     },
 
-    // 🏷️ 7. LABEL DO INPUT (do JSON steps[0].inputLabel)
+    // 🏷️ 6. LABEL DO INPUT (EXATO DA PRODUÇÃO)
     {
       id: "input-label-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO (do JSON)
-        content: "NOME *",
+        // ✨ CONTEÚDO EXATO DA PRODUÇÃO
+        content: 'NOME <span class="text-red-500">*</span>',
         text: "NOME *",
 
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
-        fontSize: "text-sm",
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (da produção)
+        fontSize: "text-xs",
         fontWeight: "font-semibold",
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "system-ui, sans-serif",
         lineHeight: "1.4",
         letterSpacing: "0.05em",
 
@@ -259,8 +245,8 @@ export const getStep01Template = () => {
         textAlign: "text-left",
         textWidth: "w-full",
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        color: "#432818", // secondaryColor do JSON
+        // ✨ CONFIGURAÇÕES DE CORES (da produção)
+        color: "#432818",
         textColor: "#432818",
         backgroundColor: "transparent",
 
@@ -270,146 +256,184 @@ export const getStep01Template = () => {
         gridColumns: "full",
         spacing: "tight",
         marginTop: 0,
-        marginBottom: 8,
+        marginBottom: 6, // mb-1.5
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
-        mobileFontSize: "text-sm",
+        mobileFontSize: "text-xs",
         mobileMarginBottom: 6,
+        
+        // ✨ ATRIBUTOS HTML (da produção)
+        htmlFor: "name",
+        role: "label",
       },
     },
 
-    // 📋 8. CAMPO DE ENTRADA DE NOME (baseado no JSON steps[0])
+    // 📋 7. CAMPO DE ENTRADA DE NOME (FUNCIONALIDADES AVANÇADAS DA PRODUÇÃO)
     {
       id: "name-input-modular",
       type: "form-input",
       properties: {
-        // ✨ CONFIGURAÇÕES DO CAMPO (do JSON)
-        label: "", // removido porque temos um componente separado acima
-        placeholder: "Digite seu nome", // do JSON steps[0].inputPlaceholder
-        name: "userName",
-        inputType: "text", // do JSON steps[0].inputType
-        required: true, // do JSON steps[0].required
+        // ✨ CONFIGURAÇÕES BÁSICAS DO CAMPO (da produção)
+        label: "",
+        placeholder: "Digite seu nome",
+        name: "name", // mesmo ID da produção
+        id: "name", // mesmo ID da produção
+        inputType: "text",
+        required: true,
 
-        // ✨ CONFIGURAÇÕES DE VALIDAÇÃO (do JSON steps[0].validation)
-        minLength: 2, // do JSON steps[0].validation.minLength
-        maxLength: 50,
+        // ✨ VALIDAÇÃO AVANÇADA (da produção)
+        minLength: 1,
+        maxLength: 32, // mesmo limite da produção
         pattern: "[A-Za-zÀ-ÿ\\s]+",
-        helperText: "Seu nome será usado para personalizar sua experiência",
-        errorMessage: "Digite seu nome para continuar", // do JSON steps[0].validation.errorMessage
+        helperText: "",
+        errorMessage: "Por favor, digite seu nome para continuar", // mensagem exata da produção
 
-        // ✨ CONFIGURAÇÕES DE ESTILO (baseado no JSON design.button)
-        borderColor: "#B89B7A", // primaryColor do JSON
-        focusColor: "#aa6b5d", // accentColor do JSON
-        backgroundColor: "#ffffff",
-        textColor: "#432818", // secondaryColor do JSON
+        // ✨ CONFIGURAÇÕES DE ESTILO AVANÇADAS (da produção)
+        borderColor: "#B89B7A",
+        borderColorError: "#EF4444", // red-500
+        borderWidth: "2px", // border-2
+        focusColor: "#A1835D", // primaryDark da produção
+        focusRingColor: "#A1835D",
+        focusRingWidth: "2px",
+        focusRingOffset: "2px",
+        backgroundColor: "#FEFEFE", // exato da produção
+        textColor: "#432818",
 
         // ✨ CONFIGURAÇÕES DE LAYOUT
         textAlign: "text-left",
-        containerWidth: "medium",
+        containerWidth: "full", // w-full da produção
         containerPosition: "center",
         gridColumns: "auto",
         spacing: "normal",
         marginTop: 0,
-        marginBottom: 24,
+        marginBottom: 24, // space-y-6
 
-        // ✨ CONFIGURAÇÕES RESPONSIVAS
+        // ✨ CONFIGURAÇÕES RESPONSIVAS (da produção)
         mobileWidth: "100%",
-        mobilePadding: "12px",
-        mobileFontSize: "16px",
+        mobilePadding: "10px", // p-2.5
+        mobileFontSize: "16px", // evita zoom no iOS
 
-        // ✨ CONFIGURAÇÕES DE COMPORTAMENTO
-        autoFocus: false,
-        autoComplete: "given-name",
-        spellCheck: true,
+        // ✨ CONFIGURAÇÕES DE COMPORTAMENTO AVANÇADAS (da produção)
+        autoFocus: true, // autoFocus da produção
+        autoComplete: "off", // desabilitado na produção
+        autoCorrect: "off",
+        autoCapitalize: "words",
+        spellCheck: false,
+        inputMode: "text",
+
+        // ✨ ACESSIBILIDADE AVANÇADA (da produção)
+        ariaRequired: "true",
+        ariaInvalid: false,
+        ariaDescribedBy: "name-error",
+
+        // ✨ ESTADOS E HOOKS (da produção)
+        useStateHook: true, // indica que deve usar useState
+        errorStateVar: "error", // nome da variável de erro
+        valueStateVar: "nome", // nome da variável de valor
+        onChangeHandler: true, // indica que precisa de onChange personalizado
+        errorClearing: true, // limpa erro ao digitar
+
+        // ✨ CLASSES CSS CUSTOMIZADAS (da produção)
+        className: "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
+        classNameError: "border-red-500 focus:ring-red-500 focus-visible:ring-red-500",
+        classNameValid: "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]",
       },
     },
 
-    // 🎯 9. BOTÃO CTA RESPONSIVO E EDITÁVEL (baseado no JSON steps[0].buttonText e design.button)
+    // 🎯 8. BOTÃO CTA AVANÇADO (FUNCIONALIDADES COMPLETAS DA PRODUÇÃO)
     {
       id: "cta-button-modular",
       type: "button-inline",
       properties: {
-        // ✨ TEXTO E CONTEÚDO EDITÁVEIS
-        text: "Quero Descobrir Meu Estilo!", // Texto quando habilitado
-        label: "", // Label opcional
+        // ✨ TEXTOS CONDICIONAIS (da produção)
+        text: "Quero Descobrir meu Estilo Agora!", // texto quando habilitado
+        textWhenDisabled: "Digite seu nome para continuar", // texto quando desabilitado
+        label: "",
 
         // ✨ ESTILO E VARIANTE
         variant: "primary",
         size: "large",
 
-        // ✨ CORES TOTALMENTE EDITÁVEIS
-        backgroundColor: "#B89B7A", // Cor principal do botão
-        textColor: "#ffffff", // Cor do texto
-        borderColor: "#B89B7A", // Cor da borda
-        hoverBackgroundColor: "#aa6b5d", // Cor ao passar mouse
-        hoverTextColor: "#ffffff", // Cor do texto ao passar mouse
-        focusColor: "#B89B7A", // Cor do foco
+        // ✨ CORES EXATAS DA PRODUÇÃO
+        backgroundColor: "#B89B7A", // primary
+        backgroundColorDisabled: "rgba(184, 155, 122, 0.5)", // #B89B7A/50
+        textColor: "#ffffff",
+        textColorDisabled: "rgba(255, 255, 255, 0.9)", // text-white/90
+        borderColor: "#B89B7A",
+        hoverBackgroundColor: "#A1835D", // primaryDark
+        activeBackgroundColor: "#947645", // mais escuro
+        focusColor: "#B89B7A",
 
-        // ✨ TAMANHO E LAYOUT RESPONSIVO
+        // ✨ TAMANHO E LAYOUT RESPONSIVO (da produção)
         fullWidth: true,
         width: "auto",
         height: "auto",
         minWidth: "200px",
         maxWidth: "none",
 
-        // ✨ TIPOGRAFIA EDITÁVEL
-        fontSize: "text-lg",
-        fontWeight: "font-bold",
-        fontFamily: "'Playfair Display', serif",
+        // ✨ TIPOGRAFIA (da produção)
+        fontSize: "text-sm sm:text-base md:text-lg",
+        fontWeight: "font-semibold",
+        fontFamily: "system-ui, sans-serif",
         lineHeight: "1.5",
         letterSpacing: "normal",
         textTransform: "none",
 
-        // ✨ BORDAS E CANTOS ARREDONDADOS
-        borderRadius: "rounded-xl", // Cantos mais arredondados
-        borderWidth: "2px",
+        // ✨ BORDAS E CANTOS ARREDONDADOS (da produção)
+        borderRadius: "rounded-md", // da produção
+        borderWidth: "0px", // sem borda na produção
         borderStyle: "solid",
 
-        // ✨ ESPAÇAMENTO EDITÁVEL
-        padding: "py-4 px-8",
+        // ✨ ESPAÇAMENTO (da produção)
+        padding: "py-2 px-3 sm:py-3 sm:px-4 md:py-3.5",
         paddingX: "",
         paddingY: "",
 
-        // ✨ MARGENS EDITÁVEIS
+        // ✨ MARGENS
         marginTop: 0,
-        marginBottom: 32,
+        marginBottom: 4, // pequena margem para o texto de privacidade
         marginLeft: 0,
         marginRight: 0,
 
-        // ✨ EFEITOS E SOMBRAS EDITÁVEIS
-        boxShadow: "shadow-xl",
-        hoverEffect: true, // Efeito ao passar mouse
-        clickEffect: true, // Efeito ao clicar
-        glowEffect: false, // Efeito de brilho
-        gradientBackground: false, // Fundo gradiente
-        gradientColors: ["#B89B7A", "#aa6b5d"],
+        // ✨ EFEITOS E SOMBRAS (da produção)
+        boxShadow: "shadow-md hover:shadow-lg",
+        hoverEffect: true,
+        clickEffect: true,
+        glowEffect: false,
+        gradientBackground: false,
 
-        // ✨ COMPORTAMENTO E VALIDAÇÃO EDITÁVEIS
-        requiresValidInput: true, // Requer input válido para ativar
-        conditionalActivation: true, // Ativação condicional
-        validationTarget: "name-input-modular", // ID do input alvo
-        disabled: false,
+        // ✨ COMPORTAMENTO E VALIDAÇÃO CONDICIONAIS (FUNCIONALIDADE PRINCIPAL DA PRODUÇÃO)
+        conditionalActivation: true, // funcionalidade chave
+        requiresValidInput: true,
+        validationTarget: "name-input-modular",
+        validationFunction: "nome.trim()", // expressão JavaScript da produção
+        disabled: false, // controlado por estado
         loading: false,
 
-        // ✨ NAVEGAÇÃO E AÇÃO EDITÁVEIS
-        action: "next-step", // Tipo de ação: "next-step", "url", "submit", "custom"
-        nextStep: "step-02", // Próxima etapa
-        targetUrl: "", // URL de destino (se action = "url")
-        openInNewTab: false, // Abrir em nova aba
-        scrollToTop: true, // Scroll para o topo após ação
+        // ✨ NAVEGAÇÃO E AÇÃO (da produção)
+        action: "custom", // usa função personalizada
+        customAction: "handleSubmit", // nome da função da produção
+        onSubmitFunction: true, // indica que precisa da função handleSubmit
+        preventDefault: true, // e.preventDefault()
+        stopPropagation: false,
+        nextStep: "step-02",
+        targetUrl: "",
+        openInNewTab: false,
+        scrollToTop: true,
 
-        // ✨ RESPONSIVIDADE EDITÁVEL
-        mobileFullWidth: true, // Largura total no mobile
-        mobileSize: "medium", // Tamanho no mobile
-        mobileFontSize: "text-base", // Fonte no mobile
-        tabletSize: "large", // Tamanho no tablet
-        desktopSize: "large", // Tamanho no desktop
+        // ✨ RESPONSIVIDADE DETALHADA (da produção)
+        mobileFullWidth: true,
+        mobileSize: "medium",
+        mobileFontSize: "text-sm",
+        tabletSize: "large",
+        desktopSize: "large",
 
-        // ✨ ANIMAÇÕES EDITÁVEIS
-        animationType: "none", // Tipo de animação
-        animationDuration: "300ms", // Duração da animação
-        animationDelay: "0ms", // Delay da animação
-        transitionEasing: "ease-in-out", // Tipo de transição
+        // ✨ ANIMAÇÕES E TRANSIÇÕES (da produção)
+        animationType: "scale", // hover:scale-[1.01]
+        animationDuration: "300ms", // transition-all duration-300
+        animationDelay: "0ms",
+        transitionEasing: "ease-in-out",
+        hoverScale: "1.01", // transform hover:scale-[1.01]
 
         // ✨ LAYOUT AVANÇADO
         textAlign: "text-center",
@@ -419,33 +443,41 @@ export const getStep01Template = () => {
         position: "relative",
         zIndex: "auto",
 
-        // ✨ ACESSIBILIDADE EDITÁVEL
+        // ✨ ACESSIBILIDADE AVANÇADA (da produção)
         ariaLabel: "Iniciar quiz de estilo pessoal",
+        ariaDisabled: false, // controlado por estado
         title: "Clique para descobrir seu estilo",
         tabIndex: 0,
+        role: "button",
+        type: "submit", // type="submit" da produção
 
-        // ✨ CONFIGURAÇÕES LEGADAS (compatibilidade)
-        containerWidth: "medium",
-        containerPosition: "center",
-        gridColumns: "auto",
-        spacing: "normal",
+        // ✨ CLASSES CSS CUSTOMIZADAS (da produção)
+        className: "w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 sm:py-3 sm:px-4 sm:text-base md:py-3.5 md:text-lg",
+        classNameEnabled: "bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]",
+        classNameDisabled: "bg-[#B89B7A]/50 text-white/90 cursor-not-allowed",
+
+        // ✨ ESTADOS E HOOKS (da produção)
+        useConditionalRendering: true, // renderização condicional baseada no estado
+        conditionalExpression: "nome.trim()", // expressão da produção
+        
+        // ✨ PERFORMANCE E WEB VITALS
+        performanceMarks: ["user-interaction"],
       },
     },
 
-    // 📜 10. TEXTO DE PRIVACIDADE (do JSON steps[0].privacyText)
+    // 📜 9. TEXTO DE PRIVACIDADE (EXATO DA PRODUÇÃO)
     {
       id: "privacy-text-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO (do JSON)
-        content:
-          "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
+        // ✨ CONTEÚDO EXATO DA PRODUÇÃO COM LINK
+        content: 'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href="#" class="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded">política de privacidade</a>',
         text: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
 
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (da produção)
         fontSize: "text-xs",
         fontWeight: "font-normal",
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "system-ui, sans-serif",
         lineHeight: "1.4",
         letterSpacing: "normal",
 
@@ -453,8 +485,8 @@ export const getStep01Template = () => {
         textAlign: "text-center",
         textWidth: "w-full",
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        color: "#6B7280", // cor mais suave para texto legal
+        // ✨ CONFIGURAÇÕES DE CORES (da produção)
+        color: "#6B7280", // text-gray-500
         textColor: "#6B7280",
         backgroundColor: "transparent",
 
@@ -463,29 +495,37 @@ export const getStep01Template = () => {
         containerPosition: "center",
         gridColumns: "full",
         spacing: "tight",
-        marginTop: 0,
-        marginBottom: 16,
+        marginTop: 4, // pt-1 da produção
+        marginBottom: 24, // espaço para o footer
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileFontSize: "text-xs",
         mobileLineHeight: "1.3",
-        mobileMarginBottom: 12,
+        mobileMarginBottom: 20,
+        
+        // ✨ ACESSIBILIDADE DO LINK
+        linkProps: {
+          href: "#",
+          className: "text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded",
+          role: "link",
+          ariaLabel: "Política de privacidade"
+        },
       },
     },
 
-    // ⚖️ 11. FOOTER COPYRIGHT (do JSON steps[0].footerText)
+    // ⚖️ 10. FOOTER COPYRIGHT (EXATO DA PRODUÇÃO)
     {
       id: "footer-copyright-modular",
       type: "text-inline",
       properties: {
-        // ✨ CONTEÚDO (do JSON)
-        content: "© 2025 Gisele Galvão - Todos os direitos reservados",
-        text: "© 2025 Gisele Galvão - Todos os direitos reservados",
+        // ✨ CONTEÚDO DINÂMICO DA PRODUÇÃO
+        content: "© {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados",
+        text: `© ${new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados`,
 
-        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA
+        // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (da produção)
         fontSize: "text-xs",
         fontWeight: "font-normal",
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "system-ui, sans-serif",
         lineHeight: "1.4",
         letterSpacing: "normal",
 
@@ -493,24 +533,31 @@ export const getStep01Template = () => {
         textAlign: "text-center",
         textWidth: "w-full",
 
-        // ✨ CONFIGURAÇÕES DE CORES
-        color: "#6B7280", // cor mais suave para footer
+        // ✨ CONFIGURAÇÕES DE CORES (da produção)
+        color: "#6B7280", // text-gray-500
         textColor: "#6B7280",
         backgroundColor: "transparent",
 
-        // ✨ CONFIGURAÇÕES DE LAYOUT
+        // ✨ CONFIGURAÇÕES DE LAYOUT (da produção)
         containerWidth: "full",
         containerPosition: "center",
         gridColumns: "full",
         spacing: "tight",
-        marginTop: 24,
+        marginTop: 24, // pt-6
         marginBottom: 16,
 
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileFontSize: "text-xs",
         mobileLineHeight: "1.3",
-        mobileMarginTop: 16,
+        mobileMarginTop: 20,
         mobileMarginBottom: 12,
+        
+        // ✨ POSICIONAMENTO (da produção)
+        position: "footer", // indica que é um footer
+        containerProps: {
+          as: "footer",
+          className: "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto",
+        },
       },
     },
   ];
