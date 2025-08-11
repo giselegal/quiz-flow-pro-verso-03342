@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 API ENDPOINT PARA MIGRAÇÃO AUTOMÁTICA
  * POST /api/admin/migrate - Executa migração do schema

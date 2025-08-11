@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Card } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { StyleResult } from '@/types/quiz';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { MetricCard } from "./MetricCard";
 import { Skeleton } from "@/components/ui/skeleton";

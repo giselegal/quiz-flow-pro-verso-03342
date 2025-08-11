@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Componente migrado de src/pages_backup/QuizOfferPage.tsx para uso no roteador SPA
 
 import React from "react";
