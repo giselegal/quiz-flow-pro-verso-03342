@@ -21,15 +21,15 @@ import { normalizeBlock } from "../utils/blockTypeMapping";
 
 // Ícones Lucide
 import {
-    Download,
-    Eye,
-    EyeOff,
-    Monitor,
-    Plus,
-    Save,
-    Search,
-    Smartphone,
-    Tablet,
+  Download,
+  Eye,
+  EyeOff,
+  Monitor,
+  Plus,
+  Save,
+  Search,
+  Smartphone,
+  Tablet,
 } from "lucide-react";
 
 // ===== INTERFACES E TIPOS =====
@@ -284,7 +284,7 @@ const SimpleBlockRenderer: React.FC<{
 };
 
 const EditorPage: React.FC = () => {
-  const [location, setLocation] = useLocation();
+  const [location] = useLocation();
   const [selectedComponentId, setSelectedComponentId] = useState<string | null>(null);
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [isLoadingFunnel, setIsLoadingFunnel] = useState(false);
@@ -298,7 +298,7 @@ const EditorPage: React.FC = () => {
   const funnelId = urlParams.get("id");
 
   const { config, addBlock, updateBlock, deleteBlock, setAllBlocks, clearAllBlocks } = useEditor();
-  const { saveFunnel, loadFunnel, isSaving, isLoading } = useEditorPersistence();
+  const { saveFunnel, isSaving, isLoading } = useEditorPersistence();
 
   // ===== DETECÇÃO DE MOBILE =====
   useEffect(() => {
@@ -613,21 +613,23 @@ const EditorPage: React.FC = () => {
 
       // Usar CLEAN_21_STEPS para carregar Step02
       const step2Config = CLEAN_21_STEPS.find(s => s.stepNumber === 2);
-      const step2Blocks = step2Config ? [
-        {
-          id: `step-02-title`,
-          type: "text-inline",
-          properties: {
-            content: step2Config.name,
-            fontSize: "text-2xl",
-            fontWeight: "font-bold",
-            textAlign: "text-center",
-            color: "#432818",
-            containerWidth: "full",
-            spacing: "medium"
-          },
-        }
-      ] : [];
+      const step2Blocks = step2Config
+        ? [
+            {
+              id: `step-02-title`,
+              type: "text-inline",
+              properties: {
+                content: step2Config.name,
+                fontSize: "text-2xl",
+                fontWeight: "font-bold",
+                textAlign: "text-center",
+                color: "#432818",
+                containerWidth: "full",
+                spacing: "medium",
+              },
+            },
+          ]
+        : [];
 
       if (!step2Blocks || step2Blocks.length === 0) {
         throw new Error("Template da Step02 não encontrado ou vazio");

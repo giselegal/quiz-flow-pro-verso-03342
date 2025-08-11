@@ -39,26 +39,26 @@ graph TD
     A --> C[ComponentsSidebar]
     A --> D[Canvas]
     A --> E[PropertiesPanel]
-    
+
     B --> F[activeStageId]
     F --> C
     F --> D
-    
+
     C --> G[Drag Component]
     G --> D
     D --> H[Block Selected]
     H --> E
-    
+
     E --> I[Property Change]
     I --> A
     A --> D
-    
+
     subgraph "Registry System"
         J[enhancedBlockRegistry]
         K[Block Definitions]
         L[Default Properties]
     end
-    
+
     J --> C
     K --> E
     L --> I
@@ -82,7 +82,7 @@ const FunnelStagesPanel = () => {
   return (
     <div className="stages-panel">
       {stages.map(stage => (
-        <StageItem 
+        <StageItem
           key={stage.id}
           stage={stage}
           isActive={activeStageId === stage.id}
@@ -130,86 +130,90 @@ const FunnelStagesPanel = () => {
 export const blockRegistry = {
   // Categoria: Texto
   text: {
-    type: 'TextInlineBlock',
-    name: 'Texto',
-    description: 'Bloco de texto editável',
-    category: 'basic',
+    type: "TextInlineBlock",
+    name: "Texto",
+    description: "Bloco de texto editável",
+    category: "basic",
     icon: Type,
     component: TextInlineBlock,
     defaultProps: {
-      text: 'Digite seu texto aqui...',
-      fontSize: '16px',
-      color: '#432818',
-      textAlign: 'left'
+      text: "Digite seu texto aqui...",
+      fontSize: "16px",
+      color: "#432818",
+      textAlign: "left",
     },
     properties: {
-      text: { type: 'string', label: 'Conteúdo' },
-      fontSize: { type: 'select', label: 'Tamanho', options: ['12px', '16px', '20px', '24px'] },
-      color: { type: 'color', label: 'Cor do Texto' },
-      textAlign: { type: 'select', label: 'Alinhamento', options: ['left', 'center', 'right'] },
-      fontWeight: { type: 'select', label: 'Peso', options: ['normal', 'bold', '600', '700'] },
-      marginTop: { type: 'range', label: 'Margem Superior', min: 0, max: 100 },
-      marginBottom: { type: 'range', label: 'Margem Inferior', min: 0, max: 100 }
-    }
+      text: { type: "string", label: "Conteúdo" },
+      fontSize: { type: "select", label: "Tamanho", options: ["12px", "16px", "20px", "24px"] },
+      color: { type: "color", label: "Cor do Texto" },
+      textAlign: { type: "select", label: "Alinhamento", options: ["left", "center", "right"] },
+      fontWeight: { type: "select", label: "Peso", options: ["normal", "bold", "600", "700"] },
+      marginTop: { type: "range", label: "Margem Superior", min: 0, max: 100 },
+      marginBottom: { type: "range", label: "Margem Inferior", min: 0, max: 100 },
+    },
   },
 
   // Categoria: Mídia
   image: {
-    type: 'ImageBlock',
-    name: 'Imagem',
-    description: 'Bloco de imagem responsiva',
-    category: 'media',
+    type: "ImageBlock",
+    name: "Imagem",
+    description: "Bloco de imagem responsiva",
+    category: "media",
     icon: Image,
     component: ImageBlock,
     defaultProps: {
-      src: '/placeholder.jpg',
-      alt: 'Imagem',
-      width: '100%',
-      height: 'auto',
-      borderRadius: '8px'
+      src: "/placeholder.jpg",
+      alt: "Imagem",
+      width: "100%",
+      height: "auto",
+      borderRadius: "8px",
     },
     properties: {
-      src: { type: 'string', label: 'URL da Imagem' },
-      alt: { type: 'string', label: 'Texto Alternativo' },
-      width: { type: 'string', label: 'Largura' },
-      height: { type: 'string', label: 'Altura' },
-      borderRadius: { type: 'range', label: 'Bordas Arredondadas', min: 0, max: 50 },
-      objectFit: { type: 'select', label: 'Ajuste', options: ['cover', 'contain', 'fill'] }
-    }
+      src: { type: "string", label: "URL da Imagem" },
+      alt: { type: "string", label: "Texto Alternativo" },
+      width: { type: "string", label: "Largura" },
+      height: { type: "string", label: "Altura" },
+      borderRadius: { type: "range", label: "Bordas Arredondadas", min: 0, max: 50 },
+      objectFit: { type: "select", label: "Ajuste", options: ["cover", "contain", "fill"] },
+    },
   },
 
   // Categoria: Interação
   button: {
-    type: 'ButtonInlineFixed',
-    name: 'Botão',
-    description: 'Botão interativo com validações',
-    category: 'interactive',
+    type: "ButtonInlineFixed",
+    name: "Botão",
+    description: "Botão interativo com validações",
+    category: "interactive",
     icon: MousePointer,
     component: ButtonInlineFixed,
     defaultProps: {
-      text: 'Clique aqui',
-      backgroundColor: '#B89B7A',
-      textColor: '#FFFFFF',
-      borderRadius: '8px',
-      padding: '12px 24px',
-      fontSize: '16px',
-      fontWeight: '600',
-      width: 'auto',
-      hoverColor: '#A38A69'
+      text: "Clique aqui",
+      backgroundColor: "#B89B7A",
+      textColor: "#FFFFFF",
+      borderRadius: "8px",
+      padding: "12px 24px",
+      fontSize: "16px",
+      fontWeight: "600",
+      width: "auto",
+      hoverColor: "#A38A69",
     },
     properties: {
-      text: { type: 'string', label: 'Texto do Botão' },
-      backgroundColor: { type: 'color', label: 'Cor de Fundo' },
-      textColor: { type: 'color', label: 'Cor do Texto' },
-      borderRadius: { type: 'range', label: 'Bordas Arredondadas', min: 0, max: 50 },
-      padding: { type: 'string', label: 'Espaçamento Interno' },
-      fontSize: { type: 'range', label: 'Tamanho da Fonte', min: 12, max: 32 },
-      fontWeight: { type: 'select', label: 'Peso da Fonte', options: ['normal', 'bold', '600', '700'] },
-      width: { type: 'select', label: 'Largura', options: ['auto', '100%', '50%', 'fit-content'] },
-      hoverColor: { type: 'color', label: 'Cor ao Passar Mouse' },
-      action: { type: 'select', label: 'Ação', options: ['next-step', 'submit', 'custom'] }
-    }
-  }
+      text: { type: "string", label: "Texto do Botão" },
+      backgroundColor: { type: "color", label: "Cor de Fundo" },
+      textColor: { type: "color", label: "Cor do Texto" },
+      borderRadius: { type: "range", label: "Bordas Arredondadas", min: 0, max: 50 },
+      padding: { type: "string", label: "Espaçamento Interno" },
+      fontSize: { type: "range", label: "Tamanho da Fonte", min: 12, max: 32 },
+      fontWeight: {
+        type: "select",
+        label: "Peso da Fonte",
+        options: ["normal", "bold", "600", "700"],
+      },
+      width: { type: "select", label: "Largura", options: ["auto", "100%", "50%", "fit-content"] },
+      hoverColor: { type: "color", label: "Cor ao Passar Mouse" },
+      action: { type: "select", label: "Ação", options: ["next-step", "submit", "custom"] },
+    },
+  },
 };
 ```
 
@@ -256,7 +260,7 @@ const CanvasDropZone = ({ blocks, selectedBlockId, onSelectBlock, onUpdateBlock 
 
   return (
     <div className="canvas-drop-zone">
-      <DropZone 
+      <DropZone
         onDrop={(blockType, position) => addBlockAtPosition(blockType, position)}
       >
         {currentStageBlocks.map((block, index) => (
@@ -312,10 +316,10 @@ const CanvasDropZone = ({ blocks, selectedBlockId, onSelectBlock, onUpdateBlock 
 
 ```typescript
 // src/components/universal/EnhancedUniversalPropertiesPanel.tsx
-const EnhancedUniversalPropertiesPanel = ({ 
-  selectedBlock, 
-  blockDefinition, 
-  onUpdate 
+const EnhancedUniversalPropertiesPanel = ({
+  selectedBlock,
+  blockDefinition,
+  onUpdate
 }) => {
   const renderPropertyControl = (propertyKey, propertyConfig) => {
     switch (propertyConfig.type) {
@@ -372,14 +376,14 @@ const EnhancedUniversalPropertiesPanel = ({
   return (
     <div className="properties-panel">
       <h3>{blockDefinition.name} - Propriedades</h3>
-      
+
       {Object.entries(blockDefinition.properties).map(([key, config]) => (
         <div key={key} className="property-group">
           {renderPropertyControl(key, config)}
         </div>
       ))}
-      
-      <Button 
+
+      <Button
         onClick={() => onUpdate(selectedBlock.id, currentProperties)}
         variant="primary"
       >
@@ -433,6 +437,7 @@ const EnhancedUniversalPropertiesPanel = ({
 ## 🎯 Exemplo Completo: Configuração de um Botão
 
 ### 1. Definição no Registry
+
 ```typescript
 button: {
   type: 'ButtonInlineFixed',
@@ -447,23 +452,24 @@ button: {
 ```
 
 ### 2. Componente Renderizado
+
 ```typescript
 const ButtonInlineFixed = ({ text, backgroundColor, size, rounded, padding }) => {
   const sizeClasses = {
     small: 'px-3 py-1 text-sm',
-    medium: 'px-4 py-2 text-base', 
+    medium: 'px-4 py-2 text-base',
     large: 'px-6 py-3 text-lg'
   };
 
   return (
-    <button 
+    <button
       className={`
-        ${sizeClasses[size]} 
+        ${sizeClasses[size]}
         ${rounded ? 'rounded-full' : 'rounded'}
       `}
-      style={{ 
-        backgroundColor, 
-        padding: `${padding}px` 
+      style={{
+        backgroundColor,
+        padding: `${padding}px`
       }}
     >
       {text}
@@ -473,6 +479,7 @@ const ButtonInlineFixed = ({ text, backgroundColor, size, rounded, padding }) =>
 ```
 
 ### 3. Painel de Propriedades Gerado
+
 ```typescript
 // Automaticamente gerado baseado na definição:
 <div className="properties-panel">
@@ -487,21 +494,25 @@ const ButtonInlineFixed = ({ text, backgroundColor, size, rounded, padding }) =>
 ## 🚀 Vantagens desta Arquitetura
 
 ### ✅ **Escalabilidade**
+
 - Novos componentes = apenas adicionar ao registry
 - Propriedades automáticas no painel
 - Tipagem TypeScript completa
 
 ### ✅ **Flexibilidade**
+
 - Qualquer tipo de propriedade suportada
 - Validações customizáveis
 - Preview em tempo real
 
 ### ✅ **Manutenibilidade**
+
 - Código centralizado no registry
 - Painel universal reutilizável
 - Separação clara de responsabilidades
 
 ### ✅ **UX Superior**
+
 - Drag & drop intuitivo
 - Propriedades visuais
 - Feedback imediato

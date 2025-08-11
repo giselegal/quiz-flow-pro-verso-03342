@@ -3,22 +3,18 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { blockDefinitions } from "@/config/blockDefinitionsOptimized";
-import {
-    MODULAR_COMPONENTS,
-    type ModularComponent
-} from "@/config/modularComponents";
-import { useEditor } from "@/contexts/EditorContext";
+import { MODULAR_COMPONENTS, type ModularComponent } from "@/config/modularComponents";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { type BlockDefinition } from "@/types/blocks";
 import {
-    ChevronDown,
-    ChevronRight,
-    GripVertical,
-    HelpCircle,
-    Layers,
-    Search,
-    Settings,
-    Trophy,
+  ChevronDown,
+  ChevronRight,
+  GripVertical,
+  HelpCircle,
+  Layers,
+  Search,
+  Settings,
+  Trophy,
 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -37,36 +33,35 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
     Estrutura: false,
   });
 
-  const {
-    activeStageId,
-    blockActions: { addBlock, updateBlock },
-  } = useEditor();
-
   // 🎯 COMPONENTES MODULARES INTEGRADOS
-  const modularBlocks: BlockDefinition[] = MODULAR_COMPONENTS.map((modularComp: ModularComponent) => ({
-    type: modularComp.type,
-    name: `📦 ${modularComp.name}`,
-    description: modularComp.description,
-    category: "Componentes Modulares",
-    icon: Settings,
-    properties: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
-      acc[key] = {
-        type: propConfig.type as any,
-        default: propConfig.default,
-        label: key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim(),
-      };
-      return acc;
-    }, {} as any),
-    defaultProps: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
-      acc[key] = propConfig.default;
-      return acc;
-    }, {} as any),
-  }));
+  const modularBlocks: BlockDefinition[] = MODULAR_COMPONENTS.map(
+    (modularComp: ModularComponent) => ({
+      type: modularComp.type,
+      name: `📦 ${modularComp.name}`,
+      description: modularComp.description,
+      category: "Componentes Modulares",
+      icon: Settings,
+      properties: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
+        acc[key] = {
+          type: propConfig.type as any,
+          default: propConfig.default,
+          label:
+            key.charAt(0).toUpperCase() +
+            key
+              .slice(1)
+              .replace(/([A-Z])/g, " $1")
+              .trim(),
+        };
+        return acc;
+      }, {} as any),
+      defaultProps: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
+        acc[key] = propConfig.default;
+        return acc;
+      }, {} as any),
+    })
+  );
 
-  const allBlocks = [
-    ...modularBlocks,
-    ...blockDefinitions
-  ];
+  const allBlocks = [...modularBlocks, ...blockDefinitions];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -89,23 +84,26 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
     return matchesSearch;
   });
 
-  const groupedBlocks = filteredBlocks.reduce((groups, block) => {
-    const category = block.category || "Outros";
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(block);
-    return groups;
-  }, {} as Record<string, typeof allBlocks>);
+  const groupedBlocks = filteredBlocks.reduce(
+    (groups, block) => {
+      const category = block.category || "Outros";
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(block);
+      return groups;
+    },
+    {} as Record<string, typeof allBlocks>
+  );
 
   const categoryOrder = [
     "Componentes Modulares", // 🎯 NOVA CATEGORIA EM PRIMEIRO
     "Quiz",
-    "Interativo", 
+    "Interativo",
     "CTA",
     "Conteúdo",
     "Legal",
-    "Estrutura"
+    "Estrutura",
   ];
 
   const categoryIcons: Record<string, React.ComponentType<any>> = {

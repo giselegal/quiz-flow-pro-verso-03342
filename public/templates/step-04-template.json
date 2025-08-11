@@ -123,12 +123,7 @@
         "validationMessage": "Selecione uma opção para avançar.",
         "scoring": {
           "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Elegante"
-          ]
+          "categories": ["Natural", "Clássico", "Contemporâneo", "Elegante"]
         }
       }
     },
@@ -180,12 +175,7 @@
     "scoring": {
       "enabled": true,
       "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante"
-      ]
+      "categories": ["Natural", "Clássico", "Contemporâneo", "Elegante"]
     },
     "conditions": null
   }

@@ -1,25 +1,16 @@
-import {
-    OfferHeader,
-    OfferHeroSection,
-    OfferPageJson
-} from '@/components/editor-fixed';
-import React from 'react';
+import { OfferHeader, OfferHeroSection, OfferPageJson } from "@/components/editor-fixed";
+import React from "react";
 
 /**
  * 🎯 EXEMPLO: Página de Oferta da Etapa 21
- * 
+ *
  * Demonstra como usar o sistema JSON/JavaScript modular
  * para renderizar uma página de oferta completa
  */
 
 // ===== OPÇÃO 1: Usando OfferPageJson (Recomendado) =====
 export const OfferPage21Example: React.FC = () => {
-  return (
-    <OfferPageJson 
-      stepNumber={21}
-      templateName="step-21-template"
-    />
-  );
+  return <OfferPageJson stepNumber={21} templateName="step-21-template" />;
 };
 
 // ===== OPÇÃO 2: Usando componentes individuais =====
@@ -54,7 +45,7 @@ export const OfferPageManualExample: React.FC = () => {
         ctaUrl="https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
         trustElements={[
           { icon: "Lock", text: "100% Seguro" },
-          { icon: "Shield", text: "7 Dias Garantia" }
+          { icon: "Shield", text: "7 Dias Garantia" },
         ]}
       />
 
@@ -74,15 +65,15 @@ export const OfferPageCustomExample: React.FC = () => {
         title: "Sua Transformação",
         titleHighlight: "Começa Aqui",
         // ... outras propriedades
-      }
-    }
+      },
+    },
     // ... outros blocos
   ]);
 
   return (
     <div>
       {/* Renderizar blocos customizados */}
-      {customBlocks.map((block) => {
+      {customBlocks.map(block => {
         // Lógica de renderização personalizada
         return <div key={block.id}>Componente customizado</div>;
       })}

@@ -15,12 +15,12 @@
 
 ```typescript
 // No seu arquivo /src/pages/editor-fixed-dragdrop.tsx (ou onde estiver seu editor)
-import { useEditorWithJson } from '@/components/editor-fixed/useEditorWithJson';
+import { useEditorWithJson } from "@/components/editor-fixed/useEditorWithJson";
 
 // Dentro do seu componente:
 const YourExistingEditor = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
-  
+
   // 🎯 ADICIONE APENAS ESTA LINHA para ter funcionalidades JSON:
   const jsonFeatures = useEditorWithJson(blocks, setBlocks);
 
@@ -36,15 +36,15 @@ const YourExistingEditor = () => {
   <button onClick={() => jsonFeatures.loadStepTemplate(1)}>
     🚀 Carregar Introdução
   </button>
-  
+
   <button onClick={() => jsonFeatures.loadStepTemplate(2)}>
     ❓ Carregar Pergunta
   </button>
-  
+
   <button onClick={() => jsonFeatures.loadStepTemplate(3)}>
     📊 Carregar Resultado
   </button>
-  
+
   {/* Template atual */}
   {jsonFeatures.currentTemplate && (
     <div className="current-template">
@@ -69,7 +69,7 @@ await jsonFeatures.loadStepTemplate(1);
 // Exportar configuração atual como JSON
 const template = jsonFeatures.exportCurrentAsTemplate({
   name: "Meu Funil Personalizado",
-  category: "custom"
+  category: "custom",
 });
 jsonFeatures.saveTemplateToFile(template);
 // ✅ Download automático do arquivo JSON
@@ -80,16 +80,19 @@ jsonFeatures.saveTemplateToFile(template);
 ## 🧩 Funcionalidades Disponíveis
 
 ### 🔄 Carregar Templates
+
 - `loadStepTemplate(1-21)` - Carrega templates das 21 etapas
 - `loadCustomTemplate(path)` - Carrega template customizado
 - `applyTemplateToEditor(template)` - Aplica template diretamente
 
 ### 💾 Exportar & Salvar
+
 - `exportCurrentAsTemplate()` - Converte blocos atuais em JSON
 - `saveTemplateToFile()` - Download automático do template
 - `mergeTemplateWithExisting()` - Mescla template com blocos existentes
 
 ### 🔍 Validação & Debug
+
 - `validateCurrentTemplate()` - Verifica se template é válido
 - `getAvailableComponents()` - Lista todos os componentes disponíveis
 - `getTemplatePreview()` - Preview do template
@@ -106,13 +109,13 @@ Os templates seguem esta estrutura (compatível com seus 92 templates existentes
   "name": "Introdução do Quiz",
   "version": "1.0",
   "category": "intro",
-  
+
   "layout": {
     "containerWidth": "full",
     "spacing": "medium",
     "backgroundColor": "transparent"
   },
-  
+
   "blocks": [
     {
       "id": "header-1",
@@ -138,18 +141,21 @@ Os templates seguem esta estrutura (compatível com seus 92 templates existentes
 O sistema automaticamente:
 
 ✅ **Mapeia tipos JSON → componentes React**
+
 ```typescript
 // JSON: "type": "quiz-intro-header"
 // Registry: ENHANCED_BLOCK_REGISTRY["quiz-intro-header"] → QuizIntroHeaderComponent
 ```
 
 ✅ **Converte properties JSON → props React**
+
 ```typescript
 // JSON: { "title": "Meu Título", "color": "blue" }
 // React: <Component title="Meu Título" color="blue" />
 ```
 
 ✅ **Valida componentes disponíveis**
+
 ```typescript
 // Se componente não existir no registry, usa fallback ou avisa
 ```
@@ -169,12 +175,12 @@ const MyEditor = () => {
   const handleQuickStart = async () => {
     // Carregar template da introdução
     await jsonFeatures.loadStepTemplate(1);
-    
+
     // Template é automaticamente aplicado e você tem:
     // - blocks[] populado com componentes React
     // - Componentes mapeados pelo ENHANCED_BLOCK_REGISTRY
     // - Estilos e propriedades aplicados
-    
+
     console.log('Blocos carregados:', blocks.length);
     console.log('Template atual:', jsonFeatures.currentTemplate?.name);
   };
@@ -185,7 +191,7 @@ const MyEditor = () => {
       name: "Meu Funil Customizado",
       description: "Criado no editor visual"
     });
-    
+
     // Salvar arquivo
     jsonFeatures.saveTemplateToFile(template, "meu-funil.json");
   };
@@ -194,7 +200,7 @@ const MyEditor = () => {
     <div>
       <button onClick={handleQuickStart}>🚀 Quick Start</button>
       <button onClick={handleSaveAsTemplate}>💾 Salvar Template</button>
-      
+
       {/* Seu editor existente aqui - sem modificação */}
       <YourExistingEditorComponent blocks={blocks} onChange={setBlocks} />
     </div>
@@ -207,6 +213,7 @@ const MyEditor = () => {
 ## 🔧 Configuração Avançada
 
 ### Template com Condições
+
 ```json
 {
   "id": "conditional-block",
@@ -222,6 +229,7 @@ const MyEditor = () => {
 ```
 
 ### Template com Estilos Customizados
+
 ```json
 {
   "globalStyles": {
@@ -246,18 +254,21 @@ const MyEditor = () => {
 ## 📈 Vantagens da Implementação
 
 ### ✅ Para Você
+
 - **Zero breaking changes** - Nada quebra
 - **Compatibilidade total** - Funciona com todos os 290+ componentes
 - **Facilidade de uso** - Um hook, múltiplas funcionalidades
 - **Templates prontos** - 92 templates das 21 etapas disponíveis
 
 ### ✅ Para o Sistema
+
 - **Escalabilidade** - Fácil adicionar novos templates
 - **Manutenibilidade** - JSON é mais fácil de manter que código
 - **Reutilização** - Templates podem ser compartilhados
 - **Versionamento** - Controle de versão de templates
 
 ### ✅ Para Performance
+
 - **Lazy loading** - Templates carregados sob demanda
 - **Cache inteligente** - Templates ficam em memória
 - **Validação rápida** - Verificação antes de aplicar

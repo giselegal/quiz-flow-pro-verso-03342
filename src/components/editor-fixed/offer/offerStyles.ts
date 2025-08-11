@@ -174,7 +174,7 @@ export const injectOfferPageStyles = (): (() => void) => {
   const styleElement = document.createElement("style");
   styleElement.textContent = offerPageStyles;
   document.head.appendChild(styleElement);
-  
+
   // Retorna função de limpeza
   return () => {
     if (styleElement.parentNode) {

@@ -123,12 +123,7 @@
         "validationMessage": "Selecione uma opção para finalizar o quiz.",
         "scoring": {
           "enabled": true,
-          "categories": [
-            "Natural",
-            "Clássico",
-            "Contemporâneo",
-            "Criativo"
-          ]
+          "categories": ["Natural", "Clássico", "Contemporâneo", "Criativo"]
         }
       }
     },
@@ -180,12 +175,7 @@
     "scoring": {
       "enabled": true,
       "method": "category-points",
-      "categories": [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Criativo"
-      ]
+      "categories": ["Natural", "Clássico", "Contemporâneo", "Criativo"]
     },
     "conditions": null
   }

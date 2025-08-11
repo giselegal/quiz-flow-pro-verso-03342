@@ -12,7 +12,7 @@ export interface StepTemplate {
 // 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES CORRETOS E SEM DUPLICAÇÃO
 const STEP_CONFIG = [
   { name: "Introdução", description: "Tela inicial do quiz" },
-  { name: "Nome", description: "Coleta do nome pessoal" }, 
+  { name: "Nome", description: "Coleta do nome pessoal" },
   { name: "Roupa Favorita", description: "Tipo de roupa preferida" },
   { name: "Estilo Pessoal", description: "Identificação do estilo" },
   { name: "Ocasiões", description: "Contextos de uso" },
@@ -31,16 +31,16 @@ const STEP_CONFIG = [
   { name: "Resultado Completo", description: "Análise completa" },
   { name: "Resultado Final", description: "Apresentação final" },
   { name: "Lead Capture", description: "Captura de contato" },
-  { name: "Oferta", description: "Página de oferta final" }
+  { name: "Oferta", description: "Página de oferta final" },
 ];
 
 // Template padrão para fallback
 const getDefaultTemplate = (stepNumber: number) => {
   const config = STEP_CONFIG[stepNumber - 1];
-  
+
   return [
     {
-      id: `step-${stepNumber.toString().padStart(2, '0')}-title`,
+      id: `step-${stepNumber.toString().padStart(2, "0")}-title`,
       type: "text-inline",
       properties: {
         content: config?.name || `Etapa ${stepNumber}`,
@@ -49,19 +49,19 @@ const getDefaultTemplate = (stepNumber: number) => {
         textAlign: "text-center",
         color: "#432818",
         containerWidth: "full",
-        spacing: "medium"
+        spacing: "medium",
       },
     },
     {
-      id: `step-${stepNumber.toString().padStart(2, '0')}-description`,
-      type: "text-inline", 
+      id: `step-${stepNumber.toString().padStart(2, "0")}-description`,
+      type: "text-inline",
       properties: {
         content: config?.description || `Descrição da etapa ${stepNumber}`,
         fontSize: "text-lg",
-        textAlign: "text-center", 
+        textAlign: "text-center",
         color: "#6B4F43",
         containerWidth: "full",
-        spacing: "small"
+        spacing: "small",
       },
     },
   ];
@@ -94,10 +94,10 @@ export const getTemplateStats = () => {
     totalTemplates: STEP_TEMPLATES.length,
     introSteps: 1,
     questionSteps: 13,
-    transitionSteps: 1, 
+    transitionSteps: 1,
     processingSteps: 1,
     resultSteps: 3,
     leadSteps: 1,
-    offerSteps: 1
+    offerSteps: 1,
   };
 };

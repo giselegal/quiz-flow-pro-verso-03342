@@ -54,7 +54,7 @@ import {
   OfferHeroSection,
   OfferProblemSection,
   OfferProductShowcase,
-  OfferSolutionSection
+  OfferSolutionSection,
 } from "../components/editor-fixed/offer";
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===

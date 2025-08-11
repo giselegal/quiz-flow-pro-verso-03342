@@ -1,7 +1,7 @@
-import FixedIntroImage from '@/components/ui/FixedIntroImage';
-import { trackButtonClick } from '@/utils/analytics';
-import { LucideIcon, ShoppingCart } from 'lucide-react';
-import React from 'react';
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { trackButtonClick } from "@/utils/analytics";
+import { LucideIcon, ShoppingCart } from "lucide-react";
+import React from "react";
 
 interface Product {
   id: string;
@@ -36,12 +36,12 @@ interface OfferProductShowcaseProps {
 
 // Mapeamento de ícones
 const iconMap: Record<string, LucideIcon> = {
-  ShoppingCart
+  ShoppingCart,
 };
 
 /**
  * 🎯 COMPONENTE: OfferProductShowcase
- * 
+ *
  * Showcase dos produtos com pricing e CTA final
  * Layout em grid responsivo para os produtos
  */
@@ -52,7 +52,7 @@ export const OfferProductShowcase: React.FC<OfferProductShowcaseProps> = ({
   pricing,
   finalCtaText,
   finalCtaIcon,
-  finalCtaUrl
+  finalCtaUrl,
 }) => {
   const FinalCtaIcon = iconMap[finalCtaIcon] || ShoppingCart;
 
@@ -73,14 +73,12 @@ export const OfferProductShowcase: React.FC<OfferProductShowcaseProps> = ({
             >
               {title}
             </h2>
-            <p className="text-body text-[var(--text-medium)]">
-              {subtitle}
-            </p>
+            <p className="text-body text-[var(--text-medium)]">{subtitle}</p>
           </div>
 
           {/* Grid de produtos */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {products.map((product) => (
+            {products.map(product => (
               <div key={product.id} className="text-center">
                 <div className="aspect-[4/5] bg-white rounded-lg mb-3 flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
                   <FixedIntroImage
@@ -91,9 +89,7 @@ export const OfferProductShowcase: React.FC<OfferProductShowcaseProps> = ({
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <h3 className="text-hierarchy-3 text-[var(--text-dark)] mb-2">
-                  {product.title}
-                </h3>
+                <h3 className="text-hierarchy-3 text-[var(--text-dark)] mb-2">{product.title}</h3>
                 <p className="text-sm text-[var(--text-medium)]">{product.description}</p>
               </div>
             ))}
@@ -111,15 +107,14 @@ export const OfferProductShowcase: React.FC<OfferProductShowcaseProps> = ({
             <p className="text-lg">
               ou à vista <strong>R$ {pricing.fullPrice}</strong>
             </p>
-            <p className="text-sm mt-2 opacity-75">{pricing.discount} - Economia de {pricing.savings}</p>
+            <p className="text-sm mt-2 opacity-75">
+              {pricing.discount} - Economia de {pricing.savings}
+            </p>
           </div>
 
           {/* CTA Final */}
           <div className="text-center">
-            <button
-              onClick={handleFinalCtaClick}
-              className="btn-primary-clean"
-            >
+            <button onClick={handleFinalCtaClick} className="btn-primary-clean">
               <FinalCtaIcon size={20} />
               {finalCtaText}
             </button>

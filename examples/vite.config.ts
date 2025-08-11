@@ -4,10 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  plugins: [
-    react(),
-    mode === "development" && componentTagger()
-  ].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   define: {
     // Suppress TypeScript errors in development
     __DEV__: mode === "development",
@@ -214,9 +211,9 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 4096, // Inline assets menores que 4KB
   },
   esbuild: {
-    logOverride: { 
+    logOverride: {
       "this-is-undefined-in-esm": "silent",
-      "direct-eval": "silent"
+      "direct-eval": "silent",
     },
     target: "es2020",
     tsconfigRaw: `{
@@ -227,6 +224,6 @@ export default defineConfig(({ mode }) => ({
         "noUnusedLocals": false,
         "noUnusedParameters": false
       }
-    }`
+    }`,
   },
 }));

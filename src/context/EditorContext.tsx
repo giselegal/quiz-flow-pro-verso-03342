@@ -1,11 +1,11 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import React, {
-    createContext,
-    ReactNode,
-    useCallback,
-    useContext,
-    useEffect,
-    useState,
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 import { CLEAN_21_STEPS } from "../config/clean21Steps";
 import { EditorBlock, FunnelStage } from "../types/editor";
@@ -107,8 +107,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     // ✅ USAR CONFIG LIMPA DAS 21 ETAPAS
     console.log("📋 EditorProvider: CLEAN_21_STEPS:", CLEAN_21_STEPS.length);
-    
-    const initialStages = CLEAN_21_STEPS.map((stepConfig) => ({
+
+    const initialStages = CLEAN_21_STEPS.map(stepConfig => ({
       id: stepConfig.id,
       name: stepConfig.name,
       order: stepConfig.stepNumber,
@@ -123,11 +123,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       },
     }));
 
+    console.log("✅ EditorProvider: 21 etapas criadas sem duplicação:", initialStages.length);
     console.log(
-      "✅ EditorProvider: 21 etapas criadas sem duplicação:",
-      initialStages.length
+      "✅ EditorProvider: Etapas:",
+      initialStages.map(s => `${s.order}: ${s.name}`)
     );
-    console.log("✅ EditorProvider: Etapas:", initialStages.map(s => `${s.order}: ${s.name}`));
     return initialStages;
   });
 
@@ -259,7 +259,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           templateBlocks = CLEAN_21_STEPS.find(s => s.stepNumber === stepNumber)
             ? [
                 {
-                  id: `step-${stepNumber.toString().padStart(2, '0')}-title`,
+                  id: `step-${stepNumber.toString().padStart(2, "0")}-title`,
                   type: "text-inline",
                   properties: {
                     content: CLEAN_21_STEPS[stepNumber - 1]?.name || `Etapa ${stepNumber}`,
@@ -268,9 +268,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                     textAlign: "text-center",
                     color: "#432818",
                     containerWidth: "full",
-                    spacing: "medium"
+                    spacing: "medium",
                   },
-                }
+                },
               ]
             : [];
           console.log(`📦 Template CLEAN fallback:`, templateBlocks?.length || 0, "blocos");

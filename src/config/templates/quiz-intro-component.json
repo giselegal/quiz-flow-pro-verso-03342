@@ -16,7 +16,7 @@
   "design": {
     "colors": {
       "primary": "#B89B7A",
-      "primaryDark": "#A1835D", 
+      "primaryDark": "#A1835D",
       "secondary": "#432818",
       "background": "#FEFEFE",
       "backgroundAlt": "#F8F5F0",
@@ -56,7 +56,7 @@
       "imageId": "v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb",
       "optimized": {
         "avif": "f_avif,q_85,w_300,c_limit",
-        "webp": "f_webp,q_85,w_300,c_limit", 
+        "webp": "f_webp,q_85,w_300,c_limit",
         "png": "f_png,q_85,w_300,c_limit"
       },
       "dimensions": {
@@ -80,7 +80,7 @@
       }
     },
     {
-      "id": "intro-header", 
+      "id": "intro-header",
       "type": "header-section",
       "properties": {
         "className": "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-8 mx-auto",
@@ -89,7 +89,7 @@
       "children": [
         {
           "id": "intro-logo-container",
-          "type": "logo-container", 
+          "type": "logo-container",
           "properties": {
             "className": "flex flex-col items-center space-y-2",
             "alignment": "center"
@@ -150,7 +150,7 @@
                 "color": "#B89B7A"
               },
               {
-                "text": "Você", 
+                "text": "Você",
                 "color": "#B89B7A"
               }
             ]
@@ -230,7 +230,7 @@
                 "className": "font-semibold text-[#432818]"
               },
               {
-                "text": "confiança", 
+                "text": "confiança",
                 "className": "font-semibold text-[#432818]"
               }
             ]
@@ -288,7 +288,7 @@
                 },
                 {
                   "id": "intro-submit-button",
-                  "type": "submit-button", 
+                  "type": "submit-button",
                   "properties": {
                     "text": {
                       "enabled": "Quero Descobrir meu Estilo Agora!",
@@ -361,7 +361,7 @@
   "analytics": {
     "trackingEvents": [
       "component_mounted",
-      "lcp_rendered", 
+      "lcp_rendered",
       "user_interaction",
       "form_submit",
       "validation_error"

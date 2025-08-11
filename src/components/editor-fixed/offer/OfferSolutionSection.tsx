@@ -1,7 +1,7 @@
-import FixedIntroImage from '@/components/ui/FixedIntroImage';
-import { trackButtonClick } from '@/utils/analytics';
-import { Clock, LucideIcon, ShoppingBag } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { trackButtonClick } from "@/utils/analytics";
+import { Clock, LucideIcon, ShoppingBag } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface CountdownTime {
   hours: number;
@@ -26,12 +26,12 @@ interface OfferSolutionSectionProps {
 // Mapeamento de ícones
 const iconMap: Record<string, LucideIcon> = {
   ShoppingBag,
-  Clock
+  Clock,
 };
 
 /**
  * 🎯 COMPONENTE: CountdownTimer
- * 
+ *
  * Timer de contagem regressiva reutilizável
  */
 const CountdownTimer: React.FC<{ initial: CountdownTime }> = ({ initial }) => {
@@ -82,7 +82,7 @@ const CountdownTimer: React.FC<{ initial: CountdownTime }> = ({ initial }) => {
 
 /**
  * 🎯 COMPONENTE: OfferSolutionSection
- * 
+ *
  * Seção que apresenta a solução com CTA e countdown opcional
  */
 export const OfferSolutionSection: React.FC<OfferSolutionSectionProps> = ({
@@ -96,7 +96,7 @@ export const OfferSolutionSection: React.FC<OfferSolutionSectionProps> = ({
   ctaIcon,
   ctaUrl,
   showCountdown,
-  countdownInitial
+  countdownInitial,
 }) => {
   const CtaIcon = iconMap[ctaIcon] || ShoppingBag;
 
@@ -107,7 +107,7 @@ export const OfferSolutionSection: React.FC<OfferSolutionSectionProps> = ({
 
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split('**').map((part, index) => {
+    return text.split("**").map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -140,17 +140,12 @@ export const OfferSolutionSection: React.FC<OfferSolutionSectionProps> = ({
             {renderText(description)}
           </p>
 
-          <button
-            onClick={handleCtaClick}
-            className="btn-primary-clean mb-6"
-          >
+          <button onClick={handleCtaClick} className="btn-primary-clean mb-6">
             <CtaIcon size={20} />
             {ctaText}
           </button>
 
-          {showCountdown && (
-            <CountdownTimer initial={countdownInitial} />
-          )}
+          {showCountdown && <CountdownTimer initial={countdownInitial} />}
         </div>
       </div>
     </section>

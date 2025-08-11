@@ -1,7 +1,7 @@
-import FixedIntroImage from '@/components/ui/FixedIntroImage';
-import { trackButtonClick } from '@/utils/analytics';
-import { ArrowRight, Award, Lock, LucideIcon, Shield } from 'lucide-react';
-import React from 'react';
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { trackButtonClick } from "@/utils/analytics";
+import { ArrowRight, Award, Lock, LucideIcon, Shield } from "lucide-react";
+import React from "react";
 
 interface TrustElement {
   icon: string;
@@ -30,12 +30,12 @@ const iconMap: Record<string, LucideIcon> = {
   Award,
   ArrowRight,
   Lock,
-  Shield
+  Shield,
 };
 
 /**
  * 🎯 COMPONENTE: OfferHeroSection
- * 
+ *
  * Seção hero principal da página de oferta
  * Inclui badge, título, subtítulo, imagem, CTA e elementos de confiança
  */
@@ -53,7 +53,7 @@ export const OfferHeroSection: React.FC<OfferHeroSectionProps> = ({
   ctaText,
   ctaIcon,
   ctaUrl,
-  trustElements
+  trustElements,
 }) => {
   const BadgeIcon = iconMap[badgeIcon] || Award;
   const CtaIcon = iconMap[ctaIcon] || ArrowRight;
@@ -65,7 +65,7 @@ export const OfferHeroSection: React.FC<OfferHeroSectionProps> = ({
 
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split('**').map((part, index) => {
+    return text.split("**").map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -110,10 +110,7 @@ export const OfferHeroSection: React.FC<OfferHeroSectionProps> = ({
           </div>
 
           {/* CTA principal */}
-          <button
-            onClick={handleCtaClick}
-            className="btn-primary-clean mb-6"
-          >
+          <button onClick={handleCtaClick} className="btn-primary-clean mb-6">
             <CtaIcon size={20} />
             {ctaText}
           </button>

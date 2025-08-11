@@ -1,5 +1,5 @@
-import FixedIntroImage from '@/components/ui/FixedIntroImage';
-import React from 'react';
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import React from "react";
 
 interface OfferGuaranteeSectionProps {
   title: string;
@@ -8,12 +8,12 @@ interface OfferGuaranteeSectionProps {
   imageAlt: string;
   imageWidth: number;
   imageHeight: number;
-  layout: 'centered' | 'side-by-side';
+  layout: "centered" | "side-by-side";
 }
 
 /**
  * 🎯 COMPONENTE: OfferGuaranteeSection
- * 
+ *
  * Seção de garantia com imagem e texto
  * Layout centralizado ou side-by-side
  */
@@ -24,11 +24,11 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
   imageAlt,
   imageWidth,
   imageHeight,
-  layout = 'centered'
+  layout = "centered",
 }) => {
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split('**').map((part, index) => {
+    return text.split("**").map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -36,7 +36,7 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
     });
   };
 
-  if (layout === 'centered') {
+  if (layout === "centered") {
     return (
       <section className="section-gap">
         <div className="container-main">
@@ -84,9 +84,7 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
               >
                 {title}
               </h2>
-              <p className="text-body text-[var(--text-medium)]">
-                {renderText(description)}
-              </p>
+              <p className="text-body text-[var(--text-medium)]">{renderText(description)}</p>
             </div>
           </div>
         </div>

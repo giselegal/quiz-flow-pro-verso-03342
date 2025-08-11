@@ -3,29 +3,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
-    Activity,
-    ArrowUpRight,
-    BarChart3,
-    Bell,
-    ChevronRight,
-    Clock,
-    Crown,
-    DollarSign,
-    Download,
-    Eye,
-    Filter,
-    Globe,
-    Heart,
-    Lightbulb,
-    PlayCircle,
-    Plus,
-    Settings,
-    Sparkles,
-    Star,
-    Target,
-    TrendingUp,
-    Users,
-    Zap
+  Activity,
+  ArrowUpRight,
+  BarChart3,
+  Bell,
+  ChevronRight,
+  Clock,
+  Crown,
+  DollarSign,
+  Download,
+  Eye,
+  Filter,
+  Globe,
+  Heart,
+  Lightbulb,
+  PlayCircle,
+  Plus,
+  Settings,
+  Sparkles,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
 import React from "react";
 
@@ -96,9 +96,9 @@ const OverviewPage: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card 
+        <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-purple-50/30 cursor-pointer"
-          onClick={() => window.open('/step/21', '_blank')}
+          onClick={() => window.open("/step/21", "_blank")}
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -287,18 +287,17 @@ const OverviewPage: React.FC = () => {
                         Sistema JSON Completo
                       </span>
                       <span className="flex items-center">
-                        <Star className="h-4 w-4 mr-1" />
-                        7 Componentes Modulares
+                        <Star className="h-4 w-4 mr-1" />7 Componentes Modulares
                       </span>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Badge className="bg-blue-100 text-blue-700 border-0">Demo</Badge>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     variant="outline"
-                    onClick={() => window.open('/step/21', '_blank')}
+                    onClick={() => window.open("/step/21", "_blank")}
                   >
                     <PlayCircle className="h-4 w-4 mr-1" />
                     Testar
@@ -499,7 +498,7 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white/10"
-                onClick={() => window.open('/step/21', '_blank')}
+                onClick={() => window.open("/step/21", "_blank")}
               >
                 <PlayCircle className="h-5 w-5 mr-2" />
                 Testar Etapa 21

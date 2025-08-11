@@ -5,6 +5,7 @@
 **Status Geral**: ✅ **CONFIGURAÇÃO COMPLETA**
 
 ### 🎯 Templates JSON Criados
+
 ```
 /templates/
 ├── step-01-template.json ✅ Introdução
@@ -33,21 +34,25 @@
 ### 🔧 Arquivos de Sistema Configurados
 
 **1. EditorContext** (`src/context/EditorContext.tsx`)
+
 - ✅ Inicialização das 21 etapas no estado
 - ✅ Mapeamento com templates específicos
 - ✅ Sistema de stages integrado
 
-**2. Mapeamento de Templates** (`src/config/stepTemplatesMapping.ts`)  
+**2. Mapeamento de Templates** (`src/config/stepTemplatesMapping.ts`)
+
 - ✅ STEP_TEMPLATES com 21 entradas
 - ✅ Função getTemplateByStep implementada
 - ✅ Nomes e descrições de todas as etapas
 
 **3. Painel de Etapas** (`src/components/editor/funnel/FunnelStagesPanel.tsx`)
+
 - ✅ Renderização das stages via stages.map()
 - ✅ Integração com EditorContext
 - ✅ Exibição visual de "Etapa X" para cada stage
 
 **4. Editor Principal** (`src/pages/editor-fixed-dragdrop.tsx`)
+
 - ✅ FunnelStagesPanel integrado na coluna da esquerda
 - ✅ Layout de 4 colunas com stagesPanel definido
 - ✅ Sistema de seleção de etapas funcionando
@@ -55,18 +60,21 @@
 ### 🎨 Funcionalidades das Etapas na Coluna
 
 **Visualização:**
+
 - ✅ **21 etapas numeradas** (Etapa 1, Etapa 2, ..., Etapa 21)
 - ✅ **Nomes descritivos** de cada etapa
 - ✅ **Indicador visual** da etapa ativa
 - ✅ **Scroll vertical** para navegação
 
 **Interatividade:**
+
 - ✅ **Click para selecionar** etapa
-- ✅ **Highlight da etapa ativa** 
+- ✅ **Highlight da etapa ativa**
 - ✅ **Sincronização com canvas** de blocos
 - ✅ **Botões de ação** (visualizar, configurar, etc.)
 
 **Estados Visuais:**
+
 - 🔹 **Etapa Normal**: Borda cinza, fundo branco
 - 🔹 **Etapa Ativa**: Borda azul, fundo destacado, indicador animado
 - 🔹 **Hover**: Sombra e transições suaves
@@ -96,8 +104,9 @@ Cada uma das 21 etapas possui:
 **URL de Teste**: `http://localhost:8080/editor-fixed`
 
 **Comportamento Visual:**
+
 1. **Scroll Vertical**: Lista rolável das 21 etapas
-2. **Cards Individuais**: Cada etapa em um card separado  
+2. **Cards Individuais**: Cada etapa em um card separado
 3. **Numeração**: "Etapa 1", "Etapa 2", etc.
 4. **Nomes**: Títulos descritivos de cada etapa
 5. **Indicador Ativo**: Ponto animado na etapa selecionada
@@ -105,21 +114,24 @@ Cada uma das 21 etapas possui:
 ### 🎯 Sistema de Navegação
 
 **Seleção de Etapa:**
+
 ```typescript
 const handleStageClick = (stageId: string) => {
-  setActiveStage(stageId);      // Atualiza etapa ativa
-  onStageSelect(stageId);       // Callback externo
+  setActiveStage(stageId); // Atualiza etapa ativa
+  onStageSelect(stageId); // Callback externo
 };
 ```
 
 **Integração com Canvas:**
+
 - ✅ Ao clicar na etapa → Canvas mostra blocos da etapa
-- ✅ Ao adicionar blocos → Contador da etapa atualiza  
+- ✅ Ao adicionar blocos → Contador da etapa atualiza
 - ✅ Propriedades → Painéis específicos por tipo de etapa
 
-### 🔍 Debug e Monitoramento  
+### 🔍 Debug e Monitoramento
 
 **Painel de Debug Ativo:**
+
 - 🔍 Monitoramento das 21 etapas em tempo real
 - 📊 Progresso visual das etapas ativadas
 - 🧪 Controles de teste para simular ativações
@@ -128,8 +140,9 @@ const handleStageClick = (stageId: string) => {
 ### ✅ Validação Final
 
 **Checklist Completo:**
+
 - [x] 21 templates JSON existem
-- [x] STEP_TEMPLATES configurado  
+- [x] STEP_TEMPLATES configurado
 - [x] EditorContext inicializa 21 stages
 - [x] FunnelStagesPanel renderiza todas as etapas
 - [x] Editor principal integra o painel de etapas
@@ -141,9 +154,10 @@ const handleStageClick = (stageId: string) => {
 
 ## 🎉 Resultado
 
-As **21 etapas do funil estão completamente configuradas e visíveis na coluna** do editor principal. 
+As **21 etapas do funil estão completamente configuradas e visíveis na coluna** do editor principal.
 
 **Para visualizar:**
+
 1. Acesse: `http://localhost:8080/editor-fixed`
 2. Observe a coluna da esquerda com as 21 etapas
 3. Clique em qualquer etapa para ativá-la

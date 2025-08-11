@@ -1,4 +1,4 @@
 // Temporary bypass for TypeScript configuration issues
-export default function() {
+export default function () {
   return null;
 }

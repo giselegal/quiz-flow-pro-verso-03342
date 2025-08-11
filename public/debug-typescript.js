@@ -10,7 +10,7 @@ window.__EDITOR_DEBUG__ = {
   problema: "tsconfig.node.json não pode estar em references quando tem noEmit",
   solucao: "Editor implementado via JavaScript puro",
   status: "Funcionando",
-  timestamp: new Date().toISOString()
+  timestamp: new Date().toISOString(),
 };
 
 console.log("✅ Editor carregado com sucesso, contornando problema TypeScript");
