@@ -1,4 +1,3 @@
-// EditorDatabaseAdapter removed - using direct context state management
 import React, {
   createContext,
   ReactNode,
@@ -10,6 +9,7 @@ import React, {
 import { CLEAN_21_STEPS } from "../config/clean21Steps";
 import { EditorBlock, FunnelStage } from "../types/editor";
 import { TemplateManager } from "../utils/TemplateManager";
+import { performanceAnalyzer } from "../utils/performanceAnalyzer";
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -83,6 +83,14 @@ export const useEditor = () => {
 
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
+
+  // 📊 PERFORMANCE MONITORING
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log("🚀 EditorProvider: Iniciando análise de performance...");
+      performanceAnalyzer.startMonitoring();
+    }
+  }, []);
 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
