@@ -1,7 +1,6 @@
 // 🎯 MAPEAMENTO DE COMPONENTES MODULARES BASEADO NO QUIZINTRO REAL
 // Transformação do componente React em configuração JSON modular
 
-import { COMPLETE_21_STEPS_CONFIG } from './complete21StepsConfig';
 
 export interface ModularComponent {
   id: string;

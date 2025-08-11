@@ -1,11 +1,11 @@
 // EditorDatabaseAdapter removed - using direct context state management
 import React, {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
+    createContext,
+    ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
 } from "react";
 import { CLEAN_21_STEPS } from "../config/clean21Steps";
 import { EditorBlock, FunnelStage } from "../types/editor";

@@ -4,27 +4,27 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { blockDefinitions } from "@/config/blockDefinitionsOptimized";
 import {
-    MODULAR_COMPONENTS,
-    type ModularComponent
+  MODULAR_COMPONENTS,
+  type ModularComponent
 } from "@/config/modularComponents";
 import { useEditor } from "@/contexts/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { type BlockDefinition } from "@/types/blocks";
 import {
-    ChevronDown,
-    ChevronRight,
-    GripVertical,
-    HelpCircle,
-    Layers,
-    Search,
-    Settings,
-    Trophy,
+  ChevronDown,
+  ChevronRight,
+  GripVertical,
+  HelpCircle,
+  Layers,
+  Search,
+  Settings,
+  Trophy,
 } from "lucide-react";
 import React, { useState } from "react";
 
-interface EnhancedComponentsSidebarProps {}
+interface ComponentsSidebarSimpleProps {}
 
-const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
+const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
@@ -184,4 +184,4 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   );
 };
 
-export default EnhancedComponentsSidebar;
+export default ComponentsSidebarSimple;

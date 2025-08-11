@@ -8,8 +8,8 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "../compone
 import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
 import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
-import { getBlockComponent } from "../config/enhancedBlockRegistry";
 import { CLEAN_21_STEPS } from "../config/clean21Steps"; // 🎯 IMPORTAÇÃO DO SISTEMA DE TEMPLATES
+import { getBlockComponent } from "../config/enhancedBlockRegistry";
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useContainerProperties } from "../hooks/useContainerProperties";
@@ -21,15 +21,15 @@ import { normalizeBlock } from "../utils/blockTypeMapping";
 
 // Ícones Lucide
 import {
-  Download,
-  Eye,
-  EyeOff,
-  Monitor,
-  Plus,
-  Save,
-  Search,
-  Smartphone,
-  Tablet,
+    Download,
+    Eye,
+    EyeOff,
+    Monitor,
+    Plus,
+    Save,
+    Search,
+    Smartphone,
+    Tablet,
 } from "lucide-react";
 
 // ===== INTERFACES E TIPOS =====
