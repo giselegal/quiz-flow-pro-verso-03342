@@ -1,13 +1,13 @@
+import { lazy, Suspense } from "react";
+import { Route, Router, Switch } from "wouter";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import PixelInitializer from "./components/PixelInitializer";
 import { Toaster } from "./components/ui/toaster";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { AuthProvider } from "./context/AuthContext";
 import { EditorProvider } from "./context/EditorContext";
 import { ScrollSyncProvider } from "./context/ScrollSyncContext";
-import { lazy, Suspense } from "react";
-import { Route, Router, Switch } from "wouter";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import PixelInitializer from "./components/PixelInitializer";
 
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import("./pages/Home"));
@@ -33,6 +33,7 @@ const DebugStep02 = lazy(() => import("./components/debug/DebugStep02"));
 const TestAllTemplates = lazy(() => import("./components/debug/TestAllTemplates"));
 const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRendering"));
 const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
+const TestStep21 = lazy(() => import("./components/editor-fixed/OfferPageJson"));
 
 // Loading component
 const PageLoading = () => (
@@ -160,6 +161,15 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <TestAllTemplates />
+                    </Suspense>
+                  )}
+                </Route>
+
+                {/* Test Step 21 Route */}
+                <Route path="/step/21">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestStep21 />
                     </Suspense>
                   )}
                 </Route>
