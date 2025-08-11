@@ -5,7 +5,7 @@
  * SEM quebrar compatibilidade
  */
 
-import { JsonTemplate, JsonBlock } from './JsonTemplateEngine';
+import { JsonBlock, JsonTemplate } from './JsonTemplateEngine';
 
 // =============================================
 // TIPOS DOS TEMPLATES EXISTENTES

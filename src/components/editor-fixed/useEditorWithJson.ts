@@ -5,9 +5,9 @@
  * Funciona como um "addon" ao editor existente.
  */
 
-import { useState, useCallback, useEffect } from 'react';
 import { Block } from '@/types/editor';
-import { useJsonTemplate, JsonTemplate } from './JsonTemplateEngine';
+import { useCallback, useEffect, useState } from 'react';
+import { JsonTemplate, useJsonTemplate } from './JsonTemplateEngine';
 import { TemplateAdapter } from './TemplateAdapter';
 
 // =============================================

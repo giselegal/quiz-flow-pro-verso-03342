@@ -5,10 +5,10 @@
  * SEM QUEBRAR NADA que já existe.
  */
 
-import React, { useState } from 'react';
 import { Block } from '@/types/editor';
-import { useEditorWithJson } from './useEditorWithJson';
+import React, { useState } from 'react';
 import { JsonTemplate } from './JsonTemplateEngine';
+import { useEditorWithJson } from './useEditorWithJson';
 
 // =============================================
 // 1️⃣ EXEMPLO: Hook no Editor Existente
@@ -320,8 +320,6 @@ export const useStepByStepBuilder = () => {
 // =============================================
 
 export {
-  EditorWithJsonIntegration,
-  SimpleJsonIntegration,
-  JsonTemplatePreview,
-  JsonDebugPanel,
+    EditorWithJsonIntegration, JsonDebugPanel, JsonTemplatePreview, SimpleJsonIntegration
 };
+

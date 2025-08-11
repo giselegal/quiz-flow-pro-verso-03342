@@ -5,11 +5,11 @@
  * 100% compatível com infraestrutura existente
  */
 
-import React, { useState } from 'react';
 import { Block } from '@/types/editor';
-import { useEditorWithJson } from './useEditorWithJson';
-import { TemplateAdapter } from './TemplateAdapter';
+import React, { useState } from 'react';
 import JsonIntegrationTest from './JsonIntegrationTest';
+import { TemplateAdapter } from './TemplateAdapter';
+import { useEditorWithJson } from './useEditorWithJson';
 
 // =============================================
 // 🚀 DEMO PRINCIPAL - QUICK START

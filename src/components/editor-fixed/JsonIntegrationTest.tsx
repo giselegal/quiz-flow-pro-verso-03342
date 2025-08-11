@@ -4,8 +4,8 @@
  * Demonstração real de como o sistema funciona com templates existentes
  */
 
-import React, { useState } from 'react';
 import { Block } from '@/types/editor';
+import React, { useState } from 'react';
 import { useEditorWithJson } from './useEditorWithJson';
 
 // =============================================

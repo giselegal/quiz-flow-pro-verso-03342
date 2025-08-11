@@ -1,7 +1,7 @@
-import React from 'react';
 import { EditorProvider } from '@/context/EditorContext';
-import { EditorFixed, DefaultEditorFixed, useEditorFixed } from './EditorFixed';
-import type { FunnelStage, Block } from '@/types/editor';
+import type { Block, FunnelStage } from '@/types/editor';
+import React from 'react';
+import { DefaultEditorFixed, EditorFixed, useEditorFixed } from './EditorFixed';
 
 /**
  * 🎯 EXEMPLOS DE USO: EditorFixed com Compound Components
@@ -303,7 +303,6 @@ const AdvancedEditorExample: React.FC = () => {
 // =============================================
 
 export {
-  SimpleEditorExample,
-  CustomEditorExample,
-  AdvancedEditorExample,
+    AdvancedEditorExample, CustomEditorExample, SimpleEditorExample
 };
+

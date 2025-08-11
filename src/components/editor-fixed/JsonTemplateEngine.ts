@@ -5,8 +5,8 @@
  * SEM quebrar nada do que já está funcionando.
  */
 
-import { Block } from '@/types/editor';
 import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import { Block } from '@/types/editor';
 
 // =============================================
 // TYPES PARA JSON TEMPLATES

@@ -1,6 +1,6 @@
-import React, { createContext, useContext, ReactNode } from 'react';
 import { useEditor as useEditorContext } from '@/context/EditorContext';
 import type { Block, FunnelStage } from '@/types/editor';
+import React, { createContext, ReactNode, useContext } from 'react';
 
 /**
  * 🏗️ COMPOUND COMPONENTS PATTERN - EditorFixed
