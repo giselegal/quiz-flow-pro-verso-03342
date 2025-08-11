@@ -9,12 +9,15 @@ import { type BlockDefinition } from "@/types/blocks";
 import {
   ChevronDown,
   ChevronRight,
+  Edit3,
+  FileCode,
   GripVertical,
   HelpCircle,
   Layers,
   Search,
   Settings,
   Trophy,
+  Zap,
 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -24,6 +27,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    "Edição JSON": true,
     "Componentes Modulares": true,
     Quiz: true,
     Interativo: true,
@@ -32,6 +36,46 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     Legal: false,
     Estrutura: false,
   });
+
+  // 🎯 COMPONENTES DE EDIÇÃO JSON ATIVA
+  const jsonEditingBlocks: BlockDefinition[] = [
+    {
+      type: "json-template-loader",
+      name: "🔧 Carregar Template JSON",
+      description: "Carrega templates JSON das etapas",
+      category: "Edição JSON",
+      icon: FileCode,
+      properties: {
+        stepNumber: { type: "number", default: 1, label: "Número da Etapa" },
+        templatePath: { type: "text", default: "", label: "Caminho do Template" },
+      },
+      defaultProps: { stepNumber: 1, templatePath: "" }
+    },
+    {
+      type: "json-integration-test", 
+      name: "🧪 Teste Integração JSON",
+      description: "Teste prático da integração JSON",
+      category: "Edição JSON",
+      icon: Edit3,
+      properties: {
+        testMode: { type: "boolean", default: true, label: "Modo Teste" },
+        logResults: { type: "boolean", default: true, label: "Log Resultados" },
+      },
+      defaultProps: { testMode: true, logResults: true }
+    },
+    {
+      type: "json-system-demo",
+      name: "⚡ Demo Sistema JSON",
+      description: "Demonstração completa do sistema JSON",
+      category: "Edição JSON",
+      icon: Zap,
+      properties: {
+        demoStep: { type: "number", default: 1, label: "Etapa Demo" },
+        autoLoad: { type: "boolean", default: false, label: "Carregamento Automático" },
+      },
+      defaultProps: { demoStep: 1, autoLoad: false }
+    }
+  ];
 
   // 🎯 COMPONENTES MODULARES INTEGRADOS
   const modularBlocks: BlockDefinition[] = MODULAR_COMPONENTS.map(
@@ -61,7 +105,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     })
   );
 
-  const allBlocks = [...modularBlocks, ...blockDefinitions];
+  const allBlocks = [...jsonEditingBlocks, ...modularBlocks, ...blockDefinitions];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
