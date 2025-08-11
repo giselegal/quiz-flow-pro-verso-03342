@@ -49,10 +49,10 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         stepNumber: { type: "number", default: 1, label: "Número da Etapa" },
         templatePath: { type: "text", default: "", label: "Caminho do Template" },
       },
-      defaultProps: { stepNumber: 1, templatePath: "" }
+      defaultProps: { stepNumber: 1, templatePath: "" },
     },
     {
-      type: "json-integration-test", 
+      type: "json-integration-test",
       name: "🧪 Teste Integração JSON",
       description: "Teste prático da integração JSON",
       category: "Edição JSON",
@@ -61,7 +61,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         testMode: { type: "boolean", default: true, label: "Modo Teste" },
         logResults: { type: "boolean", default: true, label: "Log Resultados" },
       },
-      defaultProps: { testMode: true, logResults: true }
+      defaultProps: { testMode: true, logResults: true },
     },
     {
       type: "json-system-demo",
@@ -73,8 +73,8 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         demoStep: { type: "number", default: 1, label: "Etapa Demo" },
         autoLoad: { type: "boolean", default: false, label: "Carregamento Automático" },
       },
-      defaultProps: { demoStep: 1, autoLoad: false }
-    }
+      defaultProps: { demoStep: 1, autoLoad: false },
+    },
   ];
 
   // 🎯 COMPONENTES MODULARES INTEGRADOS

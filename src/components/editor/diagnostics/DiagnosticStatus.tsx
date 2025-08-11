@@ -3,20 +3,20 @@
  * Mostra status em tempo real do editor
  */
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { useEditorDiagnostics } from "@/hooks/useEditorDiagnostics";
 import {
-    AlertTriangle,
-    CheckCircle,
-    ChevronDown,
-    ChevronRight,
-    RefreshCw,
-    Wrench,
-    XCircle
-} from 'lucide-react';
-import React, { useState } from 'react';
+  AlertTriangle,
+  CheckCircle,
+  ChevronDown,
+  ChevronRight,
+  RefreshCw,
+  Wrench,
+  XCircle,
+} from "lucide-react";
+import React, { useState } from "react";
 
 interface DiagnosticStatusProps {
   autoRun?: boolean;
@@ -27,32 +27,32 @@ interface DiagnosticStatusProps {
 export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
   autoRun = true,
   compact = false,
-  showDetails = false
+  showDetails = false,
 }) => {
   const [expanded, setExpanded] = useState(showDetails);
-  const diagnostic = useEditorDiagnostics({ 
-    autoRun, 
+  const diagnostic = useEditorDiagnostics({
+    autoRun,
     interval: 30000, // 30 segundos
-    autoFix: true 
+    autoFix: true,
   });
-  
+
   const stats = diagnostic.getStats();
 
   // 🎨 Obter cor do status baseado na saúde
   const getHealthColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    return "text-red-600";
   };
 
   // 🎨 Obter ícone do status
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success':
+      case "success":
         return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case 'warning':
+      case "warning":
         return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
-      case 'error':
+      case "error":
         return <XCircle className="w-4 h-4 text-red-600" />;
       default:
         return null;
@@ -82,24 +82,15 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-gray-800">Status do Editor</h3>
-          {diagnostic.isRunning && (
-            <RefreshCw className="w-4 h-4 animate-spin text-blue-500" />
-          )}
+          {diagnostic.isRunning && <RefreshCw className="w-4 h-4 animate-spin text-blue-500" />}
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <Badge 
-            variant="outline" 
-            className={getHealthColor(stats.healthScore)}
-          >
+          <Badge variant="outline" className={getHealthColor(stats.healthScore)}>
             {Math.round(stats.healthScore)}% Saudável
           </Badge>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setExpanded(!expanded)}
-          >
+
+          <Button variant="ghost" size="sm" onClick={() => setExpanded(!expanded)}>
             {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </Button>
         </div>
@@ -111,12 +102,12 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
           <CheckCircle className="w-4 h-4 text-green-600" />
           <span className="text-sm text-gray-600">{stats.success}</span>
         </div>
-        
+
         <div className="flex items-center gap-1">
           <AlertTriangle className="w-4 h-4 text-yellow-600" />
           <span className="text-sm text-gray-600">{stats.warning}</span>
         </div>
-        
+
         <div className="flex items-center gap-1">
           <XCircle className="w-4 h-4 text-red-600" />
           <span className="text-sm text-gray-600">{stats.error}</span>
@@ -138,7 +129,7 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
           disabled={diagnostic.isRunning}
           className="flex items-center gap-1"
         >
-          <RefreshCw className={`w-3 h-3 ${diagnostic.isRunning ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3 h-3 ${diagnostic.isRunning ? "animate-spin" : ""}`} />
           Verificar
         </Button>
 
@@ -159,25 +150,16 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
       {expanded && diagnostic.results.length > 0 && (
         <div className="space-y-2 pt-3 border-t border-gray-100">
           <h4 className="font-medium text-sm text-gray-700 mb-2">Detalhes do Diagnóstico</h4>
-          
+
           {diagnostic.results.map((result, index) => (
-            <div 
-              key={index}
-              className="flex items-start gap-2 p-2 bg-gray-50 rounded-md text-sm"
-            >
+            <div key={index} className="flex items-start gap-2 p-2 bg-gray-50 rounded-md text-sm">
               {getStatusIcon(result.status)}
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-gray-800 mb-1">
-                  {result.category}
-                </div>
-                <div className="text-gray-600 text-xs">
-                  {result.message}
-                </div>
+                <div className="font-medium text-gray-800 mb-1">{result.category}</div>
+                <div className="text-gray-600 text-xs">{result.message}</div>
                 {result.details && (
                   <details className="mt-1">
-                    <summary className="text-xs text-blue-600 cursor-pointer">
-                      Ver detalhes
-                    </summary>
+                    <summary className="text-xs text-blue-600 cursor-pointer">Ver detalhes</summary>
                     <pre className="text-xs text-gray-500 mt-1 p-2 bg-gray-100 rounded overflow-auto">
                       {JSON.stringify(result.details, null, 2)}
                     </pre>
@@ -194,11 +176,11 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
             onClick={() => {
               const report = diagnostic.generateReport();
               console.log(report);
-              
+
               // Criar modal ou download do relatório
-              const blob = new Blob([report], { type: 'text/plain' });
+              const blob = new Blob([report], { type: "text/plain" });
               const url = URL.createObjectURL(blob);
-              const a = document.createElement('a');
+              const a = document.createElement("a");
               a.href = url;
               a.download = `diagnostic-report-${new Date().toISOString().slice(0, 10)}.txt`;
               a.click();

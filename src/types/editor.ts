@@ -78,12 +78,16 @@ export interface BlockDefinition {
 }
 
 export type BlockType =
+  // Tipos gerais de blocos
   | "headline"
   | "text"
   | "image"
   | "button"
   | "spacer"
+  
+  // Blocos inline
   | "text-inline"
+  | "image-inline"
   | "image-display-inline"
   | "badge-inline"
   | "progress-inline"
@@ -92,47 +96,59 @@ export type BlockType =
   | "spacer-inline"
   | "heading-inline"
   | "button-inline"
-  | "benefits"
-  | "testimonials"
-  | "pricing"
-  | "guarantee"
-  | "cta"
-  | "header"
-  | "hero"
-  | "benefitsList"
-  | "testimonial"
-  | "styleResult"
-  | "secondaryStylesTitle"
-  | "offerHero"
-  | "carousel"
-  | "testimonialsSection"
-  | "style-result"
-  | "secondary-styles"
-  | "hero-section"
-  | "products"
-  | "video"
-  | "two-column"
-  | "icon"
-  | "faq"
-  | "quiz-start-page-inline"
-  | "pricing-card-inline"
-  | "testimonial-card-inline"
-  | "result-header-inline"
-  | "step-header-inline"
-  | "loading-animation"
-  | "quiz-offer-cta-inline"
-  | "style-card-inline"
-  | "result-card-inline"
-  | "quiz-question-inline"
-  | "quiz-result-inline"
-  | "custom-code"
-  | "decorative-bar-inline"
+  | "input-field"
   | "form-input"
   | "legal-notice-inline"
-  | "animation-block"
-  | "options-grid"
+  
+  // Blocos de quiz
   | "quiz-intro-header"
-  | "step01-intro";
+  | "quiz-start-page-inline"
+  | "quiz-question-inline"
+  | "quiz-result-inline"
+  | "quiz-offer-cta-inline"
+  | "step-header-inline"
+  | "step01-intro"
+  
+  // Blocos de resultado e estilo
+  | "style-result"
+  | "style-card-inline"
+  | "result-card-inline"
+  | "result-header-inline"
+  | "secondary-styles"
+  | "secondaryStylesTitle"
+  
+  // Blocos de layout
+  | "two-column"
+  | "form-container"
+  | "options-grid"
+  | "hero-section"
+  | "hero"
+  | "header"
+  | "carousel"
+  | "decorative-bar-inline"
+  
+  // Blocos de acessibilidade
+  | "accessibility-skip-link"
+  | "animation-block"
+  | "loading-animation"
+  
+  // Blocos de conteúdo
+  | "benefits"
+  | "benefitsList"
+  | "testimonials"
+  | "testimonial"
+  | "testimonial-card-inline"
+  | "testimonialsSection"
+  | "pricing"
+  | "pricing-card-inline"
+  | "guarantee"
+  | "cta"
+  | "offerHero"
+  | "products"
+  | "video"
+  | "icon"
+  | "faq"
+  | "custom-code";
 
 export interface FAQItem {
   id: string;

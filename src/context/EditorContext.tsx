@@ -4,12 +4,38 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useReducer,
   useState,
 } from "react";
 import { CLEAN_21_STEPS } from "../config/clean21Steps";
+import { useTemplateManager } from "../hooks/useTemplateManager";
+import type { Block } from "../types/editor";
 import { EditorBlock, FunnelStage } from "../types/editor";
 import { TemplateManager } from "../utils/TemplateManager";
 import { performanceAnalyzer } from "../utils/performanceAnalyzer";
+
+interface EditorState {
+  state: "ready" | "loading" | "error";
+}
+
+const initialState: EditorState = {
+  state: "ready",
+};
+
+type EditorAction =
+  | { type: "SET_STATE"; payload: "ready" | "loading" | "error" }
+  | { type: "RESET" };
+
+const reducer = (state: EditorState, action: EditorAction): EditorState => {
+  switch (action.type) {
+    case "SET_STATE":
+      return { ...state, state: action.payload };
+    case "RESET":
+      return { ...initialState };
+    default:
+      return state;
+  }
+};
 
 // ✅ INTERFACE UNIFICADA DO CONTEXTO
 interface EditorContextType {
@@ -19,6 +45,7 @@ interface EditorContextType {
   stages: FunnelStage[]; // ✅ ETAPAS INTEGRADAS NO EDITOR
   activeStageId: string; // ✅ ETAPA ATIVA ATUAL
   selectedBlockId: string | null; // ✅ BLOCO SELECIONADO
+  editorState: EditorState; // ✅ ESTADO DO EDITOR
 
   // ═══════════════════════════════════════════════
   // 🔧 ACTIONS ORGANIZADAS POR CATEGORIA
@@ -39,6 +66,13 @@ interface EditorContextType {
     reorderBlocks: (blockIds: string[], stageId?: string) => void;
     setSelectedBlockId: (blockId: string | null) => void;
     getBlocksForStage: (stageId: string) => EditorBlock[];
+  };
+
+  templateActions: {
+    loadTemplate: (templateId: string) => Promise<void>;
+    loadTemplateByStep: (step: number) => Promise<void>;
+    applyCurrentTemplate: () => Promise<void>;
+    isLoadingTemplate: boolean;
   };
 
   uiState: {
@@ -84,13 +118,33 @@ export const useEditor = () => {
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
 
+  // Estado principal do editor
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   // 📊 PERFORMANCE MONITORING
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       console.log("🚀 EditorProvider: Iniciando análise de performance...");
       performanceAnalyzer.startMonitoring();
     }
   }, []);
+
+  // ✅ INTEGRAÇÃO COM TEMPLATE MANAGER
+  const templateManager = useTemplateManager({
+    onAddBlock: (blockData: Block) => {
+      const stageId = activeStageId;
+      const blockId = addBlock(blockData.type, stageId);
+      if (blockId) {
+        updateBlock(blockId, {
+          content: blockData.content,
+          order: blockData.order,
+        });
+      }
+    },
+    onUpdateBlock: (blockId: string, updates: Partial<Block>) => {
+      updateBlock(blockId, updates);
+    },
+  });
 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
@@ -251,91 +305,22 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       const stepNumber = parseInt(stageId.replace("step-", ""));
 
-      console.log(`🎨 EditorContext: Carregando template JSON para etapa ${stepNumber}`);
+      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
+      dispatch({ type: "SET_STATE", payload: "loading" });
 
       try {
-        // 🚀 PRIORIZAR SISTEMA JSON
-        let templateBlocks: any[] = [];
-
-        try {
-          console.log(`📄 Tentando carregar template JSON para step-${stepNumber}`);
-          templateBlocks = await TemplateManager.loadStepBlocks(stageId);
-          console.log(`✅ Template JSON carregado:`, templateBlocks?.length || 0, "blocos");
-        } catch (jsonError) {
-          console.warn(`⚠️ JSON template falhou, usando CLEAN config fallback:`, jsonError);
-          // FALLBACK: usar CLEAN_21_STEPS system
-          templateBlocks = CLEAN_21_STEPS.find(s => s.stepNumber === stepNumber)
-            ? [
-                {
-                  id: `step-${stepNumber.toString().padStart(2, "0")}-title`,
-                  type: "text-inline",
-                  properties: {
-                    content: CLEAN_21_STEPS[stepNumber - 1]?.name || `Etapa ${stepNumber}`,
-                    fontSize: "text-2xl",
-                    fontWeight: "font-bold",
-                    textAlign: "text-center",
-                    color: "#432818",
-                    containerWidth: "full",
-                    spacing: "medium",
-                  },
-                },
-              ]
-            : [];
-          console.log(`📦 Template CLEAN fallback:`, templateBlocks?.length || 0, "blocos");
-        }
-
-        if (templateBlocks && templateBlocks.length > 0) {
-          const editorBlocks: EditorBlock[] = templateBlocks.map(
-            (block: { id: any; type: any; properties: any; content: any }, index: number) => {
-              console.log(`🔧 Processando bloco ${index}:`, {
-                id: block.id,
-                type: block.type,
-                hasProperties: !!block.properties,
-                hasContent: !!block.content,
-              });
-              return {
-                id: block.id || `${stageId}-block-${index + 1}`,
-                type: block.type as any,
-                content: block.properties || block.content || {},
-                order: index + 1,
-                properties: block.properties || {},
-              };
-            }
-          );
-
-          console.log(`💾 Salvando ${editorBlocks.length} blocos para etapa ${stepNumber}`);
-          setStageBlocks(prev => ({
-            ...prev,
-            [stageId]: editorBlocks,
-          }));
-
-          // Chamar updateStage diretamente
-          setStages(prev =>
-            prev.map(stage =>
-              stage.id === stageId
-                ? {
-                    ...stage,
-                    metadata: {
-                      ...stage.metadata,
-                      blocksCount: editorBlocks.length,
-                      lastModified: new Date(),
-                    },
-                  }
-                : stage
-            )
-          );
-
-          console.log(
-            `✅ EditorContext: ${editorBlocks.length} blocos carregados para etapa ${stepNumber} via JSON`
-          );
-        } else {
-          console.warn(`⚠️ EditorContext: Nenhum template encontrado para etapa ${stepNumber}`);
-        }
+        await templateManager.loadTemplateByStep(stepNumber);
+        console.log(`✅ EditorContext: Template carregado para etapa ${stepNumber}`);
+        dispatch({ type: "SET_STATE", payload: "ready" });
       } catch (error) {
-        console.error(`❌ EditorContext: Erro ao carregar template da etapa ${stepNumber}:`, error);
+        console.error(
+          `❌ EditorContext: Erro ao carregar template para etapa ${stepNumber}:`,
+          error
+        );
+        dispatch({ type: "SET_STATE", payload: "error" });
       }
     },
-    [stages]
+    [stages, templateManager, dispatch]
   );
 
   const setActiveStage = useCallback(
@@ -890,6 +875,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     stages,
     activeStageId,
     selectedBlockId,
+    editorState: state,
 
     stageActions: {
       setActiveStage,
@@ -907,6 +893,25 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       reorderBlocks,
       setSelectedBlockId,
       getBlocksForStage,
+    },
+
+    templateActions: {
+      loadTemplate: async templateId => {
+        const template = await templateManager.loadTemplate(templateId);
+        if (template) {
+          await templateManager.applyTemplate(template);
+        }
+      },
+      loadTemplateByStep: async step => {
+        const template = await templateManager.loadTemplateByStep(step);
+        if (template) {
+          await templateManager.applyTemplate(template);
+        }
+      },
+      applyCurrentTemplate: async () => {
+        await templateManager.applyCurrentTemplate();
+      },
+      isLoadingTemplate: templateManager.isLoading,
     },
 
     uiState: {

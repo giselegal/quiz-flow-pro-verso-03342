@@ -1,30 +1,175 @@
-// Simplified Template Service
-// Placeholder service to avoid complex type issues
+import { STEP_TEMPLATES } from "../config/templates/templates";
+import type { Block } from "../types/editor";
 
-export interface TemplateData {
+// Interfaces para corresponder à estrutura real dos templates
+export interface TemplateMetadata {
   id: string;
   name: string;
   description: string;
   category: string;
+  type: string;
   tags: string[];
-  blocks: any[];
+  createdAt: string;
+  updatedAt: string;
+  author: string;
+}
+
+export interface TemplateBlock {
+  id: string;
+  type: string;
+  properties: Record<string, any>;
+  children?: TemplateBlock[];
+}
+
+export interface TemplateDesign {
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  backgroundColor: string;
+  fontFamily: string;
+  button: Record<string, any>;
+  card: Record<string, any>;
+  progressBar: Record<string, any>;
+  animations: Record<string, any>;
+  imageOptionSize: Record<string, any>;
+}
+
+export interface TemplateData {
+  templateVersion: string;
+  metadata: TemplateMetadata;
+  design: TemplateDesign;
+  layout: {
+    containerWidth: string;
+    spacing: string;
+    backgroundColor: string;
+    responsive: boolean;
+    animations: Record<string, any>;
+  };
+  blocks: TemplateBlock[];
+  validation: {
+    nameField?: {
+      required: boolean;
+      minLength: number;
+      maxLength: number;
+      errorMessage: string;
+      realTimeValidation: boolean;
+    };
+    [key: string]: any;
+  };
+  analytics: {
+    trackingId: string;
+    events: string[];
+    utmParams: boolean;
+    customEvents: string[];
+  };
+  logic: {
+    navigation: {
+      nextStep: string | null;
+      prevStep: string | null;
+      allowBack: boolean;
+      autoAdvance: boolean;
+    };
+    formHandling: {
+      onSubmit: string;
+      validation: string;
+      errorHandling: string;
+    };
+    stateManagement: {
+      localState: string[];
+      globalState: string[];
+    };
+    scoring: any;
+    conditions: any;
+  };
+  performance: {
+    webVitals: {
+      markComponentMounted: boolean;
+      markLcpRendered: boolean;
+      markUserInteraction: boolean;
+    };
+    optimizations: {
+      preloadCriticalImages: boolean;
+      inlineStyles: boolean;
+      lazyLoadNonCritical: boolean;
+      useRequestAnimationFrame: boolean;
+    };
+  };
+  accessibility: {
+    skipLinks: boolean;
+    ariaLabels: boolean;
+    focusManagement: boolean;
+    keyboardNavigation: boolean;
+    screenReader: boolean;
+  };
+  step?: number;
+}
+
+type StepNumber = keyof typeof STEP_TEMPLATES;
+type StepTemplate = (typeof STEP_TEMPLATES)[StepNumber];
+
+function isValidStep(step: number): step is StepNumber {
+  return step >= 1 && step <= 21;
 }
 
 export const templateService = {
   async getTemplates(): Promise<TemplateData[]> {
-    console.log("Would get templates");
-    return [];
+    const templates = (Object.entries(STEP_TEMPLATES) as [string, StepTemplate][]).map(
+      ([stepStr, template]) => ({
+        ...template,
+        step: parseInt(stepStr)
+      })
+    );
+
+    return templates;
   },
 
   async getTemplate(id: string): Promise<TemplateData | null> {
-    console.log("Would get template:", id);
-    return null;
+    const step = parseInt(id.replace("step-", ""));
+    
+    if (!isValidStep(step)) {
+      return null;
+    }
+
+    const template = STEP_TEMPLATES[step];
+    return {
+      ...template,
+      step
+    };
   },
 
   async searchTemplates(query: string): Promise<TemplateData[]> {
-    console.log("Would search templates:", query);
-    return [];
+    const templates = await this.getTemplates();
+    const searchQuery = query.toLowerCase();
+    
+    return templates.filter(template => 
+      template.metadata.name.toLowerCase().includes(searchQuery) ||
+      template.metadata.description.toLowerCase().includes(searchQuery) ||
+      template.metadata.tags.some(tag => tag.toLowerCase().includes(searchQuery))
+    );
   },
+
+  // Nova função para obter template por número da etapa
+  async getTemplateByStep(step: number): Promise<TemplateData | null> {
+    if (!isValidStep(step)) {
+      return null;
+    }
+    
+    const template = STEP_TEMPLATES[step];
+    return {
+      ...template,
+      step
+    };
+  },
+
+  // Nova função para converter blocos do template para blocos do editor
+  convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
+    return templateBlocks.map((block, index) => ({
+      id: block.id,
+      type: block.type as any, // Precisamos atualizar o tipo BlockType em editor.ts
+      content: block.properties || {},
+      order: index
+    }));
+  }
 };
 
 export default templateService;

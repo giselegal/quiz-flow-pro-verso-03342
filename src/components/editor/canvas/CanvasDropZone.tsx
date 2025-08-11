@@ -1,7 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { STEP_TEMPLATES } from "@/config/templates/templates";
 import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { Download } from "lucide-react";
 import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
@@ -103,11 +106,24 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
           <p className="text-stone-500 text-lg mb-2">
             {isPreviewing
               ? "Modo Preview - Nenhum componente nesta etapa"
-              : "Arraste componentes da sidebar para começar"}
+              : "Arraste componentes da sidebar ou use um template para começar"}
           </p>
-          <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block">
-            Sistema integrado com {stageCount} etapas • Drag & Drop ativo
-          </p>
+          <div className="space-y-4">
+            <div>
+              <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block mb-4">
+                Sistema integrado com {stageCount} etapas • Drag & Drop ativo
+              </p>
+            </div>
+            {/* Botão de Carregar Template */}
+            {STEP_TEMPLATES[activeStageId as keyof typeof STEP_TEMPLATES] && (
+              <div>
+                <Button variant="outline">
+                  <Download className="w-4 h-4 mr-2" />
+                  Carregar Template da Etapa {activeStageId}
+                </Button>
+              </div>
+            )}
+          </div>
           {isOver && !isPreviewing && (
             <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
               <p className="text-brand font-medium">Solte o componente aqui</p>

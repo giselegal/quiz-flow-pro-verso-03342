@@ -4,11 +4,7 @@
  * Integra React Hook Form com Zod para validação tipada
  */
 
-import {
-  blockSchemas,
-  BlockType,
-  safeValidateBlockData
-} from "@/schemas/blockSchemas";
+import { blockSchemas, BlockType, safeValidateBlockData } from "@/schemas/blockSchemas";
 import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect } from "react";
@@ -79,14 +75,18 @@ export function useBlockForm(
     const subscription = watch(values => {
       // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
       const strategy = PerformanceOptimizer.getSuggestedStrategy(debounceMs, true);
-      
-      PerformanceOptimizer.schedule(() => {
-        if (isDirty) {
-          onUpdate({
-            properties: values as Record<string, any>,
-          });
-        }
-      }, debounceMs, strategy);
+
+      PerformanceOptimizer.schedule(
+        () => {
+          if (isDirty) {
+            onUpdate({
+              properties: values as Record<string, any>,
+            });
+          }
+        },
+        debounceMs,
+        strategy
+      );
     });
 
     return () => subscription.unsubscribe();
@@ -180,12 +180,16 @@ export function useArrayFieldForm<T extends Record<string, any>>(
     const subscription = watch(values => {
       // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
       const strategy = PerformanceOptimizer.getSuggestedStrategy(debounceMs, true);
-      
-      PerformanceOptimizer.schedule(() => {
-        if (values.items) {
-          onUpdate({ items: values.items as T[] });
-        }
-      }, debounceMs, strategy);
+
+      PerformanceOptimizer.schedule(
+        () => {
+          if (values.items) {
+            onUpdate({ items: values.items as T[] });
+          }
+        },
+        debounceMs,
+        strategy
+      );
     });
 
     return () => subscription.unsubscribe();

@@ -11,12 +11,16 @@ export function useDebounce<T>(value: T, delay: number): T {
   useEffect(() => {
     // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
     const strategy = PerformanceOptimizer.getSuggestedStrategy(delay, true);
-    const timerId = PerformanceOptimizer.schedule(() => {
-      setDebouncedValue(value);
-    }, delay, strategy);
+    const timerId = PerformanceOptimizer.schedule(
+      () => {
+        setDebouncedValue(value);
+      },
+      delay,
+      strategy
+    );
 
     return () => {
-      if (strategy === 'timeout') {
+      if (strategy === "timeout") {
         clearTimeout(timerId);
       }
     };
@@ -39,12 +43,16 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
 
     // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
     const strategy = PerformanceOptimizer.getSuggestedStrategy(delay, true);
-    const newTimeoutId = PerformanceOptimizer.schedule(() => {
-      callback(...args);
-      setTimeoutId(null);
-    }, delay, strategy);
+    const newTimeoutId = PerformanceOptimizer.schedule(
+      () => {
+        callback(...args);
+        setTimeoutId(null);
+      },
+      delay,
+      strategy
+    );
 
-    if (strategy === 'timeout') {
+    if (strategy === "timeout") {
       setTimeoutId(newTimeoutId);
     }
   }) as T;

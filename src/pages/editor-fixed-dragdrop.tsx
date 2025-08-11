@@ -3,15 +3,14 @@ import React, { useState } from "react";
 // Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
+import DiagnosticStatus from "@/components/editor/diagnostics/DiagnosticStatus";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-// ✅ NOVO: Importar o painel inteligente de propriedades
 import IntelligentPropertiesPanel from "@/components/editor/properties/IntelligentPropertiesPanel";
-// 🔍 NOVO: Importar componente de diagnóstico
-import DiagnosticStatus from "@/components/editor/diagnostics/DiagnosticStatus";
+import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
+import { STEP_TEMPLATES } from "@/config/templates/templates";
 
 // Context & Hooks
 import { useEditor } from "@/context/EditorContext";
@@ -87,7 +86,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // O EditorContext já gerencia internamente
   };
 
-  // Função para determinar tipo de etapa baseado no ID da etapa ativa
+  // Função para determinar tipo de etapa baseado no ID da etapa ativa e templates
   const getStepTypeFromStageId = (
     stageId: string | null
   ):
@@ -102,7 +101,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     if (!stageId) return "intro";
 
     const stepNumber = getStepNumberFromStageId(stageId);
+    const template = STEP_TEMPLATES[stepNumber as keyof typeof STEP_TEMPLATES];
 
+    if (template?.metadata?.type) {
+      return template.metadata.type as any;
+    }
+
+    // Fallback para lógica anterior se não houver template
     if (stepNumber === 1) return "intro";
     if (stepNumber >= 2 && stepNumber <= 14) return "question";
     if (stepNumber === 15 || stepNumber === 19) return "transition";
