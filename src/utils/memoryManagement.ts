@@ -1,4 +1,4 @@
-// Memory management utilities e cleanup automático
+import { PerformanceOptimizer } from "./performanceOptimizer";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // Gerenciador de memory leaks
@@ -33,14 +33,17 @@ class MemoryManager {
 
   // Registrar interval para cleanup automático
   setInterval(callback: () => void, ms: number) {
-    const id = window.setInterval(callback, ms);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
+    const id = PerformanceOptimizer.scheduleInterval(callback, ms);
     this.intervals.add(id);
     return id;
   }
 
   // Registrar timeout para cleanup automático
   setTimeout(callback: () => void, ms: number) {
-    const id = window.setTimeout(callback, ms);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer
+    const strategy = PerformanceOptimizer.getSuggestedStrategy(ms);
+    const id = PerformanceOptimizer.schedule(callback, ms, strategy);
     this.timeouts.add(id);
     return id;
   }
@@ -144,7 +147,8 @@ export const useMemoryMonitor = (threshold = 50) => {
       }
     };
 
-    const interval = setInterval(checkMemory, 5000);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer interval
+    const interval = PerformanceOptimizer.scheduleInterval(checkMemory, 5000);
     checkMemory();
 
     return () => clearInterval(interval);
