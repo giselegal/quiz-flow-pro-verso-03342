@@ -35,6 +35,7 @@ const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRe
 const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
 const TestStep21 = lazy(() => import("./components/editor-fixed/OfferPageJson"));
 const EditorFixedPageWithDragDrop = lazy(() => import("./pages/editor-fixed-dragdrop"));
+const ComponentTestingPage = lazy(() => import("./pages/component-testing"));
 
 // Loading component
 const PageLoading = () => (
@@ -116,6 +117,17 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <DebugEditorContext />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/components">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <ComponentTestingPage />
+                        </EditorProvider>
+                      </ErrorBoundary>
                     </Suspense>
                   )}
                 </Route>

@@ -36,7 +36,7 @@ export const TextInline: React.FC<TextInlineProps> = ({
 
   // Usar content se disponível, senão text
   const displayText = content || text || "Clique para editar texto";
-  
+
   // Usar textAlign se disponível, senão alignment
   const finalAlignment = textAlign || alignment;
 
@@ -57,10 +57,10 @@ export const TextInline: React.FC<TextInlineProps> = ({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     // Primeiro notifica a seleção do componente
     onClick?.();
-    
+
     // Depois verifica se deve iniciar a edição inline
     if (isEditable && !isEditing) {
       setIsEditing(true);
@@ -94,7 +94,7 @@ export const TextInline: React.FC<TextInlineProps> = ({
       <div style={{ position: "relative" }}>
         <textarea
           value={tempContent}
-          onChange={(e) => setTempContent(e.target.value)}
+          onChange={e => setTempContent(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleSave}
           autoFocus
@@ -108,17 +108,19 @@ export const TextInline: React.FC<TextInlineProps> = ({
           }}
           placeholder="Digite seu texto aqui..."
         />
-        <div style={{
-          position: "absolute",
-          bottom: "-30px",
-          right: "0",
-          fontSize: "12px",
-          color: "#666",
-          background: "white",
-          padding: "2px 6px",
-          borderRadius: "4px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
-        }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "-30px",
+            right: "0",
+            fontSize: "12px",
+            color: "#666",
+            background: "white",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          }}
+        >
           Ctrl+Enter para salvar • Esc para cancelar
         </div>
       </div>
@@ -126,9 +128,9 @@ export const TextInline: React.FC<TextInlineProps> = ({
   }
 
   return (
-    <p 
-      style={styles} 
-      className={className} 
+    <p
+      style={styles}
+      className={className}
       onClick={handleClick}
       dangerouslySetInnerHTML={{ __html: displayText }}
       title={isEditable ? "Clique para editar" : undefined}

@@ -7,7 +7,7 @@ import { EditorNotification } from "@/components/editor/EditorNotification";
 
 /**
  * Página de Teste de Componentes
- * 
+ *
  * Interface dedicada para testar todos os componentes das etapas
  * com o sistema de personalização integrado.
  */
@@ -23,7 +23,7 @@ export default function ComponentTestingPage() {
   const handleSelectComponent = (componentId: string, componentType: string) => {
     // Recuperar propriedades salvas ou usar padrões
     const savedProperties = componentUpdates[componentId] || {};
-    
+
     setSelectedComponent({
       id: componentId,
       type: componentType,
@@ -43,13 +43,17 @@ export default function ComponentTestingPage() {
 
     // Atualizar componente selecionado se for o mesmo
     if (selectedComponent?.id === componentId) {
-      setSelectedComponent(prev => prev ? {
-        ...prev,
-        properties: {
-          ...prev.properties,
-          ...updates,
-        },
-      } : null);
+      setSelectedComponent(prev =>
+        prev
+          ? {
+              ...prev,
+              properties: {
+                ...prev.properties,
+                ...updates,
+              },
+            }
+          : null
+      );
     }
   };
 
@@ -58,9 +62,7 @@ export default function ComponentTestingPage() {
       {/* Header */}
       <div className="border-b border-stone-200 bg-white/80 backdrop-blur-sm">
         <div className="px-6 py-4">
-          <h1 className="text-2xl font-bold text-stone-800">
-            🧪 Teste de Componentes das Etapas
-          </h1>
+          <h1 className="text-2xl font-bold text-stone-800">🧪 Teste de Componentes das Etapas</h1>
           <p className="text-sm text-stone-600 mt-1">
             Interface para testar personalização de todos os componentes
           </p>
@@ -72,9 +74,7 @@ export default function ComponentTestingPage() {
         {/* Painel esquerdo: Lista de componentes */}
         <div className="w-1/2 border-r border-stone-200 bg-white/50">
           <div className="h-full overflow-auto p-6">
-            <ComponentTestingPanel 
-              onSelectComponent={handleSelectComponent}
-            />
+            <ComponentTestingPanel onSelectComponent={handleSelectComponent} />
           </div>
         </div>
 
@@ -91,7 +91,7 @@ export default function ComponentTestingPage() {
                 onUpdate={handleUpdateComponent}
                 onClose={() => setSelectedComponent(null)}
                 onPreview={() => {
-                  console.log('Preview component:', selectedComponent);
+                  console.log("Preview component:", selectedComponent);
                 }}
               />
             ) : (
@@ -102,7 +102,8 @@ export default function ComponentTestingPage() {
                   </div>
                   <h3 className="text-lg font-medium mb-2">Selecione um Componente</h3>
                   <p className="text-sm">
-                    Clique em qualquer componente à esquerda<br />
+                    Clique em qualquer componente à esquerda
+                    <br />
                     para ver suas propriedades de personalização
                   </p>
                   <div className="mt-6 space-y-2 text-xs text-stone-400">
@@ -127,12 +128,13 @@ export default function ComponentTestingPage() {
       </div>
 
       {/* Notificação de sucesso */}
-      <EditorNotification 
-        type="success" 
-        message={selectedComponent ? 
-          `Componente ${selectedComponent.type} selecionado` : 
-          "Ambiente de teste carregado"
-        } 
+      <EditorNotification
+        type="success"
+        message={
+          selectedComponent
+            ? `Componente ${selectedComponent.type} selecionado`
+            : "Ambiente de teste carregado"
+        }
       />
 
       {/* Footer */}

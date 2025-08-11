@@ -36,12 +36,36 @@ interface ButtonInlineProps {
 }
 
 export function ButtonInline({
-  text = "Clique aqui", style = "primary", variant = "primary", size = "medium", backgroundColor = "#B89B7A", textColor = "#ffffff", onClick, className = "", fullWidth = false, borderRadius = "rounded-lg", padding, fontSize, fontWeight = "font-bold", boxShadow, hoverEffect = true, requiresValidInput = false, disabled = false, textAlign = "text-center", justifyContent = "center", alignItems = "center", async function name(params:type) {
-    display
-  } = "flex", margin = "0 auto", marginTop = 0, marginBottom = 0, marginLeft = 0, marginRight = 0,
+  text = "Clique aqui",
+  style = "primary",
+  variant = "primary",
+  size = "medium",
+  backgroundColor = "#B89B7A",
+  textColor = "#ffffff",
+  onClick,
+  className = "",
+  fullWidth = false,
+  borderRadius = "rounded-lg",
+  padding,
+  fontSize,
+  fontWeight = "font-bold",
+  boxShadow,
+  hoverEffect = true,
+  requiresValidInput = false,
+  disabled = false,
+  textAlign = "text-center",
+  justifyContent = "center",
+  alignItems = "center",
+  display = "flex",
+  margin = "0 auto",
+  marginTop = 0,
+  marginBottom = 0,
+  marginLeft = 0,
+  marginRight = 0,
   // Propriedades de edição
   isEditable = true, // ATIVADO POR PADRÃO
-  onPropertyChange, isSelected = false,
+  onPropertyChange,
+  isSelected = false,
 }: ButtonInlineProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState("");
@@ -140,7 +164,7 @@ export function ButtonInline({
         <input
           type="text"
           value={tempText}
-          onChange={(e) => setTempText(e.target.value)}
+          onChange={e => setTempText(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleSave}
           autoFocus
@@ -150,21 +174,24 @@ export function ButtonInline({
             color: textColor,
             minWidth: "120px",
           }}
-          placeholder="Texto do botão..." />
-        <div style={{
-          position: "absolute",
-          top: "100%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          fontSize: "10px",
-          color: "#666",
-          background: "white",
-          padding: "2px 4px",
-          borderRadius: "4px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          whiteSpace: "nowrap",
-          marginTop: "4px"
-        }}>
+          placeholder="Texto do botão..."
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontSize: "10px",
+            color: "#666",
+            background: "white",
+            padding: "2px 4px",
+            borderRadius: "4px",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+            whiteSpace: "nowrap",
+            marginTop: "4px",
+          }}
+        >
           Enter para salvar • Esc para cancelar
         </div>
       </div>
@@ -213,16 +240,18 @@ export function ButtonInline({
         className
       )}
       style={{
-        backgroundColor: actualVariant === "primary"
-          ? backgroundColor
-          : actualVariant === "secondary"
-            ? undefined
-            : "transparent",
-        color: actualVariant === "primary"
-          ? textColor
-          : actualVariant === "outline"
+        backgroundColor:
+          actualVariant === "primary"
             ? backgroundColor
-            : textColor,
+            : actualVariant === "secondary"
+              ? undefined
+              : "transparent",
+        color:
+          actualVariant === "primary"
+            ? textColor
+            : actualVariant === "outline"
+              ? backgroundColor
+              : textColor,
         borderColor: backgroundColor,
         ...(actualVariant === "outline" &&
           ({
@@ -234,19 +263,17 @@ export function ButtonInline({
           e.currentTarget.style.backgroundColor = backgroundColor;
           e.currentTarget.style.color = textColor;
         }
-      } }
+      }}
       onMouseLeave={e => {
         if (actualVariant === "outline") {
           e.currentTarget.style.backgroundColor = "transparent";
           e.currentTarget.style.color = backgroundColor;
         }
-      } }
+      }}
       title={isEditable ? "Clique para editar texto do botão" : undefined}
     >
       {text}
-      {isEditable && isSelected && (
-        <span className="ml-2 text-xs opacity-60">✎</span>
-      )}
+      {isEditable && isSelected && <span className="ml-2 text-xs opacity-60">✎</span>}
     </button>
   );
 }

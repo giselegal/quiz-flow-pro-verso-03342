@@ -108,23 +108,25 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   if (isEditing && isEditable) {
     return (
       <div className={`image-display-inline editing ${className}`} style={containerStyle}>
-        <div style={{
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          background: "white",
-          padding: "20px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-          zIndex: 1000,
-          minWidth: "300px"
-        }}>
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            background: "white",
+            padding: "20px",
+            borderRadius: "8px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+            zIndex: 1000,
+            minWidth: "300px",
+          }}
+        >
           <h3 style={{ marginBottom: "15px", color: "#432818" }}>Editar Imagem</h3>
           <input
             type="text"
             value={tempSrc}
-            onChange={(e) => setTempSrc(e.target.value)}
+            onChange={e => setTempSrc(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="URL da imagem..."
             style={{
@@ -133,7 +135,7 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
               border: "2px solid #B89B7A",
               borderRadius: "4px",
               marginBottom: "15px",
-              fontSize: "14px"
+              fontSize: "14px",
             }}
             autoFocus
           />
@@ -145,7 +147,7 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
                 border: "1px solid #ccc",
                 borderRadius: "4px",
                 background: "white",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Cancelar
@@ -158,22 +160,25 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
                 borderRadius: "4px",
                 background: "#B89B7A",
                 color: "white",
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               Salvar
             </button>
           </div>
         </div>
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0,0,0,0.5)",
-          zIndex: 999
-        }} onClick={handleCancel} />
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0,0,0,0.5)",
+            zIndex: 999,
+          }}
+          onClick={handleCancel}
+        />
       </div>
     );
   }
@@ -210,24 +215,30 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   }
 
   return (
-    <div className={`image-display-inline ${className}`} style={containerStyle} onClick={handleEditClick}>
+    <div
+      className={`image-display-inline ${className}`}
+      style={containerStyle}
+      onClick={handleEditClick}
+    >
       {isEditable && isSelected && (
-        <div style={{
-          position: "absolute",
-          top: "-10px",
-          right: "-10px",
-          background: "#B89B7A",
-          color: "white",
-          borderRadius: "50%",
-          width: "24px",
-          height: "24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "12px",
-          zIndex: 10,
-          cursor: "pointer"
-        }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "-10px",
+            right: "-10px",
+            background: "#B89B7A",
+            color: "white",
+            borderRadius: "50%",
+            width: "24px",
+            height: "24px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "12px",
+            zIndex: 10,
+            cursor: "pointer",
+          }}
+        >
           ✎
         </div>
       )}

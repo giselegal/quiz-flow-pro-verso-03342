@@ -233,7 +233,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     </div>
                     <p className="text-sm font-medium">Clique em um componente para personalizar</p>
                     <p className="text-xs text-stone-400 mt-2">
-                      As propriedades específicas do componente<br />
+                      As propriedades específicas do componente
+                      <br />
                       aparecerão aqui quando selecionado
                     </p>
                     <div className="mt-4 text-xs text-stone-400 space-y-1">

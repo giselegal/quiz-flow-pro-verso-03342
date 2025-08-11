@@ -15,7 +15,7 @@ interface ComponentTestingPanelProps {
 
 /**
  * Painel de Teste de Componentes
- * 
+ *
  * Permite testar todos os componentes das etapas em um só lugar
  * com diferentes configurações e propriedades.
  */
@@ -47,28 +47,30 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
   // Configurações de teste para cada tipo de componente
   const testComponents = [
     {
-      id: 'text-test-1',
-      type: 'text-inline',
-      category: 'Texto',
-      name: 'Texto Simples',
+      id: "text-test-1",
+      type: "text-inline",
+      category: "Texto",
+      name: "Texto Simples",
       component: (
         <TextInline
           text="Este é um texto de exemplo para teste"
           fontSize="16px"
           color="#333333"
           textAlign="left"
-          isSelected={selectedComponent === 'text-test-1'}
-          onClick={() => handleSelectComponent('text-test-1', 'text-inline')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('text-test-1', key, value)}
-          {...getComponentProps('text-test-1')}
+          isSelected={selectedComponent === "text-test-1"}
+          onClick={() => handleSelectComponent("text-test-1", "text-inline")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("text-test-1", key, value)
+          }
+          {...getComponentProps("text-test-1")}
         />
       ),
     },
     {
-      id: 'text-test-2',
-      type: 'text-inline',
-      category: 'Texto',
-      name: 'Texto Centralizado',
+      id: "text-test-2",
+      type: "text-inline",
+      category: "Texto",
+      name: "Texto Centralizado",
       component: (
         <TextInline
           text="Texto centralizado com fonte maior"
@@ -76,18 +78,20 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           color="#B89B7A"
           textAlign="center"
           fontWeight="bold"
-          isSelected={selectedComponent === 'text-test-2'}
-          onClick={() => handleSelectComponent('text-test-2', 'text-inline')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('text-test-2', key, value)}
-          {...getComponentProps('text-test-2')}
+          isSelected={selectedComponent === "text-test-2"}
+          onClick={() => handleSelectComponent("text-test-2", "text-inline")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("text-test-2", key, value)
+          }
+          {...getComponentProps("text-test-2")}
         />
       ),
     },
     {
-      id: 'button-test-1',
-      type: 'button-inline',
-      category: 'Botão',
-      name: 'Botão Primário',
+      id: "button-test-1",
+      type: "button-inline",
+      category: "Botão",
+      name: "Botão Primário",
       component: (
         <ButtonInline
           text="Botão Primário"
@@ -95,18 +99,20 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           size="medium"
           backgroundColor="#B89B7A"
           textColor="#ffffff"
-          isSelected={selectedComponent === 'button-test-1'}
-          onClick={() => handleSelectComponent('button-test-1', 'button-inline')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('button-test-1', key, value)}
-          {...getComponentProps('button-test-1')}
+          isSelected={selectedComponent === "button-test-1"}
+          onClick={() => handleSelectComponent("button-test-1", "button-inline")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("button-test-1", key, value)
+          }
+          {...getComponentProps("button-test-1")}
         />
       ),
     },
     {
-      id: 'button-test-2',
-      type: 'button-inline',
-      category: 'Botão',
-      name: 'Botão Secundário',
+      id: "button-test-2",
+      type: "button-inline",
+      category: "Botão",
+      name: "Botão Secundário",
       component: (
         <ButtonInline
           text="Botão Secundário"
@@ -114,18 +120,20 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           size="large"
           backgroundColor="#6B7280"
           textColor="#ffffff"
-          isSelected={selectedComponent === 'button-test-2'}
-          onClick={() => handleSelectComponent('button-test-2', 'button-inline')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('button-test-2', key, value)}
-          {...getComponentProps('button-test-2')}
+          isSelected={selectedComponent === "button-test-2"}
+          onClick={() => handleSelectComponent("button-test-2", "button-inline")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("button-test-2", key, value)
+          }
+          {...getComponentProps("button-test-2")}
         />
       ),
     },
     {
-      id: 'button-test-3',
-      type: 'button-inline',
-      category: 'Botão',
-      name: 'Botão Outline',
+      id: "button-test-3",
+      type: "button-inline",
+      category: "Botão",
+      name: "Botão Outline",
       component: (
         <ButtonInline
           text="Botão Outline"
@@ -134,18 +142,20 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           backgroundColor="#3B82F6"
           textColor="#3B82F6"
           fullWidth={false}
-          isSelected={selectedComponent === 'button-test-3'}
-          onClick={() => handleSelectComponent('button-test-3', 'button-inline')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('button-test-3', key, value)}
-          {...getComponentProps('button-test-3')}
+          isSelected={selectedComponent === "button-test-3"}
+          onClick={() => handleSelectComponent("button-test-3", "button-inline")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("button-test-3", key, value)
+          }
+          {...getComponentProps("button-test-3")}
         />
       ),
     },
     {
-      id: 'image-test-1',
-      type: 'image-display',
-      category: 'Imagem',
-      name: 'Imagem Exemplo',
+      id: "image-test-1",
+      type: "image-display",
+      category: "Imagem",
+      name: "Imagem Exemplo",
       component: (
         <ImageDisplayInline
           src="https://picsum.photos/400/200?random=1"
@@ -154,18 +164,20 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           height="200px"
           objectFit="cover"
           textAlign="center"
-          isSelected={selectedComponent === 'image-test-1'}
-          onClick={() => handleSelectComponent('image-test-1', 'image-display')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('image-test-1', key, value)}
-          {...getComponentProps('image-test-1')}
+          isSelected={selectedComponent === "image-test-1"}
+          onClick={() => handleSelectComponent("image-test-1", "image-display")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("image-test-1", key, value)
+          }
+          {...getComponentProps("image-test-1")}
         />
       ),
     },
     {
-      id: 'image-test-2',
-      type: 'image-display',
-      category: 'Imagem',
-      name: 'Imagem Pequena',
+      id: "image-test-2",
+      type: "image-display",
+      category: "Imagem",
+      name: "Imagem Pequena",
       component: (
         <ImageDisplayInline
           src="https://picsum.photos/150/150?random=2"
@@ -174,30 +186,35 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           height="150px"
           objectFit="contain"
           textAlign="left"
-          isSelected={selectedComponent === 'image-test-2'}
-          onClick={() => handleSelectComponent('image-test-2', 'image-display')}
-          onPropertyChange={(key: string, value: any) => handlePropertyChange('image-test-2', key, value)}
-          {...getComponentProps('image-test-2')}
+          isSelected={selectedComponent === "image-test-2"}
+          onClick={() => handleSelectComponent("image-test-2", "image-display")}
+          onPropertyChange={(key: string, value: any) =>
+            handlePropertyChange("image-test-2", key, value)
+          }
+          {...getComponentProps("image-test-2")}
         />
       ),
     },
   ];
 
-  const groupedComponents = testComponents.reduce((acc, comp) => {
-    if (!acc[comp.category]) {
-      acc[comp.category] = [];
-    }
-    acc[comp.category].push(comp);
-    return acc;
-  }, {} as Record<string, typeof testComponents>);
+  const groupedComponents = testComponents.reduce(
+    (acc, comp) => {
+      if (!acc[comp.category]) {
+        acc[comp.category] = [];
+      }
+      acc[comp.category].push(comp);
+      return acc;
+    },
+    {} as Record<string, typeof testComponents>
+  );
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'Texto':
+      case "Texto":
         return <Type className="w-4 h-4" />;
-      case 'Botão':
+      case "Botão":
         return <Settings className="w-4 h-4" />;
-      case 'Imagem':
+      case "Imagem":
         return <Eye className="w-4 h-4" />;
       default:
         return <Palette className="w-4 h-4" />;
@@ -231,19 +248,17 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
                 {components.length}
               </Badge>
             </div>
-            
+
             <Separator />
-            
+
             <div className="space-y-4">
-              {components.map((comp) => (
+              {components.map(comp => (
                 <div key={comp.id} className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      {comp.name}
-                    </span>
+                    <span className="text-sm font-medium text-gray-700">{comp.name}</span>
                     <div className="flex items-center space-x-1">
-                      <Badge 
-                        variant={selectedComponent === comp.id ? "default" : "outline"} 
+                      <Badge
+                        variant={selectedComponent === comp.id ? "default" : "outline"}
                         className="text-xs"
                       >
                         {comp.type}
@@ -255,12 +270,12 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
                       )}
                     </div>
                   </div>
-                  
-                  <Card 
+
+                  <Card
                     className={`p-4 cursor-pointer transition-all duration-200 ${
-                      selectedComponent === comp.id 
-                        ? 'border-blue-500 bg-blue-50/30 shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
+                      selectedComponent === comp.id
+                        ? "border-blue-500 bg-blue-50/30 shadow-md"
+                        : "border-gray-200 hover:border-gray-300"
                     }`}
                     onClick={() => handleSelectComponent(comp.id, comp.type)}
                   >
@@ -271,7 +286,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
             </div>
           </div>
         ))}
-        
+
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
           <h4 className="text-sm font-medium mb-2">Como usar:</h4>
           <ul className="text-xs text-gray-600 space-y-1">
