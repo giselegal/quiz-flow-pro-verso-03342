@@ -237,6 +237,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               // Obter componentes da etapa
               const stageComponents = getStageComponents(stage.id);
               const componentTypes = getStageComponentTypes(stage.id);
+              const hasComponents = stageComponents.length > 0;
               
               // 🎯 VERIFICAR SE ETAPA TEM TEMPLATE JSON
               const stepNumber = stage.order || index + 1;
@@ -269,8 +270,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                   }}
                 >
                   <div className="p-4 relative z-10">
-                    <div className="flex items-center justify-center">
-                      <div className="text-center">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-center flex-1">
                         <span
                           className={cn(
                             "font-medium text-lg",
@@ -281,7 +282,54 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
                         </span>
                         <div style={{ color: "#6B4F43" }}>{stage.name}</div>
                       </div>
-                    </div>{" "}
+                      
+                      {/* 🎯 INDICADOR TEMPLATE JSON */}
+                      {templateInfo && (
+                        <div className="flex items-center gap-1">
+                          <FileCode className="w-3 h-3 text-blue-600" />
+                          <span className="text-xs text-blue-600 font-medium">JSON</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* 🎯 INFORMAÇÕES DOS COMPONENTES */}
+                    {stageComponents.length > 0 && (
+                      <div className="mt-2 space-y-1">
+                        <div className="text-xs text-gray-600 font-medium">
+                          {stageComponents.length} componente{stageComponents.length !== 1 ? 's' : ''}
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {componentTypes.slice(0, 3).map(type => (
+                            <span 
+                              key={type}
+                              className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                            >
+                              {type.replace(/[-_]/g, ' ')}
+                            </span>
+                          ))}
+                          {componentTypes.length > 3 && (
+                            <span className="text-xs text-gray-500">
+                              +{componentTypes.length - 3} mais
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* 🎯 INFORMAÇÕES DO TEMPLATE JSON */}
+                    {cleanStepConfig && (
+                      <div className="mt-2">
+                        <div className="text-xs text-gray-500 flex items-center gap-1">
+                          <span>Categoria: {cleanStepConfig.category}</span>
+                          {cleanStepConfig.hasJsonTemplate && (
+                            <>
+                              <span>•</span>
+                              <span className="text-blue-600">Template JSON ativo</span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    )}{" "}
                     {/* ✅ INDICADOR VISUAL DE ETAPA ATIVA - MINIMALISTA */}
                     {activeStageId === stage.id && (
                       <div className="flex justify-center mt-2">
