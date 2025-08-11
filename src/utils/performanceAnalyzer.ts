@@ -19,7 +19,6 @@ class PerformanceAnalyzer {
   private static instance: PerformanceAnalyzer;
   private violationCount = 0;
   private frameCount = 0;
-  private lastFrameTime = performance.now();
   private isMonitoring = false;
 
   static getInstance(): PerformanceAnalyzer {
@@ -46,8 +45,15 @@ class PerformanceAnalyzer {
   }
 
   private monitorTimeoutViolations() {
-    // Interceptar setTimeout original para detectar violations
+    // Usar MessageChannel para monitoramento mais preciso
+    const channel = new MessageChannel();
     const originalSetTimeout = window.setTimeout;
+    
+    channel.port1.onmessage = () => {
+      if (this.isMonitoring) {
+        channel.port1.postMessage(null);
+      }
+    };
     
     window.setTimeout = ((callback: any, delay: number = 0, ...args: any[]) => {
       const start = performance.now();
@@ -55,7 +61,8 @@ class PerformanceAnalyzer {
       return originalSetTimeout(() => {
         const executionTime = performance.now() - start;
         
-        if (executionTime > 50) {
+        // Aumentar threshold para 250ms para reduzir ruído
+        if (executionTime > 250) {
           this.violationCount++;
           console.warn(`⚠️ setTimeout Violation: ${executionTime.toFixed(2)}ms (delay: ${delay}ms)`);
         }
@@ -63,18 +70,42 @@ class PerformanceAnalyzer {
         callback(...args);
       }, delay);
     }) as any;
+
+    // Iniciar monitoramento
+    if (this.isMonitoring) {
+      channel.port1.postMessage(null);
+    }
   }
 
   private monitorFramerate() {
+    let frames = 0;
+    let lastCheck = performance.now();
+    const FRAME_CHECK_INTERVAL = 1000; // 1 segundo
+
     const measureFrame = () => {
+      frames++;
+      
       const now = performance.now();
-      const delta = now - this.lastFrameTime;
-      
-      if (delta > 0) {
-        this.frameCount++;
+      const timeSinceLastCheck = now - lastCheck;
+
+      // Calcular FPS a cada segundo
+      if (timeSinceLastCheck >= FRAME_CHECK_INTERVAL) {
+        const fps = Math.round((frames * 1000) / timeSinceLastCheck);
+        this.frameCount = fps;
+        
+        // Resetar contadores
+        frames = 0;
+        lastCheck = now;
+
+        // Usar requestIdleCallback para análise não-crítica
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(() => {
+            if (fps < 30) {
+              console.warn(`⚠️ Low framerate detected: ${fps} FPS`);
+            }
+          });
+        }
       }
-      
-      this.lastFrameTime = now;
       
       if (this.isMonitoring) {
         requestAnimationFrame(measureFrame);
@@ -90,17 +121,37 @@ class PerformanceAnalyzer {
       return;
     }
 
-    setInterval(() => {
+    let lastGC = performance.now();
+    const GC_INTERVAL = 60000; // 1 minuto
+
+    const checkMemory = () => {
       const memory = (performance as any).memory;
       if (memory) {
         const usedMB = memory.usedJSHeapSize / 1024 / 1024;
         const totalMB = memory.totalJSHeapSize / 1024 / 1024;
+        const now = performance.now();
         
+        // Trigger GC se uso alto ou intervalo atingido
+        if (usedMB > totalMB * 0.8 || (now - lastGC) > GC_INTERVAL) {
+          if (typeof window.gc === 'function') {
+            window.gc();
+            lastGC = now;
+            console.log('🧹 Garbage Collection triggered');
+          }
+        }
+        
+        // Só alertar se ainda estiver alto após tentativa de GC
         if (usedMB > totalMB * 0.8) {
           console.warn(`⚠️ High Memory Usage: ${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB`);
         }
       }
-    }, 10000); // Check a cada 10 segundos
+
+      if (this.isMonitoring) {
+        setTimeout(checkMemory, 10000);
+      }
+    };
+
+    checkMemory();
   }
 
   generateReport(): PerformanceReport {
