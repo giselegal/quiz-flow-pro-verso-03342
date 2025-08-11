@@ -1,14 +1,14 @@
 // src/components/editor/quiz/QuizQuestionBlock.tsx
 // Bloco específico para renderizar questões baseadas na configuração JSON
 
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 import { useEditor } from "@/context/EditorContext";
-import { CheckCircle2, Circle, ArrowRight, RotateCcw } from "lucide-react";
+import { ArrowRight, CheckCircle2, Circle, RotateCcw } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface QuizQuestionBlockProps {
   id: string;
@@ -25,7 +25,7 @@ interface QuizQuestionBlockProps {
   onUpdate?: (id: string, updates: any) => void;
 }
 
-export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
+const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   id,
   className = "",
   style = {},
@@ -357,3 +357,5 @@ export const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
     </div>
   );
 };
+
+export default QuizQuestionBlock;

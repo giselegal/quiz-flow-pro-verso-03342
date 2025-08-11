@@ -4,7 +4,7 @@
 import { IntroBlock } from "@/components/steps/step01/IntroBlock";
 import React from "react";
 import { QuizIntroHeaderBlock } from "./QuizIntroHeaderBlock";
-import { QuizQuestionBlock } from "./QuizQuestionBlock";
+import QuizQuestionBlock from "./QuizQuestionBlock";
 
 // Mapeamento de componentes do quiz
 export const QUIZ_BLOCK_COMPONENTS = {

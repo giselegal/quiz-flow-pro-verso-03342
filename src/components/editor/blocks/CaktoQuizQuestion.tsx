@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React from "react";
-import { QuizQuestionBlock } from "./QuizQuestionBlock";
 import { EditableContent } from "@/types/editor";
+import React from "react";
+import QuizQuestionBlock from "./QuizQuestionBlock";
 
 interface CaktoQuizQuestionProps {
   content?: EditableContent;
