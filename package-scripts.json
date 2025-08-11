@@ -1,7 +1,0 @@
-{
-  "scripts": {
-    "dev-fixed": "vite --config vite.config.dev.ts --host 0.0.0.0 --port 8080",
-    "start-project": "bash start-project.sh",
-    "editor": "vite --config vite.config.dev.ts --host 0.0.0.0 --port 8080 --open /editor"
-  }
-}
