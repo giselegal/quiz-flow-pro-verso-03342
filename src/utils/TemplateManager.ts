@@ -3,11 +3,11 @@ import type { Block } from "../types/editor";
 import { TemplateJsonLoader } from "./TemplateJsonLoader";
 
 /**
- * Mapeamento de etapas para templates JSON
+ * Mapeamento completo das 21 etapas para templates JSON
  */
 const TEMPLATE_MAPPING = {
   "step-1": "/templates/step-01-template.json",
-  "step-2": "/templates/step-02-template.json",
+  "step-2": "/templates/step-02-template.json", 
   "step-3": "/templates/step-03-template.json",
   "step-4": "/templates/step-04-template.json",
   "step-5": "/templates/step-05-template.json",

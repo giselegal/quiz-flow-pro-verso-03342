@@ -237,7 +237,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
                       className="h-6 w-6 p-0 bg-white/90 hover:bg-white"
                       onClick={() => removeQuestion(faq.id || index.toString())}
                     >
-                      <Trash2 style={{ color: '#432818' }} />
+                      <Trash2 style={{ color: "#432818" }} />
                     </Button>
                   </div>
                 )}
@@ -335,7 +335,7 @@ const FAQSectionBlock: React.FC<BlockComponentProps> = ({
               )}
               onClick={addQuestion}
             >
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <Plus className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
                 <span className="text-sm">Adicionar Pergunta</span>
               </div>

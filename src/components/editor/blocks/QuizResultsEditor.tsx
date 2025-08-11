@@ -172,7 +172,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     onChange={e => updateCalculationMethod({ primaryCategory: e.target.value })}
                     placeholder="Ex: Elegante, Clássico, etc."
                   />
-                  <p style={{ color: '#8B7355' }}>
+                  <p style={{ color: "#8B7355" }}>
                     Em caso de empate, esta categoria terá prioridade
                   </p>
                 </div>
@@ -211,8 +211,8 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
           </div>
 
           {results.length === 0 && (
-            <div style={{ backgroundColor: '#FAF9F7' }}>
-              <p style={{ color: '#8B7355' }}>Nenhum resultado configurado</p>
+            <div style={{ backgroundColor: "#FAF9F7" }}>
+              <p style={{ color: "#8B7355" }}>Nenhum resultado configurado</p>
               <Button onClick={addResult} variant="outline" size="sm" className="mt-2">
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Resultado
@@ -245,7 +245,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     <Button
                       variant="ghost"
                       size="sm"
-                      style={{ color: '#432818' }}
+                      style={{ color: "#432818" }}
                       onClick={() => removeResult(index)}
                     >
                       <Trash className="w-4 h-4" />
@@ -330,7 +330,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                   onCheckedChange={checked => onChange({ ...config, showAllResults: checked })}
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
+              <p style={{ color: "#8B7355" }}>
                 Se ativado, mostra todos os resultados possíveis, não apenas o principal
               </p>
 
@@ -342,7 +342,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                   onCheckedChange={checked => onChange({ ...config, showScores: checked })}
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
+              <p style={{ color: "#8B7355" }}>
                 Se ativado, mostra as pontuações do usuário em cada categoria
               </p>
             </CardContent>

@@ -80,20 +80,17 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
     >
       <div className="w-full text-center space-y-6">
         {/* Título Principal */}
-        <h2 style={{ color: '#432818' }}>{title}</h2>
+        <h2 style={{ color: "#432818" }}>{title}</h2>
 
         {/* Subtítulo */}
-        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+        <p style={{ color: "#6B4F43" }}>{subtitle}</p>
 
         {/* Recursos */}
         <div className="flex flex-wrap justify-center gap-4 py-4">
           {features.map((feature: string, index: number) => (
-            <div
-              key={index}
-              style={{ borderColor: '#E5DDD5' }}
-            >
+            <div key={index} style={{ borderColor: "#E5DDD5" }}>
               <Star className="w-4 h-4 text-[#B89B7A]" />
-              <span style={{ color: '#6B4F43' }}>{feature}</span>
+              <span style={{ color: "#6B4F43" }}>{feature}</span>
             </div>
           ))}
         </div>
@@ -101,10 +98,10 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Preço */}
         <div className="text-center py-4">
           <div className="flex items-center justify-center gap-3">
-            <span style={{ color: '#8B7355' }}>{originalPrice}</span>
+            <span style={{ color: "#8B7355" }}>{originalPrice}</span>
             <span className="text-3xl font-bold text-[#B89B7A]">{price}</span>
           </div>
-          <p style={{ color: '#432818' }}>{urgencyText}</p>
+          <p style={{ color: "#432818" }}>{urgencyText}</p>
         </div>
 
         {/* Botão Principal */}
@@ -127,7 +124,7 @@ const AdvancedCTAInlineBlock: React.FC<BlockComponentProps> = ({
         </button>
 
         {/* Garantia */}
-        <p style={{ color: '#8B7355' }}>
+        <p style={{ color: "#8B7355" }}>
           <Shield className="w-4 h-4 inline mr-1" />
           Garantia incondicional de 30 dias
         </p>

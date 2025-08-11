@@ -328,10 +328,10 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
                 {formatNumber(currentValue, isDecimal)}
                 {stat.suffix}
               </div>
-              <CardTitle style={{ color: '#432818' }}>{stat.label}</CardTitle>
+              <CardTitle style={{ color: "#432818" }}>{stat.label}</CardTitle>
             </div>
 
-            {stat.description && <p style={{ color: '#6B4F43' }}>{stat.description}</p>}
+            {stat.description && <p style={{ color: "#6B4F43" }}>{stat.description}</p>}
 
             {showProgress && stat.isPercentage && (
               <div className="space-y-2">
@@ -344,7 +344,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
                     } as any
                   }
                 />
-                <div style={{ color: '#8B7355' }}>
+                <div style={{ color: "#8B7355" }}>
                   <span>0%</span>
                   <span>100%</span>
                 </div>
@@ -352,7 +352,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             )}
 
             {showTrends && stat.changeLabel && stat.change && (
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <Badge variant="outline" className="text-xs">
                   {stat.changeLabel}
                 </Badge>
@@ -444,7 +444,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
         </div>
 
         {/* Trust indicators */}
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <div className="flex items-center gap-2">
             <CheckCircle className="w-4 h-4 text-green-500" />
             <span>Dados atualizados em tempo real</span>
@@ -454,7 +454,7 @@ const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
             <span>Empresa certificada</span>
           </div>
           <div className="flex items-center gap-2">
-            <Heart style={{ color: '#432818' }} />
+            <Heart style={{ color: "#432818" }} />
             <span>Mais de 10 anos de experiência</span>
           </div>
         </div>

@@ -161,7 +161,7 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Empty state com instruções */}
       {!content && (
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <Type className="w-6 h-6 mr-2" />
           <span className="text-sm">Clique e edite no painel de propriedades →</span>
         </div>

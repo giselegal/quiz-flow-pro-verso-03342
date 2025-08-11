@@ -470,7 +470,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
           placeholder="Buscar componentes..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
+          style={{ boxShadow: "0 0 0 3px rgba(184, 155, 122, 0.5)" }}
         />
       </div>
 
@@ -516,7 +516,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
           ))}
 
           {filteredCategories.length === 0 && (
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>Nenhum componente encontrado</p>
               <p className="text-sm">Tente buscar por outros termos</p>

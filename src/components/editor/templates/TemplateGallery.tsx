@@ -274,7 +274,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
         id: "quiz-intro-header-step01",
         type: "quiz-intro-header",
         properties: {
-          logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+          logoUrl:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
           logoAlt: "Logo Gisele Galvão - Consultoria de Estilo",
           logoWidth: 120,
           logoHeight: 120,
@@ -331,7 +332,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
           title: "Bem-vindo ao Quiz de Estilo Pessoal",
           descriptionTop: "Descubra seu estilo único através de perguntas personalizadas.",
           descriptionBottom: "Vamos começar! Primeiro, nos conte seu nome:",
-          imageIntro: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/quiz-intro-image.webp",
+          imageIntro:
+            "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/quiz-intro-image.webp",
           inputLabel: "Seu Nome",
           inputPlaceholder: "Digite seu nome aqui",
           buttonText: "Iniciar Quiz",
@@ -358,7 +360,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
         id: "main-title-step01",
         type: "text-inline",
         properties: {
-          content: "Chega de um guarda-roupa lotado e da sensação de que [#432818]nada combina com você[/#432818].",
+          content:
+            "Chega de um guarda-roupa lotado e da sensação de que [#432818]nada combina com você[/#432818].",
           text: "Chega de um guarda-roupa lotado e da sensação de que nada combina com você.",
           fontSize: "text-3xl",
           fontWeight: "font-bold",
@@ -423,7 +426,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
         id: "motivation-unified-step01",
         type: "text-inline",
         properties: {
-          content: "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+          content:
+            "Em poucos minutos, descubra seu [#B89B7A]**Estilo Predominante**[/#B89B7A] — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
           text: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
           fontSize: "text-xl",
           fontWeight: "font-normal",
@@ -458,7 +462,8 @@ const PREDEFINED_TEMPLATES: Template[] = [
         id: "legal-notice-step01",
         type: "legal-notice-inline",
         properties: {
-          privacyText: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
+          privacyText:
+            "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
           copyrightText: "© 2025 Gisele Galvão - Todos os direitos reservados",
           termsText: "Termos de Uso",
           showIcon: true,
@@ -635,8 +640,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 style={{ color: '#432818' }}>Galeria de Templates</h2>
-          <p style={{ color: '#6B4F43' }}>Escolha um template ou crie o seu próprio</p>
+          <h2 style={{ color: "#432818" }}>Galeria de Templates</h2>
+          <p style={{ color: "#6B4F43" }}>Escolha um template ou crie o seu próprio</p>
         </div>
 
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -829,7 +834,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
             {/* Conteúdo */}
             <div className="p-4 flex-1">
               <div className="flex items-start justify-between mb-2">
-                <h3 style={{ color: '#432818' }}>{template.name}</h3>
+                <h3 style={{ color: "#432818" }}>{template.name}</h3>
                 <div className="flex items-center gap-1 ml-2">
                   <TooltipProvider>
                     <Tooltip>
@@ -855,7 +860,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
                 </div>
               </div>
 
-              <p style={{ color: '#6B4F43' }}>{template.description}</p>
+              <p style={{ color: "#6B4F43" }}>{template.description}</p>
 
               <div className="flex flex-wrap gap-1 mb-3">
                 <Badge variant="secondary" className="text-xs">
@@ -874,7 +879,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
               </div>
 
               {/* Metadados */}
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <div className="flex items-center gap-2">
                   {template.rating && (
                     <div className="flex items-center gap-1">
@@ -943,8 +948,8 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
       {sortedTemplates.length === 0 && (
         <div className="text-center py-12">
           <LayoutTemplate className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 style={{ color: '#432818' }}>Nenhum template encontrado</h3>
-          <p style={{ color: '#6B4F43' }}>
+          <h3 style={{ color: "#432818" }}>Nenhum template encontrado</h3>
+          <p style={{ color: "#6B4F43" }}>
             {searchTerm || selectedCategory !== "all" || showFavoritesOnly
               ? "Tente ajustar os filtros de busca"
               : "Crie seu primeiro template personalizado"}

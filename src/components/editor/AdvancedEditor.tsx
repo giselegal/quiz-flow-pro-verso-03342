@@ -192,13 +192,13 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
       <div className={`flex h-screen bg-gray-50 ${className}`}>
         {/* Sidebar Esquerda - Componentes e Templates */}
         {showComponentsPanel && (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <Tabs
               value={activeTab}
               onValueChange={value => setActiveTab(value as any)}
               className="flex-1"
             >
-              <div style={{ borderColor: '#E5DDD5' }}>
+              <div style={{ borderColor: "#E5DDD5" }}>
                 <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="design" className="text-xs">
                     <Layout className="w-3 h-3 mr-1" />
@@ -328,7 +328,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
         {/* Área Central - Canvas */}
         <div className="flex-1 flex flex-col">
           {/* Toolbar Superior */}
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button
@@ -422,7 +422,7 @@ export const AdvancedEditor: React.FC<AdvancedEditorProps> = ({
 
         {/* Painel Direito - Propriedades */}
         {showPropertiesPanel && (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <EnhancedPropertiesPanel
               selectedBlock={selectedBlock}
               onUpdate={updates => {

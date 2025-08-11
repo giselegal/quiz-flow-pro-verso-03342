@@ -68,8 +68,8 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }
@@ -112,7 +112,7 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <h3 style={{ color: '#432818' }}>{title}</h3>
+      <h3 style={{ color: "#432818" }}>{title}</h3>
 
       {faqItems.length > 0 ? (
         <Accordion type="single" collapsible className="w-full">
@@ -124,7 +124,7 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
           ))}
         </Accordion>
       ) : (
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <p>Nenhuma pergunta adicionada ainda</p>
           <p className="text-sm">Configure as perguntas nas propriedades do bloco</p>
         </div>

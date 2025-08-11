@@ -59,7 +59,7 @@ const EditorDemo: React.FC = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <AdvancedEditor
         initialBlocks={SAMPLE_BLOCKS}
         onSave={handleSave}

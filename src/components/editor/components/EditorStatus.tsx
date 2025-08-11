@@ -46,7 +46,7 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
   };
 
   return (
-    <Card style={{ backgroundColor: '#FAF9F7' }}>
+    <Card style={{ backgroundColor: "#FAF9F7" }}>
       <CardContent className="p-3">
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center space-x-4">
@@ -63,7 +63,7 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
             <Separator orientation="vertical" className="h-4" />
 
             {/* Total Blocks */}
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               <Layers className="w-3 h-3" />
               <span>{totalBlocks} blocos</span>
             </div>
@@ -71,7 +71,7 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
             <Separator orientation="vertical" className="h-4" />
 
             {/* Preview Mode */}
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               <span>{getPreviewIcon()}</span>
               <span className="capitalize">{previewMode}</span>
             </div>
@@ -81,7 +81,7 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
             {/* Last Action */}
             {lastAction && (
               <>
-                <div style={{ color: '#6B4F43' }}>
+                <div style={{ color: "#6B4F43" }}>
                   <Clock className="w-3 h-3" />
                   <span className="text-xs truncate max-w-32">{lastAction}</span>
                 </div>
@@ -90,7 +90,7 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
             )}
 
             {/* History Status */}
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               <Badge variant="outline" className="text-xs px-2 py-0">
                 {currentHistoryIndex + 1}/{historyCount}
               </Badge>
@@ -117,8 +117,8 @@ export const EditorStatus: React.FC<EditorStatusProps> = ({
         </div>
 
         {/* Keyboard Shortcuts Hint */}
-        <div style={{ borderColor: '#E5DDD5' }}>
-          <div style={{ color: '#8B7355' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ color: "#8B7355" }}>
             <span>Atalhos: Ctrl+Z (Desfazer) • Ctrl+Y (Refazer) • Del (Excluir)</span>
             <div className="flex items-center space-x-2">
               <Badge variant="secondary" className="text-xs px-1 py-0">

@@ -52,10 +52,7 @@ export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
       }
 
       // Ctrl+Y ou Ctrl+Shift+Z - Redo
-      if (
-        (isCtrl && event.key === "y") ||
-        (isCtrl && event.shiftKey && event.key === "z")
-      ) {
+      if ((isCtrl && event.key === "y") || (isCtrl && event.shiftKey && event.key === "z")) {
         event.preventDefault();
         if (canRedo && onRedo) {
           onRedo();

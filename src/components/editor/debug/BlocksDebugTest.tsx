@@ -58,7 +58,7 @@ const BlocksDebugTest: React.FC = () => {
   console.log("BlocksDebugTest - categories:", categories);
 
   return (
-    <div style={{ borderColor: '#B89B7A' }}>
+    <div style={{ borderColor: "#B89B7A" }}>
       <h3 className="font-bold text-red-800">DEBUG: Blocks Test</h3>
       <p>Total blocks: {blockDefinitions.length}</p>
       <p>Total categories: {categories.length}</p>

@@ -140,7 +140,7 @@ export const EditorShowcase: React.FC = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -149,15 +149,15 @@ export const EditorShowcase: React.FC = () => {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 style={{ color: '#432818' }}>Editor Visual Avançado</h1>
-              <p style={{ color: '#6B4F43' }}>
+              <h1 style={{ color: "#432818" }}>Editor Visual Avançado</h1>
+              <p style={{ color: "#6B4F43" }}>
                 Sistema completo de edição com recursos modernos e interface intuitiva
               </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <Badge variant="outline" style={{ color: '#6B4F43' }}>
+            <Badge variant="outline" style={{ color: "#6B4F43" }}>
               <CheckCircle className="w-3 h-3 mr-1" />8 Funcionalidades Implementadas
             </Badge>
             <Badge variant="outline" className="bg-[#B89B7A]/10 text-[#A38A69] border-[#B89B7A]/30">
@@ -169,7 +169,7 @@ export const EditorShowcase: React.FC = () => {
 
         {/* Navigation */}
         <div className="mb-6">
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             {[
               { id: "overview", label: "Visão Geral" },
               { id: "responsive", label: "Responsivo" },
@@ -206,7 +206,7 @@ export const EditorShowcase: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <CardTitle className="text-base mb-2">{feature.title}</CardTitle>
-                  <p style={{ color: '#6B4F43' }}>{feature.description}</p>
+                  <p style={{ color: "#6B4F43" }}>{feature.description}</p>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -238,7 +238,7 @@ export const EditorShowcase: React.FC = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p style={{ color: '#6B4F43' }}>
+                  <p style={{ color: "#6B4F43" }}>
                     {
                       implementationDetails[activeDemo as keyof typeof implementationDetails]
                         .description
@@ -280,9 +280,9 @@ export const EditorShowcase: React.FC = () => {
 
         {/* Footer */}
         <div className="mt-12 text-center">
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <Sparkles className="w-4 h-4 text-[#B89B7A]" />
-            <span style={{ color: '#6B4F43' }}>
+            <span style={{ color: "#6B4F43" }}>
               Sistema completo implementado com React, TypeScript e Tailwind CSS
             </span>
           </div>

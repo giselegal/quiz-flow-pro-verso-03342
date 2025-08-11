@@ -83,7 +83,7 @@ const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <p>Componente não encontrado: {block.type}</p>
         </div>
       </div>

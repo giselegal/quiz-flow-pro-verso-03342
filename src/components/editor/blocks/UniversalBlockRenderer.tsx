@@ -139,10 +139,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     console.error(`Erro ao renderizar bloco ${block.type}:`, error);
 
     return (
-      <div
-        style={{ borderColor: '#B89B7A' }}
-        onClick={onClick}
-      >
+      <div style={{ borderColor: "#B89B7A" }} onClick={onClick}>
         <p>Erro ao renderizar: {block.type}</p>
         <p className="text-xs mt-1">
           {error instanceof Error ? error.message : "Erro desconhecido"}

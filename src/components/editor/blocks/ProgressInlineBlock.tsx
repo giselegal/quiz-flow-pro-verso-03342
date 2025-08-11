@@ -97,7 +97,7 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
           <span
-            style={{ color: '#6B4F43' }}
+            style={{ color: "#6B4F43" }}
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
@@ -131,7 +131,7 @@ const ProgressInlineBlock: React.FC<ProgressInlineBlockProps> = ({
         </div>
 
         {/* Progress Bar */}
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{

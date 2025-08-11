@@ -99,7 +99,7 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         {/* Progress Bar */}
         <div className="relative">
           {/* Background */}
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             {/* Progress Fill */}
             <div
               className="h-full bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full transition-all duration-700 ease-out"

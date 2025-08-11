@@ -113,7 +113,7 @@ const QuizResultHeaderBlock: React.FC<BlockComponentProps> = ({
           </h1>
 
           {/* Subtitle */}
-          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+          <p style={{ color: "#6B4F43" }}>{subtitle}</p>
         </div>
       </AnimatedWrapper>
     </div>

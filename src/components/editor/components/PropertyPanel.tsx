@@ -12,7 +12,7 @@ interface PropertyPanelProps {
 export default function PropertyPanel({ selectedComponent, onChange }: PropertyPanelProps) {
   if (!selectedComponent) {
     return (
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <div className="mb-4 text-4xl">🎯</div>
         <h3 className="mb-2 font-medium">Propriedades</h3>
         <p className="text-sm">Selecione um componente para editar suas propriedades</p>
@@ -37,9 +37,7 @@ export default function PropertyPanel({ selectedComponent, onChange }: PropertyP
 
       <div>
         <Label htmlFor="component-type">Tipo</Label>
-        <div style={{ backgroundColor: '#FAF9F7' }}>
-          {selectedComponent.type || "Componente"}
-        </div>
+        <div style={{ backgroundColor: "#FAF9F7" }}>{selectedComponent.type || "Componente"}</div>
       </div>
 
       <div>

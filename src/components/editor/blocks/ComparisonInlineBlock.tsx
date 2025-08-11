@@ -97,10 +97,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Before Section */}
-      <div
-        style={{ borderColor: '#E5DDD5' }}
-        style={{ width: `${dragPosition}%` }}
-      >
+      <div style={{ borderColor: "#E5DDD5" }} style={{ width: `${dragPosition}%` }}>
         <h4
           className="font-bold text-red-800 mb-2 cursor-pointer text-center"
           onClick={e => {
@@ -145,7 +142,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
           {afterTitle}
         </h4>
         <p
-          style={{ color: '#6B4F43' }}
+          style={{ color: "#6B4F43" }}
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {

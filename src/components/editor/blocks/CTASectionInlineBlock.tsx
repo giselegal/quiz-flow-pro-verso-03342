@@ -171,7 +171,7 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
           </p>
 
           {/* URL Configuration */}
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             <span
               className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
               onClick={() => {
@@ -184,7 +184,7 @@ const CTASectionInlineBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           {/* Style Configuration */}
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             <span
               className="cursor-pointer hover:bg-[#B89B7A]/10/50 rounded px-1"
               onClick={() => {

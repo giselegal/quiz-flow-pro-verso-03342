@@ -423,7 +423,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          style={{ color: '#432818' }}
+          style={{ color: "#432818" }}
         >
           <AlertTriangle className="w-5 h-5" />
           Oferta Expirada!

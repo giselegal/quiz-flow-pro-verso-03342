@@ -60,8 +60,8 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco LegalNotice não encontrado</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Bloco LegalNotice não encontrado</p>
       </div>
     );
   }

@@ -119,8 +119,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
       <div ref={setNodeRef} style={style} className="my-2">
         {" "}
         {/* 🎯 Espaçamento FIXO de 8px */}
-        <Card style={{ borderColor: '#B89B7A' }}>
-          <div style={{ color: '#432818' }}>
+        <Card style={{ borderColor: "#B89B7A" }}>
+          <div style={{ color: "#432818" }}>
             <p>Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
           </div>
@@ -163,7 +163,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            style={{ color: '#432818' }}
+            style={{ color: "#432818" }}
             onClick={e => {
               e.stopPropagation();
               onDelete();

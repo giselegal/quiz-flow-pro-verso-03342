@@ -17,7 +17,6 @@ interface AddBlockButtonProps {
   onAddBlock: (type: EditorBlock["type"]) => void;
 }
 
-
 const AddBlockButton: React.FC<AddBlockButtonProps> = ({ onAddBlock }) => {
   const [open, setOpen] = useState(false);
 

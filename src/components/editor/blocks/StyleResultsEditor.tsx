@@ -90,8 +90,8 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                 </Select>
               </div>
 
-              <div style={{ backgroundColor: '#FAF9F7' }}>
-                <p style={{ color: '#8B7355' }}>Pré-visualização:</p>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
+                <p style={{ color: "#8B7355" }}>Pré-visualização:</p>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0">
                     <img
@@ -102,7 +102,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   </div>
                   <div>
                     <h4 className="font-medium">{selectedStyle}</h4>
-                    <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
+                    <p style={{ color: "#6B4F43" }}>{styleData.description}</p>
                   </div>
                 </div>
               </div>
@@ -124,7 +124,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   onCheckedChange={checked => updateConfig({ showAllStyles: checked })}
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
+              <p style={{ color: "#8B7355" }}>
                 Se ativado, mostra todos os estilos e suas pontuações, não apenas os 3 principais
               </p>
 
@@ -136,7 +136,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   onCheckedChange={checked => updateConfig({ showGuideImage: checked })}
                 />
               </div>
-              <p style={{ color: '#8B7355' }}>
+              <p style={{ color: "#8B7355" }}>
                 Se ativado, mostra a imagem do guia de estilo associado ao resultado
               </p>
             </CardContent>
@@ -158,9 +158,7 @@ const StyleResultsEditor: React.FC<StyleResultsEditorProps> = ({
                   />
                 </div>
               ) : (
-                <p style={{ color: '#8B7355' }}>
-                  Imagem do guia não disponível para este estilo
-                </p>
+                <p style={{ color: "#8B7355" }}>Imagem do guia não disponível para este estilo</p>
               )}
               <div className="flex justify-center mt-4">
                 <Button

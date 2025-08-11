@@ -66,8 +66,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
@@ -114,8 +114,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       <div className="relative w-full min-h-[120px] flex items-center justify-center">
         {/* Back Button - Absolute positioned to not affect centering */}
         {showBackButton && (
-          <button style={{ backgroundColor: '#E5DDD5' }}>
-            <ArrowLeft style={{ color: '#6B4F43' }} />
+          <button style={{ backgroundColor: "#E5DDD5" }}>
+            <ArrowLeft style={{ color: "#6B4F43" }} />
           </button>
         )}
 
@@ -140,7 +140,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Progress Bar - Só mostra se showProgress for true */}
       {showProgress && (
         <>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="bg-gradient-to-r from-[#B89B7A] to-[#8a7766] h-2 rounded-full transition-all duration-300"
               style={{ width: `${Math.min(progressValue, progressMax)}%` }}

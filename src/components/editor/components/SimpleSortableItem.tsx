@@ -35,11 +35,7 @@ export const SimpleSortableItem: React.FC<SimpleSortableItemProps> = ({
         isDragging ? "opacity-50 shadow-lg" : "hover:shadow-sm"
       } ${className}`}
     >
-      <div
-        {...attributes}
-        {...listeners}
-        style={{ color: '#6B4F43' }}
-      >
+      <div {...attributes} {...listeners} style={{ color: "#6B4F43" }}>
         <GripVertical className="w-4 h-4" />
       </div>
       <div className="flex-1">{children}</div>

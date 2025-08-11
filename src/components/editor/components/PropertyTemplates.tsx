@@ -200,8 +200,8 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
       <PopoverContent className="w-96 p-4" align="start">
         <div className="space-y-4">
           <div>
-            <h3 style={{ color: '#432818' }}>Templates de Propriedades</h3>
-            <p style={{ color: '#6B4F43' }}>Aplique configurações predefinidas rapidamente</p>
+            <h3 style={{ color: "#432818" }}>Templates de Propriedades</h3>
+            <p style={{ color: "#6B4F43" }}>Aplique configurações predefinidas rapidamente</p>
           </div>
 
           {Object.entries(categorizedTemplates).map(([category, categoryTemplates]) => {
@@ -227,21 +227,17 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
                     return (
                       <Card
                         key={template.id}
-                        style={{ borderColor: '#E5DDD5' }}
+                        style={{ borderColor: "#E5DDD5" }}
                         onClick={() => onApplyTemplate(template.properties)}
                       >
                         <CardContent className="p-3">
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0">
-                              <TemplateIcon style={{ color: '#6B4F43' }} />
+                              <TemplateIcon style={{ color: "#6B4F43" }} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h5 style={{ color: '#432818' }}>
-                                {template.name}
-                              </h5>
-                              <p style={{ color: '#6B4F43' }}>
-                                {template.description}
-                              </p>
+                              <h5 style={{ color: "#432818" }}>{template.name}</h5>
+                              <p style={{ color: "#6B4F43" }}>{template.description}</p>
                             </div>
                           </div>
                         </CardContent>
@@ -253,10 +249,8 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
             );
           })}
 
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <p style={{ color: '#8B7355' }}>
-              Clique em um template para aplicar as propriedades
-            </p>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <p style={{ color: "#8B7355" }}>Clique em um template para aplicar as propriedades</p>
           </div>
         </div>
       </PopoverContent>

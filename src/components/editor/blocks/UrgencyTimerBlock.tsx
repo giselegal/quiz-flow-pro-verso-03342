@@ -125,7 +125,7 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
         {!isExpired ? (
           <>
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <Clock style={{ color: '#432818' }} />
+              <Clock style={{ color: "#432818" }} />
               <InlineEditableText
                 value={title}
                 onChange={(value: string) => handlePropertyChange("title", value)}
@@ -143,11 +143,11 @@ const UrgencyTimerBlock: React.FC<BlockComponentProps> = ({
           </>
         ) : (
           showExpiredMessage && (
-            <div style={{ backgroundColor: '#E5DDD5' }}>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
               <InlineEditableText
                 value={expiredMessage}
                 onChange={(value: string) => handlePropertyChange("expiredMessage", value)}
-                style={{ color: '#6B4F43' }}
+                style={{ color: "#6B4F43" }}
                 placeholder="Mensagem quando o timer expira"
               />
             </div>

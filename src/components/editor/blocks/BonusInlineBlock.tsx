@@ -122,7 +122,7 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
         </div>
 
         <p
-          style={{ color: '#6B4F43' }}
+          style={{ color: "#6B4F43" }}
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {

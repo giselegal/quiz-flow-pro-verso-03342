@@ -118,8 +118,8 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
           />
           {showProgress && (
             <div className="flex items-center space-x-3">
-              <span style={{ color: '#6B4F43' }}>Progresso</span>
-              <div style={{ backgroundColor: '#E5DDD5' }}>
+              <span style={{ color: "#6B4F43" }}>Progresso</span>
+              <div style={{ backgroundColor: "#E5DDD5" }}>
                 <div
                   className="h-2 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full transition-all duration-300"
                   style={{ width: `${progressValue}%` }}
@@ -133,13 +133,13 @@ const ResultPageHeaderBlock: React.FC<ResultPageHeaderBlockProps> = ({
         {/* User Info Section */}
         <div className="flex items-center space-x-6">
           <div className="text-right">
-            <p style={{ color: '#6B4F43' }}>Olá,</p>
+            <p style={{ color: "#6B4F43" }}>Olá,</p>
             <p className="text-lg font-semibold" style={{ color: textColor }}>
               {userName || "Usuário"}
             </p>
           </div>
           <div className="text-right">
-            <p style={{ color: '#6B4F43' }}>Seu estilo é:</p>
+            <p style={{ color: "#6B4F43" }}>Seu estilo é:</p>
             <p className="text-xl font-bold text-[#B89B7A]">{primaryStyle}</p>
           </div>
         </div>

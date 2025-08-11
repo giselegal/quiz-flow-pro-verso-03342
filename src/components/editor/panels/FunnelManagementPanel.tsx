@@ -325,7 +325,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                           size="sm"
                           onClick={() => handleDeletePage(index)}
                           disabled={funnel.pages.length <= 1}
-                          style={{ color: '#432818' }}
+                          style={{ color: "#432818" }}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

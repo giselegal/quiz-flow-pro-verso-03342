@@ -121,7 +121,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
-                  <User style={{ color: '#B89B7A' }} />
+                  <User style={{ color: "#B89B7A" }} />
                   <div>
                     <p className="text-sm font-medium">Manuais</p>
                     <p className="text-2xl font-bold">
@@ -142,7 +142,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
               <ScrollArea className="h-96">
                 <div className="p-4 space-y-3">
                   {versions.length === 0 ? (
-                    <div style={{ color: '#8B7355' }}>
+                    <div style={{ color: "#8B7355" }}>
                       <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma versão encontrada</p>
                       <p className="text-sm">
@@ -187,7 +187,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                                 {version.description || "Sem descrição"}
                               </p>
 
-                              <div style={{ color: '#8B7355' }}>
+                              <div style={{ color: "#8B7355" }}>
                                 <div className="flex items-center space-x-1">
                                   <Clock className="w-3 h-3" />
                                   <span>{formatDate(version.createdAt)}</span>
@@ -197,7 +197,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               </div>
 
                               {/* Informações da versão */}
-                              <div style={{ color: '#6B4F43' }}>
+                              <div style={{ color: "#6B4F43" }}>
                                 <span>
                                   {version.data.pages.length} página
                                   {version.data.pages.length !== 1 ? "s" : ""} •{" "}
@@ -242,7 +242,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
           {/* Ações */}
           {selectedVersion &&
             currentVersion !== versions.find(v => v.id === selectedVersion)?.version && (
-              <div style={{ borderColor: '#E5DDD5' }}>
+              <div style={{ borderColor: "#E5DDD5" }}>
                 <div className="flex items-center space-x-2">
                   <RotateCcw className="w-4 h-4 text-stone-600" />
                   <span className="text-sm font-medium text-stone-700">

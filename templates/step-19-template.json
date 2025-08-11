@@ -1,0 +1,88 @@
+{
+  "templateVersion": "1.0",
+  "layout": {
+    "containerWidth": "full",
+    "spacing": "small",
+    "backgroundColor": "transparent",
+    "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 1,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione pelo menos uma opção!"
+  },
+  "analytics": {
+    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "trackingId": "step-19-result"
+  },
+  "metadata": {
+    "id": "quiz-step-19",
+    "name": "Resultado 3",
+    "description": "Terceira tela de resultado",
+    "category": "result",
+    "tags": ["quiz", "style", "result"],
+    "createdAt": "2025-08-11T01:02:19.345Z",
+    "updatedAt": "2025-08-11T01:02:19.345Z"
+  },
+  "blocks": [
+    {
+      "id": "step19-header",
+      "type": "quiz-intro-header",
+      "position": 0,
+      "properties": {
+        "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+        "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 96,
+        "logoHeight": 96,
+        "progressValue": 90,
+        "progressTotal": 100,
+        "showProgress": true,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step19-result-title",
+      "type": "text-inline",
+      "position": 1,
+      "properties": {
+        "content": "SEU ESTILO PESSOAL É:",
+        "fontSize": "text-2xl",
+        "fontWeight": "font-bold",
+        "textAlign": "text-center",
+        "color": "#432818",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step19-result-card",
+      "type": "result-card",
+      "position": 2,
+      "properties": {
+        "title": "Estilo Elegante",
+        "description": "Você tem preferência por peças clássicas e refinadas...",
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+        "containerWidth": "full",
+        "spacing": "small"
+      }
+    },
+    {
+      "id": "step19-continue-button",
+      "type": "button-inline",
+      "position": 3,
+      "properties": {
+        "text": "Continuar →",
+        "variant": "primary",
+        "size": "large",
+        "fullWidth": true,
+        "backgroundColor": "#B89B7A",
+        "textColor": "#ffffff",
+        "containerWidth": "full",
+        "spacing": "small",
+        "marginTop": 24
+      }
+    }
+  ]
+}

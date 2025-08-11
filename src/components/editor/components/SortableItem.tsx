@@ -46,15 +46,11 @@ export function SortableItem({
     >
       {/* Barra de ferramentas do componente */}
       <div className="absolute -top-3 left-2 hidden group-hover:flex items-center gap-1 bg-white border rounded px-2 py-1 shadow-sm z-10">
-        <button
-          {...attributes}
-          {...listeners}
-          style={{ color: '#6B4F43' }}
-        >
+        <button {...attributes} {...listeners} style={{ color: "#6B4F43" }}>
           <GripVertical className="h-4 w-4" />
         </button>
 
-        <span style={{ color: '#8B7355' }}>{component.type}</span>
+        <span style={{ color: "#8B7355" }}>{component.type}</span>
 
         <Button
           variant="ghost"
@@ -75,7 +71,7 @@ export function SortableItem({
             e.stopPropagation();
             onDelete();
           }}
-          style={{ color: '#432818' }}
+          style={{ color: "#432818" }}
         >
           <Trash2 className="h-3 w-3" />
         </Button>

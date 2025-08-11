@@ -93,11 +93,9 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
             Seu Estilo Principal: {primaryResult.style}
           </h3>
           {showPercentages && (
-            <div style={{ color: '#6B4F43' }}>
-              {primaryResult.percentage}% de compatibilidade
-            </div>
+            <div style={{ color: "#6B4F43" }}>{primaryResult.percentage}% de compatibilidade</div>
           )}
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="h-3 rounded-full transition-all duration-500"
               style={{
@@ -117,10 +115,10 @@ const QuizResultCalculatedBlock: React.FC<BlockComponentProps> = ({
             {secondaryResults.map((style: any, index: number) => (
               <div key={index} className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
-                  <span style={{ color: '#432818' }}>{style.style}</span>
-                  {showPercentages && <span style={{ color: '#6B4F43' }}>{style.percentage}%</span>}
+                  <span style={{ color: "#432818" }}>{style.style}</span>
+                  {showPercentages && <span style={{ color: "#6B4F43" }}>{style.percentage}%</span>}
                 </div>
-                <div style={{ backgroundColor: '#E5DDD5' }}>
+                <div style={{ backgroundColor: "#E5DDD5" }}>
                   <div
                     className="h-2 rounded-full transition-all duration-500"
                     style={{

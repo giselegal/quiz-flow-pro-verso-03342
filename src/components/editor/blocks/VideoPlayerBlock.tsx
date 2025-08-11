@@ -82,15 +82,15 @@ const VideoPlayerBlock: React.FC<VideoPlayerBlockProps> = ({
           />
         </div>
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <div className="text-center">
             <div className="text-4xl text-gray-400 mb-2">📹</div>
-            <p style={{ color: '#6B4F43' }}>Clique para adicionar vídeo</p>
+            <p style={{ color: "#6B4F43" }}>Clique para adicionar vídeo</p>
           </div>
         </div>
       )}
 
-      {title && <h3 style={{ color: '#432818' }}>{title}</h3>}
+      {title && <h3 style={{ color: "#432818" }}>{title}</h3>}
     </div>
   );
 };

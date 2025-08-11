@@ -170,10 +170,7 @@ const StrategicQuestionBlock: React.FC<StrategicQuestionBlockProps> = ({
       {/* Options */}
       <div className="grid gap-4 max-w-2xl mx-auto">
         {options.map((option: any, index: number) => (
-          <div
-            key={option.id || index}
-            style={{ borderColor: '#E5DDD5' }}
-          >
+          <div key={option.id || index} style={{ borderColor: "#E5DDD5" }}>
             <InlineEditText
               value={option.text}
               onSave={(value: string) => handleOptionChange(index, "text", value)}

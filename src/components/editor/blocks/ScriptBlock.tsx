@@ -77,7 +77,7 @@ const ScriptBlock: React.FC<BlockComponentProps> = ({
       <pre className="whitespace-pre-wrap break-all text-gray-200">
         {code || "// Seu código JavaScript aqui..."}
       </pre>
-      <p style={{ color: '#8B7355' }}>Este código será injetado na página publicada.</p>
+      <p style={{ color: "#8B7355" }}>Este código será injetado na página publicada.</p>
     </div>
   );
 };

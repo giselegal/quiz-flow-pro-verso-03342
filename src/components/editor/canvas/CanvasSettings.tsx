@@ -131,7 +131,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
                       <div className="flex items-center gap-2">
                         <IconComponent className="w-4 h-4" />
                         <span>{config.label}</span>
-                        <span style={{ color: '#8B7355' }}>({config.width})</span>
+                        <span style={{ color: "#8B7355" }}>({config.width})</span>
                       </div>
                     </SelectItem>
                   );
@@ -143,11 +143,8 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
           {/* Preview do Canvas */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">Preview</Label>
-            <div style={{ borderColor: '#E5DDD5' }}>
-              <div
-                style={{ borderColor: '#E5DDD5' }}
-                style={{ backgroundColor: backgroundColor }}
-              >
+            <div style={{ borderColor: "#E5DDD5" }}>
+              <div style={{ borderColor: "#E5DDD5" }} style={{ backgroundColor: backgroundColor }}>
                 {backgroundColor === "transparent" && (
                   <div
                     className="absolute inset-0"
@@ -162,7 +159,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-16 h-8 bg-[#B89B7A] rounded mb-2 mx-auto"></div>
-                    <div style={{ color: '#8B7355' }}>Canvas Preview</div>
+                    <div style={{ color: "#8B7355" }}>Canvas Preview</div>
                   </div>
                 </div>
               </div>

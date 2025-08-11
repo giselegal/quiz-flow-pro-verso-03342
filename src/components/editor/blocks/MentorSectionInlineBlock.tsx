@@ -115,7 +115,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
     >
       {/* Header com Badge */}
       <div className="text-center mb-6">
-        <div style={{ backgroundColor: '#B89B7A' }}>
+        <div style={{ backgroundColor: "#B89B7A" }}>
           <Crown className="w-4 h-4" />
           Sua Mentora Especialista
         </div>
@@ -141,14 +141,14 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
         {/* Coluna do Conteúdo */}
         <div className="order-1 lg:order-2 text-center lg:text-left">
           {/* Nome e Título */}
-          <h3 style={{ color: '#432818' }}>{mentorName}</h3>
+          <h3 style={{ color: "#432818" }}>{mentorName}</h3>
 
           <p className="text-[#B89B7A] font-semibold text-sm md:text-base mb-4">{mentorTitle}</p>
 
           {/* Bio */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-purple-100 mb-6">
             <Quote className="w-5 h-5 text-purple-400 mb-2" />
-            <p style={{ color: '#6B4F43' }}>{mentorBio}</p>
+            <p style={{ color: "#6B4F43" }}>{mentorBio}</p>
           </div>
 
           {/* Achievements */}
@@ -156,7 +156,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
             {achievements.map((achievement: string, index: number) => (
               <div key={index} className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 bg-purple-400 rounded-full flex-shrink-0" />
-                <span style={{ color: '#6B4F43' }}>{achievement}</span>
+                <span style={{ color: "#6B4F43" }}>{achievement}</span>
               </div>
             ))}
           </div>
@@ -165,7 +165,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
 
       {/* Credenciais */}
       <div className="mt-8 p-4 bg-white rounded-lg border border-purple-100">
-        <h4 style={{ color: '#432818' }}>
+        <h4 style={{ color: "#432818" }}>
           <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
           Certificações & Credenciais
         </h4>
@@ -173,7 +173,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
           {credentials.map((credential: string, index: number) => (
             <div key={index} className="flex items-center gap-2 text-xs md:text-sm">
               <div className="w-1.5 h-1.5 bg-purple-400 rounded-full flex-shrink-0" />
-              <span style={{ color: '#6B4F43' }}>{credential}</span>
+              <span style={{ color: "#6B4F43" }}>{credential}</span>
             </div>
           ))}
         </div>

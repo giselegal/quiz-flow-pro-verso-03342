@@ -55,23 +55,19 @@ const TestDeleteComponent: React.FC<{ onDelete: () => void }> = ({ onDelete }) =
   };
 
   return (
-    <div style={{ borderColor: '#E5DDD5' }}>
+    <div style={{ borderColor: "#E5DDD5" }}>
       <div className="text-lg font-semibold mb-2">🧪 Componente de Teste de Exclusão</div>
-      <div style={{ color: '#6B4F43' }}>
+      <div style={{ color: "#6B4F43" }}>
         Este é um componente especial apenas para testar a exclusão.
       </div>
 
       {/* Botão de exclusão sempre visível */}
-      <button
-        onClick={handleClick}
-        style={{ backgroundColor: '#FAF9F7' }}
-        type="button"
-      >
+      <button onClick={handleClick} style={{ backgroundColor: "#FAF9F7" }} type="button">
         <Trash2 className="w-4 h-4 mr-2" />
         Excluir Este Componente
       </button>
 
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         Se este botão não funcionar, há um problema na função onDelete
       </div>
     </div>

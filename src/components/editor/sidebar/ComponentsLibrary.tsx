@@ -231,7 +231,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                   />
                 </div>
                 {component.featured && (
-                  <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
+                  <Badge variant="secondary" style={{ backgroundColor: "#E5DDD5" }}>
                     ⭐ Popular
                   </Badge>
                 )}
@@ -271,7 +271,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                 {component.name}
               </h3>
 
-              <p style={{ color: '#6B4F43' }}>{component.description}</p>
+              <p style={{ color: "#6B4F43" }}>{component.description}</p>
 
               {showCategory && (
                 <Badge variant="outline" className="text-xs">
@@ -281,10 +281,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
 
               <div className="flex flex-wrap gap-1 mt-2">
                 {component.tags.slice(0, 3).map((tag: string) => (
-                  <span
-                    key={tag}
-                    style={{ color: '#6B4F43' }}
-                  >
+                  <span key={tag} style={{ color: "#6B4F43" }}>
                     {tag}
                   </span>
                 ))}
@@ -322,7 +319,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
           // Modo de busca
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 {filteredComponents.length} componentes encontrados
               </p>
               <Button variant="ghost" size="sm" onClick={() => setSearchTerm("")}>
@@ -385,7 +382,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                       {category.components.length}
                     </Badge>
                   </div>
-                  <p style={{ color: '#6B4F43' }}>{category.description}</p>
+                  <p style={{ color: "#6B4F43" }}>{category.description}</p>
                 </div>
 
                 <Separator className="bg-[#B89B7A]/20" />
@@ -400,8 +397,8 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
       </CardContent>
 
       {/* Rodapé com estatísticas */}
-      <div style={{ backgroundColor: '#FAF9F7' }}>
-        <div style={{ color: '#6B4F43' }}>
+      <div style={{ backgroundColor: "#FAF9F7" }}>
+        <div style={{ color: "#6B4F43" }}>
           {Object.values(COMPONENT_CATEGORIES).reduce(
             (total, cat) => total + cat.components.length,
             0

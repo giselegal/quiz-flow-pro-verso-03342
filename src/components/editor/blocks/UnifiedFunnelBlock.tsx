@@ -73,9 +73,9 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>
-        <p style={{ color: '#432818' }}>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Configuração do bloco inválida</p>
+        <p style={{ color: "#432818" }}>
           O componente precisa de um objeto 'block' com 'properties' válidas.
         </p>
       </div>

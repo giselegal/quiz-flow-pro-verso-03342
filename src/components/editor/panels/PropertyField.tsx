@@ -93,7 +93,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
               step={property.step || 1}
               className="w-full"
             />
-            <div style={{ color: '#8B7355' }}>{value || 0}</div>
+            <div style={{ color: "#8B7355" }}>{value || 0}</div>
           </div>
         );
 
@@ -101,7 +101,7 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
         return (
           <div className="flex items-center justify-between">
             <Switch checked={Boolean(value)} onCheckedChange={onChange} />
-            <span style={{ color: '#6B4F43' }}>{value ? "Ativado" : "Desativado"}</span>
+            <span style={{ color: "#6B4F43" }}>{value ? "Ativado" : "Desativado"}</span>
           </div>
         );
 
@@ -251,9 +251,9 @@ export const PropertyField: React.FC<PropertyFieldProps> = ({
   return (
     <div className={cn("space-y-2", className)}>
       <div className="flex items-center justify-between">
-        <Label style={{ color: '#6B4F43' }}>
+        <Label style={{ color: "#6B4F43" }}>
           {property.label}
-          {property.required && <span style={{ color: '#432818' }}>*</span>}
+          {property.required && <span style={{ color: "#432818" }}>*</span>}
         </Label>
 
         {property.description && (

@@ -186,7 +186,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
     <Card className={cn("h-full flex flex-col", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle style={{ color: '#432818' }}>Etapas Quiz</CardTitle>
+          <CardTitle style={{ color: "#432818" }}>Etapas Quiz</CardTitle>
           <Badge variant="secondary" className="text-xs">
             {steps.length}
           </Badge>
@@ -245,7 +245,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                   ) : (
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 style={{ color: '#432818' }}>{step.name}</h4>
+                        <h4 style={{ color: "#432818" }}>{step.name}</h4>
                         <div className="flex items-center space-x-1">
                           {step.blocksCount > 0 && (
                             <Badge variant="outline" className="text-xs px-1">
@@ -257,7 +257,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                           )}
                         </div>
                       </div>
-                      <p style={{ color: '#8B7355' }}>
+                      <p style={{ color: "#8B7355" }}>
                         {(() => {
                           const stepInfo = getStepReferenceInfo(step.id);
                           const typeLabel =
@@ -310,7 +310,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => onStepDelete(step.id)}
-                          style={{ color: '#432818' }}
+                          style={{ color: "#432818" }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Excluir
@@ -328,11 +328,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
             ))}
 
             {/* Add New Step Button */}
-            <Button
-              variant="outline"
-              style={{ borderColor: '#E5DDD5' }}
-              onClick={onStepAdd}
-            >
+            <Button variant="outline" style={{ borderColor: "#E5DDD5" }} onClick={onStepAdd}>
               <Plus className="w-4 h-4" />
               <span>Adicionar Nova Etapa</span>
             </Button>

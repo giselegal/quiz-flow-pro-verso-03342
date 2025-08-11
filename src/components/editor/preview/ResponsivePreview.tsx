@@ -123,7 +123,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
         onClick={() => onBlockSelect?.(block.id)}
       >
         {/* Preview do bloco */}
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <div className="flex items-center justify-between mb-2">
             <Badge variant="outline" className="text-xs">
               {block.type}
@@ -134,14 +134,14 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           {/* Simulação do conteúdo do bloco */}
           <div className="space-y-2">
             {block.properties?.content && (
-              <p style={{ color: '#432818' }}>{block.properties.content}</p>
+              <p style={{ color: "#432818" }}>{block.properties.content}</p>
             )}
             {block.properties?.title && (
-              <h3 style={{ color: '#432818' }}>{block.properties.title}</h3>
+              <h3 style={{ color: "#432818" }}>{block.properties.title}</h3>
             )}
             {block.properties?.imageUrl && (
-              <div style={{ borderColor: '#E5DDD5' }}>
-                <span style={{ color: '#8B7355' }}>Imagem</span>
+              <div style={{ borderColor: "#E5DDD5" }}>
+                <span style={{ color: "#8B7355" }}>Imagem</span>
               </div>
             )}
           </div>
@@ -170,7 +170,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
 
             <div className="flex items-center gap-2">
               {/* Métricas de performance */}
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 <Clock className="w-3 h-3" />
                 {loadTime}ms
               </div>
@@ -178,7 +178,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
               <Separator orientation="vertical" className="h-6" />
 
               {/* Controles de preview */}
-              <div style={{ backgroundColor: '#E5DDD5' }}>
+              <div style={{ backgroundColor: "#E5DDD5" }}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
@@ -236,7 +236,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           </div>
 
           {/* Informações do modo atual */}
-          <div style={{ color: '#6B4F43' }}>
+          <div style={{ color: "#6B4F43" }}>
             <Badge variant="secondary" className="bg-[#B89B7A]/10 text-[#432818]">
               {previewMode === "desktop"
                 ? "Desktop"
@@ -251,14 +251,14 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           </div>
         </CardHeader>
 
-        <CardContent style={{ backgroundColor: '#FAF9F7' }}>
+        <CardContent style={{ backgroundColor: "#FAF9F7" }}>
           <div ref={previewRef} className="min-h-full p-4">
             {blocks.length > 0 ? (
               renderDeviceFrame(
                 <div className="space-y-4">{blocks.map(block => renderBlock(block))}</div>
               )
             ) : (
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <div className="text-center">
                   <Eye className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium">Nenhum bloco para preview</p>
@@ -270,8 +270,8 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
         </CardContent>
 
         {/* Performance indicator */}
-        <div style={{ backgroundColor: '#FAF9F7' }}>
-          <div style={{ color: '#6B4F43' }}>
+        <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ color: "#6B4F43" }}>
             <div className="flex items-center gap-2">
               <Zap className="w-3 h-3" />
               <span>Tempo de renderização: {loadTime}ms</span>

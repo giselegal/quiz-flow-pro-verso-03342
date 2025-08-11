@@ -101,9 +101,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
             alt="Antes"
             className="w-full h-64 md:h-80 object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <div style={{ backgroundColor: '#FAF9F7' }}>
-            {beforeLabel}
-          </div>
+          <div style={{ backgroundColor: "#FAF9F7" }}>{beforeLabel}</div>
         </div>
       </div>
 
@@ -126,7 +124,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
   const renderToggle = () => (
     <div className="max-w-md mx-auto">
       {/* Toggle Buttons */}
-      <div style={{ backgroundColor: '#E5DDD5' }}>
+      <div style={{ backgroundColor: "#E5DDD5" }}>
         <button
           onClick={() => setActiveView("before")}
           className={cn(
@@ -190,8 +188,8 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
     >
       {/* Título */}
       <div className="text-center mb-6">
-        <h3 style={{ color: '#432818' }}>{title}</h3>
-        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+        <h3 style={{ color: "#432818" }}>{title}</h3>
+        <p style={{ color: "#6B4F43" }}>{subtitle}</p>
         <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 mx-auto mt-3 rounded-full" />
       </div>
 
@@ -213,7 +211,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
 
       {/* Call to Action */}
       <div className="text-center">
-        <p style={{ color: '#6B4F43' }}>
+        <p style={{ color: "#6B4F43" }}>
           Esta pode ser sua transformação! Comece hoje mesmo sua jornada rumo ao estilo dos sonhos.
         </p>
         <div className="inline-flex items-center gap-2 bg-[#B89B7A]/100 text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#B89B7A] transition-colors">

@@ -335,7 +335,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 
           {/* Controles de preview e ações */}
           <div className="flex items-center gap-2 pt-2">
-            <div style={{ backgroundColor: '#E5DDD5' }}>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -415,7 +415,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={onDelete}
-                      style={{ color: '#432818' }}
+                      style={{ color: "#432818" }}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -441,7 +441,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           {filteredProperties ? (
             // Modo de busca
             <div className="space-y-4">
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 {filteredProperties.length} propriedades encontradas
               </p>
               {filteredProperties.map(([key, value]) => renderPropertyControl(key, value))}
@@ -474,7 +474,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       <category.icon className="w-4 h-4" />
                       {category.label}
                     </h3>
-                    <p style={{ color: '#6B4F43' }}>{category.description}</p>
+                    <p style={{ color: "#6B4F43" }}>{category.description}</p>
                   </div>
 
                   <Separator className="bg-[#B89B7A]/20" />
@@ -486,7 +486,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       )}
                     </div>
                   ) : (
-                    <div style={{ color: '#8B7355' }}>
+                    <div style={{ color: "#8B7355" }}>
                       <category.icon className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma propriedade {category.label.toLowerCase()}</p>
                     </div>
@@ -499,7 +499,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <TabsContent value="other" className="space-y-4">
                   <div className="mb-4">
                     <h3 className="font-medium text-[#432818]">Outras Propriedades</h3>
-                    <p style={{ color: '#6B4F43' }}>Propriedades específicas do componente</p>
+                    <p style={{ color: "#6B4F43" }}>Propriedades específicas do componente</p>
                   </div>
 
                   <Separator className="bg-[#B89B7A]/20" />

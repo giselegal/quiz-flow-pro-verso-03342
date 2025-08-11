@@ -146,12 +146,7 @@ const EditorBlockItem: React.FC<EditorBlockItemProps> = ({ block, onUpdate, onDe
               <ChevronDown className="w-4 h-4 text-[#8F7A6A]" />
             )}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onDelete}
-            style={{ color: '#432818' }}
-          >
+          <Button variant="ghost" size="sm" onClick={onDelete} style={{ color: "#432818" }}>
             <Trash2 className="w-3 h-3" />
           </Button>
         </div>

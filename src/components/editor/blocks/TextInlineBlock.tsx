@@ -93,9 +93,9 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   } as const;
 
   const spacingClasses = {
-    tight: "py-0",   // 🎯 Zero padding vertical
-    normal: "py-0",  // 🎯 Zero padding vertical
-    loose: "py-0",   // 🎯 Zero padding vertical
+    tight: "py-0", // 🎯 Zero padding vertical
+    normal: "py-0", // 🎯 Zero padding vertical
+    loose: "py-0", // 🎯 Zero padding vertical
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
@@ -410,9 +410,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             }}
             placeholder="Digite seu texto..."
           />
-          <div style={{ color: '#8B7355' }}>
-            Cmd/Ctrl + Enter para salvar • Esc para cancelar
-          </div>
+          <div style={{ color: "#8B7355" }}>Cmd/Ctrl + Enter para salvar • Esc para cancelar</div>
         </div>
       ) : (
         // 🎯 MODO VISUALIZAÇÃO: Texto renderizado

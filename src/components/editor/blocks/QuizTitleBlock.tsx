@@ -66,8 +66,8 @@ const QuizTitleBlock: React.FC<QuizTitleBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: '#B89B7A' }}>
-        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: "#B89B7A" }}>
+        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }

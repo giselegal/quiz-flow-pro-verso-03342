@@ -49,10 +49,7 @@ export const AnimatedOptionsEditor: React.FC<{
           <div key={option.id} className="p-4 bg-card border border-border rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
               <span className="font-medium">{option.text}</span>
-              <button
-                onClick={() => removeOption(index)}
-                style={{ color: '#432818' }}
-              >
+              <button onClick={() => removeOption(index)} style={{ color: "#432818" }}>
                 🗑️ Remover
               </button>
             </div>

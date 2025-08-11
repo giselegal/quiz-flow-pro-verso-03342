@@ -125,7 +125,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         <PopoverContent className="w-64 p-3" align="start">
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
-              <Palette style={{ color: '#8B7355' }} />
+              <Palette style={{ color: "#8B7355" }} />
               <span className="text-sm font-medium">Escolher Cor</span>
             </div>
 
@@ -137,14 +137,12 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
                 onChange={e => handleColorChange(e.target.value)}
                 className="w-8 h-8 rounded border cursor-pointer"
               />
-              <span style={{ color: '#8B7355' }}>Seletor nativo</span>
+              <span style={{ color: "#8B7355" }}>Seletor nativo</span>
             </div>
 
             {/* Preset colors grid */}
             <div>
-              <span style={{ color: '#6B4F43' }}>
-                Cores predefinidas
-              </span>
+              <span style={{ color: "#6B4F43" }}>Cores predefinidas</span>
               <div className="grid grid-cols-7 gap-1">
                 {presets.map(preset => (
                   <button

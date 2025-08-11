@@ -149,7 +149,7 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
                   Estilo {currentStyle.name}
                 </h2>
               </div>
-              <p style={{ color: '#6B4F43' }}>{currentStyle.description}</p>
+              <p style={{ color: "#6B4F43" }}>{currentStyle.description}</p>
             </CardHeader>
 
             <CardContent className="p-8">
@@ -176,7 +176,7 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
                             className="w-6 h-6 mt-0.5 flex-shrink-0"
                             style={{ color: accentColor }}
                           />
-                          <span style={{ color: '#6B4F43' }}>{characteristic}</span>
+                          <span style={{ color: "#6B4F43" }}>{characteristic}</span>
                         </div>
                       ))}
                     </div>

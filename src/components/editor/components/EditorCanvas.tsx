@@ -94,7 +94,7 @@ export default function EditorCanvas({
   };
 
   return (
-    <div style={{ borderColor: '#E5DDD5' }}>
+    <div style={{ borderColor: "#E5DDD5" }}>
       {components.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center text-gray-400">
           <div className="mb-4 text-6xl">🎨</div>

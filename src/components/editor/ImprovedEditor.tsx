@@ -137,14 +137,14 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                 </div>
                 <div>
                   <h1 className="text-xl font-semibold text-[#432818]">{title}</h1>
-                  {stepNumber && <p style={{ color: '#6B4F43' }}>Etapa {stepNumber}</p>}
+                  {stepNumber && <p style={{ color: "#6B4F43" }}>Etapa {stepNumber}</p>}
                 </div>
               </div>
 
               <Separator orientation="vertical" className="h-8" />
 
               {/* Estatísticas */}
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 <div className="flex items-center gap-1">
                   <Layers className="w-4 h-4" />
                   <span>{blocks.length} blocos</span>
@@ -256,7 +256,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
 
         {/* Status bar */}
         <div className="bg-white border-t border-[#B89B7A]/20 px-4 py-2">
-          <div style={{ color: '#6B4F43' }}>
+          <div style={{ color: "#6B4F43" }}>
             <div className="flex items-center gap-4">
               <span>
                 {blocks.length} {blocks.length === 1 ? "bloco" : "blocos"}

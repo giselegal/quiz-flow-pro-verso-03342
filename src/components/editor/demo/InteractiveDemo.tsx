@@ -30,8 +30,8 @@ export const InteractiveDemo: React.FC = () => {
         ))}
       </div>
 
-      <div style={{ backgroundColor: '#FAF9F7' }}>
-        <p style={{ color: '#6B4F43' }}>
+      <div style={{ backgroundColor: "#FAF9F7" }}>
+        <p style={{ color: "#6B4F43" }}>
           Itens selecionados: {selectedItems.length > 0 ? selectedItems.join(", ") : "Nenhum"}
         </p>
       </div>

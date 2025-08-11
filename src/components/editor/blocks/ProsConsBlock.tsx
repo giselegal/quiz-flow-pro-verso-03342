@@ -161,7 +161,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
   );
 
   const ConsSection = () => (
-    <div style={{ borderColor: '#E5DDD5' }}>
+    <div style={{ borderColor: "#E5DDD5" }}>
       <h3
         className="text-xl font-semibold mb-4 flex items-center gap-2"
         style={{ color: consColor }}
@@ -217,7 +217,7 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
               {title}
             </h2>
           )}
-          {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
+          {subtitle && <p style={{ color: "#6B4F43" }}>{subtitle}</p>}
         </div>
       )}
 
@@ -233,8 +233,8 @@ const ProsConsBlock: React.FC<ProsConsBlockProps> = ({
 
       {/* Summary */}
       {pros.length > 0 && cons.length > 0 && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
-          <p style={{ color: '#6B4F43' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
+          <p style={{ color: "#6B4F43" }}>
             <span className="font-medium" style={{ color: prosColor }}>
               {pros.length} vantagens
             </span>

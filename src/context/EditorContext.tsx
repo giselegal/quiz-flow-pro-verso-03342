@@ -171,15 +171,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   useEffect(() => {
     const loadInitialTemplates = async () => {
       console.log("🔄 EditorProvider: Iniciando carregamento de templates JSON...");
-      
+
       // Carregar templates para as primeiras 3 etapas imediatamente
       for (let i = 1; i <= 3; i++) {
         const stageId = `step-${i}`;
-        
+
         try {
           console.log(`🔄 Carregando template JSON para ${stageId}...`);
           const blocks = await TemplateManager.loadStepBlocks(stageId);
-          
+
           if (blocks && blocks.length > 0) {
             setStageBlocks(prev => ({
               ...prev,
@@ -189,7 +189,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 content: block.content || block.properties || {},
                 order: index + 1,
                 properties: block.properties || block.content || {},
-              }))
+              })),
             }));
             console.log(`✅ Template ${stageId} carregado: ${blocks.length} blocos`);
           } else {
@@ -215,7 +215,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       if (i <= 3) {
         try {
           const templateBlocks = getTemplateByStep(i)?.templateFunction();
-          console.log(`🔄 Legacy: Carregando template para etapa ${i}:`, templateBlocks?.length || 0);
+          console.log(
+            `🔄 Legacy: Carregando template para etapa ${i}:`,
+            templateBlocks?.length || 0
+          );
 
           if (templateBlocks && templateBlocks.length > 0) {
             legacyBlocks[stageId] = templateBlocks.map(
@@ -227,7 +230,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 properties: block.properties || {},
               })
             );
-            console.log(`✅ Legacy: ${legacyBlocks[stageId].length} blocos carregados para etapa ${i}`);
+            console.log(
+              `✅ Legacy: ${legacyBlocks[stageId].length} blocos carregados para etapa ${i}`
+            );
           } else {
             legacyBlocks[stageId] = [];
           }

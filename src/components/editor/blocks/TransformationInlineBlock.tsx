@@ -122,7 +122,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
                 alt="Antes"
                 className="w-full h-48 object-cover rounded-lg shadow-md"
               />
-              <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
                 <InlineEditableText
                   value={beforeTitle}
                   onChange={value => handlePropertyChange("beforeTitle", value)}
@@ -150,7 +150,7 @@ const TransformationInlineBlock: React.FC<BlockComponentProps> = ({
                 className="w-12 h-12 md:w-16 md:h-16 animate-pulse"
                 style={{ color: arrowColor }}
               />
-              <span style={{ color: '#8B7355' }}>Transformação</span>
+              <span style={{ color: "#8B7355" }}>Transformação</span>
             </div>
           </div>
 

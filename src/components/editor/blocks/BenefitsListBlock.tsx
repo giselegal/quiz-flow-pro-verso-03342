@@ -94,7 +94,7 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      <h3 style={{ color: '#432818' }}>{title}</h3>
+      <h3 style={{ color: "#432818" }}>{title}</h3>
 
       <div className={`space-y-3 ${layout === "grid" ? "grid grid-cols-2 gap-4" : ""}`}>
         {benefits.map((benefit: BenefitItem, index: number) => (
@@ -104,7 +104,7 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
                 <Check className="w-3 h-3 text-white" />
               </div>
             )}
-            <span style={{ color: '#6B4F43' }}>{benefit.text}</span>
+            <span style={{ color: "#6B4F43" }}>{benefit.text}</span>
           </div>
         ))}
       </div>

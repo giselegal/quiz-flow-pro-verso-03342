@@ -65,7 +65,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
     if (!Component) {
       return (
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <p>Componente não encontrado: {block.type}</p>
         </div>
       );
@@ -123,7 +123,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
               </div>
             ))}
             {blocks.length === 0 && (
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <p>Nenhum componente adicionado ainda.</p>
                 <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
               </div>

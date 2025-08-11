@@ -122,7 +122,7 @@ const LoaderBlock: React.FC<BlockComponentProps> = ({
             placeholder="Mensagem de carregamento"
           />
         </span>
-        {duration && <div style={{ color: '#8B7355' }}>Duração: {duration / 1000}s</div>}
+        {duration && <div style={{ color: "#8B7355" }}>Duração: {duration / 1000}s</div>}
       </div>
 
       {/* Keyframes para as animações */}

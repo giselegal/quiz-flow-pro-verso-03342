@@ -135,14 +135,14 @@ const QuizResultSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
               <h3 className="text-2xl font-semibold text-center" style={{ color: textColor }}>
                 {title}
               </h3>
-              <p style={{ color: '#6B4F43' }}>{subtitle}</p>
+              <p style={{ color: "#6B4F43" }}>{subtitle}</p>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-6">
                 {secondaryStyles.map(([key, style]) => {
                   const SecondaryIcon = style.icon;
                   return (
-                    <div key={key} style={{ backgroundColor: '#FAF9F7' }}>
+                    <div key={key} style={{ backgroundColor: "#FAF9F7" }}>
                       <SecondaryIcon
                         className="w-8 h-8 mx-auto mb-3"
                         style={{ color: accentColor }}
@@ -150,7 +150,7 @@ const QuizResultSecondaryStylesBlock: React.FC<BlockComponentProps> = ({
                       <h4 className="font-semibold mb-2" style={{ color: textColor }}>
                         {style.name}
                       </h4>
-                      <p style={{ color: '#6B4F43' }}>{style.description}</p>
+                      <p style={{ color: "#6B4F43" }}>{style.description}</p>
                     </div>
                   );
                 })}

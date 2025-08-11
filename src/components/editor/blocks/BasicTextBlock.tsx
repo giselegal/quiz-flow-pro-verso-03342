@@ -72,7 +72,7 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
       )}
       onClick={onClick}
     >
-      <div style={{ color: '#432818' }}>{text}</div>
+      <div style={{ color: "#432818" }}>{text}</div>
     </div>
   );
 };

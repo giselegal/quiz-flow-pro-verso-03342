@@ -1,4 +1,3 @@
-import { Type } from "lucide-react";
 import React, { useState } from "react";
 
 // Editor Components
@@ -9,10 +8,10 @@ import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
-
-// Configuration & Registry
-import { generateBlockDefinitions, getRegistryStats } from "@/config/enhancedBlockRegistry";
+// ✅ NOVO: Importar o painel inteligente de propriedades
+import IntelligentPropertiesPanel from "@/components/editor/properties/IntelligentPropertiesPanel";
+// ✅ NOVO: Importar sistema de debug e ativação de etapas
+import FunnelDebugPanel from "@/components/debug/FunnelDebugPanel";
 
 // Context & Hooks
 import { useEditor } from "@/context/EditorContext";
@@ -22,32 +21,30 @@ import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
- * 
+ *
  * Editor de funil com drag & drop completo, incluindo:
  * - Layout de 4 colunas responsivo
  * - Sistema avançado de drag & drop
  * - Painel universal de propriedades
  * - Atalhos de teclado e histórico de mudanças
  * - Preview mode e viewport responsivo
+ * - Sistema de ativação automática de 21 etapas
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: "canvas" });
   const propertyHistory = usePropertyHistory();
-  
+
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
-    stages,
     activeStageId,
     selectedBlockId,
-    stageActions: { setActiveStage },
     blockActions: {
       addBlock,
       addBlockAtPosition,
-      getBlocksForStage,
       setSelectedBlockId,
       deleteBlock,
       updateBlock,
@@ -56,57 +53,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
-
-  // Registry de componentes disponíveis
-  const registryStats = getRegistryStats();
-  const allBlockDefinitions = generateBlockDefinitions();
-
-  // Função utilitária para obter definição de bloco com propriedades padrão
-  const getBlockDefinitionForType = (type: string) => {
-    const definition = allBlockDefinitions.find(def => def.type === type);
-    
-    if (definition) {
-      return definition;
-    }
-
-    // Fallback para componentes não registrados
-    return {
-      type: type,
-      name: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
-      label: type.charAt(0).toUpperCase() + type.slice(1).replace(/[-_]/g, " "),
-      description: `Componente ${type}`,
-      category: "basic",
-      icon: Type,
-      component: React.Fragment,
-      defaultProps: {},
-      properties: {
-        text: {
-          type: "string" as const,
-          label: "Texto",
-          default: "",
-          description: "Conteúdo de texto do componente",
-        },
-        title: {
-          type: "string" as const,
-          label: "Título",
-          default: "",
-          description: "Título do componente",
-        },
-        visible: {
-          type: "boolean" as const,
-          label: "Visível",
-          default: true,
-          description: "Controla se o componente está visível",
-        },
-        className: {
-          type: "string" as const,
-          label: "Classes CSS",
-          default: "",
-          description: "Classes CSS customizadas",
-        },
-      },
-    };
-  };
 
   // Configuração de viewport responsivo
   const getCanvasClassName = () => {
@@ -137,8 +83,35 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-  const handleStageSelect = (stageId: string) => {
+  const handleStageSelect = (_stageId: string) => {
     // O EditorContext já gerencia internamente
+  };
+
+  // Função para determinar tipo de etapa baseado no ID da etapa ativa
+  const getStepTypeFromStageId = (
+    stageId: string | null
+  ):
+    | "intro"
+    | "question"
+    | "transition"
+    | "strategic"
+    | "processing"
+    | "result"
+    | "lead"
+    | "offer" => {
+    if (!stageId) return "intro";
+
+    const stepNumber = getStepNumberFromStageId(stageId);
+
+    if (stepNumber === 1) return "intro";
+    if (stepNumber >= 2 && stepNumber <= 14) return "question";
+    if (stepNumber === 15 || stepNumber === 19) return "transition";
+    if (stepNumber === 16) return "processing";
+    if (stepNumber >= 17 && stepNumber <= 18) return "result";
+    if (stepNumber === 20) return "lead";
+    if (stepNumber === 21) return "offer";
+
+    return "question"; // fallback
   };
 
   const getStepNumberFromStageId = (stageId: string | null): number => {
@@ -205,7 +178,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           />
 
           {/* Top Bar - Otimizado */}
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <h1 className="text-lg font-semibold text-stone-700">
@@ -247,7 +220,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <EnhancedUniversalPropertiesPanel
+                <IntelligentPropertiesPanel
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
@@ -256,18 +229,24 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       ...(selectedBlock.content || {}),
                     },
                   }}
-                  blockDefinition={getBlockDefinitionForType(selectedBlock.type)}
-                  onUpdate={(blockId, updates) => {
+                  stepType={getStepTypeFromStageId(activeStageId)}
+                  stepNumber={getStepNumberFromStageId(activeStageId)}
+                  onUpdate={(blockId: string, updates: Record<string, any>) => {
                     updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}
+                  onPreview={() => setIsPreviewing(true)}
+                  onReset={() => {
+                    // TODO: Implementar reset para propriedades padrão
+                    console.log("Reset proprieties for block:", selectedBlock.id);
+                  }}
                 />
               ) : !isPreviewing ? (
                 <div className="h-full p-4 flex items-center justify-center text-stone-500">
                   <div className="text-center">
                     <p className="text-sm">Selecione um bloco para editar propriedades</p>
                     <p className="text-xs text-stone-400 mt-1">
-                      Painel Universal ativo • Drag & Drop habilitado
+                      Painel Inteligente ativo • Drag & Drop habilitado
                     </p>
                   </div>
                 </div>
@@ -284,6 +263,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onClose={() => setShowFunnelSettings(false)}
           />
         )}
+
+        {/* ✅ NOVO: Painel de Debug das 21 Etapas do Funil */}
+        <FunnelDebugPanel isVisible={true} />
       </div>
     </DndProvider>
   );
