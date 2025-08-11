@@ -1,13 +1,11 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 // import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -21,11 +19,15 @@ import {
   User,
   Zap,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const AuthPage = () => {
-  const { login, register, user } = useAuth();
+  const { login, signup, user } = useAuth();
   // const { t } = useTranslation();
-  const navigate = useNavigate();
+  const navigate = (path: string) => {
+    // Para wouter, usamos window.location diretamente
+    window.location.href = path;
+  };
 
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -54,7 +56,7 @@ const AuthPage = () => {
         setSuccess("Login realizado com sucesso!");
         setTimeout(() => navigate("/admin"), 1000);
       } else {
-        await register(email, password, name);
+        await signup(email, password, name);
         setSuccess("Conta criada com sucesso! Redirecionando...");
         setTimeout(() => navigate("/admin"), 1000);
       }

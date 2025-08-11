@@ -1,25 +1,25 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+// import { useTranslation } from "react-i18next";
 import {
-  Zap,
-  Sparkles,
-  Play,
   ArrowRight,
   Eye,
-  Users,
-  TrendingUp,
-  Shield,
-  Target,
   MousePointer,
+  Play,
   Rocket,
+  Shield,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const { user, logout } = useAuth();
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const navigate = (path: string) => {
     // Para wouter, usamos window.location diretamente
     window.location.href = path;
