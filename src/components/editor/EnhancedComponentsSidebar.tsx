@@ -105,7 +105,36 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   const generateModularComponents = (): BlockDefinition[] => {
     const components: BlockDefinition[] = [];
 
-    // 📋 COMPONENTES BASEADOS NA CONFIGURAÇÃO COMPLETA
+    // 🎯 ADICIONAR COMPONENTES MODULARES ANALISADOS DO QUIZ-INTRO
+    MODULAR_COMPONENTS.forEach((modularComp: ModularComponent) => {
+      components.push({
+        type: modularComp.type,
+        name: `📦 ${modularComp.name}`,
+        description: modularComp.description,
+        category: "Componentes Modulares",
+        icon: Settings, // Ícone padrão para componentes modulares
+        component: modularComp.type as any,
+        properties: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
+          acc[key] = {
+            type: propConfig.type as any,
+            default: propConfig.default,
+            label: key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim(),
+            description: propConfig.description || `Configurar ${key}`,
+            category: "general" as const,
+          };
+          return acc;
+        }, {} as any),
+        label: `� ${modularComp.name}`,
+        defaultProps: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
+          acc[key] = propConfig.default;
+          return acc;
+        }, {} as any),
+        defaultContent: modularComp.usageExample.properties || {},
+        tags: [modularComp.category.toLowerCase(), modularComp.type, "modular", "quiz-intro"],
+      });
+    });
+
+    // �📋 COMPONENTES BASEADOS NA CONFIGURAÇÃO COMPLETA DAS 21 ETAPAS
     Object.entries(COMPLETE_21_STEPS_CONFIG.components).forEach(([componentKey, componentConfig]) => {
       if (componentKey === 'quiz-intro-header') {
         components.push({
@@ -525,6 +554,8 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   // Obter todas as definições de blocos do registry validado + blocos do quiz
   // Lista completa de blocos, incluindo componentes modulares das 21 etapas
+  };
+
   const allBlocks = [
     ...generateModularComponents(), // 🎯 COMPONENTES MODULARES DAS 21 ETAPAS  
     ...generateQuizBlocks(), 
