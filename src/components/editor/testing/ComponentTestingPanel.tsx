@@ -97,7 +97,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           textColor="#ffffff"
           isSelected={selectedComponent === 'button-test-1'}
           onClick={() => handleSelectComponent('button-test-1', 'button-inline')}
-          onPropertyChange={(key, value) => handlePropertyChange('button-test-1', key, value)}
+          onPropertyChange={(key: string, value: any) => handlePropertyChange('button-test-1', key, value)}
           {...getComponentProps('button-test-1')}
         />
       ),
@@ -116,7 +116,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           textColor="#ffffff"
           isSelected={selectedComponent === 'button-test-2'}
           onClick={() => handleSelectComponent('button-test-2', 'button-inline')}
-          onPropertyChange={(key, value) => handlePropertyChange('button-test-2', key, value)}
+          onPropertyChange={(key: string, value: any) => handlePropertyChange('button-test-2', key, value)}
           {...getComponentProps('button-test-2')}
         />
       ),
@@ -136,7 +136,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           fullWidth={false}
           isSelected={selectedComponent === 'button-test-3'}
           onClick={() => handleSelectComponent('button-test-3', 'button-inline')}
-          onPropertyChange={(key, value) => handlePropertyChange('button-test-3', key, value)}
+          onPropertyChange={(key: string, value: any) => handlePropertyChange('button-test-3', key, value)}
           {...getComponentProps('button-test-3')}
         />
       ),
@@ -176,7 +176,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           textAlign="left"
           isSelected={selectedComponent === 'image-test-2'}
           onClick={() => handleSelectComponent('image-test-2', 'image-display')}
-          onPropertyChange={(key, value) => handlePropertyChange('image-test-2', key, value)}
+          onPropertyChange={(key: string, value: any) => handlePropertyChange('image-test-2', key, value)}
           {...getComponentProps('image-test-2')}
         />
       ),
