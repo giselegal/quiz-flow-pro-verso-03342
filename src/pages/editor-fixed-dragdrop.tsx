@@ -10,8 +10,6 @@ import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 // ✅ NOVO: Importar o painel inteligente de propriedades
 import IntelligentPropertiesPanel from "@/components/editor/properties/IntelligentPropertiesPanel";
-// ✅ NOVO: Importar sistema de debug e ativação de etapas
-import FunnelDebugPanel from "@/components/debug/FunnelDebugPanel";
 
 // Context & Hooks
 import { useEditor } from "@/context/EditorContext";
@@ -263,9 +261,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             onClose={() => setShowFunnelSettings(false)}
           />
         )}
-
-        {/* ✅ NOVO: Painel de Debug das 21 Etapas do Funil */}
-        <FunnelDebugPanel isVisible={true} />
       </div>
     </DndProvider>
   );
