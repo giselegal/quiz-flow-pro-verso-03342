@@ -1,9 +1,8 @@
 import React from "react";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
-import EditorFixedPageWithDragDrop from "./editor-fixed-dragdrop";
+import EditorFixedSimple from "./editor-fixed-simple";
 
 const EditorFixedPage: React.FC = () => {
-  return <EditorFixedPageWithDragDrop />;
+  return <EditorFixedSimple />;
 };
 
 export default EditorFixedPage;
