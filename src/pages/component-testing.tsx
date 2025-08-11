@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 // Importar componentes
+import { EditorNotification } from "@/components/editor/EditorNotification";
 import { ComponentSpecificPropertiesPanel } from "@/components/editor/properties/ComponentSpecificPropertiesPanel";
 import ComponentTestingPanel from "@/components/editor/testing/ComponentTestingPanel";
-import { EditorNotification } from "@/components/editor/EditorNotification";
 
 /**
  * Página de Teste de Componentes

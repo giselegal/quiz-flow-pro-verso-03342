@@ -195,6 +195,23 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
         />
       ),
     },
+    {
+      id: "quiz-intro-header-test-1",
+      type: "quiz-intro-header",
+      category: "Quiz",
+      name: "Header Quiz",
+      component: (
+        <div className="p-4 border rounded-lg bg-gray-50">
+          <div className="text-center">
+            <h3 className="text-lg font-semibold">Quiz Intro Header</h3>
+            <p className="text-sm text-gray-600">Componente de cabeçalho do quiz</p>
+            <div className="mt-2 text-xs text-blue-600">
+              Tipo: quiz-intro-header
+            </div>
+          </div>
+        </div>
+      ),
+    },
   ];
 
   const groupedComponents = testComponents.reduce(
@@ -216,8 +233,10 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
         return <Settings className="w-4 h-4" />;
       case "Imagem":
         return <Eye className="w-4 h-4" />;
-      default:
+      case "Quiz":
         return <Palette className="w-4 h-4" />;
+      default:
+        return <Settings className="w-4 h-4" />;
     }
   };
 
