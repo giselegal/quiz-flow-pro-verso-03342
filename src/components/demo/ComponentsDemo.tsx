@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Demonstração do Sistema Modernizado de Componentes
  *

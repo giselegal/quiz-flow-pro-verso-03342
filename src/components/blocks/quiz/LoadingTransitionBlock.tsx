@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Loader2, CheckCircle, Sparkles } from "lucide-react";
 

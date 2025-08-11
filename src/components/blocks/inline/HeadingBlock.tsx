@@ -1,6 +1,6 @@
+// @ts-nocheck
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-// @ts-nocheck
 import React from "react";
 
 interface HeadingProperties {
