@@ -22,6 +22,10 @@ interface ImageDisplayInlineProps {
   className?: string;
   style?: React.CSSProperties;
   onClick?: () => void;
+  // Propriedades de edição
+  isEditable?: boolean;
+  onPropertyChange?: (key: string, value: any) => void;
+  isSelected?: boolean;
 }
 
 const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
@@ -38,10 +42,45 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   className = "",
   style = {},
   onClick,
+  // Propriedades de edição
+  isEditable = true, // ATIVADO POR PADRÃO
+  onPropertyChange,
+  isSelected = false,
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempSrc, setTempSrc] = useState("");
+
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isEditable && !isEditing) {
+      setIsEditing(true);
+      setTempSrc(src);
+    }
+    onClick?.();
+  };
+
+  const handleSave = () => {
+    if (onPropertyChange && tempSrc.trim()) {
+      onPropertyChange("src", tempSrc.trim());
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempSrc("");
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSave();
+    } else if (e.key === "Escape") {
+      handleCancel();
+    }
+  };
 
   const containerStyle: React.CSSProperties = {
     display: "flex",

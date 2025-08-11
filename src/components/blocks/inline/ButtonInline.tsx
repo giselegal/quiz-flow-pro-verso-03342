@@ -62,7 +62,14 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
   marginBottom = 0,
   marginLeft = 0,
   marginRight = 0,
+  // Propriedades de edição
+  isEditable = true, // ATIVADO POR PADRÃO
+  onPropertyChange,
+  isSelected = false,
 }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempText, setTempText] = useState("");
+
   // Usar variant se style não estiver definido
   const actualVariant = variant || style;
 
@@ -100,12 +107,6 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
     return weight || "font-bold";
   };
 
-  const variantClasses = {
-    primary: "",
-    secondary: "bg-gray-600 text-white hover:bg-gray-700 border-gray-600",
-    outline: "bg-transparent hover:text-white",
-  };
-
   // Função para converter margens numéricas em classes Tailwind
   const getMarginClass = (value: number, type: "top" | "bottom" | "left" | "right"): string => {
     if (!value || value === 0) return "";
@@ -127,14 +128,85 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
     return `${prefix}-24`;
   };
 
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isEditable && !isEditing) {
+      setIsEditing(true);
+      setTempText(text);
+    }
+  };
+
+  const handleSave = () => {
+    if (onPropertyChange && tempText.trim()) {
+      onPropertyChange("text", tempText.trim());
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempText("");
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSave();
+    } else if (e.key === "Escape") {
+      handleCancel();
+    }
+  };
+
+  if (isEditing && isEditable) {
+    return (
+      <div className="inline-block relative">
+        <input
+          type="text"
+          value={tempText}
+          onChange={(e) => setTempText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onBlur={handleSave}
+          autoFocus
+          className="px-4 py-2 border-2 border-blue-500 rounded text-center font-bold"
+          style={{
+            backgroundColor,
+            color: textColor,
+            minWidth: "120px",
+          }}
+          placeholder="Texto do botão..."
+        />
+        <div style={{
+          position: "absolute",
+          top: "100%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          fontSize: "10px",
+          color: "#666",
+          background: "white",
+          padding: "2px 4px",
+          borderRadius: "4px",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          whiteSpace: "nowrap",
+          marginTop: "4px"
+        }}>
+          Enter para salvar • Esc para cancelar
+        </div>
+      </div>
+    );
+  }
+
   return (
     <button
-      onClick={onClick}
+      onClick={isEditable ? handleEditClick : onClick}
       disabled={disabled || requiresValidInput}
       className={cn(
         // Base styles
         "inline-flex items-center justify-center transition-all duration-300 border",
         "focus:outline-none focus:ring-4 focus:ring-opacity-50",
+        // Editable styles
+        isEditable && isSelected && "ring-2 ring-blue-400 ring-opacity-50",
+        isEditable && "hover:ring-2 hover:ring-blue-300 hover:ring-opacity-30",
 
         // Size
         padding || sizeClasses[size],
@@ -196,8 +268,12 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
           e.currentTarget.style.color = backgroundColor;
         }
       }}
+      title={isEditable ? "Clique para editar texto do botão" : undefined}
     >
       {text}
+      {isEditable && isSelected && (
+        <span className="ml-2 text-xs opacity-60">✎</span>
+      )}
     </button>
   );
 };
