@@ -142,16 +142,10 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           name: "🎯 Cabeçalho Modular",
           description: "Cabeçalho editável com logo e barra decorativa",
           category: "Componentes Modulares",
+          icon: Settings,
           component: "QuizIntroHeaderBlock" as any,
-          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
-            name: propKey,
-            label: propConfig.label || propKey,
-            type: propConfig.type,
-            defaultValue: propConfig.default,
-            options: propConfig.options,
-            editable: propConfig.editable
-          })),
           label: "🎯 Cabeçalho Modular",
+          properties: {},
           defaultProps: {
             enabled: true,
             showLogo: true,
@@ -169,17 +163,10 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           name: "🌟 Introdução Modular",
           description: "Componente de introdução configurável para Etapa 1",
           category: "Componentes Modulares",
-          icon: <Trophy className="h-4 w-4" />,
+          icon: Trophy,
           component: "IntroBlock" as any,
-          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
-            name: propKey,
-            label: propConfig.label || propKey,
-            type: propConfig.type,
-            defaultValue: propConfig.default,
-            options: propConfig.options,
-            editable: propConfig.editable
-          })),
           label: "🌟 Introdução Modular",
+          properties: {},
           defaultProps: {
             title: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
             imageIntro: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
@@ -198,7 +185,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           name: "❓ Grupo de Perguntas",
           description: "Componente para perguntas principais (Etapas 2-11) com auto-avanço",
           category: "Componentes Modulares",
-          icon: <HelpCircle className="h-4 w-4" />,
+          icon: HelpCircle,
           component: "QuizQuestionBlock" as any,
           props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
             name: propKey,
@@ -225,7 +212,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           name: "🎯 Perguntas Estratégicas",
           description: "Componente para perguntas estratégicas (Etapas 13-19) com clique manual",
           category: "Componentes Modulares",
-          icon: <Trophy className="h-4 w-4" />,
+          icon: Trophy,
           component: "QuizQuestionBlock" as any,
           props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
             name: propKey,
@@ -252,7 +239,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           name: "🔄 Transição Modular", 
           description: "Componente de transição configurável",
           category: "Componentes Modulares",
-          icon: <Layers className="h-4 w-4" />,
+          icon: Layers,
           component: "LoadingTransitionBlock" as any,
           props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
             name: propKey,
@@ -278,7 +265,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
           name: "🎊 Resultado Modular",
           description: "Componente de resultado com oferta (Etapa 21)",
           category: "Componentes Modulares", 
-          icon: <Trophy className="h-4 w-4" />,
+          icon: Trophy,
           component: "StyleResultCardBlock" as any,
           props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
             name: propKey,
@@ -558,8 +545,8 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   const allBlocks = [
     ...generateModularComponents(), // 🎯 COMPONENTES MODULARES DAS 21 ETAPAS  
-    ...generateQuizBlocks(), 
-    decorativeBarBlock, 
+    // ...generateQuizBlocks(), // TEMPORARIAMENTE COMENTADO
+    // decorativeBarBlock, // TEMPORARIAMENTE COMENTADO
     ...generateBlockDefinitions()
   ];
 
