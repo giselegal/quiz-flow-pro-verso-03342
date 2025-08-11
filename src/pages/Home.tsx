@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "wouter";
 import { useEffect, useState } from "react";
 import {
   Zap,
@@ -21,7 +21,8 @@ import {
 const Home = () => {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const navigate = router.navigate;
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
