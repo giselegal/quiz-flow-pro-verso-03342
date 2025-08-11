@@ -103,12 +103,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
           {isNew ? "Nova Pergunta" : "Editar Pergunta"}
         </h3>
         {onDelete && !isNew && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onDelete}
-            style={{ color: '#432818' }}
-          >
+          <Button variant="outline" size="sm" onClick={onDelete} style={{ color: "#432818" }}>
             <Trash className="w-4 h-4" />
           </Button>
         )}
@@ -167,10 +162,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
 
           <div className="space-y-3">
             {editedQuestion.options.map((option, index) => (
-              <div
-                key={option.id || index}
-                style={{ borderColor: '#E5DDD5' }}
-              >
+              <div key={option.id || index} style={{ borderColor: "#E5DDD5" }}>
                 <div className="flex-1">
                   <Input
                     value={option.text}
@@ -183,7 +175,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
                   variant="outline"
                   size="sm"
                   onClick={() => handleRemoveOption(index)}
-                  style={{ color: '#432818' }}
+                  style={{ color: "#432818" }}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>

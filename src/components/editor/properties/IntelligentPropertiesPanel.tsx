@@ -123,34 +123,22 @@ export const IntelligentPropertiesPanel: React.FC<IntelligentPropertiesPanelProp
         return <IntroStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
       case "question":
-      case "strategic":
         return <QuestionStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
       case "transition":
-      case "processing":
         return <TransitionStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
       case "result":
         return <ResultStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
       case "lead":
+        return <IntroStepProperties properties={allProperties} onUpdate={handleUpdate} />;
+
       case "offer":
-        return (
-          <div className="p-4 text-center text-muted-foreground">
-            <Settings className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">
-              Painel de propriedades para {currentStepType} em desenvolvimento
-            </p>
-          </div>
-        );
+        return <ResultStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
       default:
-        return (
-          <div className="p-4 text-center text-muted-foreground">
-            <Settings className="w-8 h-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">Tipo de etapa não reconhecido: {currentStepType}</p>
-          </div>
-        );
+        return <QuestionStepProperties properties={allProperties} onUpdate={handleUpdate} />;
     }
   };
 

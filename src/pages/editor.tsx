@@ -255,7 +255,7 @@ const SimpleBlockRenderer: React.FC<{
 
   if (!Component) {
     return (
-      <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <p>Componente não encontrado: {block.type}</p>
       </div>
     );
@@ -827,7 +827,7 @@ const EditorPage: React.FC = () => {
         /* Mobile Layout - Vertical Stack */
         <div className="flex-1 flex flex-col">
           {/* Mobile Components Panel */}
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Input
@@ -859,32 +859,26 @@ const EditorPage: React.FC = () => {
           </div>
 
           {/* Mobile Canvas */}
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <ScrollArea className="h-full p-4">
               <div className="bg-white rounded-lg shadow-sm min-h-96 p-6">
                 {sortedBlocks.length === 0 ? (
-                  <div style={{ borderColor: '#E5DDD5' }}>
+                  <div style={{ borderColor: "#E5DDD5" }}>
                     <div className="text-center space-y-4 max-w-md">
                       <div className="w-16 h-16 mx-auto bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
                         <Plus className="w-8 h-8 text-[#B89B7A]" />
                       </div>
                       <div>
-                        <h3 style={{ color: '#432818' }}>
-                          Construa Seu Funil
-                        </h3>
-                        <p style={{ color: '#6B4F43' }}>
-                          Selecione componentes acima para começar
-                        </p>
+                        <h3 style={{ color: "#432818" }}>Construa Seu Funil</h3>
+                        <p style={{ color: "#6B4F43" }}>Selecione componentes acima para começar</p>
                         <Button onClick={handleLoadTemplate} className="mb-2">
                           <Download className="w-4 h-4 mr-2" />
                           Carregar Template
                         </Button>
 
                         {/* 🎯 SEÇÃO PARA CARREGAR STEPS DO FUNIL */}
-                        <div style={{ backgroundColor: '#FAF9F7' }}>
-                          <h4 style={{ color: '#6B4F43' }}>
-                            📋 Etapas do Quiz
-                          </h4>
+                        <div style={{ backgroundColor: "#FAF9F7" }}>
+                          <h4 style={{ color: "#6B4F43" }}>📋 Etapas do Quiz</h4>
                           <div className="flex flex-col gap-2">
                             <Button
                               onClick={handleLoadStep1}
@@ -950,7 +944,7 @@ const EditorPage: React.FC = () => {
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {/* Components Panel */}
           <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               <ScrollArea className="h-full">
                 <div className="space-y-4 p-2">
                   <div className="p-2 border-b space-y-2">
@@ -994,7 +988,7 @@ const EditorPage: React.FC = () => {
                         <span className="mr-2">{block.icon}</span>
                         <div className="flex-1">
                           <div className="font-medium text-xs">{block.name}</div>
-                          <div style={{ color: '#8B7355' }}>{block.category}</div>
+                          <div style={{ color: "#8B7355" }}>{block.category}</div>
                         </div>
                       </Button>
                     ))}
@@ -1008,11 +1002,11 @@ const EditorPage: React.FC = () => {
 
           {/* Canvas */}
           <ResizablePanel defaultSize={55}>
-            <div style={{ backgroundColor: '#FAF9F7' }}>
+            <div style={{ backgroundColor: "#FAF9F7" }}>
               <ScrollArea className="h-full p-6">
                 {/* Preview Mode Indicator */}
                 <div className="text-center mb-4">
-                  <div style={{ color: '#6B4F43' }}>
+                  <div style={{ color: "#6B4F43" }}>
                     {previewMode === "desktop" && (
                       <>
                         <Monitor className="w-4 h-4" /> Desktop (1200px)
@@ -1043,16 +1037,14 @@ const EditorPage: React.FC = () => {
                   >
                     <div className="p-6">
                       {sortedBlocks.length === 0 ? (
-                        <div style={{ borderColor: '#E5DDD5' }}>
+                        <div style={{ borderColor: "#E5DDD5" }}>
                           <div className="text-center space-y-4 max-w-md">
                             <div className="w-16 h-16 mx-auto bg-[#B89B7A]/20 rounded-full flex items-center justify-center">
                               <Plus className="w-8 h-8 text-[#B89B7A]" />
                             </div>
                             <div>
-                              <h3 style={{ color: '#432818' }}>
-                                Construa Seu Funil
-                              </h3>
-                              <p style={{ color: '#6B4F43' }}>
+                              <h3 style={{ color: "#432818" }}>Construa Seu Funil</h3>
+                              <p style={{ color: "#6B4F43" }}>
                                 Sistema completo para criar um funil de quiz de estilo pessoal
                                 otimizado para conversão
                               </p>
@@ -1066,43 +1058,41 @@ const EditorPage: React.FC = () => {
                                 Carregar Template Completo
                               </Button>
 
-                              <p style={{ color: '#8B7355' }}>
+                              <p style={{ color: "#8B7355" }}>
                                 Ou adicione componentes da barra lateral
                               </p>
                             </div>
                             {/* 🎯 SEÇÃO PARA CARREGAR STEPS DO FUNIL */}
-                              <div style={{ backgroundColor: '#FAF9F7' }}>
-                                <h4 style={{ color: '#6B4F43' }}>
-                                  📋 Etapas do Quiz
-                                </h4>
-                                <div className="flex flex-col gap-2">
-                                  <Button
-                                    onClick={handleLoadStep1}
-                                    size="sm"
-                                    variant="outline"
-                                    className="w-full justify-start"
-                                  >
-                                    <span className="mr-2">1️⃣</span>
-                                    Step 01 - Introdução
-                                  </Button>
-                                  <Button
-                                    onClick={handleLoadStep2}
-                                    size="sm"
-                                    variant="outline"
-                                    className="w-full justify-start"
-                                  >
-                                    <span className="mr-2">2️⃣</span>
-                                    Step 02 - Questão 1
-                                  </Button>
-                                </div>
+                            <div style={{ backgroundColor: "#FAF9F7" }}>
+                              <h4 style={{ color: "#6B4F43" }}>📋 Etapas do Quiz</h4>
+                              <div className="flex flex-col gap-2">
+                                <Button
+                                  onClick={handleLoadStep1}
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full justify-start"
+                                >
+                                  <span className="mr-2">1️⃣</span>
+                                  Step 01 - Introdução
+                                </Button>
+                                <Button
+                                  onClick={handleLoadStep2}
+                                  size="sm"
+                                  variant="outline"
+                                  className="w-full justify-start"
+                                >
+                                  <span className="mr-2">2️⃣</span>
+                                  Step 02 - Questão 1
+                                </Button>
                               </div>
+                            </div>
 
-                              <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
-                                <p className="text-xs text-[#A38A69]">
-                                  <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes
-                                  disponíveis
-                                </p>
-                              </div>
+                            <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">
+                              <p className="text-xs text-[#A38A69]">
+                                <strong>🎯 Status:</strong> {AVAILABLE_BLOCKS.length} componentes
+                                disponíveis
+                              </p>
+                            </div>
                           </div>
                         </div>
                       ) : (
@@ -1147,7 +1137,7 @@ const EditorPage: React.FC = () => {
 
           {/* Properties Panel */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               {selectedComponentId ? (
                 <EnhancedUniversalPropertiesPanel
                   selectedBlock={{
@@ -1165,7 +1155,7 @@ const EditorPage: React.FC = () => {
                   onClose={() => setSelectedComponentId(null)}
                 />
               ) : (
-                <div style={{ color: '#8B7355' }}>
+                <div style={{ color: "#8B7355" }}>
                   <p className="text-sm">Selecione um bloco para editar suas propriedades</p>
                 </div>
               )}
@@ -1175,7 +1165,7 @@ const EditorPage: React.FC = () => {
       )}
 
       {/* Status Bar */}
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <div className="flex items-center space-x-4">
           <span>Total de blocos: {blocks.length}</span>
           <span>Modo: {previewMode}</span>
@@ -1186,9 +1176,7 @@ const EditorPage: React.FC = () => {
               Selecionado: {blocks.find(b => b.id === selectedComponentId)?.type}
             </span>
           )}
-          {isSaving && (
-            <span style={{ backgroundColor: '#E5DDD5' }}>Salvando...</span>
-          )}
+          {isSaving && <span style={{ backgroundColor: "#E5DDD5" }}>Salvando...</span>}
         </div>
       </div>
     </div>

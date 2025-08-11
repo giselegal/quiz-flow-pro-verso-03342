@@ -4,18 +4,18 @@ import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { 
-  Zap, 
-  Sparkles, 
-  Play, 
-  ArrowRight, 
-  Eye, 
-  Users, 
-  TrendingUp, 
-  Shield, 
-  Target, 
-  MousePointer, 
-  Rocket 
+import {
+  Zap,
+  Sparkles,
+  Play,
+  ArrowRight,
+  Eye,
+  Users,
+  TrendingUp,
+  Shield,
+  Target,
+  MousePointer,
+  Rocket,
 } from "lucide-react";
 
 const Home = () => {
@@ -69,10 +69,12 @@ const Home = () => {
                         {user.name?.charAt(0) || user.email.charAt(0)}
                       </span>
                     </div>
-                    <span className="text-sm font-medium text-slate-700">{user.name || user.email}</span>
+                    <span className="text-sm font-medium text-slate-700">
+                      {user.name || user.email}
+                    </span>
                   </div>
                   <Button
-                    onClick={() => navigate('/admin')}
+                    onClick={() => navigate("/admin")}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
                   >
                     Dashboard
@@ -88,14 +90,14 @@ const Home = () => {
               ) : (
                 <div className="flex items-center space-x-3">
                   <Button
-                    onClick={() => navigate('/auth')}
+                    onClick={() => navigate("/auth")}
                     variant="outline"
                     className="border-slate-300 text-slate-700 hover:bg-slate-50"
                   >
                     Entrar
                   </Button>
                   <Button
-                    onClick={() => navigate('/auth')}
+                    onClick={() => navigate("/auth")}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
                   >
                     Começar Grátis
@@ -116,27 +118,27 @@ const Home = () => {
               <Sparkles className="h-4 w-4 mr-2" />
               Plataforma de Marketing Interativo
             </Badge>
-            
+
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
               Transforme Visitantes em
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent block">
                 Clientes Engajados
               </span>
             </h1>
-            
+
             <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Crie quizzes interativos, funnels de conversão e experiências personalizadas 
-              que capturam leads qualificados e aumentam suas vendas.
+              Crie quizzes interativos, funnels de conversão e experiências personalizadas que
+              capturam leads qualificados e aumentam suas vendas.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <Button
-                onClick={() => navigate(user ? '/admin' : '/auth')}
+                onClick={() => navigate(user ? "/admin" : "/auth")}
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl px-8 py-4 text-lg"
               >
                 <Play className="h-5 w-5 mr-2" />
-                {user ? 'Ir para Dashboard' : 'Começar Agora'}
+                {user ? "Ir para Dashboard" : "Começar Agora"}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
               <Button
@@ -203,7 +205,10 @@ const Home = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
               Tudo que você precisa para
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> converter mais</span>
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {" "}
+                converter mais
+              </span>
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão amar
@@ -218,7 +223,8 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-3">Criação Rápida</h3>
               <p className="text-slate-600 leading-relaxed">
-                Crie quizzes profissionais em minutos com nossos templates inteligentes e editor visual.
+                Crie quizzes profissionais em minutos com nossos templates inteligentes e editor
+                visual.
               </p>
             </div>
 
@@ -229,7 +235,8 @@ const Home = () => {
               </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-3">Segmentação Inteligente</h3>
               <p className="text-slate-600 leading-relaxed">
-                Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas respostas.
+                Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas
+                respostas.
               </p>
             </div>
 
@@ -257,12 +264,12 @@ const Home = () => {
             Junte-se a milhares de empresas que já aumentaram suas conversões com nossa plataforma.
           </p>
           <Button
-            onClick={() => navigate(user ? '/admin' : '/auth')}
+            onClick={() => navigate(user ? "/admin" : "/auth")}
             size="lg"
             className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl px-8 py-4 text-lg font-semibold"
           >
             <Rocket className="h-5 w-5 mr-2" />
-            {user ? 'Acessar Dashboard' : 'Começar Gratuitamente'}
+            {user ? "Acessar Dashboard" : "Começar Gratuitamente"}
             <ArrowRight className="h-5 w-5 ml-2" />
           </Button>
         </div>
@@ -278,15 +285,23 @@ const Home = () => {
               </div>
               <span className="text-xl font-bold">QuizFlow</span>
             </div>
-            
+
             <div className="flex items-center space-x-6 text-sm text-slate-400">
-              <a href="#" className="hover:text-white transition-colors">Privacidade</a>
-              <a href="#" className="hover:text-white transition-colors">Termos</a>
-              <a href="#" className="hover:text-white transition-colors">Suporte</a>
-              <a href="#" className="hover:text-white transition-colors">Blog</a>
+              <a href="#" className="hover:text-white transition-colors">
+                Privacidade
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Termos
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Suporte
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Blog
+              </a>
             </div>
           </div>
-          
+
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-slate-400">
             <p>&copy; 2024 QuizFlow. Todos os direitos reservados.</p>
           </div>

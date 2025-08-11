@@ -182,9 +182,9 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   // Se não há opções, mostrar um placeholder de debug
   if (!options || options.length === 0) {
     return (
-      <div style={{ borderColor: '#E5DDD5' }}>
-        <h3 style={{ color: '#432818' }}>Debug: QuizOptionsGridBlock</h3>
-        <p style={{ color: '#6B4F43' }}>Nenhuma opção encontrada</p>
+      <div style={{ borderColor: "#E5DDD5" }}>
+        <h3 style={{ color: "#432818" }}>Debug: QuizOptionsGridBlock</h3>
+        <p style={{ color: "#6B4F43" }}>Nenhuma opção encontrada</p>
         <pre className="text-xs mt-2 bg-white p-2 rounded overflow-auto">
           {JSON.stringify({ properties, id }, null, 2)}
         </pre>

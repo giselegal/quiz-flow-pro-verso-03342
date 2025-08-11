@@ -142,12 +142,7 @@ const QuestionOptionEditor: React.FC<QuestionOptionEditorProps> = ({
                 </Select>
               </div>
 
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={onDelete}
-                style={{ color: '#432818' }}
-              >
+              <Button type="button" variant="ghost" onClick={onDelete} style={{ color: "#432818" }}>
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>

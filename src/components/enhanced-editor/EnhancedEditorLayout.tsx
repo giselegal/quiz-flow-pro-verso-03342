@@ -29,22 +29,13 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
         <div className="p-4">
           <h2 className="text-lg font-semibold mb-4">Componentes</h2>
           <div className="space-y-2">
-            <button
-              onClick={() => handleAddBlock("text")}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <button onClick={() => handleAddBlock("text")} style={{ backgroundColor: "#E5DDD5" }}>
               Texto
             </button>
-            <button
-              onClick={() => handleAddBlock("image")}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <button onClick={() => handleAddBlock("image")} style={{ backgroundColor: "#E5DDD5" }}>
               Imagem
             </button>
-            <button
-              onClick={() => handleAddBlock("button")}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <button onClick={() => handleAddBlock("button")} style={{ backgroundColor: "#E5DDD5" }}>
               Botão
             </button>
           </div>
@@ -75,7 +66,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
 
         <div className="canvas flex-1 p-4">
           {blocks.length === 0 ? (
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <p>Nenhum bloco adicionado ainda</p>
               <p className="text-sm">Use o painel lateral para adicionar componentes</p>
             </div>
@@ -91,7 +82,7 @@ export const EnhancedEditorLayout: React.FC<EnhancedEditorLayoutProps> = ({
                   }`}
                   onClick={() => onBlockSelect?.(block.id)}
                 >
-                  <div style={{ color: '#8B7355' }}>{block.type}</div>
+                  <div style={{ color: "#8B7355" }}>{block.type}</div>
                   {block.content.title && <h3>{block.content.title}</h3>}
                   {block.content.text && <p>{block.content.text}</p>}
                 </div>

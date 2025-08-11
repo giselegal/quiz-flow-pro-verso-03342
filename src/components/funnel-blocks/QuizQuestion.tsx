@@ -401,9 +401,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               <span className="flex-1 text-left">{option.text}</span>
 
               {/* Pontuação se disponível */}
-              {option.points && (
-                <span style={{ color: '#8B7355' }}>{option.points} pontos</span>
-              )}
+              {option.points && <span style={{ color: "#8B7355" }}>{option.points} pontos</span>}
             </div>
           )}
         </div>
@@ -423,14 +421,14 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
       {/* Barra de Progresso */}
       {progressConfig?.showProgress && (
         <div className="w-full max-w-2xl mx-auto mb-8">
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressConfig.progressValue || 0}%` }}
             />
           </div>
           {questionNumber && totalQuestions && (
-            <p style={{ color: '#6B4F43' }}>
+            <p style={{ color: "#6B4F43" }}>
               Pergunta {questionNumber} de {totalQuestions}
             </p>
           )}
@@ -454,7 +452,7 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
               {question}
             </h2>
 
-            {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
+            {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
           </div>
         )}
 
@@ -466,21 +464,19 @@ export const QuizQuestion: React.FC<QuizQuestionProps> = ({
           {options && options.length > 0 ? (
             options.map((option, index) => renderOption(option, index))
           ) : (
-            <div style={{ borderColor: '#E5DDD5' }}>
-              <p style={{ color: '#432818' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
+              <p style={{ color: "#432818" }}>
                 ⚠️ Nenhuma opção encontrada. Array de opções está vazio ou indefinido.
               </p>
-              <p style={{ color: '#6B4F43' }}>
-                Debug: options.length = {options?.length || 0}
-              </p>
+              <p style={{ color: "#6B4F43" }}>Debug: options.length = {options?.length || 0}</p>
             </div>
           )}
         </div>
 
         {/* Erro de Validação */}
         {validationError && showValidation && (
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <p style={{ color: '#432818' }}>{validationError}</p>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <p style={{ color: "#432818" }}>{validationError}</p>
           </div>
         )}
 

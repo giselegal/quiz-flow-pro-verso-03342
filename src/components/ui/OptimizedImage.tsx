@@ -140,7 +140,7 @@ export default function OptimizedImage({
           )}
 
           {/* Shimmer loading effect */}
-          <div style={{ backgroundColor: '#E5DDD5' }} />
+          <div style={{ backgroundColor: "#E5DDD5" }} />
         </>
       )}
 
@@ -174,8 +174,8 @@ export default function OptimizedImage({
       />
 
       {error && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
-          <span style={{ color: '#8B7355' }}>Imagem não disponível</span>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
+          <span style={{ color: "#8B7355" }}>Imagem não disponível</span>
         </div>
       )}
     </div>

@@ -137,7 +137,7 @@ const CaktoQuizResult: React.FC<CaktoQuizResultProps> = ({ result, onContinue })
                 return (
                   <div key={styleId} className="flex items-center gap-4">
                     <div className="w-20 text-sm text-[#8F7A6A] font-medium">{style?.name}</div>
-                    <div style={{ backgroundColor: '#E5DDD5' }}>
+                    <div style={{ backgroundColor: "#E5DDD5" }}>
                       <div
                         className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
                         style={{ width: `${percentage}%` }}

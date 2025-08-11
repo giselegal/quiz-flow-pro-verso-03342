@@ -106,7 +106,7 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
     <div className={optimizedClasses} style={inlineStyles}>
       {/* 📊 Debug info (apenas desenvolvimento) */}
       {devStats && (
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <details className="text-sm">
             <summary className="font-medium cursor-pointer">🔧 Hook Stats (DEV)</summary>
             <div className="mt-2 space-y-1 text-xs">
@@ -141,7 +141,7 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
       <div className="space-y-4">
         {children || (
           <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <p style={{ color: '#6B4F43' }}>Este step está otimizado com hooks existentes! ✨</p>
+            <p style={{ color: "#6B4F43" }}>Este step está otimizado com hooks existentes! ✨</p>
 
             {/* 📊 Info de performance */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
@@ -166,9 +166,7 @@ export const ProductionReadyStep: React.FC<ProductionReadyStepProps> = ({
       {/* 🎛️ Controles otimizados */}
       <div className="mt-8">
         <div className="flex justify-between items-center">
-          <div style={{ color: '#8B7355' }}>
-            Otimizado para {isMobile ? "Mobile" : "Desktop"}
-          </div>
+          <div style={{ color: "#8B7355" }}>Otimizado para {isMobile ? "Mobile" : "Desktop"}</div>
 
           <button
             onClick={handleNext}
@@ -210,10 +208,7 @@ export const QuickOptimizedStep: React.FC<ProductionReadyStepProps> = ({
       {children}
 
       <div className="mt-8 text-center">
-        <button
-          onClick={onNext}
-          style={{ backgroundColor: '#B89B7A' }}
-        >
+        <button onClick={onNext} style={{ backgroundColor: "#B89B7A" }}>
           Continuar
         </button>
       </div>

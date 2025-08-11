@@ -170,7 +170,7 @@ export const FAQSection: React.FC<FAQSectionProps> = props => {
               <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
             )}
 
-            {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
+            {subtitle && <p style={{ color: "#6B4F43" }}>{subtitle}</p>}
           </div>
         )}
 
@@ -189,7 +189,7 @@ export const FAQSection: React.FC<FAQSectionProps> = props => {
                 <CardContent className="p-0">
                   {/* Pergunta - Clicável */}
                   <button
-                    style={{ backgroundColor: '#FAF9F7' }}
+                    style={{ backgroundColor: "#FAF9F7" }}
                     onClick={() => toggleFAQ(faqId)}
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${faqId}`}
@@ -211,9 +211,7 @@ export const FAQSection: React.FC<FAQSectionProps> = props => {
                   >
                     <div className="px-6 pb-6">
                       <div className="pt-2 border-t border-gray-100">
-                        <p style={{ color: '#6B4F43' }}>
-                          {faq.answer}
-                        </p>
+                        <p style={{ color: "#6B4F43" }}>{faq.answer}</p>
                       </div>
                     </div>
                   </div>
@@ -225,7 +223,7 @@ export const FAQSection: React.FC<FAQSectionProps> = props => {
 
         {/* Texto de Apoio */}
         <div className="mt-12 text-center">
-          <p style={{ color: '#6B4F43' }}>
+          <p style={{ color: "#6B4F43" }}>
             Não encontrou sua pergunta?
             <span className="text-[#B89B7A] font-semibold ml-1 cursor-pointer hover:underline">
               Entre em contato conosco

@@ -75,11 +75,11 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
   }> = ({ title, value, description, icon }) => (
     <div className="bg-white p-6 rounded-lg border shadow-sm">
       <div className="flex items-center justify-between mb-2">
-        <h3 style={{ color: '#6B4F43' }}>{title}</h3>
+        <h3 style={{ color: "#6B4F43" }}>{title}</h3>
         {icon}
       </div>
-      <div style={{ color: '#432818' }}>{value}</div>
-      <p style={{ color: '#8B7355' }}>{description}</p>
+      <div style={{ color: "#432818" }}>{value}</div>
+      <p style={{ color: "#8B7355" }}>{description}</p>
     </div>
   );
 
@@ -97,12 +97,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
   if (error) {
     return (
       <div className={`p-6 ${className}`}>
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <div className="flex items-center space-x-2">
-            <AlertCircle style={{ color: '#432818' }} />
+            <AlertCircle style={{ color: "#432818" }} />
             <div>
               <p className="font-medium text-red-900">Erro ao carregar analytics</p>
-              <p style={{ color: '#432818' }}>{error}</p>
+              <p style={{ color: "#432818" }}>{error}</p>
               <Button onClick={loadAnalytics} className="mt-2 bg-red-600 hover:bg-red-700">
                 Tentar novamente
               </Button>
@@ -118,8 +118,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
       <div className={`p-6 ${className}`}>
         <div className="bg-white border rounded-lg p-12 text-center">
           <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 style={{ color: '#432818' }}>Nenhum dado disponível</h3>
-          <p style={{ color: '#6B4F43' }}>
+          <h3 style={{ color: "#432818" }}>Nenhum dado disponível</h3>
+          <p style={{ color: "#6B4F43" }}>
             Ainda não há dados de analytics para este quiz.
             <br />
             Comece a compartilhar seu quiz para ver as estatísticas aqui.
@@ -135,7 +135,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
-          <p style={{ color: '#6B4F43' }}>
+          <p style={{ color: "#6B4F43" }}>
             Última atualização: {new Date(metrics.last_updated).toLocaleString("pt-BR")}
           </p>
         </div>
@@ -169,7 +169,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
           title="Completados"
           value={metrics.total_completions.toLocaleString()}
           description="Quizzes finalizados"
-          icon={<Target style={{ color: '#B89B7A' }} />}
+          icon={<Target style={{ color: "#B89B7A" }} />}
         />
         <MetricCard
           title="Taxa de Conclusão"
@@ -181,7 +181,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
 
       {/* Tabs */}
       <div className="w-full">
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <nav className="-mb-px flex space-x-8">
             {["overview", "funnel", "performance"].map(tab => (
               <button
@@ -211,19 +211,19 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
                 <h3 className="text-lg font-medium mb-4">Métricas Detalhadas</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between">
-                    <span style={{ color: '#6B4F43' }}>Taxa de Conversão:</span>
+                    <span style={{ color: "#6B4F43" }}>Taxa de Conversão:</span>
                     <Badge variant={metrics.conversion_rate > 10 ? "default" : "secondary"}>
                       {metrics.conversion_rate}%
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span style={{ color: '#6B4F43' }}>Taxa de Rejeição:</span>
+                    <span style={{ color: "#6B4F43" }}>Taxa de Rejeição:</span>
                     <Badge variant={metrics.bounce_rate < 50 ? "default" : "destructive"}>
                       {metrics.bounce_rate}%
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span style={{ color: '#6B4F43' }}>Tempo Médio:</span>
+                    <span style={{ color: "#6B4F43" }}>Tempo Médio:</span>
                     <span className="font-medium">
                       {Math.floor(metrics.average_time / 60)}m {metrics.average_time % 60}s
                     </span>
@@ -265,29 +265,27 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
           {activeTab === "funnel" && (
             <div className="bg-white border rounded-lg p-6">
               <h3 className="text-lg font-medium mb-4">Funil de Conversão</h3>
-              <p style={{ color: '#6B4F43' }}>Visualize onde os usuários abandonam o processo</p>
+              <p style={{ color: "#6B4F43" }}>Visualize onde os usuários abandonam o processo</p>
 
               {funnel.length > 0 ? (
                 <div className="space-y-4">
                   {funnel.map((step, index) => (
                     <div key={step.step_name} className="relative">
-                      <div style={{ backgroundColor: '#FAF9F7' }}>
+                      <div style={{ backgroundColor: "#FAF9F7" }}>
                         <div className="flex-1">
                           <h4 className="font-medium">{step.step_name}</h4>
-                          <p style={{ color: '#6B4F43' }}>{step.total_users} usuários</p>
+                          <p style={{ color: "#6B4F43" }}>{step.total_users} usuários</p>
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-bold">{step.conversion_rate}%</div>
                           {step.drop_off_rate > 0 && (
-                            <div style={{ color: '#432818' }}>
-                              -{step.drop_off_rate}% drop-off
-                            </div>
+                            <div style={{ color: "#432818" }}>-{step.drop_off_rate}% drop-off</div>
                           )}
                         </div>
                       </div>
                       {index < funnel.length - 1 && (
                         <div className="flex justify-center my-2">
-                          <div style={{ borderColor: '#E5DDD5' }}></div>
+                          <div style={{ borderColor: "#E5DDD5" }}></div>
                         </div>
                       )}
                     </div>
@@ -296,7 +294,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
               ) : (
                 <div className="text-center py-8">
                   <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p style={{ color: '#6B4F43' }}>Dados do funil não disponíveis</p>
+                  <p style={{ color: "#6B4F43" }}>Dados do funil não disponíveis</p>
                 </div>
               )}
             </div>
@@ -317,7 +315,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ quizId, classNa
                     )}
                     {metrics.bounce_rate > 60 && (
                       <li className="flex items-start space-x-2">
-                        <AlertCircle style={{ color: '#432818' }} />
+                        <AlertCircle style={{ color: "#432818" }} />
                         <span>Taxa de rejeição alta. Melhore a primeira impressão.</span>
                       </li>
                     )}

@@ -94,17 +94,12 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <ColorPicker
               value={backgroundColor}
               onChange={color => onUpdate("backgroundColor", color)}
-              presets={["#FAF9F7", "#FFFFFF", "#F3E8E6", "#E5E7EB"]}
             />
           </div>
 
           <div>
             <Label htmlFor="textColor">Cor do Texto</Label>
-            <ColorPicker
-              value={textColor}
-              onChange={color => onUpdate("textColor", color)}
-              presets={["#432818", "#000000", "#374151", "#6B7280"]}
-            />
+            <ColorPicker value={textColor} onChange={color => onUpdate("textColor", color)} />
           </div>
         </CardContent>
       </Card>

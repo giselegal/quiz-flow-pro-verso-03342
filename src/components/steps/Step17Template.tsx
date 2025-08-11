@@ -93,4 +93,3 @@ export const getStep17Template = () => {
     },
   ];
 };
-

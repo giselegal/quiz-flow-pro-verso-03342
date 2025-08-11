@@ -100,9 +100,9 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
         style={{ backgroundColor }}
       >
         <div className="animate-pulse text-center">
-          <div style={{ backgroundColor: '#E5DDD5' }}></div>
-          <div style={{ backgroundColor: '#E5DDD5' }}></div>
-          <div style={{ backgroundColor: '#E5DDD5' }}></div>
+          <div style={{ backgroundColor: "#E5DDD5" }}></div>
+          <div style={{ backgroundColor: "#E5DDD5" }}></div>
+          <div style={{ backgroundColor: "#E5DDD5" }}></div>
         </div>
       </div>
     );
@@ -133,7 +133,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
             <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ color: textColor }}>
               Parabéns, {userName}!
             </h1>
-            <p style={{ color: '#6B4F43' }}>Seu resultado personalizado está pronto</p>
+            <p style={{ color: "#6B4F43" }}>Seu resultado personalizado está pronto</p>
           </div>
         </AnimatedWrapper>
 
@@ -150,7 +150,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                   Estilo {currentStyle.name}
                 </h2>
               </div>
-              <p style={{ color: '#6B4F43' }}>{currentStyle.description}</p>
+              <p style={{ color: "#6B4F43" }}>{currentStyle.description}</p>
             </CardHeader>
 
             <CardContent className="p-8">
@@ -177,7 +177,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                             className="w-6 h-6 mt-0.5 flex-shrink-0"
                             style={{ color: accentColor }}
                           />
-                          <span style={{ color: '#6B4F43' }}>{characteristic}</span>
+                          <span style={{ color: "#6B4F43" }}>{characteristic}</span>
                         </div>
                       ))}
                     </div>
@@ -196,7 +196,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                 <h3 className="text-2xl font-semibold text-center" style={{ color: textColor }}>
                   Seus Estilos Secundários
                 </h3>
-                <p style={{ color: '#6B4F43' }}>
+                <p style={{ color: "#6B4F43" }}>
                   Estes estilos complementam seu estilo predominante
                 </p>
               </CardHeader>
@@ -208,7 +208,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                     .map(([key, style]) => {
                       const SecondaryIcon = style.icon;
                       return (
-                        <div key={key} style={{ backgroundColor: '#FAF9F7' }}>
+                        <div key={key} style={{ backgroundColor: "#FAF9F7" }}>
                           <SecondaryIcon
                             className="w-8 h-8 mx-auto mb-3"
                             style={{ color: accentColor }}
@@ -216,9 +216,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
                           <h4 className="font-semibold mb-2" style={{ color: textColor }}>
                             {style.name}
                           </h4>
-                          <p style={{ color: '#6B4F43' }}>
-                            {style.description}
-                          </p>
+                          <p style={{ color: "#6B4F43" }}>{style.description}</p>
                         </div>
                       );
                     })}
@@ -245,7 +243,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               Quer descobrir seu guarda-roupa ideal?
             </h3>
 
-            <p style={{ color: '#6B4F43' }}>
+            <p style={{ color: "#6B4F43" }}>
               Tenha acesso ao guia completo personalizado para o seu estilo e transforme sua forma
               de se vestir para sempre.
             </p>
@@ -270,7 +268,7 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
               {ctaText}
             </Button>
 
-            <div style={{ color: '#8B7355' }}>
+            <div style={{ color: "#8B7355" }}>
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
                 +10.000 mulheres transformadas

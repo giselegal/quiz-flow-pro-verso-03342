@@ -22,7 +22,7 @@ const TestimonialsBlockPreview: React.FC<TestimonialsBlockPreviewProps> = ({ con
           className="w-full h-auto rounded-lg mx-auto"
         />
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <p className="text-gray-400">Adicione uma imagem de depoimentos</p>
         </div>
       )}

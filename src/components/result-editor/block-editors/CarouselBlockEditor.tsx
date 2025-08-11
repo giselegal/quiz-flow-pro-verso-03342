@@ -64,7 +64,7 @@ export const CarouselBlockEditor: React.FC<CarouselBlockEditorProps> = ({ block,
                   variant="ghost"
                   size="sm"
                   onClick={() => removeImage(index)}
-                  style={{ color: '#432818' }}
+                  style={{ color: "#432818" }}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>

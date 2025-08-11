@@ -79,10 +79,13 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         });
       } else {
         // Fallback otimizado usando requestIdleCallback
-        if ('requestIdleCallback' in window) {
-          (window as any).requestIdleCallback(() => {
-            fixBlurryIntroQuizImages();
-          }, { timeout: 2000 });
+        if ("requestIdleCallback" in window) {
+          (window as any).requestIdleCallback(
+            () => {
+              fixBlurryIntroQuizImages();
+            },
+            { timeout: 2000 }
+          );
         } else {
           // Fallback mais suave
           requestAnimationFrame(() => {

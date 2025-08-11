@@ -72,7 +72,7 @@ const QuizOptions: React.FC<QuizOptionsProps> = ({
     return (
       <div style={containerStyle} className={className}>
         <div style={questionStyle}>{question}</div>
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <p>Nenhuma opção configurada</p>
         </div>
       </div>

@@ -122,7 +122,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
                       e.stopPropagation();
                       handleRemoveOption(index);
                     }}
-                    style={{ color: '#432818' }}
+                    style={{ color: "#432818" }}
                   >
                     <X className="w-3 h-3" />
                   </Button>

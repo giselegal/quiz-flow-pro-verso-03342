@@ -82,10 +82,10 @@ const ExemploEditorQuestao: React.FC = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       {/* Controles do exemplo */}
       <div className="bg-white border-b p-4 flex justify-between items-center">
-        <h1 style={{ color: '#432818' }}>Exemplo: Questão Configurável</h1>
+        <h1 style={{ color: "#432818" }}>Exemplo: Questão Configurável</h1>
 
         <div className="flex gap-2">
           <Button
@@ -113,17 +113,17 @@ const ExemploEditorQuestao: React.FC = () => {
             <div>
               <span className="font-medium">Pergunta:</span>
               <br />
-              <span style={{ color: '#6B4F43' }}>{block.props.question}</span>
+              <span style={{ color: "#6B4F43" }}>{block.props.question}</span>
             </div>
             <div>
               <span className="font-medium">Opções:</span>
               <br />
-              <span style={{ color: '#6B4F43' }}>{block.props.options.length} opções</span>
+              <span style={{ color: "#6B4F43" }}>{block.props.options.length} opções</span>
             </div>
             <div>
               <span className="font-medium">Pontos Total:</span>
               <br />
-              <span style={{ color: '#6B4F43' }}>
+              <span style={{ color: "#6B4F43" }}>
                 {block.props.options.reduce((total: number, opt: any) => total + opt.points, 0)}{" "}
                 pontos
               </span>
@@ -131,7 +131,7 @@ const ExemploEditorQuestao: React.FC = () => {
             <div>
               <span className="font-medium">Categorias:</span>
               <br />
-              <span style={{ color: '#6B4F43' }}>
+              <span style={{ color: "#6B4F43" }}>
                 {
                   Array.from(new Set(block.props.options.map((opt: any) => opt.styleCategory)))
                     .length
@@ -146,7 +146,7 @@ const ExemploEditorQuestao: React.FC = () => {
       {/* Componente configurável */}
       <div className="relative">
         <div className="min-h-screen p-4">
-          <p style={{ color: '#8B7355' }}>
+          <p style={{ color: "#8B7355" }}>
             Component placeholder - QuizQuestionBlockConfigurable not available
           </p>
           <pre className="text-sm">{JSON.stringify(block, null, 2)}</pre>
@@ -156,10 +156,8 @@ const ExemploEditorQuestao: React.FC = () => {
       {/* Debug info (apenas no modo edição) */}
       {isEditing && (
         <div className="fixed bottom-4 left-4 bg-white p-3 rounded-lg shadow-lg border max-w-sm">
-          <h4 style={{ color: '#432818' }}>
-            🛠️ Debug Info
-          </h4>
-          <div style={{ color: '#6B4F43' }}>
+          <h4 style={{ color: "#432818" }}>🛠️ Debug Info</h4>
+          <div style={{ color: "#6B4F43" }}>
             <div>ID: {block.id}</div>
             <div>Tipo: {block.type}</div>
             <div>Editando: {isEditing ? "Sim" : "Não"}</div>

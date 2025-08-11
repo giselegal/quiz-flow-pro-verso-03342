@@ -74,12 +74,12 @@ export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdat
           <Card key={item.id} className="p-4">
             <CardContent className="space-y-3 p-0">
               <div className="flex items-start justify-between">
-                <span style={{ color: '#8B7355' }}>Item {index + 1}</span>
+                <span style={{ color: "#8B7355" }}>Item {index + 1}</span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => deleteFAQItem(item.id)}
-                  style={{ color: '#432818' }}
+                  style={{ color: "#432818" }}
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>

@@ -51,7 +51,7 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
         />
       </div>
 
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <span>
           {min}
           {unit}

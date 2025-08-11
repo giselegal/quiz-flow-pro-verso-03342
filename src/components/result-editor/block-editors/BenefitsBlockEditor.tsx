@@ -87,7 +87,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
                 size="sm"
                 variant="ghost"
                 onClick={() => handleRemoveItem(index)}
-                style={{ color: '#432818' }}
+                style={{ color: "#432818" }}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
@@ -96,7 +96,7 @@ const BenefitsBlockEditor: React.FC<BenefitsBlockEditorProps> = ({ block, onUpda
         </div>
 
         {benefitItems.length === 0 && (
-          <p style={{ color: '#8B7355' }}>
+          <p style={{ color: "#8B7355" }}>
             Nenhum benefício adicionado. Clique em "Adicionar" para começar.
           </p>
         )}

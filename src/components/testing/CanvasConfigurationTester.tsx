@@ -148,9 +148,9 @@ export const CanvasConfigurationTester: React.FC = () => {
 
           <div>
             <h4 className="font-medium mb-2">Test Results</h4>
-            <div style={{ backgroundColor: '#FAF9F7' }}>
+            <div style={{ backgroundColor: "#FAF9F7" }}>
               {testResults.length === 0 ? (
-                <div style={{ color: '#8B7355' }}>No tests run yet...</div>
+                <div style={{ color: "#8B7355" }}>No tests run yet...</div>
               ) : (
                 testResults.map((result, index) => (
                   <div key={index} className="border-b pb-1 mb-1 last:border-b-0">
@@ -166,10 +166,7 @@ export const CanvasConfigurationTester: React.FC = () => {
               <h4 className="font-medium mb-2">Current Components</h4>
               <div className="space-y-1 text-sm">
                 {configuration.components.map((component: any, index: number) => (
-                  <div
-                    key={index}
-                    style={{ backgroundColor: '#E5DDD5' }}
-                  >
+                  <div key={index} style={{ backgroundColor: "#E5DDD5" }}>
                     <span>
                       {component.type || "Unknown"} - {component.id}
                     </span>

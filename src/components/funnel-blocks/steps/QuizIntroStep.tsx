@@ -40,13 +40,13 @@ export const QuizIntroStep: React.FC<FunnelStepProps> = ({
       <div className="flex flex-col md:flex-row gap-8 items-center">
         {/* Lado esquerdo - Texto */}
         <div className="flex-1 space-y-6">
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             Etapa {stepNumber} de {totalSteps}
           </div>
 
-          <h2 style={{ color: '#432818' }}>{title}</h2>
+          <h2 style={{ color: "#432818" }}>{title}</h2>
 
-          <p style={{ color: '#6B4F43' }}>{description}</p>
+          <p style={{ color: "#6B4F43" }}>{description}</p>
 
           {/* Lista de bullets */}
           <ul className="space-y-3">

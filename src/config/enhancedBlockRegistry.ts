@@ -50,7 +50,7 @@ import { IntroBlock } from "../components/steps/step01/IntroBlock";
 
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // ✅ COMPONENTES PRINCIPAIS DO QUIZ
-  
+
   // Text and Content
   "text-inline": TextInlineBlock,
   "heading-inline": HeadingInlineBlock,
@@ -87,7 +87,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
   // ✅ NOVOS COMPONENTES ESPECÍFICOS DO QUIZ
   "result-style-card": ResultStyleCardBlock, // step-21
-  "bonus-showcase": BonusShowcaseBlock,     // ofertas especiais
+  "bonus-showcase": BonusShowcaseBlock, // ofertas especiais
   "loading-animation": LoadingAnimationBlock, // transições
 
   // ✅ COMPONENTES LEGACY (COMPATIBILIDADE)
@@ -100,12 +100,12 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
   // ✅ FALLBACKS PARA TIPOS NÃO IMPLEMENTADOS
   // Estes são tipos estruturais dos JSONs, não componentes visuais
-  question: TextInlineBlock,              // Fallback para tipo "question"
-  strategicQuestion: TextInlineBlock,     // Fallback para tipo "strategicQuestion" 
-  mainTransition: TextInlineBlock,        // Fallback para tipo "mainTransition"
-  result: QuizResultsEditor,              // Fallback para tipo "result"
-  intro: IntroBlock,                      // Fallback para tipo "intro"
-  progress: QuizProgressBlock,            // Fallback para tipo "progress"
+  question: TextInlineBlock, // Fallback para tipo "question"
+  strategicQuestion: TextInlineBlock, // Fallback para tipo "strategicQuestion"
+  mainTransition: TextInlineBlock, // Fallback para tipo "mainTransition"
+  result: QuizResultsEditor, // Fallback para tipo "result"
+  intro: IntroBlock, // Fallback para tipo "intro"
+  progress: QuizProgressBlock, // Fallback para tipo "progress"
 };
 
 /**
@@ -123,25 +123,25 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
   // Segundo: tentar fallbacks inteligentes
   const fallbacks: Record<string, string> = {
     // Mapeamentos alternativos comuns
-    "text": "text-inline",
-    "heading": "heading-inline", 
-    "image": "image-display-inline",
-    "button": "button-inline",
+    text: "text-inline",
+    heading: "heading-inline",
+    image: "image-display-inline",
+    button: "button-inline",
     "decorative-bar": "decorative-bar-inline",
     "legal-notice": "legal-notice-inline",
-    
+
     // Quiz específicos
     "quiz-header": "quiz-intro-header",
-    "intro": "step01-intro",
-    "form": "form-input",
-    "options": "options-grid",
-    
+    intro: "step01-intro",
+    form: "form-input",
+    options: "options-grid",
+
     // Tipos estruturais → componentes visuais
-    "question": "text-inline",
-    "strategicQuestion": "options-grid",
-    "mainTransition": "text-inline",
-    "result": "quiz-results",
-    "progress": "quiz-progress"
+    question: "text-inline",
+    strategicQuestion: "options-grid",
+    mainTransition: "text-inline",
+    result: "quiz-results",
+    progress: "quiz-progress",
   };
 
   const fallbackType = fallbacks[type];
@@ -158,7 +158,7 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
     console.log(`📝 Fallback genérico: ${type} → text-inline`);
     return ENHANCED_BLOCK_REGISTRY["text-inline"];
   }
-  
+
   if (type.includes("button") || type.includes("cta") || type.includes("action")) {
     console.log(`🔘 Fallback genérico: ${type} → button-inline`);
     return ENHANCED_BLOCK_REGISTRY["button-inline"];
@@ -177,7 +177,7 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
   // Último: fallback final para texto
   console.warn(`⚠️ Componente não encontrado, usando fallback final: ${type} → text-inline`);
   console.log("📋 Componentes disponíveis:", Object.keys(ENHANCED_BLOCK_REGISTRY));
-  
+
   return ENHANCED_BLOCK_REGISTRY["text-inline"] || null;
 };
 

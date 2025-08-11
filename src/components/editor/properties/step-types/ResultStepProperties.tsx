@@ -51,7 +51,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
   };
 
   const handleRemoveSecondaryStyle = (index: number) => {
-    const updatedStyles = secondaryStyles.filter((_, i) => i !== index);
+    const updatedStyles = secondaryStyles.filter((_: any, i: number) => i !== index);
     onUpdate("secondaryStyles", updatedStyles);
   };
 
@@ -72,7 +72,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
   };
 
   const handleRemoveBonusItem = (index: number) => {
-    const updatedBonus = bonusItems.filter((_, i) => i !== index);
+    const updatedBonus = bonusItems.filter((_: any, i: number) => i !== index);
     onUpdate("bonusItems", updatedBonus);
   };
 
@@ -180,11 +180,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
 
           <div>
             <Label htmlFor="ctaColor">Cor do Botão</Label>
-            <ColorPicker
-              value={ctaColor}
-              onChange={color => onUpdate("ctaColor", color)}
-              presets={["#B89B7A", "#aa6b5d", "#4CAF50", "#2196F3", "#FF5722"]}
-            />
+            <ColorPicker value={ctaColor} onChange={color => onUpdate("ctaColor", color)} />
           </div>
         </CardContent>
       </Card>
@@ -405,17 +401,12 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <ColorPicker
               value={backgroundColor}
               onChange={color => onUpdate("backgroundColor", color)}
-              presets={["#FAF9F7", "#FFFFFF", "#F3E8E6", "#E5E7EB"]}
             />
           </div>
 
           <div>
             <Label htmlFor="textColor">Cor do Texto</Label>
-            <ColorPicker
-              value={textColor}
-              onChange={color => onUpdate("textColor", color)}
-              presets={["#432818", "#000000", "#374151", "#6B7280"]}
-            />
+            <ColorPicker value={textColor} onChange={color => onUpdate("textColor", color)} />
           </div>
 
           <div className="flex items-center space-x-2">

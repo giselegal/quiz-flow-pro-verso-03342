@@ -29,7 +29,7 @@ const LiveEditorPage: React.FC = () => {
   return (
     <div className="h-screen flex flex-col">
       {/* Header com navegação */}
-      <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button

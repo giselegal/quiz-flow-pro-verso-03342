@@ -699,11 +699,7 @@ const FaqSectionAdvanced = () => {
               />
             </button>
 
-            {openItem === index && (
-              <div style={{ color: '#6B4F43' }}>
-                {item.answer}
-              </div>
-            )}
+            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
           </div>
         ))}
       </div>

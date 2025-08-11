@@ -22,7 +22,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   return (
     <div className="h-full bg-white p-4">
       <div className="max-w-4xl mx-auto">
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           Viewport: {viewportSize} | Preview: {isPreviewing ? "On" : "Off"}
         </div>
         <div className="space-y-4">
@@ -37,7 +37,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
               onClick={() => !isPreviewing && onSelectBlock(block.id)}
             >
               <div className="text-sm font-medium">{block.type}</div>
-              <div style={{ color: '#8B7355' }}>ID: {block.id}</div>
+              <div style={{ color: "#8B7355" }}>ID: {block.id}</div>
             </div>
           ))}
         </div>

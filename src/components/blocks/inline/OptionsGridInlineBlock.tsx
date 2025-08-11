@@ -165,7 +165,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Feedback de seleção */}
       <div className="selection-feedback mt-4 text-center">
-        <p style={{ color: '#6B4F43' }}>
+        <p style={{ color: "#6B4F43" }}>
           {multipleSelection
             ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ""}`
             : selectedOptions.length > 0

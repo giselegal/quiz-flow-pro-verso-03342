@@ -83,9 +83,7 @@ const QuizPage: React.FC = () => {
                 <p className="text-sm text-[#8F7A6A]">Descoberta de estilo pessoal</p>
               </div>
               <div className="flex items-center gap-2">
-                <span style={{ backgroundColor: '#E5DDD5' }}>
-                  Ativo
-                </span>
+                <span style={{ backgroundColor: "#E5DDD5" }}>Ativo</span>
                 <Button variant="outline" size="sm">
                   Editar
                 </Button>

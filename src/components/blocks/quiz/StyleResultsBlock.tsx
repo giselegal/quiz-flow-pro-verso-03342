@@ -86,9 +86,7 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-[#432818] mb-2">{result.title}</h2>
-        <p style={{ color: '#8B7355' }}>
-          Parabéns, {userName}! Seu estilo predominante é:
-        </p>
+        <p style={{ color: "#8B7355" }}>Parabéns, {userName}! Seu estilo predominante é:</p>
 
         {result.imageUrl && (
           <div className="mb-6">
@@ -101,7 +99,7 @@ const StyleResultsBlock: React.FC<StyleResultsBlockProps> = ({
         )}
 
         <div className="prose prose-lg prose-stone mx-auto mb-8">
-          <p style={{ color: '#6B4F43' }}>{result.description}</p>
+          <p style={{ color: "#6B4F43" }}>{result.description}</p>
         </div>
 
         {showGuideImage && guideImageUrl && (

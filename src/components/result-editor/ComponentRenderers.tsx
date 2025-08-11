@@ -142,11 +142,11 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
 
         <div className="flex-1">
           <h4 className="font-semibold text-sm">{props.title}</h4>
-          <p style={{ color: '#6B4F43' }}>{props.description}</p>
+          <p style={{ color: "#6B4F43" }}>{props.description}</p>
 
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs">{formatTime(currentTime)}</span>
-            <div style={{ backgroundColor: '#E5DDD5' }}>
+            <div style={{ backgroundColor: "#E5DDD5" }}>
               <div
                 className="h-1 rounded-full"
                 style={{

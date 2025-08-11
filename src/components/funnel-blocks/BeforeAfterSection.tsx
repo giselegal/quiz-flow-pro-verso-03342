@@ -136,9 +136,7 @@ export const BeforeAfterSection: React.FC<BeforeAfterSectionProps> = ({
                     className="w-full h-auto rounded-lg shadow-md"
                     loading="lazy"
                   />
-                  <div style={{ backgroundColor: '#FAF9F7' }}>
-                    Antes
-                  </div>
+                  <div style={{ backgroundColor: "#FAF9F7" }}>Antes</div>
                 </div>
               )}
               {transformation.afterImage && (

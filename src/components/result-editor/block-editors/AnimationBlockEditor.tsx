@@ -111,7 +111,7 @@ const AnimationBlockEditor: React.FC<AnimationBlockEditorProps> = ({ block, onUp
         />
       </div>
 
-      <div style={{ color: '#8B7355' }}>
+      <div style={{ color: "#8B7355" }}>
         <p>
           Este bloco permite animar outros elementos da página. Adicione outros blocos dentro deste
           para aplicar a animação.

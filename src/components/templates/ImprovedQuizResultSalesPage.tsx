@@ -327,7 +327,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                           <span className="text-2xl sm:text-3xl font-bold line-through text-[#6B5B4E] opacity-70">
                             R$ 175,00
                           </span>
-                          <div style={{ backgroundColor: '#FAF9F7' }}></div>
+                          <div style={{ backgroundColor: "#FAF9F7" }}></div>
                         </div>
                       </div>
                     </div>
@@ -363,7 +363,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                     <div className="mb-6">
                       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-4">
                         <div className="text-center">
-                          <p style={{ color: '#8B7355' }}>De</p>
+                          <p style={{ color: "#8B7355" }}>De</p>
                           <p className="text-xl sm:text-2xl line-through text-[#6B5B4E] opacity-70">
                             R$ 175,00
                           </p>
@@ -488,10 +488,8 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Antes */}
-            <div style={{ borderColor: '#E5DDD5' }}>
-              <h3 style={{ color: '#432818' }}>
-                ❌ Quando você não conhece seu estilo...
-              </h3>
+            <div style={{ borderColor: "#E5DDD5" }}>
+              <h3 style={{ color: "#432818" }}>❌ Quando você não conhece seu estilo...</h3>
               <ul className="space-y-3">
                 {[
                   "Compra peças por impulso que não combinam entre si",
@@ -500,7 +498,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
                   "Tem dificuldade em criar uma imagem coerente e autêntica",
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <XCircle style={{ color: '#432818' }} />
+                    <XCircle style={{ color: "#432818" }} />
                     <span className="text-sm">{item}</span>
                   </li>
                 ))}

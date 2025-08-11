@@ -29,7 +29,7 @@ const ImageBlockPreview: React.FC<ImageBlockPreviewProps> = ({ content }) => {
           className="mx-auto"
         />
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <p className="text-gray-400">Selecione uma imagem</p>
         </div>
       )}

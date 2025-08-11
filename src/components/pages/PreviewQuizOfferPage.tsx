@@ -125,7 +125,7 @@ const ActiveUsersIndicator: React.FC = () => {
 
   return (
     <div className="flex items-center bg-gradient-to-r from-pink-100 via-purple-100 to-indigo-100 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm text-purple-800 shadow-lg">
-      <Heart size={16} style={{ color: '#B89B7A' }} />
+      <Heart size={16} style={{ color: "#B89B7A" }} />
       <span className="font-semibold">+{activeCustomers} Clientes Felizes</span>
       <span className="ml-1 hidden sm:inline">Transformaram Seus Estilos!</span>
     </div>
@@ -250,7 +250,7 @@ const FaqSectionNew: React.FC = () => {
           >
             <button
               onClick={() => setOpenItem(openItem === index ? null : index)}
-              style={{ backgroundColor: '#FAF9F7' }}
+              style={{ backgroundColor: "#FAF9F7" }}
             >
               <span className="font-semibold text-brand-dark text-base sm:text-lg">{item.q}</span>
               <ChevronRight
@@ -258,11 +258,7 @@ const FaqSectionNew: React.FC = () => {
                 className={`text-brand-accent transition-transform duration-300 ${openItem === index ? "transform rotate-90" : ""}`}
               />
             </button>
-            {openItem === index && (
-              <div style={{ borderColor: '#E5DDD5' }}>
-                {item.a}
-              </div>
-            )}
+            {openItem === index && <div style={{ borderColor: "#E5DDD5" }}>{item.a}</div>}
           </div>
         ))}
       </div>
@@ -975,7 +971,7 @@ const PreviewQuizOfferPage: React.FC = () => {
           reservados.
         </p>
         <p className="mt-1.5">CNPJ: XX.XXX.XXX/0001-XX - Contato: contato@giselegalvao.com.br</p>
-        <p style={{ color: '#8B7355' }}>Design e Desenvolvimento com ❤️</p>
+        <p style={{ color: "#8B7355" }}>Design e Desenvolvimento com ❤️</p>
       </footer>
     </div>
   );

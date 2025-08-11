@@ -94,7 +94,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
   return (
     <div className="flex-1 flex flex-col">
-      <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <Button variant="outline" className="w-full" onClick={() => onAddStep()}>
           <Plus className="w-4 h-4 mr-2" />
           Nova Etapa
@@ -164,7 +164,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       {steps.length > 1 && (
                         <DropdownMenuItem
                           onClick={() => onDeleteStep(step.id)}
-                          style={{ color: '#432818' }}
+                          style={{ color: "#432818" }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Excluir
@@ -200,7 +200,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                 <h4 className="font-medium text-sm mb-1">{step.name}</h4>
               )}
 
-              <div style={{ color: '#8B7355' }}>
+              <div style={{ color: "#8B7355" }}>
                 <span>{step.items.length} componentes</span>
                 <div className="flex gap-1">
                   {step.settings.showLogo && <span>🏷️</span>}

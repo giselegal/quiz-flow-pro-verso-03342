@@ -142,7 +142,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
       case "quiz_complete":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "quiz_answer":
-        return <Clock style={{ color: '#B89B7A' }} />;
+        return <Clock style={{ color: "#B89B7A" }} />;
       case "result_view":
         return <Eye className="h-4 w-4 text-indigo-500" />;
       case "lead_generated":
@@ -150,7 +150,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
       case "sale":
         return <ShoppingCart className="h-4 w-4 text-green-500" />;
       default:
-        return <User style={{ color: '#8B7355' }} />;
+        return <User style={{ color: "#8B7355" }} />;
     }
   };
 
@@ -233,33 +233,31 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               <div>
-                                <p style={{ color: '#8B7355' }}>Nome</p>
+                                <p style={{ color: "#8B7355" }}>Nome</p>
                                 <p className="text-base">{selectedUserData?.name}</p>
                               </div>
                               <div>
-                                <p style={{ color: '#8B7355' }}>Email</p>
+                                <p style={{ color: "#8B7355" }}>Email</p>
                                 <p className="text-base">{selectedUserData?.email}</p>
                               </div>
                               <div>
-                                <p style={{ color: '#8B7355' }}>Início</p>
+                                <p style={{ color: "#8B7355" }}>Início</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.startTime)}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ color: '#8B7355' }}>Conclusão</p>
+                                <p style={{ color: "#8B7355" }}>Conclusão</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.completeTime)}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ color: '#8B7355' }}>
-                                  Perguntas Respondidas
-                                </p>
+                                <p style={{ color: "#8B7355" }}>Perguntas Respondidas</p>
                                 <p className="text-base">{selectedUserData?.totalQuestions}</p>
                               </div>
                               <div>
-                                <p style={{ color: '#8B7355' }}>Status</p>
+                                <p style={{ color: "#8B7355" }}>Status</p>
                                 <p className="text-base">
                                   {selectedUserData?.completed ? (
                                     <Badge className="bg-green-500 text-white">Concluído</Badge>
@@ -276,9 +274,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                             </div>
 
                             <div className="border-t pt-4">
-                              <h4 style={{ color: '#8B7355' }}>
-                                Histórico de Eventos
-                              </h4>
+                              <h4 style={{ color: "#8B7355" }}>Histórico de Eventos</h4>
                               <ScrollArea className="h-[300px]">
                                 <div className="space-y-4">
                                   {userEvents.map((event, index) => (
@@ -307,11 +303,11 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                                             <>Evento: {event.type}</>
                                           )}
                                         </p>
-                                        <p style={{ color: '#8B7355' }}>
+                                        <p style={{ color: "#8B7355" }}>
                                           {new Date(event.timestamp).toLocaleString()}
                                         </p>
                                         {event.type === "quiz_answer" && (
-                                          <div style={{ color: '#6B4F43' }}>
+                                          <div style={{ color: "#6B4F43" }}>
                                             <p>
                                               Opções selecionadas:{" "}
                                               {event.selectedOptions?.join(", ") || "N/A"}
@@ -322,7 +318,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                                     </div>
                                   ))}
                                   {userEvents.length === 0 && (
-                                    <p style={{ color: '#8B7355' }}>
+                                    <p style={{ color: "#8B7355" }}>
                                       Nenhum evento encontrado para este usuário.
                                     </p>
                                   )}

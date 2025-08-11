@@ -127,8 +127,8 @@ const QuizResultsBlockEditor: React.FC<QuizResultsBlockEditorProps> = ({
   // Renderização
   if (!demoResult) {
     return (
-      <div style={{ backgroundColor: '#FAF9F7' }}>
-        <p style={{ color: '#8B7355' }}>Adicione resultados para visualizar a prévia</p>
+      <div style={{ backgroundColor: "#FAF9F7" }}>
+        <p style={{ color: "#8B7355" }}>Adicione resultados para visualizar a prévia</p>
       </div>
     );
   }

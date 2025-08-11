@@ -14,7 +14,7 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
   ];
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <h3 className="text-lg font-semibold mb-4">Components</h3>
       <div className="space-y-2">
         {components.map(component => (

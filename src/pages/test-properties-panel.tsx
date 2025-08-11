@@ -28,15 +28,12 @@ const TestPropertiesPanel = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#E5DDD5' }}>
+    <div style={{ backgroundColor: "#E5DDD5" }}>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Teste do Painel de Propriedades</h1>
 
         <div className="mb-6 space-x-4">
-          <button
-            onClick={() => setIsVisible(!isVisible)}
-            style={{ backgroundColor: '#B89B7A' }}
-          >
+          <button onClick={() => setIsVisible(!isVisible)} style={{ backgroundColor: "#B89B7A" }}>
             {isVisible ? "Esconder" : "Mostrar"} Painel
           </button>
 
@@ -61,7 +58,7 @@ const TestPropertiesPanel = () => {
                 properties: { content: "Título teste", level: "h1" },
               })
             }
-            style={{ backgroundColor: '#FAF9F7' }}
+            style={{ backgroundColor: "#FAF9F7" }}
           >
             Bloco Título
           </button>
@@ -82,9 +79,7 @@ const TestPropertiesPanel = () => {
 
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h2 className="text-lg font-semibold mb-3">Bloco Selecionado:</h2>
-          <pre style={{ backgroundColor: '#E5DDD5' }}>
-            {JSON.stringify(selectedBlock, null, 2)}
-          </pre>
+          <pre style={{ backgroundColor: "#E5DDD5" }}>{JSON.stringify(selectedBlock, null, 2)}</pre>
         </div>
 
         {isVisible && (
@@ -93,7 +88,7 @@ const TestPropertiesPanel = () => {
               <div className="bg-white p-6 rounded-lg shadow">
                 <h2 className="text-lg font-semibold mb-4">Área de Visualização</h2>
                 {selectedBlock && (
-                  <div style={{ borderColor: '#E5DDD5' }}>
+                  <div style={{ borderColor: "#E5DDD5" }}>
                     {selectedBlock.type === "text" && (
                       <p
                         style={{

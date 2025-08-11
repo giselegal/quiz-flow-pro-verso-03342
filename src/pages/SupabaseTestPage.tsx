@@ -32,7 +32,7 @@ const SupabaseTestPage: React.FC = () => {
           type="checkbox"
           checked={debugMode}
           onChange={e => setDebugMode(e.target.checked)}
-          style={{ borderColor: '#E5DDD5' }}
+          style={{ borderColor: "#E5DDD5" }}
         />
       </div>
 

@@ -137,10 +137,8 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
           <div className="mb-4">
             {option.originalPrice && option.originalPrice > option.currentPrice && (
               <div className="relative mb-2">
-                <span style={{ color: '#8B7355' }}>
-                  {formatPrice(option.originalPrice)}
-                </span>
-                <div style={{ backgroundColor: '#FAF9F7' }}></div>
+                <span style={{ color: "#8B7355" }}>{formatPrice(option.originalPrice)}</span>
+                <div style={{ backgroundColor: "#FAF9F7" }}></div>
               </div>
             )}
             <div className="text-3xl font-bold text-[#aa6b5d]">
@@ -173,7 +171,7 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
             option.excludedFeatures.map((feature, idx) => (
               <div key={idx} className="flex items-start gap-3 opacity-50">
                 <X className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                <span style={{ color: '#8B7355' }}>{feature}</span>
+                <span style={{ color: "#8B7355" }}>{feature}</span>
               </div>
             ))}
         </div>
@@ -217,9 +215,9 @@ export const PriceComparison: React.FC<PriceComparisonProps> = ({
         {/* Table comparison - implementação simplificada */}
         <div className="max-w-full mx-auto">
           <div className="overflow-x-auto">
-            <div style={{ borderColor: '#E5DDD5' }}>
+            <div style={{ borderColor: "#E5DDD5" }}>
               {/* Headers */}
-              <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
                 <div className="font-semibold text-[#432818]">Recursos</div>
                 {priceOptions.slice(0, 3).map(option => (
                   <div key={option.id} className="text-center">

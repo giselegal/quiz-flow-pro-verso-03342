@@ -74,7 +74,7 @@ export const QuizDataViewer: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p style={{ color: '#8B7355' }}>Nenhuma sessão de quiz ativa.</p>
+            <p style={{ color: "#8B7355" }}>Nenhuma sessão de quiz ativa.</p>
             <p className="text-sm text-gray-400 mt-2">
               Inicie um quiz para ver os dados em tempo real.
             </p>
@@ -134,7 +134,7 @@ export const QuizDataViewer: React.FC = () => {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Target style={{ color: '#B89B7A' }} />
+                  <Target style={{ color: "#B89B7A" }} />
                   <span className="text-sm font-medium">Questões</span>
                 </div>
                 <p className="text-lg font-bold">{currentStats.questionsAnswered}</p>
@@ -177,13 +177,13 @@ export const QuizDataViewer: React.FC = () => {
                         </h4>
                         <Badge variant="outline">{(answer.responseTime / 1000).toFixed(1)}s</Badge>
                       </div>
-                      <div style={{ color: '#6B4F43' }}>
+                      <div style={{ color: "#6B4F43" }}>
                         <strong>Respostas:</strong> {answer.optionTexts.join(", ")}
                       </div>
-                      <div style={{ color: '#8B7355' }}>
+                      <div style={{ color: "#8B7355" }}>
                         <strong>Pontos de Estilo:</strong> {JSON.stringify(answer.stylePoints)}
                       </div>
-                      <div style={{ color: '#8B7355' }}>
+                      <div style={{ color: "#8B7355" }}>
                         <strong>Timestamp:</strong> {formatTime(answer.timestamp)}
                       </div>
                     </div>
@@ -207,10 +207,7 @@ export const QuizDataViewer: React.FC = () => {
                     .slice(-50)
                     .reverse()
                     .map((click: any, index: number) => (
-                      <div
-                        key={index}
-                        style={{ backgroundColor: '#FAF9F7' }}
-                      >
+                      <div key={index} style={{ backgroundColor: "#FAF9F7" }}>
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">
                             {click.elementType}
@@ -219,7 +216,7 @@ export const QuizDataViewer: React.FC = () => {
                             {click.elementText || click.elementId || "Elemento sem texto"}
                           </span>
                         </div>
-                        <div style={{ color: '#8B7355' }}>{formatTime(click.timestamp)}</div>
+                        <div style={{ color: "#8B7355" }}>{formatTime(click.timestamp)}</div>
                       </div>
                     ))}
                 </div>
@@ -305,9 +302,7 @@ export const QuizDataViewer: React.FC = () => {
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-96">
-                <pre style={{ backgroundColor: '#E5DDD5' }}>
-                  {JSON.stringify(session, null, 2)}
-                </pre>
+                <pre style={{ backgroundColor: "#E5DDD5" }}>{JSON.stringify(session, null, 2)}</pre>
               </ScrollArea>
             </CardContent>
           </Card>

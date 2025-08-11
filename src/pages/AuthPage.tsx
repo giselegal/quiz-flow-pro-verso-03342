@@ -8,25 +8,25 @@ import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  CheckCircle, 
-  Eye, 
-  EyeOff, 
-  Lock, 
-  Mail, 
-  Shield, 
-  Sparkles, 
-  User, 
-  Zap 
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  Shield,
+  Sparkles,
+  User,
+  Zap,
 } from "lucide-react";
 
 const AuthPage = () => {
   const { login, register, user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,7 +71,7 @@ const AuthPage = () => {
     "Analytics em tempo real",
     "Integração com CRM",
     "Suporte 24/7",
-    "LGPD Compliant"
+    "LGPD Compliant",
   ];
 
   return (
@@ -81,12 +81,15 @@ const AuthPage = () => {
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-purple-800/90"></div>
         <div className="absolute inset-0 opacity-5">
-          <div className="w-full h-full" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundRepeat: 'repeat'
-          }}></div>
+          <div
+            className="w-full h-full"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundRepeat: "repeat",
+            }}
+          ></div>
         </div>
-        
+
         <div className="relative z-10 flex flex-col justify-center px-12 py-20 text-white">
           {/* Logo */}
           <div className="flex items-center space-x-3 mb-12">
@@ -106,7 +109,8 @@ const AuthPage = () => {
               <span className="text-blue-200 block">clientes engajados</span>
             </h2>
             <p className="text-xl text-blue-100 leading-relaxed">
-              Crie quizzes interativos e funnels de conversão que capturam leads qualificados e aumentam suas vendas.
+              Crie quizzes interativos e funnels de conversão que capturam leads qualificados e
+              aumentam suas vendas.
             </p>
           </div>
 
@@ -177,16 +181,15 @@ const AuthPage = () => {
                   {isLogin ? "Acesse sua conta" : "Crie sua conta grátis"}
                 </Badge>
               </div>
-              
+
               <CardTitle className="text-2xl font-bold text-slate-900">
                 {isLogin ? "Entrar na plataforma" : "Começar gratuitamente"}
               </CardTitle>
-              
+
               <CardDescription className="text-slate-600">
-                {isLogin 
+                {isLogin
                   ? "Acesse seu dashboard e continue criando experiências incríveis"
-                  : "Crie sua conta e comece a converter mais em minutos"
-                }
+                  : "Crie sua conta e comece a converter mais em minutos"}
               </CardDescription>
             </CardHeader>
 
@@ -216,7 +219,7 @@ const AuthPage = () => {
                         type="text"
                         placeholder="Seu nome completo"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={e => setName(e.target.value)}
                         required={!isLogin}
                         className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                       />
@@ -235,7 +238,7 @@ const AuthPage = () => {
                       type="email"
                       placeholder="seu@email.com"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                       required
                       className="pl-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                     />
@@ -253,7 +256,7 @@ const AuthPage = () => {
                       type={showPassword ? "text" : "password"}
                       placeholder="Sua senha"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={e => setPassword(e.target.value)}
                       required
                       className="pl-10 pr-10 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                     />
@@ -265,11 +268,7 @@ const AuthPage = () => {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {!isLogin && (
-                    <p className="text-xs text-slate-500">
-                      Mínimo 6 caracteres
-                    </p>
-                  )}
+                  {!isLogin && <p className="text-xs text-slate-500">Mínimo 6 caracteres</p>}
                 </div>
 
                 <Button
@@ -320,11 +319,17 @@ const AuthPage = () => {
           {/* Footer Links */}
           <div className="text-center mt-8 space-y-2">
             <div className="flex items-center justify-center space-x-4 text-xs text-slate-500">
-              <a href="#" className="hover:text-slate-700 transition-colors">Termos de Uso</a>
+              <a href="#" className="hover:text-slate-700 transition-colors">
+                Termos de Uso
+              </a>
               <span>•</span>
-              <a href="#" className="hover:text-slate-700 transition-colors">Política de Privacidade</a>
+              <a href="#" className="hover:text-slate-700 transition-colors">
+                Política de Privacidade
+              </a>
               <span>•</span>
-              <a href="#" className="hover:text-slate-700 transition-colors">Suporte</a>
+              <a href="#" className="hover:text-slate-700 transition-colors">
+                Suporte
+              </a>
             </div>
             <p className="text-xs text-slate-400">
               © 2024 QuizFlow. Todos os direitos reservados.

@@ -241,7 +241,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
       case "duration_warning":
         return <Clock className="h-4 w-4 text-[#B89B7A]" />;
       case "conversion_anomaly":
-        return <AlertTriangle style={{ color: '#432818' }} />;
+        return <AlertTriangle style={{ color: "#432818" }} />;
       default:
         return <Bell className="h-4 w-4" />;
     }
@@ -302,7 +302,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
               <div className="text-sm text-muted-foreground">Total de Alertas</div>
             </div>
             <div className="text-center">
-              <div style={{ color: '#432818' }}>{unacknowledgedAlerts.length}</div>
+              <div style={{ color: "#432818" }}>{unacknowledgedAlerts.length}</div>
               <div className="text-sm text-muted-foreground">Não Confirmados</div>
             </div>
             <div className="text-center">
@@ -310,7 +310,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
               <div className="text-sm text-muted-foreground">Confirmados</div>
             </div>
             <div className="text-center">
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 {Math.floor((new Date().getTime() - lastCheck.getTime()) / 60000)}
                 min
               </div>
@@ -428,7 +428,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertTriangle style={{ color: '#432818' }} />
+              <AlertTriangle style={{ color: "#432818" }} />
               Alertas Ativos ({unacknowledgedAlerts.length})
             </CardTitle>
             <CardDescription>Alertas que requerem sua atenção</CardDescription>

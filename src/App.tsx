@@ -16,7 +16,9 @@ const EditorPage = lazy(() => import("./pages/editor-fixed"));
 const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
 const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
 const ResultPage = lazy(() => import("./pages/ResultPage"));
-const ResultConfigPage = lazy(() => import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage })));
+const ResultConfigPage = lazy(() =>
+  import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage }))
+);
 const QuizPageUser = lazy(() => import("./components/QuizPageUser"));
 
 // Lazy load das páginas admin
@@ -207,16 +209,16 @@ function App() {
                 </Route>
 
                 {/* Protected Routes */}
-                <ProtectedRoute 
-                  path="/admin/funis" 
+                <ProtectedRoute
+                  path="/admin/funis"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <FunnelsPage />
                     </Suspense>
                   )}
                 />
-                <ProtectedRoute 
-                  path="/admin/resultados" 
+                <ProtectedRoute
+                  path="/admin/resultados"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ResultConfigPage />

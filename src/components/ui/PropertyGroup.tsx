@@ -48,7 +48,7 @@ export function PropertyGroup({
     <Card className={cn("mb-4", className)}>
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
         <CollapsibleTrigger asChild>
-          <CardHeader style={{ backgroundColor: '#FAF9F7' }}>
+          <CardHeader style={{ backgroundColor: "#FAF9F7" }}>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
@@ -99,12 +99,12 @@ export function PropertyField({
       <div className="space-y-1">
         <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
           {label}
-          {required && <span style={{ color: '#432818' }}>*</span>}
+          {required && <span style={{ color: "#432818" }}>*</span>}
         </label>
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </div>
       {children}
-      {error && <p style={{ color: '#432818' }}>{error}</p>}
+      {error && <p style={{ color: "#432818" }}>{error}</p>}
     </div>
   );
 }
@@ -121,7 +121,7 @@ interface PropertySectionProps {
 export function PropertySection({ title, children, className }: PropertySectionProps) {
   return (
     <div className={cn("space-y-3", className)}>
-      <h4 style={{ borderColor: '#E5DDD5' }}>{title}</h4>
+      <h4 style={{ borderColor: "#E5DDD5" }}>{title}</h4>
       <div className="space-y-3">{children}</div>
     </div>
   );

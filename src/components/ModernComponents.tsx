@@ -255,16 +255,12 @@ const PricingCard: React.FC<{
 
           <div className="mb-4">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <span style={{ color: '#8B7355' }}>
-                R$ {originalPrice.toFixed(2)}
-              </span>
-              <span style={{ backgroundColor: '#FAF9F7' }}>
-                -{discount}% OFF
-              </span>
+              <span style={{ color: "#8B7355" }}>R$ {originalPrice.toFixed(2)}</span>
+              <span style={{ backgroundColor: "#FAF9F7" }}>-{discount}% OFF</span>
             </div>
             <div className="text-4xl font-bold text-[#432818]">R$ {discountPrice.toFixed(2)}</div>
             {paymentOptions && paymentOptions.installmentValue && (
-              <div style={{ color: '#6B4F43' }}>
+              <div style={{ color: "#6B4F43" }}>
                 ou {paymentOptions.installments}x de R$ {paymentOptions.installmentValue.toFixed(2)}
               </div>
             )}
@@ -283,7 +279,7 @@ const PricingCard: React.FC<{
                   />
                 </svg>
               </div>
-              <span style={{ color: '#6B4F43' }}>{feature}</span>
+              <span style={{ color: "#6B4F43" }}>{feature}</span>
             </div>
           ))}
         </div>
@@ -292,7 +288,7 @@ const PricingCard: React.FC<{
           {ctaText}
         </button>
 
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <div className="flex items-center justify-center gap-4">
             <div className="flex items-center gap-1">
               <Award className="w-4 h-4" />
@@ -335,7 +331,7 @@ const InteractiveProgressBar: React.FC<{
       </div>
 
       <div className="relative">
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <div
             className="bg-gradient-to-r from-[#B89B7A] to-[#432818] h-3 rounded-full transition-all duration-500 ease-out relative"
             style={{ width: `${percentage}%` }}
@@ -345,7 +341,7 @@ const InteractiveProgressBar: React.FC<{
         </div>
 
         {showStepLabels && (
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             <span>Início</span>
             <span>
               Etapa {currentStep} de {totalSteps}
@@ -356,7 +352,7 @@ const InteractiveProgressBar: React.FC<{
       </div>
 
       <div className="mt-4 text-center">
-        <p style={{ color: '#6B4F43' }}>
+        <p style={{ color: "#6B4F43" }}>
           {currentStep === totalSteps
             ? "🎉 Parabéns! Quiz concluído!"
             : `Questão ${currentStep} de ${totalSteps}`}
@@ -404,7 +400,7 @@ const SocialProofBanner: React.FC<{
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          <span style={{ color: '#432818' }}>Atividade ao vivo</span>
+          <span style={{ color: "#432818" }}>Atividade ao vivo</span>
         </div>
         <div className="text-sm font-medium text-[#B89B7A]">
           {liveCount.toLocaleString("pt-BR")} participantes
@@ -414,10 +410,10 @@ const SocialProofBanner: React.FC<{
       <div className="space-y-2 max-h-24 overflow-hidden">
         {recentActivity.map((activity, index) => (
           <div key={index} className="flex items-center justify-between text-sm">
-            <span style={{ color: '#6B4F43' }}>
+            <span style={{ color: "#6B4F43" }}>
               <strong>{activity.name}</strong> {activity.action}
             </span>
-            <span style={{ color: '#8B7355' }}>{activity.timeAgo}</span>
+            <span style={{ color: "#8B7355" }}>{activity.timeAgo}</span>
           </div>
         ))}
       </div>

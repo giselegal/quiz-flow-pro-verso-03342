@@ -101,9 +101,7 @@ export function ColorPicker({
             </div>
           )}
         </div>
-        <span style={{ color: '#6B4F43' }}>
-          {colorOption.label}
-        </span>
+        <span style={{ color: "#6B4F43" }}>{colorOption.label}</span>
       </button>
     );
   };
@@ -135,20 +133,18 @@ export function ColorPicker({
           <PopoverContent className="w-80 p-4 max-h-96 overflow-y-auto">
             <div className="space-y-4">
               {/* Informações da cor atual */}
-              <div style={{ backgroundColor: '#FAF9F7' }}>
+              <div style={{ backgroundColor: "#FAF9F7" }}>
                 <ColorPreview color={value} size="w-8 h-8" />
                 <div className="flex-1">
-                  <div style={{ color: '#432818' }}>
-                    {ColorUtils.getColorLabel(value)}
-                  </div>
-                  <div style={{ color: '#8B7355' }}>
+                  <div style={{ color: "#432818" }}>{ColorUtils.getColorLabel(value)}</div>
+                  <div style={{ color: "#8B7355" }}>
                     {value === "transparent" ? "Transparente" : value}
                   </div>
                 </div>
               </div>
 
               {/* Tabs */}
-              <div style={{ backgroundColor: '#E5DDD5' }}>
+              <div style={{ backgroundColor: "#E5DDD5" }}>
                 <button
                   onClick={() => setActiveTab("popular")}
                   className={cn(
@@ -221,7 +217,7 @@ export function ColorPicker({
                       type="color"
                       value={isValidColor && value !== "transparent" ? value : "#B89B7A"}
                       onChange={e => handleColorSelect(e.target.value)}
-                      style={{ borderColor: '#E5DDD5' }}
+                      style={{ borderColor: "#E5DDD5" }}
                     />
                   </div>
 
@@ -234,15 +230,13 @@ export function ColorPicker({
                       className="font-mono text-sm"
                     />
                     {!isValidColor && inputValue && (
-                      <p style={{ color: '#432818' }}>
-                        Use formato #RRGGBB ou "transparent"
-                      </p>
+                      <p style={{ color: "#432818" }}>Use formato #RRGGBB ou "transparent"</p>
                     )}
                   </div>
 
                   <button
                     onClick={() => handleColorSelect("transparent")}
-                    style={{ borderColor: '#E5DDD5' }}
+                    style={{ borderColor: "#E5DDD5" }}
                   >
                     Usar Transparente
                   </button>
@@ -255,8 +249,8 @@ export function ColorPicker({
 
       {/* Preview Area */}
       {showPreview && isValidColor && (
-        <div style={{ backgroundColor: '#FAF9F7' }}>
-          <div style={{ color: '#6B4F43' }}>
+        <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ color: "#6B4F43" }}>
             <span>Preview:</span>
             <div
               className="px-3 py-1 rounded-md font-medium transition-colors"

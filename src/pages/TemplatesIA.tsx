@@ -562,15 +562,15 @@ const TemplatesIA: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
       {/* Header */}
-      <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg">
               <Bot className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 style={{ color: '#432818' }}>Templates IA</h1>
-              <p style={{ color: '#6B4F43' }}>
+              <h1 style={{ color: "#432818" }}>Templates IA</h1>
+              <p style={{ color: "#6B4F43" }}>
                 Criação dinâmica de funis com Inteligência Artificial
               </p>
             </div>
@@ -594,16 +594,12 @@ const TemplatesIA: React.FC = () => {
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-3">
-                    <Sparkles style={{ color: '#B89B7A' }} />
+                    <Sparkles style={{ color: "#B89B7A" }} />
                     <div className="flex-1">
-                      <CardTitle style={{ color: '#432818' }}>
-                        Quiz de Estilo Pessoal
-                      </CardTitle>
-                      <p style={{ color: '#B89B7A' }}>Template Premium - 21 Etapas</p>
+                      <CardTitle style={{ color: "#432818" }}>Quiz de Estilo Pessoal</CardTitle>
+                      <p style={{ color: "#B89B7A" }}>Template Premium - 21 Etapas</p>
                     </div>
-                    {selectedTemplate === "STYLE_QUIZ" && (
-                      <Check style={{ color: '#B89B7A' }} />
-                    )}
+                    {selectedTemplate === "STYLE_QUIZ" && <Check style={{ color: "#B89B7A" }} />}
                   </div>
                 </CardHeader>
               </Card>
@@ -618,15 +614,13 @@ const TemplatesIA: React.FC = () => {
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-3">
-                    <Bot style={{ color: '#B89B7A' }} />
+                    <Bot style={{ color: "#B89B7A" }} />
                     <div className="flex-1">
-                      <CardTitle style={{ color: '#432818' }}>
-                        Com que Roupa eu Vou?
-                      </CardTitle>
-                      <p style={{ color: '#B89B7A' }}>Consultora de Estilo IA - Nova!</p>
+                      <CardTitle style={{ color: "#432818" }}>Com que Roupa eu Vou?</CardTitle>
+                      <p style={{ color: "#B89B7A" }}>Consultora de Estilo IA - Nova!</p>
                     </div>
                     {selectedTemplate === "STYLE_CONSULTANT" && (
-                      <Check style={{ color: '#B89B7A' }} />
+                      <Check style={{ color: "#B89B7A" }} />
                     )}
                   </div>
                 </CardHeader>
@@ -634,26 +628,24 @@ const TemplatesIA: React.FC = () => {
             </div>
 
             {/* Preview do Template Selecionado */}
-            <Card style={{ borderColor: '#E5DDD5' }}>
+            <Card style={{ borderColor: "#E5DDD5" }}>
               <CardHeader>
                 <div className="flex items-center gap-3">
                   {selectedTemplate === "STYLE_QUIZ" ? (
-                    <Sparkles style={{ color: '#B89B7A' }} />
+                    <Sparkles style={{ color: "#B89B7A" }} />
                   ) : (
-                    <Bot style={{ color: '#B89B7A' }} />
+                    <Bot style={{ color: "#B89B7A" }} />
                   )}
                   <div>
-                    <CardTitle style={{ color: '#432818' }}>
+                    <CardTitle style={{ color: "#432818" }}>
                       {getCurrentTemplate().meta.name}
                     </CardTitle>
-                    <p style={{ color: '#B89B7A' }}>
-                      {getCurrentTemplate().meta.description}
-                    </p>
+                    <p style={{ color: "#B89B7A" }}>{getCurrentTemplate().meta.description}</p>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div style={{ borderColor: '#E5DDD5' }}>
+                <div style={{ borderColor: "#E5DDD5" }}>
                   {selectedTemplate === "STYLE_QUIZ" ? (
                     <img
                       src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg"
@@ -671,37 +663,37 @@ const TemplatesIA: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="bg-white/50 rounded-lg p-3">
-                    <div style={{ color: '#6B4F43' }}>Etapas</div>
-                    <div style={{ color: '#432818' }}>
+                    <div style={{ color: "#6B4F43" }}>Etapas</div>
+                    <div style={{ color: "#432818" }}>
                       {getCurrentTemplate().steps.length} Páginas
                     </div>
                   </div>
                   <div className="bg-white/50 rounded-lg p-3">
-                    <div style={{ color: '#6B4F43' }}>Tipos</div>
-                    <div style={{ color: '#432818' }}>8 Estilos</div>
+                    <div style={{ color: "#6B4F43" }}>Tipos</div>
+                    <div style={{ color: "#432818" }}>8 Estilos</div>
                   </div>
                   <div className="bg-white/50 rounded-lg p-3">
-                    <div style={{ color: '#6B4F43' }}>Imagens</div>
-                    <div style={{ color: '#432818' }}>40+ Assets</div>
+                    <div style={{ color: "#6B4F43" }}>Imagens</div>
+                    <div style={{ color: "#432818" }}>40+ Assets</div>
                   </div>
                   <div className="bg-white/50 rounded-lg p-3">
-                    <div style={{ color: '#6B4F43' }}>Analytics</div>
-                    <div style={{ color: '#432818' }}>Completo</div>
+                    <div style={{ color: "#6B4F43" }}>Analytics</div>
+                    <div style={{ color: "#432818" }}>Completo</div>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary" style={{ color: '#6B4F43' }}>
+                  <Badge variant="secondary" style={{ color: "#6B4F43" }}>
                     <Wand2 className="w-3 h-3 mr-1" />
                     IA Powered
                   </Badge>
-                  <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
+                  <Badge variant="secondary" style={{ backgroundColor: "#E5DDD5" }}>
                     Responsivo
                   </Badge>
-                  <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
+                  <Badge variant="secondary" style={{ backgroundColor: "#E5DDD5" }}>
                     Analytics
                   </Badge>
-                  <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
+                  <Badge variant="secondary" style={{ backgroundColor: "#E5DDD5" }}>
                     Conversão
                   </Badge>
                 </div>
@@ -735,8 +727,7 @@ const TemplatesIA: React.FC = () => {
                         Funil Criado com Sucesso!
                       </div>
                       <div className="text-green-600 text-sm">
-                        ID:{" "}
-                        <code style={{ backgroundColor: '#E5DDD5' }}>{generatedFunnelId}</code>
+                        ID: <code style={{ backgroundColor: "#E5DDD5" }}>{generatedFunnelId}</code>
                       </div>
                     </div>
 
@@ -744,7 +735,7 @@ const TemplatesIA: React.FC = () => {
                       <Button
                         onClick={handlePreview}
                         variant="outline"
-                        style={{ backgroundColor: '#FAF9F7' }}
+                        style={{ backgroundColor: "#FAF9F7" }}
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         Preview
@@ -769,14 +760,14 @@ const TemplatesIA: React.FC = () => {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Bot style={{ color: '#B89B7A' }} />
+                    <Bot style={{ color: "#B89B7A" }} />
                     <div>
                       <CardTitle>Agente IA em Ação</CardTitle>
-                      <p style={{ color: '#6B4F43' }}>Processamento automático do template</p>
+                      <p style={{ color: "#6B4F43" }}>Processamento automático do template</p>
                     </div>
                   </div>
                   {isGenerating && (
-                    <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
+                    <Badge variant="secondary" style={{ backgroundColor: "#E5DDD5" }}>
                       Trabalhando...
                     </Badge>
                   )}
@@ -811,12 +802,12 @@ const TemplatesIA: React.FC = () => {
                             )}
                           </div>
                           <div>
-                            <div style={{ color: '#432818' }}>{step.name}</div>
-                            <div style={{ color: '#8B7355' }}>{step.description}</div>
+                            <div style={{ color: "#432818" }}>{step.name}</div>
+                            <div style={{ color: "#8B7355" }}>{step.description}</div>
                           </div>
                         </div>
                         {step.status === "processing" && (
-                          <div style={{ color: '#B89B7A' }}>{step.progress}%</div>
+                          <div style={{ color: "#B89B7A" }}>{step.progress}%</div>
                         )}
                       </div>
                       {step.status === "processing" && (
@@ -827,14 +818,12 @@ const TemplatesIA: React.FC = () => {
                 </div>
 
                 {isGenerating && currentStep >= 0 && (
-                  <div style={{ backgroundColor: '#FAF9F7' }}>
+                  <div style={{ backgroundColor: "#FAF9F7" }}>
                     <div className="flex items-center gap-2 text-blue-800">
                       <Bot className="w-4 h-4 animate-spin" />
                       <span className="font-medium">Executando: {steps[currentStep]?.name}</span>
                     </div>
-                    <div style={{ color: '#B89B7A' }}>
-                      {steps[currentStep]?.description}
-                    </div>
+                    <div style={{ color: "#B89B7A" }}>{steps[currentStep]?.description}</div>
                   </div>
                 )}
               </CardContent>
@@ -848,15 +837,15 @@ const TemplatesIA: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <div style={{ color: '#6B4F43' }}>Versão Template</div>
+                    <div style={{ color: "#6B4F43" }}>Versão Template</div>
                     <div className="font-mono">{getCurrentTemplate().meta.version}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#6B4F43' }}>Autor</div>
+                    <div style={{ color: "#6B4F43" }}>Autor</div>
                     <div className="font-medium">{getCurrentTemplate().meta.author}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#6B4F43' }}>Cor Primária</div>
+                    <div style={{ color: "#6B4F43" }}>Cor Primária</div>
                     <div className="flex items-center gap-2">
                       <div
                         className="w-4 h-4 rounded border"
@@ -868,13 +857,13 @@ const TemplatesIA: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <div style={{ color: '#6B4F43' }}>Total Etapas</div>
+                    <div style={{ color: "#6B4F43" }}>Total Etapas</div>
                     <div className="font-bold">{getCurrentTemplate().steps.length}</div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <div style={{ color: '#6B4F43' }}>Funcionalidades Incluídas:</div>
+                  <div style={{ color: "#6B4F43" }}>Funcionalidades Incluídas:</div>
                   <div className="flex flex-wrap gap-1">
                     {selectedTemplate === "STYLE_QUIZ"
                       ? [
@@ -932,7 +921,7 @@ const TemplatesIA: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           <div className="flex items-center justify-center gap-2 mb-2">
             <Bot className="w-4 h-4" />
             <span className="text-sm">Powered by IA Agent System</span>

@@ -123,7 +123,7 @@ const BasicComponentRenderer: React.FC<{
           }`}
           onClick={handleClick}
         >
-          <p style={{ color: '#8B7355' }}>Componente: {type}</p>
+          <p style={{ color: "#8B7355" }}>Componente: {type}</p>
           <p className="text-xs text-gray-400 mt-1">Renderizador não encontrado</p>
         </div>
       );

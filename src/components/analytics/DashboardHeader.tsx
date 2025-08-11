@@ -154,12 +154,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               <span className="text-xs">Exportar</span>
             </Button>
 
-            <Button
-              variant="outline"
-              size="sm"
-              style={{ color: '#432818' }}
-              onClick={onClearData}
-            >
+            <Button variant="outline" size="sm" style={{ color: "#432818" }} onClick={onClearData}>
               <Trash2 className="h-3.5 w-3.5 mr-2" />
               <span className="text-xs">Limpar Dados</span>
             </Button>

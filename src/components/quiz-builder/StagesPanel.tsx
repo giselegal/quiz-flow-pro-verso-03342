@@ -58,8 +58,8 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
-                  <span style={{ backgroundColor: '#E5DDD5' }}>{stage.type}</span>
-                  <span style={{ color: '#8B7355' }}>Ordem: {stage.order}</span>
+                  <span style={{ backgroundColor: "#E5DDD5" }}>{stage.type}</span>
+                  <span style={{ color: "#8B7355" }}>Ordem: {stage.order}</span>
                 </div>
 
                 <Label htmlFor={`stage-title-${stage.id}`} className="text-xs">
@@ -82,7 +82,7 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
                   e.stopPropagation();
                   onStageDelete(stage.id);
                 }}
-                style={{ color: '#432818' }}
+                style={{ color: "#432818" }}
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
@@ -91,7 +91,7 @@ export const StagesPanel: React.FC<StagesPanelProps> = ({
         ))}
 
         {stages.length === 0 && (
-          <div style={{ color: '#8B7355' }}>
+          <div style={{ color: "#8B7355" }}>
             <p className="mb-4">Nenhuma etapa criada ainda</p>
             <Button onClick={handleAddStage} className="bg-[#B89B7A] hover:bg-[#A08A72] text-white">
               <Plus className="w-4 h-4 mr-2" />

@@ -12,9 +12,7 @@ const SpacerBlockPreview: React.FC<SpacerBlockPreviewProps> = ({ content }) => {
 
   return (
     <div style={{ ...content.style, height }} className="relative">
-      <div style={{ borderColor: '#E5DDD5' }}>
-        Espaçamento: {height}
-      </div>
+      <div style={{ borderColor: "#E5DDD5" }}>Espaçamento: {height}</div>
     </div>
   );
 };

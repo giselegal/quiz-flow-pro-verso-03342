@@ -594,11 +594,7 @@ const FaqSectionAdvanced = () => {
               />
             </button>
 
-            {openItem === index && (
-              <div style={{ color: '#6B4F43' }}>
-                {item.answer}
-              </div>
-            )}
+            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
           </div>
         ))}
       </div>
@@ -665,7 +661,7 @@ const QuizOfferPageV2: React.FC = () => {
           />
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">5x R$ 8,83</div>
-            <div style={{ color: '#6B4F43' }}>ou R$ 39,90 à vista</div>
+            <div style={{ color: "#6B4F43" }}>ou R$ 39,90 à vista</div>
           </div>
         </div>
       </header>
@@ -771,30 +767,30 @@ const QuizOfferPageV2: React.FC = () => {
               <div className="before-after">
                 <div className="before-section">
                   <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Eye style={{ color: '#432818' }} size={24} />
+                    <Eye style={{ color: "#432818" }} size={24} />
                     SEM O QUIZ
                   </h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
-                      <span style={{ color: '#432818' }}>✗</span>
+                      <span style={{ color: "#432818" }}>✗</span>
                       <span>
                         <strong>Guarda-roupa cheio</strong> mas "nada para vestir"
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: '#432818' }}>✗</span>
+                      <span style={{ color: "#432818" }}>✗</span>
                       <span>
                         <strong>Compras por impulso</strong> que nunca usa
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: '#432818' }}>✗</span>
+                      <span style={{ color: "#432818" }}>✗</span>
                       <span>
                         <strong>Dinheiro desperdiçado</strong> em peças que não combinam
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: '#432818' }}>✗</span>
+                      <span style={{ color: "#432818" }}>✗</span>
                       <span>
                         <strong>Baixa autoestima</strong> com a própria imagem
                       </span>
@@ -910,7 +906,7 @@ const QuizOfferPageV2: React.FC = () => {
               <Flame size={32} />
             </button>
 
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               ⚡ Acesso imediato • 🔒 Pagamento seguro • 🛡️ 7 dias de garantia
             </div>
           </div>

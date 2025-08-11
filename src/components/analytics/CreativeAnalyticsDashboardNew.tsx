@@ -138,14 +138,14 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
     const rate = parseFloat(conversionRate);
     if (rate >= 2.0)
       return (
-        <Badge style={{ color: '#6B4F43' }}>
+        <Badge style={{ color: "#6B4F43" }}>
           <CheckCircle2 size={12} className="mr-1" />
           Excelente
         </Badge>
       );
     if (rate >= 1.0)
       return (
-        <Badge style={{ borderColor: '#E5DDD5' }}>
+        <Badge style={{ borderColor: "#E5DDD5" }}>
           <Target size={12} className="mr-1" />
           Bom
         </Badge>
@@ -158,7 +158,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         </Badge>
       );
     return (
-      <Badge style={{ borderColor: '#E5DDD5' }}>
+      <Badge style={{ borderColor: "#E5DDD5" }}>
         <TrendingDown size={12} className="mr-1" />
         Baixo
       </Badge>
@@ -285,7 +285,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               {creative.conversion_rate}
             </span>
           </div>
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="h-2 rounded-full transition-all duration-500"
               style={{
@@ -307,7 +307,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       >
         <div className="text-center space-y-4">
           <div
-            style={{ borderColor: '#E5DDD5' }}
+            style={{ borderColor: "#E5DDD5" }}
             style={{ borderTopColor: brandColors.primary }}
           ></div>
           <p className="text-lg font-medium" style={{ color: brandColors.text.medium }}>
@@ -365,12 +365,12 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
             </div>
 
             {/* Botões de ação */}
-            <Button variant="outline" size="sm" style={{ borderColor: '#E5DDD5' }}>
+            <Button variant="outline" size="sm" style={{ borderColor: "#E5DDD5" }}>
               <RefreshCcw size={14} className="mr-2" />
               Atualizar
             </Button>
 
-            <Button variant="outline" size="sm" style={{ borderColor: '#E5DDD5' }}>
+            <Button variant="outline" size="sm" style={{ borderColor: "#E5DDD5" }}>
               <Download size={14} className="mr-2" />
               Exportar
             </Button>
@@ -540,7 +540,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                     {creative.conversion_rate}%
                   </span>
                 </div>
-                <div style={{ backgroundColor: '#E5DDD5' }}>
+                <div style={{ backgroundColor: "#E5DDD5" }}>
                   <div
                     className="h-2 rounded-full transition-all duration-500"
                     style={{
@@ -584,7 +584,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                   <span>Aumentar budget nos criativos com conversão acima de 1.5%</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <span style={{ color: '#432818' }}>•</span>
+                  <span style={{ color: "#432818" }}>•</span>
                   <span>Pausar criativos com conversão abaixo de 0.5%</span>
                 </li>
               </ul>
@@ -599,7 +599,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                   <span>Criar variações do melhor criativo</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <span style={{ color: '#B89B7A' }}>•</span>
+                  <span style={{ color: "#B89B7A" }}>•</span>
                   <span>Testar novos ângulos baseados no winner</span>
                 </li>
                 <li className="flex items-start space-x-2">

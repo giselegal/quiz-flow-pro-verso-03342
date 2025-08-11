@@ -67,10 +67,7 @@ const CreativesPage: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                style={{ backgroundColor: '#E5DDD5' }}
-              >
+              <div key={i} style={{ backgroundColor: "#E5DDD5" }}>
                 <Image className="w-8 h-8 text-[#B89B7A]" />
               </div>
             ))}

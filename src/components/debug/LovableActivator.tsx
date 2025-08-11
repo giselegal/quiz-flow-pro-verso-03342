@@ -84,7 +84,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
   }
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <h3 className="font-bold mb-2">🚀 Lovable Status</h3>
 
       <div className="space-y-1 text-sm">
@@ -119,7 +119,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
             window.location.href =
               window.location.href + (window.location.search ? "&" : "?") + "lovable=true";
           }}
-          style={{ color: '#B89B7A' }}
+          style={{ color: "#B89B7A" }}
         >
           Ativar Lovable
         </button>
@@ -137,7 +137,7 @@ export const LovableActivator: React.FC<LovableActivatorProps> = ({ forceActivat
               href: window.location.href,
             });
           }}
-          style={{ color: '#6B4F43' }}
+          style={{ color: "#6B4F43" }}
         >
           Debug Info
         </button>

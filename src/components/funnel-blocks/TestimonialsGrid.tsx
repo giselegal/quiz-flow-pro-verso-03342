@@ -164,15 +164,13 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
             <h4 className="font-semibold text-[#432818] text-lg">{testimonial.author}</h4>
 
             {showRoles && testimonial.role && (
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 {testimonial.role}
                 {showCompany && testimonial.company && ` • ${testimonial.company}`}
               </p>
             )}
 
-            {testimonial.location && (
-              <p style={{ color: '#8B7355' }}>📍 {testimonial.location}</p>
-            )}
+            {testimonial.location && <p style={{ color: "#8B7355" }}>📍 {testimonial.location}</p>}
           </div>
         </div>
 
@@ -182,7 +180,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
         )}
 
         {/* Texto do Depoimento */}
-        <blockquote style={{ color: '#6B4F43' }}>
+        <blockquote style={{ color: "#6B4F43" }}>
           <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
           <span className="text-base">{testimonial.text}</span>
           <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
@@ -208,7 +206,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
               <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
             )}
 
-            {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
+            {subtitle && <p style={{ color: "#6B4F43" }}>{subtitle}</p>}
           </div>
         )}
 

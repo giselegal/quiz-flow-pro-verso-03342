@@ -86,9 +86,9 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
       onClick={isEditable ? onEdit : undefined}
       data-funnel-step-id={id}
     >
-      <h2 style={{ color: '#432818' }}>{title}</h2>
+      <h2 style={{ color: "#432818" }}>{title}</h2>
 
-      <div style={{ color: '#6B4F43' }}>{messages[currentMessageIndex]}</div>
+      <div style={{ color: "#6B4F43" }}>{messages[currentMessageIndex]}</div>
 
       {/* Tipos de loading */}
       <div className="text-4xl mb-6">
@@ -157,7 +157,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
       </div>
 
       {showProgress && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <div
             className="bg-primary h-2.5 rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}

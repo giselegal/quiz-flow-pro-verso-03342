@@ -61,7 +61,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
     >
       <div className="max-w-md mx-auto">
         {/* Numeração da etapa */}
-        <div style={{ color: '#8B7355' }}>
+        <div style={{ color: "#8B7355" }}>
           Etapa {stepNumber} de {totalSteps}
         </div>
 
@@ -72,9 +72,9 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
           </div>
         )}
 
-        <h2 style={{ color: '#432818' }}>{title}</h2>
+        <h2 style={{ color: "#432818" }}>{title}</h2>
 
-        <p style={{ color: '#6B4F43' }}>{description}</p>
+        <p style={{ color: "#6B4F43" }}>{description}</p>
 
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
@@ -91,7 +91,7 @@ export const NameCollectStep: React.FC<FunnelStepProps> = ({
                 className={cn("w-full", error && "border-red-500")}
                 disabled={isEditable}
               />
-              {error && <p style={{ color: '#432818' }}>{error}</p>}
+              {error && <p style={{ color: "#432818" }}>{error}</p>}
             </div>
 
             <Button type="submit" size="lg" className="w-full">

@@ -177,9 +177,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
       case "paragraph":
         return (
           <div className="py-3">
-            <p style={{ color: '#6B4F43' }}>
-              {props.text || "Your paragraph text here"}
-            </p>
+            <p style={{ color: "#6B4F43" }}>{props.text || "Your paragraph text here"}</p>
           </div>
         );
 
@@ -204,7 +202,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 />
               ) : (
                 <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-64 flex items-center justify-center">
-                  <div style={{ color: '#8B7355' }}>
+                  <div style={{ color: "#8B7355" }}>
                     <ImageIcon className="w-12 h-12 mx-auto mb-2" />
                     <p>Adicione uma imagem</p>
                   </div>
@@ -219,14 +217,10 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
       case "container":
         return (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="space-y-4">
-              {props.title && (
-                <h3 style={{ borderColor: '#E5DDD5' }}>
-                  {props.title}
-                </h3>
-              )}
-              <div style={{ color: '#6B4F43' }}>{props.content || "Container content here"}</div>
+              {props.title && <h3 style={{ borderColor: "#E5DDD5" }}>{props.title}</h3>}
+              <div style={{ color: "#6B4F43" }}>{props.content || "Container content here"}</div>
             </div>
           </div>
         );
@@ -236,10 +230,10 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           <div className="py-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div style={{ borderColor: '#E5DDD5' }}></div>
+                <div style={{ borderColor: "#E5DDD5" }}></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span style={{ color: '#8B7355' }}>{props.text || ""}</span>
+                <span style={{ color: "#8B7355" }}>{props.text || ""}</span>
               </div>
             </div>
           </div>
@@ -251,22 +245,22 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
       // COMPONENTES DE LAYOUT
       case "flex-container-horizontal":
         return (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="text-center flex-1 min-w-[200px]">
               <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
                 <StretchHorizontal className="w-6 h-6 text-white" />
               </div>
               <h4 className="font-semibold text-[#432818] mb-2">Container Horizontal</h4>
-              <p style={{ color: '#6B4F43' }}>Elementos organizados lado a lado</p>
+              <p style={{ color: "#6B4F43" }}>Elementos organizados lado a lado</p>
             </div>
             <div className="text-center flex-1 min-w-[200px]">
-              <div style={{ borderColor: '#E5DDD5' }}>
-                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 1</p>
+              <div style={{ borderColor: "#E5DDD5" }}>
+                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 1</p>
               </div>
             </div>
             <div className="text-center flex-1 min-w-[200px]">
-              <div style={{ borderColor: '#E5DDD5' }}>
-                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 2</p>
+              <div style={{ borderColor: "#E5DDD5" }}>
+                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 2</p>
               </div>
             </div>
           </div>
@@ -274,23 +268,23 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
       case "flex-container-vertical":
         return (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="text-center">
               <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Rows3 className="w-6 h-6 text-white" />
               </div>
               <h4 className="font-semibold text-[#432818] mb-2">Container Vertical</h4>
-              <p style={{ color: '#6B4F43' }}>Elementos organizados verticalmente</p>
+              <p style={{ color: "#6B4F43" }}>Elementos organizados verticalmente</p>
             </div>
             <div className="space-y-3">
-              <div style={{ borderColor: '#E5DDD5' }}>
-                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 1</p>
+              <div style={{ borderColor: "#E5DDD5" }}>
+                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 1</p>
               </div>
-              <div style={{ borderColor: '#E5DDD5' }}>
-                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 2</p>
+              <div style={{ borderColor: "#E5DDD5" }}>
+                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 2</p>
               </div>
-              <div style={{ borderColor: '#E5DDD5' }}>
-                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 3</p>
+              <div style={{ borderColor: "#E5DDD5" }}>
+                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 3</p>
               </div>
             </div>
           </div>
@@ -340,7 +334,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <h3 className="text-xl font-semibold text-[#432818] mb-2">
                 {props.question || "Qual dessas opções representa melhor seu estilo?"}
               </h3>
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 {props.allowMultiple
                   ? `Selecione até ${props.maxSelections || 3} opções`
                   : "Selecione uma opção"}
@@ -362,10 +356,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   },
                 ]
               ).map((option: any) => (
-                <div
-                  key={option.id}
-                  style={{ borderColor: '#E5DDD5' }}
-                >
+                <div key={option.id} style={{ borderColor: "#E5DDD5" }}>
                   <div className="font-medium text-[#432818]">{option.text}</div>
                   {option.styleCategory && (
                     <div className="text-sm text-[#B89B7A] mt-1">
@@ -426,12 +417,9 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   },
                 ]
               ).map((option: any) => (
-                <div
-                  key={option.id}
-                  style={{ borderColor: '#E5DDD5' }}
-                >
+                <div key={option.id} style={{ borderColor: "#E5DDD5" }}>
                   <div className="font-semibold text-[#432818] mb-2">{option.text}</div>
-                  <div style={{ color: '#8B7355' }}>
+                  <div style={{ color: "#8B7355" }}>
                     <div>
                       Categoria:{" "}
                       <span className="text-[#B89B7A] font-medium">{option.styleCategory}</span>
@@ -445,10 +433,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                     {option.keywords && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {option.keywords.map((keyword: string, idx: number) => (
-                          <span
-                            key={idx}
-                            style={{ color: '#6B4F43' }}
-                          >
+                          <span key={idx} style={{ color: "#6B4F43" }}>
                             {keyword}
                           </span>
                         ))}
@@ -530,21 +515,21 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                       <Clock className="w-6 h-6 text-[#B89B7A]" />
                     </div>
                     <div className="font-semibold text-[#432818]">5 minutos</div>
-                    <div style={{ color: '#6B4F43' }}>Duração estimada</div>
+                    <div style={{ color: "#6B4F43" }}>Duração estimada</div>
                   </div>
                   <div>
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <HelpCircle className="w-6 h-6 text-[#B89B7A]" />
                     </div>
                     <div className="font-semibold text-[#432818]">16 questões</div>
-                    <div style={{ color: '#6B4F43' }}>Cuidadosamente selecionadas</div>
+                    <div style={{ color: "#6B4F43" }}>Cuidadosamente selecionadas</div>
                   </div>
                   <div>
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Award className="w-6 h-6 text-[#B89B7A]" />
                     </div>
                     <div className="font-semibold text-[#432818]">Resultado único</div>
-                    <div style={{ color: '#6B4F43' }}>Personalizado para você</div>
+                    <div style={{ color: "#6B4F43" }}>Personalizado para você</div>
                   </div>
                 </div>
               </div>
@@ -611,13 +596,13 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <h3 className="text-xl font-semibold text-[#432818] mb-3">
                   Estilo Romântico Clássico
                 </h3>
-                <p style={{ color: '#6B4F43' }}>
+                <p style={{ color: "#6B4F43" }}>
                   Você possui uma elegância natural que combina feminilidade e sofisticação. Seu
                   estilo é atemporal, com peças que valorizam sua personalidade única.
                 </p>
                 <div className="bg-[#f9f4ef] rounded-lg p-4">
                   <h4 className="font-medium text-[#432818] mb-2">Características principais:</h4>
-                  <ul style={{ color: '#6B4F43' }}>
+                  <ul style={{ color: "#6B4F43" }}>
                     <li>• Feminilidade e delicadeza</li>
                     <li>• Elegância atemporal</li>
                     <li>• Versatilidade para todas as ocasiões</li>
@@ -646,9 +631,9 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
             </h3>
             <div className="grid md:grid-cols-2 gap-8">
               <div className="text-center">
-                <div style={{ backgroundColor: '#E5DDD5' }}>
-                  <h4 style={{ color: '#6B4F43' }}>Antes</h4>
-                  <p style={{ color: '#6B4F43' }}>
+                <div style={{ backgroundColor: "#E5DDD5" }}>
+                  <h4 style={{ color: "#6B4F43" }}>Antes</h4>
+                  <p style={{ color: "#6B4F43" }}>
                     Guarda-roupa desorganizado, compras por impulso, dúvidas sobre o que vestir a
                     cada ocasião.
                   </p>
@@ -684,21 +669,21 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <Star className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Confiança</h4>
-                <p style={{ color: '#6B4F43' }}>Sinta-se poderosa e autêntica em cada look</p>
+                <p style={{ color: "#6B4F43" }}>Sinta-se poderosa e autêntica em cada look</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Clock className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Praticidade</h4>
-                <p style={{ color: '#6B4F43' }}>Economize tempo decidindo o que vestir</p>
+                <p style={{ color: "#6B4F43" }}>Economize tempo decidindo o que vestir</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Gift className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Economia</h4>
-                <p style={{ color: '#6B4F43' }}>Compre apenas o que realmente funciona</p>
+                <p style={{ color: "#6B4F43" }}>Compre apenas o que realmente funciona</p>
               </div>
             </div>
           </div>
@@ -715,20 +700,18 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               >
                 Bônus Exclusivos
               </h3>
-              <p style={{ color: '#6B4F43' }}>Conteúdos extras para potencializar seus resultados</p>
+              <p style={{ color: "#6B4F43" }}>
+                Conteúdos extras para potencializar seus resultados
+              </p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white p-4 rounded-lg border border-green-200">
                 <h4 className="font-semibold text-green-800 mb-2">🎯 Guia de Peças-Chave</h4>
-                <p style={{ color: '#6B4F43' }}>
-                  As 10 peças essenciais para seu guarda-roupa
-                </p>
+                <p style={{ color: "#6B4F43" }}>As 10 peças essenciais para seu guarda-roupa</p>
               </div>
               <div className="bg-white p-4 rounded-lg border border-green-200">
                 <h4 className="font-semibold text-green-800 mb-2">✨ Visagismo Facial</h4>
-                <p style={{ color: '#6B4F43' }}>
-                  Como valorizar seu rosto com as escolhas certas
-                </p>
+                <p style={{ color: "#6B4F43" }}>Como valorizar seu rosto com as escolhas certas</p>
               </div>
             </div>
           </div>
@@ -767,7 +750,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 Quero meu Guia de Estilo Agora
               </span>
             </button>
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               <Lock className="w-4 h-4" />
               <span>Compra 100% segura</span>
             </div>
@@ -804,7 +787,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 >
                   Sobre Gisele Galvão
                 </h3>
-                <p style={{ color: '#6B4F43' }}>
+                <p style={{ color: "#6B4F43" }}>
                   Consultora de imagem com mais de 10 anos de experiência, já transformou a vida de
                   milhares de mulheres através do poder do estilo pessoal.
                 </p>
@@ -859,7 +842,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <span>Valor Total</span>
                   <div className="relative">
                     <span>R$ 175,00</span>
-                    <div style={{ backgroundColor: '#FAF9F7' }}></div>
+                    <div style={{ backgroundColor: "#FAF9F7" }}></div>
                   </div>
                 </div>
               </div>
@@ -867,7 +850,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
                 <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
                 <p className="text-4xl font-bold text-[#432818]">R$ 39,00</p>
-                <p style={{ color: '#8B7355' }}>Pagamento único</p>
+                <p style={{ color: "#8B7355" }}>Pagamento único</p>
               </div>
             </div>
 
@@ -892,7 +875,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </span>
             </button>
 
-            <div style={{ color: '#6B4F43' }}>
+            <div style={{ color: "#6B4F43" }}>
               <div className="flex items-center gap-1">
                 <Lock className="w-4 h-4" />
                 <span>Compra segura</span>
@@ -908,28 +891,28 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
       // FALLBACK
       default:
         return (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <div className="text-center">
-              <div style={{ backgroundColor: '#E5DDD5' }}>
-                <Code style={{ color: '#8B7355' }} />
+              <div style={{ backgroundColor: "#E5DDD5" }}>
+                <Code style={{ color: "#8B7355" }} />
               </div>
-              <h3 style={{ color: '#6B4F43' }}>Componente: {componentType}</h3>
-              <p style={{ color: '#8B7355' }}>
+              <h3 style={{ color: "#6B4F43" }}>Componente: {componentType}</h3>
+              <p style={{ color: "#8B7355" }}>
                 Este componente agora possui um design personalizado
               </p>
               {props.title && (
                 <div className="bg-white rounded-lg p-3 mb-3">
-                  <h4 style={{ color: '#6B4F43' }}>{props.title}</h4>
+                  <h4 style={{ color: "#6B4F43" }}>{props.title}</h4>
                 </div>
               )}
               {props.content && (
                 <div className="bg-white rounded-lg p-3 mb-3">
-                  <p style={{ color: '#6B4F43' }}>{props.content}</p>
+                  <p style={{ color: "#6B4F43" }}>{props.content}</p>
                 </div>
               )}
               {props.text && (
                 <div className="bg-white rounded-lg p-3">
-                  <p style={{ color: '#6B4F43' }}>{props.text}</p>
+                  <p style={{ color: "#6B4F43" }}>{props.text}</p>
                 </div>
               )}
               <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">

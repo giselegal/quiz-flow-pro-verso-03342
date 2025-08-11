@@ -30,7 +30,7 @@ const TestPropertiesPanel = () => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <div className="flex-1 p-8">
         <h1 className="text-2xl font-bold mb-4">Teste do Painel de Propriedades</h1>
 
@@ -43,7 +43,7 @@ const TestPropertiesPanel = () => {
                 properties: { content: "Texto teste", fontSize: 16, textColor: "#000000" },
               })
             }
-            style={{ backgroundColor: '#FAF9F7' }}
+            style={{ backgroundColor: "#FAF9F7" }}
           >
             Selecionar Texto
           </button>
@@ -69,15 +69,12 @@ const TestPropertiesPanel = () => {
                 properties: { text: "Botão teste", variant: "primary", backgroundColor: "#007bff" },
               })
             }
-            style={{ backgroundColor: '#FAF9F7' }}
+            style={{ backgroundColor: "#FAF9F7" }}
           >
             Selecionar Botão
           </button>
 
-          <button
-            onClick={() => setSelectedBlock(null)}
-            style={{ backgroundColor: '#FAF9F7' }}
-          >
+          <button onClick={() => setSelectedBlock(null)} style={{ backgroundColor: "#FAF9F7" }}>
             Limpar Seleção
           </button>
         </div>
@@ -94,7 +91,7 @@ const TestPropertiesPanel = () => {
             <p>
               <strong>Propriedades:</strong>
             </p>
-            <pre style={{ backgroundColor: '#E5DDD5' }}>
+            <pre style={{ backgroundColor: "#E5DDD5" }}>
               {JSON.stringify(selectedBlock.properties, null, 2)}
             </pre>
           </div>

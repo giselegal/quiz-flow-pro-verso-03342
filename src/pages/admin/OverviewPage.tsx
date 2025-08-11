@@ -29,7 +29,7 @@ import {
   ChevronRight,
   PlayCircle,
   Settings,
-  Bell
+  Bell,
 } from "lucide-react";
 import React from "react";
 
@@ -156,9 +156,7 @@ const OverviewPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900 mb-1">
-              12,847
-            </div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">12,847</div>
             <div className="flex items-center text-sm mb-3">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+18.2%</span>
@@ -182,9 +180,7 @@ const OverviewPage: React.FC = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900 mb-1">
-              34.8%
-            </div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">34.8%</div>
             <div className="flex items-center text-sm mb-3">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+5.7%</span>
@@ -200,17 +196,13 @@ const OverviewPage: React.FC = () => {
         {/* Receita Gerada */}
         <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-700">
-              Receita Gerada
-            </CardTitle>
+            <CardTitle className="text-sm font-semibold text-slate-700">Receita Gerada</CardTitle>
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <DollarSign className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900 mb-1">
-              R$ 87.420
-            </div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">R$ 87.420</div>
             <div className="flex items-center text-sm mb-3">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+24.5%</span>
@@ -226,17 +218,13 @@ const OverviewPage: React.FC = () => {
         {/* ROI Médio */}
         <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-700">
-              ROI Médio
-            </CardTitle>
+            <CardTitle className="text-sm font-semibold text-slate-700">ROI Médio</CardTitle>
             <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-slate-900 mb-1">
-              485%
-            </div>
+            <div className="text-3xl font-bold text-slate-900 mb-1">485%</div>
             <div className="flex items-center text-sm mb-3">
               <ArrowUpRight className="h-4 w-4 text-emerald-600 mr-1" />
               <span className="text-emerald-600 font-semibold">+12.3%</span>
@@ -258,7 +246,9 @@ const OverviewPage: React.FC = () => {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-xl font-bold text-slate-900">Quizzes Recentes</CardTitle>
+                  <CardTitle className="text-xl font-bold text-slate-900">
+                    Quizzes Recentes
+                  </CardTitle>
                   <p className="text-sm text-slate-600 mt-1">Seus funnels mais ativos</p>
                 </div>
                 <Button variant="outline" size="sm" className="border-slate-300 text-slate-700">
@@ -275,7 +265,9 @@ const OverviewPage: React.FC = () => {
                     <Lightbulb className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">Quiz de Personalidade - Marketing</h3>
+                    <h3 className="font-semibold text-slate-900">
+                      Quiz de Personalidade - Marketing
+                    </h3>
                     <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
                       <span className="flex items-center">
                         <Eye className="h-4 w-4 mr-1" />
@@ -304,7 +296,9 @@ const OverviewPage: React.FC = () => {
                     <Heart className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">Funil de Vendas - Produto Digital</h3>
+                    <h3 className="font-semibold text-slate-900">
+                      Funil de Vendas - Produto Digital
+                    </h3>
                     <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
                       <span className="flex items-center">
                         <Eye className="h-4 w-4 mr-1" />
@@ -333,7 +327,9 @@ const OverviewPage: React.FC = () => {
                     <Star className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-slate-900">Quiz de Segmentação - E-commerce</h3>
+                    <h3 className="font-semibold text-slate-900">
+                      Quiz de Segmentação - E-commerce
+                    </h3>
                     <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
                       <span className="flex items-center">
                         <Eye className="h-4 w-4 mr-1" />
@@ -443,11 +439,19 @@ const OverviewPage: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-blue-600 hover:bg-blue-50"
+              >
                 <Plus className="h-5 w-5 mr-2" />
                 Criar Quiz
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+              >
                 <Eye className="h-5 w-5 mr-2" />
                 Ver Templates
               </Button>

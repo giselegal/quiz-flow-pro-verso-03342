@@ -12,7 +12,7 @@ export const AnalyticsDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">1,234</div>
-            <p style={{ color: '#6B4F43' }}>+12% desde o último mês</p>
+            <p style={{ color: "#6B4F43" }}>+12% desde o último mês</p>
           </CardContent>
         </Card>
         <Card>
@@ -21,7 +21,7 @@ export const AnalyticsDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">567</div>
-            <p style={{ color: '#6B4F43' }}>+8% desde o último mês</p>
+            <p style={{ color: "#6B4F43" }}>+8% desde o último mês</p>
           </CardContent>
         </Card>
         <Card>
@@ -30,7 +30,7 @@ export const AnalyticsDashboard: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">4.6%</div>
-            <p style={{ color: '#6B4F43' }}>-2% desde o último mês</p>
+            <p style={{ color: "#6B4F43" }}>-2% desde o último mês</p>
           </CardContent>
         </Card>
       </div>
@@ -42,7 +42,7 @@ const AdvancedAnalytics: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-4">Analytics Avançado</h2>
-      <p style={{ color: '#6B4F43' }}>Sistema de analytics avançado em desenvolvimento...</p>
+      <p style={{ color: "#6B4F43" }}>Sistema de analytics avançado em desenvolvimento...</p>
     </div>
   );
 };

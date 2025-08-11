@@ -57,7 +57,7 @@ const VideoBlockPreview: React.FC<VideoBlockPreviewProps> = ({ content }) => {
           />
         </div>
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
           <p className="text-gray-400">Prévia do vídeo</p>
         </div>
       )}

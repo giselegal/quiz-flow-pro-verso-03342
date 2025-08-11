@@ -44,7 +44,7 @@ const GuaranteeBlockEditor: React.FC<GuaranteeBlockEditorProps> = ({ block, onUp
           placeholder="https://exemplo.com/garantia.jpg"
         />
         {content.image && (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <img
               src={content.image}
               alt="Imagem de garantia"

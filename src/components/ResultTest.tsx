@@ -111,7 +111,7 @@ const ResultTest: React.FC = () => {
         </Card>
 
         {/* Debug info */}
-        <Card style={{ backgroundColor: '#E5DDD5' }}>
+        <Card style={{ backgroundColor: "#E5DDD5" }}>
           <h3 className="font-bold mb-2">Debug Info:</h3>
           <pre className="text-xs overflow-auto">
             {JSON.stringify(

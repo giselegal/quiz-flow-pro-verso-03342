@@ -151,9 +151,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
 
       {/* Loading placeholder */}
-      {!isLoaded && placeholder === "empty" && (
-        <div style={{ backgroundColor: '#E5DDD5' }} />
-      )}
+      {!isLoaded && placeholder === "empty" && <div style={{ backgroundColor: "#E5DDD5" }} />}
 
       {/* Main image */}
       <img

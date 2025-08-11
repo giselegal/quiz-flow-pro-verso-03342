@@ -80,7 +80,7 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
       <div className="bg-white p-1.5 border border-gray-100 shadow-lg rounded-md">
         <p className="text-[7px] font-medium mb-0.5">{data.name}</p>
         <p className="text-[7px] font-semibold">{data.value} usuários</p>
-        <p style={{ color: '#8B7355' }}>{data.text}</p>
+        <p style={{ color: "#8B7355" }}>{data.text}</p>
       </div>
     );
   };

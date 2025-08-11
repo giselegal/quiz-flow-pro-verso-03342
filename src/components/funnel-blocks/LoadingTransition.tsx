@@ -123,10 +123,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
       case "spinning":
         return (
           <div className={`${baseClasses} w-16 h-16`}>
-            <div
-              style={{ borderColor: '#E5DDD5' }}
-              style={{ borderTopColor: progressColor }}
-            />
+            <div style={{ borderColor: "#E5DDD5" }} style={{ borderTopColor: progressColor }} />
           </div>
         );
 
@@ -214,19 +211,15 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
       <h2 className="text-2xl md:text-3xl font-bold mb-4 max-w-2xl">{message}</h2>
 
       {/* Submensagem */}
-      {submessage && <p style={{ color: '#6B4F43' }}>{submessage}</p>}
+      {submessage && <p style={{ color: "#6B4F43" }}>{submessage}</p>}
 
       {/* Texto Rotativo */}
-      {currentLoadingText && (
-        <p style={{ color: '#8B7355' }}>
-          {currentLoadingText}
-        </p>
-      )}
+      {currentLoadingText && <p style={{ color: "#8B7355" }}>{currentLoadingText}</p>}
 
       {/* Barra de Progresso */}
       {showProgress && (
         <div className="w-full max-w-md">
-          <div style={{ backgroundColor: '#E5DDD5' }}>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
             <div
               className="h-full transition-all duration-300 ease-out rounded-full"
               style={{
@@ -235,7 +228,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
               }}
             />
           </div>
-          <p style={{ color: '#8B7355' }}>{Math.round(progress)}%</p>
+          <p style={{ color: "#8B7355" }}>{Math.round(progress)}%</p>
         </div>
       )}
 

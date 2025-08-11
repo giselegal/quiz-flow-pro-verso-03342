@@ -57,7 +57,7 @@ const AccessControlSystem: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-4">Sistema de Controle de Acesso</h2>
-      <p style={{ color: '#6B4F43' }}>Sistema de controle de acesso em desenvolvimento...</p>
+      <p style={{ color: "#6B4F43" }}>Sistema de controle de acesso em desenvolvimento...</p>
     </div>
   );
 };

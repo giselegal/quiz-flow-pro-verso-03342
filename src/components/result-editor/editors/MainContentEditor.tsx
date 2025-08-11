@@ -45,7 +45,7 @@ const MainContentEditor: React.FC<MainContentEditorProps> = ({ content, onUpdate
         {content.customImage && (
           <div className="mt-2">
             <p className="text-sm text-[#8F7A6A] mb-1">Pré-visualização:</p>
-            <div style={{ backgroundColor: '#FAF9F7' }}>
+            <div style={{ backgroundColor: "#FAF9F7" }}>
               <img
                 src={content.customImage}
                 alt="Imagem do estilo"

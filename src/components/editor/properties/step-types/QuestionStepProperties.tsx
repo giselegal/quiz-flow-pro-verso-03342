@@ -60,7 +60,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
   };
 
   const handleRemoveOption = (index: number) => {
-    const updatedOptions = options.filter((_, i) => i !== index);
+    const updatedOptions = options.filter((_: any, i: number) => i !== index);
     onUpdate("options", updatedOptions);
   };
 
@@ -238,11 +238,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
         <CardContent className="space-y-4">
           <div>
             <Label>Borda Padrão</Label>
-            <ColorPicker
-              value={borderColor}
-              onChange={color => onUpdate("borderColor", color)}
-              presets={["#E5E7EB", "#D1D5DB", "#9CA3AF"]}
-            />
+            <ColorPicker value={borderColor} onChange={color => onUpdate("borderColor", color)} />
           </div>
 
           <div>
@@ -250,17 +246,12 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <ColorPicker
               value={selectedBorderColor}
               onChange={color => onUpdate("selectedBorderColor", color)}
-              presets={["#B89B7A", "#aa6b5d", "#4CAF50", "#2196F3"]}
             />
           </div>
 
           <div>
             <Label>Cor do Hover</Label>
-            <ColorPicker
-              value={hoverColor}
-              onChange={color => onUpdate("hoverColor", color)}
-              presets={["#F3E8D3", "#F9FAFB", "#FEF3C7"]}
-            />
+            <ColorPicker value={hoverColor} onChange={color => onUpdate("hoverColor", color)} />
           </div>
         </CardContent>
       </Card>

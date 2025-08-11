@@ -33,8 +33,8 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
   });
 
   return (
-    <div style={{ borderColor: '#E5DDD5' }}>
-      <h3 style={{ color: '#432818' }}>🔍 {title}</h3>
+    <div style={{ borderColor: "#E5DDD5" }}>
+      <h3 style={{ color: "#432818" }}>🔍 {title}</h3>
 
       <div className="space-y-2 text-sm">
         <div>

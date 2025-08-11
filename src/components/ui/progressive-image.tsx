@@ -108,9 +108,7 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           style={{ objectFit: fit }}
         />
       ) : (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
-          Não foi possível carregar a imagem
-        </div>
+        <div style={{ backgroundColor: "#E5DDD5" }}>Não foi possível carregar a imagem</div>
       )}
     </div>
   );

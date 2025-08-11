@@ -23,9 +23,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 }) => {
   if (!selectedBlock) {
     return (
-      <div style={{ backgroundColor: '#FAF9F7' }}>
+      <div style={{ backgroundColor: "#FAF9F7" }}>
         <h3 className="text-lg font-semibold mb-4">Properties</h3>
-        <p style={{ color: '#8B7355' }}>Select a block to edit its properties</p>
+        <p style={{ color: "#8B7355" }}>Select a block to edit its properties</p>
       </div>
     );
   }
@@ -40,7 +40,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Properties</h3>
         <Button variant="ghost" size="sm" onClick={onClose}>
@@ -51,7 +51,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       <div className="space-y-4">
         <div>
           <Label>Block Type</Label>
-          <div style={{ color: '#6B4F43' }}>{selectedBlock.type}</div>
+          <div style={{ color: "#6B4F43" }}>{selectedBlock.type}</div>
         </div>
 
         {selectedBlock.type === "text" && (

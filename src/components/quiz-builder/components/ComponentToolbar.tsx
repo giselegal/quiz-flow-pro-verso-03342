@@ -28,7 +28,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
     return (
       <div className="border-b bg-white p-3 flex items-center justify-between opacity-50">
         <div className="flex items-center space-x-2">
-          <p style={{ color: '#8B7355' }}>Selecione uma etapa para adicionar componentes</p>
+          <p style={{ color: "#8B7355" }}>Selecione uma etapa para adicionar componentes</p>
         </div>
       </div>
     );
@@ -58,7 +58,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    style={{ color: '#6B4F43' }}
+                    style={{ color: "#6B4F43" }}
                     onClick={() => onComponentSelect(component.type)}
                   >
                     <component.icon className="w-4 h-4 mr-1" />
@@ -74,7 +74,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
       </div>
 
       <div className="flex items-center">
-        <Button variant="ghost" size="sm" style={{ color: '#8B7355' }}>
+        <Button variant="ghost" size="sm" style={{ color: "#8B7355" }}>
           {isPreviewing ? (
             <>
               <EyeOff className="w-4 h-4 mr-1" />

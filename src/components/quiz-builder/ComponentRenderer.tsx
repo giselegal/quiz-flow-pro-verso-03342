@@ -45,8 +45,8 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
             className="max-w-full h-auto rounded"
           />
         ) : (
-          <div style={{ backgroundColor: '#E5DDD5' }}>
-            <p style={{ color: '#8B7355' }}>Imagem não definida</p>
+          <div style={{ backgroundColor: "#E5DDD5" }}>
+            <p style={{ color: "#8B7355" }}>Imagem não definida</p>
           </div>
         );
 
@@ -62,7 +62,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 </div>
               ))
             ) : (
-              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
+              <div style={{ color: "#8B7355" }}>Opções não definidas</div>
             )}
           </div>
         );
@@ -83,7 +83,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 </div>
               ))
             ) : (
-              <div style={{ color: '#8B7355' }}>Opções não definidas</div>
+              <div style={{ color: "#8B7355" }}>Opções não definidas</div>
             )}
           </div>
         );
@@ -98,7 +98,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
                 {Array.from(
                   { length: (data.maxValue || 10) - (data.minValue || 1) + 1 },
                   (_, i) => (
-                    <button key={i} style={{ backgroundColor: '#E5DDD5' }}>
+                    <button key={i} style={{ backgroundColor: "#E5DDD5" }}>
                       {(data.minValue || 1) + i}
                     </button>
                   )
@@ -111,8 +111,8 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
 
       default:
         return (
-          <div style={{ borderColor: '#E5DDD5' }}>
-            <p style={{ color: '#8B7355' }}>Tipo de componente desconhecido: {component.type}</p>
+          <div style={{ borderColor: "#E5DDD5" }}>
+            <p style={{ color: "#8B7355" }}>Tipo de componente desconhecido: {component.type}</p>
           </div>
         );
     }

@@ -250,7 +250,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                         R$ 175,00
                       </span>
                       <motion.div
-                        style={{ backgroundColor: '#FAF9F7' }}
+                        style={{ backgroundColor: "#FAF9F7" }}
                         initial={{ width: 0 }}
                         whileInView={{ width: "100%" }}
                         viewport={{ once: true }}
@@ -273,7 +273,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
               {/* Tabs de Pagamento */}
               <div className="flex justify-center mb-6">
                 <div
-                  style={{ backgroundColor: '#E5DDD5' }}
+                  style={{ backgroundColor: "#E5DDD5" }}
                   style={{ backgroundColor: tokens.colors.backgroundAccent }}
                 >
                   {[
@@ -308,7 +308,7 @@ const EnhancedPricingSection: React.FC<EnhancedPricingSectionProps> = ({ classNa
                   >
                     <div className="flex items-center justify-center gap-6 mb-4">
                       <div className="text-center">
-                        <p style={{ color: '#8B7355' }}>De</p>
+                        <p style={{ color: "#8B7355" }}>De</p>
                         <p
                           className="text-2xl md:text-3xl line-through"
                           style={{ color: tokens.colors.textMuted }}

@@ -50,11 +50,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
       {isSelected && (
         <div className="absolute -top-12 left-0 right-0 flex items-center justify-between bg-white border border-[#D4C4A0] rounded-lg px-3 py-2 shadow-md z-10">
           <div className="flex items-center gap-2">
-            <div
-              {...attributes}
-              {...listeners}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
+            <div {...attributes} {...listeners} style={{ backgroundColor: "#E5DDD5" }}>
               <GripVertical className="w-4 h-4 text-[#B89B7A]" />
             </div>
             <span className="text-xs font-medium text-[#432818]">Componente selecionado</span>
@@ -81,7 +77,7 @@ export const SortableCanvasItem: React.FC<SortableCanvasItemProps> = ({
                 e.stopPropagation();
                 onDelete();
               }}
-              style={{ color: '#432818' }}
+              style={{ color: "#432818" }}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

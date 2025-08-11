@@ -57,8 +57,8 @@ export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
                 }}
               />
             ) : (
-              <div style={{ backgroundColor: '#E5DDD5' }}>
-                <span style={{ color: '#8B7355' }}>Clique para adicionar imagem</span>
+              <div style={{ backgroundColor: "#E5DDD5" }}>
+                <span style={{ color: "#8B7355" }}>Clique para adicionar imagem</span>
               </div>
             )}
           </div>
@@ -83,8 +83,8 @@ export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
 
       default:
         return (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
-            <p style={{ color: '#6B4F43' }}>Tipo de bloco: {block.type}</p>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
+            <p style={{ color: "#6B4F43" }}>Tipo de bloco: {block.type}</p>
           </div>
         );
     }

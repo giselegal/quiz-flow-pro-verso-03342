@@ -20,7 +20,7 @@ export const containerConfig: ContainerConfig = {
   base: "w-full mx-auto flex flex-col",
   padding: {
     mobile: "px-1", // Removido py-1
-    tablet: "px-2", // Removido py-1  
+    tablet: "px-2", // Removido py-1
     desktop: "px-2", // Removido py-1
   },
   spacing: {

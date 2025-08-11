@@ -255,10 +255,7 @@ const FaqSectionNew = () => {
             key={index}
             className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-[#B89B7A]"
           >
-            <button
-              onClick={() => toggleItem(index)}
-              style={{ backgroundColor: '#FAF9F7' }}
-            >
+            <button onClick={() => toggleItem(index)} style={{ backgroundColor: "#FAF9F7" }}>
               <span className="font-medium text-[#432818] text-lg">{item.question}</span>
               <ChevronRight
                 size={24}
@@ -266,11 +263,7 @@ const FaqSectionNew = () => {
               />
             </button>
 
-            {openItem === index && (
-              <div style={{ color: '#6B4F43' }}>
-                {item.answer}
-              </div>
-            )}
+            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
           </div>
         ))}
       </div>
@@ -439,9 +432,7 @@ const QuizOfferPage: React.FC = () => {
               {/* Badge credibilidade */}
               <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
                 <Award size={18} className="text-green-600" />
-                <span style={{ color: '#6B4F43' }}>
-                  3000+ mulheres transformadas
-                </span>
+                <span style={{ color: "#6B4F43" }}>3000+ mulheres transformadas</span>
               </div>
 
               {/* Headline simplificada - DADOS REAIS ETAPA 21 */}

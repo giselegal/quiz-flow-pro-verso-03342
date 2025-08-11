@@ -173,14 +173,14 @@ const CreativeAnalyticsPage = (): JSX.Element => {
   };
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       {/* Header com controles */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 style={{ color: '#432818' }}>Analytics de Criativos</h1>
-              <p style={{ color: '#6B4F43' }}>
+              <h1 style={{ color: "#432818" }}>Analytics de Criativos</h1>
+              <p style={{ color: "#6B4F43" }}>
                 Monitore a performance dos seus criativos em tempo real
               </p>
             </div>

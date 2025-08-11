@@ -45,7 +45,7 @@ const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, 
           placeholder="URL da imagem principal"
         />
         {content.heroImage && (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <img
               src={content.heroImage}
               alt="Imagem principal"
@@ -64,7 +64,7 @@ const HeroSectionBlockEditor: React.FC<HeroSectionBlockEditorProps> = ({ block, 
           placeholder="URL da imagem secundária"
         />
         {content.heroImage2 && (
-          <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ backgroundColor: "#FAF9F7" }}>
             <img
               src={content.heroImage2}
               alt="Imagem secundária"

@@ -99,7 +99,7 @@ const BonusListInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="flex justify-between items-start">
               <div className="flex-1">
                 <h4 className="font-medium">{bonus.title}</h4>
-                <p style={{ color: '#6B4F43' }}>{bonus.description}</p>
+                <p style={{ color: "#6B4F43" }}>{bonus.description}</p>
               </div>
               <span className="font-bold text-[#432818]">{bonus.value}</span>
             </div>

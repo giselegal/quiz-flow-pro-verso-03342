@@ -136,7 +136,7 @@ const SimpleEditor: React.FC = () => {
               <h3 className="text-xl font-semibold mb-3" style={{ color: config.cores.primaria }}>
                 Recurso {i}
               </h3>
-              <p style={{ color: '#6B4F43' }}>
+              <p style={{ color: "#6B4F43" }}>
                 Descrição do recurso que demonstra como o editor simples pode criar layouts
                 elegantes.
               </p>
@@ -173,7 +173,7 @@ const SimpleEditor: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
+    <div style={{ backgroundColor: "#FAF9F7" }}>
       {/* Header */}
       <div className="bg-white border-b p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -181,10 +181,8 @@ const SimpleEditor: React.FC = () => {
             <Link to="/admin" className="text-[#B89B7A] hover:text-[#A38A69]">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 style={{ color: '#432818' }}>Simple Editor</h1>
-            <span style={{ backgroundColor: '#E5DDD5' }}>
-              Modo Simples
-            </span>
+            <h1 style={{ color: "#432818" }}>Simple Editor</h1>
+            <span style={{ backgroundColor: "#E5DDD5" }}>Modo Simples</span>
           </div>
 
           <div className="flex gap-2">
@@ -324,7 +322,7 @@ const SimpleEditor: React.FC = () => {
               <div className="p-4 border-b">
                 <h3 className="text-lg font-semibold">Preview em Tempo Real</h3>
               </div>
-              <div style={{ backgroundColor: '#E5DDD5' }}>
+              <div style={{ backgroundColor: "#E5DDD5" }}>
                 <ComponentePreview />
               </div>
             </Card>

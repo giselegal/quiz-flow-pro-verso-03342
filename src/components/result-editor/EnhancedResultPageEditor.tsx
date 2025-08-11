@@ -55,7 +55,7 @@ export const EnhancedResultPageEditor: React.FC<EnhancedResultPageEditorProps> =
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div style={{ borderColor: '#E5DDD5' }}>
+      <div style={{ borderColor: "#E5DDD5" }}>
         <h2 className="text-xl font-semibold">Editor de Resultados Aprimorado</h2>
         <div className="flex items-center space-x-2">
           <Button variant="ghost" onClick={togglePreview}>

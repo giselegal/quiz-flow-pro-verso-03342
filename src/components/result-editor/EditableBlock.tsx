@@ -71,16 +71,12 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
     >
       {/* Toolbar for selected block */}
       {isSelected && (
-        <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ borderColor: "#E5DDD5" }}>
           <div className="flex items-center gap-2">
-            <div
-              {...attributes}
-              {...listeners}
-              style={{ backgroundColor: '#E5DDD5' }}
-            >
-              <GripVertical style={{ color: '#8B7355' }} />
+            <div {...attributes} {...listeners} style={{ backgroundColor: "#E5DDD5" }}>
+              <GripVertical style={{ color: "#8B7355" }} />
             </div>
-            <span style={{ color: '#6B4F43' }}>{block.type}</span>
+            <span style={{ color: "#6B4F43" }}>{block.type}</span>
           </div>
 
           <div className="flex items-center gap-1">
@@ -117,7 +113,7 @@ export const EditableBlock: React.FC<EditableBlockProps> = ({
                 e.stopPropagation();
                 onDelete();
               }}
-              style={{ color: '#432818' }}
+              style={{ color: "#432818" }}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

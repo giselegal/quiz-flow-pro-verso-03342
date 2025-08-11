@@ -36,7 +36,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {userName && (
           <div className="text-right">
-            <p style={{ color: '#6B4F43' }}>Olá,</p>
+            <p style={{ color: "#6B4F43" }}>Olá,</p>
             <p className="text-lg font-medium text-[#432818]">{userName}</p>
           </div>
         )}

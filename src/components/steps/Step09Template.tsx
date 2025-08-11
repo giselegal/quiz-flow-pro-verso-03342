@@ -224,4 +224,3 @@ export const getStep09Template = () => {
     },
   ];
 };
-

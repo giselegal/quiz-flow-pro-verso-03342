@@ -46,12 +46,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <JsonConfigEditor config={resultPageConfig} onUpdate={onUpdateConfig} />
         )}
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onReset}
-          style={{ color: '#6B4F43' }}
-        >
+        <Button variant="outline" size="sm" onClick={onReset} style={{ color: "#6B4F43" }}>
           <RefreshCw className="w-4 h-4 mr-2" />
           Resetar
         </Button>

@@ -102,7 +102,7 @@ class PerformanceMonitor {
 
     // Usar requestIdleCallback para evitar violations
     const scheduleMemoryCheck = () => {
-      if ('requestIdleCallback' in window) {
+      if ("requestIdleCallback" in window) {
         requestIdleCallback(() => {
           checkMemory();
           // Reagendar apenas se ainda estiver monitorando

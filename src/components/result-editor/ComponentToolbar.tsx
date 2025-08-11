@@ -213,7 +213,7 @@ export const ComponentToolbar: React.FC<ComponentToolbarProps> = ({
         )}
 
         {locked.length > 0 && !hasPremiumFeatures && (
-          <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ borderColor: "#E5DDD5" }}>
             <h4 className="font-semibold text-stone-700 mb-2">🚀 Desbloqueie Mais Componentes</h4>
             <p className="text-sm text-stone-700 mb-3">
               Upgrade para o plano Professional e tenha acesso a {locked.length} componentes

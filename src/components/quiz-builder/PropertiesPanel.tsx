@@ -52,7 +52,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         <Button
           variant="ghost"
           size="sm"
-          style={{ color: '#432818' }}
+          style={{ color: "#432818" }}
           onClick={() => onDelete(selectedComponentId)}
         >
           <Trash2 className="w-4 h-4" />

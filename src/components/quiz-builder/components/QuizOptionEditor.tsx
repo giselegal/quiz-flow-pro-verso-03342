@@ -31,7 +31,7 @@ const QuizOptionEditor: React.FC<QuizOptionEditorProps> = ({
           variant="ghost"
           size="sm"
           onClick={() => onRemove(index)}
-          style={{ color: '#432818' }}
+          style={{ color: "#432818" }}
         >
           <Trash2 className="h-4 w-4" />
         </Button>

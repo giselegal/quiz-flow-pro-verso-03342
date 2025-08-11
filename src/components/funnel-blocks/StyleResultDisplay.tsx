@@ -123,9 +123,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
             {congratulationsText}
           </h1>
 
-          {subtitleText && (
-            <p style={{ color: '#6B4F43' }}>{subtitleText}</p>
-          )}
+          {subtitleText && <p style={{ color: "#6B4F43" }}>{subtitleText}</p>}
         </div>
 
         {/* Card Principal do Resultado */}
@@ -182,7 +180,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
                 <h2 className="text-4xl md:text-5xl font-bold text-[#B89B7A] mb-6">{styleName}</h2>
 
                 {/* Descrição */}
-                <p style={{ color: '#6B4F43' }}>{styleDescription}</p>
+                <p style={{ color: "#6B4F43" }}>{styleDescription}</p>
 
                 {/* Características */}
                 {showCharacteristics && characteristics.length > 0 && (
@@ -212,10 +210,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {styleKeywords.map((keyword, index) => (
-                        <span
-                          key={index}
-                          style={{ color: '#6B4F43' }}
-                        >
+                        <span key={index} style={{ color: "#6B4F43" }}>
                           #{keyword}
                         </span>
                       ))}
@@ -227,10 +222,10 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
                 {showPercentage && (
                   <div className="mb-8">
                     <div className="flex justify-between items-center mb-2">
-                      <span style={{ color: '#6B4F43' }}>Compatibilidade</span>
+                      <span style={{ color: "#6B4F43" }}>Compatibilidade</span>
                       <span className="text-sm font-bold text-[#B89B7A]">{percentMatch}%</span>
                     </div>
-                    <div style={{ backgroundColor: '#E5DDD5' }}>
+                    <div style={{ backgroundColor: "#E5DDD5" }}>
                       <div
                         className="bg-gradient-to-r from-[#B89B7A] to-[#D4B896] h-3 rounded-full transition-all duration-1000"
                         style={{ width: `${percentMatch}%` }}
@@ -261,7 +256,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
               {continueButtonText}
             </button>
 
-            <p style={{ color: '#8B7355' }}>
+            <p style={{ color: "#8B7355" }}>
               Veja como transformar seu guarda-roupa com esse estilo
             </p>
           </div>

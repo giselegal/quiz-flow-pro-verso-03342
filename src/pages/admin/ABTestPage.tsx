@@ -35,17 +35,15 @@ const ABTestPage: React.FC = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <h3 className="font-semibold text-[#432818]">Título da Página de Resultado</h3>
-                  <Badge style={{ backgroundColor: '#E5DDD5' }}>Ativo</Badge>
+                  <Badge style={{ backgroundColor: "#E5DDD5" }}>Ativo</Badge>
                 </div>
                 <p className="text-sm text-[#8F7A6A] mb-3">
                   Testando dois títulos diferentes na página de resultado
                 </p>
                 <div className="grid grid-cols-2 gap-4">
-                  <div style={{ backgroundColor: '#FAF9F7' }}>
-                    <div style={{ color: '#6B4F43' }}>Variante A</div>
-                    <div style={{ color: '#6B4F43' }}>
-                      43.2% conversão (234 visitantes)
-                    </div>
+                  <div style={{ backgroundColor: "#FAF9F7" }}>
+                    <div style={{ color: "#6B4F43" }}>Variante A</div>
+                    <div style={{ color: "#6B4F43" }}>43.2% conversão (234 visitantes)</div>
                   </div>
                   <div className="p-3 bg-[#B89B7A]/10 rounded">
                     <div className="text-sm font-medium text-[#A38A69]">Variante B</div>

@@ -5,7 +5,7 @@
 
 // Função universal com tipos corretos para usar em todos os blocos
 export const getMarginClass = (value: string | number | undefined, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : (value || 0);
+  const numValue = typeof value === "string" ? parseInt(value, 10) : value || 0;
 
   if (isNaN(numValue) || numValue === 0 || value === undefined) return "";
 
