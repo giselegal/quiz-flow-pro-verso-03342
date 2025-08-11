@@ -224,7 +224,6 @@ class PerformanceAnalyzer {
   reset() {
     this.violationCount = 0;
     this.frameCount = 0;
-    this.lastFrameTime = performance.now();
     console.log('🔄 Performance Analyzer: Métricas resetadas');
   }
 }
