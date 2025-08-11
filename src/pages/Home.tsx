@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { useTranslation } from "react-i18next";
-import { useRouter } from "wouter";
 import { useEffect, useState } from "react";
 import {
   Zap,
@@ -21,8 +20,10 @@ import {
 const Home = () => {
   const { user, logout } = useAuth();
   const { t } = useTranslation();
-  const router = useRouter();
-  const navigate = router.navigate;
+  const navigate = (path: string) => {
+    // Para wouter, usamos window.location diretamente
+    window.location.href = path;
+  };
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
