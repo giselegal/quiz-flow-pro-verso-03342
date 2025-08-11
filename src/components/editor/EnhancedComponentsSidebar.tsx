@@ -4,21 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { blockDefinitions } from "@/config/blockDefinitionsOptimized";
 import {
-    MODULAR_COMPONENTS,
-    type ModularComponent
+  MODULAR_COMPONENTS,
+  type ModularComponent
 } from "@/config/modularComponents";
-import { useEditor } from "@/contexts/EditorContext";
+import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { type BlockDefinition } from "@/types/blocks";
 import {
-    ChevronDown,
-    ChevronRight,
-    GripVertical,
-    HelpCircle,
-    Layers,
-    Search,
-    Settings,
-    Trophy,
+  ChevronDown,
+  ChevronRight,
+  GripVertical,
+  HelpCircle,
+  Layers,
+  Search,
+  Settings,
+  Trophy,
 } from "lucide-react";
 import React, { useState } from "react";
 
