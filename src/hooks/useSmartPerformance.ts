@@ -237,8 +237,8 @@ export const useOptimizedQuizStep = (
       setIsPreloading(true);
 
       try {
-        // Simular preload (aqui você pode implementar o preload real)
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Simular preload (aqui você pode implementar o preload real) - OTIMIZADO
+        await new Promise<void>(resolve => PerformanceOptimizer.schedule(() => resolve(), 100, 'message'));
         setPreloadComplete(true);
       } catch (error) {
         console.warn(`Erro no preload do step ${stepId + 1}:`, error);
@@ -247,8 +247,13 @@ export const useOptimizedQuizStep = (
       }
     };
 
-    const timer = setTimeout(preloadNextStep, 1000); // Preload após 1s visível
-    return () => clearTimeout(timer);
+    // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
+    const strategy = PerformanceOptimizer.getSuggestedStrategy(1000, false);
+    PerformanceOptimizer.schedule(preloadNextStep, 1000, strategy);
+    
+    return () => {
+      // Cleanup se necessário - PerformanceOptimizer gerencia automaticamente
+    };
   }, [stepId, preloadNext, smartPerf.isVisible, isPreloading]);
 
   // 🎨 Classes específicas para quiz steps
