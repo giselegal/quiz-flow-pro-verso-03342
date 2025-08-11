@@ -2,8 +2,53 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor } from "@/context/EditorContext";
-import { cn } from "@/lib/utils";
-import { Copy, Eye, Loader2, Plus, Settings, Trash2, FileCode } from "lucide-react";
+import { cn } from "@/lib/utils                    <div className="flex items-center justify-between">
+                      <div className="text-center flex-1">
+                        <span
+                          className={cn(
+                            "font-medium text-lg",
+                            activeStageId === stage.id ? "text-brand-dark" : "text-foreground"
+                          )}
+                        >
+                          Etapa {stage.order}
+                        </span>
+                        <div style={{ color: "#6B4F43" }}>{stage.name}</div>
+                        
+                        {/* 🎯 INFORMAÇÕES DOS COMPONENTES */}
+                        <div className="mt-2 space-y-1">
+                          {/* Indicador de Template JSON */}
+                          {templateInfo && (
+                            <div className="flex items-center justify-center gap-1">
+                              <FileCode className="w-3 h-3 text-blue-600" />
+                              <span className="text-xs text-blue-600 font-medium">Template JSON</span>
+                            </div>
+                          )}
+                          
+                          {/* Status dos Componentes */}
+                          {stageComponents.length > 0 && (
+                            <div className="flex items-center justify-center gap-1">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-xs text-green-600 font-medium">
+                                {stageComponents.length} componente{stageComponents.length !== 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {/* Tipos de Componentes */}
+                          {componentTypes.length > 0 && componentTypes.length <= 3 && (
+                            <div className="text-xs text-gray-500 text-center">
+                              {componentTypes.join(', ')}
+                            </div>
+                          )}
+                          
+                          {componentTypes.length > 3 && (
+                            <div className="text-xs text-gray-500 text-center">
+                              {componentTypes.slice(0, 2).join(', ')} +{componentTypes.length - 2} mais
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>opy, Eye, Loader2, Plus, Settings, Trash2, FileCode } from "lucide-react";
 import React, { useEffect, useState } from "react";
 // 🎯 IMPORTAR TEMPLATES JSON
 import { CLEAN_21_STEPS } from "@/config/clean21Steps";
