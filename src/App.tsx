@@ -34,6 +34,7 @@ const TestAllTemplates = lazy(() => import("./components/debug/TestAllTemplates"
 const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRendering"));
 const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
 const TestStep21 = lazy(() => import("./components/editor-fixed/OfferPageJson"));
+const EditorFixedPageWithDragDrop = lazy(() => import("./pages/editor-fixed-dragdrop"));
 
 // Loading component
 const PageLoading = () => (

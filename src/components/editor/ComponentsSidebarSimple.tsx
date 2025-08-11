@@ -7,14 +7,14 @@ import { MODULAR_COMPONENTS, type ModularComponent } from "@/config/modularCompo
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { type BlockDefinition } from "@/types/blocks";
 import {
-  ChevronDown,
-  ChevronRight,
-  GripVertical,
-  HelpCircle,
-  Layers,
-  Search,
-  Settings,
-  Trophy,
+    ChevronDown,
+    ChevronRight,
+    GripVertical,
+    HelpCircle,
+    Layers,
+    Search,
+    Settings,
+    Trophy,
 } from "lucide-react";
 import React, { useState } from "react";
 
