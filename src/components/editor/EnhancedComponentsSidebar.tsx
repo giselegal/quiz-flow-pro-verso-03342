@@ -22,9 +22,9 @@ import {
   Layers,
 } from "lucide-react";
 
-interface ComponentsSidebarSimpleProps {}
+interface EnhancedComponentsSidebarProps {}
 
-const EnhancedComponentsSidebar: React.FC<ComponentsSidebarSimpleProps> = () => {
+const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
