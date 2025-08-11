@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor } from "@/context/EditorContext";
 import { cn } from "@/lib/utils";
-import { Copy, Eye, Loader2, Plus, Settings, Trash2 } from "lucide-react";
+import { Copy, Eye, Loader2, Plus, Settings, Trash2, FileCode } from "lucide-react";
 import React, { useEffect, useState } from "react";
+// 🎯 IMPORTAR TEMPLATES JSON
+import { CLEAN_21_STEPS } from "@/config/clean21Steps";
+import { getTemplateByStep } from "@/config/stepTemplatesMapping";
 
 interface FunnelStagesPanelProps {
   className?: string;
