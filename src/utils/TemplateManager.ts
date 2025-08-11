@@ -2,6 +2,8 @@
 // Update the import path below to the correct relative path if needed
 import type { Block } from "../types/editor";
 import { TemplateJsonLoader } from "./TemplateJsonLoader";
+// 🎯 IMPORTAÇÃO DO TEMPLATE MODULAR DA ETAPA 1
+import { getStep01Template } from "../components/steps/Step01Template";
 
 /**
  * Mapeamento completo das 21 etapas para templates JSON
@@ -41,7 +43,32 @@ export class TemplateManager {
    */
   static async loadStepBlocks(stepId: string): Promise<Block[]> {
     try {
-      // Verifica cache primeiro
+      // 🎯 PRIORIDADE PARA TEMPLATE MODULAR DA ETAPA 1
+      if (stepId === "step-1") {
+        console.log(`🚀 Usando template modular para ${stepId}`);
+        const modularBlocks = getStep01Template();
+        
+        // Converte para o formato Block esperado
+        const blocks: Block[] = modularBlocks.map((block, index) => ({
+          id: block.id,
+          type: block.type as any, // Força o tipo para evitar erro de compilação
+          order: index,
+          properties: block.properties,
+          content: {
+            title: block.properties.content || block.properties.text || "",
+            text: block.properties.content || block.properties.text || "",
+            url: block.properties.src || block.properties.logoUrl || "",
+            alt: block.properties.alt || block.properties.logoAlt || "",
+          }
+        }));
+        
+        // Armazena no cache
+        this.cache.set(stepId, blocks);
+        console.log(`✅ Template modular ${stepId} carregado: ${blocks.length} blocos`);
+        return blocks;
+      }
+      
+      // Verifica cache primeiro para outras etapas
       if (this.cache.has(stepId)) {
         console.log(`📦 Template ${stepId} carregado do cache`);
         return this.cache.get(stepId)!;
