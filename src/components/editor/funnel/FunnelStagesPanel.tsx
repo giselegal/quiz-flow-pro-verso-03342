@@ -237,6 +237,11 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               // Obter componentes da etapa
               const stageComponents = getStageComponents(stage.id);
               const componentTypes = getStageComponentTypes(stage.id);
+              
+              // 🎯 VERIFICAR SE ETAPA TEM TEMPLATE JSON
+              const stepNumber = stage.order || index + 1;
+              const templateInfo = getTemplateByStep(stepNumber);
+              const cleanStepConfig = CLEAN_21_STEPS.find(step => step.stepNumber === stepNumber);
 
               return (
                 <div
