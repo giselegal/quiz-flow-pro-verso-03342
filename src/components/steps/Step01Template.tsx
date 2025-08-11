@@ -1,7 +1,227 @@
-// 🎯 ETAPA 1 - CONFIGURAÇÃO MODULAR BASEADA EM PRODUÇÃO
-// Template otimizado baseado no QuizIntro em produção com funcionalidades avançadas
-// 🎯 INTEGRAÇÃO RECOMENDADA: useBlockForm para gerenciamento de estado do formulário
+import React, { useEffect } from "react";
 
+/**
+ * Step01Template - Componente para Etapa 1 do Quiz
+ *
+ * Template otimizado baseado no QuizIntro em produção com funcionalidades avançadas
+ * Integração recomendada: useBlockForm para gerenciamento de estado do formulário
+ */
+
+// ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
+interface Step01TemplateProps {
+  id: string;
+  className?: string;
+  style?: React.CSSProperties;
+
+  properties?: {
+    enabled?: boolean;
+    title?: string;
+    subtitle?: string;
+    logoUrl?: string;
+    logoAlt?: string;
+    backgroundColor?: string;
+    textColor?: string;
+    showProgress?: boolean;
+    progressValue?: number;
+    buttonText?: string;
+    nameRequired?: boolean;
+    placeholderText?: string;
+  };
+
+  isEditing?: boolean;
+  isSelected?: boolean;
+  onUpdate?: (id: string, updates: any) => void;
+  onClick?: () => void;
+  onPropertyChange?: (key: string, value: any) => void;
+}
+
+// ✅ COMPONENTE PRINCIPAL
+export const Step01Template: React.FC<Step01TemplateProps> = ({
+  id,
+  className = "",
+  style = {},
+  properties = {
+    enabled: true,
+    title: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+    subtitle: "Em poucos minutos, descubra seu Estilo Predominante",
+    logoUrl:
+      "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp",
+    logoAlt: "Logo Gisele Galvão",
+    backgroundColor: "#FEFEFE",
+    textColor: "#432818",
+    showProgress: false,
+    progressValue: 0,
+    buttonText: "Quero Descobrir meu Estilo Agora!",
+    nameRequired: true,
+    placeholderText: "Digite seu nome",
+  },
+  isEditing = false,
+  isSelected = false,
+  onUpdate,
+  onClick,
+}) => {
+  // ✅ DEBUG E MONITORAMENTO
+  useEffect(() => {
+    if (isEditing) {
+      console.log(`Step01Template ${id} entered editing mode`);
+    }
+  }, [isEditing, id]);
+
+  useEffect(() => {
+    console.log(`Step01Template ${id} properties updated:`, properties);
+  }, [properties, id]);
+
+  // ✅ FUNÇÃO DE CLIQUE
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClick?.();
+
+    if (isEditing) {
+      console.log(`Step01Template ${id} clicked in editing mode`);
+      // Usar onUpdate se necessário
+      onUpdate?.(id, { lastClicked: new Date().toISOString() });
+    }
+  };
+
+  // ✅ ESTILOS DINÂMICOS
+  const containerStyles: React.CSSProperties = {
+    backgroundColor: properties.backgroundColor,
+    color: properties.textColor,
+    width: "100%",
+    minHeight: "400px",
+    padding: "24px",
+    boxSizing: "border-box",
+    position: "relative",
+    cursor: isEditing ? "pointer" : "default",
+    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
+    borderRadius: "8px",
+    transition: "all 0.3s ease",
+    opacity: properties.enabled === false ? 0.5 : 1,
+    pointerEvents: properties.enabled === false ? "none" : "auto",
+    ...style,
+  };
+
+  // ✅ RENDERIZAÇÃO CONDICIONAL QUANDO DESABILITADO
+  if (!properties.enabled && !isEditing) {
+    return null;
+  }
+
+  return (
+    <div
+      id={id}
+      className={`step01-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      style={containerStyles}
+      onClick={handleClick}
+    >
+      {/* Header com Logo */}
+      {properties.logoUrl && (
+        <div className="step-header mb-6 text-center">
+          <img
+            src={properties.logoUrl}
+            alt={properties.logoAlt}
+            className="h-12 mx-auto mb-4"
+            style={{ maxWidth: "120px" }}
+          />
+        </div>
+      )}
+
+      {/* Barra de Progresso */}
+      {properties.showProgress && (
+        <div className="progress-bar mb-6">
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
+              style={{ width: `${properties.progressValue}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Título Principal */}
+      <div className="step-content text-center">
+        <h1
+          className="text-2xl md:text-4xl font-bold mb-4"
+          style={{
+            color: properties.textColor,
+            fontFamily: '"Playfair Display", serif',
+            lineHeight: "1.2",
+          }}
+        >
+          {properties.title}
+        </h1>
+
+        {/* Subtítulo */}
+        {properties.subtitle && (
+          <p className="text-base md:text-lg mb-8" style={{ color: "#6B7280", lineHeight: "1.6" }}>
+            {properties.subtitle}
+          </p>
+        )}
+
+        {/* Campo de Nome */}
+        {properties.nameRequired && (
+          <div className="name-input-section mb-6 max-w-md mx-auto">
+            <label
+              className="block text-xs font-semibold mb-2 text-left"
+              style={{ color: properties.textColor }}
+            >
+              NOME {properties.nameRequired && <span className="text-red-500">*</span>}
+            </label>
+            <input
+              type="text"
+              placeholder={properties.placeholderText}
+              className="w-full p-3 border-2 border-[#B89B7A] rounded-md focus:outline-none focus:ring-2 focus:ring-[#A1835D]"
+              style={{
+                backgroundColor: properties.backgroundColor,
+                color: properties.textColor,
+              }}
+            />
+          </div>
+        )}
+
+        {/* Botão CTA */}
+        <div className="cta-section mb-6">
+          <button
+            className="w-full max-w-md py-3 px-6 bg-[#B89B7A] text-white font-semibold rounded-md hover:bg-[#A1835D] transition-all duration-300 transform hover:scale-[1.01]"
+            style={{ fontSize: "16px" }}
+          >
+            {properties.buttonText}
+          </button>
+        </div>
+
+        {/* Texto de Privacidade */}
+        <p className="text-xs text-gray-500 mb-4 max-w-md mx-auto">
+          Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com
+          nossa{" "}
+          <a href="#" className="text-[#B89B7A] hover:text-[#A1835D] underline">
+            política de privacidade
+          </a>
+        </p>
+
+        {/* Footer */}
+        <footer className="text-xs text-gray-500 mt-8">
+          © {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados
+        </footer>
+      </div>
+
+      {/* Indicadores de Estado no Modo de Edição */}
+      {isEditing && (
+        <div className="absolute top-2 right-2 flex gap-2 items-center">
+          {!properties.enabled && (
+            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Desabilitado</span>
+          )}
+          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">Step 01</span>
+        </div>
+      )}
+
+      {/* Debug Info */}
+      {process.env.NODE_ENV === "development" && isEditing && (
+        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
+      )}
+    </div>
+  );
+};
+
+// ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
 export const getStep01Template = () => {
   return [
     // 🎯 1. CABEÇALHO DO QUIZ - QUIZ INTRO HEADER (OTIMIZADO PARA PRODUÇÃO)
@@ -10,8 +230,10 @@ export const getStep01Template = () => {
       type: "quiz-intro-header",
       properties: {
         // ✨ URLS OTIMIZADAS DO CLOUDINARY (baseado na produção)
-        logoUrl: "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp",
-        logoUrlFallback: "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
+        logoUrl:
+          "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp",
+        logoUrlFallback:
+          "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_70,w_120,h_50,c_fit/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.png",
         logoAlt: "Logo Gisele Galvão",
         logoWidth: 120,
         logoHeight: 50,
@@ -43,7 +265,7 @@ export const getStep01Template = () => {
         mobileLogoWidth: 120,
         mobileLogoHeight: 50,
         mobileFontSize: "text-lg",
-        
+
         // ✨ ACESSIBILIDADE
         ariaLabel: "Logo Gisele Galvão - Quiz de Estilo Pessoal",
         role: "img",
@@ -87,8 +309,9 @@ export const getStep01Template = () => {
       type: "text-inline",
       properties: {
         // ✨ CONTEÚDO EXATO DA PRODUÇÃO
-        content: '<span class="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span class="text-[#B89B7A]">Você</span>.',
-        text: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.',
+        content:
+          '<span class="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span class="text-[#B89B7A]">Você</span>.',
+        text: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (Playfair Display da produção)
         fontSize: "text-2xl sm:text-3xl md:text-4xl",
@@ -118,7 +341,7 @@ export const getStep01Template = () => {
         mobileFontSize: "text-2xl",
         mobileLineHeight: "1.3",
         mobileMarginBottom: 8,
-        
+
         // ✨ CLASSES CSS CUSTOMIZADAS
         className: "playfair-display leading-tight px-2",
         customStyle: { fontWeight: 400 },
@@ -132,8 +355,10 @@ export const getStep01Template = () => {
       properties: {
         // ✨ URLS OTIMIZADAS DO CLOUDINARY (múltiplos formatos para performance)
         src: "https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif",
-        srcWebp: "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.webp",
-        srcFallback: "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
+        srcWebp:
+          "https://res.cloudinary.com/der8kogzu/image/upload/f_webp,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.webp",
+        srcFallback:
+          "https://res.cloudinary.com/der8kogzu/image/upload/f_png,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.png",
         alt: "Descubra seu estilo predominante e transforme seu guarda-roupa",
         width: 300,
         height: 204,
@@ -171,12 +396,12 @@ export const getStep01Template = () => {
         mobileClassName: "w-full h-full object-contain",
 
         // ✨ CONFIGURAÇÕES DE CONTAINER (da produção)
-        containerStyle: { 
-          aspectRatio: '1.47', 
-          maxHeight: '204px',
-          overflow: 'hidden'
+        containerStyle: {
+          aspectRatio: "1.47",
+          maxHeight: "204px",
+          overflow: "hidden",
         },
-        
+
         // ✨ WEB VITALS E PERFORMANCE
         performanceMarks: ["lcp_rendered"],
       },
@@ -188,7 +413,8 @@ export const getStep01Template = () => {
       type: "text-inline",
       properties: {
         // ✨ CONTEÚDO EXATO DA PRODUÇÃO COM SPANS DESTACADOS
-        content: 'Em poucos minutos, descubra seu <span class="font-semibold text-[#B89B7A]">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class="font-semibold text-[#432818]">essência</span>, com praticidade e <span class="font-semibold text-[#432818]">confiança</span>.',
+        content:
+          'Em poucos minutos, descubra seu <span class="font-semibold text-[#B89B7A]">Estilo Predominante</span> — e aprenda a montar looks que realmente refletem sua <span class="font-semibold text-[#432818]">essência</span>, com praticidade e <span class="font-semibold text-[#432818]">confiança</span>.',
         text: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (da produção)
@@ -219,7 +445,7 @@ export const getStep01Template = () => {
         mobileFontSize: "text-sm",
         mobileLineHeight: "1.6",
         mobileMarginBottom: 24,
-        
+
         // ✨ CLASSES CSS DA PRODUÇÃO
         className: "leading-relaxed px-2",
       },
@@ -261,7 +487,7 @@ export const getStep01Template = () => {
         // ✨ CONFIGURAÇÕES RESPONSIVAS
         mobileFontSize: "text-xs",
         mobileMarginBottom: 6,
-        
+
         // ✨ ATRIBUTOS HTML (da produção)
         htmlFor: "name",
         role: "label",
@@ -334,7 +560,8 @@ export const getStep01Template = () => {
         errorClearing: true, // limpa erro ao digitar
 
         // ✨ CLASSES CSS CUSTOMIZADAS (da produção)
-        className: "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
+        className:
+          "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
         classNameError: "border-red-500 focus:ring-red-500 focus-visible:ring-red-500",
         classNameValid: "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]",
       },
@@ -452,14 +679,16 @@ export const getStep01Template = () => {
         type: "submit", // type="submit" da produção
 
         // ✨ CLASSES CSS CUSTOMIZADAS (da produção)
-        className: "w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 sm:py-3 sm:px-4 sm:text-base md:py-3.5 md:text-lg",
-        classNameEnabled: "bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]",
+        className:
+          "w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2 sm:py-3 sm:px-4 sm:text-base md:py-3.5 md:text-lg",
+        classNameEnabled:
+          "bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]",
         classNameDisabled: "bg-[#B89B7A]/50 text-white/90 cursor-not-allowed",
 
         // ✨ ESTADOS E HOOKS (da produção)
         useConditionalRendering: true, // renderização condicional baseada no estado
         conditionalExpression: "nome.trim()", // expressão da produção
-        
+
         // ✨ PERFORMANCE E WEB VITALS
         performanceMarks: ["user-interaction"],
       },
@@ -471,7 +700,8 @@ export const getStep01Template = () => {
       type: "text-inline",
       properties: {
         // ✨ CONTEÚDO EXATO DA PRODUÇÃO COM LINK
-        content: 'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href="#" class="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded">política de privacidade</a>',
+        content:
+          'Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href="#" class="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded">política de privacidade</a>',
         text: "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade",
 
         // ✨ CONFIGURAÇÕES DE TIPOGRAFIA (da produção)
@@ -502,13 +732,14 @@ export const getStep01Template = () => {
         mobileFontSize: "text-xs",
         mobileLineHeight: "1.3",
         mobileMarginBottom: 20,
-        
+
         // ✨ ACESSIBILIDADE DO LINK
         linkProps: {
           href: "#",
-          className: "text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded",
+          className:
+            "text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded",
           role: "link",
-          ariaLabel: "Política de privacidade"
+          ariaLabel: "Política de privacidade",
         },
       },
     },
@@ -551,12 +782,13 @@ export const getStep01Template = () => {
         mobileLineHeight: "1.3",
         mobileMarginTop: 20,
         mobileMarginBottom: 12,
-        
+
         // ✨ POSICIONAMENTO (da produção)
         position: "footer", // indica que é um footer
         containerProps: {
           as: "footer",
-          className: "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto",
+          className:
+            "w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto",
         },
       },
     },

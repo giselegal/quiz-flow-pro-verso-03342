@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 
 /**
- * Step11Template - Componente para Etapa 11 do Quiz
+ * Step03Template - Componente para Etapa 3 do Quiz
  * 
- * Template para questão 10: Configurável via painel de propriedades
+ * Template para questão 2: Configurável via painel de propriedades
  * Integração com sistema de quiz e editor de propriedades
  */
 
 // ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step11TemplateProps {
+interface Step03TemplateProps {
   id: string;
   className?: string;
   style?: React.CSSProperties;
@@ -38,19 +38,19 @@ interface Step11TemplateProps {
 }
 
 // ✅ COMPONENTE PRINCIPAL
-export const Step11Template: React.FC<Step11TemplateProps> = ({
+export const Step03Template: React.FC<Step03TemplateProps> = ({
   id,
   className = "",
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 10 - CONFIGURAR NO PAINEL",
+    title: "QUESTÃO 2 - CONFIGURAR NO PAINEL",
     subtitle: "",
-    questionCounter: "Questão 10 de 10",
+    questionCounter: "Questão 2 de 10",
     backgroundColor: "#FEFEFE",
     textColor: "#432818",
     showProgress: true,
-    progressValue: 55,
+    progressValue: 15,
     buttonText: "Próxima Questão →",
     multipleSelection: true,
     minSelections: 1,
@@ -66,12 +66,12 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
   // ✅ DEBUG E MONITORAMENTO
   useEffect(() => {
     if (isEditing) {
-      console.log(`Step11Template ${id} entered editing mode`);
+      console.log(`Step03Template ${id} entered editing mode`);
     }
   }, [isEditing, id]);
 
   useEffect(() => {
-    console.log(`Step11Template ${id} properties updated:`, properties);
+    console.log(`Step03Template ${id} properties updated:`, properties);
   }, [properties, id]);
 
   // ✅ FUNÇÃO DE CLIQUE
@@ -80,7 +80,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
     onClick?.();
     
     if (isEditing) {
-      console.log(`Step11Template ${id} clicked in editing mode`);
+      console.log(`Step03Template ${id} clicked in editing mode`);
       onUpdate?.(id, { lastClicked: new Date().toISOString() });
     }
   };
@@ -111,7 +111,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step11-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step03-template ${className} ${isEditing ? "editing-mode" : ""}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -150,7 +150,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
         {/* Área de Conteúdo Configurável */}
         <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
           <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 11 - Configure no painel de propriedades
+            📝 Conteúdo da Etapa 3 - Configure no painel de propriedades
           </p>
           
           {/* Placeholder para opções */}
@@ -191,7 +191,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
             </span>
           )}
           <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
-            Step 11
+            Step 03
           </span>
         </div>
       )}
@@ -207,226 +207,197 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
 };
 
 // ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
-export const getStep11Template = () => {export const getStep11Template = () => {
+export const getStep03Template = () => {export const getStep03Template = () => {
   return [
-    // 🎯 CABEÇALHO COM PROGRESSO
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
-      id: "quiz-header-step11",
-      type: "quiz-header",
+      id: "step03-header",
+      type: "quiz-intro-header",
       properties: {
         logoUrl:
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         logoAlt: "Logo Gisele Galvão",
-        logoWidth: 80,
-        logoHeight: 80,
-        progressValue: 55,
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: 15,
         progressMax: 100,
         showBackButton: true,
-        showProgress: true,
-        stepNumber: "11 de 21",
-        spacing: "small",
         marginTop: 0,
+        spacing: "small",
         marginBottom: 0,
       },
     },
 
-    // 🎨 BARRA DECORATIVA
+    // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "decorative-bar-step11",
-      type: "decorative-bar-inline",
-      properties: {
-        width: "100%",
-        height: 3,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
-        borderRadius: 2,
-        marginTop: 0,
-        marginBottom: 20,
-        showShadow: true,
-        spacing: "small",
-      },
-    },
-
-    // 📝 PERGUNTA PRINCIPAL
-    {
-      id: "question-text-step11",
+      id: "step03-question-title",
       type: "text-inline",
       properties: {
-        content: "No ambiente de trabalho, você se veste:",
+        content: "RESUMA A SUA PERSONALIDADE:",
+        level: "h2",
         fontSize: "text-2xl",
         fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
         textAlign: "text-center",
         color: "#432818",
-        marginBottom: 24,
-        lineHeight: "1.3",
-        spacing: "small",
+        marginBottom: 0,
         marginTop: 0,
+        spacing: "small",
       },
     },
 
-    // 🖼️ IMAGEM DA PERGUNTA
+    // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "question-image-step11",
-      type: "image-display-inline",
+      id: "step03-question-counter",
+      type: "text-inline",
       properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838148/20250509_2147_Trabalho_e_Profissionalismo_simple_compose_01jtvta4gb3qhd4d6v3xr3jvtw_wnpshv.webp",
-        alt: "Imagem da pergunta 11",
-        width: 400,
-        height: 300,
-        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
+        content: "Questão 2 de 10",
+        fontSize: "text-sm",
         textAlign: "text-center",
+        color: "#6B7280",
         marginBottom: 24,
-        spacing: "small",
         marginTop: 0,
+        spacing: "small",
       },
     },
 
-    // 🎯 OPÇÕES DE RESPOSTA
-
+    // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "option-1-step11",
-      type: "quiz-option",
+      id: "step03-personality-options",
+      type: "options-grid",
       properties: {
-        optionId: "executiva-formal",
-        label: "Executiva e formal",
-        value: "executiva-formal",
-        points: {
-          elegante: 3,
-          casual: 1,
-          criativo: 1,
-          classico: 3,
-          romantico: 1,
-          minimalista: 2,
-          boho: 1,
-          spacing: "small",
-          marginTop: 0,
-          marginBottom: 0,
-        },
+        questionId: "q2",
+        options: [
+          {
+            id: "2a",
+            text: "Informal, espontânea, alegre, essencialista",
+            value: "2a",
+            category: "Natural",
+            styleCategory: "Natural",
+            points: 1,
+            marginTop: 0,
+            spacing: "small",
+            marginBottom: 0,
+          },
+          {
+            id: "2b",
+            text: "Conservadora, séria, organizada",
+            value: "2b",
+            category: "Clássico",
+            styleCategory: "Clássico",
+            points: 1,
+          },
+          {
+            id: "2c",
+            text: "Informada, ativa, prática",
+            value: "2c",
+            category: "Contemporâneo",
+            styleCategory: "Contemporâneo",
+            points: 1,
+          },
+          {
+            id: "2d",
+            text: "Exigente, sofisticada, seletiva",
+            value: "2d",
+            category: "Elegante",
+            styleCategory: "Elegante",
+            points: 1,
+          },
+          {
+            id: "2e",
+            text: "Feminina, meiga, delicada, sensível",
+            value: "2e",
+            category: "Romântico",
+            styleCategory: "Romântico",
+            points: 1,
+          },
+          {
+            id: "2f",
+            text: "Glamorosa, vaidosa, sensual",
+            value: "2f",
+            category: "Sexy",
+            styleCategory: "Sexy",
+            points: 1,
+          },
+          {
+            id: "2g",
+            text: "Cosmopolita, moderna e audaciosa",
+            value: "2g",
+            category: "Dramático",
+            styleCategory: "Dramático",
+            points: 1,
+          },
+          {
+            id: "2h",
+            text: "Exótica, aventureira, livre",
+            value: "2h",
+            category: "Criativo",
+            styleCategory: "Criativo",
+            points: 1,
+          },
+        ],
+        // 🎨 LAYOUT BASEADO EM IMAGENS - REGRA: 1 COLUNA SEM IMAGENS
+        columns: 1, // 1 coluna porque NÃO TEM IMAGENS
+        showImages: false, // SEM IMAGENS = 1 COLUNA
+        multipleSelection: true,
+        maxSelections: 3,
+        minSelections: 1,
+        validationMessage: "Selecione até 3 opções",
+        gridGap: 12, // Menor gap para texto
+        responsiveColumns: false, // Sempre 1 coluna
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
-        marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
-      },
-    },
-    {
-      id: "option-2-step11",
-      type: "quiz-option",
-      properties: {
-        optionId: "smart-casual",
-        label: "Smart casual - elegante mas descontraída",
-        value: "smart-casual",
-        points: {
-          elegante: 2,
-          casual: 2,
-          criativo: 2,
-          classico: 2,
-          romantico: 2,
-          minimalista: 3,
-          boho: 1,
-          spacing: "small",
-          marginTop: 0,
-          marginBottom: 0,
-        },
+        // 🚀 AUTOAVANÇO INSTANTÂNEO APÓS COMPLETAR
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 0, // INSTANTÂNEO após última seleção
+        instantActivation: true, // Botão ativa na hora
+        requiredSelections: 3,
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
-        marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
-      },
-    },
-    {
-      id: "option-3-step11",
-      type: "quiz-option",
-      properties: {
-        optionId: "feminina-profissional",
-        label: "Feminina e profissional",
-        value: "feminina-profissional",
-        points: {
-          elegante: 2,
-          casual: 1,
-          criativo: 1,
-          classico: 3,
-          romantico: 3,
-          minimalista: 2,
-          boho: 1,
-          spacing: "small",
-          marginTop: 0,
-          marginBottom: 0,
-        },
-
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
-        marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
-      },
-    },
-    {
-      id: "option-4-step11",
-      type: "quiz-option",
-      properties: {
-        optionId: "criativa-autentica",
-        label: "Criativa e autêntica",
-        value: "criativa-autentica",
-        points: {
-          elegante: 1,
-          casual: 2,
-          criativo: 3,
-          classico: 1,
-          romantico: 1,
-          minimalista: 1,
-          boho: 3,
-          spacing: "small",
-          marginTop: 0,
-          marginBottom: 0,
-        },
-
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
-        marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        // 🔘 ATIVAÇÃO IMEDIATA
+        enableButtonOnlyWhenValid: false,
+        instantButtonActivation: true, // Ativa assim que completar
+        showValidationFeedback: true,
       },
     },
 
-    // 🎯 BOTÃO CONTINUAR
+    // 🔘 BOTÃO COM ATIVAÇÃO INSTANTÂNEA (EDITÁVEL SEPARADAMENTE)
     {
-      id: "continue-button-step11",
+      id: "step03-continue-button",
       type: "button-inline",
       properties: {
+        // 📝 TEXTO DINÂMICO
         text: "Continuar →",
+        textWhenDisabled: "Selecione 3 características",
+        textWhenComplete: "Continuar →",
+
+        // 🎨 ESTILO
         variant: "primary",
         size: "large",
-        fullWidth: true,
         backgroundColor: "#B89B7A",
         textColor: "#ffffff",
-        requiresSelection: true,
-        textAlign: "text-center",
-        borderRadius: "rounded-full",
-        padding: "py-3 px-6",
-        fontSize: "text-base",
-        fontWeight: "font-semibold",
-        marginTop: 24,
+        disabledBackgroundColor: "#E5E7EB",
+        disabledTextColor: "#9CA3AF",
+
+        // ⚡ ATIVAÇÃO INSTANTÂNEA - SEM DELAYS
         disabled: true,
+        requiresValidInput: true,
+        instantActivation: true, // Ativa na hora que completar
+        noDelay: true, // Sem atraso para ativar
+
+        // 🚀 AUTOAVANÇO IMEDIATO
+        autoAdvanceAfterActivation: true, // Avança logo após ativar
+        autoAdvanceDelay: 0, // Instantâneo
+
+        // 📊 FEEDBACK MÍNIMO (RÁPIDO)
+        showSuccessAnimation: false, // Sem animação para não atrasar
+        showPulseWhenEnabled: false, // Sem pulse para não atrasar
+        quickFeedback: true, // Feedback rápido apenas
+        marginTop: 0,
         spacing: "small",
         marginBottom: 0,
       },
     },
   ];
 };
+
+export default getStep03Template;
+
+export default getStep03Template;

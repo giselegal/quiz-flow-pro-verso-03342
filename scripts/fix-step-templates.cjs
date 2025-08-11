@@ -1,14 +1,23 @@
-import React, { useEffect } from "react";
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+// Função para gerar o template corrigido para cada step
+function generateStepTemplate(stepNumber) {
+  const stepNum = String(stepNumber).padStart(2, '0');
+  
+  return `import React, { useEffect } from "react";
 
 /**
- * Step19Template - Componente para Etapa 19 do Quiz
+ * Step${stepNum}Template - Componente para Etapa ${stepNumber} do Quiz
  * 
- * Template para questão 18: Configurável via painel de propriedades
+ * Template para questão ${stepNumber - 1}: Configurável via painel de propriedades
  * Integração com sistema de quiz e editor de propriedades
  */
 
 // ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step19TemplateProps {
+interface Step${stepNum}TemplateProps {
   id: string;
   className?: string;
   style?: React.CSSProperties;
@@ -38,19 +47,19 @@ interface Step19TemplateProps {
 }
 
 // ✅ COMPONENTE PRINCIPAL
-export const Step19Template: React.FC<Step19TemplateProps> = ({
+export const Step${stepNum}Template: React.FC<Step${stepNum}TemplateProps> = ({
   id,
   className = "",
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 18 - CONFIGURAR NO PAINEL",
+    title: "QUESTÃO ${stepNumber - 1} - CONFIGURAR NO PAINEL",
     subtitle: "",
-    questionCounter: "Questão 18 de 10",
+    questionCounter: "Questão ${stepNumber - 1} de 10",
     backgroundColor: "#FEFEFE",
     textColor: "#432818",
     showProgress: true,
-    progressValue: 95,
+    progressValue: ${stepNumber * 5},
     buttonText: "Próxima Questão →",
     multipleSelection: true,
     minSelections: 1,
@@ -66,12 +75,12 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
   // ✅ DEBUG E MONITORAMENTO
   useEffect(() => {
     if (isEditing) {
-      console.log(`Step19Template ${id} entered editing mode`);
+      console.log(\`Step${stepNum}Template \${id} entered editing mode\`);
     }
   }, [isEditing, id]);
 
   useEffect(() => {
-    console.log(`Step19Template ${id} properties updated:`, properties);
+    console.log(\`Step${stepNum}Template \${id} properties updated:\`, properties);
   }, [properties, id]);
 
   // ✅ FUNÇÃO DE CLIQUE
@@ -80,7 +89,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
     onClick?.();
     
     if (isEditing) {
-      console.log(`Step19Template ${id} clicked in editing mode`);
+      console.log(\`Step${stepNum}Template \${id} clicked in editing mode\`);
       onUpdate?.(id, { lastClicked: new Date().toISOString() });
     }
   };
@@ -111,7 +120,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step19-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={\`step${stepNum.toLowerCase()}-template \${className} \${isEditing ? "editing-mode" : ""}\`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -121,7 +130,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
           <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${properties.progressValue}%` }}
+              style={{ width: \`\${properties.progressValue}%\` }}
             />
           </div>
         </div>
@@ -150,7 +159,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
         {/* Área de Conteúdo Configurável */}
         <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
           <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 19 - Configure no painel de propriedades
+            📝 Conteúdo da Etapa ${stepNumber} - Configure no painel de propriedades
           </p>
           
           {/* Placeholder para opções */}
@@ -191,7 +200,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
             </span>
           )}
           <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
-            Step 19
+            Step ${stepNum}
           </span>
         </div>
       )}
@@ -207,55 +216,75 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
 };
 
 // ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
-export const getStep19Template = () => {export const getStep19Template = () => {
-  return [
-    // 🎉 RESULTADO PRINCIPAL
-    {
-      id: "step19-result-header",
-      type: "quiz-intro-header",
-      properties: {
-        title: "Seu Resultado está Pronto!",
-        subtitle: "Descubra seu estilo predominante",
-        showIcon: true,
-        textAlign: "center",
-        fontSize: 24,
-        fontWeight: "bold",
-        color: "#432818",
-        backgroundColor: "transparent",
-        marginTop: 0,
-        marginBottom: 20,
-      },
-    },
+export const getStep${stepNum}Template = () => {`;
+}
 
-    // 📊 RESULTADO DETALHADO
+// Lista de arquivos para processar
+const stepsToProcess = [];
+for (let i = 3; i <= 21; i++) {
+  stepsToProcess.push(i);
+}
+
+console.log('🚀 Iniciando correção em lote dos Step Templates...');
+
+stepsToProcess.forEach(stepNumber => {
+  const stepNum = String(stepNumber).padStart(2, '0');
+  const filePath = path.join(__dirname, '..', 'src', 'components', 'steps', `Step${stepNum}Template.tsx`);
+  
+  try {
+    console.log(`📝 Processando Step${stepNum}Template.tsx...`);
+    
+    // Verifica se o arquivo existe
+    if (!fs.existsSync(filePath)) {
+      console.log(`⚠️  Arquivo Step${stepNum}Template.tsx não encontrado, pulando...`);
+      return;
+    }
+    
+    // Lê o conteúdo atual
+    const currentContent = fs.readFileSync(filePath, 'utf8');
+    
+    // Gera o novo template
+    const newTemplate = generateStepTemplate(stepNumber);
+    
+    // Encontra onde termina o template atual e mantém o resto
+    const exportMatch = currentContent.match(/export const getStep\d+Template = \(\) => \{/);
+    let remainingContent = '';
+    
+    if (exportMatch) {
+      const exportIndex = currentContent.indexOf(exportMatch[0]);
+      remainingContent = currentContent.substring(exportIndex);
+    } else {
+      // Se não encontrar, mantém apenas um template básico
+      remainingContent = `  return [
     {
-      id: "step19-result-display",
+      id: "step${stepNum}-placeholder",
       type: "text-inline",
       properties: {
-        text: "Baseado nas suas respostas, identificamos seu estilo predominante e preparamos recomendações personalizadas para você!",
-        fontSize: 16,
-        textAlign: "center",
-        color: "#6B7280",
-        marginBottom: 30,
-      },
-    },
-
-    // 🎯 CALL TO ACTION
-    {
-      id: "step19-cta-button",
-      type: "button-inline",
-      properties: {
-        text: "Ver Meu Estilo Completo",
-        variant: "primary",
-        size: "large",
-        action: "next-step",
-        backgroundColor: "#B89B7A",
-        textColor: "#FFFFFF",
-        borderRadius: 8,
-        fontWeight: "semibold",
-        textAlign: "center",
-        marginTop: 20,
+        content: "Template Step ${stepNumber} - Configure no editor",
+        fontSize: "text-lg",
+        textAlign: "text-center",
+        color: "#432818",
+        marginBottom: 16,
       },
     },
   ];
 };
+
+export default getStep${stepNum}Template;`;
+    }
+    
+    // Combina o novo template com o conteúdo existente
+    const finalContent = newTemplate + remainingContent;
+    
+    // Escreve o arquivo
+    fs.writeFileSync(filePath, finalContent, 'utf8');
+    
+    console.log(`✅ Step${stepNum}Template.tsx corrigido com sucesso!`);
+    
+  } catch (error) {
+    console.error(`❌ Erro ao processar Step${stepNum}Template.tsx:`, error.message);
+  }
+});
+
+console.log('🎉 Correção em lote finalizada!');
+console.log('📋 Próximo passo: Aplicar prettier em todos os arquivos corrigidos');
