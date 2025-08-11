@@ -3,9 +3,9 @@
  * Hook para monitorar e diagnosticar o editor em tempo real
  */
 
-import { useEffect, useState, useCallback } from 'react';
 import EditorDiagnostics, { DiagnosticResult } from '@/utils/EditorDiagnostics';
 import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { useCallback, useEffect, useState } from 'react';
 
 interface DiagnosticState {
   isRunning: boolean;

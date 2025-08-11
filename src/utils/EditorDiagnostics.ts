@@ -5,8 +5,8 @@
  * Analisa e resolve problemas de templates, performance e inicialização
  */
 
-import { TemplateManager } from './TemplateManager';
 import { TemplateJsonLoader } from './TemplateJsonLoader';
+import { TemplateManager } from './TemplateManager';
 
 export interface DiagnosticResult {
   category: string;

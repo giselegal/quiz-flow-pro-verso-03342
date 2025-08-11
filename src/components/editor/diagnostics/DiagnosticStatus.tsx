@@ -3,20 +3,20 @@
  * Mostra status em tempo real do editor
  */
 
-import React, { useState } from 'react';
-import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  AlertTriangle, 
-  CheckCircle, 
-  XCircle, 
-  RefreshCw, 
-  Wrench,
-  ChevronDown,
-  ChevronRight
+import { Card } from '@/components/ui/card';
+import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
+import {
+    AlertTriangle,
+    CheckCircle,
+    ChevronDown,
+    ChevronRight,
+    RefreshCw,
+    Wrench,
+    XCircle
 } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface DiagnosticStatusProps {
   autoRun?: boolean;
