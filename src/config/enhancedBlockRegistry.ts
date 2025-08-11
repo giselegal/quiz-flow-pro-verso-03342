@@ -23,6 +23,7 @@ import ImageDisplayInlineBlock from "../components/blocks/inline/ImageDisplayInl
 import LegalNoticeInline from "../components/blocks/inline/LegalNoticeInline";
 import PricingCardInlineBlock from "../components/blocks/inline/PricingCardInlineBlock";
 import TextInline from "../components/blocks/inline/TextInline";
+import AccessibilitySkipLinkBlock from "../components/blocks/inline/AccessibilitySkipLinkBlock";
 
 // Componentes Editor Blocks
 import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
@@ -37,6 +38,7 @@ import QuizResultsEditor from "../components/editor/blocks/QuizResultsEditor";
 import SpacerInlineBlock from "../components/editor/blocks/SpacerInlineBlock";
 import StyleResultsEditor from "../components/editor/blocks/StyleResultsEditor";
 import TextInlineBlock from "../components/editor/blocks/TextInlineBlock";
+import FormContainerBlock from "../components/editor/blocks/FormContainerBlock";
 
 // Novos componentes para o Quiz
 import BonusShowcaseBlock from "../components/blocks/inline/BonusShowcaseBlock";
@@ -66,12 +68,14 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "text-inline": TextInlineBlock,
   "heading-inline": HeadingInlineBlock,
   "image-display-inline": ImageDisplayInlineBlock,
+  "image-inline": ImageDisplayInlineBlock, // alias
 
   // Quiz Components - Principais
   "quiz-intro-header": QuizIntroHeaderBlock,
   "quiz-header": QuizIntroHeaderBlock, // Alias
   "step01-intro": IntroBlock,
   "form-input": FormInputBlock,
+  "input-field": FormInputBlock, // alias
 
   // Interactive Elements
   "button-inline": ButtonInlineFixed,
@@ -80,6 +84,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // Layout and Design
   divider: DividerInlineBlock,
   spacer: SpacerInlineBlock,
+  "form-container": FormContainerBlock,
 
   // Commerce and Pricing
   "pricing-card": PricingCardInlineBlock,
@@ -87,6 +92,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
   // Legal
   "legal-notice-inline": LegalNoticeInlineBlock,
+  "accessibility-skip-link": AccessibilitySkipLinkBlock,
 
   // ✅ QUIZ ADVANCED - COMPONENTES DAS 21 ETAPAS
   "options-grid": OptionsGridInlineBlock, // Usado em 18 templates

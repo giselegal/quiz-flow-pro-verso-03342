@@ -308,8 +308,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       >
         <div className="text-center space-y-4">
           <div
-            style={{ borderColor: "#E5DDD5" }}
-            style={{ borderTopColor: brandColors.primary }}
+            style={{ borderColor: "#E5DDD5", borderTopColor: brandColors.primary }}
           ></div>
           <p className="text-lg font-medium" style={{ color: brandColors.text.medium }}>
             Carregando dados dos criativos...

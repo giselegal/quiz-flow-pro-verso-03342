@@ -165,9 +165,13 @@ export const templateService = {
   convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
     return templateBlocks.map((block, index) => ({
       id: block.id,
-      type: block.type as any, // Precisamos atualizar o tipo BlockType em editor.ts
-      content: block.properties || {},
-      order: index
+      type: block.type as any,
+      content: {},
+      order: index,
+      properties: {
+        ...(block.properties || {}),
+        ...(block.children ? { children: block.children } : {}),
+      },
     }));
   }
 };
