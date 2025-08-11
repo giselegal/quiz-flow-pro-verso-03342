@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { ButtonInline } from "@/components/blocks/inline/ButtonInline";
 import ImageDisplayInline from "@/components/blocks/inline/ImageDisplayInline";
 import { TextInline } from "@/components/blocks/inline/TextInline";
+import { QuizIntroHeaderBlock } from "@/components/editor/quiz/QuizIntroHeaderBlock";
 
 interface ComponentTestingPanelProps {
   onSelectComponent?: (componentId: string, componentType: string) => void;
@@ -31,17 +32,38 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
   };
 
   const handlePropertyChange = (componentId: string, property: string, value: any) => {
-    setComponentProperties(prev => ({
-      ...prev,
-      [componentId]: {
-        ...prev[componentId],
-        [property]: value,
-      },
-    }));
+    setComponentProperties(prev => {
+      const currentProps = prev[componentId] || {};
+
+      // Se a propriedade é 'properties', mesclar com as propriedades existentes
+      if (property === "properties") {
+        return {
+          ...prev,
+          [componentId]: {
+            ...currentProps,
+            properties: {
+              ...currentProps.properties,
+              ...value,
+            },
+          },
+        };
+      }
+
+      // Para outras propriedades, atualizar normalmente
+      return {
+        ...prev,
+        [componentId]: {
+          ...currentProps,
+          [property]: value,
+        },
+      };
+    });
   };
 
   const getComponentProps = (componentId: string) => {
-    return componentProperties[componentId] || {};
+    const props = componentProperties[componentId] || {};
+    // Retornar apenas as propriedades internas do componente
+    return props.properties || {};
   };
 
   // Configurações de teste para cada tipo de componente
@@ -201,12 +223,34 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
       category: "Quiz",
       name: "Header Quiz",
       component: (
-        <div className="p-4 border rounded-lg bg-gray-50">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold">Quiz Intro Header</h3>
-            <p className="text-sm text-gray-600">Componente de cabeçalho do quiz</p>
-            <div className="mt-2 text-xs text-blue-600">Tipo: quiz-intro-header</div>
-          </div>
+        <div
+          onClick={() => handleSelectComponent("quiz-intro-header-test-1", "quiz-intro-header")}
+          className="cursor-pointer"
+        >
+          <QuizIntroHeaderBlock
+            id="quiz-intro-header-test-1"
+            properties={{
+              enabled: true,
+              showLogo: true,
+              showDecorativeBar: true,
+              logoUrl:
+                "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png",
+              logoAlt: "Logo Quiz",
+              logoSize: 80,
+              barColor: "#B89B7A",
+              barHeight: 4,
+              barPosition: "bottom",
+              scale: 100,
+              alignment: "center",
+              backgroundColor: "transparent",
+              backgroundOpacity: 100,
+              ...getComponentProps("quiz-intro-header-test-1"),
+            }}
+            isEditing={selectedComponent === "quiz-intro-header-test-1"}
+            onUpdate={(_, updates: any) =>
+              handlePropertyChange("quiz-intro-header-test-1", "properties", updates)
+            }
+          />
         </div>
       ),
     },

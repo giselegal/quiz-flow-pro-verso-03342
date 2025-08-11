@@ -74,7 +74,11 @@ export default function ComponentTestingPage() {
         {/* Painel esquerdo: Lista de componentes - Aumentado para 60% */}
         <div className="w-3/5 border-r border-stone-200 bg-white/50">
           <div className="h-full overflow-auto p-6">
-            <ComponentTestingPanel onSelectComponent={handleSelectComponent} />
+            <ComponentTestingPanel 
+              onSelectComponent={handleSelectComponent}
+              componentUpdates={componentUpdates}
+              onUpdateComponent={handleUpdateComponent}
+            />
           </div>
         </div>
 
