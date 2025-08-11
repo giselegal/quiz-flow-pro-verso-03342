@@ -8,6 +8,8 @@ interface TextInlineProps {
   textAlign?: string; // Suporte para textAlign também
   color?: string;
   fontWeight?: string;
+  width?: string; // Propriedade de largura
+  maxWidth?: string; // Largura máxima
   className?: string;
   // Propriedades de edição
   isEditable?: boolean;
@@ -24,6 +26,8 @@ export const TextInline: React.FC<TextInlineProps> = ({
   textAlign,
   color = "#000000",
   fontWeight = "normal",
+  width = "100%", // Padrão 100% da largura
+  maxWidth,
   className = "",
   // Propriedades de edição
   isEditable = true, // ATIVADO POR PADRÃO
@@ -45,6 +49,8 @@ export const TextInline: React.FC<TextInlineProps> = ({
     textAlign: finalAlignment as "left" | "center" | "right",
     color,
     fontWeight,
+    width, // Aplicar largura configurável
+    maxWidth, // Aplicar largura máxima se definida
     margin: 0,
     padding: isEditable ? "8px" : 0,
     whiteSpace: "pre-wrap",
@@ -53,6 +59,7 @@ export const TextInline: React.FC<TextInlineProps> = ({
     borderRadius: "4px",
     minHeight: isEditable ? "24px" : "auto",
     transition: "all 0.2s ease",
+    boxSizing: "border-box", // Garantir que padding não afete largura
   };
 
   const handleClick = (e: React.MouseEvent) => {
@@ -100,7 +107,7 @@ export const TextInline: React.FC<TextInlineProps> = ({
           autoFocus
           style={{
             ...styles,
-            width: "100%",
+            width: "100%", // Garantir largura total no modo de edição
             minHeight: "60px",
             resize: "vertical",
             fontFamily: "inherit",

@@ -95,6 +95,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           fontSize="16px"
           color="#333333"
           textAlign="left"
+          width="100%"
           isSelected={selectedComponent === "text-test-1"}
           onClick={() => handleSelectComponent("text-test-1", "text-inline")}
           onPropertyChange={(key: string, value: any) =>
@@ -116,6 +117,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           color="#B89B7A"
           textAlign="center"
           fontWeight="bold"
+          width="100%"
           isSelected={selectedComponent === "text-test-2"}
           onClick={() => handleSelectComponent("text-test-2", "text-inline")}
           onPropertyChange={(key: string, value: any) =>
