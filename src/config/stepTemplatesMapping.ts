@@ -9,91 +9,73 @@ export interface StepTemplate {
   description: string;
 }
 
-// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS USANDO TEMPLATES JSON
-const stepNames = [
-  "Introdução",
-  "Q1 - Tipo de Roupa",
-  "Q2 - Nome Pessoal",
-  "Q3 - Estilo Pessoal",
-  "Q4 - Ocasiões",
-  "Q5 - Cores",
-  "Q6 - Textura",
-  "Q7 - Silhueta",
-  "Q8 - Acessórios",
-  "Q9 - Inspiração",
-  "Q10 - Conforto",
-  "Q11 - Tendências",
-  "Q12 - Investimento",
-  "Q13 - Personalidade",
-  "Q14 - Transição",
-  "Q15 - Estratégica 1",
-  "Q16 - Estratégica 2",
-  "Q17 - Estratégica 3",
-  "Q18 - Processamento",
-  "Q19 - Resultado",
-  "Q20 - Oferta",
-];
-
-const stepDescriptions = [
-  "Tela inicial com nome",
-  "Tipo de roupa favorita",
-  "Coleta do nome pessoal",
-  "Identificação do estilo pessoal",
-  "Ocasiões de uso",
-  "Preferências de cores",
-  "Texturas preferidas",
-  "Silhuetas favoritas",
-  "Acessórios de estilo",
-  "Inspirações de moda",
-  "Nível de conforto",
-  "Tendências de interesse",
-  "Investimento em roupas",
-  "Traços de personalidade",
-  "Transição para etapas estratégicas",
-  "Como se sente sobre estilo",
-  "Maior desafio ao se vestir",
-  "Investimento disposto",
-  "Processamento dos dados",
-  "Exibição do resultado",
-  "Call to action final",
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES CORRETOS E SEM DUPLICAÇÃO
+const STEP_CONFIG = [
+  { name: "Introdução", description: "Tela inicial do quiz" },
+  { name: "Nome", description: "Coleta do nome pessoal" }, 
+  { name: "Roupa Favorita", description: "Tipo de roupa preferida" },
+  { name: "Estilo Pessoal", description: "Identificação do estilo" },
+  { name: "Ocasiões", description: "Contextos de uso" },
+  { name: "Cores", description: "Preferências de cores" },
+  { name: "Texturas", description: "Texturas favoritas" },
+  { name: "Silhuetas", description: "Formas preferidas" },
+  { name: "Acessórios", description: "Acessórios de estilo" },
+  { name: "Inspiração", description: "Referências de moda" },
+  { name: "Conforto", description: "Prioridade de conforto" },
+  { name: "Tendências", description: "Interesse em tendências" },
+  { name: "Investimento", description: "Orçamento para roupas" },
+  { name: "Personalidade", description: "Traços pessoais" },
+  { name: "Transição", description: "Preparação para resultado" },
+  { name: "Processamento", description: "Calculando resultado" },
+  { name: "Resultado Parcial", description: "Primeiro resultado" },
+  { name: "Resultado Completo", description: "Análise completa" },
+  { name: "Resultado Final", description: "Apresentação final" },
+  { name: "Lead Capture", description: "Captura de contato" },
+  { name: "Oferta", description: "Página de oferta final" }
 ];
 
 // Template padrão para fallback
 const getDefaultTemplate = (stepNumber: number) => {
+  const config = STEP_CONFIG[stepNumber - 1];
+  
   return [
     {
-      id: `step-${stepNumber}-title`,
-      type: "text",
+      id: `step-${stepNumber.toString().padStart(2, '0')}-title`,
+      type: "text-inline",
       properties: {
-        content: stepNames[stepNumber - 1] || `Etapa ${stepNumber}`,
-        fontSize: "2xl",
-        fontWeight: "bold",
-        textAlign: "center",
-        color: "#2D1810",
+        content: config?.name || `Etapa ${stepNumber}`,
+        fontSize: "text-2xl",
+        fontWeight: "font-bold",
+        textAlign: "text-center",
+        color: "#432818",
+        containerWidth: "full",
+        spacing: "medium"
       },
     },
     {
-      id: `step-${stepNumber}-description`,
-      type: "text",
+      id: `step-${stepNumber.toString().padStart(2, '0')}-description`,
+      type: "text-inline", 
       properties: {
-        content: stepDescriptions[stepNumber - 1] || `Descrição da etapa ${stepNumber}`,
-        fontSize: "md",
-        textAlign: "center",
+        content: config?.description || `Descrição da etapa ${stepNumber}`,
+        fontSize: "text-lg",
+        textAlign: "text-center", 
         color: "#6B4F43",
+        containerWidth: "full",
+        spacing: "small"
       },
     },
   ];
 };
 
-// ✅ MAPEAMENTO DAS 21 ETAPAS (versão simplificada)
-export const STEP_TEMPLATES: StepTemplate[] = Array.from({ length: 21 }, (_, index) => {
+// ✅ MAPEAMENTO DAS 21 ETAPAS ÚNICAS E CORRETAS
+export const STEP_TEMPLATES: StepTemplate[] = STEP_CONFIG.map((config, index) => {
   const stepNumber = index + 1;
 
   return {
     stepNumber,
     templateFunction: () => getDefaultTemplate(stepNumber),
-    name: stepNames[index],
-    description: stepDescriptions[index],
+    name: config.name,
+    description: config.description,
   };
 });
 
@@ -110,9 +92,12 @@ export const getTotalSteps = (): number => {
 export const getTemplateStats = () => {
   return {
     totalTemplates: STEP_TEMPLATES.length,
-    questionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Q")).length,
-    strategicSteps: STEP_TEMPLATES.filter(t => t.name.includes("Estratégica")).length,
-    transitionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Transição")).length,
-    resultSteps: STEP_TEMPLATES.filter(t => t.name.includes("Resultado")).length,
+    introSteps: 1,
+    questionSteps: 13,
+    transitionSteps: 1, 
+    processingSteps: 1,
+    resultSteps: 3,
+    leadSteps: 1,
+    offerSteps: 1
   };
 };

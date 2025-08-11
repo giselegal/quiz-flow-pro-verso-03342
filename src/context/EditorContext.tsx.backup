@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { CLEAN_21_STEPS } from "../config/clean21Steps";
+import { CLEAN_21_STEPS, getCleanStepByNumber } from "../config/clean21Steps";
 import { EditorBlock, FunnelStage } from "../types/editor";
 import { TemplateManager } from "../utils/TemplateManager";
 
@@ -130,6 +130,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     console.log("✅ EditorProvider: Etapas:", initialStages.map(s => `${s.order}: ${s.name}`));
     return initialStages;
   });
+      metadata: {
+        blocksCount: 0,
+        lastModified: new Date(),
+        isCustom: false,
+        templateBlocks: getTemplateByStep(stepTemplate.stepNumber)?.templateFunction() || [], // ✅ CARREGAR BLOCOS DO TEMPLATE
+      },
+    }));
+
+    console.log(
+      "✅ EditorProvider: 21 stages criadas com templates específicos:",
+      initialStages.length
+    );
+    return initialStages;
+  });
 
   const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
     // ✅ INICIALIZAR BLOCOS VAZIOS - CARREGAR TEMPLATES JSON ASSÍNCRONO
@@ -182,7 +196,50 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     loadInitialTemplates();
   }, []); // Executar apenas uma vez na inicialização
 
-  // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO
+  const [stageBlocksLegacy] = useState<Record<string, EditorBlock[]>>(() => {
+    // ✅ SISTEMA LEGADO MANTIDO COMO FALLBACK
+    const legacyBlocks: Record<string, EditorBlock[]> = {};
+
+    // Carregar template legacy especificamente para as primeiras etapas como fallback
+    for (let i = 1; i <= 21; i++) {
+      const stageId = `step-${i}`;
+
+      if (i <= 3) {
+        try {
+          const templateBlocks = getTemplateByStep(i)?.templateFunction();
+          console.log(
+            `🔄 Legacy: Carregando template para etapa ${i}:`,
+            templateBlocks?.length || 0
+          );
+
+          if (templateBlocks && templateBlocks.length > 0) {
+            legacyBlocks[stageId] = templateBlocks.map(
+              (block: { id: any; type: any; properties: any; content: any }, index: number) => ({
+                id: block.id || `${stageId}-legacy-block-${index + 1}`,
+                type: block.type as any,
+                content: block.properties || block.content || {},
+                order: index + 1,
+                properties: block.properties || {},
+              })
+            );
+            console.log(
+              `✅ Legacy: ${legacyBlocks[stageId].length} blocos carregados para etapa ${i}`
+            );
+          } else {
+            legacyBlocks[stageId] = [];
+          }
+        } catch (error) {
+          console.error(`❌ Legacy: Erro ao carregar template da etapa ${i}:`, error);
+          legacyBlocks[stageId] = [];
+        }
+      } else {
+        legacyBlocks[stageId] = [];
+      }
+    }
+
+    console.log("✅ EditorProvider: Sistema legacy inicializado como fallback");
+    return legacyBlocks;
+  });
 
   const [activeStageId, setActiveStageId] = useState<string>("step-1");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -254,26 +311,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           templateBlocks = await TemplateManager.loadStepBlocks(stageId);
           console.log(`✅ Template JSON carregado:`, templateBlocks?.length || 0, "blocos");
         } catch (jsonError) {
-          console.warn(`⚠️ JSON template falhou, usando CLEAN config fallback:`, jsonError);
-          // FALLBACK: usar CLEAN_21_STEPS system
-          templateBlocks = CLEAN_21_STEPS.find(s => s.stepNumber === stepNumber)
-            ? [
-                {
-                  id: `step-${stepNumber.toString().padStart(2, '0')}-title`,
-                  type: "text-inline",
-                  properties: {
-                    content: CLEAN_21_STEPS[stepNumber - 1]?.name || `Etapa ${stepNumber}`,
-                    fontSize: "text-2xl",
-                    fontWeight: "font-bold",
-                    textAlign: "text-center",
-                    color: "#432818",
-                    containerWidth: "full",
-                    spacing: "medium"
-                  },
-                }
-              ]
-            : [];
-          console.log(`📦 Template CLEAN fallback:`, templateBlocks?.length || 0, "blocos");
+          console.warn(`⚠️ JSON template falhou, usando TSX fallback:`, jsonError);
+          // FALLBACK: usar sistema TSX antigo
+          templateBlocks = getTemplateByStep(stepNumber)?.templateFunction() || [];
+          console.log(`📦 Template TSX fallback:`, templateBlocks?.length || 0, "blocos");
         }
 
         if (templateBlocks && templateBlocks.length > 0) {

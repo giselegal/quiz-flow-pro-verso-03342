@@ -9,7 +9,7 @@ import { ScrollArea } from "../components/ui/scroll-area";
 import { toast } from "../components/ui/use-toast";
 import { EnhancedUniversalPropertiesPanel } from "../components/universal/EnhancedUniversalPropertiesPanel";
 import { getBlockComponent } from "../config/enhancedBlockRegistry";
-import { getStepTemplate } from "../config/stepTemplatesMapping"; // 🎯 IMPORTAÇÃO DO SISTEMA DE TEMPLATES
+import { CLEAN_21_STEPS } from "../config/clean21Steps"; // 🎯 IMPORTAÇÃO DO SISTEMA DE TEMPLATES
 import { useAutoSaveWithDebounce } from "../hooks/editor/useAutoSaveWithDebounce";
 import { useEditorPersistence } from "../hooks/editor/useEditorPersistence";
 import { useContainerProperties } from "../hooks/useContainerProperties";
@@ -611,8 +611,23 @@ const EditorPage: React.FC = () => {
 
       console.log("🚀 Carregando Etapa 2 do Quiz usando template...");
 
-      // Usar o sistema de templates para carregar Step02
-      const step2Blocks = getStepTemplate(2);
+      // Usar CLEAN_21_STEPS para carregar Step02
+      const step2Config = CLEAN_21_STEPS.find(s => s.stepNumber === 2);
+      const step2Blocks = step2Config ? [
+        {
+          id: `step-02-title`,
+          type: "text-inline",
+          properties: {
+            content: step2Config.name,
+            fontSize: "text-2xl",
+            fontWeight: "font-bold",
+            textAlign: "text-center",
+            color: "#432818",
+            containerWidth: "full",
+            spacing: "medium"
+          },
+        }
+      ] : [];
 
       if (!step2Blocks || step2Blocks.length === 0) {
         throw new Error("Template da Step02 não encontrado ou vazio");
