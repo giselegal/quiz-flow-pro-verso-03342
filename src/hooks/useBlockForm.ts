@@ -6,7 +6,7 @@
 
 import { useForm, UseFormReturn, FieldValues, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import { z } from "zod";
 import {
   blockSchemas,
@@ -174,18 +174,19 @@ export function useArrayFieldForm<T extends Record<string, any>>(
 
   const { watch, setValue, getValues } = form;
 
-  // Watch para mudanças
+  // Watch para mudanças - OTIMIZADO
   useEffect(() => {
     if (!onUpdate) return;
 
     const subscription = watch(values => {
-      const timer = setTimeout(() => {
+      // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
+      const strategy = PerformanceOptimizer.getSuggestedStrategy(debounceMs, true);
+      
+      PerformanceOptimizer.schedule(() => {
         if (values.items) {
           onUpdate({ items: values.items as T[] });
         }
-      }, debounceMs);
-
-      return () => clearTimeout(timer);
+      }, debounceMs, strategy);
     });
 
     return () => subscription.unsubscribe();

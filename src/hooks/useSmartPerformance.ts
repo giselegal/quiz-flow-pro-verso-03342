@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useIsLowPerformanceDevice, useIsMobile } from "./use-mobile";
 import { useDebounce } from "./useDebounce";
 import { usePerformanceOptimization } from "./usePerformanceOptimization";
+import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
 
 /**
  * 🎯 Hook composto para performance completa
