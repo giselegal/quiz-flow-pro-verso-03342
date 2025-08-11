@@ -12,7 +12,7 @@ import { ScrollSyncProvider } from "./context/ScrollSyncContext";
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import("./pages/Home"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
-const EditorPage = lazy(() => import("./pages/EditorSimple.jsx"));
+const EditorPage = lazy(() => import("./pages/EditorActive.jsx"));
 const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
 const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
 const ResultPage = lazy(() => import("./pages/ResultPage"));
