@@ -205,9 +205,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           <div className="text-center">
             <h3 className="text-lg font-semibold">Quiz Intro Header</h3>
             <p className="text-sm text-gray-600">Componente de cabeçalho do quiz</p>
-            <div className="mt-2 text-xs text-blue-600">
-              Tipo: quiz-intro-header
-            </div>
+            <div className="mt-2 text-xs text-blue-600">Tipo: quiz-intro-header</div>
           </div>
         </div>
       ),

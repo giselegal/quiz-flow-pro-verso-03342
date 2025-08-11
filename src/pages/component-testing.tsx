@@ -69,17 +69,17 @@ export default function ComponentTestingPage() {
         </div>
       </div>
 
-      {/* Layout principal */}
+      {/* Layout principal - Corrigido para melhor visualização dos textos */}
       <div className="flex h-[calc(100vh-80px)]">
-        {/* Painel esquerdo: Lista de componentes */}
-        <div className="w-1/2 border-r border-stone-200 bg-white/50">
+        {/* Painel esquerdo: Lista de componentes - Aumentado para 60% */}
+        <div className="w-3/5 border-r border-stone-200 bg-white/50">
           <div className="h-full overflow-auto p-6">
             <ComponentTestingPanel onSelectComponent={handleSelectComponent} />
           </div>
         </div>
 
-        {/* Painel direito: Propriedades */}
-        <div className="w-1/2 bg-white/30">
+        {/* Painel direito: Propriedades - Reduzido para 40% */}
+        <div className="w-2/5 bg-white/30">
           <div className="h-full overflow-auto">
             {selectedComponent ? (
               <ComponentSpecificPropertiesPanel

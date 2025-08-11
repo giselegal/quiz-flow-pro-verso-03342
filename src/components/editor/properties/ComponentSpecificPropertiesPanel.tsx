@@ -238,7 +238,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         </Select>
       </div>
 
-      {/* Largura do texto */}
+      {/* Largura do texto - Melhorado */}
       <div className="space-y-2">
         <Label>Largura do Elemento</Label>
         <Select
@@ -249,14 +249,20 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="auto">Automática</SelectItem>
             <SelectItem value="25%">25% da largura</SelectItem>
+            <SelectItem value="33%">33% da largura</SelectItem>
             <SelectItem value="50%">50% da largura</SelectItem>
+            <SelectItem value="66%">66% da largura</SelectItem>
             <SelectItem value="75%">75% da largura</SelectItem>
-            <SelectItem value="100%">100% da largura</SelectItem>
-            <SelectItem value="auto">Largura automática</SelectItem>
-            <SelectItem value="fit-content">Ajuste ao conteúdo</SelectItem>
+            <SelectItem value="90%">90% da largura</SelectItem>
+            <SelectItem value="100%">100% da largura (recomendado)</SelectItem>
+            <SelectItem value="fit-content">Ajustar ao conteúdo</SelectItem>
           </SelectContent>
         </Select>
+        <p className="text-xs text-gray-500">
+          💡 Use 100% para aproveitar toda a largura disponível
+        </p>
       </div>
 
       {/* Largura máxima */}
@@ -482,7 +488,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="header-enabled"
           checked={selectedBlock.properties?.enabled !== false}
-          onCheckedChange={(checked) => handlePropertyUpdate('enabled', checked)}
+          onCheckedChange={checked => handlePropertyUpdate("enabled", checked)}
         />
         <Label htmlFor="header-enabled">Habilitar cabeçalho</Label>
       </div>
@@ -492,7 +498,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="show-logo"
           checked={selectedBlock.properties?.showLogo !== false}
-          onCheckedChange={(checked) => handlePropertyUpdate('showLogo', checked)}
+          onCheckedChange={checked => handlePropertyUpdate("showLogo", checked)}
         />
         <Label htmlFor="show-logo">Mostrar logo</Label>
       </div>
@@ -503,8 +509,11 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           <Label htmlFor="logo-url">URL da Logo</Label>
           <Input
             id="logo-url"
-            value={selectedBlock.properties?.logoUrl || 'https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png'}
-            onChange={(e) => handlePropertyUpdate('logoUrl', e.target.value)}
+            value={
+              selectedBlock.properties?.logoUrl ||
+              "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png"
+            }
+            onChange={e => handlePropertyUpdate("logoUrl", e.target.value)}
             placeholder="https://exemplo.com/logo.png"
           />
         </div>
@@ -516,8 +525,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           <Label htmlFor="logo-alt">Texto Alternativo</Label>
           <Input
             id="logo-alt"
-            value={selectedBlock.properties?.logoAlt || 'Logo'}
-            onChange={(e) => handlePropertyUpdate('logoAlt', e.target.value)}
+            value={selectedBlock.properties?.logoAlt || "Logo"}
+            onChange={e => handlePropertyUpdate("logoAlt", e.target.value)}
             placeholder="Descrição da logo"
           />
         </div>
@@ -533,7 +542,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             min="20"
             max="200"
             value={selectedBlock.properties?.logoSize || 100}
-            onChange={(e) => handlePropertyUpdate('logoSize', parseInt(e.target.value) || 100)}
+            onChange={e => handlePropertyUpdate("logoSize", parseInt(e.target.value) || 100)}
             placeholder="100"
           />
         </div>
@@ -544,7 +553,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="show-bar"
           checked={selectedBlock.properties?.showDecorativeBar !== false}
-          onCheckedChange={(checked) => handlePropertyUpdate('showDecorativeBar', checked)}
+          onCheckedChange={checked => handlePropertyUpdate("showDecorativeBar", checked)}
         />
         <Label htmlFor="show-bar">Mostrar barra decorativa</Label>
       </div>
@@ -557,13 +566,13 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             <Input
               id="bar-color"
               type="color"
-              value={selectedBlock.properties?.barColor || '#B89B7A'}
-              onChange={(e) => handlePropertyUpdate('barColor', e.target.value)}
+              value={selectedBlock.properties?.barColor || "#B89B7A"}
+              onChange={e => handlePropertyUpdate("barColor", e.target.value)}
               className="w-12 h-10 p-1"
             />
             <Input
-              value={selectedBlock.properties?.barColor || '#B89B7A'}
-              onChange={(e) => handlePropertyUpdate('barColor', e.target.value)}
+              value={selectedBlock.properties?.barColor || "#B89B7A"}
+              onChange={e => handlePropertyUpdate("barColor", e.target.value)}
               placeholder="#B89B7A"
               className="flex-1"
             />
@@ -581,7 +590,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             min="2"
             max="10"
             value={selectedBlock.properties?.barHeight || 4}
-            onChange={(e) => handlePropertyUpdate('barHeight', parseInt(e.target.value) || 4)}
+            onChange={e => handlePropertyUpdate("barHeight", parseInt(e.target.value) || 4)}
             placeholder="4"
           />
         </div>
@@ -592,8 +601,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <div className="space-y-2">
           <Label>Posição da Barra</Label>
           <Select
-            value={selectedBlock.properties?.barPosition || 'bottom'}
-            onValueChange={(value) => handlePropertyUpdate('barPosition', value)}
+            value={selectedBlock.properties?.barPosition || "bottom"}
+            onValueChange={value => handlePropertyUpdate("barPosition", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -612,19 +621,15 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label>Alinhamento</Label>
         <div className="flex space-x-2">
           {[
-            { value: 'left', icon: <AlignLeft className="w-4 h-4" />, label: 'Esquerda' },
-            { value: 'center', icon: <AlignCenter className="w-4 h-4" />, label: 'Centro' },
-            { value: 'right', icon: <AlignRight className="w-4 h-4" />, label: 'Direita' },
-          ].map((align) => (
+            { value: "left", icon: <AlignLeft className="w-4 h-4" />, label: "Esquerda" },
+            { value: "center", icon: <AlignCenter className="w-4 h-4" />, label: "Centro" },
+            { value: "right", icon: <AlignRight className="w-4 h-4" />, label: "Direita" },
+          ].map(align => (
             <Button
               key={align.value}
-              variant={
-                (selectedBlock.properties?.alignment) === align.value 
-                  ? 'default' 
-                  : 'outline'
-              }
+              variant={selectedBlock.properties?.alignment === align.value ? "default" : "outline"}
               size="sm"
-              onClick={() => handlePropertyUpdate('alignment', align.value)}
+              onClick={() => handlePropertyUpdate("alignment", align.value)}
               className="flex-1"
             >
               {align.icon}
@@ -642,7 +647,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           min="50"
           max="110"
           value={selectedBlock.properties?.scale || 100}
-          onChange={(e) => handlePropertyUpdate('scale', parseInt(e.target.value) || 100)}
+          onChange={e => handlePropertyUpdate("scale", parseInt(e.target.value) || 100)}
           placeholder="100"
         />
       </div>
