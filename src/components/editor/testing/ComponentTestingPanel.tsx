@@ -12,6 +12,8 @@ import { QuizIntroHeaderBlock } from "@/components/editor/quiz/QuizIntroHeaderBl
 
 interface ComponentTestingPanelProps {
   onSelectComponent?: (componentId: string, componentType: string) => void;
+  componentUpdates?: Record<string, any>;
+  onUpdateComponent?: (componentId: string, updates: Record<string, any>) => void;
 }
 
 /**
@@ -22,6 +24,8 @@ interface ComponentTestingPanelProps {
  */
 export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
   onSelectComponent,
+  componentUpdates = {},
+  onUpdateComponent,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
   const [componentProperties, setComponentProperties] = useState<Record<string, any>>({});
@@ -32,37 +36,49 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
   };
 
   const handlePropertyChange = (componentId: string, property: string, value: any) => {
-    setComponentProperties(prev => {
-      const currentProps = prev[componentId] || {};
-
-      // Se a propriedade é 'properties', mesclar com as propriedades existentes
+    // Usar callback externo se disponível, senão usar estado local
+    if (onUpdateComponent) {
       if (property === "properties") {
+        onUpdateComponent(componentId, value);
+      } else {
+        onUpdateComponent(componentId, { [property]: value });
+      }
+    } else {
+      // Fallback para estado local
+      setComponentProperties(prev => {
+        const currentProps = prev[componentId] || {};
+
+        if (property === "properties") {
+          return {
+            ...prev,
+            [componentId]: {
+              ...currentProps,
+              properties: {
+                ...currentProps.properties,
+                ...value,
+              },
+            },
+          };
+        }
+
         return {
           ...prev,
           [componentId]: {
             ...currentProps,
-            properties: {
-              ...currentProps.properties,
-              ...value,
-            },
+            [property]: value,
           },
         };
-      }
-
-      // Para outras propriedades, atualizar normalmente
-      return {
-        ...prev,
-        [componentId]: {
-          ...currentProps,
-          [property]: value,
-        },
-      };
-    });
+      });
+    }
   };
 
   const getComponentProps = (componentId: string) => {
+    // Usar props externas se disponíveis, senão usar estado local
+    if (componentUpdates && componentUpdates[componentId]) {
+      return componentUpdates[componentId];
+    }
+
     const props = componentProperties[componentId] || {};
-    // Retornar apenas as propriedades internas do componente
     return props.properties || {};
   };
 

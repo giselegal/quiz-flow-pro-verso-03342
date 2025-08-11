@@ -2,7 +2,6 @@
 // Componente configurável de cabeçalho para o quiz
 
 import { Badge } from "@/components/ui/badge";
-import { useEditor } from "@/context/EditorContext";
 import React from "react";
 
 interface QuizIntroHeaderBlockProps {
@@ -63,9 +62,12 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     backgroundOpacity: 100,
   },
   isEditing = false,
-  onUpdate,
+  onUpdate, // Função para atualizações futuras (não utilizada no momento)
 }) => {
-  const { activeStageId } = useEditor();
+  // Função para notificar mudanças ao componente pai
+  const handleUpdate = (updates: any) => {
+    onUpdate?.(id, updates);
+  };
 
   // Extrair propriedades com valores padrão
   const {
@@ -169,6 +171,8 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             onError={e => {
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
+              // Notificar erro de carregamento da logo
+              handleUpdate({ logoError: true, logoUrl });
             }}
           />
         </div>
