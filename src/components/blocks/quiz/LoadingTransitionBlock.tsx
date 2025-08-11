@@ -56,6 +56,7 @@ export interface LoadingTransitionBlockProps {
 }
 
 import { getMarginClass } from "@/utils/marginUtils";
+import { optimizedSetInterval, optimizedSetTimeout } from "@/utils/performanceOptimizations";
 
 const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
   blockId = "loading-transition-block",
@@ -92,7 +93,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
   useEffect(() => {
     if (isCompleted || messages.length === 0) return;
 
-    const messageTimer = setInterval(() => {
+    const messageTimer = optimizedSetInterval(() => {
       setCurrentMessageIndex(prev => (prev + 1 >= messages.length ? 0 : prev + 1));
     }, messageInterval);
 
@@ -103,7 +104,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
   useEffect(() => {
     if (isCompleted) return;
 
-    const progressTimer = setInterval(() => {
+    const progressTimer = optimizedSetInterval(() => {
       setProgress(prev => {
         const newProgress = prev + 100 / (duration / 50);
 
@@ -113,7 +114,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
 
         if (newProgress >= 100) {
           setIsCompleted(true);
-          setTimeout(() => {
+          optimizedSetTimeout(() => {
             if (autoAdvance && onComplete) {
               onComplete();
             }

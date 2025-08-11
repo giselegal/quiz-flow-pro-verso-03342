@@ -9,6 +9,7 @@ import {
   Users,
   MessageCircle,
 } from "lucide-react";
+import { optimizedSetInterval } from "@/utils/performanceOptimizations";
 
 // COMPONENT: Advanced Testimonial Slider
 const TestimonialSlider: React.FC<{
@@ -57,7 +58,7 @@ const TestimonialSlider: React.FC<{
   useEffect(() => {
     if (!autoPlay) return;
 
-    const timer = setInterval(() => {
+    const timer = optimizedSetInterval(() => {
       setCurrentIndex(prev => (prev + 1) % testimonials.length);
     }, interval);
 
@@ -148,7 +149,7 @@ const CountdownTimer: React.FC<{
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timer = optimizedSetInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate.getTime() - now;
 
@@ -385,7 +386,7 @@ const SocialProofBanner: React.FC<{
   useEffect(() => {
     if (!showLiveCounter) return;
 
-    const interval = setInterval(() => {
+    const interval = optimizedSetInterval(() => {
       if (Math.random() > 0.7) {
         // 30% chance to increment
         setLiveCount(prev => prev + 1);

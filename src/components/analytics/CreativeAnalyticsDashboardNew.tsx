@@ -21,6 +21,7 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
+import { optimizedSetInterval } from "@/utils/performanceOptimizations";
 
 interface CreativeStats {
   creative_name: string;
@@ -106,7 +107,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
     };
 
     loadCreativeData();
-    const interval = setInterval(loadCreativeData, 30000);
+    const interval = optimizedSetInterval(loadCreativeData, 30000);
     return () => clearInterval(interval);
   }, [selectedPeriod]);
 
