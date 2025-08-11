@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
-import DiagnosticStatus from "@/components/editor/diagnostics/DiagnosticStatus";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
+import { EditorNotification } from "@/components/editor/EditorNotification";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import IntelligentPropertiesPanel from "@/components/editor/properties/IntelligentPropertiesPanel";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
+
 import { STEP_TEMPLATES } from "@/config/templates/templates";
 
 // Context & Hooks
@@ -36,6 +37,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
@@ -52,6 +54,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
+
+  // Mostrar notificação quando carregar a etapa 1
+  useEffect(() => {
+    if (activeStageId === "step-1" || activeStageId === "step-01") {
+      setShowNotification(true);
+    }
+  }, [activeStageId]);
 
   // Configuração de viewport responsivo
   const getCanvasClassName = () => {
@@ -168,20 +177,21 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         updateBlock(blockId, updates as any);
       }}
     >
+      {/* Notificação de propriedades ativadas */}
+      {showNotification && (
+        <EditorNotification
+          message="🎨 Propriedades de edição ativadas na Etapa 1! Clique em qualquer componente para editá-lo diretamente."
+          type="success"
+          duration={8000}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
+
       <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
         {/* Overlay sutil para mais elegância */}
         <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
 
         <div className="relative z-10">
-          {/* 🔍 STATUS DE DIAGNÓSTICO */}
-          <div className="absolute top-4 right-4 z-50 w-72">
-            <DiagnosticStatus 
-              autoRun={true}
-              compact={false}
-              showDetails={false}
-            />
-          </div>
-
           <EditorToolbar
             isPreviewing={isPreviewing}
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}

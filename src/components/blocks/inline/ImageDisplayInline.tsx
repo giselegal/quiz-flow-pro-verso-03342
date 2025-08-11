@@ -210,7 +210,27 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
   }
 
   return (
-    <div className={`image-display-inline ${className}`} style={containerStyle}>
+    <div className={`image-display-inline ${className}`} style={containerStyle} onClick={handleEditClick}>
+      {isEditable && isSelected && (
+        <div style={{
+          position: "absolute",
+          top: "-10px",
+          right: "-10px",
+          background: "#B89B7A",
+          color: "white",
+          borderRadius: "50%",
+          width: "24px",
+          height: "24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "12px",
+          zIndex: 10,
+          cursor: "pointer"
+        }}>
+          ✎
+        </div>
+      )}
       {isLoading && (
         <div
           style={{
@@ -235,8 +255,8 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
         loading={loading}
         onLoad={handleLoad}
         onError={handleError}
-        onClick={onClick}
         {...props}
+        title={isEditable ? "Clique para editar imagem" : alt}
       />
     </div>
   );
