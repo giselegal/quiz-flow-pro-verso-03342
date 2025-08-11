@@ -4,6 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
 import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+// ✅ IMPORTAÇÃO DA CONFIGURAÇÃO COMPLETA DAS 21 ETAPAS
+import { COMPLETE_21_STEPS_CONFIG, ADVANCED_21_STEPS } from "@/config/clean21Steps";
+// 🎯 IMPORTAÇÃO DOS COMPONENTES MODULARES
+import { 
+  MODULAR_COMPONENTS, 
+  COMPONENT_CATEGORIES, 
+  getComponentsByCategory,
+  type ModularComponent 
+} from "@/config/modularComponents";
 import { useEditor } from "@/context/EditorContext";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import { BlockDefinition } from "@/types/editor";
@@ -76,6 +85,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   const { scrollRef } = useSyncedScroll({ source: "components" });
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
+    "Componentes Modulares": true, // ✅ NOVA CATEGORIA PARA AS 21 ETAPAS
     "Questões do Quiz": true,
     Quiz: true,
     Interativo: true,
@@ -90,6 +100,179 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
     activeStageId,
     blockActions: { addBlock, updateBlock },
   } = useEditor();
+
+  // ✅ FUNÇÃO PARA GERAR COMPONENTES MODULARES DAS 21 ETAPAS
+  const generateModularComponents = (): BlockDefinition[] => {
+    const components: BlockDefinition[] = [];
+
+    // 📋 COMPONENTES BASEADOS NA CONFIGURAÇÃO COMPLETA
+    Object.entries(COMPLETE_21_STEPS_CONFIG.components).forEach(([componentKey, componentConfig]) => {
+      if (componentKey === 'quiz-intro-header') {
+        components.push({
+          type: "quiz-intro-header",
+          name: "🎯 Cabeçalho Modular",
+          description: "Cabeçalho editável com logo e barra decorativa",
+          category: "Componentes Modulares",
+          component: "QuizIntroHeaderBlock" as any,
+          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
+            name: propKey,
+            label: propConfig.label || propKey,
+            type: propConfig.type,
+            defaultValue: propConfig.default,
+            options: propConfig.options,
+            editable: propConfig.editable
+          })),
+          label: "🎯 Cabeçalho Modular",
+          defaultProps: {
+            enabled: true,
+            showLogo: true,
+            showBar: true,
+            logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+            barColor: "#B89B7A",
+            alignment: "center"
+          }
+        });
+      }
+
+      if (componentKey === 'Intro') {
+        components.push({
+          type: "intro-modular",
+          name: "🌟 Introdução Modular",
+          description: "Componente de introdução configurável para Etapa 1",
+          category: "Componentes Modulares",
+          icon: <Trophy className="h-4 w-4" />,
+          component: "IntroBlock" as any,
+          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
+            name: propKey,
+            label: propConfig.label || propKey,
+            type: propConfig.type,
+            defaultValue: propConfig.default,
+            options: propConfig.options,
+            editable: propConfig.editable
+          })),
+          label: "🌟 Introdução Modular",
+          defaultProps: {
+            title: "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+            imageIntro: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.jpg",
+            descriptionBottom: "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
+            inputLabel: "NOME *",
+            inputPlaceholder: "Digite seu nome",
+            buttonText: "Digite seu nome para continuar",
+            required: true
+          }
+        });
+      }
+
+      if (componentKey === 'QuestionGroup') {
+        components.push({
+          type: "question-group-modular",
+          name: "❓ Grupo de Perguntas",
+          description: "Componente para perguntas principais (Etapas 2-11) com auto-avanço",
+          category: "Componentes Modulares",
+          icon: <HelpCircle className="h-4 w-4" />,
+          component: "QuizQuestionBlock" as any,
+          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
+            name: propKey,
+            label: propConfig.label || propKey,
+            type: propConfig.type,
+            defaultValue: propConfig.default,
+            options: propConfig.options,
+            editable: propConfig.editable
+          })),
+          label: "❓ Grupo de Perguntas",
+          defaultProps: {
+            title: "Selecione suas preferências",
+            multiSelect: 3,
+            layout: "2col",
+            autoAdvance: true,
+            buttonActivation: "Ativa após 3 seleções obrigatórias"
+          }
+        });
+      }
+
+      if (componentKey === 'StrategicQuestionGroup') {
+        components.push({
+          type: "strategic-question-group",
+          name: "🎯 Perguntas Estratégicas",
+          description: "Componente para perguntas estratégicas (Etapas 13-19) com clique manual",
+          category: "Componentes Modulares",
+          icon: <Trophy className="h-4 w-4" />,
+          component: "QuizQuestionBlock" as any,
+          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
+            name: propKey,
+            label: propConfig.label || propKey,
+            type: propConfig.type,
+            defaultValue: propConfig.default,
+            options: propConfig.options,
+            editable: propConfig.editable
+          })),
+          label: "🎯 Perguntas Estratégicas", 
+          defaultProps: {
+            title: "Pergunta estratégica",
+            multiSelect: 1,
+            layout: "1col",
+            autoAdvance: false,
+            buttonActivation: "Ativa após 1 seleção obrigatória, avança apenas com clique manual"
+          }
+        });
+      }
+
+      if (componentKey === 'Transition') {
+        components.push({
+          type: "transition-modular",
+          name: "🔄 Transição Modular", 
+          description: "Componente de transição configurável",
+          category: "Componentes Modulares",
+          icon: <Layers className="h-4 w-4" />,
+          component: "LoadingTransitionBlock" as any,
+          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
+            name: propKey,
+            label: propConfig.label || propKey,
+            type: propConfig.type,
+            defaultValue: propConfig.default,
+            options: propConfig.options,
+            editable: propConfig.editable
+          })),
+          label: "🔄 Transição Modular",
+          defaultProps: {
+            title: "Analisando suas respostas...",
+            description: "Aguarde enquanto processamos suas informações",
+            backgroundImage: "",
+            textColor: "#432818"
+          }
+        });
+      }
+
+      if (componentKey === 'Result') {
+        components.push({
+          type: "result-modular",
+          name: "🎊 Resultado Modular",
+          description: "Componente de resultado com oferta (Etapa 21)",
+          category: "Componentes Modulares", 
+          icon: <Trophy className="h-4 w-4" />,
+          component: "StyleResultCardBlock" as any,
+          props: Object.entries(componentConfig.props).map(([propKey, propConfig]: [string, any]) => ({
+            name: propKey,
+            label: propConfig.label || propKey,
+            type: propConfig.type,
+            defaultValue: propConfig.default,
+            options: propConfig.options,
+            editable: propConfig.editable
+          })),
+          label: "🎊 Resultado Modular",
+          defaultProps: {
+            title: "Seu Estilo Predominante",
+            description: "Descubra como potencializar seu visual",
+            ctaText: "Quero Meu Guia Completo",
+            ctaUrl: "#oferta",
+            buttonColor: "#B89B7A"
+          }
+        });
+      }
+    });
+
+    return components;
+  };
 
   // Gerar blocos do quiz baseados na configuração JSON
   const generateQuizBlocks = (): BlockDefinition[] => {
@@ -341,7 +524,13 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   };
 
   // Obter todas as definições de blocos do registry validado + blocos do quiz
-  const allBlocks = [...generateQuizBlocks(), decorativeBarBlock, ...generateBlockDefinitions()];
+  // Lista completa de blocos, incluindo componentes modulares das 21 etapas
+  const allBlocks = [
+    ...generateModularComponents(), // 🎯 COMPONENTES MODULARES DAS 21 ETAPAS  
+    ...generateQuizBlocks(), 
+    decorativeBarBlock, 
+    ...generateBlockDefinitions()
+  ];
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
