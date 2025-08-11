@@ -32,6 +32,11 @@ export default function ComponentTestingPage() {
   };
 
   const handleUpdateComponent = (componentId: string, updates: Record<string, any>) => {
+    // Debug para quiz-intro-header
+    if (componentId === "quiz-intro-header-test-1") {
+      console.log("handleUpdateComponent for quiz-intro-header:", updates);
+    }
+
     // Salvar atualizações do componente
     setComponentUpdates(prev => ({
       ...prev,

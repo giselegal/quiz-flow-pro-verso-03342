@@ -73,6 +73,14 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
   };
 
   const getComponentProps = (componentId: string) => {
+    // Debug para quiz-intro-header
+    if (componentId === "quiz-intro-header-test-1") {
+      console.log("getComponentProps for quiz-intro-header:", {
+        componentUpdates: componentUpdates?.[componentId],
+        localProps: componentProperties[componentId],
+      });
+    }
+
     // Usar props externas se disponíveis, senão usar estado local
     if (componentUpdates && componentUpdates[componentId]) {
       return componentUpdates[componentId];
@@ -248,6 +256,7 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
           <QuizIntroHeaderBlock
             id="quiz-intro-header-test-1"
             properties={{
+              // Propriedades padrão
               enabled: true,
               showLogo: true,
               showDecorativeBar: true,
@@ -262,12 +271,54 @@ export const ComponentTestingPanel: React.FC<ComponentTestingPanelProps> = ({
               alignment: "center",
               backgroundColor: "transparent",
               backgroundOpacity: 100,
+              // Propriedades editadas (sobrescrever padrões)
               ...getComponentProps("quiz-intro-header-test-1"),
             }}
             isEditing={selectedComponent === "quiz-intro-header-test-1"}
-            onUpdate={(_, updates: any) =>
-              handlePropertyChange("quiz-intro-header-test-1", "properties", updates)
-            }
+            onUpdate={(_, updates: any) => {
+              console.log("QuizIntroHeaderBlock onUpdate:", updates);
+              handlePropertyChange("quiz-intro-header-test-1", "properties", updates);
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      id: "step01-header",
+      type: "quiz-intro-header",
+      category: "Quiz",
+      name: "Step01 Header (Específico)",
+      component: (
+        <div
+          onClick={() => handleSelectComponent("step01-header", "quiz-intro-header")}
+          className="cursor-pointer"
+        >
+          <QuizIntroHeaderBlock
+            id="step01-header"
+            properties={{
+              // Propriedades padrão
+              enabled: true,
+              showLogo: true,
+              showDecorativeBar: true,
+              logoUrl:
+                "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png",
+              logoAlt: "Step01 Logo",
+              logoSize: 100,
+              barColor: "#3B82F6",
+              barHeight: 6,
+              barPosition: "top",
+              scale: 110,
+              alignment: "left",
+              backgroundColor: "#F8F9FA",
+              backgroundOpacity: 50,
+              // Propriedades editadas (sobrescrever padrões)
+              ...getComponentProps("step01-header"),
+            }}
+            isEditing={selectedComponent === "step01-header"}
+            onUpdate={(_, updates: any) => {
+              console.log("Step01-header onUpdate:", updates);
+              handlePropertyChange("step01-header", "properties", updates);
+            }}
           />
         </div>
       ),
