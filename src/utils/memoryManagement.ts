@@ -1,5 +1,5 @@
 // Memory management utilities e cleanup automático
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
 // Gerenciador de memory leaks
 class MemoryManager {
