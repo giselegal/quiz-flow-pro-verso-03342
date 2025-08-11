@@ -97,7 +97,6 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
               <Activity className="w-5 h-5 text-blue-500" />
-              Debug Funil (21 Etapas)
             </CardTitle>
             {onToggle && (
               <Button variant="ghost" size="sm" onClick={onToggle}>
@@ -106,10 +105,8 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
             )}
           </div>
 
-          {/* Progresso Geral */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span>Progresso:</span>
               <span>{progressStats.completionRate}%</span>
             </div>
             <Progress value={progressStats.completionRate} className="h-2" />

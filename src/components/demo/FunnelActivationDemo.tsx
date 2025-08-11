@@ -68,7 +68,7 @@ export function FunnelActivationDemo() {
           </CardTitle>
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span>Progresso: {progressStats.completionRate}%</span>
+              <span>{progressStats.completionRate}%</span>
               <span>Etapas: {activatedStages.length}/21</span>
             </div>
           </div>

@@ -1,31 +1,5 @@
 // src/config/stepTemplatesMapping.ts
-// Mapeamento das 21 etapas para seus templates específicos
-
-// Importações dos templates de cada etapa (arquivos .tsx)
-import { getStep01Template } from "@/components/steps/Step01Template";
-import { getStep02Template } from "@/components/steps/Step02Template";
-import { getStep03Template } from "@/components/steps/Step03Template";
-import { getStep04Template } from "@/components/steps/Step04Template";
-import { getStep05Template } from "@/components/steps/Step05Template";
-import { getStep06Template } from "@/components/steps/Step06Template";
-import { getStep07Template } from "@/components/steps/Step07Template";
-import { getStep08Template } from "@/components/steps/Step08Template";
-import { getStep09Template } from "@/components/steps/Step09Template";
-import { getStep10Template } from "@/components/steps/Step10Template";
-import { getStep11Template } from "@/components/steps/Step11Template";
-import { getStep12Template } from "@/components/steps/Step12Template";
-import { getStep13Template } from "@/components/steps/Step13Template";
-import { getStep14Template } from "@/components/steps/Step14Template";
-import { getStep15Template } from "@/components/steps/Step15Template";
-import { getStep16Template } from "@/components/steps/Step16Template";
-import { getStep17Template } from "@/components/steps/Step17Template";
-import { getStep18Template } from "@/components/steps/Step18Template";
-import { getStep19Template } from "@/components/steps/Step19Template";
-import { getStep20Template } from "@/components/steps/Step20Template";
-import { getStep21Template } from "@/components/steps/Step21Template";
-
-// Importar a configuração completa do quiz
-import { QUIZ_CONFIGURATION } from "./quizConfiguration";
+// Mapeamento das 21 etapas para seus templates específicos (usando templates JSON)
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -35,139 +9,93 @@ export interface StepTemplate {
   description: string;
 }
 
-// 🎯 CONFIGURAÇÃO COMPLETA DO QUIZ DE ESTILO PESSOAL
-// Exportar configuração do quiz baseada no JSON fornecido
-export const FULL_QUIZ_TEMPLATE = QUIZ_CONFIGURATION;
-
-// ✅ MAPEAMENTO DAS 21 ETAPAS (mantido para compatibilidade)
-export const STEP_TEMPLATES: StepTemplate[] = [
-  {
-    stepNumber: 1,
-    templateFunction: getStep01Template,
-    name: "Quiz Intro",
-    description: "Tela inicial com nome",
-  },
-  {
-    stepNumber: 2,
-    templateFunction: getStep02Template,
-    name: "Pergunta 1",
-    description: "Tipo de roupa favorita",
-  },
-  {
-    stepNumber: 3,
-    templateFunction: getStep03Template,
-    name: "Pergunta 2",
-    description: "Personalidade",
-  },
-  {
-    stepNumber: 4,
-    templateFunction: getStep04Template,
-    name: "Pergunta 3",
-    description: "Visual identificação",
-  },
-  {
-    stepNumber: 5,
-    templateFunction: getStep05Template,
-    name: "Pergunta 4",
-    description: "Perguntas adicionais",
-  },
-  {
-    stepNumber: 6,
-    templateFunction: getStep06Template,
-    name: "Pergunta 5",
-    description: "Perguntas adicionais",
-  },
-  {
-    stepNumber: 7,
-    templateFunction: getStep07Template,
-    name: "Pergunta 6",
-    description: "Perguntas adicionais",
-  },
-  {
-    stepNumber: 8,
-    templateFunction: getStep08Template,
-    name: "Pergunta 7",
-    description: "Perguntas adicionais",
-  },
-  {
-    stepNumber: 9,
-    templateFunction: getStep09Template,
-    name: "Pergunta 8",
-    description: "Perguntas adicionais",
-  },
-  {
-    stepNumber: 10,
-    templateFunction: getStep10Template,
-    name: "Pergunta 9",
-    description: "Perguntas adicionais",
-  },
-  {
-    stepNumber: 11,
-    templateFunction: getStep11Template,
-    name: "Transição",
-    description: "Transição para estratégicas",
-  },
-  {
-    stepNumber: 12,
-    templateFunction: getStep12Template,
-    name: "Estratégica 1",
-    description: "Como se sente sobre estilo",
-  },
-  {
-    stepNumber: 13,
-    templateFunction: getStep13Template,
-    name: "Estratégica 2",
-    description: "Maior desafio ao se vestir",
-  },
-  {
-    stepNumber: 14,
-    templateFunction: getStep14Template,
-    name: "Estratégica 3",
-    description: "Investimento passado",
-  },
-  {
-    stepNumber: 15,
-    templateFunction: getStep15Template,
-    name: "Estratégica 4",
-    description: "Investimento disposto",
-  },
-  {
-    stepNumber: 16,
-    templateFunction: getStep16Template,
-    name: "Estratégica 5",
-    description: "Aspecto a melhorar",
-  },
-  {
-    stepNumber: 17,
-    templateFunction: getStep17Template,
-    name: "Estratégica 6",
-    description: "Objetivo com quiz",
-  },
-  {
-    stepNumber: 18,
-    templateFunction: getStep18Template,
-    name: "Transição Final",
-    description: "Preparando resultado",
-  },
-  {
-    stepNumber: 19,
-    templateFunction: getStep19Template,
-    name: "Resultado",
-    description: "Exibição do estilo",
-  },
-  {
-    stepNumber: 20,
-    templateFunction: getStep20Template,
-    name: "CTA",
-    description: "Call to action",
-  },
-  {
-    stepNumber: 21,
-    templateFunction: getStep21Template,
-    name: "Bonus",
-    description: "Conteúdo extra",
-  },
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS USANDO TEMPLATES JSON
+const stepNames = [
+  "Introdução",
+  "Q1 - Tipo de Roupa",
+  "Q2 - Nome Pessoal",
+  "Q3 - Estilo Pessoal",
+  "Q4 - Ocasiões",
+  "Q5 - Cores",
+  "Q6 - Textura",
+  "Q7 - Silhueta",
+  "Q8 - Acessórios",
+  "Q9 - Inspiração",
+  "Q10 - Conforto",
+  "Q11 - Tendências",
+  "Q12 - Investimento",
+  "Q13 - Personalidade",
+  "Q14 - Transição",
+  "Q15 - Estratégica 1",
+  "Q16 - Estratégica 2",
+  "Q17 - Estratégica 3",
+  "Q18 - Processamento",
+  "Q19 - Resultado",
+  "Q20 - Oferta",
 ];
+
+const stepDescriptions = [
+  "Tela inicial com nome",
+  "Tipo de roupa favorita",
+  "Coleta do nome pessoal",
+  "Identificação do estilo pessoal",
+  "Ocasiões de uso",
+  "Preferências de cores",
+  "Texturas preferidas",
+  "Silhuetas favoritas",
+  "Acessórios de estilo",
+  "Inspirações de moda",
+  "Nível de conforto",
+  "Tendências de interesse",
+  "Investimento em roupas",
+  "Traços de personalidade",
+  "Transição para etapas estratégicas",
+  "Como se sente sobre estilo",
+  "Maior desafio ao se vestir",
+  "Investimento disposto",
+  "Processamento dos dados",
+  "Exibição do resultado",
+  "Call to action final",
+];
+
+// Template padrão para fallback
+const getDefaultTemplate = (stepNumber: number) => {
+  return [
+    {
+      id: `step-${stepNumber}-title`,
+      type: "text",
+      properties: {
+        content: stepNames[stepNumber - 1] || `Etapa ${stepNumber}`,
+        fontSize: "2xl",
+        fontWeight: "bold",
+        textAlign: "center",
+        color: "#2D1810",
+      },
+    },
+    {
+      id: `step-${stepNumber}-description`,
+      type: "text",
+      properties: {
+        content: stepDescriptions[stepNumber - 1] || `Descrição da etapa ${stepNumber}`,
+        fontSize: "md",
+        textAlign: "center",
+        color: "#6B4F43",
+      },
+    },
+  ];
+};
+
+// ✅ MAPEAMENTO DAS 21 ETAPAS (versão simplificada)
+export const STEP_TEMPLATES: StepTemplate[] = Array.from({ length: 21 }, (_, index) => {
+  const stepNumber = index + 1;
+
+  return {
+    stepNumber,
+    templateFunction: () => getDefaultTemplate(stepNumber),
+    name: stepNames[index],
+    description: stepDescriptions[index],
+  };
+});
 
 // 🔧 UTILITÁRIOS
 export const getTemplateByStep = (stepNumber: number): StepTemplate | undefined => {
@@ -182,7 +110,7 @@ export const getTotalSteps = (): number => {
 export const getTemplateStats = () => {
   return {
     totalTemplates: STEP_TEMPLATES.length,
-    questionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Pergunta")).length,
+    questionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Q")).length,
     strategicSteps: STEP_TEMPLATES.filter(t => t.name.includes("Estratégica")).length,
     transitionSteps: STEP_TEMPLATES.filter(t => t.name.includes("Transição")).length,
     resultSteps: STEP_TEMPLATES.filter(t => t.name.includes("Resultado")).length,
