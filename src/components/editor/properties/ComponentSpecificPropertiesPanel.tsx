@@ -237,6 +237,39 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           </SelectContent>
         </Select>
       </div>
+
+      {/* Largura do texto */}
+      <div className="space-y-2">
+        <Label>Largura do Elemento</Label>
+        <Select
+          value={selectedBlock.properties?.width?.toString() || "100%"}
+          onValueChange={value => handlePropertyUpdate("width", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="25%">25% da largura</SelectItem>
+            <SelectItem value="50%">50% da largura</SelectItem>
+            <SelectItem value="75%">75% da largura</SelectItem>
+            <SelectItem value="100%">100% da largura</SelectItem>
+            <SelectItem value="auto">Largura automática</SelectItem>
+            <SelectItem value="fit-content">Ajuste ao conteúdo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Largura máxima */}
+      <div className="space-y-2">
+        <Label htmlFor="max-width">Largura Máxima</Label>
+        <Input
+          id="max-width"
+          type="text"
+          value={selectedBlock.properties?.maxWidth || ""}
+          onChange={e => handlePropertyUpdate("maxWidth", e.target.value)}
+          placeholder="ex: 600px, 80rem, none"
+        />
+      </div>
     </div>
   );
 
