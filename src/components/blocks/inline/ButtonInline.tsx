@@ -35,38 +35,14 @@ interface ButtonInlineProps {
   isSelected?: boolean;
 }
 
-export const ButtonInline: React.FC<ButtonInlineProps> = ({
-  text = "Clique aqui",
-  style = "primary",
-  variant = "primary",
-  size = "medium",
-  backgroundColor = "#B89B7A",
-  textColor = "#ffffff",
-  onClick,
-  className = "",
-  fullWidth = false,
-  borderRadius = "rounded-lg",
-  padding,
-  fontSize,
-  fontWeight = "font-bold",
-  boxShadow,
-  hoverEffect = true,
-  requiresValidInput = false,
-  disabled = false,
-  textAlign = "text-center",
-  justifyContent = "center",
-  alignItems = "center",
-  display = "flex",
-  margin = "0 auto",
-  marginTop = 0,
-  marginBottom = 0,
-  marginLeft = 0,
-  marginRight = 0,
+export function ButtonInline({
+  text = "Clique aqui", style = "primary", variant = "primary", size = "medium", backgroundColor = "#B89B7A", textColor = "#ffffff", onClick, className = "", fullWidth = false, borderRadius = "rounded-lg", padding, fontSize, fontWeight = "font-bold", boxShadow, hoverEffect = true, requiresValidInput = false, disabled = false, textAlign = "text-center", justifyContent = "center", alignItems = "center", async function name(params:type) {
+    display
+  } = "flex", margin = "0 auto", marginTop = 0, marginBottom = 0, marginLeft = 0, marginRight = 0,
   // Propriedades de edição
   isEditable = true, // ATIVADO POR PADRÃO
-  onPropertyChange,
-  isSelected = false,
-}) => {
+  onPropertyChange, isSelected = false,
+}: ButtonInlineProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [tempText, setTempText] = useState("");
 
@@ -131,7 +107,7 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
   const handleEditClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isEditable && !isEditing) {
       setIsEditing(true);
       setTempText(text);
@@ -174,8 +150,7 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
             color: textColor,
             minWidth: "120px",
           }}
-          placeholder="Texto do botão..."
-        />
+          placeholder="Texto do botão..." />
         <div style={{
           position: "absolute",
           top: "100%",
@@ -238,18 +213,16 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
         className
       )}
       style={{
-        backgroundColor:
-          actualVariant === "primary"
+        backgroundColor: actualVariant === "primary"
+          ? backgroundColor
+          : actualVariant === "secondary"
+            ? undefined
+            : "transparent",
+        color: actualVariant === "primary"
+          ? textColor
+          : actualVariant === "outline"
             ? backgroundColor
-            : actualVariant === "secondary"
-              ? undefined
-              : "transparent",
-        color:
-          actualVariant === "primary"
-            ? textColor
-            : actualVariant === "outline"
-              ? backgroundColor
-              : textColor,
+            : textColor,
         borderColor: backgroundColor,
         ...(actualVariant === "outline" &&
           ({
@@ -261,13 +234,13 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
           e.currentTarget.style.backgroundColor = backgroundColor;
           e.currentTarget.style.color = textColor;
         }
-      }}
+      } }
       onMouseLeave={e => {
         if (actualVariant === "outline") {
           e.currentTarget.style.backgroundColor = "transparent";
           e.currentTarget.style.color = backgroundColor;
         }
-      }}
+      } }
       title={isEditable ? "Clique para editar texto do botão" : undefined}
     >
       {text}
@@ -276,6 +249,6 @@ export const ButtonInline: React.FC<ButtonInlineProps> = ({
       )}
     </button>
   );
-};
+}
 
 export default ButtonInline;

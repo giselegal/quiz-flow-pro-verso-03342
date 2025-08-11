@@ -52,8 +52,12 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
   };
 
   const getComponentIcon = (type: string) => {
-    switch (type) {
+    const normalizedType = type.replace('-inline', '').replace('-display', '').replace('-component', '');
+    
+    switch (normalizedType) {
       case 'text':
+      case 'heading':
+      case 'paragraph':
         return <Type className="w-4 h-4" />;
       case 'button':
         return <Settings className="w-4 h-4" />;
@@ -65,6 +69,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
   };
 
   const getComponentDisplayName = (type: string) => {
+    const normalizedType = type.replace('-inline', '').replace('-display', '').replace('-component', '');
+    
     const names: Record<string, string> = {
       text: 'Texto',
       button: 'Botão',
@@ -75,7 +81,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       divider: 'Divisor',
       spacer: 'Espaçador',
     };
-    return names[type] || type.charAt(0).toUpperCase() + type.slice(1);
+    return names[normalizedType] || normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1);
   };
 
   // Renderizar propriedades específicas por tipo de componente
@@ -86,8 +92,11 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label htmlFor="text-content">Texto</Label>
         <Textarea
           id="text-content"
-          value={selectedBlock.properties?.text || selectedBlock.content?.text || ''}
-          onChange={(e) => handlePropertyUpdate('text', e.target.value)}
+          value={selectedBlock.properties?.text || selectedBlock.properties?.content || selectedBlock.content?.text || ''}
+          onChange={(e) => {
+            handlePropertyUpdate('text', e.target.value);
+            handlePropertyUpdate('content', e.target.value); // Garantir compatibilidade
+          }}
           placeholder="Digite o texto aqui..."
           rows={3}
         />
@@ -104,9 +113,16 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           ].map((align) => (
             <Button
               key={align.value}
-              variant={selectedBlock.properties?.textAlign === align.value ? 'default' : 'outline'}
+              variant={
+                (selectedBlock.properties?.textAlign || selectedBlock.properties?.alignment) === align.value 
+                  ? 'default' 
+                  : 'outline'
+              }
               size="sm"
-              onClick={() => handlePropertyUpdate('textAlign', align.value)}
+              onClick={() => {
+                handlePropertyUpdate('textAlign', align.value);
+                handlePropertyUpdate('alignment', align.value); // Garantir compatibilidade
+              }}
               className="flex-1"
             >
               {align.icon}
@@ -146,12 +162,18 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             id="text-color"
             type="color"
             value={selectedBlock.properties?.color || selectedBlock.properties?.textColor || '#000000'}
-            onChange={(e) => handlePropertyUpdate('textColor', e.target.value)}
+            onChange={(e) => {
+              handlePropertyUpdate('color', e.target.value);
+              handlePropertyUpdate('textColor', e.target.value);
+            }}
             className="w-12 h-10 p-1"
           />
           <Input
             value={selectedBlock.properties?.color || selectedBlock.properties?.textColor || '#000000'}
-            onChange={(e) => handlePropertyUpdate('textColor', e.target.value)}
+            onChange={(e) => {
+              handlePropertyUpdate('color', e.target.value);
+              handlePropertyUpdate('textColor', e.target.value);
+            }}
             placeholder="#000000"
             className="flex-1"
           />
@@ -383,7 +405,12 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
   );
 
   const renderPropertiesByType = () => {
-    switch (selectedBlock.type) {
+    const blockType = selectedBlock.type;
+    
+    // Normalizar tipos com sufixos (text-inline -> text, button-inline -> button, etc.)
+    const normalizedType = blockType.replace('-inline', '').replace('-display', '').replace('-component', '');
+    
+    switch (normalizedType) {
       case 'text':
       case 'heading':
       case 'paragraph':
@@ -397,6 +424,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           <div className="text-center text-gray-500 py-8">
             <Settings className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p>Propriedades não disponíveis para este tipo de componente.</p>
+            <p className="text-xs mt-2">Tipo detectado: {blockType}</p>
+            <p className="text-xs">Tipo normalizado: {normalizedType}</p>
           </div>
         );
     }
