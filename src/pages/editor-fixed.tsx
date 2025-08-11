@@ -1,8 +1,4 @@
-import React from "react";
-import EditorFixedSimple from "./editor-fixed-simple";
+// @ts-nocheck
+import EditorWorkingMinimal from "./editor-minimal.jsx";
 
-const EditorFixedPage: React.FC = () => {
-  return <EditorFixedSimple />;
-};
-
-export default EditorFixedPage;
+export default EditorWorkingMinimal;
