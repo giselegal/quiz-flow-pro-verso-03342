@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 /**
  * Step11Template - Componente para Etapa 11 do Quiz
- * 
+ *
  * Template para questão 10: Configurável via painel de propriedades
  * Integração com sistema de quiz e editor de propriedades
  */
@@ -12,7 +12,7 @@ interface Step11TemplateProps {
   id: string;
   className?: string;
   style?: React.CSSProperties;
-  
+
   properties?: {
     enabled?: boolean;
     title?: string;
@@ -29,7 +29,7 @@ interface Step11TemplateProps {
     columns?: number;
     imageSize?: number;
   };
-  
+
   isEditing?: boolean;
   isSelected?: boolean;
   onUpdate?: (id: string, updates: any) => void;
@@ -78,7 +78,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onClick?.();
-    
+
     if (isEditing) {
       console.log(`Step11Template ${id} clicked in editing mode`);
       onUpdate?.(id, { lastClicked: new Date().toISOString() });
@@ -130,19 +130,13 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
       {/* Conteúdo da Questão */}
       <div className="step-content text-center">
         {/* Título da Questão */}
-        <h1 
-          className="text-2xl font-bold mb-2"
-          style={{ color: properties.textColor }}
-        >
+        <h1 className="text-2xl font-bold mb-2" style={{ color: properties.textColor }}>
           {properties.title}
         </h1>
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p 
-            className="text-sm mb-6"
-            style={{ color: "#6B7280" }}
-          >
+          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
             {properties.questionCounter}
           </p>
         )}
@@ -152,10 +146,10 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
           <p className="text-gray-500 mb-4">
             📝 Conteúdo da Etapa 11 - Configure no painel de propriedades
           </p>
-          
+
           {/* Placeholder para opções */}
           <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3, 4].map(i => (
               <div key={i} className="p-4 bg-white rounded border border-gray-200">
                 <div className="w-full h-20 bg-gray-100 rounded mb-2"></div>
                 <p className="text-xs text-gray-400">Opção {i}</p>
@@ -186,28 +180,22 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
       {isEditing && (
         <div className="absolute top-2 right-2 flex gap-2 items-center">
           {!properties.enabled && (
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
-              Desabilitado
-            </span>
+            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Desabilitado</span>
           )}
-          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
-            Step 11
-          </span>
+          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">Step 11</span>
         </div>
       )}
 
       {/* Debug Info */}
       {process.env.NODE_ENV === "development" && isEditing && (
-        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">
-          ID: {id}
-        </div>
+        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
   );
 };
 
 // ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
-export const getStep11Template = () => {export const getStep11Template = () => {
+export const getStep11Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
