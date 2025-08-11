@@ -71,6 +71,11 @@ const HeadingInlineBlock: React.FC<BlockComponentProps> = ({
     fontWeight = "bold",
     maxWidth = "full",
     responsive = true,
+    // Fix: Extract margin properties from block
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   // Tamanhos responsivos por nível
