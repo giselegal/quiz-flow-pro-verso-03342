@@ -80,7 +80,7 @@ const ENHANCED_BLOCK_REGISTRY = {
   alert: lazy(() => import("./AlertBlock")),
 
   // 🧠 BLOCKS DE QUIZ
-  "quiz-question": lazy(() => import("./QuizQuestionBlock")),
+  "quiz-question": lazy(() => import("../quiz/QuizQuestionBlock")),
   "quiz-progress": lazy(() => import("./QuizProgressBlock")),
   "quiz-result-calculated": lazy(() => import("./QuizResultCalculatedBlock")),
   "quiz-start-page": lazy(() => import("./QuizStartPageBlock")),

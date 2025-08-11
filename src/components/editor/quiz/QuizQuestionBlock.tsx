@@ -32,7 +32,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   properties = {},
   isEditing = false,
   onUpdate,
-}) => {
+}: QuizQuestionBlockProps) => {
   const { activeStageId } = useEditor();
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     properties.selectedOptions || []
