@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useState } from "react";
 
 interface ButtonInlineProps {
   text?: string;
@@ -29,6 +29,10 @@ interface ButtonInlineProps {
   marginBottom?: number;
   marginLeft?: number;
   marginRight?: number;
+  // Propriedades de edição
+  isEditable?: boolean;
+  onPropertyChange?: (key: string, value: any) => void;
+  isSelected?: boolean;
 }
 
 export const ButtonInline: React.FC<ButtonInlineProps> = ({
