@@ -1,11 +1,172 @@
 /**
+ * 🚀 PERFORMANCE OPTIMIZER
  * Utilitário para monitoramento e otimização de performance
+ * Inclui otimizações para setTimeout violations
  */
 
 interface EnhancedPerformanceEntry extends PerformanceEntry {
   processingStart?: number;
   processingEnd?: number;
   hadRecentInput?: boolean;
+}
+
+// 1️⃣ OTIMIZAÇÃO: requestAnimationFrame pool para operações UI
+class AnimationFrameScheduler {
+  private queue: (() => void)[] = [];
+  private isScheduled = false;
+
+  schedule(callback: () => void) {
+    this.queue.push(callback);
+    if (!this.isScheduled) {
+      this.isScheduled = true;
+      requestAnimationFrame(() => this.flush());
+    }
+  }
+
+  private flush() {
+    const callbacks = [...this.queue];
+    this.queue.length = 0;
+    this.isScheduled = false;
+    
+    callbacks.forEach(callback => {
+      try {
+        callback();
+      } catch (error) {
+        console.error('Animation frame callback error:', error);
+      }
+    });
+  }
+}
+
+// 2️⃣ OTIMIZAÇÃO: MessageChannel para non-blocking scheduling  
+class MessageChannelScheduler {
+  private channel: MessageChannel;
+  private port1: MessagePort;
+  private port2: MessagePort;
+  private callbacks: (() => void)[] = [];
+
+  constructor() {
+    this.channel = new MessageChannel();
+    this.port1 = this.channel.port1;
+    this.port2 = this.channel.port2;
+    
+    this.port1.onmessage = () => this.flushCallbacks();
+  }
+
+  schedule(callback: () => void) {
+    this.callbacks.push(callback);
+    this.port2.postMessage(null);
+  }
+
+  private flushCallbacks() {
+    const callbacks = [...this.callbacks];
+    this.callbacks.length = 0;
+    
+    callbacks.forEach(callback => {
+      try {
+        callback();
+      } catch (error) {
+        console.error('MessageChannel callback error:', error);
+      }
+    });
+  }
+}
+
+// 3️⃣ OTIMIZAÇÃO: Smart timeout com fallbacks
+class SmartTimeout {
+  private static animationScheduler = new AnimationFrameScheduler();
+  private static messageScheduler = new MessageChannelScheduler();
+
+  /**
+   * Substituto otimizado para setTimeout com scheduling inteligente
+   */
+  static schedule(
+    callback: () => void,
+    delay: number = 0,
+    strategy: 'animation' | 'message' | 'timeout' = 'animation'
+  ): number {
+    switch (strategy) {
+      case 'animation':
+        // Para UI updates, usar requestAnimationFrame
+        this.animationScheduler.schedule(callback);
+        return 0; // requestAnimationFrame não retorna ID cancelável
+
+      case 'message':
+        // Para non-blocking operations
+        this.messageScheduler.schedule(callback);
+        return 0;
+
+      case 'timeout':
+      default:
+        // Fallback para setTimeout nativo quando necessário
+        return window.setTimeout(callback, Math.max(delay, 4)) as unknown as number;
+    }
+  }
+
+  /**
+   * Substituto otimizado para setInterval
+   */
+  static scheduleInterval(
+    callback: () => void,
+    delay: number,
+    strategy: 'animation' | 'timeout' = 'animation'
+  ): number {
+    if (strategy === 'animation' && delay < 100) {
+      // Para intervalos rápidos, usar requestAnimationFrame recursivo
+      const recursiveCallback = () => {
+        callback();
+        requestAnimationFrame(recursiveCallback);
+      };
+      requestAnimationFrame(recursiveCallback);
+      return 0;
+    }
+    
+    // Fallback para setInterval nativo
+    return window.setInterval(callback, Math.max(delay, 16)) as unknown as number;
+  }
+}
+
+// 4️⃣ OTIMIZAÇÃO: Debounce otimizado
+class OptimizedDebounce {
+  private static timers = new Map<string, number>();
+  private static scheduler = new AnimationFrameScheduler();
+
+  static create<T extends (...args: any[]) => any>(
+    fn: T,
+    delay: number,
+    key?: string
+  ): T & { cancel: () => void } {
+    const uniqueKey = key || `debounce-${Math.random()}`;
+
+    const debouncedFn = ((...args: any[]) => {
+      // Cancel previous timer
+      if (this.timers.has(uniqueKey)) {
+        clearTimeout(this.timers.get(uniqueKey));
+      }
+
+      if (delay <= 16) {
+        // Para delays muito baixos, usar requestAnimationFrame
+        this.scheduler.schedule(() => fn(...args));
+      } else {
+        // Para delays maiores, usar setTimeout otimizado
+        const timerId = SmartTimeout.schedule(() => {
+          this.timers.delete(uniqueKey);
+          fn(...args);
+        }, delay, 'timeout');
+        
+        this.timers.set(uniqueKey, timerId);
+      }
+    }) as T & { cancel: () => void };
+
+    debouncedFn.cancel = () => {
+      if (this.timers.has(uniqueKey)) {
+        clearTimeout(this.timers.get(uniqueKey));
+        this.timers.delete(uniqueKey);
+      }
+    };
+
+    return debouncedFn;
+  }
 }
 
 /**
@@ -33,6 +194,24 @@ export const QUIZ_PERF = {
     // Implementação simulada para retornar LCP
     return 1200; // Valor fictício em ms
   },
+};
+
+// 5️⃣ EXPORT: API pública otimizada
+export const PerformanceOptimizer = {
+  // Schedulers otimizados
+  schedule: SmartTimeout.schedule,
+  scheduleInterval: SmartTimeout.scheduleInterval,
+  
+  // Debounce otimizado
+  debounce: OptimizedDebounce.create,
+  
+  // Utilitários
+  isHighFrequencyUpdate: (delay: number) => delay < 100,
+  getSuggestedStrategy: (delay: number, isUIUpdate = false): 'animation' | 'message' | 'timeout' => {
+    if (isUIUpdate || delay < 16) return 'animation';
+    if (delay < 100) return 'message';
+    return 'timeout';
+  }
 };
 
 /**

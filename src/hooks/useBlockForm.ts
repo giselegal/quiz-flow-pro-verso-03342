@@ -6,7 +6,7 @@
 
 import { useForm, UseFormReturn, FieldValues, Path } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { z } from "zod";
 import {
   blockSchemas,
@@ -14,6 +14,7 @@ import {
   validateBlockData,
   safeValidateBlockData,
 } from "@/schemas/blockSchemas";
+import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
 
 export interface Block {
   id: string;
@@ -72,20 +73,21 @@ export function useBlockForm(
     }
   }, [block?.id, reset]);
 
-  // Watch para mudanças e debounce das atualizações
+  // Watch para mudanças e debounce das atualizações - OTIMIZADO
   useEffect(() => {
     if (!block || !onUpdate) return;
 
     const subscription = watch(values => {
-      const timer = setTimeout(() => {
+      // 🚀 OTIMIZAÇÃO: Usar PerformanceOptimizer ao invés de setTimeout
+      const strategy = PerformanceOptimizer.getSuggestedStrategy(debounceMs, true);
+      
+      PerformanceOptimizer.schedule(() => {
         if (isDirty) {
           onUpdate({
             properties: values as Record<string, any>,
           });
         }
-      }, debounceMs);
-
-      return () => clearTimeout(timer);
+      }, debounceMs, strategy);
     });
 
     return () => subscription.unsubscribe();
