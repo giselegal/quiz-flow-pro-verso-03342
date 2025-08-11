@@ -10,6 +10,8 @@ import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 // ✅ NOVO: Importar o painel inteligente de propriedades
 import IntelligentPropertiesPanel from "@/components/editor/properties/IntelligentPropertiesPanel";
+// 🔍 NOVO: Importar componente de diagnóstico
+import DiagnosticStatus from "@/components/editor/diagnostics/DiagnosticStatus";
 
 // Context & Hooks
 import { useEditor } from "@/context/EditorContext";
@@ -166,6 +168,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
 
         <div className="relative z-10">
+          {/* 🔍 STATUS DE DIAGNÓSTICO */}
+          <div className="absolute top-4 right-4 z-50 w-72">
+            <DiagnosticStatus 
+              autoRun={true}
+              compact={false}
+              showDetails={false}
+            />
+          </div>
+
           <EditorToolbar
             isPreviewing={isPreviewing}
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}

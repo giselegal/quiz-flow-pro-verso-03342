@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Hook para debounce de auto-save com controle inteligente
