@@ -9,7 +9,6 @@ import { getStep04Template } from "@/components/steps/Step04Template";
 import { getStep05Template } from "@/components/steps/Step05Template";
 import { getStep06Template } from "@/components/steps/Step06Template";
 import { getStep07Template } from "@/components/steps/Step07Template";
-import { getStep08Template } from "@/components/steps/Step08Template";
 import { getStep09Template } from "@/components/steps/Step09Template";
 import { getStep10Template } from "@/components/steps/Step10Template";
 import { getStep11Template } from "@/components/steps/Step11Template";
@@ -85,7 +84,6 @@ export const STEP_TEMPLATES: StepTemplate[] = [
   },
   {
     stepNumber: 8,
-    templateFunction: getStep08Template,
     name: "Pergunta 7",
     description: "Perguntas adicionais",
   },

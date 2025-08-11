@@ -8,7 +8,6 @@ import { getStep04Template } from "../components/steps/Step04Template";
 import { getStep05Template } from "../components/steps/Step05Template";
 import { getStep06Template } from "../components/steps/Step06Template";
 import { getStep07Template } from "../components/steps/Step07Template";
-import { getStep08Template } from "../components/steps/Step08Template";
 import { getStep09Template } from "../components/steps/Step09Template";
 import { getStep10Template } from "../components/steps/Step10Template";
 import { getStep11Template } from "../components/steps/Step11Template";
@@ -96,7 +95,6 @@ const STEP_MAPPING: Record<
     name: "Q6: Calças (2)",
     type: "question",
     description: "QUAL SUA CALÇA FAVORITA? (Continuação)",
-    getTemplate: getStep08Template,
     multiSelect: 3,
   },
   9: {
