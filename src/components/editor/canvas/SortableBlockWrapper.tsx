@@ -158,11 +158,12 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
       {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
-          "relative group transition-all duration-200 border-transparent", // 🎯 Borda transparente por padrão
+          "relative group transition-all duration-200", // 🎯 Transição suave
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
-          // 🎯 Apenas borda tracejada discreta quando selecionado
-          isSelected && "border-dashed border-[#B89B7A]/60 border-2",
+          // 🎯 Destaque visual quando selecionado
+          isSelected && "ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg",
+          !isSelected && "border-stone-200 hover:border-stone-300",
           // Margens universais com controles deslizantes
           getMarginClass(marginTop, "top"),
           getMarginClass(marginBottom, "bottom"),
@@ -173,6 +174,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
           backgroundColor:
             containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
+          borderColor: isSelected ? "#3b82f6" : "#E5DDD5",
         }}
       >
         {/* Drag handle and controls - only show on hover */}

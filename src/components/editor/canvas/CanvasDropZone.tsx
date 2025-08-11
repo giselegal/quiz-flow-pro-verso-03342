@@ -115,7 +115,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
               </p>
             </div>
             {/* Botão de Carregar Template */}
-            {STEP_TEMPLATES[activeStageId as keyof typeof STEP_TEMPLATES] && (
+            {STEP_TEMPLATES[activeStageId as unknown as keyof typeof STEP_TEMPLATES] && (
               <div>
                 <Button variant="outline">
                   <Download className="w-4 h-4 mr-2" />

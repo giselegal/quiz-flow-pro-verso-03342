@@ -8,16 +8,15 @@ import { EditorNotification } from "@/components/editor/EditorNotification";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import IntelligentPropertiesPanel from "@/components/editor/properties/IntelligentPropertiesPanel";
+import { ComponentSpecificPropertiesPanel } from "@/components/editor/properties/ComponentSpecificPropertiesPanel";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
-
-import { STEP_TEMPLATES } from "@/config/templates/templates";
 
 // Context & Hooks
 import { useEditor } from "@/context/EditorContext";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { usePropertyHistory } from "@/hooks/usePropertyHistory";
 import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { Settings } from "lucide-react";
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -93,39 +92,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   const handleStageSelect = (_stageId: string) => {
     // O EditorContext já gerencia internamente
-  };
-
-  // Função para determinar tipo de etapa baseado no ID da etapa ativa e templates
-  const getStepTypeFromStageId = (
-    stageId: string | null
-  ):
-    | "intro"
-    | "question"
-    | "transition"
-    | "strategic"
-    | "processing"
-    | "result"
-    | "lead"
-    | "offer" => {
-    if (!stageId) return "intro";
-
-    const stepNumber = getStepNumberFromStageId(stageId);
-    const template = STEP_TEMPLATES[stepNumber as keyof typeof STEP_TEMPLATES];
-
-    if (template?.metadata?.type) {
-      return template.metadata.type as any;
-    }
-
-    // Fallback para lógica anterior se não houver template
-    if (stepNumber === 1) return "intro";
-    if (stepNumber >= 2 && stepNumber <= 14) return "question";
-    if (stepNumber === 15 || stepNumber === 19) return "transition";
-    if (stepNumber === 16) return "processing";
-    if (stepNumber >= 17 && stepNumber <= 18) return "result";
-    if (stepNumber === 20) return "lead";
-    if (stepNumber === 21) return "offer";
-
-    return "question"; // fallback
   };
 
   const getStepNumberFromStageId = (stageId: string | null): number => {
@@ -244,7 +210,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <IntelligentPropertiesPanel
+                <ComponentSpecificPropertiesPanel
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
@@ -253,25 +219,33 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       ...(selectedBlock.content || {}),
                     },
                   }}
-                  stepType={getStepTypeFromStageId(activeStageId)}
-                  stepNumber={getStepNumberFromStageId(activeStageId)}
                   onUpdate={(blockId: string, updates: Record<string, any>) => {
                     updateBlock(blockId, updates);
                   }}
                   onClose={() => setSelectedBlockId(null)}
                   onPreview={() => setIsPreviewing(true)}
-                  onReset={() => {
-                    // TODO: Implementar reset para propriedades padrão
-                    console.log("Reset proprieties for block:", selectedBlock.id);
-                  }}
                 />
               ) : !isPreviewing ? (
                 <div className="h-full p-4 flex items-center justify-center text-stone-500">
                   <div className="text-center">
-                    <p className="text-sm">Selecione um bloco para editar propriedades</p>
-                    <p className="text-xs text-stone-400 mt-1">
-                      Painel Inteligente ativo • Drag & Drop habilitado
+                    <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
+                      <Settings className="w-8 h-8 text-stone-400" />
+                    </div>
+                    <p className="text-sm font-medium">Clique em um componente para personalizar</p>
+                    <p className="text-xs text-stone-400 mt-2">
+                      As propriedades específicas do componente<br />
+                      aparecerão aqui quando selecionado
                     </p>
+                    <div className="mt-4 text-xs text-stone-400 space-y-1">
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span>Texto, Botão, Imagem</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span>Propriedades específicas por tipo</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ) : null

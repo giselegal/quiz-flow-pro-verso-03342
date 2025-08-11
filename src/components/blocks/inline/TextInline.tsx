@@ -57,11 +57,15 @@ export const TextInline: React.FC<TextInlineProps> = ({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Primeiro notifica a seleção do componente
+    onClick?.();
+    
+    // Depois verifica se deve iniciar a edição inline
     if (isEditable && !isEditing) {
       setIsEditing(true);
       setTempContent(displayText);
     }
-    onClick?.();
   };
 
   const handleSave = () => {
