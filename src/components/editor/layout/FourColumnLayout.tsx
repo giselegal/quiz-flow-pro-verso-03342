@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
 import { ScrollSyncProvider } from "@/context/ScrollSyncContext";

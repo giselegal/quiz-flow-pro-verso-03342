@@ -16,7 +16,7 @@ interface PropertiesPanelProps {
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   selectedComponentId,
-  onClose,
+  onClose: _onClose,
   onUpdate,
   onDelete,
 }) => {

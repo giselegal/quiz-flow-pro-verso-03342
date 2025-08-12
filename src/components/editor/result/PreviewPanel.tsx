@@ -6,10 +6,14 @@ import { cn } from "@/lib/utils";
 
 interface PreviewPanelProps {
   primaryStyle: StyleResult;
+  onSelectComponent?: (id: string | null) => void;
+  selectedComponentId?: string | null;
 }
 
 export const PreviewPanel: React.FC<PreviewPanelProps> = ({
   primaryStyle,
+  onSelectComponent: _onSelectComponent,
+  selectedComponentId: _selectedComponentId,
 }) => {
   const [viewMode, setViewMode] = React.useState<"desktop" | "mobile">("desktop");
   const [isPreviewing, setIsPreviewing] = React.useState(false);

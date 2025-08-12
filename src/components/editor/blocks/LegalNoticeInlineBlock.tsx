@@ -53,7 +53,7 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   className = "",
 }) => {
   // Verificação de segurança para evitar erro de undefined

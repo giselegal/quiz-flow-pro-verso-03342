@@ -1,12 +1,13 @@
 import React from "react";
 import { EditorBlock } from "@/types/editor";
-import { StyleResult } from "@/types/quiz";
+import type { StyleResult } from "@/types/quiz";
 
 interface BlockPreviewRendererProps {
   block: EditorBlock;
   isSelected?: boolean;
   isPreviewing?: boolean;
   onSelect?: () => void;
+  primaryStyle?: StyleResult;
 }
 
 export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({

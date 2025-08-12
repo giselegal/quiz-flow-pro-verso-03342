@@ -27,12 +27,12 @@ interface QuizConfigurationPanelProps {
 }
 
 export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
-  selectedBlock,
-  onUpdate,
+  selectedBlock: _selectedBlock,
+  onUpdate: _onUpdate,
 }) => {
   const { activeStageId } = useEditor();
   const [selectedStep, setSelectedStep] = useState<any>(null);
-  const [editingQuestion, setEditingQuestion] = useState<any>(null);
+  const [, setEditingQuestion] = useState<any>(null);
 
   // Identificar o tipo de step atual baseado na configuração JSON
   useEffect(() => {
@@ -42,18 +42,6 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
     }
   }, [activeStageId]);
 
-  // Função para atualizar configurações da questão
-  const handleQuestionUpdate = (updates: Record<string, any>) => {
-    if (selectedBlock && onUpdate) {
-      onUpdate(selectedBlock.id, {
-        ...selectedBlock.properties,
-        quizConfig: {
-          ...selectedBlock.properties?.quizConfig,
-          ...updates,
-        },
-      });
-    }
-  };
 
 
   // Renderizar configurações específicas para cada tipo de step

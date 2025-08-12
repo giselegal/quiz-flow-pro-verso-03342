@@ -58,7 +58,7 @@ const getMarginClass = (
 const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   block,
   onClick,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   disabled: _disabled = false,
   className,
 }) => {
