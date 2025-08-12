@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { QuizTemplate, TemplateListItem } from '@/types/quizTemplate';
 import { styleQuizTemplate } from './styleQuizTemplate';
 

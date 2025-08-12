@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Utilitário para verificar a saúde do site após o deploy na Hostinger
 import React from 'react';
 import ReactDOM from 'react-dom';

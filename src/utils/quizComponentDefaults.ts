@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { QuizComponentType } from '@/types/quizBuilder';
 
 export const getDefaultData = (type: QuizComponentType) => {

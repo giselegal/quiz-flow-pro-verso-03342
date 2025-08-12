@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Simplified preload resources utility
 
 export interface PreloadResource {

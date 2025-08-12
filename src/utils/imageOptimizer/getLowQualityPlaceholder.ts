@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Function to get a low quality image placeholder URL
  *

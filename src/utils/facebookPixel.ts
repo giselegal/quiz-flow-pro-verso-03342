@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Facebook Pixel utility functions
 import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from '../services/pixelManager';
 

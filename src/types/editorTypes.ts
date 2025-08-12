@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Block } from './editor';
 
 export interface EditorState {

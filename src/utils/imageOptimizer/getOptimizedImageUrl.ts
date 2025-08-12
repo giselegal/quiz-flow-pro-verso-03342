@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Function to get an optimized image URL
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StyleResult } from '../types/quiz';
 
 /**

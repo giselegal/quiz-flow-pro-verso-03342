@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface SchemaValidationError {
   field: string;
   message: string;

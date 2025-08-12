@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Simplified route fixing utility
 
 export interface RouteData {

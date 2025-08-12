@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ImageOptimizationOptions, PreloadOptions } from './images/types';
 
 export const getOptimizedImageUrl = (

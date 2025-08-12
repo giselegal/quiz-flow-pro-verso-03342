@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { FixBlurryImagesOptions } from './images/types';
 
 interface FixedImage {

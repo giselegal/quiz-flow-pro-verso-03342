@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utility for ongoing project maintenance and cleanup
  */

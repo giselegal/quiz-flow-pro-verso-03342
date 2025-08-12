@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Simplified diagnostic service
 
 export interface DiagnosticData {

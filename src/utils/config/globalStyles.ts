@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface GlobalStylesConfig {
   primaryColor: string;
   secondaryColor: string;

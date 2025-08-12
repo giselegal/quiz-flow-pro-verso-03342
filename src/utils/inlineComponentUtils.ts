@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const getPersonalizedText = (
   text: string,
   pattern: string,

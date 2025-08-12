@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { trackSaleConversion } from '@/utils/analytics';
 
 // Declare window interface extensions

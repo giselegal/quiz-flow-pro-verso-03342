@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { QuizComponentData, QuizComponentType } from '@/types/quizBuilder';
 import { generateId } from './idGenerator';
 

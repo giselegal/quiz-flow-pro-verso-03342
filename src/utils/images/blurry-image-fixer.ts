@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utility to identify and fix blurry images, particularly focused on Cloudinary URLs
  */

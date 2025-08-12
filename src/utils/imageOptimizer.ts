@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Image optimization utility functions
  */

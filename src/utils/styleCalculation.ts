@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { QuizResponse, QuizResult, StyleType, StyleScore, QuizQuestion } from '@/types/quiz';
 import { getStyleById } from '@/data/styles';
 

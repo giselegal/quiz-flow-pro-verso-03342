@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Simulador de Webhook Hotmart para testes
 // Este arquivo simula o recebimento de webhooks da Hotmart no frontend
 

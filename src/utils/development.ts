@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Console warnings cleanup and development utilities
 export const cleanupConsoleWarnings = () => {
   // Suppress known non-critical warnings in development

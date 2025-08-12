@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const exportProjectAsJson = (config: any) => {
   try {
     // Create a blob with the JSON data

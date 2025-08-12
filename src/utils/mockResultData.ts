@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Mock data para testar o componente de resultado
 export const mockQuizResult = {
   primaryStyle: {

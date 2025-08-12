@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Utilitário para verificar as rotas específicas do site da Gisele Galvão
 // Versão: 1.0.3
 

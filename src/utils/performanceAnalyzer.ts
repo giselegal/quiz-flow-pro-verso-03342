@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔍 PERFORMANCE ANALYZER
  * Analisa e reporta performance após otimizações

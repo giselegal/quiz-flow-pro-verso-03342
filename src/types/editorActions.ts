@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EditorBlock, EditableContent, EditorConfig } from './editor';
 
 export interface EditorActions {

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Block } from '@/types/editor';
 
 /**

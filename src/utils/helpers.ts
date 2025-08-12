@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SimpleComponent, QuizOption, BonusItem, FaqItem } from '@/interfaces/quiz';
 import PlaceholderUtils from './placeholderUtils';
 

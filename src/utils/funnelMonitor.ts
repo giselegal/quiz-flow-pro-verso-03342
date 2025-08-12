@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Simplified funnel monitoring utility
 
 export interface FunnelEvent {

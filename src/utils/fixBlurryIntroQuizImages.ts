@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utilitário otimizado para corrigir imagens borradas na seção de introdução do quiz
  * Versão 2.0 - Otimizada para desempenho

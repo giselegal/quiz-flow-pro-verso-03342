@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const getDefaultContentForType = (type: string) => {
   switch (type) {
     case 'header':

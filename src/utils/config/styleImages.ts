@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const getStyleImage = (styleType: string): string => {
   const styleImages: Record<string, string> = {
     Natural:

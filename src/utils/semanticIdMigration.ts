@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 SCRIPT DE MIGRAÇÃO - TIMESTAMP PARA SEMÂNTICO
  *

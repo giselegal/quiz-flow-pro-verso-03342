@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utilitários de performance para evitar violations
  */

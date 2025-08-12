@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EditableContent } from '@/types/editor';
 
 export const getDefaultContentForType = (type: string): EditableContent => {

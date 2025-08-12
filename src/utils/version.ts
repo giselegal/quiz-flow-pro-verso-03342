@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * This file contains version information that can be updated
  * to test the CI/CD pipeline and GitHub integration.

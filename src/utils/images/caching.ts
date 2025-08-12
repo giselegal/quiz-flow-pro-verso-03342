@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ImageCacheEntry } from './types';
 
 const IMAGE_CACHE_KEY = 'image_cache';

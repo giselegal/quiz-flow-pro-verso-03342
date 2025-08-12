@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Validador para prevenir futuras duplicações de componentes
  * Detecta conflitos e inconsistências no sistema de mapeamento

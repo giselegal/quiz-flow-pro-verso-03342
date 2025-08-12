@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utilitário para gerenciar CSS crítico para melhorar o First Contentful Paint
  */

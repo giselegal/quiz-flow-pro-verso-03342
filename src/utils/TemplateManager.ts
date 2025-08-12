@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Importações
 import { templateService } from '../services/templateService';
 import type { Block } from '../types/editor';

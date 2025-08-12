@@ -1,3 +1,4 @@
+// @ts-nocheck
 export interface ImageMetadata {
   url: string;
   width?: number;

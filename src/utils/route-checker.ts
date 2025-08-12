@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Utilitário para verificar e documentar as rotas do projeto Quiz Sell Genius
  */

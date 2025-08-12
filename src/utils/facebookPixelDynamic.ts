@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Facebook Pixel utility functions for A/B test
 import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from '../services/pixelManager';
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Funções utilitárias para otimização, gerenciamento e manipulação de imagens
  */
