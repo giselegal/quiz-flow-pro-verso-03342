@@ -153,11 +153,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         />
       )}
 
-      <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative overflow-hidden">
+      <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
         {/* Overlay sutil para mais elegância */}
         <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
 
-        <div className="flex flex-col flex-1 relative z-10 overflow-hidden">
+        <div className="flex flex-col flex-1 relative z-10 overflow-y-auto">
           <div className="flex-shrink-0">
             <EditorToolbar
               isPreviewing={isPreviewing}
@@ -184,76 +184,78 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             </div>
           </div>
 
-          <FourColumnLayout
-            stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
-            componentsPanel={
-              <CombinedComponentsPanel
-                currentStepNumber={getStepNumberFromStageId(activeStageId)}
-              />
-            }
-            canvas={
-              <div
-                ref={scrollRef}
-                className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
-              >
-                <div className={getCanvasClassName()}>
-                  <CanvasDropZone
-                    blocks={currentBlocks}
-                    selectedBlockId={selectedBlockId}
-                    isPreviewing={isPreviewing}
-                    activeStageId={activeStageId}
-                    stageCount={stageCount}
-                    onSelectBlock={setSelectedBlockId}
-                    onUpdateBlock={updateBlock}
-                    onDeleteBlock={handleDeleteBlock}
-                  />
-                </div>
-              </div>
-            }
-            propertiesPanel={
-              !isPreviewing && selectedBlock ? (
-                <EnhancedUniversalPropertiesPanel
-                  selectedBlock={{
-                    id: selectedBlock.id,
-                    type: selectedBlock.type,
-                    properties: {
-                      ...(selectedBlock.properties || {}),
-                      ...(selectedBlock.content || {}),
-                    },
-                  }}
-                  onUpdate={(blockId: string, updates: Record<string, any>) => {
-                    updateBlock(blockId, updates);
-                  }}
-                  onDelete={handleDeleteBlock}
-                  onClose={() => setSelectedBlockId(null)}
+          <div className="min-h-0 flex-1">
+            <FourColumnLayout
+              stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
+              componentsPanel={
+                <CombinedComponentsPanel
+                  currentStepNumber={getStepNumberFromStageId(activeStageId)}
                 />
-              ) : !isPreviewing ? (
-                <div className="h-full p-4 flex items-center justify-center text-stone-500">
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
-                      <Settings className="w-8 h-8 text-stone-400" />
-                    </div>
-                    <p className="text-sm font-medium">Clique em um componente para personalizar</p>
-                    <p className="text-xs text-stone-400 mt-2">
-                      As propriedades específicas do componente
-                      <br />
-                      aparecerão aqui quando selecionado
-                    </p>
-                    <div className="mt-4 text-xs text-stone-400 space-y-1">
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                        <span>Texto, Botão, Imagem</span>
+              }
+              canvas={
+                <div
+                  ref={scrollRef}
+                  className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
+                >
+                  <div className={getCanvasClassName()}>
+                    <CanvasDropZone
+                      blocks={currentBlocks}
+                      selectedBlockId={selectedBlockId}
+                      isPreviewing={isPreviewing}
+                      activeStageId={activeStageId}
+                      stageCount={stageCount}
+                      onSelectBlock={setSelectedBlockId}
+                      onUpdateBlock={updateBlock}
+                      onDeleteBlock={handleDeleteBlock}
+                    />
+                  </div>
+                </div>
+              }
+              propertiesPanel={
+                !isPreviewing && selectedBlock ? (
+                  <EnhancedUniversalPropertiesPanel
+                    selectedBlock={{
+                      id: selectedBlock.id,
+                      type: selectedBlock.type,
+                      properties: {
+                        ...(selectedBlock.properties || {}),
+                        ...(selectedBlock.content || {}),
+                      },
+                    }}
+                    onUpdate={(blockId: string, updates: Record<string, any>) => {
+                      updateBlock(blockId, updates);
+                    }}
+                    onDelete={handleDeleteBlock}
+                    onClose={() => setSelectedBlockId(null)}
+                  />
+                ) : !isPreviewing ? (
+                  <div className="h-full p-4 flex items-center justify-center text-stone-500">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
+                        <Settings className="w-8 h-8 text-stone-400" />
                       </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                        <span>Propriedades específicas por tipo</span>
+                      <p className="text-sm font-medium">Clique em um componente para personalizar</p>
+                      <p className="text-xs text-stone-400 mt-2">
+                        As propriedades específicas do componente
+                        <br />
+                        aparecerão aqui quando selecionado
+                      </p>
+                      <div className="mt-4 text-xs text-stone-400 space-y-1">
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                          <span>Texto, Botão, Imagem</span>
+                        </div>
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                          <span>Propriedades específicas por tipo</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ) : null
-            }
-          />
+                ) : null
+              }
+            />
+          </div>
         </div>
 
         {/* Painel de Configurações do Funil */}

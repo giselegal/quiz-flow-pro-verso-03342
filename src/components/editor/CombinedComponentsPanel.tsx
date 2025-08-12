@@ -11,9 +11,9 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
   currentStepNumber = 1,
 }) => {
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-hidden">
       <Tabs defaultValue="blocks" className="h-full flex flex-col">
-        <div className="border-b border-border/50 bg-card/80 p-2">
+        <div className="flex-shrink-0 border-b border-border/50 bg-card/80 p-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="blocks" className="flex items-center gap-2 text-xs">
               <Grid3X3 className="h-3 w-3" />
@@ -27,18 +27,20 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
         </div>
 
         <div className="flex-1 overflow-hidden">
-          <TabsContent value="blocks" className="h-full m-0 p-0">
+          <TabsContent value="blocks" className="h-full m-0 p-0 overflow-hidden">
             <EnhancedComponentsSidebar />
           </TabsContent>
 
-          <TabsContent value="reusable" className="h-full m-0 p-0 overflow-auto">
-            <div className="p-2">
-              <ReusableComponentsPanel
-                currentStepNumber={currentStepNumber}
-                onComponentAdd={type => {
-                  console.log(`✅ Componente reutilizável ${type} adicionado!`);
-                }}
-              />
+          <TabsContent value="reusable" className="h-full m-0 p-0">
+            <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">
+              <div className="p-2">
+                <ReusableComponentsPanel
+                  currentStepNumber={currentStepNumber}
+                  onComponentAdd={type => {
+                    console.log(`✅ Componente reutilizável ${type} adicionado!`);
+                  }}
+                />
+              </div>
             </div>
           </TabsContent>
         </div>
