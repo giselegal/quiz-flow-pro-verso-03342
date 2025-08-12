@@ -1,0 +1,153 @@
+{
+  "id": "etapa-10-estrategica-objetivos",
+  "name": "Etapa 10: Objetivos Estratégicos",
+  "description": "Questões sobre os objetivos principais a serem alcançados com o novo estilo",
+  "version": "1.0.0",
+  "type": "quiz-strategic",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "strategic",
+    "stepNumber": 10,
+    "totalSteps": 21,
+    "estimatedTime": "1 minuto"
+  },
+  "blocks": [
+    {
+      "id": "header-estrategica-objetivos",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Seus Objetivos",
+        "subtitle": "O que você deseja alcançar com seu novo estilo?",
+        "description": "Definir objetivos claros nos ajuda a criar um plano mais eficaz para você.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 10,
+        "totalSteps": 21,
+        "quizType": "strategic"
+      }
+    },
+    {
+      "id": "content-estrategica-objetivos",
+      "type": "QuizContentIntegration",
+      "properties": {
+        "question": "Quais são seus principais objetivos ao buscar um novo estilo?",
+        "description": "Você pode selecionar até 3 opções que melhor representam o que deseja alcançar.",
+        "questionType": "strategicQuestions",
+        "multiSelect": true,
+        "required": true,
+        "options": [
+          {
+            "id": "objetivo-autenticidade",
+            "text": "Expressar minha autenticidade e personalidade através das roupas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/objetivo-autenticidade.jpg",
+            "points": 5,
+            "strategicCategory": "self-expression",
+            "goalType": "identity"
+          },
+          {
+            "id": "objetivo-praticidade",
+            "text": "Ter um guarda-roupa versátil e prático para o dia a dia",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/objetivo-praticidade.jpg",
+            "points": 5,
+            "strategicCategory": "practicality",
+            "goalType": "functional"
+          },
+          {
+            "id": "objetivo-confianca",
+            "text": "Sentir mais confiança e segurança com minha aparência",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/objetivo-confianca.jpg",
+            "points": 5,
+            "strategicCategory": "confidence",
+            "goalType": "emotional"
+          },
+          {
+            "id": "objetivo-profissional",
+            "text": "Projetar uma imagem profissional mais alinhada com meus objetivos de carreira",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/objetivo-profissional.jpg",
+            "points": 5,
+            "strategicCategory": "professional",
+            "goalType": "career"
+          },
+          {
+            "id": "objetivo-economia",
+            "text": "Economizar tempo e dinheiro com escolhas mais assertivas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/objetivo-economia.jpg",
+            "points": 5,
+            "strategicCategory": "efficiency",
+            "goalType": "practical"
+          },
+          {
+            "id": "objetivo-atualizacao",
+            "text": "Atualizar meu visual para algo mais contemporâneo e atual",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/objetivo-atualizacao.jpg",
+            "points": 5,
+            "strategicCategory": "modernity",
+            "goalType": "trend"
+          }
+        ]
+      },
+      "config": {
+        "maxSelections": 3,
+        "minSelections": 1,
+        "showImages": true,
+        "imageLayout": "grid",
+        "imageSize": "medium"
+      }
+    },
+    {
+      "id": "navigation-estrategica-objetivos",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Continuar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isStrategic": true
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["question_viewed", "option_selected", "question_completed"]
+    },
+    "validation": {
+      "requireMinSelections": true,
+      "showValidationErrors": true,
+      "validationErrorMessage": "Por favor, selecione ao menos uma opção para continuar."
+    },
+    "navigation": {
+      "allowSkip": false,
+      "showProgress": true,
+      "autoAdvance": true
+    },
+    "styling": {
+      "theme": "strategic",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-11-transicao-demografica",
+    "dataCollection": {
+      "storeSelections": true,
+      "updateUserProfile": true,
+      "fieldMapping": {
+        "goalType": "user.strategy.goals",
+        "strategicCategory": "user.strategy.goalCategories"
+      }
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-11-transicao-demografica"
+    }
+  }
+}

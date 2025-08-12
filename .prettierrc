@@ -7,7 +7,5 @@
   "trailingComma": "es5",
   "bracketSpacing": true,
   "arrowParens": "avoid",
-  "cacheLocation": ".cache/prettier",
-  "cacheStrategy": "content",
   "endOfLine": "lf"
 }

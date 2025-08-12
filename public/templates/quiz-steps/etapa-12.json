@@ -1,0 +1,146 @@
+{
+  "id": "etapa-12-demografica-idade",
+  "name": "Etapa 12: Dados Demográficos - Idade",
+  "description": "Coleta de informações sobre a faixa etária",
+  "version": "1.0.0",
+  "type": "quiz-demographic",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "demographic",
+    "stepNumber": 12,
+    "totalSteps": 21,
+    "estimatedTime": "30 segundos"
+  },
+  "blocks": [
+    {
+      "id": "header-demografica-idade",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Sua Faixa Etária",
+        "subtitle": "Ajude-nos a personalizar melhor nossas recomendações",
+        "description": "Diferentes idades têm diferentes necessidades e preferências de estilo.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 12,
+        "totalSteps": 21,
+        "quizType": "demographic"
+      }
+    },
+    {
+      "id": "content-demografica-idade",
+      "type": "QuizContentIntegration",
+      "properties": {
+        "question": "Qual é a sua faixa etária?",
+        "description": "Esta informação nos ajuda a personalizar as recomendações de estilo de acordo com sua fase de vida.",
+        "questionType": "demographicQuestions",
+        "multiSelect": false,
+        "required": true,
+        "options": [
+          {
+            "id": "idade-18-24",
+            "text": "18-24 anos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/demographic/idade-18-24.jpg",
+            "demographicCategory": "age",
+            "ageGroup": "young-adult"
+          },
+          {
+            "id": "idade-25-34",
+            "text": "25-34 anos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/demographic/idade-25-34.jpg",
+            "demographicCategory": "age",
+            "ageGroup": "adult"
+          },
+          {
+            "id": "idade-35-44",
+            "text": "35-44 anos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/demographic/idade-35-44.jpg",
+            "demographicCategory": "age",
+            "ageGroup": "mid-adult"
+          },
+          {
+            "id": "idade-45-54",
+            "text": "45-54 anos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/demographic/idade-45-54.jpg",
+            "demographicCategory": "age",
+            "ageGroup": "mature"
+          },
+          {
+            "id": "idade-55-64",
+            "text": "55-64 anos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/demographic/idade-55-64.jpg",
+            "demographicCategory": "age",
+            "ageGroup": "senior"
+          },
+          {
+            "id": "idade-65-mais",
+            "text": "65 anos ou mais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/demographic/idade-65-mais.jpg",
+            "demographicCategory": "age",
+            "ageGroup": "elder"
+          }
+        ]
+      },
+      "config": {
+        "maxSelections": 1,
+        "minSelections": 1,
+        "showImages": true,
+        "imageLayout": "grid",
+        "imageSize": "medium"
+      }
+    },
+    {
+      "id": "navigation-demografica-idade",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Continuar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isDemographic": true
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["question_viewed", "option_selected", "question_completed"]
+    },
+    "validation": {
+      "requireMinSelections": true,
+      "showValidationErrors": true,
+      "validationErrorMessage": "Por favor, selecione uma opção para continuar."
+    },
+    "navigation": {
+      "allowSkip": false,
+      "showProgress": true,
+      "autoAdvance": true
+    },
+    "styling": {
+      "theme": "demographic",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-13-demografica-profissao",
+    "dataCollection": {
+      "storeSelections": true,
+      "updateUserProfile": true,
+      "fieldMapping": {
+        "ageGroup": "user.demographic.ageGroup"
+      }
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-13-demografica-profissao"
+    }
+  }
+}

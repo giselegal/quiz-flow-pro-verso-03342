@@ -1,0 +1,153 @@
+{
+  "id": "etapa-09-estrategica-desafios",
+  "name": "Etapa 9: Desafios Estratégicos",
+  "description": "Questões sobre os principais desafios enfrentados com o estilo atual",
+  "version": "1.0.0",
+  "type": "quiz-strategic",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "strategic",
+    "stepNumber": 9,
+    "totalSteps": 21,
+    "estimatedTime": "1 minuto"
+  },
+  "blocks": [
+    {
+      "id": "header-estrategica-desafios",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Seus Desafios",
+        "subtitle": "Quais desafios você enfrenta com seu estilo atual?",
+        "description": "Identificar os desafios nos ajuda a oferecer soluções mais direcionadas.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 9,
+        "totalSteps": 21,
+        "quizType": "strategic"
+      }
+    },
+    {
+      "id": "content-estrategica-desafios",
+      "type": "QuizContentIntegration",
+      "properties": {
+        "question": "Qual é o seu maior desafio atual em relação ao seu estilo?",
+        "description": "Você pode selecionar até 2 opções que representam seus principais desafios.",
+        "questionType": "strategicQuestions",
+        "multiSelect": true,
+        "required": true,
+        "options": [
+          {
+            "id": "desafio-tempo",
+            "text": "Não tenho tempo para pensar em combinações todos os dias",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/desafio-tempo.jpg",
+            "points": 5,
+            "strategicCategory": "time-management",
+            "challengeType": "practical"
+          },
+          {
+            "id": "desafio-combinar",
+            "text": "Tenho dificuldade em combinar peças e criar looks",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/desafio-combinar.jpg",
+            "points": 5,
+            "strategicCategory": "styling-skills",
+            "challengeType": "knowledge"
+          },
+          {
+            "id": "desafio-tamanho",
+            "text": "Tenho dificuldade em encontrar roupas do meu tamanho que me valorizam",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/desafio-tamanho.jpg",
+            "points": 5,
+            "strategicCategory": "body-image",
+            "challengeType": "physical"
+          },
+          {
+            "id": "desafio-estilo",
+            "text": "Não sei qual estilo realmente combina comigo",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/desafio-estilo.jpg",
+            "points": 5,
+            "strategicCategory": "identity",
+            "challengeType": "personal"
+          },
+          {
+            "id": "desafio-gasto",
+            "text": "Gasto muito com roupas mas sinto que não tenho o que vestir",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/desafio-gasto.jpg",
+            "points": 5,
+            "strategicCategory": "budget",
+            "challengeType": "financial"
+          },
+          {
+            "id": "desafio-conforto",
+            "text": "Tenho dificuldade em conciliar conforto com um visual mais elaborado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1713476980/quiz-assets/strategic/desafio-conforto.jpg",
+            "points": 5,
+            "strategicCategory": "comfort",
+            "challengeType": "balance"
+          }
+        ]
+      },
+      "config": {
+        "maxSelections": 2,
+        "minSelections": 1,
+        "showImages": true,
+        "imageLayout": "grid",
+        "imageSize": "medium"
+      }
+    },
+    {
+      "id": "navigation-estrategica-desafios",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Continuar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isStrategic": true
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["question_viewed", "option_selected", "question_completed"]
+    },
+    "validation": {
+      "requireMinSelections": true,
+      "showValidationErrors": true,
+      "validationErrorMessage": "Por favor, selecione ao menos uma opção para continuar."
+    },
+    "navigation": {
+      "allowSkip": false,
+      "showProgress": true,
+      "autoAdvance": true
+    },
+    "styling": {
+      "theme": "strategic",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-10-estrategica-objetivos",
+    "dataCollection": {
+      "storeSelections": true,
+      "updateUserProfile": true,
+      "fieldMapping": {
+        "challengeType": "user.strategy.challenges",
+        "strategicCategory": "user.strategy.challengeCategories"
+      }
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-10-estrategica-objetivos"
+    }
+  }
+}

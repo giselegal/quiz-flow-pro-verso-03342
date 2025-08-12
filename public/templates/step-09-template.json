@@ -14,20 +14,20 @@
   },
   "analytics": {
     "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-04-quiz-question"
+    "trackingId": "step-09-quiz-question"
   },
   "metadata": {
-    "id": "quiz-step-04",
-    "name": "Q3 - Estilo Pessoal",
-    "description": "Questão sobre preferências de estilo",
+    "id": "quiz-step-09",
+    "name": "Q8 - Acessórios",
+    "description": "Questão sobre uso de acessórios",
     "category": "quiz-question",
     "tags": ["quiz", "style", "quiz-question"],
-    "createdAt": "2025-08-11T01:02:19.341Z",
-    "updatedAt": "2025-08-11T01:02:19.341Z"
+    "createdAt": "2025-08-11T01:02:19.342Z",
+    "updatedAt": "2025-08-11T01:02:19.342Z"
   },
   "blocks": [
     {
-      "id": "step04-header",
+      "id": "step09-header",
       "type": "quiz-intro-header",
       "position": 0,
       "properties": {
@@ -35,7 +35,7 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 19,
+        "progressValue": 43,
         "progressTotal": 100,
         "showProgress": true,
         "containerWidth": "full",
@@ -43,11 +43,11 @@
       }
     },
     {
-      "id": "step04-question-title",
+      "id": "step09-question-title",
       "type": "text-inline",
       "position": 1,
       "properties": {
-        "content": "Q3 - ESTILO PESSOAL",
+        "content": "Q8 - ACESSÓRIOS",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -57,11 +57,11 @@
       }
     },
     {
-      "id": "step04-question-counter",
+      "id": "step09-question-counter",
       "type": "text-inline",
       "position": 2,
       "properties": {
-        "content": "Questão 3 de 13",
+        "content": "Questão 8 de 13",
         "fontSize": "text-sm",
         "textAlign": "text-center",
         "color": "#6B7280",
@@ -71,40 +71,40 @@
       }
     },
     {
-      "id": "step04-options-grid",
+      "id": "step09-options-grid",
       "type": "options-grid",
       "position": 3,
       "properties": {
         "options": [
           {
-            "id": "4a",
+            "id": "9a",
             "text": "Opção A - Descrição personalizada",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "4a",
+            "value": "9a",
             "category": "Natural",
             "points": 1
           },
           {
-            "id": "4b",
+            "id": "9b",
             "text": "Opção B - Descrição personalizada",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "4b",
+            "value": "9b",
             "category": "Clássico",
             "points": 2
           },
           {
-            "id": "4c",
+            "id": "9c",
             "text": "Opção C - Descrição personalizada",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "4c",
+            "value": "9c",
             "category": "Contemporâneo",
             "points": 2
           },
           {
-            "id": "4d",
+            "id": "9d",
             "text": "Opção D - Descrição personalizada",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "4d",
+            "value": "9d",
             "category": "Elegante",
             "points": 3
           }
@@ -124,7 +124,7 @@
       }
     },
     {
-      "id": "step04-continue-button",
+      "id": "step09-continue-button",
       "type": "button-inline",
       "position": 4,
       "properties": {

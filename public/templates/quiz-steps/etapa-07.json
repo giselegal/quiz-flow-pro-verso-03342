@@ -1,0 +1,92 @@
+{
+  "id": "etapa-07-transicao-estrategicas",
+  "name": "Etapa 7: Transição para Questões Estratégicas",
+  "description": "Transição entre as perguntas de personalidade e as questões estratégicas finais",
+  "version": "1.0.0",
+  "type": "quiz-transition",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "transition",
+    "stepNumber": 7,
+    "totalSteps": 21,
+    "estimatedTime": "30 segundos"
+  },
+  "blocks": [
+    {
+      "id": "header-transicao-estrategicas",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Estamos quase lá!",
+        "subtitle": "Últimas perguntas para finalizar seu perfil",
+        "description": "Agora vamos fazer algumas perguntas específicas para entender melhor suas motivações e objetivos.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 7,
+        "totalSteps": 21,
+        "quizType": "strategic"
+      }
+    },
+    {
+      "id": "transition-message-estrategicas",
+      "type": "QuizTransition",
+      "properties": {
+        "message": "Excelente! Já conhecemos muito sobre seu estilo e personalidade. Para finalizar, precisamos entender seus objetivos específicos e motivações para criar recomendações personalizadas que realmente funcionem para você.",
+        "variant": "info",
+        "showDivider": true,
+        "showButton": true,
+        "buttonText": "Vamos finalizar!"
+      }
+    },
+    {
+      "id": "navigation-transicao-estrategicas",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Continuar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isStrategic": true
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["transition_viewed", "section_completed", "next_section_started"]
+    },
+    "validation": {
+      "requireMinSelections": false,
+      "showValidationErrors": false
+    },
+    "navigation": {
+      "allowSkip": true,
+      "showProgress": true,
+      "autoAdvance": false
+    },
+    "styling": {
+      "theme": "transition",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-08-estrategica-motivacao",
+    "dataCollection": {
+      "storeSelections": false,
+      "updateUserProfile": true,
+      "fieldMapping": {}
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-08-estrategica-motivacao"
+    }
+  }
+}

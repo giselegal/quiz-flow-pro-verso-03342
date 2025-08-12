@@ -1,167 +1,261 @@
 {
   "templateVersion": "2.0",
-  "metadata": {
-    "id": "quiz-step-21",
-    "name": "Resultado do Quiz",
-    "description": "Página de resultado final do quiz",
-    "category": "quiz-result",
-    "type": "result",
-    "tags": ["quiz", "result", "final", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
-    "author": "giselegal"
-  },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif"
-  },
+  "stepNumber": 21,
+  "stepName": "Oferta Exclusiva",
+  "description": "Página de oferta com componentes modulares editáveis",
   "layout": {
     "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
+    "spacing": "large",
+    "backgroundColor": "#FFFBF7",
     "responsive": true
+  },
+  "validation": {
+    "required": false,
+    "minAnswers": 0,
+    "maxAnswers": 1,
+    "validationMessage": "Clique para continuar"
+  },
+  "analytics": {
+    "events": ["page_view", "cta_clicked", "section_viewed", "countdown_expired"],
+    "trackingId": "step-21-offer-page"
+  },
+  "metadata": {
+    "id": "quiz-step-21-offer",
+    "name": "Oferta Exclusiva - Etapa 21",
+    "description": "Página completa de oferta com seções modulares",
+    "category": "offer-page",
+    "tags": ["quiz", "style", "offer", "landing-page"],
+    "createdAt": "2025-08-11T01:02:19.345Z",
+    "updatedAt": "2025-08-11T10:30:00.000Z"
+  },
+  "styles": {
+    "theme": "offer-page",
+    "colors": {
+      "primary": "#B89B7A",
+      "secondary": "#432818",
+      "accent": "#aa6b5d",
+      "background": "#FFFBF7",
+      "white": "#ffffff",
+      "textDark": "#432818",
+      "textMedium": "#6B4F43",
+      "textLight": "#8B7355",
+      "success": "#22c55e"
+    },
+    "fonts": {
+      "primary": "Inter",
+      "heading": "Playfair Display"
+    },
+    "spacing": {
+      "section": "4rem",
+      "container": "1200px"
+    }
   },
   "blocks": [
     {
-      "id": "step21-header",
-      "type": "quiz-intro-header",
+      "id": "offer-header",
+      "type": "offer-header",
       "position": 0,
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 100,
-        "progressTotal": 100,
-        "showProgress": true,
-        "showBackButton": false,
+        "logoWidth": 180,
+        "logoHeight": 80,
+        "isSticky": true,
+        "backgroundColor": "rgba(255, 255, 255, 0.9)",
+        "backdropBlur": true,
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
-      "id": "step21-congratulations",
-      "type": "text-inline",
+      "id": "hero-section",
+      "type": "offer-hero-section",
       "position": 1,
       "properties": {
-        "content": "🎉 Parabéns!",
-        "fontSize": "text-3xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
+        "badgeText": "3000+ mulheres transformadas",
+        "badgeIcon": "Award",
+        "title": "Etapa 21:",
+        "titleHighlight": "Oferta Exclusiva",
+        "titleSuffix": "Para Seu Estilo!",
+        "subtitle": "Leve sua transformação de estilo para o próximo nível com nosso **Guia Completo personalizado** para seu resultado",
+        "heroImageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp",
+        "heroImageAlt": "Transformação de guarda-roupa",
+        "heroImageWidth": 600,
+        "heroImageHeight": 400,
+        "ctaText": "Sim! Quero Garantir Meu Acesso",
+        "ctaIcon": "ArrowRight",
+        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "trustElements": [
+          {
+            "icon": "Lock",
+            "text": "100% Seguro"
+          },
+          {
+            "icon": "Shield",
+            "text": "7 Dias Garantia"
+          }
+        ],
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "large"
       }
     },
     {
-      "id": "step21-result-title",
-      "type": "text-inline",
+      "id": "problem-section",
+      "type": "offer-problem-section",
       "position": 2,
       "properties": {
-        "content": "Seu Estilo Pessoal Foi Identificado",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-semibold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
+        "title": "Você se identifica com isso?",
+        "problems": [
+          "**Guarda-roupa cheio** mas nunca tem o que vestir?",
+          "**Compra peças** que nunca combinam com nada?",
+          "**Sente que \"nada fica bom\"** em você?"
+        ],
+        "highlightText": "Isso acontece porque você ainda não descobriu seu **estilo predominante**.",
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp",
+        "imageAlt": "Frustração com guarda-roupa",
+        "imageWidth": 500,
+        "imageHeight": 350,
+        "layout": "side-by-side",
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "large"
       }
     },
     {
-      "id": "step21-result-description",
-      "type": "text-inline",
+      "id": "solution-section",
+      "type": "offer-solution-section",
       "position": 3,
       "properties": {
-        "content": "Com base nas suas respostas, identificamos seu estilo único. Agora você pode descobrir as melhores peças e combinações para expressar sua personalidade através da moda.",
-        "fontSize": "text-lg",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 32,
+        "title": "A Solução: Quiz de Estilo",
+        "description": "Método preciso para identificar seu estilo entre os **7 estilos universais** + guia personalizado completo.",
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp",
+        "imageAlt": "Quiz de Estilo",
+        "imageWidth": 400,
+        "imageHeight": 300,
+        "ctaText": "Fazer o Quiz Agora",
+        "ctaIcon": "ShoppingBag",
+        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "showCountdown": true,
+        "countdownInitial": {
+          "hours": 1,
+          "minutes": 59,
+          "seconds": 59
+        },
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "large"
       }
     },
     {
-      "id": "step21-result-image",
-      "type": "image-display-inline",
+      "id": "product-showcase",
+      "type": "offer-product-showcase",
       "position": 4,
       "properties": {
-        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/result_style.webp",
-        "alt": "Seu estilo pessoal",
-        "width": 400,
-        "height": 300,
-        "borderRadius": "16px",
-        "shadow": "0 4px 20px rgba(184, 155, 122, 0.10)",
+        "title": "Transformação Completa",
+        "subtitle": "Tudo que você precisa para descobrir e aplicar seu estilo",
+        "products": [
+          {
+            "id": "main-guide",
+            "title": "Guia Personalizado",
+            "description": "Para seu estilo específico",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp",
+            "imageAlt": "Guia Personalizado",
+            "imageWidth": 250,
+            "imageHeight": 312
+          },
+          {
+            "id": "bonus-key-pieces",
+            "title": "Bônus: Peças-Chave",
+            "description": "Guarda-roupa funcional",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp",
+            "imageAlt": "Bônus Peças-Chave",
+            "imageWidth": 250,
+            "imageHeight": 312
+          },
+          {
+            "id": "bonus-visagism",
+            "title": "Bônus: Visagismo",
+            "description": "Valorize seus traços",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
+            "imageAlt": "Bônus Visagismo",
+            "imageWidth": 250,
+            "imageHeight": 312
+          }
+        ],
+        "pricing": {
+          "installments": {
+            "quantity": 5,
+            "amount": "8,83"
+          },
+          "fullPrice": "39,90",
+          "discount": "77% OFF",
+          "savings": "R$ 135,10",
+          "limitedOffer": true
+        },
+        "finalCtaText": "Garantir Minha Transformação",
+        "finalCtaIcon": "ShoppingCart",
+        "finalCtaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
         "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 24
+        "spacing": "large"
       }
     },
     {
-      "id": "step21-cta-button",
-      "type": "button-inline",
+      "id": "guarantee-section",
+      "type": "offer-guarantee-section",
       "position": 5,
       "properties": {
-        "text": "Ver Meu Resultado Completo →",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "animation": "hover:scale-105, active:scale-95",
+        "title": "7 Dias de Garantia",
+        "description": "Se não ficar satisfeita, devolvemos **100% do seu dinheiro**. Sem perguntas.",
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp",
+        "imageAlt": "Garantia 7 dias",
+        "imageWidth": 200,
+        "imageHeight": 200,
+        "layout": "centered",
         "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
+        "spacing": "large"
       }
     },
     {
-      "id": "step21-share-button",
-      "type": "button-inline",
+      "id": "faq-section",
+      "type": "offer-faq-section",
       "position": 6,
       "properties": {
-        "text": "Compartilhar Resultado",
-        "variant": "secondary",
-        "size": "medium",
-        "fullWidth": true,
-        "backgroundColor": "transparent",
-        "textColor": "#B89B7A",
-        "borderColor": "#B89B7A",
-        "borderWidth": "2px",
-        "borderRadius": "10px",
-        "animation": "hover:scale-105, active:scale-95",
+        "title": "Perguntas Frequentes",
+        "questions": [
+          {
+            "question": "Quanto tempo leva para fazer o quiz?",
+            "answer": "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida."
+          },
+          {
+            "question": "Como recebo os materiais após a compra?",
+            "answer": "Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais."
+          },
+          {
+            "question": "Os guias servem para qualquer tipo físico?",
+            "answer": "Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único."
+          },
+          {
+            "question": "Preciso ter conhecimento prévio sobre moda?",
+            "answer": "Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática."
+          },
+          {
+            "question": "Posso acessar os materiais pelo celular?",
+            "answer": "Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone."
+          },
+          {
+            "question": "E se eu não gostar do conteúdo?",
+            "answer": "Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento."
+          },
+          {
+            "question": "Quanto tempo terei acesso aos materiais?",
+            "answer": "O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração."
+          },
+          {
+            "question": "Os guias funcionam para qualquer idade?",
+            "answer": "Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida."
+          }
+        ],
         "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 16
+        "spacing": "large"
       }
     }
-  ],
-  "validation": {
-    "required": false
-  },
-  "analytics": {
-    "trackingId": "step-21-quiz-result",
-    "events": ["page_view", "interaction", "completion", "share"],
-    "utmParams": true,
-    "customEvents": ["result_view", "cta_click", "share_click"]
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": null,
-      "prevStep": "step-20",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": {
-      "enabled": false
-    },
-    "conditions": null
-  }
+  ]
 }

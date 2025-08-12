@@ -1,28 +1,29 @@
 {
-  "templateVersion": "2.0",
-  "metadata": {
-    "id": "quiz-step-20",
-    "name": "Q12 - ÚLTIMA QUESTÃO",
-    "description": "Questão 12 de 13 - Última questão do quiz",
-    "category": "quiz-question",
-    "type": "question",
-    "tags": ["quiz", "final-question", "quiz-question", "gisele-galvao"],
-    "createdAt": "2025-08-10T03:45:03.511Z",
-    "updatedAt": "2025-08-10T03:45:03.511Z",
-    "author": "giselegal"
-  },
-  "design": {
-    "primaryColor": "#B89B7A",
-    "secondaryColor": "#432818",
-    "accentColor": "#aa6b5d",
-    "backgroundColor": "#FAF9F7",
-    "fontFamily": "'Playfair Display', 'Inter', serif"
-  },
+  "templateVersion": "1.0",
   "layout": {
     "containerWidth": "full",
-    "spacing": "responsive",
-    "backgroundColor": "#FAF9F7",
+    "spacing": "small",
+    "backgroundColor": "transparent",
     "responsive": true
+  },
+  "validation": {
+    "required": true,
+    "minAnswers": 1,
+    "maxAnswers": 3,
+    "validationMessage": "Selecione pelo menos uma opção!"
+  },
+  "analytics": {
+    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "trackingId": "step-20-lead"
+  },
+  "metadata": {
+    "id": "quiz-step-20",
+    "name": "Lead Capture",
+    "description": "Coleta de dados para contato",
+    "category": "lead",
+    "tags": ["quiz", "style", "lead"],
+    "createdAt": "2025-08-11T01:02:19.345Z",
+    "updatedAt": "2025-08-11T01:02:19.345Z"
   },
   "blocks": [
     {
@@ -37,146 +38,34 @@
         "progressValue": 95,
         "progressTotal": 100,
         "showProgress": true,
-        "showBackButton": true,
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
-      "id": "step20-question-title",
+      "id": "step20-title",
       "type": "text-inline",
       "position": 1,
       "properties": {
-        "content": "QUAL É O SEU OBJETIVO PRINCIPAL COM A MODA?",
+        "content": "RECEBA SEU GUIA DE ESTILO COMPLETO",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
         "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
-      "id": "step20-question-counter",
-      "type": "text-inline",
+      "id": "step20-form",
+      "type": "lead-form",
       "position": 2,
       "properties": {
-        "content": "Questão 12 de 13 - Última questão!",
-        "fontSize": "text-sm",
-        "textAlign": "text-center",
-        "color": "#6B7280",
-        "marginBottom": 24,
+        "fields": ["name", "email", "phone"],
+        "submitText": "Receber Guia Gratuito",
         "containerWidth": "full",
         "spacing": "small"
       }
-    },
-    {
-      "id": "step20-options-grid",
-      "type": "options-grid",
-      "position": 3,
-      "properties": {
-        "options": [
-          {
-            "id": "12a",
-            "text": "Sentir-me confortável e autêntica",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/goal1_comfort.webp",
-            "styleCategory": "Natural",
-            "points": 1
-          },
-          {
-            "id": "12b",
-            "text": "Transmitir profissionalismo e elegância",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/goal2_professional.webp",
-            "styleCategory": "Clássico",
-            "points": 2
-          },
-          {
-            "id": "12c",
-            "text": "Estar sempre na moda e atual",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/goal3_trendy.webp",
-            "styleCategory": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "12d",
-            "text": "Expressar minha personalidade única",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/goal4_unique.webp",
-            "styleCategory": "Criativo",
-            "points": 4
-          }
-        ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginBottom": 16,
-        "selectionStyle": "glow",
-        "animationType": "scale",
-        "validationMessage": "Selecione uma opção para finalizar o quiz.",
-        "scoring": {
-          "enabled": true,
-          "categories": ["Natural", "Clássico", "Contemporâneo", "Criativo"]
-        }
-      }
-    },
-    {
-      "id": "step20-continue-button",
-      "type": "button-inline",
-      "position": 4,
-      "properties": {
-        "text": "Finalizar Quiz e Ver Resultado →",
-        "textWhenDisabled": "Selecione uma opção para finalizar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 24
-      }
     }
-  ],
-  "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para finalizar o quiz."
-  },
-  "analytics": {
-    "trackingId": "step-20-quiz-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
-    "utmParams": true,
-    "customEvents": ["quiz_completion"]
-  },
-  "logic": {
-    "navigation": {
-      "nextStep": "step-21",
-      "prevStep": "step-19",
-      "allowBack": true,
-      "autoAdvance": false
-    },
-    "scoring": {
-      "enabled": true,
-      "method": "category-points",
-      "categories": ["Natural", "Clássico", "Contemporâneo", "Criativo"]
-    },
-    "conditions": null
-  }
+  ]
 }

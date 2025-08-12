@@ -14,20 +14,20 @@
   },
   "analytics": {
     "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-01-intro"
+    "trackingId": "step-16-processing"
   },
   "metadata": {
-    "id": "quiz-step-01",
-    "name": "Introdução",
-    "description": "Página inicial do quiz",
-    "category": "intro",
-    "tags": ["quiz", "style", "intro"],
-    "createdAt": "2025-08-11T01:02:19.339Z",
-    "updatedAt": "2025-08-11T01:02:19.340Z"
+    "id": "quiz-step-16",
+    "name": "Processamento",
+    "description": "Página de carregamento do resultado",
+    "category": "processing",
+    "tags": ["quiz", "style", "processing"],
+    "createdAt": "2025-08-11T01:02:19.344Z",
+    "updatedAt": "2025-08-11T01:02:19.344Z"
   },
   "blocks": [
     {
-      "id": "step01-header",
+      "id": "step16-header",
       "type": "quiz-intro-header",
       "position": 0,
       "properties": {
@@ -35,7 +35,7 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 5,
+        "progressValue": 76,
         "progressTotal": 100,
         "showProgress": true,
         "containerWidth": "full",
@@ -43,12 +43,12 @@
       }
     },
     {
-      "id": "step01-title",
+      "id": "step16-title",
       "type": "text-inline",
       "position": 1,
       "properties": {
-        "content": "DESCUBRA SEU ESTILO PESSOAL",
-        "fontSize": "text-4xl",
+        "content": "PREPARANDO SEU RESULTADO PERSONALIZADO...",
+        "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
         "color": "#432818",
@@ -57,32 +57,15 @@
       }
     },
     {
-      "id": "step01-subtitle",
-      "type": "text-inline",
+      "id": "step16-progress-bar",
+      "type": "progress-bar",
       "position": 2,
       "properties": {
-        "content": "Um quiz personalizado para descobrir qual estilo combina perfeitamente com você",
-        "fontSize": "text-xl",
-        "textAlign": "text-center",
-        "color": "#6B7280",
+        "value": 100,
+        "animated": true,
+        "color": "#B89B7A",
         "containerWidth": "full",
         "spacing": "small"
-      }
-    },
-    {
-      "id": "step01-start-button",
-      "type": "button-inline",
-      "position": 3,
-      "properties": {
-        "text": "Começar Quiz",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "textColor": "#ffffff",
-        "containerWidth": "full",
-        "spacing": "small",
-        "marginTop": 32
       }
     }
   ]

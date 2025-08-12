@@ -1,0 +1,92 @@
+{
+  "id": "etapa-11-transicao-demografica",
+  "name": "Etapa 11: Transição para Dados Demográficos",
+  "description": "Transição entre as questões estratégicas e a coleta de dados demográficos",
+  "version": "1.0.0",
+  "type": "quiz-transition",
+  "metadata": {
+    "author": "Quiz Quest",
+    "createdAt": "2024-01-20",
+    "category": "transition",
+    "stepNumber": 11,
+    "totalSteps": 21,
+    "estimatedTime": "30 segundos"
+  },
+  "blocks": [
+    {
+      "id": "header-transicao-demografica",
+      "type": "QuizHeaderBlock",
+      "properties": {
+        "title": "Estamos quase concluindo!",
+        "subtitle": "Algumas informações para personalizar ainda mais",
+        "description": "Para finalizar, precisamos de algumas informações adicionais para personalizar melhor nossas recomendações.",
+        "showProgress": true
+      },
+      "config": {
+        "currentStep": 11,
+        "totalSteps": 21,
+        "quizType": "demographic"
+      }
+    },
+    {
+      "id": "transition-message-demografica",
+      "type": "QuizTransition",
+      "properties": {
+        "message": "Ótimo! Já conhecemos suas preferências de estilo, personalidade e objetivos. Para criarmos um perfil completo e oferecer as melhores recomendações, precisamos de algumas informações demográficas adicionais.",
+        "variant": "info",
+        "showDivider": true,
+        "showButton": true,
+        "buttonText": "Vamos finalizar!"
+      }
+    },
+    {
+      "id": "navigation-transicao-demografica",
+      "type": "QuizNavigationIntegration",
+      "properties": {
+        "showPrevious": true,
+        "showNext": true,
+        "nextButtonText": "Continuar"
+      },
+      "config": {
+        "isLastQuestion": false,
+        "isDemographic": true
+      }
+    }
+  ],
+  "settings": {
+    "analytics": {
+      "trackingEnabled": true,
+      "events": ["transition_viewed", "section_completed", "next_section_started"]
+    },
+    "validation": {
+      "requireMinSelections": false,
+      "showValidationErrors": false
+    },
+    "navigation": {
+      "allowSkip": true,
+      "showProgress": true,
+      "autoAdvance": false
+    },
+    "styling": {
+      "theme": "transition",
+      "colorScheme": {
+        "primary": "#B89B7A",
+        "secondary": "#432818",
+        "accent": "#F3E8E6",
+        "text": "#5A453A"
+      }
+    }
+  },
+  "integration": {
+    "nextStep": "etapa-12-demografica-idade",
+    "dataCollection": {
+      "storeSelections": false,
+      "updateUserProfile": true,
+      "fieldMapping": {}
+    },
+    "conditionalLogic": {
+      "rules": [],
+      "defaultNextStep": "etapa-12-demografica-idade"
+    }
+  }
+}

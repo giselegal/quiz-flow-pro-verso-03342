@@ -14,20 +14,20 @@
   },
   "analytics": {
     "events": ["page_view", "option_selected", "validation_error", "completion"],
-    "trackingId": "step-01-intro"
+    "trackingId": "step-17-result"
   },
   "metadata": {
-    "id": "quiz-step-01",
-    "name": "Introdução",
-    "description": "Página inicial do quiz",
-    "category": "intro",
-    "tags": ["quiz", "style", "intro"],
-    "createdAt": "2025-08-11T01:02:19.339Z",
-    "updatedAt": "2025-08-11T01:02:19.340Z"
+    "id": "quiz-step-17",
+    "name": "Resultado 1",
+    "description": "Primeira tela de resultado",
+    "category": "result",
+    "tags": ["quiz", "style", "result"],
+    "createdAt": "2025-08-11T01:02:19.344Z",
+    "updatedAt": "2025-08-11T01:02:19.344Z"
   },
   "blocks": [
     {
-      "id": "step01-header",
+      "id": "step17-header",
       "type": "quiz-intro-header",
       "position": 0,
       "properties": {
@@ -35,7 +35,7 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 5,
+        "progressValue": 81,
         "progressTotal": 100,
         "showProgress": true,
         "containerWidth": "full",
@@ -43,12 +43,12 @@
       }
     },
     {
-      "id": "step01-title",
+      "id": "step17-result-title",
       "type": "text-inline",
       "position": 1,
       "properties": {
-        "content": "DESCUBRA SEU ESTILO PESSOAL",
-        "fontSize": "text-4xl",
+        "content": "SEU ESTILO PESSOAL É:",
+        "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
         "color": "#432818",
@@ -57,24 +57,23 @@
       }
     },
     {
-      "id": "step01-subtitle",
-      "type": "text-inline",
+      "id": "step17-result-card",
+      "type": "result-card",
       "position": 2,
       "properties": {
-        "content": "Um quiz personalizado para descobrir qual estilo combina perfeitamente com você",
-        "fontSize": "text-xl",
-        "textAlign": "text-center",
-        "color": "#6B7280",
+        "title": "Estilo Elegante",
+        "description": "Você tem preferência por peças clássicas e refinadas...",
+        "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
         "containerWidth": "full",
         "spacing": "small"
       }
     },
     {
-      "id": "step01-start-button",
+      "id": "step17-continue-button",
       "type": "button-inline",
       "position": 3,
       "properties": {
-        "text": "Começar Quiz",
+        "text": "Ver Mais →",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -82,7 +81,7 @@
         "textColor": "#ffffff",
         "containerWidth": "full",
         "spacing": "small",
-        "marginTop": 32
+        "marginTop": 24
       }
     }
   ]
