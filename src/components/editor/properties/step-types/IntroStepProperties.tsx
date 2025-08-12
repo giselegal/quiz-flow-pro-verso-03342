@@ -19,6 +19,9 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
   properties,
   onUpdate,
 }) => {
+  // ✅ Debug: Log das propriedades recebidas
+  console.log('🎛️ [IntroStepProperties] Propriedades recebidas:', properties);
+  console.log('🎛️ [IntroStepProperties] onUpdate função:', typeof onUpdate);
   // ✅ Propriedades gerais do step
   const {
     title = 'Descubra Seu Estilo Predominante',
@@ -42,7 +45,6 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
     logoHeight = 96,
     showBackButton = false,
     progressValue = 0,
-    progressMax = 100,
     showProgressBar = false,
   } = properties;
 
