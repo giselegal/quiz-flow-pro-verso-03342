@@ -134,21 +134,21 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     true,
     PropertyType.SWITCH,
     "Habilitar Cabeçalho",
-    "logo" as PropertyCategoryOrString
+    PropertyCategory.CONTENT
   ),
   createProperty(
     "showLogo",
     true,
     PropertyType.SWITCH,
     "Mostrar Logo",
-    "logo" as PropertyCategoryOrString
+    PropertyCategory.CONTENT
   ),
   createProperty(
     "decorativeBar",
     false,
     PropertyType.SWITCH,
     "Barra Decorativa",
-    "logo" as PropertyCategoryOrString
+    PropertyCategory.CONTENT
   ),
 
   // 1. Margens externas (4 direções)

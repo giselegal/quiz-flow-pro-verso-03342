@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { preloadCriticalImages } from "@/utils/images/preloading";
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+// import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import MentorSection from "@/components/result/MentorSection";
@@ -11,24 +11,24 @@ import {
   Star,
   ShoppingBag,
   Heart,
-  Users,
-  Award,
+  // Users,
+  // Award,
   Shield,
   ArrowRight,
-  TrendingUp,
-  BadgeCheck,
-  Lock,
-  Gift,
-  ShoppingCart,
-  CheckCircle,
-  ArrowDown,
-  Hourglass,
-  Zap,
+  // TrendingUp,
+  // BadgeCheck,
+  // Lock,
+  // Gift,
+  // ShoppingCart,
+  // CheckCircle,
+  // ArrowDown,
+  // Hourglass,
+  // Zap,
   Target,
   Sparkles,
   Crown,
   Flame,
-  Eye,
+  // Eye,
 } from "lucide-react";
 import { trackButtonClick } from "@/utils/analytics";
 import { storeUserForHotmart } from "@/utils/hotmartWebhook";
