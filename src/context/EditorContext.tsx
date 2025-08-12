@@ -199,7 +199,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     // Inicializar todas as etapas com arrays vazios
     for (let i = 1; i <= 21; i++) {
-      const stageId = `step-${i}`;
+      const stageId = `step-${String(i).padStart(2, '0')}`;
       initialBlocks[stageId] = [];
     }
 
@@ -214,7 +214,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       // Carregar templates para as primeiras 3 etapas imediatamente
       for (let i = 1; i <= 3; i++) {
-        const stageId = `step-${i}`;
+        const stageId = `step-${String(i).padStart(2, '0')}`;
 
         try {
           console.log(`🔄 Carregando template JSON para ${stageId}...`);
@@ -246,7 +246,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO
 
-  const [activeStageId, setActiveStageId] = useState<string>('step-1');
+  const [activeStageId, setActiveStageId] = useState<string>('step-01');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
@@ -359,7 +359,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const addStage = useCallback(
     (stageData?: Partial<FunnelStage>): string => {
-      const newStageId = `step-${stages.length + 1}`;
+      const newStageId = `step-${String(stages.length + 1).padStart(2, '0')}`;
       const newStage: FunnelStage = {
         id: newStageId,
         name: stageData?.name || `Nova Etapa ${stages.length + 1}`,
