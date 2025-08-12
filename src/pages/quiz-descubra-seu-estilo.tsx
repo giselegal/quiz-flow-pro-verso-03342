@@ -531,8 +531,8 @@ const handleCTAClick = (buttonId: string, action: string = "Comprar Agora") => {
   };
 };
 
-// Componente de Popup de Prova Social Dinâmica
-const SocialProofPopup = () => {
+// Componente de Popup de Prova Social Dinâmica - não utilizado
+// const SocialProofPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
 
