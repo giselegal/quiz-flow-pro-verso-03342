@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
-import ColorPicker from '@/components/visual-controls/ColorPicker';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import ColorPicker from "@/components/visual-controls/ColorPicker";
 
 interface IntroStepPropertiesProps {
   properties: Record<string, any>;
@@ -20,27 +20,27 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
   onUpdate,
 }) => {
   // ✅ Debug: Log das propriedades recebidas
-  console.log('🎛️ [IntroStepProperties] Propriedades recebidas:', properties);
-  console.log('🎛️ [IntroStepProperties] onUpdate função:', typeof onUpdate);
+  console.log("🎛️ [IntroStepProperties] Propriedades recebidas:", properties);
+  console.log("🎛️ [IntroStepProperties] onUpdate função:", typeof onUpdate);
   // ✅ Propriedades gerais do step
   const {
-    title = 'Descubra Seu Estilo Predominante',
-    subtitle = 'Quiz personalizado para descobrir seu estilo único',
-    imageUrl = '',
-    inputLabel = 'NOME *',
-    inputPlaceholder = 'Digite seu nome',
-    buttonText = 'Iniciar Quiz',
+    title = "Descubra Seu Estilo Predominante",
+    subtitle = "Quiz personalizado para descobrir seu estilo único",
+    imageUrl = "",
+    inputLabel = "NOME *",
+    inputPlaceholder = "Digite seu nome",
+    buttonText = "Iniciar Quiz",
     required = true,
-    backgroundColor = '#FAF9F7',
-    textColor = '#432818',
-    buttonColor = '#B89B7A',
+    backgroundColor = "#FAF9F7",
+    textColor = "#432818",
+    buttonColor = "#B89B7A",
     showProgress = false,
   } = properties;
 
   // ✅ Propriedades específicas do quiz-intro-header
   const {
-    logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-    logoAlt = 'Logo',
+    logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+    logoAlt = "Logo",
     logoWidth = 96,
     logoHeight = 96,
     showBackButton = false,
@@ -61,7 +61,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="logoUrl"
               value={logoUrl}
-              onChange={e => onUpdate('logoUrl', e.target.value)}
+              onChange={e => onUpdate("logoUrl", e.target.value)}
               placeholder="URL da imagem da logo"
             />
           </div>
@@ -71,7 +71,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="logoAlt"
               value={logoAlt}
-              onChange={e => onUpdate('logoAlt', e.target.value)}
+              onChange={e => onUpdate("logoAlt", e.target.value)}
               placeholder="Descrição da logo"
             />
           </div>
@@ -85,7 +85,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
                 max={240}
                 step={2}
                 value={[logoWidth]}
-                onValueChange={([value]) => onUpdate('logoWidth', value)}
+                onValueChange={([value]) => onUpdate("logoWidth", value)}
                 className="mt-2"
               />
             </div>
@@ -98,7 +98,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
                 max={240}
                 step={2}
                 value={[logoHeight]}
-                onValueChange={([value]) => onUpdate('logoHeight', value)}
+                onValueChange={([value]) => onUpdate("logoHeight", value)}
                 className="mt-2"
               />
             </div>
@@ -108,7 +108,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Switch
               id="showBackButton"
               checked={showBackButton}
-              onCheckedChange={checked => onUpdate('showBackButton', checked)}
+              onCheckedChange={checked => onUpdate("showBackButton", checked)}
             />
             <Label htmlFor="showBackButton">Mostrar Botão Voltar</Label>
           </div>
@@ -117,7 +117,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Switch
               id="showProgressBar"
               checked={showProgressBar}
-              onCheckedChange={checked => onUpdate('showProgress', checked)}
+              onCheckedChange={checked => onUpdate("showProgress", checked)}
             />
             <Label htmlFor="showProgressBar">Mostrar Barra de Progresso</Label>
           </div>
@@ -131,7 +131,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
                 max={100}
                 step={1}
                 value={[progressValue]}
-                onValueChange={([value]) => onUpdate('progressValue', value)}
+                onValueChange={([value]) => onUpdate("progressValue", value)}
                 className="mt-2"
               />
             </div>
@@ -152,7 +152,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="title"
               value={title}
-              onChange={e => onUpdate('title', e.target.value)}
+              onChange={e => onUpdate("title", e.target.value)}
               placeholder="Título da página de introdução"
             />
           </div>
@@ -162,7 +162,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="subtitle"
               value={subtitle}
-              onChange={e => onUpdate('subtitle', e.target.value)}
+              onChange={e => onUpdate("subtitle", e.target.value)}
               placeholder="Descrição do quiz"
             />
           </div>
@@ -172,7 +172,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="imageUrl"
               value={imageUrl}
-              onChange={e => onUpdate('imageUrl', e.target.value)}
+              onChange={e => onUpdate("imageUrl", e.target.value)}
               placeholder="URL da imagem principal"
             />
           </div>
@@ -190,7 +190,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="inputLabel"
               value={inputLabel}
-              onChange={e => onUpdate('inputLabel', e.target.value)}
+              onChange={e => onUpdate("inputLabel", e.target.value)}
               placeholder="Texto do label"
             />
           </div>
@@ -200,7 +200,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="inputPlaceholder"
               value={inputPlaceholder}
-              onChange={e => onUpdate('inputPlaceholder', e.target.value)}
+              onChange={e => onUpdate("inputPlaceholder", e.target.value)}
               placeholder="Texto do placeholder"
             />
           </div>
@@ -209,7 +209,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Switch
               id="required"
               checked={required}
-              onCheckedChange={checked => onUpdate('required', checked)}
+              onCheckedChange={checked => onUpdate("required", checked)}
             />
             <Label htmlFor="required">Campo Obrigatório</Label>
           </div>
@@ -227,14 +227,14 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="buttonText"
               value={buttonText}
-              onChange={e => onUpdate('buttonText', e.target.value)}
+              onChange={e => onUpdate("buttonText", e.target.value)}
               placeholder="Texto do botão principal"
             />
           </div>
 
           <div>
             <Label htmlFor="buttonColor">Cor do Botão</Label>
-            <ColorPicker value={buttonColor} onChange={color => onUpdate('buttonColor', color)} />
+            <ColorPicker value={buttonColor} onChange={color => onUpdate("buttonColor", color)} />
           </div>
 
           <Separator className="my-4" />
@@ -242,12 +242,12 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
           {/* ✅ Controles de Ativação Condicional */}
           <div className="space-y-4">
             <h4 className="text-sm font-medium">Ativação do Botão</h4>
-            
+
             <div className="flex items-center space-x-2">
               <Switch
                 id="requiresValidInput"
                 checked={properties.requiresValidInput ?? true}
-                onCheckedChange={checked => onUpdate('requiresValidInput', checked)}
+                onCheckedChange={checked => onUpdate("requiresValidInput", checked)}
               />
               <Label htmlFor="requiresValidInput">Exigir nome preenchido para ativar</Label>
             </div>
@@ -257,8 +257,8 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
                 <Label htmlFor="disabledText">Texto quando desabilitado</Label>
                 <Input
                   id="disabledText"
-                  value={properties.disabledText || 'Digite seu nome para continuar'}
-                  onChange={e => onUpdate('disabledText', e.target.value)}
+                  value={properties.disabledText || "Digite seu nome para continuar"}
+                  onChange={e => onUpdate("disabledText", e.target.value)}
                   placeholder="Texto exibido quando botão está desabilitado"
                 />
               </div>
@@ -268,7 +268,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
               <Switch
                 id="showDisabledState"
                 checked={properties.showDisabledState ?? true}
-                onCheckedChange={checked => onUpdate('showDisabledState', checked)}
+                onCheckedChange={checked => onUpdate("showDisabledState", checked)}
               />
               <Label htmlFor="showDisabledState">Mostrar estado desabilitado visualmente</Label>
             </div>
@@ -279,13 +279,13 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
           {/* ✅ Configuração de Navegação */}
           <div className="space-y-4">
             <h4 className="text-sm font-medium">Navegação</h4>
-            
+
             <div>
               <Label htmlFor="nextStepId">Próxima Etapa (ID)</Label>
               <Input
                 id="nextStepId"
-                value={properties.nextStepId || 'step-2'}
-                onChange={e => onUpdate('nextStepId', e.target.value)}
+                value={properties.nextStepId || "step-2"}
+                onChange={e => onUpdate("nextStepId", e.target.value)}
                 placeholder="ID da próxima etapa (ex: step-2)"
               />
             </div>
@@ -294,8 +294,8 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
               <Label htmlFor="nextStepUrl">URL da Próxima Etapa</Label>
               <Input
                 id="nextStepUrl"
-                value={properties.nextStepUrl || '/quiz/step-2'}
-                onChange={e => onUpdate('nextStepUrl', e.target.value)}
+                value={properties.nextStepUrl || "/quiz/step-2"}
+                onChange={e => onUpdate("nextStepUrl", e.target.value)}
                 placeholder="URL para navegação (ex: /quiz/step-2)"
               />
             </div>
@@ -304,7 +304,7 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
       </Card>
 
       {/* Configuração do Botão - Seção Original Simplificada */}
-      <Card style={{ display: 'none' }}>
+      <Card style={{ display: "none" }}>
         {/* Seção ocultada - propriedades movidas para "Botão de Ação" acima */}
         <CardHeader>
           <CardTitle className="text-sm">Botão de Ação</CardTitle>
@@ -315,14 +315,14 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Input
               id="buttonText"
               value={buttonText}
-              onChange={e => onUpdate('buttonText', e.target.value)}
+              onChange={e => onUpdate("buttonText", e.target.value)}
               placeholder="Texto do botão principal"
             />
           </div>
 
           <div>
             <Label htmlFor="buttonColor">Cor do Botão</Label>
-            <ColorPicker value={buttonColor} onChange={color => onUpdate('buttonColor', color)} />
+            <ColorPicker value={buttonColor} onChange={color => onUpdate("buttonColor", color)} />
           </div>
         </CardContent>
       </Card>
@@ -339,20 +339,20 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
             <Label htmlFor="backgroundColor">Cor de Fundo</Label>
             <ColorPicker
               value={backgroundColor}
-              onChange={color => onUpdate('backgroundColor', color)}
+              onChange={color => onUpdate("backgroundColor", color)}
             />
           </div>
 
           <div>
             <Label htmlFor="textColor">Cor do Texto</Label>
-            <ColorPicker value={textColor} onChange={color => onUpdate('textColor', color)} />
+            <ColorPicker value={textColor} onChange={color => onUpdate("textColor", color)} />
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
               id="showProgress"
               checked={showProgress}
-              onCheckedChange={checked => onUpdate('showProgress', checked)}
+              onCheckedChange={checked => onUpdate("showProgress", checked)}
             />
             <Label htmlFor="showProgress">Mostrar Barra de Progresso</Label>
           </div>

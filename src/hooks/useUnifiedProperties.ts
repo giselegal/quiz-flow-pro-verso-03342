@@ -136,13 +136,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     "Habilitar Cabeçalho",
     PropertyCategory.CONTENT
   ),
-  createProperty(
-    "showLogo",
-    true,
-    PropertyType.SWITCH,
-    "Mostrar Logo",
-    PropertyCategory.CONTENT
-  ),
+  createProperty("showLogo", true, PropertyType.SWITCH, "Mostrar Logo", PropertyCategory.CONTENT),
   createProperty(
     "decorativeBar",
     false,
@@ -194,34 +188,41 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     PropertyCategory.LAYOUT,
     { min: 0, max: 100, step: 2, unit: "px" }
   ),
-  createProperty("paddingLeft", 0, PropertyType.RANGE, "Padding Esquerdo", PropertyCategory.LAYOUT, {
-    min: 0,
-    max: 100,
-    step: 2,
-    unit: "px",
-  }),
-  createProperty("paddingRight", 0, PropertyType.RANGE, "Padding Direito", PropertyCategory.LAYOUT, {
-    min: 0,
-    max: 100,
-    step: 2,
-    unit: "px",
-  }),
-
-  // 3. Escala geral (tamanho)
   createProperty(
-    "sizeScale",
-    "100%",
-    PropertyType.SELECT,
-    "Tamanho",
+    "paddingLeft",
+    0,
+    PropertyType.RANGE,
+    "Padding Esquerdo",
     PropertyCategory.LAYOUT,
     {
-      options: [
-        { value: "50%", label: "50%" },
-        { value: "100%", label: "100%" },
-        { value: "110%", label: "110%" },
-      ],
+      min: 0,
+      max: 100,
+      step: 2,
+      unit: "px",
     }
   ),
+  createProperty(
+    "paddingRight",
+    0,
+    PropertyType.RANGE,
+    "Padding Direito",
+    PropertyCategory.LAYOUT,
+    {
+      min: 0,
+      max: 100,
+      step: 2,
+      unit: "px",
+    }
+  ),
+
+  // 3. Escala geral (tamanho)
+  createProperty("sizeScale", "100%", PropertyType.SELECT, "Tamanho", PropertyCategory.LAYOUT, {
+    options: [
+      { value: "50%", label: "50%" },
+      { value: "100%", label: "100%" },
+      { value: "110%", label: "110%" },
+    ],
+  }),
 
   // 4. Cores de fundo
   createProperty(
@@ -342,7 +343,9 @@ export const useUnifiedProperties = (
           // Conteúdo
           createProperty(
             "content",
-            currentBlock?.properties?.content ?? currentBlock?.content?.text ?? "Digite seu texto aqui...",
+            currentBlock?.properties?.content ??
+              currentBlock?.content?.text ??
+              "Digite seu texto aqui...",
             PropertyType.TEXTAREA,
             "Conteúdo",
             PropertyCategory.CONTENT,
@@ -921,7 +924,9 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             "backgroundColor",
-            currentBlock?.properties?.backgroundColor ?? currentBlock?.properties?.containerBackgroundColor ?? "transparent",
+            currentBlock?.properties?.backgroundColor ??
+              currentBlock?.properties?.containerBackgroundColor ??
+              "transparent",
             PropertyType.COLOR,
             "Cor de Fundo",
             PropertyCategory.STYLE
