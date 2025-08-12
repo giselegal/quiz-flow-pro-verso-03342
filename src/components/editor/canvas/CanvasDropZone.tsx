@@ -43,8 +43,6 @@ interface CanvasDropZoneProps {
   blocks: Block[];
   selectedBlockId: string | null;
   isPreviewing: boolean;
-  activeStageId: string;
-  stageCount: number;
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (id: string, updates: any) => void;
   onDeleteBlock: (id: string) => void;
@@ -55,7 +53,6 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   blocks,
   selectedBlockId,
   isPreviewing,
-  stageCount,
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
