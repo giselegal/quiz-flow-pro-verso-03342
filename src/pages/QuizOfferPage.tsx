@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "@/utils/images/preloading";
-import { usePageConfig } from "@/hooks/usePageConfig";
 import DynamicBlockRenderer from "@/components/DynamicBlockRenderer";
 import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { usePageConfig } from "@/hooks/usePageConfig";
+import { trackButtonClick } from "@/utils/analytics";
+import { preloadCriticalImages } from "@/utils/images/preloading";
 import {
+  ArrowRight,
+  Award,
   ChevronRight,
   Clock,
-  Star,
-  Shield,
-  ArrowRight,
   Lock,
-  Award,
+  Shield,
   ShoppingBag,
   ShoppingCart,
+  Star,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import React, { useEffect, useState } from "react";
 
 // CSS simplificado e otimizado
 const customStyles = `

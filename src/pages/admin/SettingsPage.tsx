@@ -1,13 +1,13 @@
-import { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { AppearanceTab } from "@/components/settings/AppearanceTab";
-import { AnalyticsTab } from "@/components/settings/AnalyticsTab";
-import { MarketingTab } from "@/components/settings/MarketingTab";
-import { ApiIntegrationsTab } from "@/components/settings/ApiIntegrationsTab";
 import { AdvancedTab } from "@/components/settings/AdvancedTab";
+import { AnalyticsTab } from "@/components/settings/AnalyticsTab";
+import { ApiIntegrationsTab } from "@/components/settings/ApiIntegrationsTab";
+import { AppearanceTab } from "@/components/settings/AppearanceTab";
 import { FacebookAdsTab } from "@/components/settings/FacebookAdsTab";
+import { MarketingTab } from "@/components/settings/MarketingTab";
 import { UtmSettingsTab } from "@/components/settings/UtmSettingsTab";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
 import { useLocation } from "wouter";
 
 const SettingsPage = () => {
