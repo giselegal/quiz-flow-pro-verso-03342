@@ -16,23 +16,23 @@
           "backgroundColor": "#ffffff"
         },
         "hero": {
-          "title": "Descubra Seu Estilo Único",
-          "subtitle": "Transforme sua imagem com nosso programa exclusivo",
-          "imageUrl": "https://placehold.co/600x400",
+          "title": "Transforme seu Guarda-Roupa Agora!",
+          "subtitle": "Oferta especial baseada no seu estilo pessoal",
+          "imageUrl": "https://placehold.co/800x600",
           "imageAlt": "Transformação de Estilo",
-          "imageWidth": 600,
-          "imageHeight": 400,
-          "ctaText": "Quero Transformar Meu Estilo",
+          "imageWidth": 800,
+          "imageHeight": 600,
+          "ctaText": "Quero Começar Agora",
           "ctaUrl": "#oferta"
         },
         "problem": {
-          "title": "Você Se Identifica Com Esses Desafios?",
+          "title": "Desafios no seu Guarda-Roupa",
           "problems": [
-            "Insegurança com sua imagem pessoal",
-            "Dificuldade em escolher looks adequados",
-            "Falta de conhecimento sobre seu tipo de corpo"
+            "Roupas que não combinam entre si",
+            "Dificuldade para montar looks",
+            "Peças que não valorizam seu estilo"
           ],
-          "highlightText": "É hora de mudar essa realidade!",
+          "highlightText": "Chegou a hora de mudar isso!",
           "imageUrl": "https://placehold.co/500x300",
           "imageAlt": "Desafios de Estilo",
           "imageWidth": 500,
@@ -40,12 +40,12 @@
           "layout": "side-by-side"
         },
         "solution": {
-          "title": "Programa de Transformação de Estilo",
-          "description": "Um método completo para descobrir e valorizar seu estilo pessoal",
+          "title": "A Solução para seu Estilo",
+          "description": "Um guarda-roupa inteligente e personalizado",
           "benefits": [
-            "Análise personalizada do seu tipo de corpo",
-            "Guia de cores que mais combinam com você",
-            "Consultoria individual de estilo"
+            "Looks que combinam perfeitamente",
+            "Economia de tempo e dinheiro",
+            "Mais confiança no seu estilo"
           ],
           "imageUrl": "https://placehold.co/500x300",
           "imageAlt": "Solução de Estilo",
