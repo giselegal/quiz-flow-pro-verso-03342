@@ -8,7 +8,7 @@ import { EditorNotification } from "@/components/editor/EditorNotification";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
 import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
 import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import { ComponentSpecificPropertiesPanel } from "@/components/editor/properties/ComponentSpecificPropertiesPanel";
+import EnhancedUniversalPropertiesPanel from "@/components/universal/EnhancedUniversalPropertiesPanel";
 import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
 
 // Context & Hooks
@@ -210,7 +210,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                <ComponentSpecificPropertiesPanel
+                <EnhancedUniversalPropertiesPanel
                   selectedBlock={{
                     id: selectedBlock.id,
                     type: selectedBlock.type,
@@ -222,8 +222,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   onUpdate={(blockId: string, updates: Record<string, any>) => {
                     updateBlock(blockId, updates);
                   }}
+                  onDelete={handleDeleteBlock}
                   onClose={() => setSelectedBlockId(null)}
-                  onPreview={() => setIsPreviewing(true)}
                 />
               ) : !isPreviewing ? (
                 <div className="h-full p-4 flex items-center justify-center text-stone-500">
