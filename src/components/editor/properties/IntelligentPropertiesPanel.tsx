@@ -1,15 +1,15 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Eye, RotateCcw, Settings, X } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Eye, RotateCcw, Settings, X } from "lucide-react";
 
 // Importar os painéis específicos por tipo de etapa
-import IntroStepProperties from './step-types/IntroStepProperties';
-import QuestionStepProperties from './step-types/QuestionStepProperties';
-import ResultStepProperties from './step-types/ResultStepProperties';
-import TransitionStepProperties from './step-types/TransitionStepProperties';
+import IntroStepProperties from "./step-types/IntroStepProperties";
+import QuestionStepProperties from "./step-types/QuestionStepProperties";
+import ResultStepProperties from "./step-types/ResultStepProperties";
+import TransitionStepProperties from "./step-types/TransitionStepProperties";
 
 interface IntelligentPropertiesPanelProps {
   selectedBlock?: {
@@ -19,14 +19,14 @@ interface IntelligentPropertiesPanelProps {
     content?: Record<string, any>;
   } | null;
   stepType?:
-    | 'intro'
-    | 'question'
-    | 'transition'
-    | 'strategic'
-    | 'processing'
-    | 'result'
-    | 'lead'
-    | 'offer';
+    | "intro"
+    | "question"
+    | "transition"
+    | "strategic"
+    | "processing"
+    | "result"
+    | "lead"
+    | "offer";
   stepNumber?: number;
   onUpdate: (blockId: string, updates: Record<string, any>) => void;
   onClose?: () => void;
@@ -83,34 +83,34 @@ export const IntelligentPropertiesPanel: React.FC<IntelligentPropertiesPanelProp
 
   // Determinar tipo de etapa baseado no stepType ou tipo do bloco
   const determineStepType = ():
-    | 'intro'
-    | 'question'
-    | 'transition'
-    | 'result'
-    | 'offer'
-    | 'lead' => {
+    | "intro"
+    | "question"
+    | "transition"
+    | "result"
+    | "offer"
+    | "lead" => {
     if (stepType) return stepType as any;
 
     // Inferir do tipo do bloco ou número da etapa
-    if (stepNumber === 1) return 'intro';
-    if (stepNumber && stepNumber >= 2 && stepNumber <= 14) return 'question';
-    if (stepNumber === 15 || stepNumber === 19) return 'transition';
-    if (stepNumber && stepNumber >= 17 && stepNumber <= 18) return 'result';
-    if (stepNumber === 20) return 'lead';
-    if (stepNumber === 21) return 'offer';
+    if (stepNumber === 1) return "intro";
+    if (stepNumber && stepNumber >= 2 && stepNumber <= 14) return "question";
+    if (stepNumber === 15 || stepNumber === 19) return "transition";
+    if (stepNumber && stepNumber >= 17 && stepNumber <= 18) return "result";
+    if (stepNumber === 20) return "lead";
+    if (stepNumber === 21) return "offer";
 
     // Inferir do tipo do bloco
-    if (selectedBlock.type.includes('intro') || selectedBlock.type.includes('start'))
-      return 'intro';
-    if (selectedBlock.type.includes('question') || selectedBlock.type.includes('quiz'))
-      return 'question';
-    if (selectedBlock.type.includes('transition') || selectedBlock.type.includes('processing'))
-      return 'transition';
-    if (selectedBlock.type.includes('result')) return 'result';
-    if (selectedBlock.type.includes('lead')) return 'lead';
-    if (selectedBlock.type.includes('offer')) return 'offer';
+    if (selectedBlock.type.includes("intro") || selectedBlock.type.includes("start"))
+      return "intro";
+    if (selectedBlock.type.includes("question") || selectedBlock.type.includes("quiz"))
+      return "question";
+    if (selectedBlock.type.includes("transition") || selectedBlock.type.includes("processing"))
+      return "transition";
+    if (selectedBlock.type.includes("result")) return "result";
+    if (selectedBlock.type.includes("lead")) return "lead";
+    if (selectedBlock.type.includes("offer")) return "offer";
 
-    return 'question'; // Default fallback
+    return "question"; // Default fallback
   };
 
   const currentStepType = determineStepType();
@@ -118,22 +118,22 @@ export const IntelligentPropertiesPanel: React.FC<IntelligentPropertiesPanelProp
   // Renderizar o painel específico baseado no tipo
   const renderSpecificPanel = () => {
     switch (currentStepType) {
-      case 'intro':
+      case "intro":
         return <IntroStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
-      case 'question':
+      case "question":
         return <QuestionStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
-      case 'transition':
+      case "transition":
         return <TransitionStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
-      case 'result':
+      case "result":
         return <ResultStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
-      case 'lead':
+      case "lead":
         return <IntroStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
-      case 'offer':
+      case "offer":
         return <ResultStepProperties properties={allProperties} onUpdate={handleUpdate} />;
 
       default:
@@ -144,30 +144,30 @@ export const IntelligentPropertiesPanel: React.FC<IntelligentPropertiesPanelProp
   // Mapear nomes amigáveis para tipos de etapa
   const getStepTypeName = (type: string) => {
     const names = {
-      intro: 'Introdução',
-      question: 'Pergunta do Quiz',
-      strategic: 'Pergunta Estratégica',
-      transition: 'Transição',
-      processing: 'Processamento',
-      result: 'Resultado',
-      lead: 'Captura de Lead',
-      offer: 'Oferta',
+      intro: "Introdução",
+      question: "Pergunta do Quiz",
+      strategic: "Pergunta Estratégica",
+      transition: "Transição",
+      processing: "Processamento",
+      result: "Resultado",
+      lead: "Captura de Lead",
+      offer: "Oferta",
     };
     return names[type as keyof typeof names] || type;
   };
 
   const getBadgeVariant = (type: string) => {
     const variants = {
-      intro: 'default',
-      question: 'secondary',
-      strategic: 'outline',
-      transition: 'default',
-      processing: 'secondary',
-      result: 'default',
-      lead: 'secondary',
-      offer: 'destructive',
+      intro: "default",
+      question: "secondary",
+      strategic: "outline",
+      transition: "default",
+      processing: "secondary",
+      result: "default",
+      lead: "secondary",
+      offer: "destructive",
     };
-    return variants[type as keyof typeof variants] || 'default';
+    return variants[type as keyof typeof variants] || "default";
   };
 
   return (
