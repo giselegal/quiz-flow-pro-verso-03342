@@ -1,12 +1,12 @@
 import { BlockDefinition } from '@/types/blocks';
-import Step21OfferPage from '../step-types/Step21OfferPage';
 
 export const step21BlockDefinition: BlockDefinition = {
   type: 'step-21-offer',
-  label: 'Oferta (Etapa 21)',
+  name: 'Oferta (Etapa 21)',
   description: 'Página de oferta completa e personalizável',
-  component: Step21OfferPage,
-  defaultProperties: {
+  category: 'offer',
+  icon: null,
+  defaultProps: {
     header: {
       logoUrl: 'https://placehold.co/200x60',
       logoAlt: 'Logo da Empresa',
@@ -93,9 +93,5 @@ export const step21BlockDefinition: BlockDefinition = {
       ],
     },
   },
-  category: 'offer',
-  keywords: ['oferta', 'venda', 'landing page', 'etapa 21'],
-  isContainer: false,
-  allowedBlocks: [],
-  maxBlocks: 0,
+  properties: {}
 };
