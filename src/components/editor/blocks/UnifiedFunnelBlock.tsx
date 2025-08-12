@@ -19,7 +19,6 @@ interface UnifiedFunnelBlockProps extends BlockComponentProps {
   // Props adicionais podem ser adicionadas aqui se necessário
 }
 
-
 const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
   block,
   isSelected = false,

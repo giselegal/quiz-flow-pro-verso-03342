@@ -1,4 +1,3 @@
-
 // Importações
 import { templateService } from "../services/templateService";
 import type { Block } from "../types/editor";
@@ -50,7 +49,7 @@ export class TemplateManager {
    */
   private static getFallbackBlocks(stepId: string): Block[] {
     const stepNumber = parseInt(stepId.replace("step-", ""));
-    
+
     return [
       {
         id: `${stepId}-generic-title`,
@@ -87,7 +86,7 @@ export class TemplateManager {
           textAlign: "text-center",
           color: "#6b7280",
         },
-      }
+      },
     ];
   }
 

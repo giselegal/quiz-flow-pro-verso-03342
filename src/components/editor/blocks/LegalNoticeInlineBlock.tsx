@@ -89,7 +89,6 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-
   // Estilos CSS dinâmicos
   const containerStyles: React.CSSProperties = {
     backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,

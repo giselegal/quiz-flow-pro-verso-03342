@@ -116,7 +116,7 @@ export const templateService = {
     const templates = (Object.entries(STEP_TEMPLATES) as [string, StepTemplate][]).map(
       ([stepStr, template]) => ({
         ...template,
-        step: parseInt(stepStr)
+        step: parseInt(stepStr),
       })
     );
 
@@ -125,7 +125,7 @@ export const templateService = {
 
   async getTemplate(id: string): Promise<TemplateData | null> {
     const step = parseInt(id.replace("step-", ""));
-    
+
     if (!isValidStep(step)) {
       return null;
     }
@@ -133,18 +133,19 @@ export const templateService = {
     const template = STEP_TEMPLATES[step];
     return {
       ...template,
-      step
+      step,
     };
   },
 
   async searchTemplates(query: string): Promise<TemplateData[]> {
     const templates = await this.getTemplates();
     const searchQuery = query.toLowerCase();
-    
-    return templates.filter(template => 
-      template.metadata.name.toLowerCase().includes(searchQuery) ||
-      template.metadata.description.toLowerCase().includes(searchQuery) ||
-      template.metadata.tags.some(tag => tag.toLowerCase().includes(searchQuery))
+
+    return templates.filter(
+      template =>
+        template.metadata.name.toLowerCase().includes(searchQuery) ||
+        template.metadata.description.toLowerCase().includes(searchQuery) ||
+        template.metadata.tags.some(tag => tag.toLowerCase().includes(searchQuery))
     );
   },
 
@@ -153,11 +154,11 @@ export const templateService = {
     if (!isValidStep(step)) {
       return null;
     }
-    
+
     const template = STEP_TEMPLATES[step];
     return {
       ...template,
-      step
+      step,
     };
   },
 
@@ -173,7 +174,7 @@ export const templateService = {
         ...(block.children ? { children: block.children } : {}),
       },
     }));
-  }
+  },
 };
 
 export default templateService;

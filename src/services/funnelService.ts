@@ -15,7 +15,7 @@ interface Funnel {
   description?: string;
 }
 
-interface InsertFunnel extends Omit<Funnel, 'id'> {}
+interface InsertFunnel extends Omit<Funnel, "id"> {}
 
 interface FunnelPage {
   id: string;
@@ -24,7 +24,7 @@ interface FunnelPage {
   path: string;
 }
 
-interface InsertFunnelPage extends Omit<FunnelPage, 'id'> {}
+interface InsertFunnelPage extends Omit<FunnelPage, "id"> {}
 
 interface FunnelVersion {
   id: string;
@@ -32,7 +32,7 @@ interface FunnelVersion {
   version: number;
 }
 
-interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> {}
+interface InsertFunnelVersion extends Omit<FunnelVersion, "id"> {}
 
 export interface FunnelData {
   id: string;

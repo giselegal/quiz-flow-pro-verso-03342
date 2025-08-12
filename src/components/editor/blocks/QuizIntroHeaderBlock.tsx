@@ -89,7 +89,6 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-
   return (
     <div
       className={cn(

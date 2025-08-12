@@ -22,14 +22,11 @@ const QuizOptionBlock: React.FC<QuizOptionBlockProps> = ({ block, isSelected, on
 
   const label: string = props.label || props.text || "Opção";
   const textAlign: string = props.textAlign || "text-left";
-  
-  
+
   const borderRadius: string = props.borderRadius || "rounded-lg";
 
   const backgroundColor: string | undefined = props.backgroundColor;
   const textColor: string | undefined = props.textColor;
-  
-  
 
   // Dimensões e espaçamento
   const fullWidth = props.fullWidth ?? true;

@@ -30,13 +30,13 @@ class PerformanceAnalyzer {
 
   startMonitoring() {
     if (this.isMonitoring) return;
-    
+
     this.isMonitoring = true;
-    console.log('🔍 Performance Analyzer: Iniciando monitoramento...');
+    console.log("🔍 Performance Analyzer: Iniciando monitoramento...");
 
     // Monitor de violations
     this.monitorTimeoutViolations();
-    
+
     // Monitor de framerate
     this.monitorFramerate();
 
@@ -48,25 +48,27 @@ class PerformanceAnalyzer {
     // Usar MessageChannel para monitoramento mais preciso
     const channel = new MessageChannel();
     const originalSetTimeout = window.setTimeout;
-    
+
     channel.port1.onmessage = () => {
       if (this.isMonitoring) {
         channel.port1.postMessage(null);
       }
     };
-    
+
     window.setTimeout = ((callback: any, delay: number = 0, ...args: any[]) => {
       const start = performance.now();
-      
+
       return originalSetTimeout(() => {
         const executionTime = performance.now() - start;
-        
+
         // Aumentar threshold para 250ms para reduzir ruído
         if (executionTime > 250) {
           this.violationCount++;
-          console.warn(`⚠️ setTimeout Violation: ${executionTime.toFixed(2)}ms (delay: ${delay}ms)`);
+          console.warn(
+            `⚠️ setTimeout Violation: ${executionTime.toFixed(2)}ms (delay: ${delay}ms)`
+          );
         }
-        
+
         callback(...args);
       }, delay);
     }) as any;
@@ -84,7 +86,7 @@ class PerformanceAnalyzer {
 
     const measureFrame = () => {
       frames++;
-      
+
       const now = performance.now();
       const timeSinceLastCheck = now - lastCheck;
 
@@ -92,13 +94,13 @@ class PerformanceAnalyzer {
       if (timeSinceLastCheck >= FRAME_CHECK_INTERVAL) {
         const fps = Math.round((frames * 1000) / timeSinceLastCheck);
         this.frameCount = fps;
-        
+
         // Resetar contadores
         frames = 0;
         lastCheck = now;
 
         // Usar requestIdleCallback para análise não-crítica
-        if ('requestIdleCallback' in window) {
+        if ("requestIdleCallback" in window) {
           (window as any).requestIdleCallback(() => {
             if (fps < 30) {
               console.warn(`⚠️ Low framerate detected: ${fps} FPS`);
@@ -106,18 +108,18 @@ class PerformanceAnalyzer {
           });
         }
       }
-      
+
       if (this.isMonitoring) {
         requestAnimationFrame(measureFrame);
       }
     };
-    
+
     requestAnimationFrame(measureFrame);
   }
 
   private async monitorMemoryUsage() {
-    if (!('memory' in performance)) {
-      console.log('📊 Memory API não disponível');
+    if (!("memory" in performance)) {
+      console.log("📊 Memory API não disponível");
       return;
     }
 
@@ -130,16 +132,16 @@ class PerformanceAnalyzer {
         const usedMB = memory.usedJSHeapSize / 1024 / 1024;
         const totalMB = memory.totalJSHeapSize / 1024 / 1024;
         const now = performance.now();
-        
+
         // Trigger GC se uso alto ou intervalo atingido
-        if (usedMB > totalMB * 0.8 || (now - lastGC) > GC_INTERVAL) {
-          if (typeof window.gc === 'function') {
+        if (usedMB > totalMB * 0.8 || now - lastGC > GC_INTERVAL) {
+          if (typeof window.gc === "function") {
             window.gc();
             lastGC = now;
-            console.log('🧹 Garbage Collection triggered');
+            console.log("🧹 Garbage Collection triggered");
           }
         }
-        
+
         // Só alertar se ainda estiver alto após tentativa de GC
         if (usedMB > totalMB * 0.8) {
           console.warn(`⚠️ High Memory Usage: ${usedMB.toFixed(1)}MB / ${totalMB.toFixed(1)}MB`);
@@ -155,10 +157,11 @@ class PerformanceAnalyzer {
   }
 
   generateReport(): PerformanceReport {
-    const framerate = this.frameCount > 0 ? Math.round(this.frameCount / (performance.now() / 1000)) : 0;
-    
+    const framerate =
+      this.frameCount > 0 ? Math.round(this.frameCount / (performance.now() / 1000)) : 0;
+
     let memoryUsage = 0;
-    if ('memory' in performance) {
+    if ("memory" in performance) {
       const memory = (performance as any).memory;
       if (memory) {
         memoryUsage = Math.round((memory.usedJSHeapSize / memory.totalJSHeapSize) * 100);
@@ -174,7 +177,7 @@ class PerformanceAnalyzer {
         animationFrameSchedulerActive: true,
         messageChannelSchedulerActive: true,
         totalOptimizations: this.countOptimizations(),
-      }
+      },
     };
   }
 
@@ -185,46 +188,52 @@ class PerformanceAnalyzer {
 
   logReport() {
     const report = this.generateReport();
-    
-    console.group('🚀 Performance Analysis Report');
+
+    console.group("🚀 Performance Analysis Report");
     console.log(`⏱️ setTimeout Violations: ${report.timeoutViolations}`);
     console.log(`🎞️ Average Framerate: ${report.framerate} FPS`);
     console.log(`💾 Memory Usage: ${report.memoryUsage}%`);
-    console.log(`✅ Smart Timeout: ${report.optimizationStatus.smartTimeoutEnabled ? 'Enabled' : 'Disabled'}`);
-    console.log(`🎨 Animation Frame Scheduler: ${report.optimizationStatus.animationFrameSchedulerActive ? 'Active' : 'Inactive'}`);
-    console.log(`📨 Message Channel Scheduler: ${report.optimizationStatus.messageChannelSchedulerActive ? 'Active' : 'Inactive'}`);
+    console.log(
+      `✅ Smart Timeout: ${report.optimizationStatus.smartTimeoutEnabled ? "Enabled" : "Disabled"}`
+    );
+    console.log(
+      `🎨 Animation Frame Scheduler: ${report.optimizationStatus.animationFrameSchedulerActive ? "Active" : "Inactive"}`
+    );
+    console.log(
+      `📨 Message Channel Scheduler: ${report.optimizationStatus.messageChannelSchedulerActive ? "Active" : "Inactive"}`
+    );
     console.log(`🔧 Total Optimizations Applied: ${report.optimizationStatus.totalOptimizations}`);
-    
+
     // Recomendações
-    console.group('📋 Recommendations');
+    console.group("📋 Recommendations");
     if (report.timeoutViolations > 5) {
-      console.warn('⚠️ High timeout violations detected. Consider more aggressive debouncing.');
+      console.warn("⚠️ High timeout violations detected. Consider more aggressive debouncing.");
     }
     if (report.framerate < 30) {
-      console.warn('⚠️ Low framerate detected. Consider reducing animation complexity.');
+      console.warn("⚠️ Low framerate detected. Consider reducing animation complexity.");
     }
     if (report.memoryUsage > 80) {
-      console.warn('⚠️ High memory usage. Consider implementing garbage collection triggers.');
+      console.warn("⚠️ High memory usage. Consider implementing garbage collection triggers.");
     }
     if (report.timeoutViolations === 0) {
-      console.log('✅ No setTimeout violations detected! Optimizations working well.');
+      console.log("✅ No setTimeout violations detected! Optimizations working well.");
     }
     console.groupEnd();
-    
+
     console.groupEnd();
-    
+
     return report;
   }
 
   stopMonitoring() {
     this.isMonitoring = false;
-    console.log('🔍 Performance Analyzer: Monitoramento pausado');
+    console.log("🔍 Performance Analyzer: Monitoramento pausado");
   }
 
   reset() {
     this.violationCount = 0;
     this.frameCount = 0;
-    console.log('🔄 Performance Analyzer: Métricas resetadas');
+    console.log("🔄 Performance Analyzer: Métricas resetadas");
   }
 }
 
@@ -232,10 +241,10 @@ class PerformanceAnalyzer {
 export const performanceAnalyzer = PerformanceAnalyzer.getInstance();
 
 // Auto-start monitoring in development
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   setTimeout(() => {
     performanceAnalyzer.startMonitoring();
-    
+
     // Generate report every 30 seconds
     setInterval(() => {
       performanceAnalyzer.logReport();

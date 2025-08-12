@@ -4,42 +4,6 @@
 import { Badge } from "@/components/ui/badge";
 import React from "react";
 
-/**
- * 🎯 COMPONENTE CABEÇALHO DO QUIZ - EDITÁVEL
- * ===========================================
- *
- * Componente configurável de cabeçalho para o quiz que suporta:
- * - Logo personalizável (URL, tamanho, posicionamento)
- * - Barra decorativa (cor, altura, posição)
- * - Controles de escala e alinhamento
- * - Background personalizável
- * - Integração completa com painel de propriedades
- * - Sistema de callbacks para edição
- *
- * @example
- * ```tsx
- * <QuizIntroHeaderBlock
- *   id="header-1"
- *   properties={{
- *     enabled: true,
- *     showLogo: true,
- *     logoUrl: "https://exemplo.com/logo.png",
- *     logoSize: 120,
- *     barColor: "#B89B7A",
- *     alignment: "center"
- *   }}
- *   isEditing={true}
- *   onUpdate={(id, updates) => console.log(updates)}
- *   onClick={() => selectComponent(id)}
- *   onPropertyChange={(key, value) => updateProperty(key, value)}
- * />
- * ```
- *
- * @see ComponentTestingPanel - Para testar diferentes configurações
- * @see ComponentSpecificPropertiesPanel - Para painel de propriedades
- * @see CHECKLIST_COMPONENTES_EDITOR.md - Para requisitos de implementação
- */
-
 interface QuizIntroHeaderBlockProps {
   id: string;
   className?: string;
@@ -107,35 +71,9 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   onClick,
   onPropertyChange,
 }) => {
-  // ✅ SISTEMA DE DEBUG E LOGS
-  React.useEffect(() => {
-    if (isEditing) {
-      console.log(`QuizIntroHeaderBlock ${id} entered editing mode`);
-    }
-  }, [isEditing, id]);
-
-  React.useEffect(() => {
-    console.log(`QuizIntroHeaderBlock ${id} properties updated:`, properties);
-  }, [properties, id]);
-
-  // ✅ Função para notificar mudanças ao componente pai
+  // Função para notificar mudanças ao componente pai
   const handleUpdate = (updates: any) => {
-    console.log(`QuizIntroHeaderBlock ${id} onUpdate called:`, updates);
     onUpdate?.(id, updates);
-  };
-
-  // ✅ IMPLEMENTAÇÃO DO CALLBACK onPropertyChange
-  const handlePropertyChange = (property: string, value: any) => {
-    console.log(`QuizIntroHeaderBlock ${id} property changed: ${property} = ${value}`);
-    onPropertyChange?.(property, value);
-    onUpdate?.(id, { [property]: value });
-  };
-
-  // ✅ IMPLEMENTAÇÃO DO CALLBACK onClick
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log(`QuizIntroHeaderBlock ${id} clicked`);
-    onClick?.();
   };
 
   // Extrair propriedades com valores padrão
@@ -222,16 +160,7 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     <div
       id={id}
       className={`quiz-intro-header-block ${className} ${isEditing ? "editing-mode" : ""}`}
-      style={{
-        ...containerStyle,
-        cursor: isEditing ? "pointer" : "default",
-        border: isSelected ? "2px dashed #B89B7A" : "none",
-        borderRadius: isSelected ? "8px" : "0",
-        padding: isSelected ? "8px" : "0",
-        transition: "all 0.2s ease",
-      }}
-      onClick={handleClick}
-      title={isEditing ? "Clique para selecionar componente" : undefined}
+      style={containerStyle}
     >
       {/* Barra decorativa superior */}
       {renderDecorativeBar("top")}
@@ -249,9 +178,7 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             onError={e => {
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
-              // ✅ Usar handlePropertyChange para notificar erro
-              console.log(`Logo loading error for ${id}:`, logoUrl);
-              handlePropertyChange("logoError", true);
+              // Notificar erro de carregamento da logo
               handleUpdate({ logoError: true, logoUrl });
             }}
           />

@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { BlockEditorProps } from "./types";
 
-
 const TextBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   return (
     <div className="space-y-4">

@@ -27,18 +27,18 @@ class AnimationFrameScheduler {
     const callbacks = [...this.queue];
     this.queue.length = 0;
     this.isScheduled = false;
-    
+
     callbacks.forEach(callback => {
       try {
         callback();
       } catch (error) {
-        console.error('Animation frame callback error:', error);
+        console.error("Animation frame callback error:", error);
       }
     });
   }
 }
 
-// 2️⃣ OTIMIZAÇÃO: MessageChannel para non-blocking scheduling  
+// 2️⃣ OTIMIZAÇÃO: MessageChannel para non-blocking scheduling
 class MessageChannelScheduler {
   private channel: MessageChannel;
   private port1: MessagePort;
@@ -49,7 +49,7 @@ class MessageChannelScheduler {
     this.channel = new MessageChannel();
     this.port1 = this.channel.port1;
     this.port2 = this.channel.port2;
-    
+
     this.port1.onmessage = () => this.flushCallbacks();
   }
 
@@ -61,12 +61,12 @@ class MessageChannelScheduler {
   private flushCallbacks() {
     const callbacks = [...this.callbacks];
     this.callbacks.length = 0;
-    
+
     callbacks.forEach(callback => {
       try {
         callback();
       } catch (error) {
-        console.error('MessageChannel callback error:', error);
+        console.error("MessageChannel callback error:", error);
       }
     });
   }
@@ -83,20 +83,20 @@ class SmartTimeout {
   static schedule(
     callback: () => void,
     delay: number = 0,
-    strategy: 'animation' | 'message' | 'timeout' = 'animation'
+    strategy: "animation" | "message" | "timeout" = "animation"
   ): number {
     switch (strategy) {
-      case 'animation':
+      case "animation":
         // Para UI updates, usar requestAnimationFrame
         this.animationScheduler.schedule(callback);
         return 0; // requestAnimationFrame não retorna ID cancelável
 
-      case 'message':
+      case "message":
         // Para non-blocking operations
         this.messageScheduler.schedule(callback);
         return 0;
 
-      case 'timeout':
+      case "timeout":
       default:
         // Fallback para setTimeout nativo quando necessário
         return window.setTimeout(callback, Math.max(delay, 4)) as unknown as number;
@@ -109,9 +109,9 @@ class SmartTimeout {
   static scheduleInterval(
     callback: () => void,
     delay: number,
-    strategy: 'animation' | 'timeout' = 'animation'
+    strategy: "animation" | "timeout" = "animation"
   ): number {
-    if (strategy === 'animation' && delay < 100) {
+    if (strategy === "animation" && delay < 100) {
       // Para intervalos rápidos, usar requestAnimationFrame recursivo
       const recursiveCallback = () => {
         callback();
@@ -120,7 +120,7 @@ class SmartTimeout {
       requestAnimationFrame(recursiveCallback);
       return 0;
     }
-    
+
     // Fallback para setInterval nativo
     return window.setInterval(callback, Math.max(delay, 16)) as unknown as number;
   }
@@ -149,11 +149,15 @@ class OptimizedDebounce {
         this.scheduler.schedule(() => fn(...args));
       } else {
         // Para delays maiores, usar setTimeout otimizado
-        const timerId = SmartTimeout.schedule(() => {
-          this.timers.delete(uniqueKey);
-          fn(...args);
-        }, delay, 'timeout');
-        
+        const timerId = SmartTimeout.schedule(
+          () => {
+            this.timers.delete(uniqueKey);
+            fn(...args);
+          },
+          delay,
+          "timeout"
+        );
+
         this.timers.set(uniqueKey, timerId);
       }
     }) as T & { cancel: () => void };
@@ -201,17 +205,20 @@ export const PerformanceOptimizer = {
   // Schedulers otimizados
   schedule: SmartTimeout.schedule,
   scheduleInterval: SmartTimeout.scheduleInterval,
-  
+
   // Debounce otimizado
   debounce: OptimizedDebounce.create,
-  
+
   // Utilitários
   isHighFrequencyUpdate: (delay: number) => delay < 100,
-  getSuggestedStrategy: (delay: number, isUIUpdate = false): 'animation' | 'message' | 'timeout' => {
-    if (isUIUpdate || delay < 16) return 'animation';
-    if (delay < 100) return 'message';
-    return 'timeout';
-  }
+  getSuggestedStrategy: (
+    delay: number,
+    isUIUpdate = false
+  ): "animation" | "message" | "timeout" => {
+    if (isUIUpdate || delay < 16) return "animation";
+    if (delay < 100) return "message";
+    return "timeout";
+  },
 };
 
 /**

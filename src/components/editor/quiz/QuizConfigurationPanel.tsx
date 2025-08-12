@@ -42,8 +42,6 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
     }
   }, [activeStageId]);
 
-
-
   // Renderizar configurações específicas para cada tipo de step
   const renderStepConfiguration = () => {
     if (!selectedStep) return null;

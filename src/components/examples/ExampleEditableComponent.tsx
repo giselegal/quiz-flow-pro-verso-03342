@@ -86,9 +86,9 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
   },
   isEditing = false,
   isSelected = false,
-  onUpdate: _onUpdate,
+  onUpdate,
   onClick,
-  onPropertyChange: _onPropertyChange,
+  onPropertyChange,
 }) => {
   // ✅ 3. ESTADO LOCAL SE NECESSÁRIO
   const [isHovered, setIsHovered] = useState(false);
@@ -104,6 +104,11 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
     console.log(`ExampleComponent ${id} properties updated:`, properties);
   }, [properties, id]);
 
+  // ✅ 5. FUNÇÃO DE ATUALIZAÇÃO
+  const handleUpdate = (updates: any) => {
+    onUpdate?.(id, updates);
+    console.log(`ExampleComponent ${id} updated:`, updates);
+  };
 
   // ✅ 6. FUNÇÃO DE CLIQUE
   const handleClick = (e: React.MouseEvent) => {
@@ -122,9 +127,9 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
       case "small":
         return { fontSize: "14px", padding: "8px" };
       case "large":
-        return { fontSize: "20px" };
+        return { fontSize: "20px", padding: "24px" };
       default:
-        return { fontSize: "16px" };
+        return { fontSize: "16px", padding: "16px" };
     }
   };
 

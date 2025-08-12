@@ -60,7 +60,6 @@ interface StatsBlockProps extends BlockComponentProps {
   };
 }
 
-
 const StatsMetricsBlock: React.FC<StatsBlockProps> = ({
   block,
   isSelected = false,

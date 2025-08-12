@@ -84,7 +84,7 @@ export type BlockType =
   | "image"
   | "button"
   | "spacer"
-  
+
   // Blocos inline
   | "text-inline"
   | "image-inline"
@@ -99,7 +99,7 @@ export type BlockType =
   | "input-field"
   | "form-input"
   | "legal-notice-inline"
-  
+
   // Blocos de quiz
   | "quiz-intro-header"
   | "quiz-start-page-inline"
@@ -108,7 +108,7 @@ export type BlockType =
   | "quiz-offer-cta-inline"
   | "step-header-inline"
   | "step01-intro"
-  
+
   // Blocos de resultado e estilo
   | "style-result"
   | "style-card-inline"
@@ -116,7 +116,7 @@ export type BlockType =
   | "result-header-inline"
   | "secondary-styles"
   | "secondaryStylesTitle"
-  
+
   // Blocos de layout
   | "two-column"
   | "form-container"
@@ -126,12 +126,12 @@ export type BlockType =
   | "header"
   | "carousel"
   | "decorative-bar-inline"
-  
+
   // Blocos de acessibilidade
   | "accessibility-skip-link"
   | "animation-block"
   | "loading-animation"
-  
+
   // Blocos de conteúdo
   | "benefits"
   | "benefitsList"

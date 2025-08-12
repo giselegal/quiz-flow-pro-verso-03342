@@ -8,7 +8,6 @@
  * Use: /src/components/universal/EnhancedUniversalPropertiesPanel.tsx
  */
 
-
 interface Block {
   id: string;
   type: string;
@@ -20,7 +19,6 @@ interface EnhancedUniversalPropertiesPanelProps {
   onUpdateBlock: (blockId: string, properties: any) => void;
   className?: string;
 }
-
 
 export const BasicPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
   selectedBlock,

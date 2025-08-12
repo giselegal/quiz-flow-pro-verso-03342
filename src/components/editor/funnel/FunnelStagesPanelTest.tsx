@@ -6,9 +6,7 @@ interface FunnelStagesPanelProps {
   onStageSelect?: (stageId: string) => void;
 }
 
-export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
-  className,
-}) => {
+export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({ className }) => {
   return (
     <Card className={className}>
       <CardHeader>

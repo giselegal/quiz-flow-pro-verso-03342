@@ -18,7 +18,6 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
   propertiesPanel,
   className,
 }) => {
-
   return (
     <ScrollSyncProvider>
       <div className={cn("h-full w-full bg-background", className)}>

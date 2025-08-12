@@ -1,18 +1,44 @@
-// @ts-nocheck
-import React from 'react';
+import Image from "next/image";
+import React from "react";
 
-const ImageDisplayInline = ({ block, isSelected, onClick }) => {
-  const { imageUrl = "", imageAlt = "Image" } = block?.properties || {};
-  
+interface ImageDisplayInlineProps {
+  src?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  onClick?: () => void;
+}
+
+const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
+  src = "",
+  alt = "Imagem",
+  width = 400,
+  height = 300,
+  className = "",
+  onClick,
+}) => {
+  if (!src) {
+    return (
+      <div
+        className={`flex items-center justify-center bg-muted rounded-lg ${className}`}
+        style={{ width, height }}
+        onClick={onClick}
+      >
+        <span className="text-muted-foreground text-sm">Selecione uma imagem</span>
+      </div>
+    );
+  }
+
   return (
-    <div className={isSelected ? 'ring-2 ring-primary' : ''} onClick={onClick}>
-      {imageUrl ? (
-        <img src={imageUrl} alt={imageAlt} className="w-full rounded" />
-      ) : (
-        <div className="w-full h-32 bg-gray-100 border border-dashed border-gray-300 rounded flex items-center justify-center">
-          <span className="text-gray-500">Click to add image</span>
-        </div>
-      )}
+    <div className={`relative ${className}`} onClick={onClick}>
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        className="rounded-lg object-cover"
+      />
     </div>
   );
 };

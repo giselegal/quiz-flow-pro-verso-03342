@@ -2,7 +2,6 @@ import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
 import React from "react";
 
-
 interface DroppableCanvasProps {
   blocks: Block[];
   onBlocksChange: (blocks: Block[]) => void;
@@ -16,7 +15,6 @@ const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   selectedBlockId: _selectedBlockId,
   isPreviewing: _isPreviewing = false,
 }) => {
-
   const { setNodeRef } = useDroppable({
     id: "droppable-canvas",
     data: {

@@ -1,14 +1,5 @@
-
 import { Button } from "@/components/ui/button";
-import {
-  Eye,
-  Save,
-  Smartphone,
-  Tablet,
-  Monitor,
-  Maximize2,
-  Settings,
-} from "lucide-react";
+import { Eye, Save, Smartphone, Tablet, Monitor, Maximize2, Settings } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 

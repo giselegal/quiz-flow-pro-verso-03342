@@ -28,7 +28,6 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
   onBackgroundColorChange,
   className = "",
 }) => {
-  
   const [viewportMode, setViewportMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
   const viewportSizes = {
