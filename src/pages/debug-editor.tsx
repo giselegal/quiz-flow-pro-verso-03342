@@ -37,7 +37,7 @@ const DebugEditorContext: React.FC = () => {
         <h2 className="text-lg font-semibold mb-2">Lista de Etapas</h2>
         {stages && stages.length > 0 ? (
           <ul className="space-y-2">
-            {stages.map((stage, index) => (
+            {stages.map((stage, _index) => (
               <li key={stage.id} className="p-2 border rounded">
                 <strong>{stage.id}</strong>: {stage.name} ({stage.type})
                 {stage.id === activeStageId && (

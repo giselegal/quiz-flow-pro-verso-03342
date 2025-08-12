@@ -1,3 +1,4 @@
+import React from "react";
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
