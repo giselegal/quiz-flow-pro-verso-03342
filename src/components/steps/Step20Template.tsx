@@ -1,6 +1,6 @@
 /**
- * Step20Template - Template Modular para Etapa 20 do Quiz
- * ✅ PÁGINA DE RESULTADO FINAL
+ * Step20Template - Resultado Final com Cálculo Inteligente
+ * ✅ INTEGRAÇÃO COM SISTEMA DE PONTUAÇÃO
  */
 
 export const getStep20Template = () => {
@@ -18,7 +18,7 @@ export const getStep20Template = () => {
           marginBottom: 'mb-8',
         },
         subtitle: {
-          text: 'Com base em suas respostas, aqui está sua análise personalizada:',
+          text: 'Baseado nas suas respostas das questões 2-11',
           fontSize: 'text-lg',
           textAlign: 'text-center',
           color: 'text-gray-700',
@@ -35,13 +35,53 @@ export const getStep20Template = () => {
         enableExport: true,
         resultLayout: 'vertical',
         animationDelay: 500,
+        // ✅ NOVO: Configuração de cálculo automático
+        scoreCalculation: {
+          source: 'questions_2_to_11',
+          method: 'weighted',
+          showPercentage: true,
+          showProfile: true,
+          showCategoryBreakdown: true,
+          autoCalculate: true,
+        },
         resultConfig: {
           showProgressBar: true,
           showCategoryScores: true,
           showPersonalizedMessage: true,
           includeNextSteps: true,
-          enableSocialShare: false,
+          enableSocialShare: true,
           resultCardStyle: 'modern',
+          // ✅ NOVO: Perfis de resultado
+          profileMessages: {
+            'Expert Avançado': {
+              title: 'Parabéns! Você é um Expert',
+              message:
+                'Seu conhecimento em marketing digital é excepcional. Você está pronto para estratégias avançadas.',
+              color: 'text-green-600',
+              bgColor: 'bg-green-50',
+            },
+            'Profissional Experiente': {
+              title: 'Muito Bom! Profissional Sólido',
+              message:
+                'Você tem uma base forte. Com algumas otimizações, pode chegar ao nível expert.',
+              color: 'text-blue-600',
+              bgColor: 'bg-blue-50',
+            },
+            Intermediário: {
+              title: 'Bom Progresso! Nível Intermediário',
+              message:
+                'Você está no caminho certo. Foque em automatização e métricas para evoluir.',
+              color: 'text-yellow-600',
+              bgColor: 'bg-yellow-50',
+            },
+            Iniciante: {
+              title: 'Começando Bem! Grande Potencial',
+              message:
+                'Todo expert começou como você. Foque nos fundamentos e evolua consistentemente.',
+              color: 'text-purple-600',
+              bgColor: 'bg-purple-50',
+            },
+          },
         },
         resultStyles: {
           cardBackground: 'bg-white',
@@ -53,24 +93,25 @@ export const getStep20Template = () => {
           accentColor: 'blue',
         },
         tracking: {
-          event: 'quiz_result_viewed',
+          event: 'quiz_result_calculated',
           properties: {
             step: 20,
-            resultType: 'final_score',
+            resultType: 'weighted_score',
             calculatedFrom: 'questions_2_to_11',
+            includesCategoryBreakdown: true,
           },
         },
         stepInfo: {
           step: 20,
           category: 'result',
-          isScoring: false,
+          isScoring: true,
           isStrategic: false,
           isTransition: false,
           isResult: true,
           flowPosition: 'final-result',
-          dependencies: ['questions_2_to_11_completed'],
+          dependencies: ['questions_2_to_11_completed', 'user_name_collected'],
           nextStep: 21,
-          description: 'Página de resultado final calculado apenas das questões 2-11',
+          description: 'Resultado final com cálculo inteligente baseado em 10 perguntas principais',
         },
       },
     },

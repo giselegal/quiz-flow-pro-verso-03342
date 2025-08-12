@@ -5,9 +5,9 @@
  * Converte templates híbridos para modulares puros usando Prettier
  */
 
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,28 +36,28 @@ class ModularConverter {
 
   async run() {
     console.log('🚀 Iniciando conversão para padrão modular...\n');
-    
+
     // 1. Converter híbridos para modulares
     await this.convertHybrids();
-    
+
     // 2. Criar templates vazios
     await this.createEmptyTemplates();
-    
+
     // 3. Aplicar Prettier em tudo
     await this.formatAllTemplates();
-    
+
     // 4. Relatório final
     this.generateReport();
   }
 
   async convertHybrids() {
     const hybridSteps = [3, 4, 5, 6, 7, 8, 9, 10, 11, 21];
-    
+
     for (const stepNum of hybridSteps) {
       try {
         const fileName = `Step${stepNum.toString().padStart(2, '0')}Template.tsx`;
         const filePath = path.join(STEPS_DIR, fileName);
-        
+
         if (fs.existsSync(filePath)) {
           console.log(`📝 Convertendo ${fileName}...`);
           await this.convertHybridToModular(filePath, stepNum);
@@ -75,19 +75,19 @@ class ModularConverter {
 
   async convertHybridToModular(filePath, stepNum) {
     const content = fs.readFileSync(filePath, 'utf8');
-    
+
     // Extrair apenas a função modular existente
     const modularFunctionMatch = content.match(
       /export const getStep\d+Template = \(\) => \{[\s\S]*?\n\];[\s\S]*?\n\};/
     );
-    
+
     if (!modularFunctionMatch) {
       throw new Error('Função modular não encontrada');
     }
-    
+
     // Criar novo template modular puro
     const newContent = this.createModularTemplate(stepNum, modularFunctionMatch[0]);
-    
+
     // Salvar e formatar
     fs.writeFileSync(filePath, newContent);
     await this.formatFile(filePath);
@@ -95,7 +95,7 @@ class ModularConverter {
 
   createModularTemplate(stepNum, modularFunction) {
     const stepPadded = stepNum.toString().padStart(2, '0');
-    
+
     return `/**
  * Step${stepPadded}Template - Template Modular para Etapa ${stepNum} do Quiz
  * ✅ CONVERTIDO PARA MODULAR PURO
@@ -110,20 +110,20 @@ export default getStep${stepPadded}Template;
 
   async createEmptyTemplates() {
     const emptySteps = [13, 15];
-    
+
     for (const stepNum of emptySteps) {
       try {
         const fileName = `Step${stepNum.toString().padStart(2, '0')}Template.tsx`;
         const filePath = path.join(STEPS_DIR, fileName);
-        
+
         console.log(`📝 Criando ${fileName}...`);
-        
+
         const strategicIndex = stepNum === 13 ? 1 : 3;
         const content = this.createStrategicTemplate(stepNum, strategicIndex);
-        
+
         fs.writeFileSync(filePath, content);
         await this.formatFile(filePath);
-        
+
         this.results.created.push(fileName);
       } catch (error) {
         console.error(`❌ Erro ao criar Step${stepNum}:`, error.message);
@@ -135,12 +135,12 @@ export default getStep${stepPadded}Template;
   createStrategicTemplate(stepNum, strategicIndex) {
     const stepPadded = stepNum.toString().padStart(2, '0');
     const progressValue = Math.round(((stepNum - 1) / 20) * 100);
-    
+
     const questions = {
       13: 'Em que ocasiões você mais usa as roupas que compra?',
-      15: 'Qual aspecto mais te incomoda no seu guarda-roupa atual?'
+      15: 'Qual aspecto mais te incomoda no seu guarda-roupa atual?',
     };
-    
+
     const options = {
       13: [
         { id: 'strategic-13-a', text: 'Trabalho/profissional', category: 'work' },
@@ -153,7 +153,7 @@ export default getStep${stepPadded}Template;
         { id: 'strategic-15-b', text: 'Roupas que não combina', category: 'mismatch' },
         { id: 'strategic-15-c', text: 'Peças sem uso', category: 'unused' },
         { id: 'strategic-15-d', text: 'Falta de variedade', category: 'variety' },
-      ]
+      ],
     };
 
     return `/**
@@ -210,10 +210,14 @@ export const getStep${stepPadded}Template = () => {
       id: 'strategic-options-step${stepNum}',
       type: 'options-grid',
       properties: {
-        options: ${JSON.stringify(options[stepNum].map(opt => ({
-          ...opt,
-          strategicType: 'usage'
-        })), null, 10)},
+        options: ${JSON.stringify(
+          options[stepNum].map(opt => ({
+            ...opt,
+            strategicType: 'usage',
+          })),
+          null,
+          10
+        )},
         multiSelect: false,
         columns: 2,
         backgroundColor: '#FFFFFF',
@@ -271,16 +275,17 @@ export default getStep${stepPadded}Template;
 
   async formatAllTemplates() {
     console.log('\n🎨 Aplicando Prettier em todos os templates...');
-    
+
     try {
-      const templateFiles = fs.readdirSync(STEPS_DIR)
+      const templateFiles = fs
+        .readdirSync(STEPS_DIR)
         .filter(file => file.match(/Step\d+Template\.tsx$/))
         .map(file => path.join(STEPS_DIR, file));
-      
+
       for (const file of templateFiles) {
         await this.formatFile(file);
       }
-      
+
       console.log('✅ Prettier aplicado com sucesso!');
     } catch (error) {
       console.error('❌ Erro ao aplicar Prettier:', error.message);
@@ -289,9 +294,9 @@ export default getStep${stepPadded}Template;
 
   async formatFile(filePath) {
     try {
-      execSync(`npx prettier --write "${filePath}"`, { 
+      execSync(`npx prettier --write "${filePath}"`, {
         stdio: 'pipe',
-        cwd: path.join(__dirname, '..')
+        cwd: path.join(__dirname, '..'),
       });
     } catch (error) {
       console.warn(`⚠️  Prettier falhou em ${path.basename(filePath)}`);
@@ -300,26 +305,26 @@ export default getStep${stepPadded}Template;
 
   generateReport() {
     console.log('\n📊 RELATÓRIO DE CONVERSÃO:\n');
-    
+
     console.log(`✅ Convertidos: ${this.results.converted.length}`);
     this.results.converted.forEach(file => console.log(`   - ${file}`));
-    
+
     console.log(`\n🆕 Criados: ${this.results.created.length}`);
     this.results.created.forEach(file => console.log(`   - ${file}`));
-    
+
     console.log(`\n⏭️  Ignorados: ${this.results.skipped.length}`);
     this.results.skipped.forEach(file => console.log(`   - ${file}`));
-    
+
     if (this.results.errors.length > 0) {
       console.log(`\n❌ Erros: ${this.results.errors.length}`);
       this.results.errors.forEach(error => console.log(`   - ${error}`));
     }
-    
+
     console.log('\n🎯 PRÓXIMOS PASSOS:');
     console.log('   1. Verificar se todos os templates foram convertidos');
     console.log('   2. Testar integração com o sistema');
     console.log('   3. Remover imports React não utilizados');
-    
+
     console.log('\n🚀 Conversão concluída!');
   }
 }

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useEditor } from '@/context/EditorContext';
 import { Eye, Image, Palette, Scale, Settings, Upload } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -103,6 +104,9 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
       onUpdate(selectedBlock.id, updatedProperties);
     }
   };
+
+  // ✅ NOVO: Acesso ao sistema de quiz
+  const { quizState } = useEditor();
 
   return (
     <div className="h-full flex flex-col" style={{ backgroundColor: '#FEFEFE' }}>
@@ -220,6 +224,43 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                     onCheckedChange={checked => handlePropertyUpdate('isSticky', checked)}
                   />
                 </div>
+
+                {/* ✅ NOVO: Controles de Pontuação */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Mostrar Pontuação
+                  </Label>
+                  <Switch
+                    checked={properties.showScore || false}
+                    onCheckedChange={checked => handlePropertyUpdate('showScore', checked)}
+                  />
+                </div>
+
+                {properties.showScore && (
+                  <div className="space-y-2 p-2 rounded" style={{ backgroundColor: '#FAF9F7' }}>
+                    <div className="text-xs font-medium" style={{ color: '#432818' }}>
+                      Status do Quiz
+                    </div>
+                    <div className="text-xs" style={{ color: '#6B4F43' }}>
+                      Respostas: {Object.keys(quizState.userAnswers).length}/10
+                    </div>
+                    {quizState.currentScore && (
+                      <>
+                        <div className="text-xs" style={{ color: '#6B4F43' }}>
+                          Pontuação: {quizState.currentScore.percentage}%
+                        </div>
+                        <div className="text-xs" style={{ color: '#6B4F43' }}>
+                          Perfil: {quizState.currentScore.profile}
+                        </div>
+                      </>
+                    )}
+                    {quizState.isQuizCompleted && (
+                      <Badge variant="outline" className="text-xs">
+                        Quiz Completo
+                      </Badge>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

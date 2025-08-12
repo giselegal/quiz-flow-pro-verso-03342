@@ -5,6 +5,7 @@
 ### 🔍 **CLASSIFICAÇÃO POR ARQUITETURA:**
 
 #### ✅ **MODULARES PUROS** (Apenas função `getStepXXTemplate()`)
+
 - **Step01**: ✅ Modular - Introdução do quiz
 - **Step02**: ✅ Modular - Questão de roupa favorita
 - **Step12**: ✅ Modular - Transição para estratégicas
@@ -16,6 +17,7 @@
 - **Step20**: ✅ Modular - Página de resultado
 
 #### 🔄 **HÍBRIDOS** (React Component + função modular)
+
 - **Step03**: 🔄 Híbrido - React.FC + getStep03Template()
 - **Step04**: 🔄 Híbrido - React.FC + getStep04Template()
 - **Step05**: 🔄 Híbrido - React.FC + getStep05Template()
@@ -28,6 +30,7 @@
 - **Step21**: 🔄 Híbrido - React.FC + getStep21Template()
 
 #### ❌ **VAZIOS/INCOMPLETOS**
+
 - **Step13**: ❌ Arquivo vazio (0 linhas)
 - **Step15**: ❌ Arquivo vazio (0 linhas)
 
@@ -35,25 +38,28 @@
 
 ## 📈 **ESTATÍSTICAS:**
 
-| Tipo | Quantidade | Percentagem |
-|------|-----------|-------------|
-| **Modulares Puros** | 9 | 43% |
-| **Híbridos** | 10 | 48% |
-| **Vazios** | 2 | 9% |
-| **TOTAL** | 21 | 100% |
+| Tipo                | Quantidade | Percentagem |
+| ------------------- | ---------- | ----------- |
+| **Modulares Puros** | 9          | 43%         |
+| **Híbridos**        | 10         | 48%         |
+| **Vazios**          | 2          | 9%          |
+| **TOTAL**           | 21         | 100%        |
 
 ---
 
 ## 🎯 **ANÁLISE DETALHADA:**
 
 ### **✅ MODULARES PUROS - Seguem padrão desejado:**
+
 ```typescript
 export const getStepXXTemplate = () => {
   return [
     {
       id: 'stepXX-header',
       type: 'quiz-header',
-      properties: { /* configs */ }
+      properties: {
+        /* configs */
+      },
     },
     // ... mais blocos
   ];
@@ -61,6 +67,7 @@ export const getStepXXTemplate = () => {
 ```
 
 ### **🔄 HÍBRIDOS - Arquitetura dupla:**
+
 ```typescript
 // React Component
 export const StepXXTemplate: React.FC<Props> = ({ ... }) => {
@@ -74,6 +81,7 @@ export const getStepXXTemplate = () => {
 ```
 
 ### **❌ VAZIOS - Precisam ser implementados:**
+
 - Step13Template.tsx: 0 bytes
 - Step15Template.tsx: 0 bytes
 
@@ -82,16 +90,19 @@ export const getStepXXTemplate = () => {
 ## 🚨 **INCONSISTÊNCIAS IDENTIFICADAS:**
 
 ### **1. Arquitetura Mista**
+
 - **Problema**: 10 templates híbridos criam complexidade
 - **Impacto**: Confusão sobre qual usar (React vs Modular)
 - **Recomendação**: Padronizar todos como modulares
 
 ### **2. Templates Vazios**
+
 - **Problema**: Step13 e Step15 não implementados
 - **Impacto**: Quebra do fluxo 13-18 estratégico
 - **Recomendação**: Implementar como modulares puros
 
 ### **3. Padrões de ID Inconsistentes**
+
 - **Modulares**: `stepXX-header`
 - **Híbridos**: `stepXX-header` (consistente)
 - **Status**: ✅ IDs consistentes
@@ -100,33 +111,36 @@ export const getStepXXTemplate = () => {
 
 ## 🎯 **FLUXO ATUAL:**
 
-| Etapa | Tipo | Função | Arquitetura |
-|-------|------|--------|-------------|
-| 01 | Introdução | Captura nome | ✅ Modular |
-| 02-11 | Questões pontuadoras | Cálculo resultado | 🔄 Híbridos |
-| 12 | Transição | Explicação | ✅ Modular |
-| 13 | Estratégica 1 | Métricas | ❌ Vazio |
-| 14 | Estratégica 2 | Métricas | ✅ Modular |
-| 15 | Estratégica 3 | Métricas | ❌ Vazio |
-| 16-18 | Estratégicas 4-6 | Métricas | ✅ Modulares |
-| 19 | Transição resultado | Preparação | ✅ Modular |
-| 20 | Resultado | Exibição | ✅ Modular |
-| 21 | Oferta | Comercial | 🔄 Híbrido |
+| Etapa | Tipo                 | Função            | Arquitetura  |
+| ----- | -------------------- | ----------------- | ------------ |
+| 01    | Introdução           | Captura nome      | ✅ Modular   |
+| 02-11 | Questões pontuadoras | Cálculo resultado | 🔄 Híbridos  |
+| 12    | Transição            | Explicação        | ✅ Modular   |
+| 13    | Estratégica 1        | Métricas          | ❌ Vazio     |
+| 14    | Estratégica 2        | Métricas          | ✅ Modular   |
+| 15    | Estratégica 3        | Métricas          | ❌ Vazio     |
+| 16-18 | Estratégicas 4-6     | Métricas          | ✅ Modulares |
+| 19    | Transição resultado  | Preparação        | ✅ Modular   |
+| 20    | Resultado            | Exibição          | ✅ Modular   |
+| 21    | Oferta               | Comercial         | 🔄 Híbrido   |
 
 ---
 
 ## 💡 **RECOMENDAÇÕES:**
 
 ### **1. PRIORIDADE ALTA - Completar vazios:**
+
 - [ ] Implementar Step13Template (estratégica 1)
 - [ ] Implementar Step15Template (estratégica 3)
 
 ### **2. PRIORIDADE MÉDIA - Padronizar arquitetura:**
+
 - [ ] Converter Steps 02-11 para modulares puros
 - [ ] Converter Step21 para modular puro
 - [ ] Remover React Components duplicados
 
 ### **3. PRIORIDADE BAIXA - Otimização:**
+
 - [ ] Padronizar spacing e estilos
 - [ ] Unificar estrutura de propriedades
 
@@ -135,8 +149,9 @@ export const getStepXXTemplate = () => {
 ## ✅ **CONCLUSÃO:**
 
 **NÃO**, as etapas **não seguem o mesmo padrão modular**. Há **3 arquiteturas diferentes**:
+
 - 43% Modulares puros ✅
-- 48% Híbridos 🔄  
+- 48% Híbridos 🔄
 - 9% Vazios ❌
 
 **Para consistência total, seria necessário converter todos para modulares puros.**

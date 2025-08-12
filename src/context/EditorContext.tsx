@@ -1,3 +1,4 @@
+import { calculateQuizScore } from '@/data/correctQuizQuestions';
 import React, {
   createContext,
   ReactNode,
@@ -6,30 +7,30 @@ import React, {
   useEffect,
   useReducer,
   useState,
-} from "react";
-import { useTemplateManager } from "../hooks/useTemplateManager";
-import type { Block } from "../types/editor";
-import { EditorBlock, FunnelStage } from "../types/editor";
-import { TemplateManager } from "../utils/TemplateManager";
-import { performanceAnalyzer } from "../utils/performanceAnalyzer";
+} from 'react';
+import { useTemplateManager } from '../hooks/useTemplateManager';
+import type { Block } from '../types/editor';
+import { EditorBlock, FunnelStage } from '../types/editor';
+import { TemplateManager } from '../utils/TemplateManager';
+import { performanceAnalyzer } from '../utils/performanceAnalyzer';
 
 interface EditorState {
-  state: "ready" | "loading" | "error";
+  state: 'ready' | 'loading' | 'error';
 }
 
 const initialState: EditorState = {
-  state: "ready",
+  state: 'ready',
 };
 
 type EditorAction =
-  | { type: "SET_STATE"; payload: "ready" | "loading" | "error" }
-  | { type: "RESET" };
+  | { type: 'SET_STATE'; payload: 'ready' | 'loading' | 'error' }
+  | { type: 'RESET' };
 
 const reducer = (state: EditorState, action: EditorAction): EditorState => {
   switch (action.type) {
-    case "SET_STATE":
+    case 'SET_STATE':
       return { ...state, state: action.payload };
-    case "RESET":
+    case 'RESET':
       return { ...initialState };
     default:
       return state;
@@ -77,8 +78,8 @@ interface EditorContextType {
   uiState: {
     isPreviewing: boolean;
     setIsPreviewing: (value: boolean) => void;
-    viewportSize: "sm" | "md" | "lg" | "xl";
-    setViewportSize: (size: "sm" | "md" | "lg" | "xl") => void;
+    viewportSize: 'sm' | 'md' | 'lg' | 'xl';
+    setViewportSize: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
   };
 
   // ═══════════════════════════════════════════════
@@ -102,6 +103,16 @@ interface EditorContextType {
     migrateToDatabase: () => Promise<boolean>;
     getStats: () => Promise<any>;
   };
+
+  // ✅ NOVO: Sistema de Quiz e Pontuação
+  quizState: {
+    userAnswers: Record<string, string>;
+    currentScore: ReturnType<typeof calculateQuizScore> | null;
+    setAnswer: (questionId: string, answer: string) => void;
+    calculateCurrentScore: () => void;
+    resetQuiz: () => void;
+    isQuizCompleted: boolean;
+  };
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
@@ -109,21 +120,21 @@ const EditorContext = createContext<EditorContextType | undefined>(undefined);
 export const useEditor = () => {
   const context = useContext(EditorContext);
   if (context === undefined) {
-    throw new Error("useEditor must be used within an EditorProvider");
+    throw new Error('useEditor must be used within an EditorProvider');
   }
   return context;
 };
 
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  console.log("🔥 EditorProvider: INICIANDO PROVIDER!");
+  console.log('🔥 EditorProvider: INICIANDO PROVIDER!');
 
   // Estado principal do editor
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // 📊 PERFORMANCE MONITORING
   useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      console.log("🚀 EditorProvider: Iniciando análise de performance...");
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🚀 EditorProvider: Iniciando análise de performance...');
       performanceAnalyzer.startMonitoring();
     }
   }, []);
@@ -153,58 +164,58 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setDatabaseMode: (_enabled: boolean) => {},
     setQuizId: (_quizId: string) => {},
     migrateLocalToDatabase: () => Promise.resolve(false),
-    getQuizStats: () => Promise.resolve({ error: "Database adapter not available" }),
+    getQuizStats: () => Promise.resolve({ error: 'Database adapter not available' }),
   };
 
   // Estado do modo banco
   const [databaseModeEnabled, setDatabaseModeEnabled] = useState(false);
-  const [currentQuizId, setCurrentQuizId] = useState("quiz-demo-id");
+  const [currentQuizId, setCurrentQuizId] = useState('quiz-demo-id');
 
   // ═══════════════════════════════════════════════
   // 🏗️ ESTADO PRINCIPAL CENTRALIZADO - FIXO PARA 21 ETAPAS
   // ═══════════════════════════════════════════════
   const [stages, setStages] = useState<FunnelStage[]>(() => {
-    console.log("🚀 EditorProvider: Inicializando diretamente 21 etapas");
+    console.log('🚀 EditorProvider: Inicializando diretamente 21 etapas');
 
     // ✅ DEFINIÇÃO DIRETA DAS 21 ETAPAS (EVITAR PROBLEMAS DE IMPORT)
     const directStages: FunnelStage[] = [];
 
     for (let i = 1; i <= 21; i++) {
-      const stepId = `step-${String(i).padStart(2, "0")}`;
-      let name = "";
-      let type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" =
-        "question";
-      let description = "";
+      const stepId = `step-${String(i).padStart(2, '0')}`;
+      let name = '';
+      let type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' =
+        'question';
+      let description = '';
 
       // Definir nomes e tipos das etapas
       if (i === 1) {
-        name = "Introdução";
-        type = "intro";
-        description = "Página inicial do quiz";
+        name = 'Introdução';
+        type = 'intro';
+        description = 'Página inicial do quiz';
       } else if (i >= 2 && i <= 14) {
         name = `Q${i - 1} - Pergunta ${i - 1}`;
-        type = "question";
+        type = 'question';
         description = `Pergunta ${i - 1} do quiz`;
       } else if (i === 15) {
-        name = "Nome";
-        type = "lead";
-        description = "Coleta de nome do usuário";
+        name = 'Nome';
+        type = 'lead';
+        description = 'Coleta de nome do usuário';
       } else if (i === 16) {
-        name = "Processamento";
-        type = "processing";
-        description = "Calculando resultado...";
+        name = 'Processamento';
+        type = 'processing';
+        description = 'Calculando resultado...';
       } else if (i === 17) {
-        name = "Resultado";
-        type = "result";
-        description = "Exibição do resultado";
+        name = 'Resultado';
+        type = 'result';
+        description = 'Exibição do resultado';
       } else if (i >= 18 && i <= 20) {
         name = `Transição ${i - 17}`;
-        type = "transition";
+        type = 'transition';
         description = `Transição para oferta ${i - 17}`;
       } else if (i === 21) {
-        name = "Oferta Final";
-        type = "offer";
-        description = "Página de oferta e conversão";
+        name = 'Oferta Final';
+        type = 'offer';
+        description = 'Página de oferta e conversão';
       }
 
       directStages.push({
@@ -223,11 +234,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
     }
 
-    console.log("✅ EditorProvider: 21 etapas criadas diretamente:", directStages.length);
-    console.log("✅ EditorProvider: Primeira etapa:", directStages[0]);
-    console.log("✅ EditorProvider: Última etapa:", directStages[directStages.length - 1]);
+    console.log('✅ EditorProvider: 21 etapas criadas diretamente:', directStages.length);
+    console.log('✅ EditorProvider: Primeira etapa:', directStages[0]);
+    console.log('✅ EditorProvider: Última etapa:', directStages[directStages.length - 1]);
     console.log(
-      "✅ EditorProvider: Lista das etapas:",
+      '✅ EditorProvider: Lista das etapas:',
       directStages.map(s => `${s.order}: ${s.name}`)
     );
     return directStages;
@@ -239,22 +250,22 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     // Inicializar todas as etapas com arrays vazios
     for (let i = 1; i <= 21; i++) {
-      const stageId = `step-${String(i).padStart(2, "0")}`;
+      const stageId = `step-${String(i).padStart(2, '0')}`;
       initialBlocks[stageId] = [];
     }
 
-    console.log("✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono");
+    console.log('✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono');
     return initialBlocks;
   });
 
   // ✅ EFEITO PARA CARREGAR TEMPLATES JSON ASSÍNCRONO
   useEffect(() => {
     const loadInitialTemplates = async () => {
-      console.log("🔄 EditorProvider: Iniciando carregamento de templates JSON...");
+      console.log('🔄 EditorProvider: Iniciando carregamento de templates JSON...');
 
       // Carregar templates para as primeiras 3 etapas imediatamente
       for (let i = 1; i <= 3; i++) {
-        const stageId = `step-${String(i).padStart(2, "0")}`;
+        const stageId = `step-${String(i).padStart(2, '0')}`;
 
         try {
           console.log(`🔄 Carregando template JSON para ${stageId}...`);
@@ -286,18 +297,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO
 
-  const [activeStageId, setActiveStageId] = useState<string>("step-01");
+  const [activeStageId, setActiveStageId] = useState<string>('step-01');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
   useEffect(() => {
-    console.log("🚀 EditorProvider: Iniciando pré-carregamento de templates JSON");
+    console.log('🚀 EditorProvider: Iniciando pré-carregamento de templates JSON');
     TemplateManager.preloadCommonTemplates()
       .then(() => {
-        console.log("✅ Templates JSON pré-carregados com sucesso");
+        console.log('✅ Templates JSON pré-carregados com sucesso');
       })
       .catch(error => {
-        console.warn("⚠️ Erro no pré-carregamento de templates JSON:", error);
+        console.warn('⚠️ Erro no pré-carregamento de templates JSON:', error);
       });
   }, []);
 
@@ -305,10 +316,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // 🎨 UI STATE
   // ═══════════════════════════════════════════════
   const [isPreviewing, setIsPreviewing] = useState(false);
-  const [viewportSize, setViewportSize] = useState<"sm" | "md" | "lg" | "xl">("lg");
+  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
   // ✅ DEBUG LOGGING
-  console.log("📊 EditorProvider: Estado atual:", {
+  console.log('📊 EditorProvider: Estado atual:', {
     stagesCount: stages.length,
     activeStageId,
     blocksKeys: Object.keys(stageBlocks).length,
@@ -343,10 +354,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       const stage = stages.find(s => s.id === stageId);
       if (!stage) return;
 
-      const stepNumber = parseInt(stageId.replace("step-", ""));
+      const stepNumber = parseInt(stageId.replace('step-', ''));
 
       console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
-      dispatch({ type: "SET_STATE", payload: "loading" });
+      dispatch({ type: 'SET_STATE', payload: 'loading' });
 
       try {
         // Carregar blocos do template JSON e aplicar no estado
@@ -365,24 +376,30 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           }));
 
           // Atualizar metadados da etapa
-          setStages(prev => prev.map(s => s.id === stageId ? {
-            ...s,
-            metadata: {
-              ...s.metadata,
-              blocksCount: blocks.length,
-              lastModified: new Date(),
-            },
-          } : s));
+          setStages(prev =>
+            prev.map(s =>
+              s.id === stageId
+                ? {
+                    ...s,
+                    metadata: {
+                      ...s.metadata,
+                      blocksCount: blocks.length,
+                      lastModified: new Date(),
+                    },
+                  }
+                : s
+            )
+          );
         }
 
         console.log(`✅ EditorContext: Template carregado para etapa ${stepNumber}`);
-        dispatch({ type: "SET_STATE", payload: "ready" });
+        dispatch({ type: 'SET_STATE', payload: 'ready' });
       } catch (error) {
         console.error(
           `❌ EditorContext: Erro ao carregar template para etapa ${stepNumber}:`,
           error
         );
-        dispatch({ type: "SET_STATE", payload: "error" });
+        dispatch({ type: 'SET_STATE', payload: 'error' });
       }
     },
     [stages, dispatch]
@@ -390,10 +407,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const setActiveStage = useCallback(
     (stageId: string) => {
-      console.log("🔄 EditorContext: Mudando etapa ativa para:", stageId);
+      console.log('🔄 EditorContext: Mudando etapa ativa para:', stageId);
 
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Etapa inválida:", stageId);
+        console.warn('⚠️ EditorContext: Etapa inválida:', stageId);
         return;
       }
 
@@ -417,20 +434,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         );
       }
 
-      console.log("✅ EditorContext: Etapa ativa alterada para:", stageId);
+      console.log('✅ EditorContext: Etapa ativa alterada para:', stageId);
     },
     [validateStageId, stageBlocks, loadStageTemplate]
   );
 
   const addStage = useCallback(
     (stageData?: Partial<FunnelStage>): string => {
-      const newStageId = `step-${String(stages.length + 1).padStart(2, "0")}`;
+      const newStageId = `step-${String(stages.length + 1).padStart(2, '0')}`;
       const newStage: FunnelStage = {
         id: newStageId,
         name: stageData?.name || `Nova Etapa ${stages.length + 1}`,
         order: stages.length + 1,
-        type: stageData?.type || "question",
-        description: stageData?.description || "Nova etapa personalizada",
+        type: stageData?.type || 'question',
+        description: stageData?.description || 'Nova etapa personalizada',
         isActive: false,
         metadata: {
           blocksCount: 0,
@@ -442,7 +459,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setStages(prev => [...prev, newStage]);
       setStageBlocks(prev => ({ ...prev, [newStageId]: [] }));
 
-      console.log("➕ EditorContext: Nova etapa adicionada:", newStageId);
+      console.log('➕ EditorContext: Nova etapa adicionada:', newStageId);
       return newStageId;
     },
     [stages.length]
@@ -451,7 +468,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const removeStage = useCallback(
     (stageId: string) => {
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Tentativa de remover etapa inválida:", stageId);
+        console.warn('⚠️ EditorContext: Tentativa de remover etapa inválida:', stageId);
         return;
       }
 
@@ -469,7 +486,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         }
       }
 
-      console.log("🗑️ EditorContext: Etapa removida:", stageId);
+      console.log('🗑️ EditorContext: Etapa removida:', stageId);
     },
     [validateStageId, activeStageId, stages]
   );
@@ -477,7 +494,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const updateStage = useCallback(
     (stageId: string, updates: Partial<FunnelStage>) => {
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Tentativa de atualizar etapa inválida:", stageId);
+        console.warn('⚠️ EditorContext: Tentativa de atualizar etapa inválida:', stageId);
         return;
       }
 
@@ -493,7 +510,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         )
       );
 
-      console.log("📝 EditorContext: Etapa atualizada:", stageId, updates);
+      console.log('📝 EditorContext: Etapa atualizada:', stageId, updates);
     },
     [validateStageId]
   );
@@ -505,8 +522,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:", stageId);
-        return "";
+        console.warn('⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:', stageId);
+        return '';
       }
 
       // 🎯 SISTEMA 1: ID Semântico ao invés de timestamp
@@ -535,11 +552,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       console.log(
-        "➕ EditorContext: Bloco adicionado (Sistema Semântico):",
+        '➕ EditorContext: Bloco adicionado (Sistema Semântico):',
         blockId,
-        "tipo:",
+        'tipo:',
         type,
-        "etapa:",
+        'etapa:',
         stageId
       );
       return blockId;
@@ -552,8 +569,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:", stageId);
-        return "";
+        console.warn('⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:', stageId);
+        return '';
       }
 
       // 🎯 SISTEMA 1: ID Semântico com posição
@@ -591,13 +608,13 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       console.log(
-        "➕ EditorContext: Bloco adicionado na posição (Sistema Semântico):",
+        '➕ EditorContext: Bloco adicionado na posição (Sistema Semântico):',
         position,
-        "blockId:",
+        'blockId:',
         blockId,
-        "tipo:",
+        'tipo:',
         type,
-        "etapa:",
+        'etapa:',
         stageId
       );
       return blockId;
@@ -611,16 +628,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Tentativa de duplicar bloco em etapa inválida:", stageId);
-        return "";
+        console.warn('⚠️ EditorContext: Tentativa de duplicar bloco em etapa inválida:', stageId);
+        return '';
       }
 
       const currentStageBlocks = stageBlocks[stageId] || [];
       const blockToDuplicate = currentStageBlocks.find(b => b.id === blockId);
 
       if (!blockToDuplicate) {
-        console.warn("⚠️ EditorContext: Bloco para duplicar não encontrado:", blockId);
-        return "";
+        console.warn('⚠️ EditorContext: Bloco para duplicar não encontrado:', blockId);
+        return '';
       }
 
       // Gerar ID semântico para duplicação
@@ -648,9 +665,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       console.log(
-        "🔄 EditorContext: Bloco duplicado (Sistema Semântico):",
+        '🔄 EditorContext: Bloco duplicado (Sistema Semântico):',
         duplicatedBlockId,
-        "original:",
+        'original:',
         blockId
       );
       return duplicatedBlockId;
@@ -663,7 +680,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
-        console.warn("⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:", stageId);
+        console.warn('⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:', stageId);
         return;
       }
 
@@ -671,9 +688,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       if (blockIds.length !== currentStageBlocks.length) {
         console.warn(
-          "⚠️ EditorContext: Número de blockIds não confere com blocos existentes",
+          '⚠️ EditorContext: Número de blockIds não confere com blocos existentes',
           blockIds.length,
-          "vs",
+          'vs',
           currentStageBlocks.length
         );
         return;
@@ -684,7 +701,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         .map((blockId, index) => {
           const block = currentStageBlocks.find(b => b.id === blockId);
           if (!block) {
-            console.warn("⚠️ EditorContext: Bloco não encontrado:", blockId);
+            console.warn('⚠️ EditorContext: Bloco não encontrado:', blockId);
             return null;
           }
           return {
@@ -700,9 +717,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       }));
 
       console.log(
-        "🔄 EditorContext: Blocos reordenados na etapa:",
+        '🔄 EditorContext: Blocos reordenados na etapa:',
         stageId,
-        "nova ordem:",
+        'nova ordem:',
         blockIds
       );
     },
@@ -711,7 +728,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const deleteBlock = useCallback(
     (blockId: string) => {
-      let deletedFromStage = "";
+      let deletedFromStage = '';
 
       setStageBlocks(prev => {
         const updated = { ...prev };
@@ -746,13 +763,13 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setSelectedBlockId(null);
       }
 
-      console.log("🗑️ EditorContext: Bloco removido:", blockId, "da etapa:", deletedFromStage);
+      console.log('🗑️ EditorContext: Bloco removido:', blockId, 'da etapa:', deletedFromStage);
     },
     [selectedBlockId, getStageById, updateStage]
   );
 
   const updateBlock = useCallback((blockId: string, updates: Partial<EditorBlock>) => {
-    console.log("🔧 EditorContext updateBlock chamado:", { blockId, updates });
+    console.log('🔧 EditorContext updateBlock chamado:', { blockId, updates });
 
     setStageBlocks(prev => {
       const updated = { ...prev };
@@ -764,7 +781,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         if (blockIndex !== -1) {
           updated[stageId] = blocks.map(block => {
             if (block.id === blockId) {
-              console.log("🔧 Bloco encontrado, estado atual:", block);
+              console.log('🔧 Bloco encontrado, estado atual:', block);
 
               // Criar uma nova cópia do bloco
               const updatedBlock = { ...block };
@@ -773,35 +790,35 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
               Object.entries(updates).forEach(([key, value]) => {
                 console.log(`🔧 Processando update: ${key} =`, value);
 
-                if (key === "properties") {
+                if (key === 'properties') {
                   // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
                   updatedBlock.properties = {
                     ...block.properties,
                     ...(value as Record<string, any>),
                   };
-                  console.log("🔧 Properties merged:", updatedBlock.properties);
+                  console.log('🔧 Properties merged:', updatedBlock.properties);
 
                   // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
                   updatedBlock.content = {
                     ...block.content,
                     ...(value as Record<string, any>),
                   };
-                  console.log("🔧 Content também sincronizado:", updatedBlock.content);
-                } else if (key === "content") {
+                  console.log('🔧 Content também sincronizado:', updatedBlock.content);
+                } else if (key === 'content') {
                   // Para content, fazer um merge profundo preservando imutabilidade
                   updatedBlock.content = {
                     ...block.content,
                     ...(value as Record<string, any>),
                   };
-                  console.log("🔧 Content atualizado:", updatedBlock.content);
+                  console.log('🔧 Content atualizado:', updatedBlock.content);
                 } else {
                   // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
-                  if (block.content && typeof value !== "object") {
+                  if (block.content && typeof value !== 'object') {
                     updatedBlock.content = {
                       ...block.content,
                       [key]: value,
                     };
-                    console.log("🔧 Content direto atualizado:", updatedBlock.content);
+                    console.log('🔧 Content direto atualizado:', updatedBlock.content);
                   }
 
                   if (block.properties) {
@@ -809,7 +826,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                       ...block.properties,
                       [key]: value,
                     };
-                    console.log("🔧 Properties direto atualizada:", updatedBlock.properties);
+                    console.log('🔧 Properties direto atualizada:', updatedBlock.properties);
                   } else {
                     // Para outras propriedades, atualização direta com casting seguro
                     (updatedBlock as any)[key] = value;
@@ -818,7 +835,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 }
               });
 
-              console.log("🔧 Bloco final atualizado:", updatedBlock);
+              console.log('🔧 Bloco final atualizado:', updatedBlock);
               return updatedBlock;
             }
             return block;
@@ -830,7 +847,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       return updated;
     });
 
-    console.log("📝 EditorContext: Bloco atualizado:", blockId, updates);
+    console.log('📝 EditorContext: Bloco atualizado:', blockId, updates);
   }, []);
 
   const getBlocksForStage = useCallback(
@@ -862,7 +879,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const setDatabaseMode = useCallback(
     (enabled: boolean) => {
-      console.log(`🔧 EditorContext: Modo banco ${enabled ? "ativado" : "desativado"}`);
+      console.log(`🔧 EditorContext: Modo banco ${enabled ? 'ativado' : 'desativado'}`);
       setDatabaseModeEnabled(enabled);
       adapter.setDatabaseMode(enabled);
     },
@@ -879,17 +896,17 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   );
 
   const migrateToDatabase = useCallback(async (): Promise<boolean> => {
-    console.log("🚀 EditorContext: Iniciando migração para banco...");
+    console.log('🚀 EditorContext: Iniciando migração para banco...');
     try {
       const success = await adapter.migrateLocalToDatabase();
       if (success) {
         setDatabaseModeEnabled(true);
         adapter.setDatabaseMode(true);
-        console.log("✅ EditorContext: Migração concluída, modo banco ativado");
+        console.log('✅ EditorContext: Migração concluída, modo banco ativado');
       }
       return success;
     } catch (error) {
-      console.error("❌ EditorContext: Erro na migração:", error);
+      console.error('❌ EditorContext: Erro na migração:', error);
       return false;
     }
   }, [adapter]);
@@ -898,16 +915,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     try {
       return await adapter.getQuizStats();
     } catch (error) {
-      console.error("❌ EditorContext: Erro ao obter estatísticas:", error);
+      console.error('❌ EditorContext: Erro ao obter estatísticas:', error);
       return { error: String(error) };
     }
   }, [adapter]);
 
   // Debug logging para computed values
-  console.log("📊 EditorContext: Computed values:", {
+  console.log('📊 EditorContext: Computed values:', {
     activeStageId,
     currentBlocks: currentBlocks.length,
-    selectedBlock: selectedBlock?.id || "none",
+    selectedBlock: selectedBlock?.id || 'none',
     totalBlocks,
     stageCount,
     databaseMode: databaseModeEnabled,
@@ -916,9 +933,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // ✅ INICIALIZAÇÃO AUTOMÁTICA - CARREGAR TEMPLATE DA ETAPA ATIVA
   useEffect(() => {
-    console.log("🚀 EditorContext: useEffect de inicialização executado");
-    console.log("📋 EditorContext: activeStageId:", activeStageId);
-    console.log("📋 EditorContext: currentBlocks.length:", currentBlocks.length);
+    console.log('🚀 EditorContext: useEffect de inicialização executado');
+    console.log('📋 EditorContext: activeStageId:', activeStageId);
+    console.log('📋 EditorContext: currentBlocks.length:', currentBlocks.length);
 
     // Só carregar se a etapa ativa não tiver blocos (evitar sobrescrever blocos já carregados)
     if (activeStageId && currentBlocks.length === 0) {
@@ -1001,9 +1018,19 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       migrateToDatabase,
       getStats,
     },
+
+    // ✅ NOVO: Quiz State
+    quizState: {
+      userAnswers,
+      currentScore,
+      setAnswer,
+      calculateCurrentScore,
+      resetQuiz,
+      isQuizCompleted,
+    },
   };
 
-  console.log("🎯 EditorContext: Providing context value com", stages.length, "etapas");
+  console.log('🎯 EditorContext: Providing context value com', stages.length, 'etapas');
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };

@@ -11,7 +11,7 @@ export const getStep01 = () => ({
   name: 'Introdução',
   type: 'introduction',
   description: 'Tela de boas-vindas e captura de nome',
-  blocks: []
+  blocks: [],
 });
 
 // Etapas 2-11: Questões

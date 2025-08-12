@@ -99,6 +99,12 @@ export interface QuizResult {
   complementaryStyles?: string[];
   styleScores?: Record<string, number>;
   participantName?: string;
+  // ✅ NOVO: Dados personalizados do usuário
+  userData?: {
+    name?: string;
+    completionTime?: Date;
+    strategicAnswersCount?: number;
+  };
 }
 
 export interface QuizFunnel {

@@ -18,6 +18,8 @@ export const useQuizLogic = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  // ✅ NOVO: Estado para capturar nome do usuário na Etapa 1
+  const [userName, setUserName] = useState<string>('');
 
   const initializeQuiz = (questions: QuizQuestion[]) => {
     setCurrentQuestionIndex(0);
@@ -25,7 +27,26 @@ export const useQuizLogic = () => {
     setQuizCompleted(false);
     setQuizResult(null);
     setTotalQuestions(questions.length);
+    // ✅ MANTER: Nome do usuário persiste durante o quiz
   };
+
+  // ✅ NOVA FUNÇÃO: Capturar nome do usuário (Etapa 1)
+  const setUserNameFromInput = useCallback((name: string) => {
+    const cleanName = name.trim();
+    setUserName(cleanName);
+
+    // ✅ TRACKING: Log da captura do nome
+    console.log('👤 NOME CAPTURADO:', {
+      name: cleanName,
+      timestamp: new Date().toISOString(),
+      step: 1,
+    });
+
+    // TODO: Salvar no localStorage ou contexto global
+    if (cleanName && typeof window !== 'undefined') {
+      localStorage.setItem('quizUserName', cleanName);
+    }
+  }, []);
 
   const answerQuestion = useCallback((questionId: string, optionId: string) => {
     setAnswers(prevAnswers => {
@@ -83,14 +104,24 @@ export const useQuizLogic = () => {
   const calculateStyleScores = (answers: QuizAnswer[]) => {
     const styleScores: { [style: string]: number } = {};
 
-    // ✅ CORREÇÃO DE FLUXO: Apenas questões 2-11 pontuam para o resultado
+    // ✅ CORREÇÃO DE FLUXO: Apenas questões q1-q10 pontuam para o resultado (etapas 2-11)
     answers.forEach(answer => {
       const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
       const option = question?.options.find((opt: any) => opt.id === answer.optionId);
 
-      // ✅ FILTRO: Só conta se for questão que pontua (2-11)
-      const questionNumber = parseInt(question?.id?.replace('q', '') || '0');
-      const isScorableQuestion = questionNumber >= 1 && questionNumber <= 10; // q1-q10 = etapas 2-11
+      // ✅ FILTRO: Só conta se for questão que pontua (q1-q10 = etapas 2-11)
+      const isScorableQuestion = [
+        'q1',
+        'q2',
+        'q3',
+        'q4',
+        'q5',
+        'q6',
+        'q7',
+        'q8',
+        'q9',
+        'q10',
+      ].includes(question?.id || '');
 
       if (option?.style && isScorableQuestion) {
         styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
@@ -109,30 +140,42 @@ export const useQuizLogic = () => {
     rank: 1,
   });
 
-  const calculateResults = useCallback((answers: QuizAnswer[]): QuizResult => {
-    const styleScores = calculateStyleScores(answers);
+  const calculateResults = useCallback(
+    (answers: QuizAnswer[]): QuizResult => {
+      const styleScores = calculateStyleScores(answers);
 
-    const sortedStyles = Object.entries(styleScores).sort(
-      ([, scoreA], [, scoreB]) => scoreB - scoreA
-    );
-    const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
+      const sortedStyles = Object.entries(styleScores).sort(
+        ([, scoreA], [, scoreB]) => scoreB - scoreA
+      );
+      const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
 
-    const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
+      const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
 
-    const secondaryResults = sortedStyles
-      .slice(1, 4)
-      .map(([category, score]) => createStyleResult(category, score));
+      const secondaryResults = sortedStyles
+        .slice(1, 4)
+        .map(([category, score]) => createStyleResult(category, score));
 
-    const result: QuizResult = {
-      primaryStyle: primaryResult,
-      secondaryStyles: secondaryResults,
-      totalQuestions: answers.length,
-      completedAt: new Date(),
-      scores: styleScores,
-    };
+      // ✅ PERSONALIZAÇÃO: Incluir nome do usuário no resultado
+      const currentUserName = userName || localStorage.getItem('quizUserName') || '';
 
-    return result;
-  }, []);
+      const result: QuizResult = {
+        primaryStyle: primaryResult,
+        secondaryStyles: secondaryResults,
+        totalQuestions: answers.length,
+        completedAt: new Date(),
+        scores: styleScores,
+        // ✅ NOVO: Dados personalizados
+        userData: {
+          name: currentUserName,
+          completionTime: new Date(),
+          strategicAnswersCount: strategicAnswers.length,
+        },
+      };
+
+      return result;
+    },
+    [userName, strategicAnswers.length]
+  );
 
   const completeQuiz = useCallback(() => {
     const calculatedResult = calculateResults(answers);
@@ -147,9 +190,11 @@ export const useQuizLogic = () => {
     quizCompleted,
     quizResult,
     totalQuestions,
+    userName,
     initializeQuiz,
     answerQuestion,
     answerStrategicQuestion,
+    setUserNameFromInput,
     goToNextQuestion,
     goToPreviousQuestion,
     restartQuiz,
