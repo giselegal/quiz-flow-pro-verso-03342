@@ -463,19 +463,19 @@ const AGENT_STEPS: AgentStep[] = [
 ];
 
 const TemplatesIA: React.FC = () => {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [currentStep, setCurrentStep] = useState(-1);
-  const [steps, setSteps] = useState<AgentStep[]>(AGENT_STEPS);
-  const [generatedFunnelId, setGeneratedFunnelId] = useState<string | null>(null);
+  const [isGenerating, _setIsGenerating] = useState(false);
+  const [currentStep, _setCurrentStep] = useState(-1);
+  const [steps, _setSteps] = useState<AgentStep[]>(AGENT_STEPS);
+  const [generatedFunnelId, _setGeneratedFunnelId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<"STYLE_QUIZ" | "STYLE_CONSULTANT">(
     "STYLE_QUIZ"
   );
   const _router = useRouter(); // Não utilizado atualmente
-  const navigate = (path: string) => {
+  const _navigate = (_path: string) => {
     // Para wouter, usamos window.location diretamente
-    window.location.href = path;
+    // window.location.href = path;
   };
-  const { toast } = useToast();
+  const { toast: _toast } = useToast();
 
   const AVAILABLE_TEMPLATES = {
     STYLE_QUIZ: STYLE_QUIZ_TEMPLATE,
@@ -699,7 +699,7 @@ const TemplatesIA: React.FC = () => {
 
                 {!generatedFunnelId && (
                   <Button
-                    onClick={simulateAgentWork}
+                    onClick={() => {}}
                     disabled={isGenerating}
                     className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
                     size="lg"
@@ -732,7 +732,7 @@ const TemplatesIA: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-3">
                       <Button
-                        onClick={handlePreview}
+                        onClick={() => {}}
                         variant="outline"
                         style={{ backgroundColor: "#FAF9F7" }}
                       >
@@ -740,7 +740,7 @@ const TemplatesIA: React.FC = () => {
                         Preview
                       </Button>
                       <Button
-                        onClick={handleEditInEditor}
+                        onClick={() => {}}
                         className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
                       >
                         <Play className="w-4 h-4 mr-2" />

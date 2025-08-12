@@ -13,6 +13,9 @@ interface Funnel {
   id: string;
   name: string;
   description?: string;
+  settings?: any;
+  userId?: number;
+  version?: number;
 }
 
 interface InsertFunnel extends Omit<Funnel, 'id'> {}
@@ -22,6 +25,11 @@ interface FunnelPage {
   funnel_id: string;
   name: string;
   path: string;
+  pageType?: string;
+  title?: string;
+  pageOrder?: number;
+  blocks?: any;
+  metadata?: any;
 }
 
 interface InsertFunnelPage extends Omit<FunnelPage, 'id'> {}
@@ -517,28 +525,28 @@ class FunnelService {
         await this.updateFunnelPage(existingPage.id, {
           pageType: pageData.type,
           pageOrder: pageData.order,
-          title: pageData.title || null,
+          title: pageData.title || undefined,
           blocks: pageData.blocks,
-          metadata: pageData.metadata || null,
+          metadata: pageData.metadata || undefined,
         });
       } else {
         await this.createFunnelPage({
-          funnelId: funnel.id,
+          funnel_id: funnel.id,
+          name: pageData.title || `Page ${pageData.order}`,
+          path: `/page-${pageData.order}`,
           pageType: pageData.type,
           pageOrder: pageData.order || 0,
-          title: pageData.title || null,
+          title: pageData.title || undefined,
           blocks: pageData.blocks,
-          metadata: pageData.metadata || null,
+          metadata: pageData.metadata || undefined,
         });
       }
     }
 
     // Create version snapshot
     await this.createFunnelVersion({
-      funnelId: funnel.id,
+      funnel_id: funnel.id,
       version: (funnel.version || 0) + 1,
-      funnelData: funnelData,
-      createdBy: userId || null,
     });
 
     return funnel;
@@ -556,9 +564,9 @@ class FunnelService {
       description: funnel.description || undefined,
       pages: pages.map(page => ({
         id: page.id,
-        type: page.pageType,
+        type: page.pageType || 'default',
         title: page.title || undefined,
-        order: page.pageOrder,
+        order: page.pageOrder || 0,
         blocks: page.blocks as BlockData[],
         metadata: page.metadata || undefined,
       })),
