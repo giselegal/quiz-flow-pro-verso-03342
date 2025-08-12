@@ -1,5 +1,4 @@
 // src/templates/stepTemplates.ts
-import { BlockData } from '../types/blocks';
 
 // Interfaces para parâmetros dos templates
 export interface QuestionParams {
