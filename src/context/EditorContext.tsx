@@ -104,11 +104,13 @@ interface EditorContextType {
     getStats: () => Promise<any>;
   };
 
-  // ✅ NOVO: Sistema de Quiz e Pontuação
+  // ✅ NOVO: Sistema de Quiz e Pontuação (com coleta de nome Etapa 1)
   quizState: {
     userAnswers: Record<string, string>;
+    userName: string;
     currentScore: ReturnType<typeof calculateQuizScore> | null;
     setAnswer: (questionId: string, answer: string) => void;
+    setUserNameFromInput: (name: string) => void;
     calculateCurrentScore: () => void;
     resetQuiz: () => void;
     isQuizCompleted: boolean;
@@ -319,13 +321,37 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
   // ═══════════════════════════════════════════════
-  // 🎯 QUIZ STATE
+  // 🎯 QUIZ STATE (INTEGRADO COM ETAPA 1 - NOME)
   // ═══════════════════════════════════════════════
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+  const [userName, setUserName] = useState<string>('');
   const [currentScore, setCurrentScore] = useState<ReturnType<typeof calculateQuizScore> | null>(
     null
   );
   const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+
+  // ✅ FUNÇÃO ESPECÍFICA PARA COLETA DE NOME (ETAPA 1)
+  const setUserNameFromInput = useCallback((name: string) => {
+    const cleanName = name.trim();
+    setUserName(cleanName);
+
+    // Também salvar como resposta do quiz para compatibilidade
+    setUserAnswers(prev => ({
+      ...prev,
+      'user-name': cleanName,
+      'step-01-name': cleanName,
+    }));
+
+    // Persistir no localStorage
+    if (cleanName && typeof window !== 'undefined') {
+      localStorage.setItem('quizUserName', cleanName);
+    }
+
+    console.log('👤 EditorContext: Nome coletado na Etapa 1:', {
+      name: cleanName,
+      timestamp: new Date().toISOString(),
+    });
+  }, []);
 
   const setAnswer = useCallback((questionId: string, answer: string) => {
     setUserAnswers(prev => ({
@@ -346,8 +372,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   const resetQuiz = useCallback(() => {
     setUserAnswers({});
+    setUserName('');
     setCurrentScore(null);
     setIsQuizCompleted(false);
+
+    // Limpar localStorage também
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('quizUserName');
+    }
+
+    console.log('🔄 EditorContext: Quiz resetado, incluindo nome de usuário');
   }, []);
 
   // ✅ DEBUG LOGGING
@@ -1051,11 +1085,13 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       getStats,
     },
 
-    // ✅ NOVO: Quiz State
+    // ✅ NOVO: Quiz State (com coleta de nome da Etapa 1)
     quizState: {
       userAnswers,
+      userName,
       currentScore,
       setAnswer,
+      setUserNameFromInput,
       calculateCurrentScore,
       resetQuiz,
       isQuizCompleted,

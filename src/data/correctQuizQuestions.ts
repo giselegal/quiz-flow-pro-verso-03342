@@ -10,8 +10,8 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     id: "q0",
     text: "VAMOS NOS CONHECER?",
-    title: "VAMOS NOS CONHECER?",
     order: 0,
+    title: "VAMOS NOS CONHECER?",
     type: "name-input",
     options: [], // Input de texto para nome
   },
