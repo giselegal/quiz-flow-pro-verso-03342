@@ -1,3 +1,4 @@
+import React from "react";
 import FunnelDebugPanel from "@/components/debug/FunnelDebugPanel";
 import FunnelActivationDemo from "@/components/demo/FunnelActivationDemo";
 
