@@ -5,23 +5,14 @@ import DynamicBlockRenderer from "@/components/DynamicBlockRenderer";
 import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import {
   ChevronRight,
-  Check,
   Clock,
   Star,
-  ShoppingBag,
-  Heart,
-  Users,
-  Award,
   Shield,
   ArrowRight,
-  TrendingUp,
-  BadgeCheck,
   Lock,
-  Gift,
+  Award,
+  ShoppingBag,
   ShoppingCart,
-  CheckCircle,
-  ArrowDown,
-  Hourglass,
 } from "lucide-react";
 import { trackButtonClick } from "@/utils/analytics";
 

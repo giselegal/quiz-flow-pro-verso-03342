@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -9,14 +9,9 @@ interface TestDataItem {
 }
 
 const CreativeAnalyticsPageNew: React.FC = () => {
-  const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
     cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    percent,
     index,
   }: any) => {
     return (

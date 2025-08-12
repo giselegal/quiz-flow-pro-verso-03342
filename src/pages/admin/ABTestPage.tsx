@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Play, Pause, TrendingUp } from "lucide-react";
+import { Plus, Pause, TrendingUp } from "lucide-react";
 
 const ABTestPage: React.FC = () => {
   return (

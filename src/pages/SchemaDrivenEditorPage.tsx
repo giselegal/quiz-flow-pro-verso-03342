@@ -2,7 +2,7 @@ import SchemaDrivenEditorResponsive from "@/components/editor/SchemaDrivenEditor
 import { useRoute } from "wouter";
 
 const SchemaDrivenEditorPage: React.FC = () => {
-  const [match, params] = useRoute("/editor/:id");
+  const [_match, params] = useRoute("/editor/:id");
   const funnelId = params?.id;
 
   return (

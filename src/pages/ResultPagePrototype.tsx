@@ -1,9 +1,7 @@
 import { StyleResult } from "@/types/quiz";
-import { useLocation } from "wouter";
 import { useEffect } from "react";
 
-export const ResultPagePrototype: React.FC = () => {
-  const [location, setLocation] = useLocation();
+export default function ResultPagePrototype() {
 
   useEffect(() => {
     // Prevent any navigation issues
@@ -13,7 +11,8 @@ export const ResultPagePrototype: React.FC = () => {
   const mockPrimaryStyle = "Elegante";
   const mockSecondaryStyles = ["Clássico", "Contemporâneo", "Natural"];
 
-  const primaryStyle: StyleResult = mockPrimaryStyle
+  // Mock data for prototype - variables intentionally unused for now
+  const _primaryStyle: StyleResult = mockPrimaryStyle
     ? {
         category: mockPrimaryStyle,
         score: 100,
@@ -31,7 +30,7 @@ export const ResultPagePrototype: React.FC = () => {
         rank: 1,
       };
 
-  const secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) => ({
+  const _secondaryStyles: StyleResult[] = mockSecondaryStyles.map((style, index) => ({
     category: style,
     score: 80 - index * 10,
     percentage: 75 - index * 10,
