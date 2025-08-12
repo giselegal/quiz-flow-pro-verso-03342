@@ -4,10 +4,27 @@
   "description": "Template completo para página de oferta da etapa 21",
   "blocks": [
     {
+      "type": "quiz-intro-header",
+      "id": "offer-header-21",
+      "properties": {
+        "logoUrl": "https://placehold.co/200x60",
+        "logoAlt": "Logo da Empresa",
+        "logoWidth": 200,
+        "logoHeight": 60,
+        "isSticky": true,
+        "backgroundColor": "#ffffff",
+        "showProgress": true,
+        "progressValue": 100,
+        "progressMax": 100,
+        "showBackButton": false,
+        "marginTop": 0,
+        "marginBottom": 24
+      }
+    },
+    {
       "type": "step-21-offer",
       "id": "offer-page-21",
       "properties": {
-        "header": {
           "logoUrl": "https://placehold.co/200x60",
           "logoAlt": "Logo da Empresa",
           "logoWidth": 200,

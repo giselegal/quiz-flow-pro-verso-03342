@@ -3,6 +3,7 @@ import { BlockDefinition } from '@/types/blocks';
 export const step21BlockDefinition: BlockDefinition = {
   type: 'step-21-offer',
   name: 'Oferta (Etapa 21)',
+  subBlocks: ['quiz-intro-header'],
   description: 'Página de oferta completa e personalizável',
   category: 'offer',
   icon: null,
