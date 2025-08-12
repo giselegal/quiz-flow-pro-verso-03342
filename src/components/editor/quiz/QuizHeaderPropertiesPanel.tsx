@@ -6,20 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  AlignCenter,
-  AlignLeft,
-  AlignRight,
   Eye,
   Image,
   Palette,
@@ -94,7 +84,7 @@ const ColorPicker: React.FC<{
   );
 };
 
-import { HeaderProperties } from '@/config/headerPropertiesMapping';
+import { HeaderProperties, defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 import type { Block } from '@/types/editor';
 
 interface QuizHeaderPropertiesPanelProps {
@@ -108,14 +98,16 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
 }) => {
   const [activeTab, setActiveTab] = useState('general');
 
-  const properties = (selectedBlock?.properties as HeaderProperties) || {};
+  const properties = (selectedBlock?.properties as HeaderProperties) || defaultHeaderProperties;
 
   const handlePropertyUpdate = (key: keyof HeaderProperties, value: any) => {
     if (selectedBlock && onUpdate) {
-      onUpdate(selectedBlock.id, {
+      const updatedProperties = {
         ...properties,
         [key]: value,
-      } as HeaderProperties);
+      } as HeaderProperties;
+      
+      onUpdate(selectedBlock.id, updatedProperties);
     }
   };
 
