@@ -22,6 +22,7 @@ import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
 // ✅ Importa painel específico do quiz
 import { QuizConfigurationPanel } from "@/components/editor/quiz/QuizConfigurationPanel";
 import { QuizHeaderPropertiesPanel } from "@/components/editor/quiz/QuizHeaderPropertiesPanel";
+import { OptionsGridPropertiesPanel } from "@/components/editor/quiz/OptionsGridPropertiesPanel";
 import { IntroPropertiesPanel } from "@/components/steps/step01/IntroPropertiesPanel";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
@@ -467,6 +468,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
   const isQuizHeader =
     actualBlock?.type === "quiz-intro-header" || actualBlock?.component === "QuizIntroHeaderBlock";
+  const isOptionsGrid =
+    actualBlock?.type === "options-grid" || actualBlock?.component === "OptionsGridBlock";
   const isIntroBlock =
     actualBlock?.type === "step01-intro" || actualBlock?.component === "IntroBlock";
 
@@ -484,6 +487,25 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     return (
       <div className="h-full flex flex-col">
         <QuizHeaderPropertiesPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
+      </div>
+    );
+  }
+
+  // Se for um options-grid, mostrar o painel específico
+  if (isOptionsGrid) {
+    return (
+      <div className="h-full flex flex-col">
+        <OptionsGridPropertiesPanel
+          properties={actualBlock?.properties || {}}
+          onPropertyChange={(property, value) => {
+            if (onUpdate && actualBlock?.id) {
+              onUpdate(actualBlock.id, { [property]: value });
+            }
+          }}
+          onValidationError={(errors) => {
+            console.warn('⚠️ Erros de validação no OptionsGrid:', errors);
+          }}
+        />
       </div>
     );
   }

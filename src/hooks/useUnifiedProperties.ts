@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { HeaderProperties, defaultHeaderProperties } from '@/config/headerPropertiesMapping';
+import { OptionsGridProperties, defaultOptionsGridProperties, optionsGridUtils } from '@/config/optionsGridPropertiesMapping';
 
 /**
  * 🎯 Enumerações e tipos fundamentais
