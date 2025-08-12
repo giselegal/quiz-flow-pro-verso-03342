@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { Button } from '@/components/ui/button';
+import { styleConfig } from '@/config/styleConfig';
 import { useAuth } from '@/context/AuthContext';
-import { styleConfig } from '@/data/styleConfig';
 import { QuizResult } from '@/hooks/useQuizResults';
 import React, { useState } from 'react';
 import StyleGuideModal from './StyleGuideModal';

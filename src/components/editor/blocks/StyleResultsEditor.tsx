@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { styleConfig } from '@/data/styleConfig';
+import { styleConfig } from '@/config/styleConfig';
 import React, { useState } from 'react';
 
 interface StyleResultsEditorProps {

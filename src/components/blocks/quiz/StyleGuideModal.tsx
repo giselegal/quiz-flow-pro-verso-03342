@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { styleConfig } from '@/data/styleConfig';
+import { styleConfig } from '@/config/styleConfig';
 import { XIcon } from 'lucide-react';
 
 interface StyleGuideModalProps {
