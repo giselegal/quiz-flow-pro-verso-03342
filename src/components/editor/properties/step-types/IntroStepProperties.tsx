@@ -216,8 +216,96 @@ export const IntroStepProperties: React.FC<IntroStepPropertiesProps> = ({
         </CardContent>
       </Card>
 
-      {/* Configuração do Botão */}
+      {/* ✅ NOVO: Configurações do Botão Inteligente */}
       <Card>
+        <CardHeader>
+          <CardTitle className="text-sm">Botão de Ação</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="buttonText">Texto do Botão</Label>
+            <Input
+              id="buttonText"
+              value={buttonText}
+              onChange={e => onUpdate('buttonText', e.target.value)}
+              placeholder="Texto do botão principal"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="buttonColor">Cor do Botão</Label>
+            <ColorPicker value={buttonColor} onChange={color => onUpdate('buttonColor', color)} />
+          </div>
+
+          <Separator className="my-4" />
+
+          {/* ✅ Controles de Ativação Condicional */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium">Ativação do Botão</h4>
+            
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="requiresValidInput"
+                checked={properties.requiresValidInput ?? true}
+                onCheckedChange={checked => onUpdate('requiresValidInput', checked)}
+              />
+              <Label htmlFor="requiresValidInput">Exigir nome preenchido para ativar</Label>
+            </div>
+
+            {properties.requiresValidInput !== false && (
+              <div>
+                <Label htmlFor="disabledText">Texto quando desabilitado</Label>
+                <Input
+                  id="disabledText"
+                  value={properties.disabledText || 'Digite seu nome para continuar'}
+                  onChange={e => onUpdate('disabledText', e.target.value)}
+                  placeholder="Texto exibido quando botão está desabilitado"
+                />
+              </div>
+            )}
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="showDisabledState"
+                checked={properties.showDisabledState ?? true}
+                onCheckedChange={checked => onUpdate('showDisabledState', checked)}
+              />
+              <Label htmlFor="showDisabledState">Mostrar estado desabilitado visualmente</Label>
+            </div>
+          </div>
+
+          <Separator className="my-4" />
+
+          {/* ✅ Configuração de Navegação */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium">Navegação</h4>
+            
+            <div>
+              <Label htmlFor="nextStepId">Próxima Etapa (ID)</Label>
+              <Input
+                id="nextStepId"
+                value={properties.nextStepId || 'step-2'}
+                onChange={e => onUpdate('nextStepId', e.target.value)}
+                placeholder="ID da próxima etapa (ex: step-2)"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="nextStepUrl">URL da Próxima Etapa</Label>
+              <Input
+                id="nextStepUrl"
+                value={properties.nextStepUrl || '/quiz/step-2'}
+                onChange={e => onUpdate('nextStepUrl', e.target.value)}
+                placeholder="URL para navegação (ex: /quiz/step-2)"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Configuração do Botão - Seção Original Simplificada */}
+      <Card style={{ display: 'none' }}>
+        {/* Seção ocultada - propriedades movidas para "Botão de Ação" acima */}
         <CardHeader>
           <CardTitle className="text-sm">Botão de Ação</CardTitle>
         </CardHeader>

@@ -65,31 +65,56 @@ export const getStep01Template = () => {
         marginBottom: 24
       }
     },
+    // ✅ NOVO: Form Container com input e botão integrados
     {
-      id: 'intro-form',
-      type: 'form-input',
+      id: 'intro-form-container',
+      type: 'form-container',
       properties: {
-        inputType: 'text',
-        placeholder: 'Digite seu primeiro nome aqui...',
-        label: 'Como posso te chamar?',
-        required: true,
-        fieldName: 'firstName',
-        backgroundColor: '#ffffff',
-        borderColor: '#B89B7A',
-        marginBottom: 16
-      }
-    },
-    {
-      id: 'intro-cta-button',
-      type: 'button-inline',
-      properties: {
-        text: 'Quero Descobrir meu Estilo Agora!',
-        variant: 'primary',
-        size: 'lg',
-        fullWidth: true,
-        backgroundColor: '#B89B7A',
-        textColor: '#ffffff'
-      }
+        backgroundColor: 'transparent',
+        marginTop: 0,
+        marginBottom: 16,
+        paddingTop: 0,
+        paddingBottom: 0,
+        requireNameToEnableButton: true,
+        targetButtonId: 'intro-cta-button',
+        visuallyDisableButton: true,
+      },
+      children: [
+        {
+          id: 'intro-form-input',
+          type: 'form-input',
+          properties: {
+            inputType: 'text',
+            placeholder: 'Digite seu primeiro nome aqui...',
+            label: 'Como posso te chamar?',
+            required: true,
+            name: 'userName',
+            backgroundColor: '#ffffff',
+            borderColor: '#B89B7A',
+            marginBottom: 16,
+          }
+        },
+        {
+          id: 'intro-cta-button',
+          type: 'button-inline',
+          properties: {
+            text: 'Quero Descobrir meu Estilo Agora!',
+            variant: 'primary',
+            size: 'lg',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            // ✅ Configurações de controle condicional
+            requiresValidInput: true,
+            watchInputId: 'intro-form-input',
+            nextStepUrl: '/quiz/step-2',
+            nextStepId: 'step-2',
+            disabledText: 'Digite seu nome para continuar',
+            showDisabledState: true,
+            disabledOpacity: 0.6,
+          }
+        }
+      ]
     }
   ];
 };

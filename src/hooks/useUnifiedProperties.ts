@@ -1092,6 +1092,66 @@ export const useUnifiedProperties = (
             "Botão Desabilitado",
             PropertyCategory.BEHAVIOR
           ),
+          // 🔹 SISTEMA DE VALIDAÇÃO CONDICIONAL
+          createProperty(
+            "requiresValidInput",
+            currentBlock?.properties?.requiresValidInput === true,
+            PropertyType.SWITCH,
+            "Ativar Apenas com Input Válido",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "watchInputId",
+            currentBlock?.properties?.watchInputId || "",
+            PropertyType.TEXT,
+            "ID do Input para Observar",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "disabledText",
+            currentBlock?.properties?.disabledText || "Preencha os campos obrigatórios",
+            PropertyType.TEXT,
+            "Texto Quando Desabilitado",
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            "showDisabledState",
+            currentBlock?.properties?.showDisabledState !== false,
+            PropertyType.SWITCH,
+            "Mostrar Estado Desabilitado Visualmente",
+            PropertyCategory.STYLE
+          ),
+          // 🔹 NAVEGAÇÃO ESPECÍFICA PARA VALIDAÇÃO
+          createProperty(
+            "nextStepId",
+            currentBlock?.properties?.nextStepId || "",
+            PropertyType.SELECT,
+            "ID da Próxima Etapa (Validação)",
+            PropertyCategory.BEHAVIOR,
+            {
+              options: [
+                { value: "", label: "Padrão do Sistema" },
+                { value: "step-02", label: "Etapa 2" },
+                { value: "step-03", label: "Etapa 3" },
+                { value: "step-04", label: "Etapa 4" },
+                { value: "step-05", label: "Etapa 5" },
+                { value: "step-06", label: "Etapa 6" },
+                { value: "step-07", label: "Etapa 7" },
+                { value: "step-08", label: "Etapa 8" },
+                { value: "step-09", label: "Etapa 9" },
+                { value: "step-10", label: "Etapa 10" },
+                { value: "results", label: "Resultados" },
+                { value: "thank-you", label: "Página de Agradecimento" },
+              ],
+            }
+          ),
+          createProperty(
+            "nextStepUrl",
+            currentBlock?.properties?.nextStepUrl || "",
+            PropertyType.URL,
+            "URL da Próxima Etapa (Validação)",
+            PropertyCategory.BEHAVIOR
+          ),
         ];
 
       case "decorative-bar-inline":
