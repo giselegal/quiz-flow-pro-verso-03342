@@ -3,7 +3,10 @@ import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
 import { useEditorWithJson } from "@/components/editor-fixed/useEditorWithJson";
 import type { Block } from "@/types/editor";
 
-const StepSelector: React.FC<{ value: number; onChange: (v: number) => void }> = ({ value, onChange }) => {
+const StepSelector: React.FC<{ value: number; onChange: (v: number) => void }> = ({
+  value,
+  onChange,
+}) => {
   return (
     <div className="flex flex-wrap gap-2">
       {Array.from({ length: 21 }, (_, i) => i + 1).map(n => (
@@ -26,18 +29,17 @@ const EditorFixedMinimal: React.FC = () => {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [step, setStep] = useState<number>(21);
 
-  const {
-    loadStepTemplate,
-    isLoadingTemplate,
-    templateError,
-    currentTemplate,
-  } = useEditorWithJson(blocks, setBlocks);
+  const { loadStepTemplate, isLoadingTemplate, templateError, currentTemplate } = useEditorWithJson(
+    blocks,
+    setBlocks
+  );
 
   // SEO lightweight
   useEffect(() => {
     document.title = `Editor Fixed | Etapa ${step.toString().padStart(2, "0")}`;
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", `Configurar etapa ${step} com componentes do editor-fixed`);
+    if (meta)
+      meta.setAttribute("content", `Configurar etapa ${step} com componentes do editor-fixed`);
     const link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (link) link.href = window.location.href;
     else {
@@ -70,7 +72,9 @@ const EditorFixedMinimal: React.FC = () => {
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Editor Fixed – Etapas (1–21)</h1>
-            <p className="text-sm text-muted-foreground">Carregue e visualize os blocos JSON por etapa</p>
+            <p className="text-sm text-muted-foreground">
+              Carregue e visualize os blocos JSON por etapa
+            </p>
           </div>
           <StepSelector value={step} onChange={setStep} />
         </div>
@@ -91,7 +95,9 @@ const EditorFixedMinimal: React.FC = () => {
         <div className="space-y-4">
           {rendered}
           {!isLoadingTemplate && !templateError && !blocks?.length && (
-            <div className="py-16 text-center text-muted-foreground">Nenhum bloco para esta etapa.</div>
+            <div className="py-16 text-center text-muted-foreground">
+              Nenhum bloco para esta etapa.
+            </div>
           )}
         </div>
 
@@ -100,9 +106,15 @@ const EditorFixedMinimal: React.FC = () => {
           <aside className="mt-10 rounded-lg border bg-card p-4">
             <h2 className="mb-2 text-sm font-medium text-muted-foreground">Template</h2>
             <div className="text-sm">
-              <div><strong>ID:</strong> {currentTemplate.id}</div>
-              <div><strong>Nome:</strong> {currentTemplate.name}</div>
-              <div><strong>Blocos:</strong> {currentTemplate.blocks?.length ?? 0}</div>
+              <div>
+                <strong>ID:</strong> {currentTemplate.id}
+              </div>
+              <div>
+                <strong>Nome:</strong> {currentTemplate.name}
+              </div>
+              <div>
+                <strong>Blocos:</strong> {currentTemplate.blocks?.length ?? 0}
+              </div>
             </div>
           </aside>
         )}

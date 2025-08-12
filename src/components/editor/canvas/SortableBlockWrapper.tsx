@@ -162,7 +162,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
           // 🎯 Destaque visual quando selecionado
-          isSelected && "ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg",
+          isSelected &&
+            "ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg",
           !isSelected && "border-stone-200 hover:border-stone-300",
           // Margens universais com controles deslizantes
           getMarginClass(marginTop, "top"),

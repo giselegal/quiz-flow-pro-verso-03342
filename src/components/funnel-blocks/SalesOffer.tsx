@@ -47,8 +47,6 @@ export interface SalesOfferProps extends BlockComponentProps, InteractionCallbac
   // Urgência e escassez
   urgencyText?: string;
   scarcityText?: string;
-  showCountdown?: boolean;
-  countdownHours?: number;
 
   // Recursos inclusos
   features?: Feature[];
@@ -56,7 +54,6 @@ export interface SalesOfferProps extends BlockComponentProps, InteractionCallbac
 
   // Garantia
   guaranteeText?: string;
-  guaranteePeriod?: string;
   showGuarantee?: boolean;
 
   // Botão de ação
@@ -64,7 +61,6 @@ export interface SalesOfferProps extends BlockComponentProps, InteractionCallbac
   buttonSubtext?: string;
 
   // Layout e estilos
-  alignment?: Alignment;
   cardStyle?: "elegant" | "bold" | "minimal";
   highlightDiscount?: boolean;
 
@@ -117,7 +113,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
   } = props;
 
   // Classes de alinhamento
-  const alignmentClasses = {
+  const
     left: "text-left items-start",
     center: "text-center items-center",
     right: "text-right items-end",
@@ -307,4 +303,4 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
   );
 };
 
-export default SalesOffer;
+export default SalesOffer

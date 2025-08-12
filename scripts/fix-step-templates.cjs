@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Função para gerar o template corrigido para cada step
 function generateStepTemplate(stepNumber) {
-  const stepNum = String(stepNumber).padStart(2, '0');
-  
+  const stepNum = String(stepNumber).padStart(2, "0");
+
   return `import React, { useEffect } from "react";
 
 /**
@@ -225,31 +225,38 @@ for (let i = 3; i <= 21; i++) {
   stepsToProcess.push(i);
 }
 
-console.log('🚀 Iniciando correção em lote dos Step Templates...');
+console.log("🚀 Iniciando correção em lote dos Step Templates...");
 
 stepsToProcess.forEach(stepNumber => {
-  const stepNum = String(stepNumber).padStart(2, '0');
-  const filePath = path.join(__dirname, '..', 'src', 'components', 'steps', `Step${stepNum}Template.tsx`);
-  
+  const stepNum = String(stepNumber).padStart(2, "0");
+  const filePath = path.join(
+    __dirname,
+    "..",
+    "src",
+    "components",
+    "steps",
+    `Step${stepNum}Template.tsx`
+  );
+
   try {
     console.log(`📝 Processando Step${stepNum}Template.tsx...`);
-    
+
     // Verifica se o arquivo existe
     if (!fs.existsSync(filePath)) {
       console.log(`⚠️  Arquivo Step${stepNum}Template.tsx não encontrado, pulando...`);
       return;
     }
-    
+
     // Lê o conteúdo atual
-    const currentContent = fs.readFileSync(filePath, 'utf8');
-    
+    const currentContent = fs.readFileSync(filePath, "utf8");
+
     // Gera o novo template
     const newTemplate = generateStepTemplate(stepNumber);
-    
+
     // Encontra onde termina o template atual e mantém o resto
     const exportMatch = currentContent.match(/export const getStep\d+Template = \(\) => \{/);
-    let remainingContent = '';
-    
+    let remainingContent = "";
+
     if (exportMatch) {
       const exportIndex = currentContent.indexOf(exportMatch[0]);
       remainingContent = currentContent.substring(exportIndex);
@@ -272,19 +279,18 @@ stepsToProcess.forEach(stepNumber => {
 
 export default getStep${stepNum}Template;`;
     }
-    
+
     // Combina o novo template com o conteúdo existente
     const finalContent = newTemplate + remainingContent;
-    
+
     // Escreve o arquivo
-    fs.writeFileSync(filePath, finalContent, 'utf8');
-    
+    fs.writeFileSync(filePath, finalContent, "utf8");
+
     console.log(`✅ Step${stepNum}Template.tsx corrigido com sucesso!`);
-    
   } catch (error) {
     console.error(`❌ Erro ao processar Step${stepNum}Template.tsx:`, error.message);
   }
 });
 
-console.log('🎉 Correção em lote finalizada!');
-console.log('📋 Próximo passo: Aplicar prettier em todos os arquivos corrigidos');
+console.log("🎉 Correção em lote finalizada!");
+console.log("📋 Próximo passo: Aplicar prettier em todos os arquivos corrigidos");

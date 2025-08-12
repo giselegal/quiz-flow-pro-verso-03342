@@ -1,4 +1,4 @@
-import React, { useEffect, useState, StrictMode, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   ChevronRight,
   Check,

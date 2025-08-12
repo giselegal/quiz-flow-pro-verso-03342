@@ -21,7 +21,7 @@ export function useFunnelNavigation({
   preventExit = true,
 }: UseFunnelNavigationOptions = {}) {
   // Acesso ao contexto global do funil
-  const { config, currentStepIndex, setCurrentStepIndex, userData, updateUserData, answers } =
+  const { config, currentStepIndex, setCurrentStepIndex, userData, updateUserData,} =
     useFunnelConfig();
 
   // const router = useRouter(); // Removido para React puro

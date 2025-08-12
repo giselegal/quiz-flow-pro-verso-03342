@@ -112,10 +112,11 @@ const SimpleJsonIntegration: React.FC<SimpleJsonIntegrationProps> = ({
   existingBlocks,
   onBlocksUpdate,
 }) => {
-  const { loadStepTemplate, mergeTemplateWithExisting: _mergeTemplateWithExisting, isLoadingTemplate } = useEditorWithJson(
-    existingBlocks,
-    onBlocksUpdate
-  );
+  const {
+    loadStepTemplate,
+    mergeTemplateWithExisting: _mergeTemplateWithExisting,
+    isLoadingTemplate,
+  } = useEditorWithJson(existingBlocks, onBlocksUpdate);
 
   return (
     <div className="simple-integration">

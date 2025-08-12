@@ -31,13 +31,7 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
 
   return (
     <div className={`relative ${className}`} onClick={onClick}>
-      <img
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        className="rounded-lg object-cover"
-      />
+      <img src={src} alt={alt} width={width} height={height} className="rounded-lg object-cover" />
     </div>
   );
 };

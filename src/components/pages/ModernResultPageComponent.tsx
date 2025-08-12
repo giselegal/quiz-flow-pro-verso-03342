@@ -40,12 +40,6 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
-
   // Configuração dos estilos
   const styleConfig = {
     elegante: {

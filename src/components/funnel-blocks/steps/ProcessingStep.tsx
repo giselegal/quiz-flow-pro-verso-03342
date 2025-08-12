@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { FunnelStepProps } from "@/types/funnel";
-import { Button } from "@/components/ui/button";
 
 /**
  * ProcessingStep - Etapa de processamento
@@ -70,7 +69,7 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
   }, [isEditable, onNext, messages, duration, showProgress]);
 
   // Estilos para diferentes tipos de loading
-  const loadingClasses = {
+  const
     spinning: "animate-spin text-primary",
     elegant: "processing-spinner text-primary",
     dots: "processing-dots text-primary",
@@ -199,4 +198,4 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
   );
 };
 
-export default ProcessingStep;
+export default ProcessingStep

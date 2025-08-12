@@ -1,4 +1,3 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ interface QuizTransitionProps extends StyleProps {
   /** Duração da transição em ms */
   duration?: number;
   /** Configuração de viewport */
-  deviceView?: DeviceView;
   /** Callback quando a transição completa */
   onComplete?: () => void;
   /** Callback para continuar manualmente */

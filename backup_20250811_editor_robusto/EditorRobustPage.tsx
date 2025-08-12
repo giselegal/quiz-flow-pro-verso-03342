@@ -7,16 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EditorProvider, useEditor } from "@/context/EditorContext";
-import {
-    Code,
-    Download,
-    Eye,
-    Layers,
-    Play,
-    Save,
-    Settings,
-    Upload
-} from "lucide-react";
+import { Code, Download, Eye, Layers, Play, Save, Settings, Upload } from "lucide-react";
 import React from "react";
 
 // Importar templates das 21 etapas
@@ -71,11 +62,11 @@ const STEP_TEMPLATES = {
  * Canvas Principal - Área de Drop e Renderização
  */
 const CanvasDropZone: React.FC = () => {
-  const { 
-    activeStageId, 
-    stages, 
+  const {
+    activeStageId,
+    stages,
     selectedBlockId,
-    blockActions: { getBlocksForStage, setSelectedBlockId }
+    blockActions: { getBlocksForStage, setSelectedBlockId },
   } = useEditor();
 
   const activeStage = stages.find(s => s.id === activeStageId);
@@ -99,12 +90,10 @@ const CanvasDropZone: React.FC = () => {
               <span>Canvas - Etapa {activeStage?.order || "?"}</span>
             </CardTitle>
             {activeStage && (
-              <Badge variant="outline">
-                {activeStage.name || `Etapa ${activeStage.order}`}
-              </Badge>
+              <Badge variant="outline">{activeStage.name || `Etapa ${activeStage.order}`}</Badge>
             )}
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Button size="sm" variant="outline">
               <Eye className="w-4 h-4 mr-2" />
@@ -116,12 +105,11 @@ const CanvasDropZone: React.FC = () => {
             </Button>
           </div>
         </div>
-        
+
         {stageTemplate && (
           <div className="text-sm text-muted-foreground">
-            Template: {stageTemplate.metadata?.name || "Sem nome"} • 
-            Tipo: {stageTemplate.metadata?.type || "N/A"} •
-            Blocos: {stageBlocks.length}
+            Template: {stageTemplate.metadata?.name || "Sem nome"} • Tipo:{" "}
+            {stageTemplate.metadata?.type || "N/A"} • Blocos: {stageBlocks.length}
           </div>
         )}
       </CardHeader>
@@ -151,8 +139,8 @@ const CanvasDropZone: React.FC = () => {
                   <div
                     key={block.id}
                     className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                      selectedBlockId === block.id 
-                        ? "border-primary bg-primary/5 shadow-md" 
+                      selectedBlockId === block.id
+                        ? "border-primary bg-primary/5 shadow-md"
                         : "border-muted hover:border-muted-foreground/50"
                     }`}
                     onClick={() => setSelectedBlockId(block.id)}
@@ -161,12 +149,16 @@ const CanvasDropZone: React.FC = () => {
                       <Badge variant="secondary">{block.type}</Badge>
                       <span className="text-xs text-muted-foreground">#{index + 1}</span>
                     </div>
-                    
+
                     {/* Renderização simplificada do bloco */}
                     <div className="text-sm">
-                      <div className="font-medium">{block.content?.title || block.properties?.title || "Sem título"}</div>
+                      <div className="font-medium">
+                        {block.content?.title || block.properties?.title || "Sem título"}
+                      </div>
                       {(block.content?.subtitle || block.properties?.subtitle) && (
-                        <div className="text-muted-foreground">{block.content.subtitle || block.properties?.subtitle}</div>
+                        <div className="text-muted-foreground">
+                          {block.content.subtitle || block.properties?.subtitle}
+                        </div>
                       )}
                       {(block.content?.description || block.properties?.description) && (
                         <div className="text-xs text-muted-foreground mt-1 line-clamp-2">
@@ -189,10 +181,10 @@ const CanvasDropZone: React.FC = () => {
  * Componente Principal do Editor (Interno - usa useEditor)
  */
 const EditorRobustContent: React.FC = () => {
-  const { 
-    activeStageId, 
-    stages, 
-    blockActions: { updateBlock }
+  const {
+    activeStageId,
+    stages,
+    blockActions: { updateBlock },
   } = useEditor();
 
   // Determinar tipo de etapa para propriedades inteligentes
@@ -207,7 +199,7 @@ const EditorRobustContent: React.FC = () => {
     if (order >= 17 && order <= 18) return "result";
     if (order === 20) return "lead";
     if (order === 21) return "offer";
-    
+
     return "question";
   };
 

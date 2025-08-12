@@ -232,11 +232,7 @@
     "trackingId": "step-01-quiz-intro",
     "events": ["page_view", "form_submit", "validation_error", "completion"],
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "lcp_rendered",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "lcp_rendered", "user_interaction"]
   },
   "logic": {
     "navigation": {

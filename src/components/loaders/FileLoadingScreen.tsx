@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 
 interface FileLoadingScreenProps {
-  fileUrl?: string;
   onFileLoaded?: () => void;
-  onError?: (error: Error) => void;
 }
 
 const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({

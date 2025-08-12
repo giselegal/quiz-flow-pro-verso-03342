@@ -33,7 +33,6 @@ export interface StyleResultDisplayProps extends BlockComponentProps, Interactio
   styleKeywords?: string[];
 
   // Configurações visuais
-  alignment?: Alignment;
   showPercentage?: boolean;
   showCharacteristics?: boolean;
   imageSize?: "small" | "medium" | "large";
@@ -93,7 +92,7 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
   };
 
   // Classes de alinhamento
-  const alignmentClasses = {
+  const
     left: "text-left items-start",
     center: "text-center items-center",
     right: "text-right items-end",
@@ -266,4 +265,4 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
   );
 };
 
-export default StyleResultDisplay;
+export default StyleResultDisplay

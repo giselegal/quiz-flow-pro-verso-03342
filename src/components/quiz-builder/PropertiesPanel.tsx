@@ -12,7 +12,6 @@ interface PropertiesPanelProps {
   components: QuizComponentData[];
   onUpdate: (id: string, data: Partial<QuizComponentData["data"]>) => void;
   onDelete: (id: string) => void;
-  onClose: () => void;
 }
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({

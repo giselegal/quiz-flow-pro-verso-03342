@@ -1,10 +1,10 @@
-import { Card } from '@/components/ui/card';
-import { useAuth } from '@/context/AuthContext';
-import { StyleResult } from '@/types/quiz';
-import React from 'react';
+import { Card } from "@/components/ui/card";
+import { useAuth } from "@/context/AuthContext";
+import { StyleResult } from "@/types/quiz";
+import React from "react";
 
 interface HeaderProps {
-  primaryStyle?: StyleResult; 
+  primaryStyle?: StyleResult;
   logoHeight?: number;
   logo?: string;
   logoAlt?: string;
@@ -14,16 +14,21 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  primaryStyle: _primaryStyle, 
+  primaryStyle: _primaryStyle,
   logoHeight = 50,
   logo,
   logoAlt = "Logo",
   userName,
   isScrolled: _isScrolled,
-  className = ''
+  className = "",
 }) => {
   const { user } = useAuth();
-  const displayName = userName || (user as any)?.userName || (user as any)?.user_metadata?.full_name || (user as any)?.email || 'Visitante';
+  const displayName =
+    userName ||
+    (user as any)?.userName ||
+    (user as any)?.user_metadata?.full_name ||
+    (user as any)?.email ||
+    "Visitante";
 
   return (
     <Card className={`bg-white shadow-sm p-6 mb-4 md:mb-6 border-0 ${className}`}>
@@ -33,16 +38,15 @@ export const Header: React.FC<HeaderProps> = ({
             src={logo}
             alt={logoAlt}
             className="h-auto mx-auto"
-            style={{ height: `${logoHeight}px`, maxWidth: '100%' }}
+            style={{ height: `${logoHeight}px`, maxWidth: "100%" }}
           />
         </div>
-        
+
         <h1 className="text-xl md:text-2xl font-playfair text-[#432818] leading-relaxed">
           Parabéns, <span className="font-bold">{displayName}</span>!
-          <br className="sm:hidden" /> 
+          <br className="sm:hidden" />
           <span className="text-xl md:text-2xl text-[#aa6b5d]"> Seu Estilo Predominante é:</span>
         </h1>
-        
       </div>
     </Card>
   );

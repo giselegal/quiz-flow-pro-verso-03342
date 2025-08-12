@@ -56,7 +56,7 @@
           },
           {
             "id": "classico",
-            "label": "Clássico & Elegante", 
+            "label": "Clássico & Elegante",
             "description": "Peças atemporais, bem cortadas e sofisticadas",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1/quiz-styles/classic-style",
             "value": "classico",
@@ -137,11 +137,7 @@
   "settings": {
     "analytics": {
       "trackingEnabled": true,
-      "events": [
-        "question_viewed",
-        "option_selected",
-        "step_completed"
-      ]
+      "events": ["question_viewed", "option_selected", "step_completed"]
     },
     "validation": {
       "requireMinSelections": true,

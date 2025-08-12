@@ -97,11 +97,7 @@
   "settings": {
     "analytics": {
       "trackingEnabled": true,
-      "events": [
-        "question_viewed",
-        "option_selected",
-        "step_completed"
-      ]
+      "events": ["question_viewed", "option_selected", "step_completed"]
     },
     "validation": {
       "requireMinSelections": true,

@@ -34,7 +34,7 @@ const HybridQuizSection: React.FC<{ template: QuizTemplate }> = ({ template }) =
 
   // 2. Lógica & Estado
   const [answers, setAnswers] = useState({});
-  
+
   // 3. Processamento Dinâmico
   const processAnswer = (questionId: string, answer: string) => {
     setAnswers(prev => ({ ...prev, [questionId]: answer }));
@@ -46,11 +46,7 @@ const HybridQuizSection: React.FC<{ template: QuizTemplate }> = ({ template }) =
       <motion.div animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <h2>{content.title}</h2>
         {content.items.map(item => (
-          <QuizItem
-            key={item.question}
-            data={item}
-            onAnswer={processAnswer}
-          />
+          <QuizItem key={item.question} data={item} onAnswer={processAnswer} />
         ))}
       </motion.div>
     </section>
@@ -90,7 +86,7 @@ const StyledQuestion = ({ template }) => {
 const ComponentRegistry = {
   "quiz-question": QuizQuestionComponent,
   "result-card": ResultCardComponent,
-  "style-analysis": StyleAnalysisComponent
+  "style-analysis": StyleAnalysisComponent,
 };
 ```
 
@@ -99,7 +95,7 @@ const ComponentRegistry = {
 ```typescript
 const TemplateResolver: React.FC<{ template: any }> = ({ template }) => {
   const Component = ComponentRegistry[template.type];
-  
+
   if (!Component) {
     console.error(`Componente não encontrado: ${template.type}`);
     return null;
@@ -126,6 +122,7 @@ const TemplateResolver: React.FC<{ template: any }> = ({ template }) => {
 ## 🎯 CONCLUSÃO
 
 A abordagem híbrida nos permite:
+
 1. **Configurar** com JSON (estrutura/conteúdo)
 2. **Executar** com React (comportamento/interatividade)
 3. **Escalar** facilmente (templates + componentes)

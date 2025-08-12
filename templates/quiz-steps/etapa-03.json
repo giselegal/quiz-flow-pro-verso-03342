@@ -59,11 +59,7 @@
   "settings": {
     "analytics": {
       "trackingEnabled": true,
-      "events": [
-        "transition_viewed",
-        "section_completed",
-        "next_section_started"
-      ]
+      "events": ["transition_viewed", "section_completed", "next_section_started"]
     },
     "validation": {
       "requireMinSelections": false,

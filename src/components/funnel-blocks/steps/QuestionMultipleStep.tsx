@@ -3,12 +3,10 @@ import { Button } from "@/components/ui/button";
 import { FunnelStepProps } from "@/types/funnel";
 
 interface QuizOptionProps {
-  id: string;
   text: string;
   imageUrl?: string;
   isSelected: boolean;
   onSelect: () => void;
-  multiSelect: boolean;
   disabled: boolean;
 }
 

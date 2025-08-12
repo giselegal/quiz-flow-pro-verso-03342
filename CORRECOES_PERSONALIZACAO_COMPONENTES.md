@@ -1,10 +1,13 @@
 # Correções do Sistema de Personalização por Componente
 
 ## 🚨 Problema Identificado
+
 O sistema estava funcionando apenas para o componente `text-inline`, mas não para outros tipos como `button-inline` ou `image-display`.
 
 ## 🔍 Causa Raiz
+
 O painel de propriedades estava fazendo match exato dos tipos de componente:
+
 - ❌ Procurava por `text` mas recebia `text-inline`
 - ❌ Procurava por `button` mas recebia `button-inline`
 - ❌ Procurava por `image` mas recebia `image-display`
@@ -12,28 +15,40 @@ O painel de propriedades estava fazendo match exato dos tipos de componente:
 ## ✅ Correções Aplicadas
 
 ### 1. **Normalização de Tipos de Componente**
+
 ```typescript
 // Antes
 switch (selectedBlock.type) {
-  case 'text': return renderTextProperties();
-  case 'button': return renderButtonProperties();
-  case 'image': return renderImageProperties();
+  case "text":
+    return renderTextProperties();
+  case "button":
+    return renderButtonProperties();
+  case "image":
+    return renderImageProperties();
 }
 
 // Depois
-const normalizedType = blockType.replace('-inline', '').replace('-display', '').replace('-component', '');
+const normalizedType = blockType
+  .replace("-inline", "")
+  .replace("-display", "")
+  .replace("-component", "");
 
 switch (normalizedType) {
-  case 'text': return renderTextProperties();
-  case 'button': return renderButtonProperties(); 
-  case 'image': return renderImageProperties();
+  case "text":
+    return renderTextProperties();
+  case "button":
+    return renderButtonProperties();
+  case "image":
+    return renderImageProperties();
 }
 ```
 
 ### 2. **Compatibilidade de Propriedades**
+
 **Problema**: Componentes usavam propriedades diferentes (`text` vs `content`, `textAlign` vs `alignment`)
 
 **Solução**: Dupla atualização para garantir compatibilidade:
+
 ```typescript
 // Texto
 onChange={(e) => {
@@ -55,6 +70,7 @@ onChange={(e) => {
 ```
 
 ### 3. **Função de Ícones e Nomes**
+
 ```typescript
 // Antes
 const getComponentIcon = (type: string) => {
@@ -63,7 +79,7 @@ const getComponentIcon = (type: string) => {
   }
 }
 
-// Depois  
+// Depois
 const getComponentIcon = (type: string) => {
   const normalizedType = type.replace('-inline', '').replace('-display', '').replace('-component', '');
   switch (normalizedType) { // ✅ normalizedType = "text"
@@ -73,7 +89,9 @@ const getComponentIcon = (type: string) => {
 ```
 
 ### 4. **Debug Visual Melhorado**
+
 Adicionado informações de debug para identificar problemas:
+
 ```typescript
 default:
   return (
@@ -87,13 +105,13 @@ default:
 
 ## 🎯 Tipos Agora Suportados
 
-| Tipo Original | Tipo Normalizado | Status |
-|---------------|------------------|--------|
-| `text-inline` | `text` | ✅ Funcionando |
-| `button-inline` | `button` | ✅ Corrigido |
-| `image-display` | `image` | ✅ Corrigido |
-| `heading-component` | `heading` | ✅ Suportado |
-| `paragraph-inline` | `paragraph` | ✅ Suportado |
+| Tipo Original       | Tipo Normalizado | Status         |
+| ------------------- | ---------------- | -------------- |
+| `text-inline`       | `text`           | ✅ Funcionando |
+| `button-inline`     | `button`         | ✅ Corrigido   |
+| `image-display`     | `image`          | ✅ Corrigido   |
+| `heading-component` | `heading`        | ✅ Suportado   |
+| `paragraph-inline`  | `paragraph`      | ✅ Suportado   |
 
 ## 🧪 Como Testar
 
@@ -115,6 +133,7 @@ default:
    - Teste edição de URL, alt text, dimensões
 
 ## 🔄 Resultado Esperado
+
 - ✅ Todos os componentes devem mostrar suas propriedades específicas
 - ✅ Edições devem ser aplicadas em tempo real
 - ✅ Interface deve mostrar feedback visual claro

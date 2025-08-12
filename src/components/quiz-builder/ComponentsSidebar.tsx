@@ -1,6 +1,5 @@
 import React from "react";
 import { QuizComponentType } from "@/types/quizBuilder";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export interface ComponentsSidebarProps {

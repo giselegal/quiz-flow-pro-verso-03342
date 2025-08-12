@@ -31,7 +31,6 @@ export const StyleResultPropertyEditor: React.FC<StyleResultPropertyEditorProps>
     cardSize = "medium",
     backgroundColor = "white",
     borderColor = "#B89B7A",
-    isEditable = true,
   } = properties;
 
   return (

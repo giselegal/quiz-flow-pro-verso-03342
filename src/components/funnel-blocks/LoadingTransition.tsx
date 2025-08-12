@@ -124,9 +124,9 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
     switch (animationType) {
       case "spinning":
         return (
-            <div className={`${baseClasses} w-16 h-16`}>
-              <div style={{ borderColor: "#E5DDD5", borderTopColor: progressColor }} />
-            </div>
+          <div className={`${baseClasses} w-16 h-16`}>
+            <div style={{ borderColor: "#E5DDD5", borderTopColor: progressColor }} />
+          </div>
         );
 
       case "elegant":

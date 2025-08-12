@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { useQuizBuilder } from "@/hooks/useQuizBuilder";
 import { useEditor } from "@/hooks/useEditor";
-import { ComponentsSidebar } from "./ComponentsSidebar";
 import BuilderLayout from "./components/BuilderLayout";
 import { StagesPanel } from "./StagesPanel";
 import { PropertiesPanel } from "./PropertiesPanel";
@@ -31,7 +29,7 @@ const QuizBuilder: React.FC = () => {
     loading,
   } = useQuizBuilder();
 
-  const { blocks, actions } = useEditor();
+  const { blocks,} = useEditor();
 
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
@@ -75,7 +73,7 @@ const QuizBuilder: React.FC = () => {
     },
   ];
 
-  const mockQuizResult = {
+  const
     primaryStyle: mockPrimaryStyle,
     secondaryStyles: mockSecondaryStyles,
   };
@@ -116,8 +114,7 @@ const QuizBuilder: React.FC = () => {
   };
 
   // Safely handle editor blocks
-  const handleBlockOperations = () => {
-    blocks.forEach(block => {
+  const processBlocks = (blocks: any[]) => {
       const content = block.content || {};
       const title = content?.title || "";
       const text = content?.text || "";
