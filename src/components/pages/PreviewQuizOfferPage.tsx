@@ -1,20 +1,18 @@
-import React, { useEffect, useState, useCallback } from "react";
 import {
-  ChevronRight,
-  Check,
-  Clock,
-  Star,
-  ShoppingBag,
-  Heart,
-  Users,
-  Award,
-  Shield,
-  ArrowRight,
-  TrendingUp,
-  BadgeCheck,
-  Lock,
-  Gift,
+    ArrowRight,
+    BadgeCheck,
+    Check,
+    ChevronRight,
+    Clock,
+    Gift,
+    Heart,
+    Lock,
+    Shield,
+    ShoppingBag,
+    TrendingUp,
+    Users
 } from "lucide-react";
+import React, { useCallback, useEffect, useState } from "react";
 
 // Configuração de URLs das imagens
 const HERO_IMAGE_URL =
@@ -100,15 +98,6 @@ const FixedIntroImage: React.FC<FixedIntroImageProps> = ({
     </div>
   );
 };
-
-// Componente de estrelas de avaliação
-const RatingStars: React.FC<{ rating: number }> = ({ rating }) => (
-  <div className="flex text-brand-accent">
-    {[...Array(5)].map((_, i) => (
-      <Star key={i} size={16} fill={i < rating ? "currentColor" : "none"} className="mr-0.5" />
-    ))}
-  </div>
-);
 
 // Indicador de usuários ativos
 const ActiveUsersIndicator: React.FC = () => {

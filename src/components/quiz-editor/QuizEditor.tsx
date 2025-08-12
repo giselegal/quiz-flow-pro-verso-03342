@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QuizQuestion } from "@/types/quiz";

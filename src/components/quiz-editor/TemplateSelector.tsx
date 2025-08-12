@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -30,7 +30,6 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Plus, Copy, Trash2, Edit, Check, X } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 import { styleQuizTemplate } from "@/services/templates/styleQuizTemplate";
 
 interface TemplateSelectorProps {

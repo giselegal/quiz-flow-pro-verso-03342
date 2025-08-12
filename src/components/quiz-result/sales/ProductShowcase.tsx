@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { Check, Sparkles, Star } from "lucide-react";
 import { motion } from "framer-motion";

@@ -1,35 +1,14 @@
 import React, { useState } from "react";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { Button } from "@/components/ui/button";
 import { useQuizBuilder } from "@/hooks/useQuizBuilder";
 import { useEditor } from "@/hooks/useEditor";
-import BuilderLayout from "./components/BuilderLayout";
-import { StagesPanel } from "./StagesPanel";
-import { PropertiesPanel } from "./PropertiesPanel";
 import { QuizComponentType, QuizComponentData } from "@/types/quizBuilder";
 import { StyleResult, StyleType } from "@/types/quiz";
 
-const QuizBuilder: React.FC = () => {
-  const {
-    components,
-    stages,
-    activeStageId,
-    selectedComponentId,
-    addComponent,
-    updateComponent,
-    deleteComponent,
-    moveComponent,
-    addStage,
-    updateStage,
-    deleteStage,
-    moveStage,
-    setActiveStage,
-    setSelectedComponentId,
-    saveCurrentState,
-    loading,
-  } = useQuizBuilder();
-
-  const { blocks,} = useEditor();
+const QuizBuilder: React.FC<QuizBuilderProps> = ({ 
+  setSelectedTab 
+}) => {
+  const { } = useQuizBuilder();
+  const { blocks } = useEditor();
 
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
@@ -202,4 +181,4 @@ const QuizBuilder: React.FC = () => {
   );
 };
 
-export default QuizBuilder;
+export default QuizBuilder

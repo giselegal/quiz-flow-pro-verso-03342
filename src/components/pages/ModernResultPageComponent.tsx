@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Award, Star, Gift, Crown, Users, CheckCircle, ShoppingBag } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { BlockComponentProps } from "@/types/blocks";
+import { Award, CheckCircle, Crown, Gift, ShoppingBag, Star, Users } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface ModernResultPageComponentProps extends BlockComponentProps {
   // Props específicas do componente
@@ -14,7 +14,6 @@ const ModernResultPageComponent: React.FC<ModernResultPageComponentProps> = ({
   isSelected = false,
   isEditing = false,
   onClick,
-  onPropertyChange,
   className = "",
 }) => {
   const {

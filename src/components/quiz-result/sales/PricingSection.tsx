@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Clock, Lock, Check, Sparkles } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 import SecurePurchaseElement from "@/components/result/SecurePurchaseElement";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { motion, AnimatePresence } from "framer-motion";

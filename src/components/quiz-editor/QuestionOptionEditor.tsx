@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { QuizOption } from "@/types/quiz";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { GripVertical, Image, Trash2 } from "lucide-react";
 
 interface QuestionOptionEditorProps {
   option: QuizOption;
