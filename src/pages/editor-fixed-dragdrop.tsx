@@ -2,17 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import      <div className="flex flex-col h-screen">
-        <div className="flex-none"
-            <div className="sticky top-0 bg-white z-20">
-              <EditorToolbar
-                isPreviewing={isPreviewing}
-                onTogglePreview={() => setIsPreviewing(!isPreviewing)}
-                onSave={handleSave}
-                viewportSize={viewportSize}
-                onViewportSizeChange={setViewportSize}
-                onShowFunnelSettings={() => setShowFunnelSettings(true)}
-              />nentsPanel from "@/components/editor/CombinedComponentsPanel";
+import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { EditorNotification } from "@/components/editor/EditorNotification";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
@@ -166,7 +156,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       <div className="flex flex-col h-screen">
         <div className="flex-none">
           <div className="sticky top-0 bg-white z-20">
-            <EditorToolbar            {/* Top Bar - Otimizado */}
+            <EditorToolbar
+              isPreviewing={isPreviewing}
+              onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+              onSave={handleSave}
+              viewportSize={viewportSize}
+              onViewportSizeChange={setViewportSize}
+              onShowFunnelSettings={() => setShowFunnelSettings(true)}
+            />
+
             <div style={{ borderColor: "#E5DDD5" }} className="border-b bg-white">
               <div className="flex items-center justify-between p-2">
                 <div className="flex items-center space-x-4">
