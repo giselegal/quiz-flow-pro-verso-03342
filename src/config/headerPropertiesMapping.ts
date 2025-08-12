@@ -1,5 +1,5 @@
 // Mapeamento padrão para propriedades do cabeçalho
-import { Block } from '@/types/editor';
+import { Block, EditableContent } from '@/types/editor';
 
 export interface HeaderProperties {
   logoUrl: string;
@@ -49,11 +49,15 @@ export const convertLegacyHeader = (block: Block): HeaderProperties => {
   };
 };
 
-export const createHeaderBlock = (stageId: string): Block => {
+export const createHeaderBlock = (stageId: string): Omit<Block, 'stageId'> & { stageId: string } => {
   return {
     id: `${stageId}-header`,
     type: 'quiz-intro-header',
     properties: defaultHeaderProperties,
+    content: {
+      type: 'doc',
+      content: []
+    } as EditableContent,
     order: 0,
     stageId
   };

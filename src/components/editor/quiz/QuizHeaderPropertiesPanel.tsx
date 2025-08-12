@@ -94,9 +94,12 @@ const ColorPicker: React.FC<{
   );
 };
 
+import { HeaderProperties } from '@/config/headerPropertiesMapping';
+import type { Block } from '@/types/editor';
+
 interface QuizHeaderPropertiesPanelProps {
-  selectedBlock?: any;
-  onUpdate?: (blockId: string, updates: Record<string, any>) => void;
+  selectedBlock?: Block;
+  onUpdate?: (blockId: string, properties: HeaderProperties) => void;
 }
 
 export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps> = ({
@@ -105,14 +108,14 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
 }) => {
   const [activeTab, setActiveTab] = useState('general');
 
-  const properties = selectedBlock?.properties || {};
+  const properties = selectedBlock?.properties as HeaderProperties || {};
 
-  const handlePropertyUpdate = (key: string, value: any) => {
+  const handlePropertyUpdate = (key: keyof HeaderProperties, value: any) => {
     if (selectedBlock && onUpdate) {
       onUpdate(selectedBlock.id, {
         ...properties,
-        [key]: value,
-      });
+        [key]: value
+      } as HeaderProperties);
     }
   };
 
