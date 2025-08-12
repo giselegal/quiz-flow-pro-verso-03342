@@ -1,0 +1,138 @@
+{
+  "id": "step-21-template",
+  "name": "Etapa 21 - Página de Oferta",
+  "description": "Template completo para página de oferta da etapa 21",
+  "blocks": [
+    {
+      "type": "step-21-offer",
+      "id": "offer-page-21",
+      "properties": {
+        "header": {
+          "logoUrl": "https://placehold.co/200x60",
+          "logoAlt": "Logo da Empresa",
+          "logoWidth": 200,
+          "logoHeight": 60,
+          "isSticky": true,
+          "backgroundColor": "#ffffff"
+        },
+        "hero": {
+          "title": "Descubra Seu Estilo Único",
+          "subtitle": "Transforme sua imagem com nosso programa exclusivo",
+          "imageUrl": "https://placehold.co/600x400",
+          "imageAlt": "Transformação de Estilo",
+          "imageWidth": 600,
+          "imageHeight": 400,
+          "ctaText": "Quero Transformar Meu Estilo",
+          "ctaUrl": "#oferta"
+        },
+        "problem": {
+          "title": "Você Se Identifica Com Esses Desafios?",
+          "problems": [
+            "Insegurança com sua imagem pessoal",
+            "Dificuldade em escolher looks adequados",
+            "Falta de conhecimento sobre seu tipo de corpo"
+          ],
+          "highlightText": "É hora de mudar essa realidade!",
+          "imageUrl": "https://placehold.co/500x300",
+          "imageAlt": "Desafios de Estilo",
+          "imageWidth": 500,
+          "imageHeight": 300,
+          "layout": "side-by-side"
+        },
+        "solution": {
+          "title": "Programa de Transformação de Estilo",
+          "description": "Um método completo para descobrir e valorizar seu estilo pessoal",
+          "benefits": [
+            "Análise personalizada do seu tipo de corpo",
+            "Guia de cores que mais combinam com você",
+            "Consultoria individual de estilo"
+          ],
+          "imageUrl": "https://placehold.co/500x300",
+          "imageAlt": "Solução de Estilo",
+          "imageWidth": 500,
+          "imageHeight": 300,
+          "countdown": {
+            "hours": 48,
+            "minutes": 0,
+            "seconds": 0
+          }
+        },
+        "products": {
+          "title": "Escolha Seu Plano",
+          "description": "Invista em você e transforme seu estilo",
+          "items": [
+            {
+              "id": "basic",
+              "title": "Plano Essencial",
+              "description": "Ideal para quem está começando",
+              "imageUrl": "https://placehold.co/300x200",
+              "imageAlt": "Plano Essencial",
+              "imageWidth": 300,
+              "imageHeight": 200,
+              "price": "R$ 297,00",
+              "installments": {
+                "quantity": 6,
+                "amount": "R$ 49,50"
+              },
+              "features": [
+                "Análise de coloração pessoal",
+                "Guia de estilos básicos",
+                "Acesso à comunidade VIP"
+              ]
+            },
+            {
+              "id": "premium",
+              "title": "Plano Premium",
+              "description": "Transformação completa de estilo",
+              "imageUrl": "https://placehold.co/300x200",
+              "imageAlt": "Plano Premium",
+              "imageWidth": 300,
+              "imageHeight": 200,
+              "price": "R$ 497,00",
+              "installments": {
+                "quantity": 12,
+                "amount": "R$ 41,42"
+              },
+              "features": [
+                "Tudo do plano essencial",
+                "Consultoria individual",
+                "Planejamento de guarda-roupa",
+                "Suporte prioritário"
+              ]
+            }
+          ]
+        },
+        "guarantee": {
+          "title": "Garantia Incondicional de 7 Dias",
+          "description": "Se você não ficar 100% satisfeito(a) com o programa, devolvemos seu dinheiro integralmente, sem questionamentos.",
+          "imageUrl": "https://placehold.co/400x400",
+          "imageAlt": "Selo de Garantia 7 Dias",
+          "imageWidth": 400,
+          "imageHeight": 400,
+          "layout": "centered"
+        },
+        "faq": {
+          "title": "Perguntas Frequentes",
+          "questions": [
+            {
+              "question": "Quanto tempo tenho acesso ao programa?",
+              "answer": "Você tem acesso vitalício a todo o conteúdo do programa, podendo assistir e revisar quando quiser."
+            },
+            {
+              "question": "O programa é online ou presencial?",
+              "answer": "O programa é 100% online, permitindo que você aprenda no seu próprio ritmo e horário."
+            },
+            {
+              "question": "Preciso ter conhecimento prévio?",
+              "answer": "Não! O programa foi desenvolvido para todos os níveis, desde iniciantes até pessoas que já conhecem um pouco sobre moda."
+            },
+            {
+              "question": "Como funciona a garantia?",
+              "answer": "Oferecemos 7 dias de garantia incondicional. Se você não ficar satisfeito(a), basta solicitar o reembolso."
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

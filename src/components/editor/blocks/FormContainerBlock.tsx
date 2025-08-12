@@ -8,12 +8,7 @@ import { getBlockComponent } from '@/config/enhancedBlockRegistry';
  */
 const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const { properties = {} } = block || {};
-  const {
-    elementId,
-    className,
-    marginTop,
-    marginBottom,
-  } = (properties as any) || {};
+  const { elementId, className, marginTop, marginBottom } = (properties as any) || {};
 
   // Fonte única de verdade para children: prioriza block.children e faz fallback para properties.children
   const childrenList = (block as any)?.children || (properties as any)?.children || [];
@@ -26,7 +21,8 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
     paddingLeft: (properties as any)?.paddingLeft,
     paddingRight: (properties as any)?.paddingRight,
     // Suporta tanto backgroundColor quanto containerBackgroundColor (padrão do design system universal)
-    backgroundColor: (properties as any)?.backgroundColor ?? (properties as any)?.containerBackgroundColor,
+    backgroundColor:
+      (properties as any)?.backgroundColor ?? (properties as any)?.containerBackgroundColor,
   };
 
   const combinedClassName = className ? `w-full ${className}` : 'w-full';
@@ -53,7 +49,11 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
     applyDisabled(true);
 
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { buttonId: string; enabled: boolean; disabled: boolean };
+      const detail = (e as CustomEvent).detail as {
+        buttonId: string;
+        enabled: boolean;
+        disabled: boolean;
+      };
       if (!detail || detail.buttonId !== targetButtonId) return;
       applyDisabled(!detail.enabled);
     };
@@ -78,11 +78,12 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
           };
 
           // Renderizamos o componente filho passando o bloco completo
-          return <Component key={childBlock.id} block={childBlock} properties={childBlock.properties} />;
+          return (
+            <Component key={childBlock.id} block={childBlock} properties={childBlock.properties} />
+          );
         })}
     </div>
   );
 };
-
 
 export default FormContainerBlock;

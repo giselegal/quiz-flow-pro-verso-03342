@@ -1,38 +1,38 @@
 // @ts-nocheck
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 // ✅ Importa controles visuais NO-CODE
-import AlignmentButtons from '@/components/visual-controls/AlignmentButtons';
-import ColorPicker from '@/components/visual-controls/ColorPicker';
-import SizeSlider from '@/components/visual-controls/SizeSlider';
+import AlignmentButtons from "@/components/visual-controls/AlignmentButtons";
+import ColorPicker from "@/components/visual-controls/ColorPicker";
+import SizeSlider from "@/components/visual-controls/SizeSlider";
 // ✅ Importa componentes de feedback melhorados
-import { EnhancedPropertyInput } from './EnhancedPropertyInput';
-import { PropertyChangeIndicator } from './PropertyChangeIndicator';
+import { EnhancedPropertyInput } from "./EnhancedPropertyInput";
+import { PropertyChangeIndicator } from "./PropertyChangeIndicator";
 // ✅ Importa painel específico do quiz
-import { QuizConfigurationPanel } from '@/components/editor/quiz/QuizConfigurationPanel';
-import { QuizHeaderPropertiesPanel } from '@/components/editor/quiz/QuizHeaderPropertiesPanel';
-import { IntroPropertiesPanel } from '@/components/steps/step01/IntroPropertiesPanel';
+import { QuizConfigurationPanel } from "@/components/editor/quiz/QuizConfigurationPanel";
+import { QuizHeaderPropertiesPanel } from "@/components/editor/quiz/QuizHeaderPropertiesPanel";
+import { IntroPropertiesPanel } from "@/components/steps/step01/IntroPropertiesPanel";
 // ✅ Importa UnifiedBlock, useUnifiedProperties e PropertyType do hook
 import {
   PropertyType,
   UnifiedBlock,
   UnifiedProperty,
   useUnifiedProperties,
-} from '@/hooks/useUnifiedProperties';
-import { BlockDefinition } from '@/types/editor'; // Mantido para compatibilidade da interface
+} from "@/hooks/useUnifiedProperties";
+import { BlockDefinition } from "@/types/editor"; // Mantido para compatibilidade da interface
 // ✅ Importa hook de sincronização de scroll
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { useSyncedScroll } from "@/hooks/useSyncedScroll";
 import {
   EyeOff,
   Layout,
@@ -42,7 +42,7 @@ import {
   Settings,
   Trash2,
   Type,
-} from 'lucide-react';
+} from "lucide-react";
 
 // A interface UnifiedBlock é importada do hook, garantindo consistência
 interface EnhancedUniversalPropertiesPanelProps {
@@ -68,7 +68,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // pois o `selectedBlock` e `onUpdate` são as fontes de verdade para o hook.
 }) => {
   // ✅ Hook de sincronização de scroll conectado ao painel de propriedades
-  const { scrollRef } = useSyncedScroll({ source: 'properties' });
+  const { scrollRef } = useSyncedScroll({ source: "properties" });
 
   // ✅ Normaliza `selectedBlock` para ser a única fonte de verdade para o hook.
   const actualBlock = selectedBlock;
@@ -78,7 +78,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // chamará o `onUpdate` do `EditorProvider`.
   const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
     useUnifiedProperties(
-      actualBlock?.type || '',
+      actualBlock?.type || "",
       actualBlock?.id,
       actualBlock,
       onUpdate // Passa o `onUpdate` do painel diretamente para o hook
@@ -86,7 +86,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
   // ✅ OTIMIZAÇÃO: Logs de debug removidos para melhor performance
   const debugInfo =
-    actualBlock && process.env.NODE_ENV === 'development'
+    actualBlock && process.env.NODE_ENV === "development"
       ? {
           id: actualBlock.id,
           type: actualBlock.type,
@@ -95,12 +95,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
       : null;
 
   if (debugInfo) {
-    console.log('🎯 EnhancedUniversalPropertiesPanel:', debugInfo);
+    console.log("🎯 EnhancedUniversalPropertiesPanel:", debugInfo);
   }
 
   // Log específico para quiz-intro-header
-  if (actualBlock?.type === 'quiz-intro-header') {
-    console.log('🏠 [quiz-intro-header] Debug específico:', {
+  if (actualBlock?.type === "quiz-intro-header") {
+    console.log("🏠 [quiz-intro-header] Debug específico:", {
       blockId: actualBlock.id,
       blockType: actualBlock.type,
       blockProperties: actualBlock.properties,
@@ -124,7 +124,16 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   }
 
   // ✅ NO-CODE: Categorias visuais e amigáveis (abas)
-  const categoryOrder = ['logo', 'style', 'layout', 'content', 'alignment', 'behavior', 'scoring', 'advanced'];
+  const categoryOrder = [
+    "logo",
+    "style",
+    "layout",
+    "content",
+    "alignment",
+    "behavior",
+    "scoring",
+    "advanced",
+  ];
 
   const categoryIcons = {
     logo: Type,
@@ -138,14 +147,14 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   };
 
   const categoryLabels = {
-    logo: '🏷️ Logo',
-    content: '📝 Conteúdo',
-    style: '🎨 Estilo',
-    layout: '📐 Layout',
-    alignment: '📐 Alinhamento',
-    behavior: '⚙️ Comportamento',
-    scoring: '🏆 Pontuação',
-    advanced: '🔧 Avançado',
+    logo: "🏷️ Logo",
+    content: "📝 Conteúdo",
+    style: "🎨 Estilo",
+    layout: "📐 Layout",
+    alignment: "📐 Alinhamento",
+    behavior: "⚙️ Comportamento",
+    scoring: "🏆 Pontuação",
+    advanced: "🔧 Avançado",
   };
 
   // ✅ NO-CODE: Renderizar campo baseado no tipo com controles visuais
@@ -162,7 +171,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           <EnhancedPropertyInput
             key={`${key}-${idx}`}
             label={label}
-            value={value || ''}
+            value={value || ""}
             placeholder={`Digite ${label.toLowerCase()}`}
             onChange={newValue => updateProperty(key, newValue)}
             type="text"
@@ -176,7 +185,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           <EnhancedPropertyInput
             key={key}
             label={label}
-            value={value || ''}
+            value={value || ""}
             placeholder={`Digite ${label.toLowerCase()}`}
             onChange={newValue => updateProperty(key, newValue)}
             type="textarea"
@@ -190,7 +199,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <PropertyChangeIndicator key={`${key}-${idx}`}>
             <ColorPicker
-              value={value || '#432818'}
+              value={value || "#432818"}
               onChange={color => updateProperty(key, color)}
               label={label}
               allowTransparent={true}
@@ -208,7 +217,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               min={min || 0}
               max={max || 100}
               step={step || 1}
-              unit={unit || 'px'}
+              unit={unit || "px"}
               label={label}
               showValue={true}
             />
@@ -222,7 +231,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             <div className="space-y-2">
               <Label className="text-sm font-medium text-[#432818]">{label}</Label>
               <AlignmentButtons
-                value={value || 'left'}
+                value={value || "left"}
                 onChange={(alignment: string) => updateProperty(key, alignment)}
               />
             </div>
@@ -234,7 +243,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           <EnhancedPropertyInput
             key={`${key}-${idx}`}
             label={label}
-            value={value || ''}
+            value={value || ""}
             placeholder={`Digite ${label.toLowerCase()}`}
             onChange={newValue => updateProperty(key, newValue)}
             type="number"
@@ -258,7 +267,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
             <div className="space-y-2">
               <Label className="text-sm font-medium text-[#432818]">{label}</Label>
               <Input
-                value={value || ''}
+                value={value || ""}
                 onChange={e => updateProperty(key, e.target.value)}
                 placeholder="Cole o link da imagem aqui"
                 className="border-[#B89B7A]/30 focus:border-[#B89B7A]"
@@ -270,7 +279,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                     alt="Preview"
                     className="w-full max-w-32 h-auto rounded border"
                     onError={e => {
-                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).style.display = "none";
                     }}
                   />
                 </div>
@@ -322,7 +331,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="flex items-center justify-between py-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818] cursor-pointer">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Switch
               id={key}
@@ -338,12 +347,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Input
               id={key}
               type="text"
-              value={value || ''}
+              value={value || ""}
               onChange={e => updateProperty(key, e.target.value)}
               placeholder="Cole o link da imagem aqui"
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
@@ -355,7 +364,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
                   alt="Preview"
                   className="w-full max-w-32 h-auto rounded border"
                   onError={e => {
-                    (e.target as HTMLImageElement).style.display = 'none';
+                    (e.target as HTMLImageElement).style.display = "none";
                   }}
                 />
               </div>
@@ -368,7 +377,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Input
               id={key}
@@ -389,12 +398,12 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <Input
               id={key}
               type="text"
-              value={value || ''}
+              value={value || ""}
               onChange={e => updateProperty(key, e.target.value)}
               placeholder="Ex: Clássico, Moderno, Casual"
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
@@ -408,13 +417,13 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <div key={key} className="space-y-2">
             <Label className="text-sm font-medium text-[#432818]">
-              {label} {required && <span style={{ color: '#432818' }}>*</span>}
+              {label} {required && <span style={{ color: "#432818" }}>*</span>}
             </Label>
             <div className="border border-[#B89B7A]/30 rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
               {arrayValue.length > 0 ? (
                 arrayValue.map((item, index) => (
                   <div key={index} className="text-xs bg-[#F8F6F3] p-2 rounded border">
-                    {typeof item === 'object' ? (
+                    {typeof item === "object" ? (
                       <div className="space-y-1">
                         {Object.entries(item).map(([k, v]) => (
                           <div key={k} className="flex gap-2">
@@ -435,14 +444,14 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
               )}
             </div>
             <div className="text-xs text-[#666]">
-              Total: {arrayValue.length} {arrayValue.length === 1 ? 'item' : 'itens'}
+              Total: {arrayValue.length} {arrayValue.length === 1 ? "item" : "itens"}
             </div>
           </div>
         );
 
       default:
         return (
-          <div key={key} style={{ color: '#432818' }}>
+          <div key={key} style={{ color: "#432818" }}>
             ⚠️ Tipo não suportado: {type}
           </div>
         );
@@ -455,11 +464,11 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
   // Verificar se é um bloco de quiz
   const isQuizBlock =
-    actualBlock?.type?.startsWith('quiz-') || actualBlock?.component === 'QuizQuestionBlock';
+    actualBlock?.type?.startsWith("quiz-") || actualBlock?.component === "QuizQuestionBlock";
   const isQuizHeader =
-    actualBlock?.type === 'quiz-intro-header' || actualBlock?.component === 'QuizIntroHeaderBlock';
+    actualBlock?.type === "quiz-intro-header" || actualBlock?.component === "QuizIntroHeaderBlock";
   const isIntroBlock =
-    actualBlock?.type === 'step01-intro' || actualBlock?.component === 'IntroBlock';
+    actualBlock?.type === "step01-intro" || actualBlock?.component === "IntroBlock";
 
   // Se for um bloco de introdução, mostrar o painel específico
   if (isIntroBlock) {
@@ -511,7 +520,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         </div>
       </CardHeader>
 
-      <CardContent 
+      <CardContent
         ref={scrollRef}
         className="flex-1 p-4 space-y-6 overflow-y-auto [scrollbar-gutter:stable]"
       >

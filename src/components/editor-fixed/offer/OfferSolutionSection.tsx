@@ -12,6 +12,7 @@ interface CountdownTime {
 interface OfferSolutionSectionProps {
   title: string;
   description: string;
+  benefits?: string[];
   imageUrl: string;
   imageAlt: string;
   imageWidth: number;
