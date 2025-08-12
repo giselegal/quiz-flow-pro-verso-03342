@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface ABTestVariation {
   id: string;
@@ -16,7 +16,7 @@ export interface ABTestVariation {
 export interface ABTest {
   id: string;
   name: string;
-  type: 'result' | 'sales';
+  type: "result" | "sales";
   isActive: boolean;
   startDate: string;
   endDate?: string;
@@ -28,7 +28,7 @@ export interface ABTest {
  * @param type - Tipo de página ('result' ou 'sales')
  * @returns Informações sobre a variação atual do teste A/B
  */
-export const useABTest = (type: 'result' | 'sales') => {
+export const useABTest = (type: "result" | "sales") => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentVariation, setCurrentVariation] = useState<ABTestVariation | null>(null);
   const [activeTest, setActiveTest] = useState<ABTest | null>(null);
@@ -39,7 +39,7 @@ export const useABTest = (type: 'result' | 'sales') => {
         setIsLoading(true);
 
         // Carregar testes A/B do localStorage (em produção seria uma API)
-        const storedTests = localStorage.getItem('ab_tests');
+        const storedTests = localStorage.getItem("ab_tests");
         if (!storedTests) {
           setIsLoading(false);
           return;
@@ -103,7 +103,7 @@ export const useABTest = (type: 'result' | 'sales') => {
 
         setIsLoading(false);
       } catch (error) {
-        console.error('Erro ao determinar variação A/B:', error);
+        console.error("Erro ao determinar variação A/B:", error);
         setIsLoading(false);
       }
     };
@@ -135,7 +135,7 @@ export const useABTest = (type: 'result' | 'sales') => {
         `Conversão registrada para teste ${activeTest.id}, variação ${currentVariation.id}`
       );
     } catch (error) {
-      console.error('Erro ao registrar conversão:', error);
+      console.error("Erro ao registrar conversão:", error);
     }
   };
 

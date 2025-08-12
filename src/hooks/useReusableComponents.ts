@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import { useCallback, useEffect, useState } from 'react';
+import { createClient } from "@supabase/supabase-js";
+import { useCallback, useEffect, useState } from "react";
 
 // ============================================================================
 // TIPOS PARA COMPONENTES REUTILIZÁVEIS
@@ -79,14 +79,14 @@ export const useReusableComponents = (quizId?: string) => {
       }
 
       const { data, error } = await supabase
-        .from('component_types')
-        .select('*')
-        .order('category, display_name');
+        .from("component_types")
+        .select("*")
+        .order("category, display_name");
 
       if (error) throw error;
       setComponentTypes(data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar tipos de componentes');
+      setError(err instanceof Error ? err.message : "Erro ao carregar tipos de componentes");
     } finally {
       setLoading(false);
     }
@@ -107,12 +107,12 @@ export const useReusableComponents = (quizId?: string) => {
           return [];
         }
         const { data, error } = await supabase!
-          .from('step_components')
-          .select('*')
-          .eq('quiz_id', quizId)
-          .eq('step_number', stepNumber)
-          .eq('is_active', true)
-          .order('order_index');
+          .from("step_components")
+          .select("*")
+          .eq("quiz_id", quizId)
+          .eq("step_number", stepNumber)
+          .eq("is_active", true)
+          .order("order_index");
 
         if (error) throw error;
 
@@ -123,7 +123,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data || [];
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao carregar componentes da etapa');
+        setError(err instanceof Error ? err.message : "Erro ao carregar componentes da etapa");
         return [];
       } finally {
         setLoading(false);
@@ -146,11 +146,11 @@ export const useReusableComponents = (quizId?: string) => {
         return {} as Record<number, StepComponent[]>;
       }
       const { data, error } = await supabase!
-        .from('step_components')
-        .select('*')
-        .eq('quiz_id', quizId)
-        .eq('is_active', true)
-        .order('step_number, order_index');
+        .from("step_components")
+        .select("*")
+        .eq("quiz_id", quizId)
+        .eq("is_active", true)
+        .order("step_number, order_index");
 
       if (error) throw error;
 
@@ -166,7 +166,7 @@ export const useReusableComponents = (quizId?: string) => {
       setStepComponents(groupedComponents);
       return groupedComponents;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao carregar componentes do quiz');
+      setError(err instanceof Error ? err.message : "Erro ao carregar componentes do quiz");
       return {};
     } finally {
       setLoading(false);
@@ -184,7 +184,7 @@ export const useReusableComponents = (quizId?: string) => {
       properties: Record<string, any> = {},
       orderIndex?: number
     ) => {
-      if (!quizId) throw new Error('Quiz ID é obrigatório');
+      if (!quizId) throw new Error("Quiz ID é obrigatório");
 
       try {
         setLoading(true);
@@ -196,11 +196,11 @@ export const useReusableComponents = (quizId?: string) => {
         }
 
         if (!supabase) {
-          throw new Error('Supabase não configurado');
+          throw new Error("Supabase não configurado");
         }
 
         const { data, error } = await supabase!
-          .from('component_instances')
+          .from("component_instances")
           .insert({
             component_type_key: componentTypeKey,
             quiz_id: quizId,
@@ -219,7 +219,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data;
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao adicionar componente');
+        setError(err instanceof Error ? err.message : "Erro ao adicionar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -235,19 +235,19 @@ export const useReusableComponents = (quizId?: string) => {
   const updateComponent = useCallback(
     async (
       instanceId: string,
-      updates: Partial<Pick<ComponentInstance, 'properties' | 'custom_styling' | 'is_active'>>
+      updates: Partial<Pick<ComponentInstance, "properties" | "custom_styling" | "is_active">>
     ) => {
       try {
         setLoading(true);
 
         if (!supabase) {
-          throw new Error('Supabase não configurado');
+          throw new Error("Supabase não configurado");
         }
 
         const { data, error } = await supabase!
-          .from('component_instances')
+          .from("component_instances")
           .update(updates)
-          .eq('id', instanceId)
+          .eq("id", instanceId)
           .select()
           .single();
 
@@ -260,7 +260,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data;
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao atualizar componente');
+        setError(err instanceof Error ? err.message : "Erro ao atualizar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -279,14 +279,14 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(true);
 
         if (!supabase) {
-          throw new Error('Supabase não configurado');
+          throw new Error("Supabase não configurado");
         }
         // Atualizar order_index de cada componente
         const updates = orderedInstanceIds.map((instanceId, index) =>
           supabase!
-            .from('component_instances')
+            .from("component_instances")
             .update({ order_index: index + 1 })
-            .eq('id', instanceId)
+            .eq("id", instanceId)
         );
 
         await Promise.all(updates);
@@ -294,7 +294,7 @@ export const useReusableComponents = (quizId?: string) => {
         // Recarregar componentes da etapa
         await loadStepComponents(stepNumber);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao reordenar componentes');
+        setError(err instanceof Error ? err.message : "Erro ao reordenar componentes");
         throw err;
       } finally {
         setLoading(false);
@@ -313,17 +313,17 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(true);
 
         if (!supabase) {
-          throw new Error('Supabase não configurado');
+          throw new Error("Supabase não configurado");
         }
 
         // Obter dados do componente antes de deletar
         const { data: componentData } = await supabase!
-          .from('component_instances')
-          .select('step_number')
-          .eq('id', instanceId)
+          .from("component_instances")
+          .select("step_number")
+          .eq("id", instanceId)
           .single();
 
-        const { error } = await supabase!.from('component_instances').delete().eq('id', instanceId);
+        const { error } = await supabase!.from("component_instances").delete().eq("id", instanceId);
 
         if (error) throw error;
 
@@ -332,7 +332,7 @@ export const useReusableComponents = (quizId?: string) => {
           await loadStepComponents(componentData.step_number);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao deletar componente');
+        setError(err instanceof Error ? err.message : "Erro ao deletar componente");
         throw err;
       } finally {
         setLoading(false);
@@ -351,14 +351,14 @@ export const useReusableComponents = (quizId?: string) => {
         setLoading(true);
 
         if (!supabase) {
-          throw new Error('Supabase não configurado');
+          throw new Error("Supabase não configurado");
         }
 
         // Obter dados do componente original
         const { data: originalComponent, error: fetchError } = await supabase!
-          .from('component_instances')
-          .select('*')
-          .eq('id', instanceId)
+          .from("component_instances")
+          .select("*")
+          .eq("id", instanceId)
           .single();
 
         if (fetchError) throw fetchError;
@@ -368,7 +368,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         // Criar nova instância
         const { data, error } = await supabase!
-          .from('component_instances')
+          .from("component_instances")
           .insert({
             component_type_key: originalComponent.component_type_key,
             quiz_id: originalComponent.quiz_id,
@@ -388,7 +388,7 @@ export const useReusableComponents = (quizId?: string) => {
 
         return data;
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro ao duplicar componente');
+        setError(err instanceof Error ? err.message : "Erro ao duplicar componente");
         throw err;
       } finally {
         setLoading(false);

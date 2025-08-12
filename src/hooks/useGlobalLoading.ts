@@ -1,4 +1,4 @@
-import React, { useState, useCallback, createContext, useContext } from 'react';
+import React, { useState, useCallback, createContext, useContext } from "react";
 
 interface GlobalLoadingState {
   isLoading: boolean;
@@ -46,7 +46,7 @@ export const GlobalLoadingProvider = ({ children }: { children: React.ReactNode 
 export const useGlobalLoading = () => {
   const context = useContext(GlobalLoadingContext);
   if (!context) {
-    throw new Error('useGlobalLoading must be used within GlobalLoadingProvider');
+    throw new Error("useGlobalLoading must be used within GlobalLoadingProvider");
   }
 
   return {

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { fixBlurryIntroQuizImages } from '@/utils/fixBlurryIntroQuizImages';
+import React, { useEffect, useRef } from "react";
+import { fixBlurryIntroQuizImages } from "@/utils/fixBlurryIntroQuizImages";
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
   children,
   fixOnMount = true,
   fixOnUpdate = true,
-  className = '',
+  className = "",
   observeSelector = '.quiz-intro, [data-section="intro"]', // Observar apenas elementos relevantes
 }) => {
   // Ref para o elemento contêiner para limitação de escopo do MutationObserver
@@ -33,7 +33,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     }
 
     // Usar requestIdleCallback se disponível
-    if ('requestIdleCallback' in window) {
+    if ("requestIdleCallback" in window) {
       debounceTimeoutRef.current = setTimeout(() => {
         // @ts-ignore
         window.requestIdleCallback(
@@ -57,8 +57,8 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     if (fixOnMount) {
       // Detectar se o navegador suporta métricas de performance
       const supportsPerformanceObserver =
-        'PerformanceObserver' in window &&
-        PerformanceObserver.supportedEntryTypes?.includes('largest-contentful-paint');
+        "PerformanceObserver" in window &&
+        PerformanceObserver.supportedEntryTypes?.includes("largest-contentful-paint");
 
       if (supportsPerformanceObserver) {
         // Aguardar o LCP antes de executar otimizações
@@ -74,12 +74,12 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         });
 
         lcpObserver.observe({
-          type: 'largest-contentful-paint',
+          type: "largest-contentful-paint",
           buffered: true,
         });
       } else {
         // Fallback otimizado usando requestIdleCallback
-        if ('requestIdleCallback' in window) {
+        if ("requestIdleCallback" in window) {
           (window as any).requestIdleCallback(
             () => {
               fixBlurryIntroQuizImages();
@@ -112,7 +112,7 @@ const AutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         const hasImageChanges = mutations.some(mutation =>
           Array.from(mutation.addedNodes).some(
             node =>
-              node.nodeName === 'IMG' || (node instanceof Element && node.querySelector('img'))
+              node.nodeName === "IMG" || (node instanceof Element && node.querySelector("img"))
           )
         );
 

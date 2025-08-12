@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { BarChart3, FileText, Plus, Settings } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BarChart3, FileText, Plus, Settings } from "lucide-react";
 
 const QuizPage: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const QuizPage: React.FC = () => {
         <div>
           <h1
             className="text-3xl font-bold text-[#432818]"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: "Playfair Display, serif" }}
           >
             Quiz Manager
           </h1>
@@ -82,7 +82,7 @@ const QuizPage: React.FC = () => {
                 <p className="text-sm text-[#8F7A6A]">Descoberta de estilo pessoal</p>
               </div>
               <div className="flex items-center gap-2">
-                <span style={{ backgroundColor: '#E5DDD5' }}>Ativo</span>
+                <span style={{ backgroundColor: "#E5DDD5" }}>Ativo</span>
                 <Button variant="outline" size="sm">
                   Editar
                 </Button>

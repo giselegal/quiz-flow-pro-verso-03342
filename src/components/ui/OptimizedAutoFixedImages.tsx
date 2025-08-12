@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { fixBlurryImages } from '@/utils/enhancedFixBlurryImages';
+import React, { useEffect } from "react";
+import { fixBlurryImages } from "@/utils/enhancedFixBlurryImages";
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;
@@ -17,13 +17,13 @@ const OptimizedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
   children,
   fixOnMount = true,
   fixOnUpdate = false, // Reduzido para false por padrão para evitar observação contínua
-  className = '',
+  className = "",
 }) => {
   // Aplicar correção na montagem inicial - com performance melhorada
   useEffect(() => {
     if (fixOnMount) {
       // Adiar execução para um momento com baixo impacto na performance
-      if ('requestIdleCallback' in window) {
+      if ("requestIdleCallback" in window) {
         const timeoutId = window.setTimeout(() => {
           // @ts-ignore
           window.requestIdleCallback(
@@ -64,7 +64,7 @@ const OptimizedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
 
       // Agendar próxima correção com baixa prioridade
       debounceTimer = window.setTimeout(() => {
-        if ('requestIdleCallback' in window) {
+        if ("requestIdleCallback" in window) {
           // @ts-ignore
           window.requestIdleCallback(
             () => {

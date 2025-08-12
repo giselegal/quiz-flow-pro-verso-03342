@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export interface UtmParameters {
   source?: string;
@@ -15,11 +15,11 @@ export interface UtmParameters {
  */
 export const useUtmParameters = () => {
   const [utmParams, setUtmParams] = useState<UtmParameters>({});
-  const [domainBase, setDomainBase] = useState<string>('giselegalvao.com.br');
+  const [domainBase, setDomainBase] = useState<string>("giselegalvao.com.br");
 
   useEffect(() => {
     // Carregar configuração de domínio do localStorage, se disponível
-    const savedDomain = localStorage.getItem('domain_base');
+    const savedDomain = localStorage.getItem("domain_base");
     if (savedDomain) {
       setDomainBase(savedDomain);
     }
@@ -39,10 +39,10 @@ export const useUtmParameters = () => {
    */
   const saveUtmToServer = async (params: UtmParameters) => {
     try {
-      const response = await fetch('http://localhost:3001/api/utm-analytics', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/api/utm-analytics", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           utmSource: params.source,
@@ -59,12 +59,12 @@ export const useUtmParameters = () => {
 
       const result = await response.json();
       if (result.success) {
-        console.log('UTM parameters saved successfully');
+        console.log("UTM parameters saved successfully");
       } else {
-        console.error('Error saving UTM parameters:', result.error);
+        console.error("Error saving UTM parameters:", result.error);
       }
     } catch (error) {
-      console.error('Error in saveUtmToServer:', error);
+      console.error("Error in saveUtmToServer:", error);
     }
   };
 
@@ -77,25 +77,25 @@ export const useUtmParameters = () => {
       const utmParams: UtmParameters = {};
 
       // Parâmetros UTM padrão
-      if (urlParams.has('utm_source')) utmParams.source = urlParams.get('utm_source') || undefined;
-      if (urlParams.has('utm_medium')) utmParams.medium = urlParams.get('utm_medium') || undefined;
-      if (urlParams.has('utm_campaign'))
-        utmParams.campaign = urlParams.get('utm_campaign') || undefined;
-      if (urlParams.has('utm_content'))
-        utmParams.content = urlParams.get('utm_content') || undefined;
-      if (urlParams.has('utm_term')) utmParams.term = urlParams.get('utm_term') || undefined;
-      if (urlParams.has('utm_id')) utmParams.id = urlParams.get('utm_id') || undefined;
+      if (urlParams.has("utm_source")) utmParams.source = urlParams.get("utm_source") || undefined;
+      if (urlParams.has("utm_medium")) utmParams.medium = urlParams.get("utm_medium") || undefined;
+      if (urlParams.has("utm_campaign"))
+        utmParams.campaign = urlParams.get("utm_campaign") || undefined;
+      if (urlParams.has("utm_content"))
+        utmParams.content = urlParams.get("utm_content") || undefined;
+      if (urlParams.has("utm_term")) utmParams.term = urlParams.get("utm_term") || undefined;
+      if (urlParams.has("utm_id")) utmParams.id = urlParams.get("utm_id") || undefined;
 
       // Parâmetro específico do Facebook
-      if (urlParams.has('fbclid')) utmParams.fbclid = urlParams.get('fbclid') || undefined;
+      if (urlParams.has("fbclid")) utmParams.fbclid = urlParams.get("fbclid") || undefined;
 
       // Armazenar parâmetros UTM no localStorage para persistência
       if (Object.keys(utmParams).length > 0) {
-        localStorage.setItem('utm_parameters', JSON.stringify(utmParams));
-        console.log('UTM parameters captured:', utmParams);
+        localStorage.setItem("utm_parameters", JSON.stringify(utmParams));
+        console.log("UTM parameters captured:", utmParams);
       } else {
         // Tentar recuperar parâmetros do localStorage se não houver na URL
-        const storedUtmParams = localStorage.getItem('utm_parameters');
+        const storedUtmParams = localStorage.getItem("utm_parameters");
         if (storedUtmParams) {
           return JSON.parse(storedUtmParams);
         }
@@ -103,7 +103,7 @@ export const useUtmParameters = () => {
 
       return utmParams;
     } catch (error) {
-      console.error('Error capturing UTM parameters:', error);
+      console.error("Error capturing UTM parameters:", error);
       return {};
     }
   };
@@ -139,17 +139,17 @@ export const useUtmParameters = () => {
 
     try {
       const urlObj = new URL(url);
-      if (utmParams.source) urlObj.searchParams.append('utm_source', utmParams.source);
-      if (utmParams.medium) urlObj.searchParams.append('utm_medium', utmParams.medium);
-      if (utmParams.campaign) urlObj.searchParams.append('utm_campaign', utmParams.campaign);
-      if (utmParams.content) urlObj.searchParams.append('utm_content', utmParams.content);
-      if (utmParams.term) urlObj.searchParams.append('utm_term', utmParams.term);
-      if (utmParams.id) urlObj.searchParams.append('utm_id', utmParams.id);
-      if (utmParams.fbclid) urlObj.searchParams.append('fbclid', utmParams.fbclid);
+      if (utmParams.source) urlObj.searchParams.append("utm_source", utmParams.source);
+      if (utmParams.medium) urlObj.searchParams.append("utm_medium", utmParams.medium);
+      if (utmParams.campaign) urlObj.searchParams.append("utm_campaign", utmParams.campaign);
+      if (utmParams.content) urlObj.searchParams.append("utm_content", utmParams.content);
+      if (utmParams.term) urlObj.searchParams.append("utm_term", utmParams.term);
+      if (utmParams.id) urlObj.searchParams.append("utm_id", utmParams.id);
+      if (utmParams.fbclid) urlObj.searchParams.append("fbclid", utmParams.fbclid);
 
       return urlObj.toString();
     } catch (error) {
-      console.error('Error adding UTM parameters to URL:', error);
+      console.error("Error adding UTM parameters to URL:", error);
       return url;
     }
   };
@@ -159,32 +159,32 @@ export const useUtmParameters = () => {
    */
   const setBaseDomain = (domain: string) => {
     setDomainBase(domain);
-    localStorage.setItem('domain_base', domain);
+    localStorage.setItem("domain_base", domain);
   };
 
   /**
    * Gera links UTM completos para diferentes canais
    */
   const generateUtmLink = (
-    path: string = '',
-    source: string = 'facebook',
-    medium: string = 'social',
-    campaign: string = 'brand',
+    path: string = "",
+    source: string = "facebook",
+    medium: string = "social",
+    campaign: string = "brand",
     content?: string,
     term?: string
   ): string => {
     let baseUrl = `https://${domainBase}`;
-    if (path && !path.startsWith('/')) {
-      baseUrl += '/';
+    if (path && !path.startsWith("/")) {
+      baseUrl += "/";
     }
     baseUrl += path;
 
     const url = new URL(baseUrl);
-    url.searchParams.append('utm_source', source);
-    url.searchParams.append('utm_medium', medium);
-    url.searchParams.append('utm_campaign', campaign);
-    if (content) url.searchParams.append('utm_content', content);
-    if (term) url.searchParams.append('utm_term', term);
+    url.searchParams.append("utm_source", source);
+    url.searchParams.append("utm_medium", medium);
+    url.searchParams.append("utm_campaign", campaign);
+    if (content) url.searchParams.append("utm_content", content);
+    if (term) url.searchParams.append("utm_term", term);
 
     return url.toString();
   };

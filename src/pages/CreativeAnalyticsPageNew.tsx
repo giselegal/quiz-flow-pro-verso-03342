@@ -1,6 +1,6 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import AdminLayout from '@/components/admin/AdminLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TestDataItem {
   name: string;
@@ -27,12 +27,12 @@ const CreativeAnalyticsPageNew: React.FC = () => {
   };
 
   const testData: TestDataItem[] = [
-    { name: 'Natural', value: 25, color: '#8F7A6A' },
-    { name: 'Clássico', value: 20, color: '#432818' },
-    { name: 'Contemporâneo', value: 18, color: '#B89B7A' },
-    { name: 'Elegante', value: 15, color: '#AA6B5D' },
-    { name: 'Romântico', value: 12, color: '#D4A5A5' },
-    { name: 'Sexy', value: 10, color: '#9E2B2B' },
+    { name: "Natural", value: 25, color: "#8F7A6A" },
+    { name: "Clássico", value: 20, color: "#432818" },
+    { name: "Contemporâneo", value: 18, color: "#B89B7A" },
+    { name: "Elegante", value: 15, color: "#AA6B5D" },
+    { name: "Romântico", value: 12, color: "#D4A5A5" },
+    { name: "Sexy", value: 10, color: "#9E2B2B" },
   ];
 
   return (

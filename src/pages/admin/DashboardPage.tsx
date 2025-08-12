@@ -1,24 +1,24 @@
-import React, { Suspense, lazy } from 'react';
-import { Route, Switch, useLocation } from 'wouter';
-import { AdminSidebar } from '../../components/admin/AdminSidebar';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import React, { Suspense, lazy } from "react";
+import { Route, Switch, useLocation } from "wouter";
+import { AdminSidebar } from "../../components/admin/AdminSidebar";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 // Lazy loading das páginas do dashboard
-const DashboardOverview = lazy(() => import('./OverviewPage'));
-const QuizPage = lazy(() => import('./QuizPage'));
-const FunnelPanelPage = lazy(() => import('./FunnelPanelPage'));
-const ABTestPage = lazy(() => import('./ABTestPage'));
-const SettingsPage = lazy(() => import('./SettingsPage'));
-const CreativesPage = lazy(() => import('./CreativesPage'));
-const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
-const EditorPage = lazy(() => import('./EditorPage'));
+const DashboardOverview = lazy(() => import("./OverviewPage"));
+const QuizPage = lazy(() => import("./QuizPage"));
+const FunnelPanelPage = lazy(() => import("./FunnelPanelPage"));
+const ABTestPage = lazy(() => import("./ABTestPage"));
+const SettingsPage = lazy(() => import("./SettingsPage"));
+const CreativesPage = lazy(() => import("./CreativesPage"));
+const AnalyticsPage = lazy(() => import("./AnalyticsPage"));
+const EditorPage = lazy(() => import("./EditorPage"));
 
 // Componente de loading
 const LoadingFallback = () => (
   <div className="flex items-center justify-center h-64">
     <div className="text-center">
       <LoadingSpinner size="lg" color="#B89B7A" className="mx-auto" />
-      <p style={{ color: '#6B4F43' }}>Carregando...</p>
+      <p style={{ color: "#6B4F43" }}>Carregando...</p>
     </div>
   </div>
 );

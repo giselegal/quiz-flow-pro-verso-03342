@@ -37,7 +37,7 @@ export interface BankImage {
   /**
    * Prioridade de carregamento
    */
-  priority?: 'high' | 'medium' | 'low';
+  priority?: "high" | "medium" | "low";
 
   /**
    * Largura original da imagem em pixels

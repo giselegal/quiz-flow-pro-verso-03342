@@ -2,7 +2,7 @@
 // hooks/usePropertyHistory.ts - Hook para histórico de propriedades
 // =====================================================================
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from "react";
 
 interface HistoryEntry {
   id: string;
@@ -14,17 +14,17 @@ interface HistoryEntry {
 export function usePropertyHistory(initialProperties: Record<string, any> = {}) {
   const [history, setHistory] = useState<HistoryEntry[]>([
     {
-      id: 'initial',
+      id: "initial",
       timestamp: Date.now(),
       properties: initialProperties,
-      description: 'Estado inicial',
+      description: "Estado inicial",
     },
   ]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const lastSaveTime = useRef(Date.now());
 
   const saveToHistory = useCallback(
-    (properties: Record<string, any>, description: string = 'Alteração de propriedade') => {
+    (properties: Record<string, any>, description: string = "Alteração de propriedade") => {
       const now = Date.now();
 
       // Evitar salvar mudanças muito frequentes (debounce de 1 segundo)

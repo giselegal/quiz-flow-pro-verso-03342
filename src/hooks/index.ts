@@ -5,61 +5,61 @@
  */
 
 // Editor hooks
-export { useEditor } from './useEditor';
-export { useUnifiedProperties } from './useUnifiedProperties';
-export { useInlineEdit } from './useInlineEdit';
-export { useBlockForm } from './useBlockForm';
-export { usePropertyHistory } from './usePropertyHistory';
-export { useLiveEditor } from './useLiveEditor';
+export { useEditor } from "./useEditor";
+export { useUnifiedProperties } from "./useUnifiedProperties";
+export { useInlineEdit } from "./useInlineEdit";
+export { useBlockForm } from "./useBlockForm";
+export { usePropertyHistory } from "./usePropertyHistory";
+export { useLiveEditor } from "./useLiveEditor";
 
 // Hooks compostos e avançados
-export { useStepWithContainer, useQuizStepContainer } from './useStepWithContainer';
+export { useStepWithContainer, useQuizStepContainer } from "./useStepWithContainer";
 export {
   useIntegratedReusableComponents,
   useTemplateActions,
-} from './useIntegratedReusableComponents';
+} from "./useIntegratedReusableComponents";
 export {
   useSmartPerformance,
   useOptimizedQuizStep,
   useOptimizedInlineComponent,
   useSmartDebounce,
-} from './useSmartPerformance';
+} from "./useSmartPerformance";
 
 // Quiz hooks (core)
-export { useQuiz } from './useQuiz';
-export { useQuizBuilder } from './useQuizBuilder';
-export { useQuizConfig } from './useQuizConfig';
-export { useQuizLogic } from './useQuizLogic';
-export { useQuizResults } from './useQuizResults';
-export { useQuizTracking } from './useQuizTracking';
+export { useQuiz } from "./useQuiz";
+export { useQuizBuilder } from "./useQuizBuilder";
+export { useQuizConfig } from "./useQuizConfig";
+export { useQuizLogic } from "./useQuizLogic";
+export { useQuizResults } from "./useQuizResults";
+export { useQuizTracking } from "./useQuizTracking";
 
 // Responsividade
-export { useIsLowPerformanceDevice, useIsMobile } from './use-mobile';
-export { useMediaQuery } from './useMediaQuery';
+export { useIsLowPerformanceDevice, useIsMobile } from "./use-mobile";
+export { useMediaQuery } from "./useMediaQuery";
 
 // Performance
-export { useDebounce } from './useDebounce';
-export { useLoadingState } from './useLoadingState';
-export { useOptimizedTimer } from './useOptimizedTimer';
-export { usePerformanceOptimization } from './usePerformanceOptimization';
+export { useDebounce } from "./useDebounce";
+export { useLoadingState } from "./useLoadingState";
+export { useOptimizedTimer } from "./useOptimizedTimer";
+export { usePerformanceOptimization } from "./usePerformanceOptimization";
 
 // UI/UX
-export { useAutoAnimate } from './useAutoAnimate';
-export { useGlobalStyles } from './useGlobalStyles';
-export { useKeyboardShortcuts } from './useKeyboardShortcuts';
-export { useScrollTracking } from './useScrollTracking';
+export { useAutoAnimate } from "./useAutoAnimate";
+export { useGlobalStyles } from "./useGlobalStyles";
+export { useKeyboardShortcuts } from "./useKeyboardShortcuts";
+export { useScrollTracking } from "./useScrollTracking";
 
 // Dados
-export { useAutosave } from './useAutosave';
-export { useHistory } from './useHistory';
-export { useSupabase } from './useSupabase';
-export { useSupabaseQuiz } from './useSupabaseQuiz';
+export { useAutosave } from "./useAutosave";
+export { useHistory } from "./useHistory";
+export { useSupabase } from "./useSupabase";
+export { useSupabaseQuiz } from "./useSupabaseQuiz";
 
 // Utilitários
-export { useToast } from './use-toast';
-export { useABTest } from './useABTest';
-export { useGlobalLoading } from './useGlobalLoading';
-export { useUtmParameters } from './useUtmParameters';
+export { useToast } from "./use-toast";
+export { useABTest } from "./useABTest";
+export { useGlobalLoading } from "./useGlobalLoading";
+export { useUtmParameters } from "./useUtmParameters";
 
 // Estatísticas dos hooks
 export const HOOKS_STATS = {
@@ -74,5 +74,5 @@ export const HOOKS_STATS = {
     database: 0,
     result: 4,
   },
-  lastAnalyzed: '2025-08-07T19:48:07.539Z',
+  lastAnalyzed: "2025-08-07T19:48:07.539Z",
 };

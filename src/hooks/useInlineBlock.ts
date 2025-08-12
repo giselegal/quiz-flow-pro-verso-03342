@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { Block } from '@/types/editor';
+import { useState, useCallback } from "react";
+import { Block } from "@/types/editor";
 
 export interface UseInlineBlockReturn {
   isEditing: boolean;

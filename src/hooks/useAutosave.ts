@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 interface UseAutosaveOptions {
   data: any;
@@ -30,7 +30,7 @@ export const useAutosave = ({
       await onSave(data);
       setLastSaved(new Date());
     } catch (error) {
-      console.error('Erro ao salvar:', error);
+      console.error("Erro ao salvar:", error);
     } finally {
       setIsSaving(false);
     }

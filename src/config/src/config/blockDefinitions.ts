@@ -1,2 +1,2 @@
 // Re-export from the correct location
-export * from '../../blockDefinitions';
+export * from "../../blockDefinitions";

@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { QuizQuestion, QuizAnswer, QuizResult } from '@/types/quiz';
-import { calculateQuizResult } from '@/lib/quizEngine';
+import React, { createContext, useContext, useState, useCallback } from "react";
+import { QuizQuestion, QuizAnswer, QuizResult } from "@/types/quiz";
+import { calculateQuizResult } from "@/lib/quizEngine";
 
 interface EditorQuizContextType {
   currentQuestionIndex: number;
@@ -95,7 +95,7 @@ export const EditorQuizProvider: React.FC<EditorQuizProviderProps> = ({ children
 export const useEditorQuiz = (): EditorQuizContextType => {
   const context = useContext(EditorQuizContext);
   if (context === undefined) {
-    throw new Error('useEditorQuiz must be used within an EditorQuizProvider');
+    throw new Error("useEditorQuiz must be used within an EditorQuizProvider");
   }
   return context;
 };

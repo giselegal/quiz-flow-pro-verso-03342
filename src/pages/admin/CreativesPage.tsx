@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus, Image, Video, FileText } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Image, Video, FileText } from "lucide-react";
 
 const CreativesPage: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const CreativesPage: React.FC = () => {
         <div>
           <h1
             className="text-3xl font-bold text-[#432818]"
-            style={{ fontFamily: 'Playfair Display, serif' }}
+            style={{ fontFamily: "Playfair Display, serif" }}
           >
             Biblioteca de Criativos
           </h1>
@@ -66,7 +66,7 @@ const CreativesPage: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} style={{ backgroundColor: '#E5DDD5' }}>
+              <div key={i} style={{ backgroundColor: "#E5DDD5" }}>
                 <Image className="w-8 h-8 text-[#B89B7A]" />
               </div>
             ))}

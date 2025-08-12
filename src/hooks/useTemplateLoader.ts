@@ -1,7 +1,7 @@
-import { STEP_TEMPLATES } from '@/config/templates/templates';
-import { useEditor } from '@/context/EditorContext';
-import { Block } from '@/types/editor';
-import { useCallback, useEffect, useState } from 'react';
+import { STEP_TEMPLATES } from "@/config/templates/templates";
+import { useEditor } from "@/context/EditorContext";
+import { Block } from "@/types/editor";
+import { useCallback, useEffect, useState } from "react";
 
 type StageTemplate = any;
 
@@ -48,8 +48,8 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
             id: stage.id,
             name: (template as any).metadata?.name || `Template ${stage.order}`,
             description: (template as any).metadata?.description,
-            type: (template as any).metadata?.type || 'default',
-            version: (template as any).metadata?.version || '1.0.0',
+            type: (template as any).metadata?.type || "default",
+            version: (template as any).metadata?.version || "1.0.0",
             blocksCount: (template as any).blocks?.length || 0,
           };
         }

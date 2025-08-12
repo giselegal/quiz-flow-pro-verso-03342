@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 interface LimitedStockIndicatorProps {
   initialStock?: number;
@@ -7,7 +7,7 @@ interface LimitedStockIndicatorProps {
 
 export const LimitedStockIndicator: React.FC<LimitedStockIndicatorProps> = ({
   initialStock = 12,
-  className = '',
+  className = "",
 }) => {
   const [stockLeft, setStockLeft] = useState(initialStock);
   const [isActive, setIsActive] = useState(false);
@@ -37,12 +37,12 @@ export const LimitedStockIndicator: React.FC<LimitedStockIndicatorProps> = ({
       <div className="flex items-center justify-between text-xs mb-1">
         <span className="font-medium text-[#D68047]">Estoque limitado</span>
         <span
-          className={`transition-all duration-700 ${isActive ? 'text-red-500 font-bold' : 'text-[#8F7A6A]'}`}
+          className={`transition-all duration-700 ${isActive ? "text-red-500 font-bold" : "text-[#8F7A6A]"}`}
         >
           Restam apenas {stockLeft} unidades
         </span>
       </div>
-      <div style={{ backgroundColor: '#E5DDD5' }}>
+      <div style={{ backgroundColor: "#E5DDD5" }}>
         <div
           className="h-full bg-gradient-to-r from-red-500 to-[#D68047] transition-all duration-500"
           style={{ width: `${percentLeft}%` }}

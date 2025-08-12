@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
-import { ResultPageConfig } from '@/types/resultPageConfig';
-import { useResultPageConfig } from './useResultPageConfig';
+import { useState, useCallback } from "react";
+import { ResultPageConfig } from "@/types/resultPageConfig";
+import { useResultPageConfig } from "./useResultPageConfig";
 
 interface UseResultPageEditorReturn {
   resultPageConfig: ResultPageConfig;

@@ -22,9 +22,9 @@ const EditorFixedSimple: React.FC = () => {
                 <h3 className="font-semibold text-stone-800 mb-2">Etapa {i + 1}</h3>
                 <p className="text-sm text-stone-600">
                   {i === 0
-                    ? 'Página de introdução'
+                    ? "Página de introdução"
                     : i === 20
-                      ? 'Página de resultado'
+                      ? "Página de resultado"
                       : `Pergunta ${i}`}
                 </p>
               </div>

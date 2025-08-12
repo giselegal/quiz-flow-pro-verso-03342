@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useState, useRef, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 interface OptimizedImageProps {
   src: string;
@@ -10,7 +10,7 @@ interface OptimizedImageProps {
   priority?: boolean;
   onLoad?: () => void;
   quality?: number;
-  placeholder?: 'blur' | 'empty';
+  placeholder?: "blur" | "empty";
   blurDataURL?: string;
   sizes?: string;
   fill?: boolean;
@@ -26,9 +26,9 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   priority = false,
   onLoad,
   quality = 85,
-  placeholder = 'empty',
+  placeholder = "empty",
   blurDataURL,
-  sizes = '100vw',
+  sizes = "100vw",
   fill = false,
   style = {},
 }) => {
@@ -57,7 +57,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         }
       },
       {
-        rootMargin: '50px',
+        rootMargin: "50px",
         threshold: 0.1,
       }
     );
@@ -71,16 +71,16 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate optimized image URLs for different providers
   const getOptimizedSrc = (originalSrc: string, targetWidth?: number) => {
-    if (originalSrc.includes('cloudinary.com')) {
-      const baseUrl = originalSrc.split('/upload/')[0];
-      const imagePath = originalSrc.split('/upload/')[1];
+    if (originalSrc.includes("cloudinary.com")) {
+      const baseUrl = originalSrc.split("/upload/")[0];
+      const imagePath = originalSrc.split("/upload/")[1];
 
       const transformations = [
         `q_${quality}`,
-        'f_auto',
+        "f_auto",
         ...(targetWidth ? [`w_${targetWidth}`] : []),
-        'c_limit',
-      ].join(',');
+        "c_limit",
+      ].join(",");
 
       return `${baseUrl}/upload/${transformations}/${imagePath}`;
     }
@@ -95,7 +95,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     const breakpoints = [480, 640, 768, 1024, 1280, 1536];
     const relevantBreakpoints = breakpoints.filter(bp => bp <= width * 2);
 
-    return relevantBreakpoints.map(bp => `${getOptimizedSrc(src, bp)} ${bp}w`).join(', ');
+    return relevantBreakpoints.map(bp => `${getOptimizedSrc(src, bp)} ${bp}w`).join(", ");
   };
 
   const handleLoad = () => {
@@ -113,7 +113,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     return (
       <div
         ref={imgRef}
-        className={cn('bg-gray-200 animate-pulse', fill ? 'absolute inset-0' : '', className)}
+        className={cn("bg-gray-200 animate-pulse", fill ? "absolute inset-0" : "", className)}
         style={fill ? { ...style } : { width, height, ...style }}
       />
     );
@@ -124,8 +124,8 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     return (
       <div
         className={cn(
-          'bg-gray-100 flex items-center justify-center text-gray-400',
-          fill ? 'absolute inset-0' : '',
+          "bg-gray-100 flex items-center justify-center text-gray-400",
+          fill ? "absolute inset-0" : "",
           className
         )}
         style={fill ? { ...style } : { width, height, ...style }}
@@ -137,11 +137,11 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   return (
     <div
-      className={cn('relative overflow-hidden', fill ? 'absolute inset-0' : '', className)}
+      className={cn("relative overflow-hidden", fill ? "absolute inset-0" : "", className)}
       style={fill ? { ...style } : { width, height, ...style }}
     >
       {/* Placeholder/blur effect */}
-      {placeholder === 'blur' && blurDataURL && !isLoaded && (
+      {placeholder === "blur" && blurDataURL && !isLoaded && (
         <img
           src={blurDataURL}
           alt=""
@@ -151,7 +151,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
 
       {/* Loading placeholder */}
-      {!isLoaded && placeholder === 'empty' && <div style={{ backgroundColor: '#E5DDD5' }} />}
+      {!isLoaded && placeholder === "empty" && <div style={{ backgroundColor: "#E5DDD5" }} />}
 
       {/* Main image */}
       <img
@@ -160,17 +160,17 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? 'eager' : 'lazy'}
+        loading={priority ? "eager" : "lazy"}
         decoding="async"
-        fetchPriority={priority ? 'high' : 'auto'}
+        fetchPriority={priority ? "high" : "auto"}
         srcSet={generateSrcSet()}
         sizes={sizes}
         onLoad={handleLoad}
         onError={handleError}
         className={cn(
-          'transition-opacity duration-300',
-          fill ? 'absolute inset-0 w-full h-full object-cover' : 'w-full h-auto',
-          isLoaded ? 'opacity-100' : 'opacity-0'
+          "transition-opacity duration-300",
+          fill ? "absolute inset-0 w-full h-full object-cover" : "w-full h-auto",
+          isLoaded ? "opacity-100" : "opacity-0"
         )}
       />
     </div>

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { useCallback, useEffect, useRef } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface UseAutoSaveWithDebounceOptions {
   data: any;
@@ -35,19 +35,19 @@ export const useAutoSaveWithDebounce = ({
 
       if (showToasts) {
         toast({
-          title: 'Salvamento automático',
-          description: 'Alterações salvas com sucesso',
-          variant: 'default',
+          title: "Salvamento automático",
+          description: "Alterações salvas com sucesso",
+          variant: "default",
         });
       }
     } catch (error) {
-      console.error('Auto-save error:', error);
+      console.error("Auto-save error:", error);
 
       if (showToasts) {
         toast({
-          title: 'Erro no salvamento',
-          description: 'Falha ao salvar alterações automaticamente',
-          variant: 'destructive',
+          title: "Erro no salvamento",
+          description: "Falha ao salvar alterações automaticamente",
+          variant: "destructive",
         });
       }
     } finally {

@@ -1,17 +1,17 @@
-import { StyleResult } from '@/types/quiz';
-import { useLocation } from 'wouter';
-import { useEffect } from 'react';
+import { StyleResult } from "@/types/quiz";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
 
 export const ResultPagePrototype: React.FC = () => {
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
     // Prevent any navigation issues
-    console.log('ResultPagePrototype loaded');
+    console.log("ResultPagePrototype loaded");
   }, []);
 
-  const mockPrimaryStyle = 'Elegante';
-  const mockSecondaryStyles = ['Clássico', 'Contemporâneo', 'Natural'];
+  const mockPrimaryStyle = "Elegante";
+  const mockSecondaryStyles = ["Clássico", "Contemporâneo", "Natural"];
 
   const primaryStyle: StyleResult = mockPrimaryStyle
     ? {
@@ -23,10 +23,10 @@ export const ResultPagePrototype: React.FC = () => {
         rank: 1,
       }
     : {
-        category: 'Natural',
+        category: "Natural",
         score: 100,
         percentage: 85,
-        style: 'natural',
+        style: "natural",
         points: 100,
         rank: 1,
       };

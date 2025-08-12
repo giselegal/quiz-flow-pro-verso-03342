@@ -1,5 +1,5 @@
-import { QuizComponentData } from '@/types/quizBuilder';
-import { useCallback, useState } from 'react';
+import { QuizComponentData } from "@/types/quizBuilder";
+import { useCallback, useState } from "react";
 
 export const useQuizComponents = () => {
   const [components, setComponents] = useState<QuizComponentData[]>([]);
@@ -36,7 +36,7 @@ export const useQuizComponents = () => {
 
   const moveComponent = useCallback((draggedId: string, targetId: string) => {
     // Implementation for moving components
-    console.log('Move component', draggedId, 'to', targetId);
+    console.log("Move component", draggedId, "to", targetId);
   }, []);
 
   return {

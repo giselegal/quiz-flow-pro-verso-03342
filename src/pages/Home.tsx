@@ -1,6 +1,6 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/context/AuthContext';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 // import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
@@ -14,8 +14,8 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const { user, logout } = useAuth();
@@ -76,7 +76,7 @@ const Home = () => {
                     </span>
                   </div>
                   <Button
-                    onClick={() => navigate('/admin')}
+                    onClick={() => navigate("/admin")}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
                   >
                     Dashboard
@@ -92,14 +92,14 @@ const Home = () => {
               ) : (
                 <div className="flex items-center space-x-3">
                   <Button
-                    onClick={() => navigate('/auth')}
+                    onClick={() => navigate("/auth")}
                     variant="outline"
                     className="border-slate-300 text-slate-700 hover:bg-slate-50"
                   >
                     Entrar
                   </Button>
                   <Button
-                    onClick={() => navigate('/auth')}
+                    onClick={() => navigate("/auth")}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
                   >
                     Começar Grátis
@@ -135,12 +135,12 @@ const Home = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <Button
-                onClick={() => navigate(user ? '/admin' : '/auth')}
+                onClick={() => navigate(user ? "/admin" : "/auth")}
                 size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl px-8 py-4 text-lg"
               >
                 <Play className="h-5 w-5 mr-2" />
-                {user ? 'Ir para Dashboard' : 'Começar Agora'}
+                {user ? "Ir para Dashboard" : "Começar Agora"}
                 <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
               <Button
@@ -208,7 +208,7 @@ const Home = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
               Tudo que você precisa para
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {' '}
+                {" "}
                 converter mais
               </span>
             </h2>
@@ -266,12 +266,12 @@ const Home = () => {
             Junte-se a milhares de empresas que já aumentaram suas conversões com nossa plataforma.
           </p>
           <Button
-            onClick={() => navigate(user ? '/admin' : '/auth')}
+            onClick={() => navigate(user ? "/admin" : "/auth")}
             size="lg"
             className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl px-8 py-4 text-lg font-semibold"
           >
             <Rocket className="h-5 w-5 mr-2" />
-            {user ? 'Acessar Dashboard' : 'Começar Gratuitamente'}
+            {user ? "Acessar Dashboard" : "Começar Gratuitamente"}
             <ArrowRight className="h-5 w-5 ml-2" />
           </Button>
         </div>

@@ -1,6 +1,6 @@
-import type { Block } from '@/types/editor';
-import { TemplateManager } from '@/utils/TemplateManager';
-import { useCallback, useEffect, useState } from 'react';
+import type { Block } from "@/types/editor";
+import { TemplateManager } from "@/utils/TemplateManager";
+import { useCallback, useEffect, useState } from "react";
 
 interface UseJsonTemplateOptions {
   preload?: boolean;
@@ -84,7 +84,7 @@ export const useJsonTemplate = (
     // Pre-carregamento opcional
     if (preload) {
       TemplateManager.preloadCommonTemplates().catch(err => {
-        console.warn('⚠️ Falha no pre-carregamento:', err);
+        console.warn("⚠️ Falha no pre-carregamento:", err);
       });
     }
   }, [initialStepId, preload, loadStep]);
@@ -132,7 +132,7 @@ export const useMultiJsonTemplate = (stepIds: string[]) => {
     setErrors(errors);
     setLoading(false);
 
-    console.log('📊 useMultiJsonTemplate: Carregados', Object.keys(results).length, 'templates');
+    console.log("📊 useMultiJsonTemplate: Carregados", Object.keys(results).length, "templates");
   }, [stepIds]);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import { useAuth } from '@/context/AuthContext';
-import { StyleResult } from '@/types/quiz';
-import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from "@/context/AuthContext";
+import { StyleResult } from "@/types/quiz";
+import { useCallback, useEffect, useState } from "react";
 
 interface UserStyleData {
   primaryStyle?: StyleResult;
@@ -24,7 +24,7 @@ export const useUserDataPersistence = () => {
     const loadUserData = () => {
       try {
         setIsLoading(true);
-        const storageKey = `userStyleData_${user?.id || 'anonymous'}`;
+        const storageKey = `userStyleData_${user?.id || "anonymous"}`;
         const savedData = localStorage.getItem(storageKey);
 
         if (savedData) {
@@ -43,8 +43,8 @@ export const useUserDataPersistence = () => {
           }
         }
       } catch (err) {
-        setError('Erro ao carregar dados do usuário');
-        console.error('Erro ao carregar dados:', err);
+        setError("Erro ao carregar dados do usuário");
+        console.error("Erro ao carregar dados:", err);
       } finally {
         setIsLoading(false);
       }
@@ -57,7 +57,7 @@ export const useUserDataPersistence = () => {
   const saveUserData = useCallback(
     (data: Partial<UserStyleData>) => {
       try {
-        const storageKey = `userStyleData_${user?.id || 'anonymous'}`;
+        const storageKey = `userStyleData_${user?.id || "anonymous"}`;
         const updatedData = {
           ...userData,
           ...data,
@@ -68,8 +68,8 @@ export const useUserDataPersistence = () => {
         setUserData(updatedData);
         setError(null);
       } catch (err) {
-        setError('Erro ao salvar dados do usuário');
-        console.error('Erro ao salvar dados:', err);
+        setError("Erro ao salvar dados do usuário");
+        console.error("Erro ao salvar dados:", err);
       }
     },
     [userData, user]
@@ -77,7 +77,7 @@ export const useUserDataPersistence = () => {
 
   // Atualizar preferências do usuário
   const updatePreferences = useCallback(
-    (preferences: UserStyleData['preferences']) => {
+    (preferences: UserStyleData["preferences"]) => {
       saveUserData({ preferences });
     },
     [saveUserData]
@@ -86,13 +86,13 @@ export const useUserDataPersistence = () => {
   // Limpar dados do usuário
   const clearUserData = useCallback(() => {
     try {
-      const storageKey = `userStyleData_${user?.id || 'anonymous'}`;
+      const storageKey = `userStyleData_${user?.id || "anonymous"}`;
       localStorage.removeItem(storageKey);
       setUserData({});
       setError(null);
     } catch (err) {
-      setError('Erro ao limpar dados do usuário');
-      console.error('Erro ao limpar dados:', err);
+      setError("Erro ao limpar dados do usuário");
+      console.error("Erro ao limpar dados:", err);
     }
   }, [user]);
 

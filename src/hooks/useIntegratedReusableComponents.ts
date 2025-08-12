@@ -7,10 +7,10 @@
  * para criar uma experiência otimizada de reutilização.
  */
 
-import { useCallback, useMemo, useState } from 'react';
-import { useEditor } from '../context/EditorContext';
-import { useReusableComponents } from './useReusableComponents';
-import { useUnifiedProperties } from './useUnifiedProperties';
+import { useCallback, useMemo, useState } from "react";
+import { useEditor } from "../context/EditorContext";
+import { useReusableComponents } from "./useReusableComponents";
+import { useUnifiedProperties } from "./useUnifiedProperties";
 
 export interface ReusableBlockTemplate {
   id: string;
@@ -18,7 +18,7 @@ export interface ReusableBlockTemplate {
   description: string;
   blockType: string;
   properties: Record<string, any>;
-  category: 'quiz' | 'result' | 'offer' | 'utility';
+  category: "quiz" | "result" | "offer" | "utility";
   tags: string[];
   usage_count?: number;
   created_at?: string;
@@ -42,7 +42,7 @@ export const useIntegratedReusableComponents = () => {
         description: comp.description,
         blockType: comp.type_key,
         properties: comp.default_properties,
-        category: comp.category as 'quiz' | 'result' | 'offer' | 'utility',
+        category: comp.category as "quiz" | "result" | "offer" | "utility",
         tags: [],
         isSystemComponent: true,
       })) || [];
@@ -59,7 +59,7 @@ export const useIntegratedReusableComponents = () => {
         description: templateInfo.description || `Template criado a partir de ${block.type}`,
         blockType: block.type,
         properties: { ...block.properties },
-        category: templateInfo.category || 'utility',
+        category: templateInfo.category || "utility",
         tags: templateInfo.tags || [],
         created_at: new Date().toISOString(),
       };
@@ -72,7 +72,7 @@ export const useIntegratedReusableComponents = () => {
         await reusableHook.createComponentInstance({
           instance_key: template.id,
           component_type_key: template.blockType,
-          quiz_id: 'templates', // ID especial para templates
+          quiz_id: "templates", // ID especial para templates
           step_number: 0,
           order_index: 0,
           properties: template.properties,
@@ -81,7 +81,7 @@ export const useIntegratedReusableComponents = () => {
           is_locked: false,
         });
       } catch (error) {
-        console.log('Template salvo apenas localmente:', error);
+        console.log("Template salvo apenas localmente:", error);
       }
 
       return template;
@@ -187,7 +187,7 @@ export const useIntegratedReusableComponents = () => {
       try {
         await reusableHook.deleteComponentInstance(templateId);
       } catch (error) {
-        console.log('Template removido apenas localmente:', error);
+        console.log("Template removido apenas localmente:", error);
       }
     },
     [reusableHook]
@@ -231,7 +231,7 @@ export const useTemplateActions = (blockType: string) => {
       return createTemplate(block, {
         name,
         description: description || `Template para ${blockType}`,
-        category: 'utility',
+        category: "utility",
         tags: [blockType],
       });
     },

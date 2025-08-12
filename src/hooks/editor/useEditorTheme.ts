@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
-import { EditorConfig } from '@/types/editor';
-import { EditorThemeActions } from '@/types/editorActions';
+import { useCallback } from "react";
+import { EditorConfig } from "@/types/editor";
+import { EditorThemeActions } from "@/types/editorActions";
 
 export const useEditorTheme = (
   config: EditorConfig,

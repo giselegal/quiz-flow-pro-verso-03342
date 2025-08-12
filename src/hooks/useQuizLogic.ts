@@ -1,6 +1,6 @@
-import caktoquizQuestions from '@/data/caktoquizQuestions';
-import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
-import { useCallback, useState } from 'react';
+import caktoquizQuestions from "@/data/caktoquizQuestions";
+import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from "@/types/quiz";
+import { useCallback, useState } from "react";
 
 export const useQuizLogic = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -72,7 +72,7 @@ export const useQuizLogic = () => {
     const sortedStyles = Object.entries(styleScores).sort(
       ([, scoreA], [, scoreB]) => scoreB - scoreA
     );
-    const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
+    const topStyle = sortedStyles[0]?.[0] || "estilo-neutro";
 
     const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
 

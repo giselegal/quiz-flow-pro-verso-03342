@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef } from "react";
 
 /**
  * Hook otimizado para debounce que evita violations de performance
@@ -26,7 +26,7 @@ export const useOptimizedDebounce = <T extends (...args: any[]) => any>(
 
       const execute = () => callback(...args);
 
-      if (useIdleCallback && 'requestIdleCallback' in window) {
+      if (useIdleCallback && "requestIdleCallback" in window) {
         // Usar requestIdleCallback para operações não críticas
         idleCallbackRef.current = requestIdleCallback(execute, {
           timeout: delay + 1000, // Timeout de segurança
@@ -99,7 +99,7 @@ export const useOptimizedHeavyOperation = () => {
         // Yield para o browser entre chunks
         if (i + chunkSize < items.length) {
           await new Promise(resolve => {
-            if ('requestIdleCallback' in window) {
+            if ("requestIdleCallback" in window) {
               requestIdleCallback(() => resolve(undefined));
             } else {
               setTimeout(resolve, delayBetweenChunks);

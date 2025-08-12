@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { preloadCriticalImages } from '@/utils/images/preloading';
-import FixedIntroImage from '@/components/ui/FixedIntroImage';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import MentorSection from '@/components/result/MentorSection';
+import React, { useEffect, useState } from "react";
+import { preloadCriticalImages } from "@/utils/images/preloading";
+import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import MentorSection from "@/components/result/MentorSection";
 import {
   ChevronRight,
   Check,
@@ -29,9 +29,9 @@ import {
   Crown,
   Flame,
   Eye,
-} from 'lucide-react';
-import { trackButtonClick } from '@/utils/analytics';
-import { storeUserForHotmart } from '@/utils/hotmartWebhook';
+} from "lucide-react";
+import { trackButtonClick } from "@/utils/analytics";
+import { storeUserForHotmart } from "@/utils/hotmartWebhook";
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `
@@ -428,103 +428,103 @@ const customStyles = `
 
 // URLs das imagens (mantidas da versão original)
 const HERO_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp";
 const HERO_COMPLEMENTARY_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg";
 const PROBLEM_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_9_mgkdnb.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_9_mgkdnb.webp";
 const SOLUTION_QUIZ_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921098/Espanhol_Portugu%C3%AAs_5_cptzyb.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921098/Espanhol_Portugu%C3%AAs_5_cptzyb.webp";
 const GUIDES_BENEFITS_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp";
 const BONUS_1_KEY_PIECES_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921227/Espanhol_Portugu%C3%AAs_6_y4kqao.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921227/Espanhol_Portugu%C3%AAs_6_y4kqao.webp";
 const BONUS_2_VISAGISM_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921365/Espanhol_Portugu%C3%AAs_7_eqgdqz.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921365/Espanhol_Portugu%C3%AAs_7_eqgdqz.webp";
 const GUARANTEE_IMAGE_URL =
-  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/Garantia_7_dias_j8mxth.webp';
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/Garantia_7_dias_j8mxth.webp";
 
 // Dados para as seções da página
 const painPoints = [
   {
     icon: Heart,
-    title: 'Problemas de autoestima',
-    description: 'Você se sente insegura com sua imagem e não sabe como melhorar',
+    title: "Problemas de autoestima",
+    description: "Você se sente insegura com sua imagem e não sabe como melhorar",
   },
   {
     icon: ShoppingBag,
-    title: 'Compras sem direção',
-    description: 'Gasta dinheiro em roupas que não combinam com você',
+    title: "Compras sem direção",
+    description: "Gasta dinheiro em roupas que não combinam com você",
   },
   {
     icon: Clock,
-    title: 'Perda de tempo',
-    description: 'Demora horas para se arrumar e ainda não fica satisfeita',
+    title: "Perda de tempo",
+    description: "Demora horas para se arrumar e ainda não fica satisfeita",
   },
 ];
 
 const benefits = [
   {
     icon: Crown,
-    title: 'Descobrir seu estilo único',
-    description: 'Identifique qual estilo combina perfeitamente com sua personalidade',
+    title: "Descobrir seu estilo único",
+    description: "Identifique qual estilo combina perfeitamente com sua personalidade",
   },
   {
     icon: Target,
-    title: 'Compras estratégicas',
-    description: 'Saiba exatamente o que comprar para valorizar sua beleza',
+    title: "Compras estratégicas",
+    description: "Saiba exatamente o que comprar para valorizar sua beleza",
   },
   {
     icon: Sparkles,
-    title: 'Confiança renovada',
-    description: 'Sinta-se linda e confiante todos os dias',
+    title: "Confiança renovada",
+    description: "Sinta-se linda e confiante todos os dias",
   },
 ];
 
 const realTestimonials = [
   {
-    name: 'Mariangela',
-    author: 'Mariangela, Engenheira',
-    text: 'Antes, a roupa me vestia. Hoje, eu me visto de propósito. A consultoria me fez dar vida à mulher que sempre existiu em mim.',
+    name: "Mariangela",
+    author: "Mariangela, Engenheira",
+    text: "Antes, a roupa me vestia. Hoje, eu me visto de propósito. A consultoria me fez dar vida à mulher que sempre existiu em mim.",
     rating: 5,
-    location: 'Engenheira',
+    location: "Engenheira",
   },
   {
-    name: 'Patrícia Paranhos',
-    author: 'Patrícia Paranhos, Advogada',
-    text: 'Aprendi a me valorizar e a dar valor para a imagem que transmito. As pessoas começaram a me olhar diferente — porque eu estava diferente.',
+    name: "Patrícia Paranhos",
+    author: "Patrícia Paranhos, Advogada",
+    text: "Aprendi a me valorizar e a dar valor para a imagem que transmito. As pessoas começaram a me olhar diferente — porque eu estava diferente.",
     rating: 5,
-    location: 'Advogada',
+    location: "Advogada",
   },
   {
-    name: 'Sônia Spier',
-    author: 'Sônia Spier, Terapeuta',
-    text: 'A Gisele me ensinou a entender o que comunico com as roupas. Hoje compro com consciência, estilo e propósito.',
+    name: "Sônia Spier",
+    author: "Sônia Spier, Terapeuta",
+    text: "A Gisele me ensinou a entender o que comunico com as roupas. Hoje compro com consciência, estilo e propósito.",
     rating: 5,
-    location: 'Terapeuta',
+    location: "Terapeuta",
   },
 ];
 
 // Função para lidar com cliques em CTAs
-const handleCTAClick = (buttonId: string, action: string = 'Comprar Agora') => {
+const handleCTAClick = (buttonId: string, action: string = "Comprar Agora") => {
   return (event: React.MouseEvent) => {
     event.preventDefault();
     const emailInput = document.querySelector('input[type="email"]') as HTMLInputElement;
-    trackButtonClick(buttonId, action, 'quiz_offer_page');
+    trackButtonClick(buttonId, action, "quiz_offer_page");
 
     if (emailInput?.value) {
       storeUserForHotmart(emailInput.value, {
-        funnel_step: 'quiz_offer_checkout',
+        funnel_step: "quiz_offer_checkout",
         page_url: window.location.href,
       });
     }
 
     // Redirecionar para checkout
     const checkoutUrl =
-      'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912&utm_source=quiz&utm_medium=abtest&utm_campaign=testeB';
+      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912&utm_source=quiz&utm_medium=abtest&utm_campaign=testeB";
 
     if (window.innerWidth >= 768) {
-      window.open(checkoutUrl, '_blank');
+      window.open(checkoutUrl, "_blank");
     } else {
       window.location.href = checkoutUrl;
     }
@@ -534,14 +534,14 @@ const handleCTAClick = (buttonId: string, action: string = 'Comprar Agora') => {
 // Componente de Popup de Prova Social Dinâmica
 const SocialProofPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState("");
 
   const users = [
-    'Ana Carolina acabou de comprar',
-    'Maria Silva descobriu seu estilo',
-    'Juliana Santos transformou seu guarda-roupa',
-    'Fernanda Costa está encantada',
-    'Camila Oliveira recomenda',
+    "Ana Carolina acabou de comprar",
+    "Maria Silva descobriu seu estilo",
+    "Juliana Santos transformou seu guarda-roupa",
+    "Fernanda Costa está encantada",
+    "Camila Oliveira recomenda",
   ];
 
   useEffect(() => {
@@ -557,7 +557,7 @@ const SocialProofPopup = () => {
   return (
     <div
       className={`fixed bottom-4 left-4 z-50 transition-all duration-500 ${
-        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
     >
       <div className="bg-green-500 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm">
@@ -581,7 +581,7 @@ const StarRating = ({ rating }: { rating: number }) => {
         <Star
           key={i}
           size={20}
-          className={`${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+          className={`${i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
         />
       ))}
     </div>
@@ -614,7 +614,7 @@ const DramaticCountdown = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const formatNumber = (num: number) => num.toString().padStart(2, '0');
+  const formatNumber = (num: number) => num.toString().padStart(2, "0");
 
   return (
     <div className="countdown-dramatic">
@@ -648,29 +648,29 @@ const FaqSectionAdvanced = () => {
 
   const faqItems = [
     {
-      question: 'É realmente possível descobrir meu estilo em 5 minutos?',
+      question: "É realmente possível descobrir meu estilo em 5 minutos?",
       answer:
-        'Sim! Nosso quiz foi desenvolvido com base em anos de experiência e metodologia científica. Em poucos minutos, você terá uma análise precisa do seu estilo predominante entre os 7 estilos universais.',
+        "Sim! Nosso quiz foi desenvolvido com base em anos de experiência e metodologia científica. Em poucos minutos, você terá uma análise precisa do seu estilo predominante entre os 7 estilos universais.",
     },
     {
-      question: 'O que acontece se eu não gostar do resultado?',
+      question: "O que acontece se eu não gostar do resultado?",
       answer:
-        'Oferecemos 7 dias de garantia total. Se não ficar satisfeita, devolvemos 100% do seu dinheiro sem perguntas. Sua satisfação é nossa prioridade.',
+        "Oferecemos 7 dias de garantia total. Se não ficar satisfeita, devolvemos 100% do seu dinheiro sem perguntas. Sua satisfação é nossa prioridade.",
     },
     {
-      question: 'Quanto tempo terei acesso aos materiais?',
+      question: "Quanto tempo terei acesso aos materiais?",
       answer:
-        'O acesso é vitalício! Você poderá baixar todos os materiais e consultá-los sempre que precisar, sem prazo de expiração.',
+        "O acesso é vitalício! Você poderá baixar todos os materiais e consultá-los sempre que precisar, sem prazo de expiração.",
     },
     {
-      question: 'Funciona para todas as idades e tipos de corpo?',
+      question: "Funciona para todas as idades e tipos de corpo?",
       answer:
-        'Absolutamente! Nosso método é universal e funciona para mulheres de todas as idades, tipos de corpo e estilos de vida. O importante é descobrir e expressar sua essência única.',
+        "Absolutamente! Nosso método é universal e funciona para mulheres de todas as idades, tipos de corpo e estilos de vida. O importante é descobrir e expressar sua essência única.",
     },
     {
-      question: 'Como recebo os materiais após a compra?',
+      question: "Como recebo os materiais após a compra?",
       answer:
-        'Logo após a confirmação do pagamento, você recebe um email com o link de acesso à área exclusiva onde poderá fazer o quiz e baixar todos os materiais imediatamente.',
+        "Logo após a confirmação do pagamento, você recebe um email com o link de acesso à área exclusiva onde poderá fazer o quiz e baixar todos os materiais imediatamente.",
     },
   ];
 
@@ -694,12 +694,12 @@ const FaqSectionAdvanced = () => {
               <ChevronRight
                 size={24}
                 className={`text-orange-500 transition-transform duration-300 flex-shrink-0 ${
-                  openItem === index ? 'transform rotate-90' : ''
+                  openItem === index ? "transform rotate-90" : ""
                 }`}
               />
             </button>
 
-            {openItem === index && <div style={{ color: '#6B4F43' }}>{item.answer}</div>}
+            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
           </div>
         ))}
       </div>
@@ -709,7 +709,7 @@ const FaqSectionAdvanced = () => {
 
 const DescubraSeuEstilo: React.FC = () => {
   useEffect(() => {
-    const styleElement = document.createElement('style');
+    const styleElement = document.createElement("style");
     styleElement.textContent = customStyles;
     document.head.appendChild(styleElement);
 
@@ -727,8 +727,8 @@ const DescubraSeuEstilo: React.FC = () => {
       { quality: 95 }
     );
 
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('offer-page-v2-mounted');
+    if (typeof window !== "undefined" && "performance" in window) {
+      window.performance.mark("offer-page-v2-mounted");
     }
 
     return () => {
@@ -753,20 +753,20 @@ const DescubraSeuEstilo: React.FC = () => {
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-playfair text-[#432818] text-center md:text-left leading-tight">
-                <span style={{ color: '#B89B7A', fontWeight: 700 }}>Chega</span> de um guarda-roupa
-                lotado e da sensação de que{' '}
-                <span style={{ color: '#B89B7A', fontWeight: 700 }}>nada combina com você.</span>
+                <span style={{ color: "#B89B7A", fontWeight: 700 }}>Chega</span> de um guarda-roupa
+                lotado e da sensação de que{" "}
+                <span style={{ color: "#B89B7A", fontWeight: 700 }}>nada combina com você.</span>
               </h1>
 
               <p className="text-lg md:text-xl text-[#8F7A6A] text-center md:text-left">
-                Em poucos minutos, descubra seu{' '}
-                <strong style={{ color: '#B89B7A' }}>Estilo Predominante</strong> — e aprenda a
+                Em poucos minutos, descubra seu{" "}
+                <strong style={{ color: "#B89B7A" }}>Estilo Predominante</strong> — e aprenda a
                 montar looks que realmente refletem sua essência, com praticidade e confiança.
               </p>
 
               <div className="flex justify-center md:justify-start">
                 <Button
-                  onClick={() => (window.location.href = '/editor-fixed')}
+                  onClick={() => (window.location.href = "/editor-fixed")}
                   size="lg"
                   className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 >
@@ -1122,7 +1122,7 @@ const DescubraSeuEstilo: React.FC = () => {
           </div>
 
           <Button
-            onClick={handleCTAClick('final-cta', 'Quero Transformar Minha Imagem')}
+            onClick={handleCTAClick("final-cta", "Quero Transformar Minha Imagem")}
             size="lg"
             className="bg-[#B89B7A] hover:bg-[#A68A6A] text-white px-8 py-4 text-xl font-semibold rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 w-full md:w-auto"
           >

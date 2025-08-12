@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { fixBlurryImages } from '@/utils/enhancedFixBlurryImages';
+import React, { useEffect, useRef } from "react";
+import { fixBlurryImages } from "@/utils/enhancedFixBlurryImages";
 
 interface AutoFixedImagesProps {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
   children,
   fixOnMount = true,
   fixOnUpdate = true,
-  className = '',
+  className = "",
 }) => {
   // Referência para o elemento wrapper
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -29,21 +29,21 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     let lcpOccurred = false;
 
     try {
-      if (typeof PerformanceObserver !== 'undefined') {
+      if (typeof PerformanceObserver !== "undefined") {
         // Criar observer para LCP
         const lcpObserver = new PerformanceObserver(entries => {
           const lcpEntry = entries.getEntries().at(-1);
           if (lcpEntry) {
             lcpOccurred = true;
-            console.log('LCP detectado:', lcpEntry.startTime);
+            console.log("LCP detectado:", lcpEntry.startTime);
 
             // Executar a correção um pouco depois do LCP
-            if ('requestIdleCallback' in window) {
+            if ("requestIdleCallback" in window) {
               // @ts-ignore
               window.requestIdleCallback(
                 () => {
                   if (wrapperRef.current) {
-                    console.log('Executando correção após LCP (via requestIdleCallback)');
+                    console.log("Executando correção após LCP (via requestIdleCallback)");
                     fixBlurryImages(wrapperRef.current);
                   }
                 },
@@ -52,7 +52,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
             } else {
               setTimeout(() => {
                 if (wrapperRef.current) {
-                  console.log('Executando correção após LCP (via setTimeout)');
+                  console.log("Executando correção após LCP (via setTimeout)");
                   fixBlurryImages(wrapperRef.current);
                 }
               }, 800);
@@ -65,14 +65,14 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
 
         // Observar eventos de LCP
         lcpObserver.observe({
-          type: 'largest-contentful-paint',
+          type: "largest-contentful-paint",
           buffered: true,
         });
 
         // Fallback: Se após 3 segundos o LCP ainda não ocorreu, executar mesmo assim
         setTimeout(() => {
           if (!lcpOccurred && wrapperRef.current) {
-            console.log('Fallback: Executando correção após timeout sem LCP detectado');
+            console.log("Fallback: Executando correção após timeout sem LCP detectado");
             fixBlurryImages(wrapperRef.current);
             lcpObserver.disconnect();
           }
@@ -82,7 +82,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
         setTimeout(() => {
           if (wrapperRef.current) {
             console.log(
-              'Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)'
+              "Fallback: Executando correção após timeout (sem suporte a PerformanceObserver)"
             );
             fixBlurryImages(wrapperRef.current);
           }
@@ -90,10 +90,10 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
       }
     } catch (error) {
       // Proteção contra erros em navegadores incompatíveis
-      console.error('Erro ao configurar detecção de LCP:', error);
+      console.error("Erro ao configurar detecção de LCP:", error);
       setTimeout(() => {
         if (wrapperRef.current) {
-          console.log('Executando correção após erro na detecção de LCP');
+          console.log("Executando correção após erro na detecção de LCP");
           fixBlurryImages(wrapperRef.current);
         }
       }, 2000);
@@ -116,8 +116,8 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
           // Verificar se o nó adicionado é uma imagem ou contém imagens
           if (node.nodeType === Node.ELEMENT_NODE) {
             const element = node as Element;
-            if (element.tagName === 'IMG') return true;
-            return element.querySelectorAll('img').length > 0;
+            if (element.tagName === "IMG") return true;
+            return element.querySelectorAll("img").length > 0;
           }
           return false;
         });
@@ -134,12 +134,12 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
 
         // Debounce: Adiar a correção para evitar múltiplas execuções
         debounceTimer = window.setTimeout(() => {
-          if ('requestIdleCallback' in window) {
+          if ("requestIdleCallback" in window) {
             // @ts-ignore
             window.requestIdleCallback(
               () => {
                 if (wrapperRef.current) {
-                  console.log('Executando correção após mutações (via requestIdleCallback)');
+                  console.log("Executando correção após mutações (via requestIdleCallback)");
                   fixBlurryImages(wrapperRef.current);
                   pendingCorrection = false;
                 }
@@ -149,7 +149,7 @@ const EnhancedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
           } else {
             setTimeout(() => {
               if (wrapperRef.current) {
-                console.log('Executando correção após mutações (via setTimeout)');
+                console.log("Executando correção após mutações (via setTimeout)");
                 fixBlurryImages(wrapperRef.current);
                 pendingCorrection = false;
               }

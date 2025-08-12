@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 interface CanvasConfiguration {
   width: number;
@@ -12,7 +12,7 @@ export const useCanvasConfiguration = () => {
   const [configuration, setConfiguration] = useState<CanvasConfiguration>({
     width: 800,
     height: 600,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     padding: 20,
     components: [],
   });
@@ -40,20 +40,20 @@ export const useCanvasConfiguration = () => {
 
   const loadAndApplyStep20 = useCallback(() => {
     setIsStep20Loaded(true);
-    console.log('Step 20 loaded and applied');
+    console.log("Step 20 loaded and applied");
   }, []);
 
   const loadAndApplyStep21 = useCallback(() => {
     setIsStep21Loaded(true);
-    console.log('Step 21 loaded and applied');
+    console.log("Step 21 loaded and applied");
   }, []);
 
   const getResultComponents = useCallback(() => {
-    return configuration.components.filter((c: any) => c.type === 'result');
+    return configuration.components.filter((c: any) => c.type === "result");
   }, [configuration.components]);
 
   const getOfferComponents = useCallback(() => {
-    return configuration.components.filter((c: any) => c.type === 'offer');
+    return configuration.components.filter((c: any) => c.type === "offer");
   }, [configuration.components]);
 
   const validateAllSteps = useCallback(() => {

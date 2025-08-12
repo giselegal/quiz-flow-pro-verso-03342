@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
-import type { TemplateData } from '../services/templateService';
-import { templateService } from '../services/templateService';
-import type { Block } from '../types/editor';
+import { useCallback, useState } from "react";
+import type { TemplateData } from "../services/templateService";
+import { templateService } from "../services/templateService";
+import type { Block } from "../types/editor";
 
 export interface UseTemplateManagerOptions {
   onAddBlock?: (blockData: Block) => void;
@@ -20,7 +20,7 @@ export const useTemplateManager = (options: UseTemplateManagerOptions = {}) => {
       setCurrentTemplate(template);
       return template;
     } catch (error) {
-      console.error('Erro ao carregar template:', error);
+      console.error("Erro ao carregar template:", error);
       return null;
     } finally {
       setIsLoading(false);
@@ -35,7 +35,7 @@ export const useTemplateManager = (options: UseTemplateManagerOptions = {}) => {
       setCurrentTemplate(template);
       return template;
     } catch (error) {
-      console.error('Erro ao carregar template por etapa:', error);
+      console.error("Erro ao carregar template por etapa:", error);
       return null;
     } finally {
       setIsLoading(false);
@@ -48,7 +48,7 @@ export const useTemplateManager = (options: UseTemplateManagerOptions = {}) => {
       const { onAddBlock, onUpdateBlock } = options;
 
       if (!onAddBlock || !onUpdateBlock) {
-        console.error('Handlers para addBlock/updateBlock não fornecidos');
+        console.error("Handlers para addBlock/updateBlock não fornecidos");
         return;
       }
 
@@ -74,7 +74,7 @@ export const useTemplateManager = (options: UseTemplateManagerOptions = {}) => {
   // Aplica o template atual se existir
   const applyCurrentTemplate = useCallback(async () => {
     if (!currentTemplate) {
-      console.error('Nenhum template carregado para aplicar');
+      console.error("Nenhum template carregado para aplicar");
       return;
     }
 

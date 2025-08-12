@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import { getResponsiveImageSources, getLowQualityPlaceholder } from '@/utils/imageUtils';
-import { getImageMetadata, isImagePreloaded, getOptimizedImage } from '@/utils/imageManager';
+import React, { useState, useEffect, useMemo } from "react";
+import { cn } from "@/lib/utils";
+import { getResponsiveImageSources, getLowQualityPlaceholder } from "@/utils/imageUtils";
+import { getImageMetadata, isImagePreloaded, getOptimizedImage } from "@/utils/imageManager";
 
 interface OptimizedImageProps {
   src: string;
@@ -11,7 +11,7 @@ interface OptimizedImageProps {
   className?: string;
   priority?: boolean;
   onLoad?: () => void;
-  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
   style?: React.CSSProperties;
 }
 
@@ -33,7 +33,7 @@ export default function OptimizedImage({
   className,
   priority = false,
   onLoad,
-  objectFit = 'cover',
+  objectFit = "cover",
   style,
 }: OptimizedImageProps) {
   const [loaded, setLoaded] = useState(false);
@@ -45,13 +45,13 @@ export default function OptimizedImage({
 
   // Generate placeholders and optimized URLs only once
   const placeholderSrc = useMemo(() => {
-    if (!src) return '';
+    if (!src) return "";
     return getLowQualityPlaceholder(src);
   }, [src]);
 
   // Otimizar URLs do Cloudinary automaticamente
   const optimizedSrc = useMemo(() => {
-    if (!src) return '';
+    if (!src) return "";
 
     // Use metadata width/height if available and not overridden
     const imgWidth = width || imageMetadata?.width || undefined;
@@ -59,7 +59,7 @@ export default function OptimizedImage({
 
     return getOptimizedImage(src, {
       quality: 75, // Reduzido de 95 para 75
-      format: 'auto',
+      format: "auto",
       width: imgWidth,
       height: imgHeight,
     });
@@ -67,11 +67,11 @@ export default function OptimizedImage({
 
   // Get responsive image attributes if needed
   const responsiveImageProps = useMemo(() => {
-    if (!src) return { srcSet: '', sizes: '' };
+    if (!src) return { srcSet: "", sizes: "" };
     if (width && width > 300) {
       return getResponsiveImageSources(src, [width / 2, width, width * 1.5]);
     }
-    return { srcSet: '', sizes: '' };
+    return { srcSet: "", sizes: "" };
   }, [src, width]);
 
   // For priority images, we check if they're already preloaded and update state accordingly
@@ -108,8 +108,8 @@ export default function OptimizedImage({
     <div
       className="relative"
       style={{
-        width: style?.width || '100%', // Prioriza style.width, senão 100% para responsividade
-        height: style?.height || (height ? `${height}px` : 'auto'), // Prioriza style.height, senão a prop height em pixels, senão auto
+        width: style?.width || "100%", // Prioriza style.width, senão 100% para responsividade
+        height: style?.height || (height ? `${height}px` : "auto"), // Prioriza style.height, senão a prop height em pixels, senão auto
         ...style, // Aplica o resto do style original passado via props
       }}
     >
@@ -123,20 +123,20 @@ export default function OptimizedImage({
               width={width}
               height={height}
               className={cn(
-                'absolute inset-0 w-full h-full',
-                objectFit === 'cover' && 'object-cover',
-                objectFit === 'contain' && 'object-contain',
-                objectFit === 'fill' && 'object-fill',
-                objectFit === 'none' && 'object-none',
-                objectFit === 'scale-down' && 'object-scale-down',
-                'blur-xl scale-110' // Blur effect for placeholders
+                "absolute inset-0 w-full h-full",
+                objectFit === "cover" && "object-cover",
+                objectFit === "contain" && "object-contain",
+                objectFit === "fill" && "object-fill",
+                objectFit === "none" && "object-none",
+                objectFit === "scale-down" && "object-scale-down",
+                "blur-xl scale-110" // Blur effect for placeholders
               )}
               aria-hidden="true"
             />
           )}
 
           {/* Shimmer loading effect */}
-          <div style={{ backgroundColor: '#E5DDD5' }} />
+          <div style={{ backgroundColor: "#E5DDD5" }} />
         </>
       )}
 
@@ -145,9 +145,9 @@ export default function OptimizedImage({
         alt={imageMetadata?.alt || alt} // Use metadata alt if available
         width={width}
         height={height}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding={priority ? 'sync' : 'async'}
-        {...(priority ? { fetchpriority: 'high' } : { fetchpriority: 'auto' })}
+        loading={priority ? "eager" : "lazy"}
+        decoding={priority ? "sync" : "async"}
+        {...(priority ? { fetchpriority: "high" } : { fetchpriority: "auto" })}
         srcSet={responsiveImageProps.srcSet || undefined}
         sizes={responsiveImageProps.sizes || undefined}
         onLoad={() => {
@@ -156,22 +156,22 @@ export default function OptimizedImage({
         }}
         onError={() => setError(true)}
         className={cn(
-          'w-full h-full transition-opacity duration-300',
-          !loaded && 'opacity-0',
-          loaded && 'opacity-100',
-          objectFit === 'cover' && 'object-cover',
-          objectFit === 'contain' && 'object-contain',
-          objectFit === 'fill' && 'object-fill',
-          objectFit === 'none' && 'object-none',
-          objectFit === 'scale-down' && 'object-scale-down',
+          "w-full h-full transition-opacity duration-300",
+          !loaded && "opacity-0",
+          loaded && "opacity-100",
+          objectFit === "cover" && "object-cover",
+          objectFit === "contain" && "object-contain",
+          objectFit === "fill" && "object-fill",
+          objectFit === "none" && "object-none",
+          objectFit === "scale-down" && "object-scale-down",
           className
         )}
         style={style}
       />
 
       {error && (
-        <div style={{ backgroundColor: '#E5DDD5' }}>
-          <span style={{ color: '#8B7355' }}>Imagem não disponível</span>
+        <div style={{ backgroundColor: "#E5DDD5" }}>
+          <span style={{ color: "#8B7355" }}>Imagem não disponível</span>
         </div>
       )}
     </div>

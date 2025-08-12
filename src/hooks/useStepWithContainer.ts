@@ -6,17 +6,17 @@
  * para criar um hook completo para steps de quiz.
  */
 
-import { useCallback, useMemo } from 'react';
-import { useIsMobile } from './use-mobile';
-import { useContainerProperties } from './useContainerProperties';
-import { usePerformanceOptimization } from './usePerformanceOptimization';
+import { useCallback, useMemo } from "react";
+import { useIsMobile } from "./use-mobile";
+import { useContainerProperties } from "./useContainerProperties";
+import { usePerformanceOptimization } from "./usePerformanceOptimization";
 
 export interface StepWithContainerProps {
   stepId: number;
-  containerWidth?: 'full' | 'large' | 'medium' | 'small';
-  containerPosition?: 'left' | 'center' | 'right';
-  spacing?: 'none' | 'small' | 'compact' | 'normal' | 'comfortable' | 'spacious';
-  backgroundColor?: 'transparent' | 'white' | 'gray-50' | 'brand-light';
+  containerWidth?: "full" | "large" | "medium" | "small";
+  containerPosition?: "left" | "center" | "right";
+  spacing?: "none" | "small" | "compact" | "normal" | "comfortable" | "spacious";
+  backgroundColor?: "transparent" | "white" | "gray-50" | "brand-light";
   enableMobileOptimizations?: boolean;
   enablePerformanceOptimizations?: boolean;
 }
@@ -43,18 +43,18 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
     return {
       // Container mais estreito no mobile
       containerWidth:
-        containerProps.containerWidth === 'large'
-          ? ('medium' as const)
+        containerProps.containerWidth === "large"
+          ? ("medium" as const)
           : containerProps.containerWidth,
       // Espaçamento mais compacto no mobile
       spacing:
-        containerProps.spacing === 'spacious'
-          ? ('comfortable' as const)
-          : containerProps.spacing === 'comfortable'
-            ? ('normal' as const)
+        containerProps.spacing === "spacious"
+          ? ("comfortable" as const)
+          : containerProps.spacing === "comfortable"
+            ? ("normal" as const)
             : containerProps.spacing,
       // Grid sempre full no mobile
-      gridColumns: 'full' as const,
+      gridColumns: "full" as const,
     };
   }, [isMobile, enableMobileOptimizations, containerProps.containerWidth, containerProps.spacing]);
 
@@ -89,8 +89,8 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
 
     // Adicionar classes de performance se necessário
     const performanceClasses = performanceOptimizations.shouldLazyLoad
-      ? 'opacity-0 animate-in'
-      : '';
+      ? "opacity-0 animate-in"
+      : "";
 
     return `${baseClasses} ${performanceClasses}`.trim();
   }, [containerClasses, performanceOptimizations.shouldLazyLoad]);
@@ -126,7 +126,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
 
     // 🔧 Utilitários
     applyContainerOptimizations: (additionalClasses?: string) => {
-      return `${getStepClasses()} ${additionalClasses || ''}`.trim();
+      return `${getStepClasses()} ${additionalClasses || ""}`.trim();
     },
   };
 };
@@ -141,10 +141,10 @@ export const useQuizStepContainer = (
   // Configurações padrão otimizadas para steps de quiz
   const defaultQuizStepProps: StepWithContainerProps = {
     stepId,
-    containerWidth: 'large',
-    containerPosition: 'center',
-    spacing: 'small', // 🎯 Padrão alterado para "small" (0.75rem/12px)
-    backgroundColor: 'white',
+    containerWidth: "large",
+    containerPosition: "center",
+    spacing: "small", // 🎯 Padrão alterado para "small" (0.75rem/12px)
+    backgroundColor: "white",
     enableMobileOptimizations: true,
     enablePerformanceOptimizations: true,
     ...customProps,

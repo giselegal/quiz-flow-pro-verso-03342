@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const sidebarVariants = cva(
-  'fixed left-0 top-0 z-40 flex h-screen flex-col border-r bg-background transition-all dark:border-slate-700 lg:left-0',
+  "fixed left-0 top-0 z-40 flex h-screen flex-col border-r bg-background transition-all dark:border-slate-700 lg:left-0",
   {
     variants: {
       size: {
-        sm: 'w-14',
-        md: 'w-64',
+        sm: "w-14",
+        md: "w-64",
       },
       isMobile: {
-        true: 'translate-x-0',
-        false: '',
+        true: "translate-x-0",
+        false: "",
       },
       isCollapsed: {
-        true: 'lg:w-14',
-        false: 'lg:w-64',
+        true: "lg:w-14",
+        false: "lg:w-64",
       },
     },
     defaultVariants: {
-      size: 'md',
+      size: "md",
       isMobile: false,
       isCollapsed: false,
     },
@@ -35,7 +35,7 @@ interface SidebarProps
     VariantProps<typeof sidebarVariants> {
   isCollapsed?: boolean;
   isMobile?: boolean;
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
 }
 
 interface SidebarContextValue {
@@ -60,9 +60,9 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
       setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
     return () => {
-      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener("resize", checkMobile);
     };
   }, []);
 
@@ -85,7 +85,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 export const useSidebar = () => {
   const context = React.useContext(SidebarContext);
   if (!context) {
-    throw new Error('useSidebar must be used within a SidebarProvider');
+    throw new Error("useSidebar must be used within a SidebarProvider");
   }
   return context;
 };
@@ -125,7 +125,7 @@ export function Sidebar({
   className,
   isCollapsed = false,
   isMobile = false,
-  size = 'md',
+  size = "md",
   ...props
 }: SidebarProps) {
   const { isCollapsed: isContextCollapsed, isOpen, isMobile: isContextMobile } = useSidebar();
@@ -154,8 +154,8 @@ export function SidebarHeader({ className, ...props }: React.HTMLAttributes<HTML
   return (
     <div
       className={cn(
-        'flex h-14 items-center border-b px-4 transition-all dark:border-slate-700',
-        isCollapsed ? 'lg:justify-center lg:px-0' : '',
+        "flex h-14 items-center border-b px-4 transition-all dark:border-slate-700",
+        isCollapsed ? "lg:justify-center lg:px-0" : "",
         className
       )}
       {...props}
@@ -164,7 +164,7 @@ export function SidebarHeader({ className, ...props }: React.HTMLAttributes<HTML
 }
 
 export function SidebarContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex-1 overflow-y-auto', className)} {...props} />;
+  return <div className={cn("flex-1 overflow-y-auto", className)} {...props} />;
 }
 
 export function SidebarFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -173,8 +173,8 @@ export function SidebarFooter({ className, ...props }: React.HTMLAttributes<HTML
   return (
     <div
       className={cn(
-        'flex items-center border-t p-4 transition-all dark:border-slate-700',
-        isCollapsed ? 'lg:justify-center lg:px-0' : '',
+        "flex items-center border-t p-4 transition-all dark:border-slate-700",
+        isCollapsed ? "lg:justify-center lg:px-0" : "",
         className
       )}
       {...props}
@@ -183,7 +183,7 @@ export function SidebarFooter({ className, ...props }: React.HTMLAttributes<HTML
 }
 
 export function SidebarGroup({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('space-y-2 py-2', className)} {...props} />;
+  return <div className={cn("space-y-2 py-2", className)} {...props} />;
 }
 
 export function SidebarGroupLabel({
@@ -198,22 +198,22 @@ export function SidebarGroupLabel({
 
   return (
     <p
-      className={cn('mx-2 text-xs font-medium tracking-tight text-muted-foreground', className)}
+      className={cn("mx-2 text-xs font-medium tracking-tight text-muted-foreground", className)}
       {...props}
     />
   );
 }
 
 export function SidebarGroupContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('space-y-1', className)} {...props} />;
+  return <div className={cn("space-y-1", className)} {...props} />;
 }
 
 export function SidebarMenu({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) {
-  return <ul className={cn('', className)} role="list" {...props} />;
+  return <ul className={cn("", className)} role="list" {...props} />;
 }
 
 export function SidebarMenuItem({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) {
-  return <li className={cn('', className)} {...props} />;
+  return <li className={cn("", className)} {...props} />;
 }
 
 interface SidebarMenuButtonProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -226,7 +226,7 @@ export function SidebarMenuButton({
   ...props
 }: SidebarMenuButtonProps) {
   const { isCollapsed } = useSidebar();
-  const Comp = asChild ? React.Fragment : 'div';
+  const Comp = asChild ? React.Fragment : "div";
 
   if (isCollapsed) {
     return (
@@ -235,7 +235,7 @@ export function SidebarMenuButton({
           <TooltipTrigger asChild>
             <Comp
               className={cn(
-                'group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground',
+                "group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground",
                 className
               )}
               {...props}
@@ -252,7 +252,7 @@ export function SidebarMenuButton({
   return (
     <Comp
       className={cn(
-        'group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground',
+        "group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground",
         className
       )}
       {...props}
@@ -275,13 +275,13 @@ export function SidebarMenuLink({ className, active, icon: Icon, ...props }: Sid
           <TooltipTrigger asChild>
             <a
               className={cn(
-                'group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground',
-                active && 'bg-accent',
+                "group inline-flex h-9 w-9 items-center justify-center rounded-md px-0 py-2 hover:bg-accent hover:text-accent-foreground",
+                active && "bg-accent",
                 className
               )}
               {...props}
             >
-              {Icon && <Icon className={cn('h-5 w-5')} />}
+              {Icon && <Icon className={cn("h-5 w-5")} />}
               <span className="sr-only">{props.children}</span>
             </a>
           </TooltipTrigger>
@@ -296,13 +296,13 @@ export function SidebarMenuLink({ className, active, icon: Icon, ...props }: Sid
   return (
     <a
       className={cn(
-        'group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground',
-        active && 'bg-accent',
+        "group flex h-9 items-center rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground",
+        active && "bg-accent",
         className
       )}
       {...props}
     >
-      {Icon && <Icon className={cn('mr-2 h-5 w-5')} />}
+      {Icon && <Icon className={cn("mr-2 h-5 w-5")} />}
       <span>{props.children}</span>
     </a>
   );

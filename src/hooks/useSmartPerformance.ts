@@ -6,11 +6,11 @@
  * otimizações automáticas e inteligentes.
  */
 
-import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useIsLowPerformanceDevice, useIsMobile } from './use-mobile';
-import { useDebounce } from './useDebounce';
-import { usePerformanceOptimization } from './usePerformanceOptimization';
+import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useIsLowPerformanceDevice, useIsMobile } from "./use-mobile";
+import { useDebounce } from "./useDebounce";
+import { usePerformanceOptimization } from "./usePerformanceOptimization";
 
 /**
  * 🎯 Hook composto para performance completa
@@ -144,20 +144,20 @@ export const useSmartPerformance = (
     const classes = [];
 
     if (deviceOptimizations.reduceAnimations) {
-      classes.push('motion-reduce:transition-none');
+      classes.push("motion-reduce:transition-none");
     }
 
     if (deviceOptimizations.throttleRendering) {
-      classes.push('will-change-auto');
+      classes.push("will-change-auto");
     }
 
     if (!metrics.isVisible && enableLazyLoading) {
-      classes.push('opacity-0');
+      classes.push("opacity-0");
     } else {
-      classes.push('opacity-100 transition-opacity duration-300');
+      classes.push("opacity-100 transition-opacity duration-300");
     }
 
-    return classes.join(' ');
+    return classes.join(" ");
   }, [deviceOptimizations, metrics.isVisible, enableLazyLoading]);
 
   // ⚡ Função para otimizar props
@@ -239,7 +239,7 @@ export const useOptimizedQuizStep = (
       try {
         // Simular preload (aqui você pode implementar o preload real) - OTIMIZADO
         await new Promise<void>(resolve =>
-          PerformanceOptimizer.schedule(() => resolve(), 100, 'message')
+          PerformanceOptimizer.schedule(() => resolve(), 100, "message")
         );
         setPreloadComplete(true);
       } catch (error) {
@@ -263,16 +263,16 @@ export const useOptimizedQuizStep = (
     const classes = [smartPerf.optimizedClasses];
 
     if (!enableAnimations || smartPerf.device.shouldOptimize) {
-      classes.push('motion-reduce:transition-none');
+      classes.push("motion-reduce:transition-none");
     } else {
-      classes.push('transition-all duration-300 ease-in-out');
+      classes.push("transition-all duration-300 ease-in-out");
     }
 
     if (smartPerf.isVisible) {
-      classes.push('animate-fade-in');
+      classes.push("animate-fade-in");
     }
 
-    return classes.join(' ');
+    return classes.join(" ");
   }, [
     smartPerf.optimizedClasses,
     smartPerf.device.shouldOptimize,
@@ -318,7 +318,7 @@ export const useOptimizedInlineComponent = (componentType: string) => {
     (props: any) => {
       return smartPerf.optimizeProps({
         ...props,
-        className: `${props.className || ''} ${smartPerf.optimizedClasses}`.trim(),
+        className: `${props.className || ""} ${smartPerf.optimizedClasses}`.trim(),
       });
     },
     [smartPerf]

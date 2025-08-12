@@ -1,5 +1,5 @@
 const EditorTestPage: React.FC = () => {
-  console.log('🚀 EditorTestPage: RENDERIZANDO!');
+  console.log("🚀 EditorTestPage: RENDERIZANDO!");
 
   return (
     <div className="p-4">

@@ -1,4 +1,4 @@
-import { QuizTemplate } from '@/types/quizBuilder';
+import { QuizTemplate } from "@/types/quizBuilder";
 
 interface QuestionScoringConfig {
   [key: string]: {
@@ -10,52 +10,52 @@ interface QuestionScoringConfig {
 
 const questionScoringConfig: QuestionScoringConfig = {
   question1: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question2: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question3: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question4: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question5: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question6: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question7: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question8: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question9: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
   question10: {
-    type: 'multiple-choice',
+    type: "multiple-choice",
     multiSelect: 1,
     scoring: true,
   },
@@ -70,7 +70,7 @@ export const generateRealQuestionTemplates = (): QuizTemplate[] => {
     return {
       id: `question-${index + 1}`,
       title: `Questão ${index + 1}`,
-      type: config?.type || 'multiple-choice',
+      type: config?.type || "multiple-choice",
       progress: ((index + 1) / questionKeys.length) * 100,
       multiSelect: config?.multiSelect || 3,
       blocks: [],

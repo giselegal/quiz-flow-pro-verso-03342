@@ -1,7 +1,7 @@
-import { useEditor } from '@/context/EditorContext';
+import { useEditor } from "@/context/EditorContext";
 
 const DebugEditorContext: React.FC = () => {
-  console.log('🔥 DebugEditorContext: COMPONENTE RENDERIZANDO!');
+  console.log("🔥 DebugEditorContext: COMPONENTE RENDERIZANDO!");
 
   const {
     stages,
@@ -9,7 +9,7 @@ const DebugEditorContext: React.FC = () => {
     computed: { stageCount },
   } = useEditor();
 
-  console.log('🔥 DebugEditorContext: Dados do context:', {
+  console.log("🔥 DebugEditorContext: Dados do context:", {
     stages: stages?.length || 0,
     stagesIds: stages?.map(s => s.id) || [],
     activeStageId,
@@ -17,7 +17,7 @@ const DebugEditorContext: React.FC = () => {
   });
 
   return (
-    <div style={{ backgroundColor: '#E5DDD5' }}>
+    <div style={{ backgroundColor: "#E5DDD5" }}>
       <h1 className="text-2xl font-bold mb-4">Debug Editor Context</h1>
 
       <div className="bg-white p-4 rounded-lg shadow mb-4">
@@ -47,7 +47,7 @@ const DebugEditorContext: React.FC = () => {
             ))}
           </ul>
         ) : (
-          <p style={{ color: '#432818' }}>❌ Nenhuma etapa encontrada!</p>
+          <p style={{ color: "#432818" }}>❌ Nenhuma etapa encontrada!</p>
         )}
       </div>
     </div>

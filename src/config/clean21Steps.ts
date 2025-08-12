@@ -8,18 +8,18 @@ import {
   getStepConfig,
   getStepsStatistics,
   type AdvancedStepConfig,
-} from './complete21StepsConfig';
+} from "./complete21StepsConfig";
 
 // 🎯 INTEGRAÇÃO COM TEMPLATES JSON
-import { getTemplateByStep } from './stepTemplatesMapping';
+import { getTemplateByStep } from "./stepTemplatesMapping";
 
 export interface CleanStepConfig {
   stepNumber: number;
   id: string;
   name: string;
   description: string;
-  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer';
-  category: 'start' | 'questions' | 'strategic' | 'results' | 'conversion';
+  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer";
+  category: "start" | "questions" | "strategic" | "results" | "conversion";
   // 🎯 NOVOS CAMPOS PARA JSON INTEGRATION
   hasJsonTemplate?: boolean;
   templateFunction?: () => any[];

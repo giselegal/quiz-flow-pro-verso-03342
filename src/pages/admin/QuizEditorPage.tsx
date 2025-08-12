@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
-import AdminLayout from '@/components/admin/AdminLayout';
-import QuizEditor from '@/components/quiz-editor/QuizEditor';
-import { LoadingState } from '@/components/ui/loading-state';
-import { getTemplateById } from '@/services/templates/templateService';
-import { QuizTemplate } from '@/types/quizTemplate';
+import React, { useEffect, useState } from "react";
+import { useLocation } from "wouter";
+import AdminLayout from "@/components/admin/AdminLayout";
+import QuizEditor from "@/components/quiz-editor/QuizEditor";
+import { LoadingState } from "@/components/ui/loading-state";
+import { getTemplateById } from "@/services/templates/templateService";
+import { QuizTemplate } from "@/types/quizTemplate";
 
 interface QuizEditorPageProps {
   templateId?: string;
@@ -22,15 +22,15 @@ const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
         try {
           const template = await getTemplateById(templateId);
           if (!template) {
-            setError('Template não encontrado');
-            setLocation('/admin/quiz-editor');
+            setError("Template não encontrado");
+            setLocation("/admin/quiz-editor");
             return;
           }
           setTemplate(template);
         } catch (err) {
-          console.error('Error loading template:', err);
-          setError('Erro ao carregar template');
-          setLocation('/admin/quiz-editor');
+          console.error("Error loading template:", err);
+          setError("Erro ao carregar template");
+          setLocation("/admin/quiz-editor");
         }
       }
       setLoading(false);
@@ -51,7 +51,7 @@ const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
     return (
       <AdminLayout>
         <div className="p-6">
-          <p style={{ color: '#432818' }}>{error}</p>
+          <p style={{ color: "#432818" }}>{error}</p>
         </div>
       </AdminLayout>
     );

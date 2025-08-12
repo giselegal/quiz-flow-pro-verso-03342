@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 interface AdminUser {
   email: string;
@@ -18,13 +18,13 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 
 export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
 
   useEffect(() => {
     // Automaticamente autenticar como admin (acesso livre)
     const autoLogin = () => {
       const user: AdminUser = {
-        email: 'admin@local.dev',
+        email: "admin@local.dev",
         authenticated: true,
         loginTime: new Date(),
       };
@@ -34,10 +34,10 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
     autoLogin();
   }, []);
 
-  const adminLogin = async (email: string, password: string): Promise<boolean> => {
+  const adminLogin = async (email: string, _password: string): Promise<boolean> => {
     // Sempre retorna sucesso (acesso livre)
     const user: AdminUser = {
-      email: email || 'admin@local.dev',
+      email: email || "admin@local.dev",
       authenticated: true,
       loginTime: new Date(),
     };
@@ -47,7 +47,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const adminLogout = () => {
     // Não faz logout real, apenas simula
-    console.log('Logout simulado - acesso continua livre');
+    console.log("Logout simulado - acesso continua livre");
   };
 
   const isAdminAuthenticated = true; // Sempre autenticado
@@ -70,7 +70,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
 export const useAdminAuth = () => {
   const context = useContext(AdminAuthContext);
   if (context === undefined) {
-    throw new Error('useAdminAuth must be used within an AdminAuthProvider');
+    throw new Error("useAdminAuth must be used within an AdminAuthProvider");
   }
   return context;
 };
