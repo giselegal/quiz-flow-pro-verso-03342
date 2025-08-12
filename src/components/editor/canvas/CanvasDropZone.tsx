@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEditor } from '@/context/EditorContext';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
@@ -56,7 +55,6 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   blocks,
   selectedBlockId,
   isPreviewing,
-  activeStageId,
   stageCount,
   onSelectBlock,
   onUpdateBlock,
