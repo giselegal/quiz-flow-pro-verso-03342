@@ -9,14 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Eye,
-  Image,
-  Palette,
-  Scale,
-  Settings,
-  Upload,
-} from 'lucide-react';
+import { Eye, Image, Palette, Scale, Settings, Upload } from 'lucide-react';
 import React, { useState } from 'react';
 
 // Color picker moderno e elegante
@@ -106,7 +99,7 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
         ...properties,
         [key]: value,
       } as HeaderProperties;
-      
+
       onUpdate(selectedBlock.id, updatedProperties);
     }
   };
