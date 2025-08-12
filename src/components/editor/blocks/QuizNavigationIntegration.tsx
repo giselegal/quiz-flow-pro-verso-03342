@@ -1,4 +1,3 @@
-
 interface QuizNavigationIntegrationProps {
   properties: {
     showPrevious?: boolean;

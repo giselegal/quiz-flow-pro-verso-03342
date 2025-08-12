@@ -1,4 +1,3 @@
-
 export type EditorTab = "quiz" | "result" | "sales";
 
 interface UnifiedVisualEditorProps {}

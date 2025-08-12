@@ -1,4 +1,3 @@
-
 // Interface simplificada
 interface GuaranteeSealProps {
   className?: string;

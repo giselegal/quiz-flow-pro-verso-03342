@@ -1,4 +1,3 @@
-
 interface SecondaryStylesBlockPreviewProps {
   content: {
     title?: string;

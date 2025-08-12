@@ -10,7 +10,8 @@ import { Check, Loader2 } from "lucide-react";
 interface PropertyChangeIndicatorProps {
   isChanging?: boolean;
   hasChanged?: boolean;
-  children: React.ReactNode;}
+  children: React.ReactNode;
+}
 
 export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = ({
   isChanging = false,

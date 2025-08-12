@@ -1,4 +1,3 @@
-
 interface QuizImageProps {
   src?: string;
   alt: string;

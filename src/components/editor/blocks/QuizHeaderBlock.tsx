@@ -1,4 +1,3 @@
-
 interface QuizHeaderBlockProps {
   properties: {
     title?: string;

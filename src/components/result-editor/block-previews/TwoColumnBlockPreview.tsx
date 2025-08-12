@@ -1,4 +1,3 @@
-
 interface TwoColumnBlockPreviewProps {
   content: {
     leftColumn?: {

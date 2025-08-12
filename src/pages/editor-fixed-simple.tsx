@@ -1,4 +1,3 @@
-
 /**
  * Simplified Editor Fixed Page - Temporary version to bypass import issues
  */

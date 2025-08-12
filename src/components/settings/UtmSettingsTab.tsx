@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,12 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useUtmParameters } from "@/hooks/useUtmParameters";
-import { CopyIcon, CheckCircleIcon, ArrowRightIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { useUtmParameters } from "@/hooks/useUtmParameters";
+import { ArrowRightIcon, CheckCircleIcon, CopyIcon } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 export const UtmSettingsTab: React.FC = () => {
   const { setBaseDomain, generateUtmLink } = useUtmParameters();
@@ -28,27 +28,9 @@ export const UtmSettingsTab: React.FC = () => {
 
   const updateExampleLinks = (domain: string) => {
     const newLinks = {
-      facebook: generateUtmLink(
-        `https://${domain}/`,
-        "facebook",
-        "social",
-        "brand",
-        "cta_button"
-      ),
-      instagram: generateUtmLink(
-        `https://${domain}/`,
-        "instagram",
-        "social",
-        "feed",
-        "story"
-      ),
-      email: generateUtmLink(
-        `https://${domain}/`,
-        "email",
-        "newsletter",
-        "weekly",
-        "footer"
-      ),
+      facebook: generateUtmLink(`https://${domain}/`, "facebook", "social", "brand", "cta_button"),
+      instagram: generateUtmLink(`https://${domain}/`, "instagram", "social", "feed", "story"),
+      email: generateUtmLink(`https://${domain}/`, "email", "newsletter", "weekly", "footer"),
       resultado: generateUtmLink(
         `https://${domain}/resultado`,
         "facebook",

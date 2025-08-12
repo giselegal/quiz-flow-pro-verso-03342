@@ -1,4 +1,3 @@
-
 interface TestimonialsBlockPreviewProps {
   content: {
     title?: string;

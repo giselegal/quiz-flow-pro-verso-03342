@@ -1,4 +1,3 @@
-
 interface QuizInputProps {
   label?: string;
   placeholder?: string;

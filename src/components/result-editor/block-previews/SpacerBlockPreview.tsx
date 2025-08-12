@@ -1,4 +1,3 @@
-
 interface SpacerBlockPreviewProps {
   content: {
     height?: string;

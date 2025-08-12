@@ -1,4 +1,3 @@
-
 interface QuizSpacerProps {
   height?: string;
   backgroundColor?: string;

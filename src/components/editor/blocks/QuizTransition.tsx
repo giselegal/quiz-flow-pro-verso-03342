@@ -1,4 +1,3 @@
-
 interface QuizTransitionBlockProps {
   properties: {
     message?: string;

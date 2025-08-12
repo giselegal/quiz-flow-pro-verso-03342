@@ -7,7 +7,6 @@
  * totalmente integrado com o sistema de propriedades unificado.
  */
 
-
 interface LegalNoticeInlineProps {
   privacyText?: string;
   copyrightText?: string;

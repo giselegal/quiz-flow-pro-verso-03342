@@ -1,4 +1,3 @@
-
 interface TextBlockPreviewProps {
   content: {
     text?: string;

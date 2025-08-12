@@ -1,4 +1,3 @@
-
 interface AspectRatioContainerProps {
   ratio?: string;
   className?: string;

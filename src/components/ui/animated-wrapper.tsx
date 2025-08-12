@@ -1,4 +1,3 @@
-
 interface AnimatedWrapperProps {
   animation?: "fade" | "scale" | "none";
   show: boolean;

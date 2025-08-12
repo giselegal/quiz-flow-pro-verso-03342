@@ -1,4 +1,3 @@
-
 interface PropertyPanelProps {
   selectedComponent?: any;
   onUpdate?: (updates: any) => void;

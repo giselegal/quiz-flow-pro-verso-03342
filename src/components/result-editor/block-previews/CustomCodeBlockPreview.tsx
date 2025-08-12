@@ -1,4 +1,3 @@
-
 interface CustomCodeBlockPreviewProps {
   content: {
     code?: string;

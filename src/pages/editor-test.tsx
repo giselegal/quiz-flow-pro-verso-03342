@@ -1,4 +1,3 @@
-
 const EditorTestPage: React.FC = () => {
   console.log("🚀 EditorTestPage: RENDERIZANDO!");
 

@@ -1,4 +1,3 @@
-
 interface VideoBlockPreviewProps {
   content: {
     videoUrl?: string;

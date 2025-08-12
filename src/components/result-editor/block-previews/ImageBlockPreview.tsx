@@ -1,4 +1,3 @@
-
 interface ImageBlockPreviewProps {
   content: {
     imageUrl?: string;

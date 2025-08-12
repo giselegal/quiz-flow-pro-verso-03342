@@ -1,4 +1,3 @@
-
 interface QuizContentIntegrationProps {
   properties: {
     questionSource?: string;

@@ -1,4 +1,3 @@
-
 interface HeadlineBlockPreviewProps {
   content: {
     title?: string;

@@ -1,4 +1,3 @@
-
 interface ImageDisplayInlineProps {
   src?: string;
   alt?: string;

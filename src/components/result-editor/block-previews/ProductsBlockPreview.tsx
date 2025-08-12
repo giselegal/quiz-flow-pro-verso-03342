@@ -1,4 +1,3 @@
-
 interface ProductsBlockPreviewProps {
   content: {
     title?: string;

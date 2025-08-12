@@ -303,4 +303,4 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
   );
 };
 
-export default SalesOffer
+export default SalesOffer;

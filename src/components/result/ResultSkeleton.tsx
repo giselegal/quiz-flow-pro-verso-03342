@@ -8,7 +8,6 @@ interface ResultSkeletonProps {
 }
 
 const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
-
   // Constantes para garantir proporções consistentes em todos os breakpoints
   const IMAGE_ASPECT_RATIO = 4 / 5; // Proporção altura/largura (4:5)
   const BASE_WIDTH = 256; // w-64 em pixels

@@ -199,4 +199,4 @@ export const ProcessingStep: React.FC<FunnelStepProps> = ({
   );
 };
 
-export default ProcessingStep
+export default ProcessingStep;

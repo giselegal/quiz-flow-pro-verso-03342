@@ -1,4 +1,3 @@
-
 const GuaranteeSection: React.FC = () => {
   return (
     <div className="bg-white rounded-2xl shadow-md p-8 relative">

@@ -1,4 +1,3 @@
-
 interface PropertiesPanelProps {
   selectedComponent?: any;
   selectedBlock?: any;

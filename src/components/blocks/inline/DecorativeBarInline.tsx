@@ -6,7 +6,6 @@
  * totalmente integrado com o sistema de propriedades unificado.
  */
 
-
 interface DecorativeBarInlineProps {
   height?: number;
   color?: string;

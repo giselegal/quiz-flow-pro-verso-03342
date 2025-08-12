@@ -1,4 +1,3 @@
-
 interface GuaranteeBlockPreviewProps {
   content: {
     title?: string;

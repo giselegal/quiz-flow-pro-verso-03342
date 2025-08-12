@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
-import {
-  getResponsiveImageSources,
-  getLowQualityPlaceholder,
-} from "@/utils/imageUtils";
+import { getResponsiveImageSources, getLowQualityPlaceholder } from "@/utils/imageUtils";
 import { getImageMetadata, isImagePreloaded, getOptimizedImage } from "@/utils/imageManager";
 
 interface OptimizedImageProps {

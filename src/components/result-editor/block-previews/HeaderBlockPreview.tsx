@@ -1,4 +1,3 @@
-
 interface HeaderBlockPreviewProps {
   content: {
     title?: string;

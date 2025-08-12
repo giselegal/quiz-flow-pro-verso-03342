@@ -265,4 +265,4 @@ export const StyleResultDisplay: React.FC<StyleResultDisplayProps> = props => {
   );
 };
 
-export default StyleResultDisplay
+export default StyleResultDisplay;

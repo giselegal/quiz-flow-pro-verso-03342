@@ -1,16 +1,16 @@
 import {
-    ArrowRight,
-    BadgeCheck,
-    Check,
-    ChevronRight,
-    Clock,
-    Gift,
-    Heart,
-    Lock,
-    Shield,
-    ShoppingBag,
-    TrendingUp,
-    Users
+  ArrowRight,
+  BadgeCheck,
+  Check,
+  ChevronRight,
+  Clock,
+  Gift,
+  Heart,
+  Lock,
+  Shield,
+  ShoppingBag,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 

@@ -1,4 +1,3 @@
-
 interface LoadingFallbackProps {
   message?: string;
 }
