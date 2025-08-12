@@ -2,11 +2,11 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-04",
-    "name": "Q3 - QUAL DESSAS CORES",
-    "description": "Questão 3 de 13",
+    "name": "Q3 - QUAL VISUAL VOCÊ MAIS SE IDENTIFICA",
+    "description": "Questão 3 de 10",
     "category": "quiz-question",
     "type": "question",
-    "tags": ["quiz", "colors", "quiz-question", "gisele-galvao"],
+    "tags": ["quiz", "visual-style", "quiz-question", "gisele-galvao"],
     "createdAt": "2025-08-10T03:45:03.511Z",
     "updatedAt": "2025-08-10T03:45:03.511Z",
     "author": "giselegal"
@@ -34,7 +34,7 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 20,
+        "progressValue": 30,
         "progressTotal": 100,
         "showProgress": true,
         "showBackButton": true,
@@ -47,7 +47,7 @@
       "type": "text-inline",
       "position": 1,
       "properties": {
-        "content": "QUAL DESSAS CORES MAIS TE REPRESENTA?",
+        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -62,7 +62,7 @@
       "type": "text-inline",
       "position": 2,
       "properties": {
-        "content": "Questão 3 de 13",
+        "content": "Questão 3 de 10",
         "fontSize": "text-sm",
         "textAlign": "text-center",
         "color": "#6B7280",
@@ -79,39 +79,67 @@
         "options": [
           {
             "id": "3a",
-            "text": "Tons neutros e terrosos",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/color1_neutral.webp",
+            "text": "Visual leve, despojado e natural",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
             "styleCategory": "Natural",
             "points": 1
           },
           {
             "id": "3b",
-            "text": "Cores clássicas e atemporais",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/color2_classic.webp",
+            "text": "Visual clássico e tradicional",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
             "styleCategory": "Clássico",
-            "points": 2
+            "points": 1
           },
           {
             "id": "3c",
-            "text": "Cores vibrantes e modernas",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/color3_contemporary.webp",
+            "text": "Visual casual com toque atual",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
             "styleCategory": "Contemporâneo",
-            "points": 2
+            "points": 1
           },
           {
             "id": "3d",
-            "text": "Tons sofisticados e elegantes",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/color4_elegant.webp",
+            "text": "Visual refinado e imponente",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
             "styleCategory": "Elegante",
-            "points": 3
+            "points": 1
+          },
+          {
+            "id": "3e",
+            "text": "Visual romântico, feminino e delicado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "styleCategory": "Romântico",
+            "points": 1
+          },
+          {
+            "id": "3f",
+            "text": "Visual sensual, com saia justa e decote",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "styleCategory": "Sexy",
+            "points": 1
+          },
+          {
+            "id": "3g",
+            "text": "Visual marcante e urbano (jeans + jaqueta)",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "styleCategory": "Dramático",
+            "points": 1
+          },
+          {
+            "id": "3h",
+            "text": "Visual criativo, colorido e ousado",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "styleCategory": "Criativo",
+            "points": 1
           }
         ],
         "columns": 2,
         "imageSize": 256,
         "showImages": true,
-        "multipleSelection": false,
+        "multipleSelection": true,
         "minSelections": 1,
-        "maxSelections": 1,
+        "maxSelections": 3,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
@@ -120,10 +148,10 @@
         "marginBottom": 16,
         "selectionStyle": "glow",
         "animationType": "scale",
-        "validationMessage": "Selecione uma opção para avançar.",
+        "validationMessage": "Selecione até 3 opções para avançar.",
         "scoring": {
           "enabled": true,
-          "categories": ["Natural", "Clássico", "Contemporâneo", "Elegante"]
+          "categories": ["Natural", "Clássico", "Contemporâneo", "Elegante", "Romântico", "Sexy", "Dramático", "Criativo"]
         }
       }
     },
@@ -132,8 +160,8 @@
       "type": "button-inline",
       "position": 4,
       "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
+        "text": "Continuar →",
+        "textWhenDisabled": "Selecione até 3 opções para avançar",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -156,8 +184,8 @@
   "validation": {
     "required": true,
     "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para avançar."
+    "maxAnswers": 3,
+    "validationMessage": "Selecione até 3 opções para avançar."
   },
   "analytics": {
     "trackingId": "step-04-quiz-question",
@@ -175,7 +203,7 @@
     "scoring": {
       "enabled": true,
       "method": "category-points",
-      "categories": ["Natural", "Clássico", "Contemporâneo", "Elegante"]
+      "categories": ["Natural", "Clássico", "Contemporâneo", "Elegante", "Romântico", "Sexy", "Dramático", "Criativo"]
     },
     "conditions": null
   }
