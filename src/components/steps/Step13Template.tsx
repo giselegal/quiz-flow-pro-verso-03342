@@ -1,44 +1,122 @@
-import React, { useEffect } from 'react';
-
 /**
- * Step13Template - Componente para Etapa 13 do Quiz
+ * Step13Template - Template Modular para Etapa 13 do Quiz
  *
- * Template para questão 12: Configurável via painel de propriedades
- * Integração com sistema de quiz e editor de propriedades
+ * ✅ APENAS TEMPLATE MODULAR - Compatível com sistema de blocos
+ * ❌ Componente monolítico removido para evitar conflitos arquiteturais
  */
 
-// ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step13TemplateProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
+// ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
+export const getStep13Template = () => {
+  return [
+    // 🎯 CABEÇALHO COM PROGRESSO
+    {
+      id: 'progress-header-step13',
+      type: 'quiz-header',
+      properties: {
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        logoWidth: 80,
+        logoHeight: 80,
+        progressValue: 65,
+        progressMax: 100,
+        showBackButton: false,
+        showProgress: true,
+        stepNumber: '13 de 21',
+        spacing: 'small',
+      },
+    },
 
-  properties?: {
-    enabled?: boolean;
-    title?: string;
-    subtitle?: string;
-    questionCounter?: string;
-    backgroundColor?: string;
-    textColor?: string;
-    showProgress?: boolean;
-    progressValue?: number;
-    buttonText?: string;
-    multipleSelection?: boolean;
-    minSelections?: number;
-    maxSelections?: number;
-    columns?: number;
-    imageSize?: number;
-  };
+    // 🎨 BARRA DECORATIVA
+    {
+      id: 'decorative-bar-step13',
+      type: 'decorative-bar-inline',
+      properties: {
+        width: '100%',
+        height: 4,
+        color: '#B89B7A',
+        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
+        borderRadius: 3,
+        marginTop: 0,
+        marginBottom: 32,
+        showShadow: true,
+        spacing: 'small',
+      },
+    },
 
-  isEditing?: boolean;
-  isSelected?: boolean;
-  onUpdate?: (id: string, updates: any) => void;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-}
+    // 📱 TÍTULO DA TRANSIÇÃO
+    {
+      id: 'transition-title-step13',
+      type: 'text-inline',
+      properties: {
+        content: 'Vamos conhecer você melhor!',
+        fontSize: 'text-4xl md:text-5xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
+        marginBottom: 24,
+        spacing: 'medium',
+      },
+    },
 
-// ✅ COMPONENTE PRINCIPAL
-export const Step13Template: React.FC<Step13TemplateProps> = ({
+    // 📝 SUBTÍTULO EXPLICATIVO
+    {
+      id: 'transition-subtitle-step13',
+      type: 'text-inline',
+      properties: {
+        content:
+          'Agora vamos fazer algumas perguntas estratégicas para personalizar ainda mais seu resultado.',
+        fontSize: 'text-lg md:text-xl',
+        textAlign: 'text-center',
+        color: '#432818',
+        opacity: 0.8,
+        marginBottom: 32,
+        maxWidth: '640px',
+        spacing: 'medium',
+      },
+    },
+
+    // 🔄 BOTÃO DE CONTINUAR
+    {
+      id: 'continue-button-step13',
+      type: 'button-inline',
+      properties: {
+        text: 'Continuar →',
+        variant: 'primary',
+        size: 'large',
+        backgroundColor: '#B89B7A',
+        textColor: '#FFFFFF',
+        hoverBackgroundColor: '#A1835D',
+        borderRadius: 12,
+        padding: '16px 32px',
+        fontSize: 'text-lg',
+        fontWeight: 'font-semibold',
+        marginTop: 16,
+        marginBottom: 32,
+        showShadow: true,
+        spacing: 'medium',
+      },
+    },
+
+    // 📊 INDICADOR DE PROGRESSO
+    {
+      id: 'progress-indicator-step13',
+      type: 'text-inline',
+      properties: {
+        content: 'Etapa 13 de 21',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#432818',
+        opacity: 0.6,
+        marginTop: 24,
+        spacing: 'small',
+      },
+    },
+  ];
+};
+
+// ✅ EXPORT PADRÃO (COMPATIBILIDADE)
+export default getStep13Template;
   id,
   className = '',
   style = {},
@@ -240,7 +318,7 @@ export const getStep13Template = () => {
       id: 'transition-title-step13',
       type: 'text-inline',
       properties: {
-        content: 'undefined',
+        content: 'Quase lá! Processando suas Preferências...',
         fontSize: 'text-3xl',
         fontWeight: 'font-bold',
         fontFamily: 'Playfair Display, serif',
@@ -259,7 +337,7 @@ export const getStep13Template = () => {
       type: 'image-display-inline',
       properties: {
         src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838154/20250509_2149_Or%C3%A7amento_e_Investimento_simple_compose_01jtvtc8grfgxdq3pvr9c4jqan_drrewn.webp',
-        alt: 'undefined',
+        alt: 'Processando suas preferências de estilo',
         width: 500,
         height: 350,
         className: 'object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg',
@@ -275,7 +353,7 @@ export const getStep13Template = () => {
       id: 'transition-description-step13',
       type: 'text-inline',
       properties: {
-        content: 'undefined',
+        content: 'Estamos analisando suas escolhas para criar um perfil de estilo único para você.',
         fontSize: 'text-lg',
         textAlign: 'text-center',
         color: '#432818',

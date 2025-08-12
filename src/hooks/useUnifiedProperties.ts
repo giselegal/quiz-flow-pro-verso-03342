@@ -518,6 +518,7 @@ export const useUnifiedProperties = (
           ),
         ];
 
+      case 'quiz-header':
       case 'quiz-intro-header':
         // Usar as propriedades padronizadas do HeaderProperties
         const headerProps = { ...defaultHeaderProperties, ...(currentBlock?.properties || {}) };
