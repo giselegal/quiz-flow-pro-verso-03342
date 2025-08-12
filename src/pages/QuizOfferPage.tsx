@@ -12,7 +12,6 @@ import {
   Shield,
   ShoppingBag,
   ShoppingCart,
-  Star,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -89,48 +88,33 @@ const SOLUTION_QUIZ_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp";
 const GUIDES_BENEFITS_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp";
-const GUIDES_BENEFITS_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp";
 const BONUS_1_KEY_PIECES_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp";
-const BONUS_1_KEY_PIECES_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515075/Espanhol_Portugu%C3%AAs_1_uru4r3.webp";
 const BONUS_2_VISAGISM_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp";
-const BONUS_2_VISAGISM_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp";
 const MENTOR_GISELE_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp";
 const TESTIMONIALS_RESULTS_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp";
-// Imagens de transformação reais da ResultPage
-const TRANSFORMATION_REAL_IMAGE_1_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334756/ChatGPT_Image_4_de_mai._de_2025_01_42_42_jlugsc.webp";
-const TRANSFORMATION_REAL_IMAGE_2_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp";
-const TRANSFORMATION_REAL_IMAGE_3_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp";
 const GUARANTEE_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp";
-const GUARANTEE_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp";
 const FAQ_IMAGE_URL =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp";
 
-// Componente de estrelas para avaliações (mantido)
-const RatingStars = ({ rating }: { rating: number }) => {
-  return (
-    <div className="flex">
-      {[...Array(5)].map((_, i) => (
-        <Star
-          key={i}
-          size={16}
-          className={`${i < rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"} mr-0.5`}
-        />
-      ))}
-    </div>
-  );
-};
+// Componente de estrelas para avaliações (comentado pois não está em uso)
+// const RatingStars = ({ rating }: { rating: number }) => {
+//   return (
+//     <div className="flex">
+//       {[...Array(5)].map((_, i) => (
+//         <Star
+//           key={i}
+//           size={16}
+//           className={`${i < rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"} mr-0.5`}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
 
 // Componente de contagem regressiva melhorado (mantido)
 const CountdownTimer = () => {
@@ -262,60 +246,61 @@ const FaqSectionNew = () => {
   );
 };
 
-// Componente de título padronizado - SIMPLIFICADO
-const SectionTitle: React.FC<{
-  children: React.ReactNode;
-  subtitle?: string;
-  size?: "lg" | "xl";
-  className?: string;
-  variant?: "primary" | "secondary" | "simple";
-}> = ({ children, subtitle, size = "xl", className = "", variant = "simple" }) => (
-  <div className={`text-center mb-16 animate-fade-in-up ${className}`}>
-    {/* Decoração superior - APENAS para títulos principais */}
-    {variant === "primary" && (
-      <div className="flex justify-center mb-4">
-        <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] rounded-full"></div>
-      </div>
-    )}
-
-    {/* Título principal - estilos diferenciados */}
-    <h2
-      className={`font-bold font-playfair leading-tight mb-6 ${
-        variant === "primary"
-          ? "text-4xl md:text-5xl lg:text-6xl text-brand-dark"
-          : variant === "secondary"
-            ? "text-3xl md:text-4xl lg:text-5xl text-brand-dark"
-            : "text-3xl md:text-4xl font-bold text-brand-dark"
-      }`}
-    >
-      {children}
-    </h2>
-
-    {/* Subtítulo opcional */}
-    {subtitle && (
-      <p className="text-xl text-brand-medium font-inter max-w-3xl mx-auto">{subtitle}</p>
-    )}
-  </div>
-);
+// Componente de título padronizado - COMENTADO (não utilizado atualmente)
+// const SectionTitle: React.FC<{
+//   children: React.ReactNode;
+//   subtitle?: string;
+//   size?: "lg" | "xl";
+//   className?: string;
+//   variant?: "primary" | "secondary" | "simple";
+// }> = ({ children, subtitle, size = "xl", className = "", variant = "simple" }) => (
+//   <div className={`text-center mb-16 animate-fade-in-up ${className}`}>
+//     {/* Decoração superior - APENAS para títulos principais */}
+//     {variant === "primary" && (
+//       <div className="flex justify-center mb-4">
+//         <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] rounded-full"></div>
+//       </div>
+//     )}
+//
+//     {/* Título principal - estilos diferenciados */}
+//     <h2
+//       className={`font-bold font-playfair leading-tight mb-6 ${
+//         variant === "primary"
+//           ? "text-4xl md:text-5xl lg:text-6xl text-brand-dark"
+//           : variant === "secondary"
+//             ? "text-3xl md:text-4xl lg:text-5xl text-brand-dark"
+//             : "text-3xl md:text-4xl font-bold text-brand-dark"
+//       }`}
+//     >
+//       {children}
+//     </h2>
+//
+//     {/* Subtítulo opcional */}
+//     {subtitle && (
+//       <p className="text-xl text-brand-medium font-inter max-w-3xl mx-auto">{subtitle}</p>
+//     )}
+//   </div>
+// );
 
 const QuizOfferPage: React.FC = () => {
   // Integração com o editor visual
   const { config: pageConfig, loading: configLoading } = usePageConfig("quiz-offer-page");
 
-  const testimonials = [
-    {
-      rating: 5 as number,
-      text: "Transformou completamente meu guarda-roupa!",
-      author: "Maria Silva",
-    },
-    {
-      rating: 5 as number,
-      text: "Finalmente entendi meu estilo pessoal.",
-      author: "Ana Costa",
-    },
-  ];
+  // Testimonials comentados (não utilizados atualmente)
+  // const testimonials = [
+  //   {
+  //     rating: 5 as number,
+  //     text: "Transformou completamente meu guarda-roupa!",
+  //     author: "Maria Silva",
+  //   },
+  //   {
+  //     rating: 5 as number,
+  //     text: "Finalmente entendi meu estilo pessoal.",
+  //     author: "Ana Costa",
+  //   },
+  // ];
 
-  const renderStars = (num: number) => {
+  // const renderStars = (num: number) => {
     return Array.from({ length: 5 }, (_, index: number) => (
       <span key={index} className={index < num ? "text-yellow-400" : "text-gray-300"}>
         ★
