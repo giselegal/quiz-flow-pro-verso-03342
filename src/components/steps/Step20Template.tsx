@@ -1,290 +1,86 @@
-import React, { useEffect } from 'react';
+import { TemplateBlock } from '@/services/templateService';
 
 /**
- * Step20Template - Componente para Etapa 20 do Quiz
- *
- * Template para questão 19: Configurável via painel de propriedades
- * Integração com sistema de quiz e editor de propriedades
+ * Step 20: Resultado Final do Quiz
+ * Exibe o resultado calculado baseado apenas nas questões 2-11 que pontuam
+ * Utiliza o ConnectedQuizResultsBlock para integração completa
  */
-
-// ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step20TemplateProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
-
-  properties?: {
-    enabled?: boolean;
-    title?: string;
-    subtitle?: string;
-    questionCounter?: string;
-    backgroundColor?: string;
-    textColor?: string;
-    showProgress?: boolean;
-    progressValue?: number;
-    buttonText?: string;
-    multipleSelection?: boolean;
-    minSelections?: number;
-    maxSelections?: number;
-    columns?: number;
-    imageSize?: number;
-  };
-
-  isEditing?: boolean;
-  isSelected?: boolean;
-  onUpdate?: (id: string, updates: any) => void;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-}
-
-// ✅ COMPONENTE PRINCIPAL
-export const Step20Template: React.FC<Step20TemplateProps> = ({
-  id,
-  className = '',
-  style = {},
-  properties = {
-    enabled: true,
-    title: 'QUESTÃO 19 - CONFIGURAR NO PAINEL',
-    subtitle: '',
-    questionCounter: 'Questão 19 de 10',
-    backgroundColor: '#FEFEFE',
-    textColor: '#432818',
-    showProgress: true,
-    progressValue: 100,
-    buttonText: 'Próxima Questão →',
-    multipleSelection: true,
-    minSelections: 1,
-    maxSelections: 3,
-    columns: 2,
-    imageSize: 256,
-  },
-  isEditing = false,
-  isSelected = false,
-  onUpdate,
-  onClick,
-}) => {
-  // ✅ DEBUG E MONITORAMENTO
-  useEffect(() => {
-    if (isEditing) {
-      console.log(`Step20Template ${id} entered editing mode`);
+export const getStep20Template = (): TemplateBlock => ({
+  id: 'step20-result',
+  type: 'quiz-results',
+  properties: {
+    title: {
+      text: 'Seu Resultado Personalizado',
+      fontSize: 'text-3xl',
+      fontWeight: 'font-bold',
+      textAlign: 'text-center',
+      color: 'text-blue-600',
+      marginBottom: 'mb-8'
+    },
+    subtitle: {
+      text: 'Com base em suas respostas, aqui está sua análise personalizada:',
+      fontSize: 'text-lg',
+      textAlign: 'text-center',
+      color: 'text-gray-700',
+      marginBottom: 'mb-12'
+    },
+    backgroundColor: 'bg-gradient-to-b from-blue-50 to-white',
+    padding: 'p-8',
+    borderRadius: 'rounded-xl',
+    shadow: 'shadow-lg',
+    minHeight: 'min-h-screen',
+    displayMode: 'full-analysis', // Análise completa com gráficos
+    showScoreBreakdown: true, // Mostrar detalhamento da pontuação
+    showRecommendations: true, // Mostrar recomendações personalizadas
+    enableExport: true, // Permitir exportar resultado
+    resultLayout: 'vertical', // Layout vertical para melhor experiência
+    animationDelay: 500, // Animação suave de entrada
+    
+    // Configurações específicas do resultado
+    resultConfig: {
+      showProgressBar: true,
+      showCategoryScores: true,
+      showPersonalizedMessage: true,
+      includeNextSteps: true,
+      enableSocialShare: false, // Desabilitado por privacidade
+      resultCardStyle: 'modern'
+    },
+    
+    // Estilização da apresentação do resultado
+    resultStyles: {
+      cardBackground: 'bg-white',
+      cardBorder: 'border border-gray-200',
+      cardShadow: 'shadow-xl',
+      titleColor: 'text-gray-900',
+      scoreColor: 'text-blue-600',
+      descriptionColor: 'text-gray-700',
+      accentColor: 'blue'
+    },
+    
+    // Integração com analytics
+    tracking: {
+      event: 'quiz_result_viewed',
+      properties: {
+        step: 20,
+        resultType: 'final_score',
+        calculatedFrom: 'questions_2_to_11'
+      }
+    },
+    
+    // Metadados incluídos nas properties
+    stepInfo: {
+      step: 20,
+      category: 'result',
+      isScoring: false, // Não pontua, apenas exibe resultado
+      isStrategic: false,
+      isTransition: false,
+      isResult: true,
+      flowPosition: 'final-result',
+      dependencies: ['questions_2_to_11_completed'],
+      nextStep: 21,
+      description: 'Página de resultado final calculado apenas das questões 2-11'
     }
-  }, [isEditing, id]);
-
-  useEffect(() => {
-    console.log(`Step20Template ${id} properties updated:`, properties);
-  }, [properties, id]);
-
-  // ✅ FUNÇÃO DE CLIQUE
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClick?.();
-
-    if (isEditing) {
-      console.log(`Step20Template ${id} clicked in editing mode`);
-      onUpdate?.(id, { lastClicked: new Date().toISOString() });
-    }
-  };
-
-  // ✅ ESTILOS DINÂMICOS
-  const containerStyles: React.CSSProperties = {
-    backgroundColor: properties.backgroundColor,
-    color: properties.textColor,
-    width: '100%',
-    minHeight: '500px',
-    padding: '24px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    cursor: isEditing ? 'pointer' : 'default',
-    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
-    borderRadius: '8px',
-    transition: 'all 0.3s ease',
-    opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? 'none' : 'auto',
-    ...style,
-  };
-
-  // ✅ RENDERIZAÇÃO CONDICIONAL QUANDO DESABILITADO
-  if (!properties.enabled && !isEditing) {
-    return null;
   }
+});
 
-  return (
-    <div
-      id={id}
-      className={`step20-template ${className} ${isEditing ? 'editing-mode' : ''}`}
-      style={containerStyles}
-      onClick={handleClick}
-    >
-      {/* Header com Progresso */}
-      {properties.showProgress && (
-        <div className="step-header mb-6">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div
-              className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${properties.progressValue}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Conteúdo da Questão */}
-      <div className="step-content text-center">
-        {/* Título da Questão */}
-        <h1 className="text-2xl font-bold mb-2" style={{ color: properties.textColor }}>
-          {properties.title}
-        </h1>
-
-        {/* Contador da Questão */}
-        {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
-            {properties.questionCounter}
-          </p>
-        )}
-
-        {/* Área de Conteúdo Configurável */}
-        <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-          <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 20 - Configure no painel de propriedades
-          </p>
-
-          {/* Placeholder para opções */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="p-4 bg-white rounded border border-gray-200">
-                <div className="w-full h-20 bg-gray-100 rounded mb-2"></div>
-                <p className="text-xs text-gray-400">Opção {i}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Botão de Continuar */}
-        <div className="button-section">
-          <button
-            className="w-full max-w-md py-3 px-6 bg-[#B89B7A] text-white font-semibold rounded-md hover:bg-[#A1835D] transition-all duration-300"
-            disabled={isEditing}
-          >
-            {properties.buttonText}
-          </button>
-        </div>
-
-        {/* Info sobre Seleção */}
-        {properties.multipleSelection && (
-          <p className="text-xs text-gray-500 mt-4">
-            Selecione entre {properties.minSelections} e {properties.maxSelections} opções
-          </p>
-        )}
-      </div>
-
-      {/* Indicadores de Estado no Modo de Edição */}
-      {isEditing && (
-        <div className="absolute top-2 right-2 flex gap-2 items-center">
-          {!properties.enabled && (
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Desabilitado</span>
-          )}
-          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">Step 20</span>
-        </div>
-      )}
-
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && isEditing && (
-        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
-      )}
-    </div>
-  );
-};
-
-// ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
-export const getStep20Template = () => {
-  return [
-    // 🎯 CABEÇALHO COM PROGRESSO
-    {
-      id: 'progress-header-step20',
-      type: 'quiz-header',
-      properties: {
-        logoUrl:
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-        logoAlt: 'Logo Gisele Galvão',
-        logoWidth: 80,
-        logoHeight: 80,
-        progressValue: 100,
-        progressMax: 100,
-        showBackButton: false,
-        showProgress: true,
-        stepNumber: '20 de 21',
-        spacing: 'small',
-        marginTop: 0,
-        marginBottom: 0,
-      },
-    },
-
-    // 🎨 BARRA DECORATIVA
-    {
-      id: 'decorative-bar-step20',
-      type: 'decorative-bar-inline',
-      properties: {
-        width: '100%',
-        height: 4,
-        color: '#B89B7A',
-        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
-        borderRadius: 3,
-        marginTop: 0,
-        marginBottom: 32,
-        showShadow: true,
-        spacing: 'small',
-      },
-    },
-
-    // 📱 TÍTULO DA TRANSIÇÃO
-    {
-      id: 'transition-title-step20',
-      type: 'text-inline',
-      properties: {
-        content: 'Seu Resultado Está Pronto!',
-        fontSize: 'text-3xl',
-        fontWeight: 'font-bold',
-        fontFamily: 'Playfair Display, serif',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 24,
-        lineHeight: '1.2',
-        spacing: 'small',
-        marginTop: 0,
-      },
-    },
-
-    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
-    {
-      id: 'transition-image-step20',
-      type: 'image-display-inline',
-      properties: {
-        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838175/20250509_2156_Resultado_Final_simple_compose_01jtvtjm8wn0q6r9p3b7k2mvcl_hdz8kt.webp',
-        alt: 'Seu Resultado Está Pronto!',
-        width: 500,
-        height: 350,
-        className: 'object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg',
-        textAlign: 'text-center',
-        marginBottom: 32,
-        spacing: 'small',
-        marginTop: 0,
-      },
-    },
-
-    // 💭 TEXTO DESCRITIVO
-    {
-      id: 'transition-description-step20',
-      type: 'text-inline',
-      properties: {
-        content:
-          'Parabéns! Descobrimos seu estilo predominante e criamos um guia personalizado para você.',
-        fontSize: 'text-lg',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 40,
-        lineHeight: '1.6',
-        spacing: 'small',
-        marginTop: 0,
-      },
-    },
-  ];
-};
+export default getStep20Template;

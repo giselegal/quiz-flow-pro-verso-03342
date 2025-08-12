@@ -1,8 +1,12 @@
 /**
  * Step12Template - Template Modular para Etapa 12 do Quiz
  *
- * ✅ APENAS TEMPLATE MODULAR - Compatível com sistema de blocos
+ * ✅ TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
  * ❌ Componente monolítico removido para evitar conflitos arquiteturais
+ * 
+ * CORREÇÃO DE FLUXO:
+ * - Etapa 12: TRANSIÇÃO após questões que pontuam (2-11)
+ * - Prepara usuário para questões estratégicas (13-18)
  */
 export const getStep12Template = () => {
   return [
@@ -16,7 +20,7 @@ export const getStep12Template = () => {
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 80,
         logoHeight: 80,
-        progressValue: 60,
+        progressValue: 60, // 60% após questões principais
         progressMax: 100,
         showBackButton: false,
         showProgress: true,
@@ -49,16 +53,48 @@ export const getStep12Template = () => {
       id: 'transition-title-step12',
       type: 'text-inline',
       properties: {
-        content: 'Analisando seu Perfil...',
-        fontSize: 'text-3xl',
+        content: 'Estamos quase lá.... 🎉',
+        fontSize: 'text-4xl md:text-5xl',
         fontWeight: 'font-bold',
-        fontFamily: 'Playfair Display, serif',
         textAlign: 'text-center',
         color: '#432818',
         marginBottom: 24,
-        lineHeight: '1.2',
-        spacing: 'small',
-        marginTop: 0,
+        spacing: 'medium',
+      },
+    },
+
+    // 📝 SUBTÍTULO EXPLICATIVO
+    {
+      id: 'transition-subtitle-step12',
+      type: 'text-inline',
+      properties: {
+        content: 'Agora vamos conhecer você melhor...',
+        fontSize: 'text-lg md:text-xl',
+        textAlign: 'text-center',
+        color: '#432818',
+        opacity: 0.8,
+        marginBottom: 32,
+        maxWidth: '640px',
+        spacing: 'medium',
+      },
+    },
+
+    // 💡 INFORMAÇÃO SOBRE QUESTÕES ESTRATÉGICAS
+    {
+      id: 'strategic-info-step12',
+      type: 'text-inline',
+      properties: {
+        content: 'Essas próximas perguntas nos ajudam a personalizar melhor sua experiência.',
+        fontSize: 'text-base',
+        textAlign: 'text-center',
+        color: '#432818',
+        opacity: 0.7,
+        marginBottom: 32,
+        maxWidth: '600px',
+        backgroundColor: '#F8F6F4',
+        padding: '16px 24px',
+        borderRadius: 12,
+        spacing: 'medium',
       },
     },
 

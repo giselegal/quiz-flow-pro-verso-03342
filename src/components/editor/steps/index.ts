@@ -1,5 +1,3 @@
-import { Step01Intro } from './Step01Intro';
-
 import { generateQuestionSteps } from './QuestionStepsFactory';
 
 /**
@@ -7,8 +5,14 @@ import { generateQuestionSteps } from './QuestionStepsFactory';
  * Arquitetura limpa e organizada
  */
 
-// Etapa 1: Introdução
-export const getStep01 = () => Step01Intro();
+// Etapa 1: Introdução (removido Step01Intro para evitar confusão)
+export const getStep01 = () => ({
+  id: 'etapa-1',
+  name: 'Introdução',
+  type: 'introduction',
+  description: 'Tela de boas-vindas e captura de nome',
+  blocks: []
+});
 
 // Etapas 2-11: Questões
 export const getQuestionSteps = () => generateQuestionSteps();
