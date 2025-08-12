@@ -42,7 +42,6 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
     alignment = "center",
     backgroundColor = "transparent",
     backgroundOpacity = 100,
-    jsonConfig,
   } = properties;
 
   // Validação baseada nas regras do JSON
@@ -75,7 +74,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const handleContinue = () => {
+  const
     if (isValid) {
       console.log("✅ Usuário válido:", userName);
       // Aqui seria implementada a lógica de navegação
