@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { STEP_TEMPLATES } from '@/config/templates/templates';
+import { useEditor } from '@/context/EditorContext';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
@@ -74,6 +74,10 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     },
   });
 
+  const { templateActions } = useEditor();
+  const stepNumber = parseInt(activeStageId.replace('step-', ''));
+  const hasTemplate = !Number.isNaN(stepNumber) && stepNumber >= 1 && stepNumber <= 21;
+
   // Verifica se qualquer item arrastável válido está ativo
   const isDraggingAnyValidComponent =
     active?.data.current?.type === 'sidebar-component' ||
@@ -115,11 +119,11 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
               </p>
             </div>
             {/* Botão de Carregar Template */}
-            {STEP_TEMPLATES[activeStageId as unknown as keyof typeof STEP_TEMPLATES] && (
+            {hasTemplate && (
               <div>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => templateActions.loadTemplateByStep(stepNumber)}>
                   <Download className="w-4 h-4 mr-2" />
-                  Carregar Template da Etapa {activeStageId}
+                  Carregar Template da Etapa {stepNumber}
                 </Button>
               </div>
             )}

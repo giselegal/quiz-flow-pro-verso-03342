@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { EditorBlock, EditorConfig, EditableContent } from "@/types/editor";
 import { EditorActions } from "@/types/editorActions";
 import { getDefaultContentForType } from "@/utils/editorDefaults";

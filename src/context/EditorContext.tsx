@@ -349,7 +349,32 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       dispatch({ type: "SET_STATE", payload: "loading" });
 
       try {
-        await templateManager.loadTemplateByStep(stepNumber);
+        // Carregar blocos do template JSON e aplicar no estado
+        const blocks = await TemplateManager.loadStepBlocks(stageId);
+
+        if (blocks && blocks.length > 0) {
+          setStageBlocks(prev => ({
+            ...prev,
+            [stageId]: blocks.map((block, index) => ({
+              id: block.id || `${stageId}-block-${index + 1}`,
+              type: block.type as any,
+              content: block.content || block.properties || {},
+              order: index + 1,
+              properties: block.properties || block.content || {},
+            })),
+          }));
+
+          // Atualizar metadados da etapa
+          setStages(prev => prev.map(s => s.id === stageId ? {
+            ...s,
+            metadata: {
+              ...s.metadata,
+              blocksCount: blocks.length,
+              lastModified: new Date(),
+            },
+          } : s));
+        }
+
         console.log(`✅ EditorContext: Template carregado para etapa ${stepNumber}`);
         dispatch({ type: "SET_STATE", payload: "ready" });
       } catch (error) {
@@ -360,7 +385,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         dispatch({ type: "SET_STATE", payload: "error" });
       }
     },
-    [stages, templateManager, dispatch]
+    [stages, dispatch]
   );
 
   const setActiveStage = useCallback(

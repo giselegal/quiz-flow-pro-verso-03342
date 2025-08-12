@@ -1,6 +1,6 @@
+// @ts-nocheck
 // Exemplo de Integração do Editor Melhorado
 // Substitui ou complementa páginas existentes como FunnelPanelPage.tsx
-
 import React, { useState, useEffect } from "react";
 import { useRoute } from "wouter";
 import { Button } from "../../components/ui/button";

@@ -73,7 +73,7 @@ export const useEditorPersistence = () => {
           createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
         };
 
-        const result = await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
+        await schemaDrivenFunnelService.saveFunnel(schemaDrivenData);
 
         toast({
           title: "Sucesso",
