@@ -1,4 +1,5 @@
 # 🔧 REFERÊNCIA RÁPIDA - DESENVOLVEDOR
+
 ## Sistema de Quiz de 21 Etapas - Guia de Implementação
 
 ---
@@ -6,6 +7,7 @@
 ## 📋 CHECKLIST DE FUNCIONALIDADES
 
 ### ✅ **IMPLEMENTADO E TESTADO**
+
 - [x] **Etapa 1:** Coleta de nome com validação
 - [x] **EditorContext:** Estado global unificado
 - [x] **Quiz Core:** 10 questões pontuadas (q1-q10)
@@ -20,8 +22,9 @@
 - [x] **Interface:** `/editor-fixed` funcional
 
 ### ⚠️ **EM VALIDAÇÃO**
+
 - [ ] **Etapas 19-20:** Página de resultado personalizada + ofertas
-- [ ] **Teste A:** /resultado (ResultPage) 
+- [ ] **Teste A:** /resultado (ResultPage)
 - [ ] **Teste B:** /quiz-descubra-seu-estilo (QuizOfferPage)
 - [ ] **Analytics:** Tracking completo
 - [ ] **Persistência:** Banco de dados
@@ -43,7 +46,7 @@
 │   └── EditorContext.tsx          ← Estado global da aplicação
 ├── 📂 hooks/
 │   ├── useQuizLogic.ts            ← Lógica principal do quiz
-│   ├── useStyleQuizResults.ts     ← Hook de resultados de estilo  
+│   ├── useStyleQuizResults.ts     ← Hook de resultados de estilo
 │   └── useQuizResults.ts          ← Hook genérico de resultados
 ├── 📂 components/
 │   ├── 📂 blocks/quiz/
@@ -60,12 +63,13 @@
 ## 🔑 FUNÇÕES PRINCIPAIS
 
 ### **1. Capturar Nome (Etapa 1)**
+
 ```typescript
 // src/hooks/useQuizLogic.ts
 const setUserNameFromInput = useCallback((name: string) => {
   const cleanName = name.trim();
   setUserName(cleanName);
-  
+
   if (cleanName && typeof window !== 'undefined') {
     localStorage.setItem('quizUserName', cleanName);
   }
@@ -73,6 +77,7 @@ const setUserNameFromInput = useCallback((name: string) => {
 ```
 
 ### **2. Responder Questão Core (Etapas 2-11)**
+
 ```typescript
 // Questões que PONTUAM para o resultado
 const answerQuestion = useCallback((questionId: string, optionId: string) => {
@@ -84,34 +89,47 @@ const answerQuestion = useCallback((questionId: string, optionId: string) => {
 ```
 
 ### **3. Responder Questão Estratégica (Etapas 13-17)**
+
 ```typescript
 // Questões que NÃO pontuam - apenas métricas
 const answerStrategicQuestion = useCallback(
   (questionId: string, optionId: string, category: string, strategicType: string) => {
-    setStrategicAnswers(prev => [...prev, {
-      questionId, optionId, category, strategicType, timestamp: new Date()
-    }]);
-  }, []
+    setStrategicAnswers(prev => [
+      ...prev,
+      {
+        questionId,
+        optionId,
+        category,
+        strategicType,
+        timestamp: new Date(),
+      },
+    ]);
+  },
+  []
 );
 ```
 
 ### **4. Calcular Resultado Final**
+
 ```typescript
-const calculateResults = useCallback((answers: QuizAnswer[]): QuizResult => {
-  // Só questões q1-q10 pontuam
-  const styleScores = calculateStyleScores(answers);
-  const sortedStyles = Object.entries(styleScores).sort(([,a], [,b]) => b - a);
-  const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
-  
-  return {
-    primaryStyle: createStyleResult(topStyle, styleScores[topStyle]),
-    userData: {
-      name: userName || localStorage.getItem('quizUserName') || '',
-      completionTime: new Date(),
-      strategicAnswersCount: strategicAnswers.length
-    }
-  };
-}, [userName, strategicAnswers.length]);
+const calculateResults = useCallback(
+  (answers: QuizAnswer[]): QuizResult => {
+    // Só questões q1-q10 pontuam
+    const styleScores = calculateStyleScores(answers);
+    const sortedStyles = Object.entries(styleScores).sort(([, a], [, b]) => b - a);
+    const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
+
+    return {
+      primaryStyle: createStyleResult(topStyle, styleScores[topStyle]),
+      userData: {
+        name: userName || localStorage.getItem('quizUserName') || '',
+        completionTime: new Date(),
+        strategicAnswersCount: strategicAnswers.length,
+      },
+    };
+  },
+  [userName, strategicAnswers.length]
+);
 ```
 
 ---
@@ -119,13 +137,14 @@ const calculateResults = useCallback((answers: QuizAnswer[]): QuizResult => {
 ## 🎨 CONFIGURAÇÃO DE ESTILOS
 
 ### **Acessar Configuração de Estilo**
+
 ```typescript
 // src/config/styleConfig.ts
 import { styleConfig, getStyleByKeyword, getStylesByCategory } from '@/config/styleConfig';
 
 // Obter dados completos do estilo
 const styleData = styleConfig['Natural'];
-console.log(styleData.image);      // Imagem principal
+console.log(styleData.image); // Imagem principal
 console.log(styleData.guideImage); // Imagem do guia
 console.log(styleData.description); // Descrição personalizada
 
@@ -137,16 +156,17 @@ const stylesComfort = getStylesByCategory('Conforto & Praticidade'); // ['Natura
 ```
 
 ### **Estilos Disponíveis**
+
 ```typescript
 const AVAILABLE_STYLES = [
-  'Natural',      // Conforto & Praticidade
-  'Clássico',     // Elegância Atemporal  
+  'Natural', // Conforto & Praticidade
+  'Clássico', // Elegância Atemporal
   'Contemporâneo', // Equilíbrio & Modernidade
-  'Elegante',     // Refinamento & Qualidade
-  'Romântico',    // Delicadeza & Feminilidade
-  'Sexy',         // Sensualidade & Confiança
-  'Dramático',    // Impacto & Presença
-  'Criativo'      // Expressão & Individualidade
+  'Elegante', // Refinamento & Qualidade
+  'Romântico', // Delicadeza & Feminilidade
+  'Sexy', // Sensualidade & Confiança
+  'Dramático', // Impacto & Presença
+  'Criativo', // Expressão & Individualidade
 ];
 ```
 
@@ -155,6 +175,7 @@ const AVAILABLE_STYLES = [
 ## 🔄 ESTADOS DO CONTEXTO
 
 ### **Acessar Estado Global**
+
 ```typescript
 // Em qualquer componente
 import { useEditorContext } from '@/context/EditorContext';
@@ -162,18 +183,19 @@ import { useEditorContext } from '@/context/EditorContext';
 const {
   // Estados do usuário
   userName,
-  userAnswers, 
+  userAnswers,
   currentScore,
   isQuizCompleted,
-  
+
   // Funções principais
   setUserNameFromInput,
   calculateCurrentScore,
-  resetQuiz
+  resetQuiz,
 } = useEditorContext();
 ```
 
 ### **Estados Disponíveis**
+
 ```typescript
 interface EditorContextType {
   // Dados do usuário
@@ -181,11 +203,11 @@ interface EditorContextType {
   userAnswers: Record<string, string>;
   currentScore: number;
   isQuizCompleted: boolean;
-  
-  // Controle de navegação  
+
+  // Controle de navegação
   activeStageId: string;
   selectedBlockId: string | null;
-  
+
   // Funções
   setUserNameFromInput: (name: string) => void;
   calculateCurrentScore: () => number;
@@ -198,6 +220,7 @@ interface EditorContextType {
 ## 🎯 PONTUAÇÃO E CÁLCULO
 
 ### **Questões que Pontuam (q1-q10)**
+
 ```typescript
 const SCORABLE_QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'];
 
@@ -219,12 +242,13 @@ const calculateStyleScores = (answers: QuizAnswer[]) => {
 ```
 
 ### **Questões que NÃO Pontuam (q12-q17)**
+
 ```typescript
 const NON_SCORABLE_QUESTIONS = ['q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
 
 // Usadas apenas para:
 // - Analytics e métricas
-// - Segmentação de usuários  
+// - Segmentação de usuários
 // - Personalização adicional
 // - Insights comportamentais
 ```
@@ -234,12 +258,13 @@ const NON_SCORABLE_QUESTIONS = ['q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
 ## 📊 TEMPLATES JSON
 
 ### **Estrutura Básica do Template**
+
 ```json
 {
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-XX",
-    "name": "Nome da Etapa", 
+    "name": "Nome da Etapa",
     "type": "quiz|intro|result|offer"
   },
   "design": {
@@ -250,12 +275,14 @@ const NON_SCORABLE_QUESTIONS = ['q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
     {
       "id": "unique-block-id",
       "type": "input-field|quiz-question|text-inline",
-      "properties": { /* configurações específicas */ }
+      "properties": {
+        /* configurações específicas */
+      }
     }
   ],
   "logic": {
     "navigation": {
-      "nextStep": "step-XX", 
+      "nextStep": "step-XX",
       "prevStep": "step-XX"
     }
   }
@@ -263,6 +290,7 @@ const NON_SCORABLE_QUESTIONS = ['q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
 ```
 
 ### **Tipos de Blocos Principais**
+
 ```json
 // Campo de input
 {
@@ -276,7 +304,7 @@ const NON_SCORABLE_QUESTIONS = ['q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
 
 // Questão do quiz
 {
-  "type": "quiz-question", 
+  "type": "quiz-question",
   "properties": {
     "questionId": "q1",
     "options": [
@@ -300,6 +328,7 @@ const NON_SCORABLE_QUESTIONS = ['q12', 'q13', 'q14', 'q15', 'q16', 'q17'];
 ## 🔧 COMANDOS ÚTEIS
 
 ### **Desenvolvimento**
+
 ```bash
 # Iniciar servidor de desenvolvimento
 npm run dev
@@ -312,6 +341,7 @@ open http://localhost:5173/editor-fixed
 ```
 
 ### **Debug**
+
 ```bash
 # Verificar estado do contexto
 console.log(useEditorContext());
@@ -330,6 +360,7 @@ console.log(Object.keys(styleConfig)); // Lista todos os estilos
 ## 🐛 TROUBLESHOOTING
 
 ### **Problema: Nome não está sendo capturado**
+
 ```typescript
 // Verificar se a função está sendo chamada
 console.log('Nome capturado:', userName);
@@ -343,6 +374,7 @@ console.log('Contexto userName:', userName);
 ```
 
 ### **Problema: Resultado não está personalizado**
+
 ```typescript
 // Verificar se o nome está disponível no cálculo
 const result = calculateResults(answers);
@@ -354,10 +386,12 @@ console.log('Nome final:', name);
 ```
 
 ### **Problema: Pontuação incorreta**
+
 ```typescript
 // Verificar se apenas questões q1-q10 estão pontuando
-const isScorableQuestion = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10']
-  .includes(questionId);
+const isScorableQuestion = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10'].includes(
+  questionId
+);
 console.log('Questão pontua?', isScorableQuestion);
 
 // Verificar cálculo
@@ -370,16 +404,19 @@ console.log('Pontuações:', styleScores);
 ## 🎯 TESTES RÁPIDOS
 
 ### **1. Testar Captura de Nome**
+
 1. Acessar `/editor-fixed`
 2. Digitar nome no campo
 3. Verificar no console: `localStorage.getItem('quizUserName')`
 
 ### **2. Testar Quiz Completo**
+
 1. Completar Etapa 1 (nome)
 2. Responder 10 questões (Etapas 2-11)
 3. Verificar resultado personalizado na Etapa 20
 
 ### **3. Testar Configuração de Estilos**
+
 ```javascript
 // No console do navegador
 import { styleConfig } from './src/config/styleConfig.ts';
@@ -402,6 +439,7 @@ console.log('Natural config:', styleConfig.Natural);
 ## ✅ STATUS FINAL
 
 **🟢 SISTEMA OPERACIONAL E TESTADO**
+
 - Coleta de nome funcional
 - Quiz de 10 questões pontuando corretamente
 - Resultado personalizado com nome do usuário

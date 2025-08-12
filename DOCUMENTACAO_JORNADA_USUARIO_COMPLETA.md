@@ -1,9 +1,11 @@
 # 🎯 DOCUMENTAÇÃO COMPLETA - JORNADA DO USUÁRIO
+
 ## Quiz de Estilo Predominante - Sistema de 21 Etapas
 
 ---
 
 ## 📋 ÍNDICE
+
 1. [Visão Geral da Jornada](#visao-geral)
 2. [Fluxo de Coleta de Nome](#coleta-nome)
 3. [Sistema de Eventos e Tracking](#eventos-tracking)
@@ -18,6 +20,7 @@
 ## 🎯 1. VISÃO GERAL DA JORNADA {#visao-geral}
 
 ### **Estrutura das 21 Etapas**
+
 ```
 ETAPA 01: 👤 Coleta de Nome (QuizIntro)
 ETAPAS 02-11: 🎯 Quiz Core (10 questões pontuadas)
@@ -29,6 +32,7 @@ ETAPA 21: 🎁 CTA Final/Conversão
 ```
 
 ### **Fluxo Simplificado**
+
 ```mermaid
 graph TD
     A[ETAPA 1: Nome] --> B[ETAPAS 2-11: Quiz Core]
@@ -48,6 +52,7 @@ graph TD
 **📁 Arquivo Template:** `src/config/templates/step-01.json`
 
 **🎨 Componentes Principais:**
+
 ```jsx
 // Campo de input do nome
 {
@@ -69,6 +74,7 @@ graph TD
 ```
 
 **🔧 Função de Captura:**
+
 ```typescript
 // src/hooks/useQuizLogic.ts
 const setUserNameFromInput = useCallback((name: string) => {
@@ -90,6 +96,7 @@ const setUserNameFromInput = useCallback((name: string) => {
 ```
 
 **📊 Validações:**
+
 - **Obrigatório:** Mínimo 2 caracteres
 - **Máximo:** 32 caracteres
 - **Tempo Real:** Validação conforme digitação
@@ -108,7 +115,7 @@ const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
 const setUserNameFromInput = useCallback((name: string) => {
   const cleanName = name.trim();
   setUserName(cleanName);
-  
+
   // Salvar no localStorage para persistência
   if (typeof window !== 'undefined') {
     localStorage.setItem('quiz-userName', cleanName);
@@ -123,6 +130,7 @@ const setUserNameFromInput = useCallback((name: string) => {
 ### **3.1 Tipos de Eventos Registrados**
 
 #### **A. Eventos de Nome (Etapa 1)**
+
 ```typescript
 // Captura do nome
 {
@@ -137,6 +145,7 @@ const setUserNameFromInput = useCallback((name: string) => {
 ```
 
 #### **B. Eventos de Quiz Core (Etapas 2-11)**
+
 ```typescript
 // Resposta de questão pontuada
 {
@@ -153,6 +162,7 @@ const setUserNameFromInput = useCallback((name: string) => {
 ```
 
 #### **C. Eventos Estratégicos (Etapas 13-18)**
+
 ```typescript
 // Questões métricas (não pontuam)
 {
@@ -169,6 +179,7 @@ const setUserNameFromInput = useCallback((name: string) => {
 ```
 
 #### **D. Eventos de Transição (Etapas 12 e 19)**
+
 ```typescript
 // Páginas de transição
 {
@@ -191,10 +202,10 @@ const setUserNameFromInput = useCallback((name: string) => {
 const answerStrategicQuestion = useCallback(
   (questionId: string, optionId: string, category: string, strategicType: string) => {
     const strategicAnswer = {
-      questionId,     // q12-q17
+      questionId, // q12-q17
       optionId,
-      category,       // 'autoavaliacao', 'desafios', 'qualificacao', 'pricing'
-      strategicType,  // 'lead_qualification', 'behavioral', 'pricing_test'
+      category, // 'autoavaliacao', 'desafios', 'qualificacao', 'pricing'
+      strategicType, // 'lead_qualification', 'behavioral', 'pricing_test'
       timestamp: new Date(),
     };
 
@@ -223,6 +234,7 @@ const answerStrategicQuestion = useCallback(
 ### **4.1 Sistema de Pontuação**
 
 #### **Questões que PONTUAM (Etapas 2-11):**
+
 ```typescript
 // src/hooks/useQuizLogic.ts
 const calculateStyleScores = (answers: QuizAnswer[]) => {
@@ -234,8 +246,16 @@ const calculateStyleScores = (answers: QuizAnswer[]) => {
 
     // ✅ FILTRO: Só questões q1-q10 pontuam (etapas 2-11)
     const isScorableQuestion = [
-      'q1', 'q2', 'q3', 'q4', 'q5', 
-      'q6', 'q7', 'q8', 'q9', 'q10'
+      'q1',
+      'q2',
+      'q3',
+      'q4',
+      'q5',
+      'q6',
+      'q7',
+      'q8',
+      'q9',
+      'q10',
     ].includes(question?.id || '');
 
     if (option?.style && isScorableQuestion) {
@@ -248,6 +268,7 @@ const calculateStyleScores = (answers: QuizAnswer[]) => {
 ```
 
 #### **Questões que NÃO PONTUAM (Etapas 13-17):**
+
 - **Propósito:** Apenas métricas e insights
 - **Armazenamento:** `strategicAnswers` array separado
 - **Uso:** Analytics, segmentação, personalização
@@ -256,38 +277,41 @@ const calculateStyleScores = (answers: QuizAnswer[]) => {
 
 ```typescript
 // src/hooks/useQuizLogic.ts
-const calculateResults = useCallback((answers: QuizAnswer[]): QuizResult => {
-  const styleScores = calculateStyleScores(answers);
+const calculateResults = useCallback(
+  (answers: QuizAnswer[]): QuizResult => {
+    const styleScores = calculateStyleScores(answers);
 
-  // Ordenar estilos por pontuação
-  const sortedStyles = Object.entries(styleScores).sort(
-    ([, scoreA], [, scoreB]) => scoreB - scoreA
-  );
+    // Ordenar estilos por pontuação
+    const sortedStyles = Object.entries(styleScores).sort(
+      ([, scoreA], [, scoreB]) => scoreB - scoreA
+    );
 
-  const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
-  const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
+    const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
+    const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
 
-  // Estilos secundários (top 3)
-  const secondaryResults = sortedStyles
-    .slice(1, 4)
-    .map(([category, score]) => createStyleResult(category, score));
+    // Estilos secundários (top 3)
+    const secondaryResults = sortedStyles
+      .slice(1, 4)
+      .map(([category, score]) => createStyleResult(category, score));
 
-  // ✅ PERSONALIZAÇÃO: Incluir dados do usuário
-  const currentUserName = userName || localStorage.getItem('quizUserName') || '';
+    // ✅ PERSONALIZAÇÃO: Incluir dados do usuário
+    const currentUserName = userName || localStorage.getItem('quizUserName') || '';
 
-  return {
-    primaryStyle: primaryResult,
-    secondaryStyles: secondaryResults,
-    totalQuestions: answers.length,
-    completedAt: new Date(),
-    scores: styleScores,
-    userData: {
-      name: currentUserName,
-      completionTime: new Date(),
-      strategicAnswersCount: strategicAnswers.length,
-    },
-  };
-}, [userName, strategicAnswers.length]);
+    return {
+      primaryStyle: primaryResult,
+      secondaryStyles: secondaryResults,
+      totalQuestions: answers.length,
+      completedAt: new Date(),
+      scores: styleScores,
+      userData: {
+        name: currentUserName,
+        completionTime: new Date(),
+        strategicAnswersCount: strategicAnswers.length,
+      },
+    };
+  },
+  [userName, strategicAnswers.length]
+);
 ```
 
 ### **4.3 Hook de Resultados de Estilo**
@@ -345,20 +369,21 @@ export const useStyleQuizResults = (answers: Map<string, QuestionOption[]>) => {
 
 ```typescript
 export interface StyleConfig {
-  image: string;        // Imagem representativa do estilo
-  guideImage: string;   // Imagem do guia específico
-  description: string;  // Descrição personalizada
-  category: string;     // Categoria para agrupamento
-  keywords: string[];   // Palavras-chave para busca
+  image: string; // Imagem representativa do estilo
+  guideImage: string; // Imagem do guia específico
+  description: string; // Descrição personalizada
+  category: string; // Categoria para agrupamento
+  keywords: string[]; // Palavras-chave para busca
 }
 
 export const styleConfig: StyleConfigMap = {
   Natural: {
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
-    guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+    guideImage:
+      'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
     description: 'Você valoriza o conforto e a praticidade...',
     category: 'Conforto & Praticidade',
-    keywords: ['conforto', 'praticidade', 'descontraído', 'autêntico']
+    keywords: ['conforto', 'praticidade', 'descontraído', 'autêntico'],
   },
   // ... demais estilos
 };
@@ -366,16 +391,16 @@ export const styleConfig: StyleConfigMap = {
 
 ### **5.2 Estilos Disponíveis**
 
-| Estilo | Categoria | Imagens |
-|--------|-----------|---------|
-| **Natural** | Conforto & Praticidade | ✅ Main + Guide |
-| **Clássico** | Elegância Atemporal | ✅ Main + Guide |
-| **Contemporâneo** | Equilíbrio & Modernidade | ✅ Main + Guide |
-| **Elegante** | Refinamento & Qualidade | ✅ Main + Guide |
-| **Romântico** | Delicadeza & Feminilidade | ✅ Main + Guide |
-| **Sexy** | Sensualidade & Confiança | ✅ Main + Guide |
-| **Dramático** | Impacto & Presença | ✅ Main + Guide |
-| **Criativo** | Expressão & Individualidade | ✅ Main + Guide |
+| Estilo            | Categoria                   | Imagens         |
+| ----------------- | --------------------------- | --------------- |
+| **Natural**       | Conforto & Praticidade      | ✅ Main + Guide |
+| **Clássico**      | Elegância Atemporal         | ✅ Main + Guide |
+| **Contemporâneo** | Equilíbrio & Modernidade    | ✅ Main + Guide |
+| **Elegante**      | Refinamento & Qualidade     | ✅ Main + Guide |
+| **Romântico**     | Delicadeza & Feminilidade   | ✅ Main + Guide |
+| **Sexy**          | Sensualidade & Confiança    | ✅ Main + Guide |
+| **Dramático**     | Impacto & Presença          | ✅ Main + Guide |
+| **Criativo**      | Expressão & Individualidade | ✅ Main + Guide |
 
 ### **5.3 Utilitários de Estilo**
 
@@ -475,7 +500,7 @@ sequenceDiagram
     E1->>CTX: setUserNameFromInput(nome)
     CTX->>LS: localStorage.setItem('quizUserName', nome)
     CTX->>Q: Disponibiliza nome para resultado
-    
+
     Note over U,Q: Nome capturado e disponível globalmente
 ```
 
@@ -491,10 +516,10 @@ sequenceDiagram
 
     U->>Q2_11: Responde questões core
     Q2_11->>CALC: answers.push() [PONTUAM]
-    
+
     U->>Q12_18: Responde questões estratégicas
     Q12_18->>CALC: strategicAnswers.push() [NÃO PONTUAM]
-    
+
     CALC->>RESULT: calculateResults()
     RESULT->>U: Mostra estilo predominante + personalização
 ```
@@ -508,7 +533,7 @@ const STORAGE_KEYS = {
   answers: 'quiz-answers',
   strategicAnswers: 'quiz-strategic-answers',
   completedAt: 'quiz-completedAt',
-  result: 'quiz-result'
+  result: 'quiz-result',
 };
 
 // Exemplo de persistência
@@ -530,20 +555,20 @@ interface QuizState {
   // Estado atual
   phase: 'name-capture' | 'quiz-core' | 'strategic-questions' | 'email-capture' | 'result' | 'offer';
   currentStep: 1 | 2 | 3 | ... | 21;
-  
+
   // Dados do usuário
   userName: string;
   userEmail?: string;
-  
+
   // Respostas
   coreAnswers: QuizAnswer[];        // Etapas 2-11 (pontuam)
   strategicAnswers: StrategicAnswer[]; // Etapas 13-17 (métricas)
-  
+
   // Resultados
   styleScores: Record<string, number>;
   primaryStyle: StyleResult;
   secondaryStyles: StyleResult[];
-  
+
   // Controles
   isCompleted: boolean;
   completedAt?: Date;
@@ -597,12 +622,12 @@ track('quiz_answer_scored', { questionId, style, weight, step, timestamp });
 track('strategic_answer_captured', { questionId, category, strategicType, timestamp });
 
 // Etapa 20
-track('quiz_completed', { 
-  primaryStyle, 
-  userName, 
-  totalTime, 
-  coreAnswers: 10, 
-  strategicAnswers: 7 
+track('quiz_completed', {
+  primaryStyle,
+  userName,
+  totalTime,
+  coreAnswers: 10,
+  strategicAnswers: 7,
 });
 ```
 
@@ -613,10 +638,10 @@ const CONVERSION_EVENTS = {
   NAME_CAPTURED: 'Etapa 1 → Etapa 2',
   QUIZ_STARTED: 'Etapa 2 iniciada',
   QUIZ_CORE_COMPLETED: 'Etapas 2-11 finalizadas',
-  STRATEGIC_COMPLETED: 'Etapas 13-17 finalizadas', 
+  STRATEGIC_COMPLETED: 'Etapas 13-17 finalizadas',
   EMAIL_CAPTURED: 'Etapa 19 → Etapa 20',
   RESULT_VIEWED: 'Etapa 20 visualizada',
-  OFFER_PRESENTED: 'Etapa 21 apresentada'
+  OFFER_PRESENTED: 'Etapa 21 apresentada',
 };
 ```
 
@@ -625,6 +650,7 @@ const CONVERSION_EVENTS = {
 ## ✅ 10. CHECKLIST DE IMPLEMENTAÇÃO
 
 ### **Estados Implementados:**
+
 - ✅ Coleta de nome (Etapa 1)
 - ✅ Estado global no EditorContext
 - ✅ Persistência em localStorage
@@ -633,6 +659,7 @@ const CONVERSION_EVENTS = {
 - ✅ Sistema de tracking básico
 
 ### **Pendente:**
+
 - ⏳ Integração com analytics (Google Analytics/Supabase)
 - ⏳ Captura de email (Etapa 19)
 - ⏳ Sistema de ofertas (Etapa 21)
