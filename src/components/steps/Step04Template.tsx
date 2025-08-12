@@ -44,14 +44,14 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
   style = {},
   properties = {
     enabled: true,
-    title: 'QUESTÃO 3 - CONFIGURAR NO PAINEL',
+    title: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
     subtitle: '',
     questionCounter: 'Questão 3 de 10',
     backgroundColor: '#FEFEFE',
     textColor: '#432818',
     showProgress: true,
-    progressValue: 20,
-    buttonText: 'Próxima Questão →',
+    progressValue: 30,
+    buttonText: 'Continuar',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -144,15 +144,38 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
         {/* Área de Conteúdo Configurável */}
         <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
           <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 4 - Configure no painel de propriedades
+            📝 Selecione até 3 opções que mais representam seu estilo visual
           </p>
 
-          {/* Placeholder para opções */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="p-4 bg-white rounded border border-gray-200">
-                <div className="w-full h-20 bg-gray-100 rounded mb-2"></div>
-                <p className="text-xs text-gray-400">Opção {i}</p>
+          {/* Grid de Opções Visuais */}
+          <div 
+            className="grid gap-4 max-w-4xl mx-auto"
+            style={{ 
+              gridTemplateColumns: `repeat(${properties.columns}, 1fr)` 
+            }}
+          >
+            {[
+              { id: '3a', text: 'Visual leve, despojado e natural', category: 'Natural', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp' },
+              { id: '3b', text: 'Visual clássico e tradicional', category: 'Clássico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp' },
+              { id: '3c', text: 'Visual casual com toque atual', category: 'Contemporâneo', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp' },
+              { id: '3d', text: 'Visual refinado e imponente', category: 'Elegante', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp' },
+              { id: '3e', text: 'Visual romântico, feminino e delicado', category: 'Romântico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp' },
+              { id: '3f', text: 'Visual sensual, com saia justa e decote', category: 'Sexy', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp' },
+              { id: '3g', text: 'Visual marcante e urbano (jeans + jaqueta)', category: 'Dramático', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp' },
+              { id: '3h', text: 'Visual criativo, colorido e ousado', category: 'Criativo', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp' }
+            ].map((option) => (
+              <div key={option.id} className="option-card p-3 bg-white rounded-lg border border-gray-200 hover:border-[#B89B7A] cursor-pointer transition-all">
+                <div 
+                  className="w-full rounded mb-3 bg-gray-100"
+                  style={{ 
+                    height: `${(properties.imageSize || 256) / 4}px`,
+                    backgroundImage: `url(${option.imageUrl})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                ></div>
+                <div className="text-xs font-semibold text-[#B89B7A] mb-1">{option.category}</div>
+                <p className="text-xs text-gray-700">{option.text}</p>
               </div>
             ))}
           </div>
@@ -207,7 +230,7 @@ export const getStep04Template = () => {
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
-        progressValue: 20,
+        progressValue: 30,
         progressMax: 100,
         showBackButton: true,
         marginTop: 0,
