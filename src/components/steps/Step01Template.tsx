@@ -120,3 +120,5 @@ export const getStep01Template = () => {
     },
   ];
 };
+
+export default getStep01Template;

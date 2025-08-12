@@ -19,7 +19,11 @@
     "type-check": "tsc --noEmit",
     "format:editor": "prettier --write \"src/components/editor/**/*.{ts,tsx}\"",
     "format:context": "prettier --write \"src/context/**/*.{ts,tsx}\"",
-    "format:hooks": "prettier --write \"src/hooks/**/*.{ts,tsx}\""
+    "format:hooks": "prettier --write \"src/hooks/**/*.{ts,tsx}\"",
+    "templates:standardize": "node scripts/standardize-templates.js",
+    "templates:convert": "node scripts/convert-to-modular.js",
+    "templates:cleanup": "node scripts/template-cleanup.js",
+    "templates:format": "prettier --write \"src/components/steps/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

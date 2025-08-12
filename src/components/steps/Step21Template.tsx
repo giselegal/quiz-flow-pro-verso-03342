@@ -282,3 +282,5 @@ export const getStep21Template = () => {
     },
   ];
 };
+
+export default getStep21Template;

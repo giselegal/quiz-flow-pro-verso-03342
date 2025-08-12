@@ -3,7 +3,7 @@
  *
  * ✅ TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
  * ❌ Componente monolítico removido para evitar conflitos arquiteturais
- * 
+ *
  * CORREÇÃO DE FLUXO:
  * - Etapa 12: TRANSIÇÃO após questões que pontuam (2-11)
  * - Prepara usuário para questões estratégicas (13-18)
@@ -132,3 +132,5 @@ export const getStep12Template = () => {
     },
   ];
 };
+
+export default getStep12Template;

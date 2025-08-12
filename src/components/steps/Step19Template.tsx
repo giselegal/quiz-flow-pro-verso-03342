@@ -9,7 +9,8 @@ export const getStep19Template = () => {
       id: 'progress-header-step19',
       type: 'quiz-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 80,
         logoHeight: 80,
@@ -79,7 +80,8 @@ export const getStep19Template = () => {
       id: 'processing-steps-step19',
       type: 'text-inline',
       properties: {
-        content: '✓ Analisando suas 10 respostas principais\n✓ Calculando compatibilidade por estilo\n✓ Definindo seu resultado personalizado',
+        content:
+          '✓ Analisando suas 10 respostas principais\n✓ Calculando compatibilidade por estilo\n✓ Definindo seu resultado personalizado',
         fontSize: 'text-base',
         textAlign: 'text-center',
         color: '#432818',

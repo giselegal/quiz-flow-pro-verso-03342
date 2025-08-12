@@ -148,30 +148,81 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
           </p>
 
           {/* Grid de Opções Visuais */}
-          <div 
+          <div
             className="grid gap-4 max-w-4xl mx-auto"
-            style={{ 
-              gridTemplateColumns: `repeat(${properties.columns}, 1fr)` 
+            style={{
+              gridTemplateColumns: `repeat(${properties.columns}, 1fr)`,
             }}
           >
             {[
-              { id: '3a', text: 'Visual leve, despojado e natural', category: 'Natural', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp' },
-              { id: '3b', text: 'Visual clássico e tradicional', category: 'Clássico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp' },
-              { id: '3c', text: 'Visual casual com toque atual', category: 'Contemporâneo', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp' },
-              { id: '3d', text: 'Visual refinado e imponente', category: 'Elegante', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp' },
-              { id: '3e', text: 'Visual romântico, feminino e delicado', category: 'Romântico', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp' },
-              { id: '3f', text: 'Visual sensual, com saia justa e decote', category: 'Sexy', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp' },
-              { id: '3g', text: 'Visual marcante e urbano (jeans + jaqueta)', category: 'Dramático', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp' },
-              { id: '3h', text: 'Visual criativo, colorido e ousado', category: 'Criativo', imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp' }
-            ].map((option) => (
-              <div key={option.id} className="option-card p-3 bg-white rounded-lg border border-gray-200 hover:border-[#B89B7A] cursor-pointer transition-all">
-                <div 
+              {
+                id: '3a',
+                text: 'Visual leve, despojado e natural',
+                category: 'Natural',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
+              },
+              {
+                id: '3b',
+                text: 'Visual clássico e tradicional',
+                category: 'Clássico',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp',
+              },
+              {
+                id: '3c',
+                text: 'Visual casual com toque atual',
+                category: 'Contemporâneo',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
+              },
+              {
+                id: '3d',
+                text: 'Visual refinado e imponente',
+                category: 'Elegante',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp',
+              },
+              {
+                id: '3e',
+                text: 'Visual romântico, feminino e delicado',
+                category: 'Romântico',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp',
+              },
+              {
+                id: '3f',
+                text: 'Visual sensual, com saia justa e decote',
+                category: 'Sexy',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp',
+              },
+              {
+                id: '3g',
+                text: 'Visual marcante e urbano (jeans + jaqueta)',
+                category: 'Dramático',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp',
+              },
+              {
+                id: '3h',
+                text: 'Visual criativo, colorido e ousado',
+                category: 'Criativo',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp',
+              },
+            ].map(option => (
+              <div
+                key={option.id}
+                className="option-card p-3 bg-white rounded-lg border border-gray-200 hover:border-[#B89B7A] cursor-pointer transition-all"
+              >
+                <div
                   className="w-full rounded mb-3 bg-gray-100"
-                  style={{ 
+                  style={{
                     height: `${(properties.imageSize || 256) / 4}px`,
                     backgroundImage: `url(${option.imageUrl})`,
                     backgroundSize: 'cover',
-                    backgroundPosition: 'center'
+                    backgroundPosition: 'center',
                   }}
                 ></div>
                 <div className="text-xs font-semibold text-[#B89B7A] mb-1">{option.category}</div>
