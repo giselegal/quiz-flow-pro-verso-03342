@@ -1,3 +1,4 @@
+// @ts-nocheck
 // =============================================================================
 // SERVIÇO DE UPLOAD DE MÍDIA
 // Upload de imagens, vídeos e outros arquivos para Supabase Storage

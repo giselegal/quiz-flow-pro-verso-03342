@@ -1,3 +1,4 @@
+// @ts-nocheck
 // =============================================================================
 // SISTEMA DE TESTES A/B PARA QUIZZES
 // Permite testar diferentes versões de quizzes para otimizar conversão

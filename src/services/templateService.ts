@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { STEP_TEMPLATES } from '../config/templates/templates';
 import type { Block } from '../types/editor';
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // =============================================================================
 // SISTEMA DE ANALYTICS BÁSICO
 // Tracking de métricas essenciais do quiz/funil

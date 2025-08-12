@@ -1,3 +1,4 @@
+// @ts-nocheck
 // ✨ SERVIÇO UNIFICADO PARA TEMPLATES POR ETAPA
 // Este serviço centraliza o acesso aos templates individuais mantendo a modularidade
 

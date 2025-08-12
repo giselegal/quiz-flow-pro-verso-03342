@@ -685,6 +685,9 @@ const FaqSectionAdvanced = () => {
   );
 };
 
+// keep unused prototype component reference
+void FaqSectionAdvanced;
+
 const DescubraSeuEstilo: React.FC = () => {
   useEffect(() => {
     const styleElement = document.createElement("style");

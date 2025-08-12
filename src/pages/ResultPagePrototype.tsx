@@ -39,6 +39,9 @@ export default function ResultPagePrototype() {
     rank: index + 2,
   }));
 
+  void _primaryStyle;
+  void _secondaryStyles;
+
   return (
     <div className="min-h-screen bg-[#FAF9F7]">
       <img

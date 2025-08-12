@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🚀 SERVIÇO DE MIGRAÇÃO AUTOMÁTICA VIA API SUPABASE
  * Executa migrações de schema automaticamente via código

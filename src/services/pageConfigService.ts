@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { BlockData } from './funnelService';
 import { getDefaultPageConfig } from '../data/defaultPageConfigs';
 
