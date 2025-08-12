@@ -1,198 +1,13 @@
-import React, { useEffect } from 'react';
-
 /**
- * Step14Template - Componente para Etapa 14 do Quiz
+ * Step14Template - Template Modular para Etapa 14 do Quiz
  *
- * Template para questão 13: Configurável via painel de propriedades
- * Integração com sistema de quiz e editor de propriedades
+ * ✅ APENAS TEMPLATE MODULAR - Questão estratégica 2
+ * ❌ Componente monolítico removido para evitar conflitos arquiteturais
+ *
+ * CORREÇÃO DE FLUXO:
+ * - Etapa 14: SEGUNDA questão estratégica (NÃO pontua)
+ * - Monitora cliques para métricas da jornada do usuário
  */
-
-// ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step14TemplateProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
-
-  properties?: {
-    enabled?: boolean;
-    title?: string;
-    subtitle?: string;
-    questionCounter?: string;
-    backgroundColor?: string;
-    textColor?: string;
-    showProgress?: boolean;
-    progressValue?: number;
-    buttonText?: string;
-    multipleSelection?: boolean;
-    minSelections?: number;
-    maxSelections?: number;
-    columns?: number;
-    imageSize?: number;
-  };
-
-  isEditing?: boolean;
-  isSelected?: boolean;
-  onUpdate?: (id: string, updates: any) => void;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-}
-
-// ✅ COMPONENTE PRINCIPAL
-export const Step14Template: React.FC<Step14TemplateProps> = ({
-  id,
-  className = '',
-  style = {},
-  properties = {
-    enabled: true,
-    title: 'QUESTÃO 13 - CONFIGURAR NO PAINEL',
-    subtitle: '',
-    questionCounter: 'Questão 13 de 10',
-    backgroundColor: '#FEFEFE',
-    textColor: '#432818',
-    showProgress: true,
-    progressValue: 70,
-    buttonText: 'Próxima Questão →',
-    multipleSelection: true,
-    minSelections: 1,
-    maxSelections: 3,
-    columns: 2,
-    imageSize: 256,
-  },
-  isEditing = false,
-  isSelected = false,
-  onUpdate,
-  onClick,
-}) => {
-  // ✅ DEBUG E MONITORAMENTO
-  useEffect(() => {
-    if (isEditing) {
-      console.log(`Step14Template ${id} entered editing mode`);
-    }
-  }, [isEditing, id]);
-
-  useEffect(() => {
-    console.log(`Step14Template ${id} properties updated:`, properties);
-  }, [properties, id]);
-
-  // ✅ FUNÇÃO DE CLIQUE
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClick?.();
-
-    if (isEditing) {
-      console.log(`Step14Template ${id} clicked in editing mode`);
-      onUpdate?.(id, { lastClicked: new Date().toISOString() });
-    }
-  };
-
-  // ✅ ESTILOS DINÂMICOS
-  const containerStyles: React.CSSProperties = {
-    backgroundColor: properties.backgroundColor,
-    color: properties.textColor,
-    width: '100%',
-    minHeight: '500px',
-    padding: '24px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    cursor: isEditing ? 'pointer' : 'default',
-    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
-    borderRadius: '8px',
-    transition: 'all 0.3s ease',
-    opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? 'none' : 'auto',
-    ...style,
-  };
-
-  // ✅ RENDERIZAÇÃO CONDICIONAL QUANDO DESABILITADO
-  if (!properties.enabled && !isEditing) {
-    return null;
-  }
-
-  return (
-    <div
-      id={id}
-      className={`step14-template ${className} ${isEditing ? 'editing-mode' : ''}`}
-      style={containerStyles}
-      onClick={handleClick}
-    >
-      {/* Header com Progresso */}
-      {properties.showProgress && (
-        <div className="step-header mb-6">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div
-              className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${properties.progressValue}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Conteúdo da Questão */}
-      <div className="step-content text-center">
-        {/* Título da Questão */}
-        <h1 className="text-2xl font-bold mb-2" style={{ color: properties.textColor }}>
-          {properties.title}
-        </h1>
-
-        {/* Contador da Questão */}
-        {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
-            {properties.questionCounter}
-          </p>
-        )}
-
-        {/* Área de Conteúdo Configurável */}
-        <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-          <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 14 - Configure no painel de propriedades
-          </p>
-
-          {/* Placeholder para opções */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="p-4 bg-white rounded border border-gray-200">
-                <div className="w-full h-20 bg-gray-100 rounded mb-2"></div>
-                <p className="text-xs text-gray-400">Opção {i}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Botão de Continuar */}
-        <div className="button-section">
-          <button
-            className="w-full max-w-md py-3 px-6 bg-[#B89B7A] text-white font-semibold rounded-md hover:bg-[#A1835D] transition-all duration-300"
-            disabled={isEditing}
-          >
-            {properties.buttonText}
-          </button>
-        </div>
-
-        {/* Info sobre Seleção */}
-        {properties.multipleSelection && (
-          <p className="text-xs text-gray-500 mt-4">
-            Selecione entre {properties.minSelections} e {properties.maxSelections} opções
-          </p>
-        )}
-      </div>
-
-      {/* Indicadores de Estado no Modo de Edição */}
-      {isEditing && (
-        <div className="absolute top-2 right-2 flex gap-2 items-center">
-          {!properties.enabled && (
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Desabilitado</span>
-          )}
-          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">Step 14</span>
-        </div>
-      )}
-
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && isEditing && (
-        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
-      )}
-    </div>
-  );
-};
 
 // ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
 export const getStep14Template = () => {
@@ -207,14 +22,12 @@ export const getStep14Template = () => {
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 80,
         logoHeight: 80,
-        progressValue: 70,
+        progressValue: 78, // 78% - questões estratégicas
         progressMax: 100,
         showBackButton: false,
         showProgress: true,
         stepNumber: '14 de 21',
         spacing: 'small',
-        marginTop: 0,
-        marginBottom: 0,
       },
     },
 
@@ -235,55 +48,122 @@ export const getStep14Template = () => {
       },
     },
 
-    // 📱 TÍTULO DA TRANSIÇÃO
+    // 📝 TÍTULO DA QUESTÃO ESTRATÉGICA
     {
-      id: 'transition-title-step14',
+      id: 'question-title-step14',
       type: 'text-inline',
       properties: {
-        content: 'undefined',
-        fontSize: 'text-3xl',
+        content: 'QUESTÃO ESTRATÉGICA 2',
+        fontSize: 'text-2xl md:text-3xl',
         fontWeight: 'font-bold',
-        fontFamily: 'Playfair Display, serif',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 24,
-        lineHeight: '1.2',
-        spacing: 'small',
-        marginTop: 0,
+        marginBottom: 16,
+        spacing: 'medium',
       },
     },
 
-    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
+    // 🎯 PERGUNTA PRINCIPAL
     {
-      id: 'transition-image-step14',
-      type: 'image-display-inline',
-      properties: {
-        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838157/20250509_2150_Idade_e_Experi%C3%AAncia_simple_compose_01jtvtdbkfcj3g9f8tmexn5chm_wppuxb.webp',
-        alt: 'undefined',
-        width: 500,
-        height: 350,
-        className: 'object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg',
-        textAlign: 'text-center',
-        marginBottom: 32,
-        spacing: 'small',
-        marginTop: 0,
-      },
-    },
-
-    // 💭 TEXTO DESCRITIVO
-    {
-      id: 'transition-description-step14',
+      id: 'strategic-question-step14',
       type: 'text-inline',
       properties: {
-        content: 'undefined',
-        fontSize: 'text-lg',
+        content: 'Qual é o seu maior desafio quando se veste?',
+        fontSize: 'text-xl md:text-2xl',
+        fontWeight: 'font-semibold',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 40,
-        lineHeight: '1.6',
+        marginBottom: 32,
+        maxWidth: '720px',
+        spacing: 'medium',
+      },
+    },
+
+    // 📊 OPÇÕES DA QUESTÃO ESTRATÉGICA (NÃO PONTUAM - APENAS MÉTRICAS)
+    {
+      id: 'strategic-options-step14',
+      type: 'options-grid',
+      properties: {
+        options: [
+          {
+            id: 'strategic-14-a',
+            text: 'Não sei o que combina comigo',
+            category: 'knowledge',
+            strategicType: 'challenge',
+          },
+          {
+            id: 'strategic-14-b',
+            text: 'Tenho pouca variedade no guarda-roupa',
+            category: 'variety',
+            strategicType: 'challenge',
+          },
+          {
+            id: 'strategic-14-c',
+            text: 'Não tenho tempo para pensar em looks',
+            category: 'time',
+            strategicType: 'challenge',
+          },
+          {
+            id: 'strategic-14-d',
+            text: 'Não me sinto confiante com minhas escolhas',
+            category: 'confidence',
+            strategicType: 'challenge',
+          },
+        ],
+        multiSelect: false, // Questões estratégicas: seleção única
+        columns: 2,
+        backgroundColor: '#FFFFFF',
+        borderColor: '#E5DDD5',
+        hoverBackgroundColor: '#F3E8E6',
+        selectedBackgroundColor: '#B89B7A',
+        selectedTextColor: '#FFFFFF',
+        borderRadius: 12,
+        padding: 16,
+        spacing: 'medium',
+        trackingEnabled: true, // ✅ HABILITADO PARA MÉTRICAS
+      },
+    },
+
+    // 🔄 BOTÃO DE NAVEGAÇÃO
+    {
+      id: 'navigation-button-step14',
+      type: 'button-inline',
+      properties: {
+        text: 'Próxima Questão →',
+        variant: 'primary',
+        size: 'large',
+        backgroundColor: '#B89B7A',
+        textColor: '#FFFFFF',
+        hoverBackgroundColor: '#A1835D',
+        borderRadius: 12,
+        padding: '16px 32px',
+        fontSize: 'text-lg',
+        fontWeight: 'font-semibold',
+        marginTop: 32,
+        marginBottom: 16,
+        showShadow: true,
+        spacing: 'medium',
+        disabled: true, // Desabilitado até seleção
+        requiresSelection: true, // Requer seleção para habilitar
+      },
+    },
+
+    // 📊 INDICADOR DE PROGRESSO ESTRATÉGICO
+    {
+      id: 'strategic-progress-step14',
+      type: 'text-inline',
+      properties: {
+        content: 'Questão Estratégica 2 de 6 • Não afeta sua pontuação',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#432818',
+        opacity: 0.6,
+        marginTop: 16,
         spacing: 'small',
-        marginTop: 0,
       },
     },
   ];
 };
+
+// ✅ EXPORT PADRÃO (COMPATIBILIDADE)
+export default getStep14Template;

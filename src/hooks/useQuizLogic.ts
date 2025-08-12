@@ -1,10 +1,20 @@
-import caktoquizQuestions from "@/data/caktoquizQuestions";
-import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from "@/types/quiz";
-import { useCallback, useState } from "react";
+import caktoquizQuestions from '@/data/caktoquizQuestions';
+import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
+import { useCallback, useState } from 'react';
+
+// ✅ INTERFACE PARA QUESTÕES ESTRATÉGICAS
+interface StrategicAnswer {
+  questionId: string;
+  optionId: string;
+  category: string;
+  strategicType: string;
+  timestamp: Date;
+}
 
 export const useQuizLogic = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+  const [strategicAnswers, setStrategicAnswers] = useState<StrategicAnswer[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -27,6 +37,34 @@ export const useQuizLogic = () => {
     });
   }, []);
 
+  // ✅ NOVA FUNÇÃO: Responder questões estratégicas (13-18)
+  const answerStrategicQuestion = useCallback(
+    (questionId: string, optionId: string, category: string, strategicType: string) => {
+      const strategicAnswer: StrategicAnswer = {
+        questionId,
+        optionId,
+        category,
+        strategicType,
+        timestamp: new Date(),
+      };
+
+      setStrategicAnswers(prev => [...prev, strategicAnswer]);
+
+      // ✅ TRACKING: Enviar métricas sem afetar cálculo
+      console.log('📊 MÉTRICA ESTRATÉGICA:', {
+        questionId,
+        optionId,
+        category,
+        strategicType,
+        timestamp: strategicAnswer.timestamp,
+      });
+
+      // TODO: Integrar com analytics/Supabase para métricas
+      // trackStrategicInteraction(strategicAnswer);
+    },
+    []
+  );
+
   const goToNextQuestion = useCallback(() => {
     setCurrentQuestionIndex(prevIndex => Math.min(prevIndex + 1, totalQuestions - 1));
   }, [totalQuestions]);
@@ -45,11 +83,16 @@ export const useQuizLogic = () => {
   const calculateStyleScores = (answers: QuizAnswer[]) => {
     const styleScores: { [style: string]: number } = {};
 
+    // ✅ CORREÇÃO DE FLUXO: Apenas questões 2-11 pontuam para o resultado
     answers.forEach(answer => {
       const question = caktoquizQuestions.find((q: any) => q.id === answer.questionId);
       const option = question?.options.find((opt: any) => opt.id === answer.optionId);
 
-      if (option?.style) {
+      // ✅ FILTRO: Só conta se for questão que pontua (2-11)
+      const questionNumber = parseInt(question?.id?.replace('q', '') || '0');
+      const isScorableQuestion = questionNumber >= 1 && questionNumber <= 10; // q1-q10 = etapas 2-11
+
+      if (option?.style && isScorableQuestion) {
         styleScores[option.style] = (styleScores[option.style] || 0) + (option.weight || 1);
       }
     });
@@ -72,7 +115,7 @@ export const useQuizLogic = () => {
     const sortedStyles = Object.entries(styleScores).sort(
       ([, scoreA], [, scoreB]) => scoreB - scoreA
     );
-    const topStyle = sortedStyles[0]?.[0] || "estilo-neutro";
+    const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
 
     const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
 
@@ -100,11 +143,13 @@ export const useQuizLogic = () => {
   return {
     currentQuestionIndex,
     answers,
+    strategicAnswers,
     quizCompleted,
     quizResult,
     totalQuestions,
     initializeQuiz,
     answerQuestion,
+    answerStrategicQuestion,
     goToNextQuestion,
     goToPreviousQuestion,
     restartQuiz,
