@@ -54,7 +54,7 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
     buttonText: 'Continuar',
     multipleSelection: true,
     minSelections: 3,
-        autoAdvance: true,
+    autoAdvance: true,
     maxSelections: 3,
     columns: 2,
     imageSize: 256,

@@ -5,9 +5,9 @@ import { EditorBlock, Block } from '@/types/editor';
 
 /**
  * UNIFIED TEMPLATE MANAGER
- * 
+ *
  * Sistema unificado de gerenciamento de templates que:
- * ✅ Integra com FixedTemplateService 
+ * ✅ Integra com FixedTemplateService
  * ✅ Gerencia cache de forma inteligente
  * ✅ Fornece templates sempre disponíveis
  * ✅ Debug detalhado
@@ -43,7 +43,7 @@ export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) 
 
   const getTemplate = (stepNumber: number): EditorBlock[] => {
     console.log(`🔍 UnifiedTemplateManager: Obtendo template para etapa ${stepNumber}`);
-    
+
     try {
       const template = getStepTemplate(stepNumber);
       console.log(`✅ Template etapa ${stepNumber} obtido: ${template.length} blocos`);
@@ -51,26 +51,30 @@ export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) 
     } catch (error) {
       console.error(`❌ Erro ao obter template etapa ${stepNumber}:`, error);
       // Fallback com template mínimo
-      return [{
-        id: `fallback-step-${stepNumber}`,
-        type: 'text-inline',
-        content: { text: `Etapa ${stepNumber} - Template em carregamento...` },
-        properties: {},
-        order: 0
-      }];
+      return [
+        {
+          id: `fallback-step-${stepNumber}`,
+          type: 'text-inline',
+          content: { text: `Etapa ${stepNumber} - Template em carregamento...` },
+          properties: {},
+          order: 0,
+        },
+      ];
     }
   };
 
   const loadTemplate = async (stepNumber: number): Promise<EditorBlock[]> => {
     console.log(`🔄 UnifiedTemplateManager: Carregando template async etapa ${stepNumber}`);
     setIsLoading(true);
-    
+
     try {
       // Simular carregamento assíncrono se necessário
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       const template = getTemplate(stepNumber);
-      console.log(`✅ Template etapa ${stepNumber} carregado assincronamente: ${template.length} blocos`);
+      console.log(
+        `✅ Template etapa ${stepNumber} carregado assincronamente: ${template.length} blocos`
+      );
       return template;
     } catch (error) {
       console.error(`❌ Erro no carregamento async etapa ${stepNumber}:`, error);
@@ -86,18 +90,16 @@ export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) 
     isLoading,
     currentStep,
     setCurrentStep,
-    availableSteps
+    availableSteps,
   };
 
   useEffect(() => {
-    console.log(`📊 UnifiedTemplateManager inicializado - Etapas disponíveis: ${availableSteps.length}`);
+    console.log(
+      `📊 UnifiedTemplateManager inicializado - Etapas disponíveis: ${availableSteps.length}`
+    );
   }, []);
 
-  return (
-    <TemplateContext.Provider value={contextValue}>
-      {children}
-    </TemplateContext.Provider>
-  );
+  return <TemplateContext.Provider value={contextValue}>{children}</TemplateContext.Provider>;
 };
 
 /**
@@ -105,14 +107,14 @@ export const TemplateProvider: React.FC<TemplateProviderProps> = ({ children }) 
  */
 export const useCurrentStepTemplate = () => {
   const { getTemplate, currentStep, isLoading } = useTemplateManager();
-  
+
   const [template, setTemplate] = useState<EditorBlock[]>([]);
-  
+
   useEffect(() => {
     console.log(`🔄 Carregando template para etapa atual: ${currentStep}`);
     const newTemplate = getTemplate(currentStep);
     setTemplate(newTemplate);
   }, [currentStep, getTemplate]);
-  
+
   return { template, isLoading, currentStep };
 };

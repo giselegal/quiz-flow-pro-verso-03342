@@ -37,7 +37,15 @@ export const Step01ComponentsTest = () => {
       <div>
         <h2 className="text-xl font-bold mb-4">IntroBlock Component</h2>
         <div className="border rounded-lg p-4">
-          <IntroBlock id={mockBlock.id} properties={mockBlock.properties} />
+          <IntroBlock
+            block={{
+              id: mockBlock.id,
+              type: mockBlock.type,
+              properties: mockBlock.properties,
+              content: {},
+              order: 0,
+            }}
+          />
         </div>
       </div>
 

@@ -4,5 +4,5 @@
 export const BLOCK_REGISTRY = {
   register: (_key: string, _definition: any) => {
     // No-op implementation
-  }
+  },
 };

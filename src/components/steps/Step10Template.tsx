@@ -56,7 +56,7 @@ export const Step10Template: React.FC<Step10TemplateProps> = ({
     autoAdvanceOnComplete: true,
     autoAdvanceDelay: 1500,
     minSelections: 3,
-        autoAdvance: true,
+    autoAdvance: true,
     maxSelections: 3,
     columns: 2,
     imageSize: 256,

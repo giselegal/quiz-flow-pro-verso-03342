@@ -1,8 +1,8 @@
-import React from 'react';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
 
 // Componente para drop zone entre blocos

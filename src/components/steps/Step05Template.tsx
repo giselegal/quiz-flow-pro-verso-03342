@@ -54,7 +54,7 @@ export const Step05Template: React.FC<Step05TemplateProps> = ({
     buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 3,
-        autoAdvance: true,
+    autoAdvance: true,
     maxSelections: 3,
     columns: 2,
     imageSize: 256,
