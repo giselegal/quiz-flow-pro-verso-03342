@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { HeaderProperties, defaultHeaderProperties } from '@/config/headerPropertiesMapping';
-import { OptionsGridProperties, defaultOptionsGridProperties, optionsGridUtils } from '@/config/optionsGridPropertiesMapping';
+import { defaultHeaderProperties } from '@/config/headerPropertiesMapping';
+import { defaultOptionsGridProperties } from '@/config/optionsGridPropertiesMapping';
 
 /**
  * 🎯 Enumerações e tipos fundamentais
@@ -519,82 +519,69 @@ export const useUnifiedProperties = (
         ];
 
       case 'quiz-intro-header':
+        // Usar as propriedades padronizadas do HeaderProperties
+        const headerProps = { ...defaultHeaderProperties, ...(currentBlock?.properties || {}) };
+        
         return [
           ...getUniversalProperties(),
-
+          
           // Logo
           createProperty(
             'logoUrl',
-            currentBlock?.properties?.logoUrl || '',
+            headerProps.logoUrl,
             PropertyType.URL,
             'URL da Logo',
             PropertyCategory.CONTENT
           ),
           createProperty(
             'logoAlt',
-            currentBlock?.properties?.logoAlt || 'Logo',
+            headerProps.logoAlt,
             PropertyType.TEXT,
             'Texto Alternativo',
             PropertyCategory.ACCESSIBILITY
           ),
           createProperty(
             'logoWidth',
-            currentBlock?.properties?.logoWidth ?? 96,
+            headerProps.logoWidth,
             PropertyType.RANGE,
             'Largura da Logo (px)',
             PropertyCategory.STYLE,
-            { min: 24, max: 240, step: 2 }
+            { min: 50, max: 400, step: 10 }
           ),
           createProperty(
             'logoHeight',
-            currentBlock?.properties?.logoHeight ?? 96,
+            headerProps.logoHeight,
             PropertyType.RANGE,
             'Altura da Logo (px)',
             PropertyCategory.STYLE,
-            { min: 24, max: 240, step: 2 }
+            { min: 50, max: 400, step: 10 }
           ),
-
-          // Comportamento
-          createProperty(
-            'showBackButton',
-            currentBlock?.properties?.showBackButton ?? true,
-            PropertyType.SWITCH,
-            'Mostrar botão Voltar',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'showProgress',
-            currentBlock?.properties?.showProgress ?? true,
-            PropertyType.SWITCH,
-            'Mostrar barra de progresso',
-            PropertyCategory.BEHAVIOR
-          ),
-
-          // Progresso
-          createProperty(
-            'progressValue',
-            currentBlock?.properties?.progressValue ?? 0,
-            PropertyType.RANGE,
-            'Progresso (%)',
-            PropertyCategory.BEHAVIOR,
-            { min: 0, max: 100, step: 1 }
-          ),
-          createProperty(
-            'progressMax',
-            currentBlock?.properties?.progressMax ?? 100,
-            PropertyType.NUMBER,
-            'Máximo (%)',
-            PropertyCategory.BEHAVIOR,
-            { min: 1, max: 100 }
-          ),
-
+          
           // Estilo
           createProperty(
             'backgroundColor',
-            currentBlock?.properties?.backgroundColor ?? 'transparent',
+            headerProps.backgroundColor,
             PropertyType.COLOR,
             'Cor de Fundo',
             PropertyCategory.STYLE
+          ),
+          
+          // Layout
+          createProperty(
+            'marginTop',
+            headerProps.marginTop,
+            PropertyType.RANGE,
+            'Margem Superior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4 }
+          ),
+          createProperty(
+            'marginBottom',
+            headerProps.marginBottom,
+            PropertyType.RANGE,
+            'Margem Inferior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4 }
           ),
         ];
       case 'step01-intro':
@@ -1284,401 +1271,138 @@ export const useUnifiedProperties = (
         ];
 
       case 'options-grid':
+        // Usar as propriedades padronizadas do OptionsGridProperties
+        const gridProps = { ...defaultOptionsGridProperties, ...(currentBlock?.properties || {}) };
+        
         return [
           ...getUniversalProperties(),
-          // 📊 LAYOUT DO GRID
+          
+          // Layout
           createProperty(
-            'gridColumns',
-            currentBlock?.properties?.gridColumns ?? 2,
+            'columns',
+            gridProps.columns,
             PropertyType.SELECT,
-            'Colunas do Grid',
+            'Número de Colunas',
             PropertyCategory.LAYOUT,
             {
               options: [
                 { value: 1, label: '1 Coluna' },
                 { value: 2, label: '2 Colunas' },
+                { value: 3, label: '3 Colunas' },
+                { value: 4, label: '4 Colunas' },
               ],
             }
-          ),
-          createProperty(
-            'contentDirection',
-            currentBlock?.properties?.contentDirection || 'vertical',
-            PropertyType.SELECT,
-            'Direção do Conteúdo',
-            PropertyCategory.LAYOUT,
-            {
-              options: [
-                { value: 'vertical', label: 'Vertical (Imagem → Texto)' },
-                { value: 'horizontal', label: 'Horizontal (Lado a Lado)' },
-              ],
-            }
-          ),
-          createProperty(
-            'contentLayout',
-            currentBlock?.properties?.contentLayout || 'image-text',
-            PropertyType.SELECT,
-            'Disposição Texto',
-            PropertyCategory.LAYOUT,
-            {
-              options: [
-                { value: 'image-text', label: 'Imagem | Texto' },
-                { value: 'text-only', label: 'Apenas | Texto' },
-                { value: 'image-only', label: 'Apenas | Imagem' },
-              ],
-            }
-          ),
-          createProperty(
-            'imageSize',
-            currentBlock?.properties?.imageSize || '256x256',
-            PropertyType.SELECT,
-            'Tamanho da Imagem (256x256px)',
-            PropertyCategory.LAYOUT,
-            {
-              options: [
-                { value: '200x200', label: '200x200 pixels' },
-                { value: '256x256', label: '256x256 pixels (Padrão)' },
-                { value: '300x300', label: '300x300 pixels' },
-              ],
-            }
-          ),
-          createProperty(
-            'imageClasses',
-            currentBlock?.properties?.imageClasses || 'w-full h-full object-cover rounded-lg',
-            PropertyType.TEXT,
-            'Classes CSS da Imagem',
-            PropertyCategory.ADVANCED
           ),
           createProperty(
             'gridGap',
-            currentBlock?.properties?.gridGap ?? 8,
-            PropertyType.SELECT,
-            'Espaçamento Grid (gap-2 = 8px)',
+            gridProps.gridGap,
+            PropertyType.RANGE,
+            'Espaçamento (Gap)',
             PropertyCategory.LAYOUT,
-            {
-              options: [
-                { value: 2, label: 'gap-0.5 (2px)' },
-                { value: 4, label: 'gap-1 (4px)' },
-                { value: 8, label: 'gap-2 (8px) - Padrão' },
-                { value: 16, label: 'gap-4 (16px)' },
-              ],
-            }
+            { min: 0, max: 48, step: 4 }
           ),
-
-          // 📝 EDITOR DE OPÇÕES
+          
+          // Imagens
           createProperty(
-            'options',
-            // 🎯 FIX: Não sobrescrever opções existentes com valor padrão
-            currentBlock?.properties?.options && currentBlock.properties.options.length > 0
-              ? currentBlock.properties.options // Usar opções existentes
-              : currentBlock?.content?.options && currentBlock.content.options.length > 0
-                ? currentBlock.content.options // Fallback para content.options
-                : [
-                    // Só usar padrão se não houver opções em lugar nenhum
-                    {
-                      id: 'option-a',
-                      text: 'Amo roupas confortáveis e práticas para o dia a dia.',
-                      image: '',
-                      points: 1,
-                      category: 'Casual',
-                    },
-                  ],
-            PropertyType.ARRAY,
-            'Lista de Opções',
+            'showImages',
+            gridProps.showImages,
+            PropertyType.SWITCH,
+            'Mostrar Imagens',
             PropertyCategory.CONTENT
           ),
           createProperty(
-            'enableAddOption',
-            currentBlock?.properties?.enableAddOption !== false,
-            PropertyType.SWITCH,
-            'Permitir Adicionar Opções',
-            PropertyCategory.BEHAVIOR
+            'imageSize',
+            gridProps.imageSize,
+            PropertyType.SELECT,
+            'Tamanho da Imagem',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'small', label: 'Pequena (200x200)' },
+                { value: 'medium', label: 'Média (256x256)' },
+                { value: 'large', label: 'Grande (300x300)' },
+              ],
+            }
           ),
-
-          // ⚖️ VALIDAÇÕES
+          createProperty(
+            'imagePosition',
+            gridProps.imagePosition,
+            PropertyType.SELECT,
+            'Posição da Imagem',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'top', label: 'Superior' },
+                { value: 'left', label: 'Esquerda' },
+                { value: 'right', label: 'Direita' },
+                { value: 'bottom', label: 'Inferior' },
+              ],
+            }
+          ),
+          
+          // Comportamento
           createProperty(
             'multipleSelection',
-            currentBlock?.properties?.multipleSelection !== false,
+            gridProps.multipleSelection,
             PropertyType.SWITCH,
-            'Múltipla Escolha',
+            'Múltipla Seleção',
             PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'minSelections',
-            currentBlock?.properties?.minSelections ?? 1,
-            PropertyType.RANGE,
-            'Mínimo de Seleções',
-            PropertyCategory.BEHAVIOR,
-            { min: 1, max: 8, step: 1 }
           ),
           createProperty(
             'maxSelections',
-            currentBlock?.properties?.maxSelections ?? 3,
+            gridProps.maxSelections,
             PropertyType.RANGE,
             'Máximo de Seleções',
             PropertyCategory.BEHAVIOR,
-            { min: 1, max: 8, step: 1 }
+            { min: 1, max: 10, step: 1 }
           ),
           createProperty(
-            'autoAdvance',
-            currentBlock?.properties?.autoAdvance === true,
-            PropertyType.SWITCH,
-            'Auto-avançar',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'autoAdvanceDelay',
-            currentBlock?.properties?.autoAdvanceDelay ?? 1000,
+            'minSelections',
+            gridProps.minSelections,
             PropertyType.RANGE,
-            'Delay do Auto-avanço (ms)',
+            'Mínimo de Seleções',
             PropertyCategory.BEHAVIOR,
-            { min: 500, max: 3000, step: 100 }
+            { min: 1, max: 10, step: 1 }
           ),
+          
+          // Estilo
           createProperty(
-            'enableButtonWhenValid',
-            currentBlock?.properties?.enableButtonWhenValid !== false,
-            PropertyType.SWITCH,
-            'Ativar Botão Apenas Quando Válido',
-            PropertyCategory.BEHAVIOR
-          ),
-
-          // 🎨 ESTILIZAÇÃO
-          createProperty(
-            'borderWidth',
-            currentBlock?.properties?.borderWidth || 'medium',
-            PropertyType.SELECT,
-            'Espessura das Bordas',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'thin', label: 'Fina (1px)' },
-                { value: 'medium', label: 'Média (2px)' },
-                { value: 'thick', label: 'Grossa (3px)' },
-              ],
-            }
-          ),
-          createProperty(
-            'shadowSize',
-            currentBlock?.properties?.shadowSize || 'small',
-            PropertyType.SELECT,
-            'Tamanho da Sombra',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'none', label: 'Sem Sombra' },
-                { value: 'small', label: 'Pequena' },
-                { value: 'medium', label: 'Média' },
-                { value: 'large', label: 'Grande' },
-              ],
-            }
-          ),
-          createProperty(
-            'optionSpacing',
-            currentBlock?.properties?.optionSpacing || 'none',
-            PropertyType.SELECT,
-            'Espaçamento entre Opções',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'none', label: 'Nenhum (0px)' },
-                { value: 'small', label: 'Pequeno (4px)' },
-                { value: 'medium', label: 'Médio (8px)' },
-                { value: 'large', label: 'Grande (16px)' },
-              ],
-            }
-          ),
-          createProperty(
-            'visualDetail',
-            currentBlock?.properties?.visualDetail || 'simple',
-            PropertyType.SELECT,
-            'Estilo do Detalhe Visual',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'simple', label: 'Simples' },
-                { value: 'modern', label: 'Moderno' },
-                { value: 'elegant', label: 'Elegante' },
-              ],
-            }
-          ),
-
-          // 🔘 PROPRIEDADES DO BOTÃO
-          createProperty(
-            'buttonText',
-            currentBlock?.properties?.buttonText || 'Continuar',
-            PropertyType.TEXT,
-            'Texto do Botão',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'buttonScale',
-            currentBlock?.properties?.buttonScale || '100%',
-            PropertyType.SELECT,
-            'Tamanho Uniforme',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: '50%', label: '50%' },
-                { value: '100%', label: '100%' },
-                { value: '200%', label: '200%' },
-              ],
-            }
-          ),
-          createProperty(
-            'buttonTextColor',
-            currentBlock?.properties?.buttonTextColor || '#FFFFFF',
+            'backgroundColor',
+            gridProps.backgroundColor,
             PropertyType.COLOR,
-            'Cor de Fundo do Texto',
+            'Cor de Fundo',
             PropertyCategory.STYLE
           ),
           createProperty(
-            'buttonContainerColor',
-            currentBlock?.properties?.buttonContainerColor || BRAND_COLORS.primary,
+            'selectedColor',
+            gridProps.selectedColor,
             PropertyType.COLOR,
-            'Cor de Fundo do Container',
+            'Cor de Seleção',
             PropertyCategory.STYLE
           ),
           createProperty(
-            'buttonBorderColor',
-            currentBlock?.properties?.buttonBorderColor || BRAND_COLORS.primary,
+            'hoverColor',
+            gridProps.hoverColor,
             PropertyType.COLOR,
-            'Cor da Borda',
+            'Cor de Hover',
             PropertyCategory.STYLE
-          ),
-          createProperty(
-            'fontFamily',
-            currentBlock?.properties?.fontFamily || 'inherit',
-            PropertyType.SELECT,
-            'Família da Fonte',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'inherit', label: 'Padrão' },
-                { value: 'Inter', label: 'Inter' },
-                { value: 'Roboto', label: 'Roboto' },
-                { value: 'Open Sans', label: 'Open Sans' },
-              ],
-            }
-          ),
-          createProperty(
-            'buttonAlignment',
-            currentBlock?.properties?.buttonAlignment || 'center',
-            PropertyType.SELECT,
-            'Alinhamento',
-            PropertyCategory.LAYOUT,
-            {
-              options: [
-                { value: 'left', label: 'Esquerda' },
-                { value: 'center', label: 'Centro' },
-                { value: 'right', label: 'Direita' },
-              ],
-            }
-          ),
-          createProperty(
-            'shadowType',
-            currentBlock?.properties?.shadowType || 'none',
-            PropertyType.SELECT,
-            'Tipo de Sombra',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'none', label: 'Sem Sombra' },
-                { value: 'small', label: 'Pequena' },
-                { value: 'medium', label: 'Média' },
-              ],
-            }
-          ),
-          createProperty(
-            'shadowColor',
-            currentBlock?.properties?.shadowColor || '#000000',
-            PropertyType.COLOR,
-            'Cor da Sombra',
-            PropertyCategory.STYLE
-          ),
-          createProperty(
-            'visualEffect',
-            currentBlock?.properties?.visualEffect || 'shine',
-            PropertyType.SELECT,
-            'Efeito Visual',
-            PropertyCategory.STYLE,
-            {
-              options: [
-                { value: 'none', label: 'Nenhum' },
-                { value: 'shine', label: 'Brilho Deslizante' },
-                { value: 'pulse', label: 'Pulsação' },
-                { value: 'hover', label: 'Efeito Hover' },
-              ],
-            }
           ),
           createProperty(
             'borderRadius',
-            currentBlock?.properties?.borderRadius ?? 7,
+            gridProps.borderRadius,
             PropertyType.RANGE,
-            'Raio da Borda',
+            'Borda Arredondada',
             PropertyCategory.STYLE,
-            { min: 0, max: 50, step: 1, unit: 'px' }
+            { min: 0, max: 24, step: 2 }
           ),
+          
+          // Opções
           createProperty(
-            'hoverOpacity',
-            currentBlock?.properties?.hoverOpacity ?? 75,
-            PropertyType.RANGE,
-            'Opacidade no Hover',
-            PropertyCategory.STYLE,
-            { min: 50, max: 100, step: 5, unit: '%' }
-          ),
-          createProperty(
-            'buttonAction',
-            currentBlock?.properties?.buttonAction || 'next-step',
-            PropertyType.SELECT,
-            'Ação do Botão',
-            PropertyCategory.BEHAVIOR,
-            {
-              options: [
-                { value: 'next-step', label: 'Próxima Etapa' },
-                { value: 'specific-step', label: 'Etapa Específica' },
-                { value: 'url', label: 'URL Externa' },
-              ],
-            }
-          ),
-          createProperty(
-            'targetUrl',
-            currentBlock?.properties?.targetUrl || '',
-            PropertyType.URL,
-            'URL de Destino',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'linkTarget',
-            currentBlock?.properties?.linkTarget || '_blank',
-            PropertyType.SELECT,
-            'Destino do Link',
-            PropertyCategory.BEHAVIOR,
-            {
-              options: [
-                { value: '_self', label: 'Mesma Aba (_self)' },
-                { value: '_blank', label: 'Nova Aba (_blank)' },
-              ],
-            }
-          ),
-          createProperty(
-            'requireValidInput',
-            currentBlock?.properties?.requireValidInput !== false,
-            PropertyType.SWITCH,
-            'Requer Input Válido',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'disabled',
-            currentBlock?.properties?.disabled === true,
-            PropertyType.SWITCH,
-            'Desabilitado',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'componentId',
-            currentBlock?.properties?.componentId || 'step-2-block-options-grid-pos-1',
-            PropertyType.TEXT,
-            'ID do Componente',
-            PropertyCategory.ADVANCED
+            'options',
+            gridProps.options,
+            PropertyType.ARRAY,
+            'Lista de Opções',
+            PropertyCategory.CONTENT
           ),
         ];
 
