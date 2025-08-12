@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { defaultHeaderProperties } from '@/config/headerPropertiesMapping';
 import { defaultOptionsGridProperties } from '@/config/optionsGridPropertiesMapping';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 /**
  * 🎯 Enumerações e tipos fundamentais
@@ -521,10 +521,10 @@ export const useUnifiedProperties = (
       case 'quiz-intro-header':
         // Usar as propriedades padronizadas do HeaderProperties
         const headerProps = { ...defaultHeaderProperties, ...(currentBlock?.properties || {}) };
-        
+
         return [
           ...getUniversalProperties(),
-          
+
           // Logo
           createProperty(
             'logoUrl',
@@ -556,7 +556,7 @@ export const useUnifiedProperties = (
             PropertyCategory.STYLE,
             { min: 50, max: 400, step: 10 }
           ),
-          
+
           // Estilo
           createProperty(
             'backgroundColor',
@@ -565,7 +565,7 @@ export const useUnifiedProperties = (
             'Cor de Fundo',
             PropertyCategory.STYLE
           ),
-          
+
           // Layout
           createProperty(
             'marginTop',
@@ -582,96 +582,6 @@ export const useUnifiedProperties = (
             'Margem Inferior',
             PropertyCategory.LAYOUT,
             { min: 0, max: 100, step: 4 }
-          ),
-        ];
-      case 'step01-intro':
-        return [
-          ...getUniversalProperties(),
-          // Conteúdo configurável
-          createProperty(
-            'title',
-            currentBlock?.properties?.title || 'Bem-vindo ao Quiz',
-            PropertyType.TEXT,
-            'Título Principal',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'descriptionTop',
-            currentBlock?.properties?.descriptionTop || '',
-            PropertyType.TEXTAREA,
-            'Descrição Superior',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'descriptionBottom',
-            currentBlock?.properties?.descriptionBottom || '',
-            PropertyType.TEXTAREA,
-            'Descrição Inferior',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'imageIntro',
-            currentBlock?.properties?.imageIntro || '',
-            PropertyType.UPLOAD,
-            'Imagem de Introdução',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'inputLabel',
-            currentBlock?.properties?.inputLabel || 'Seu Nome',
-            PropertyType.TEXT,
-            'Label do Input',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'inputPlaceholder',
-            currentBlock?.properties?.inputPlaceholder || 'Digite aqui...',
-            PropertyType.TEXT,
-            'Placeholder do Input',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'buttonText',
-            currentBlock?.properties?.buttonText || 'Continuar',
-            PropertyType.TEXT,
-            'Texto do Botão',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'privacyText',
-            currentBlock?.properties?.privacyText || '',
-            PropertyType.TEXTAREA,
-            'Texto de Privacidade',
-            PropertyCategory.CONTENT
-          ),
-          createProperty(
-            'footerText',
-            currentBlock?.properties?.footerText || '',
-            PropertyType.TEXT,
-            'Texto do Rodapé',
-            PropertyCategory.CONTENT
-          ),
-          // Configurações visuais
-          createProperty(
-            'showImage',
-            currentBlock?.properties?.showImage !== false,
-            PropertyType.SWITCH,
-            'Mostrar Imagem',
-            PropertyCategory.STYLE
-          ),
-          createProperty(
-            'showInput',
-            currentBlock?.properties?.showInput !== false,
-            PropertyType.SWITCH,
-            'Mostrar Campo de Input',
-            PropertyCategory.STYLE
-          ),
-          createProperty(
-            'required',
-            currentBlock?.properties?.required !== false,
-            PropertyType.SWITCH,
-            'Campo Obrigatório',
-            PropertyCategory.BEHAVIOR
           ),
         ];
 
@@ -1273,10 +1183,10 @@ export const useUnifiedProperties = (
       case 'options-grid':
         // Usar as propriedades padronizadas do OptionsGridProperties
         const gridProps = { ...defaultOptionsGridProperties, ...(currentBlock?.properties || {}) };
-        
+
         return [
           ...getUniversalProperties(),
-          
+
           // Layout
           createProperty(
             'columns',
@@ -1301,7 +1211,7 @@ export const useUnifiedProperties = (
             PropertyCategory.LAYOUT,
             { min: 0, max: 48, step: 4 }
           ),
-          
+
           // Imagens
           createProperty(
             'showImages',
@@ -1339,7 +1249,7 @@ export const useUnifiedProperties = (
               ],
             }
           ),
-          
+
           // Comportamento
           createProperty(
             'multipleSelection',
@@ -1364,7 +1274,7 @@ export const useUnifiedProperties = (
             PropertyCategory.BEHAVIOR,
             { min: 1, max: 10, step: 1 }
           ),
-          
+
           // Estilo
           createProperty(
             'backgroundColor',
@@ -1395,7 +1305,7 @@ export const useUnifiedProperties = (
             PropertyCategory.STYLE,
             { min: 0, max: 24, step: 2 }
           ),
-          
+
           // Opções
           createProperty(
             'options',
