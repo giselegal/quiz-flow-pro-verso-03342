@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // Componentes modernos
 import {
@@ -8,7 +8,7 @@ import {
   PricingCard,
   InteractiveProgressBar,
   SocialProofBanner,
-} from "./ModernComponents";
+} from './ModernComponents';
 
 // Componentes básicos
 import {
@@ -30,10 +30,10 @@ import {
   Rows3,
   ShoppingCart,
   ArrowDown,
-} from "lucide-react";
+} from 'lucide-react';
 
 // 🚀 SUPABASE: Integração de dados
-import { saveQuizResponse } from "../services/quizSupabaseService";
+import { saveQuizResponse } from '../services/quizSupabaseService';
 
 interface DynamicBlockRendererProps {
   pageId: string;
@@ -51,7 +51,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   pageId,
   blockId,
   fallback = null,
-  className = "",
+  className = '',
   style = {},
   // 🚀 SUPABASE: Props de integração
   enableSupabaseTracking = true,
@@ -59,20 +59,20 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   userName,
 }) => {
   // Para fins de demonstração, vamos simular props baseadas no blockId
-  const componentType = blockId || "default";
+  const componentType = blockId || 'default';
 
   // 🚀 SUPABASE: Função helper para tracking de eventos
   const trackEvent = async (
     eventName:
-      | "quiz_start"
-      | "quiz_complete"
-      | "checkout_click"
-      | "step_view"
-      | "step_complete"
-      | "quiz_abandon"
-      | "button_click"
-      | "option_select"
-      | "result_view",
+      | 'quiz_start'
+      | 'quiz_complete'
+      | 'checkout_click'
+      | 'step_view'
+      | 'step_complete'
+      | 'quiz_abandon'
+      | 'button_click'
+      | 'option_select'
+      | 'result_view',
     eventData: any = {}
   ) => {
     if (enableSupabaseTracking) {
@@ -88,51 +88,51 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
         });
         console.log(`🚀 Supabase: Evento ${eventName} rastreado`);
       } catch (error) {
-        console.error("❌ Erro ao rastrear evento:", error);
+        console.error('❌ Erro ao rastrear evento:', error);
       }
     }
   };
 
   const props: any = {
-    question: "Qual dessas opções representa melhor seu estilo?",
-    questionId: "question-1",
+    question: 'Qual dessas opções representa melhor seu estilo?',
+    questionId: 'question-1',
     allowMultiple: true,
     maxSelections: 3,
     showImages: true,
     autoAdvance: false,
-    height: "2rem",
+    height: '2rem',
     options: [
       {
-        id: "1",
-        text: "Clássico e elegante",
-        styleCategory: "Clássico",
+        id: '1',
+        text: 'Clássico e elegante',
+        styleCategory: 'Clássico',
         points: 2,
-        keywords: ["elegante", "sofisticado"],
+        keywords: ['elegante', 'sofisticado'],
       },
       {
-        id: "2",
-        text: "Moderno e descolado",
-        styleCategory: "Contemporâneo",
+        id: '2',
+        text: 'Moderno e descolado',
+        styleCategory: 'Contemporâneo',
         points: 3,
-        keywords: ["moderno", "descolado"],
+        keywords: ['moderno', 'descolado'],
       },
       {
-        id: "3",
-        text: "Natural e autêntico",
-        styleCategory: "Natural",
+        id: '3',
+        text: 'Natural e autêntico',
+        styleCategory: 'Natural',
         points: 1,
-        keywords: ["natural", "autêntico"],
+        keywords: ['natural', 'autêntico'],
       },
     ],
-    title: "Descubra Seu Estilo",
-    subtitle: "Um quiz personalizado para descobrir seu estilo único",
-    buttonText: "Começar Quiz Agora",
-    text: "Texto de exemplo",
-    content: "Conteúdo de exemplo",
-    message: "Analisando suas respostas...",
-    src: "",
-    alt: "Imagem",
-    caption: "",
+    title: 'Descubra Seu Estilo',
+    subtitle: 'Um quiz personalizado para descobrir seu estilo único',
+    buttonText: 'Começar Quiz Agora',
+    text: 'Texto de exemplo',
+    content: 'Conteúdo de exemplo',
+    message: 'Analisando suas respostas...',
+    src: '',
+    alt: 'Imagem',
+    caption: '',
     showPercentages: true,
     showSecondaryStyles: true,
     maxSecondaryStyles: 2,
@@ -141,7 +141,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
   // Renderizar componente baseado no tipo
   const renderComponent = () => {
     switch (componentType) {
-      case "quiz-transition":
+      case 'quiz-transition':
         return (
           <div className="min-h-[400px] bg-gradient-to-br from-[#432818] to-[#6B5B73] rounded-xl flex items-center justify-center text-white">
             <div className="text-center max-w-md mx-auto p-8">
@@ -150,9 +150,9 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </div>
               <h3
                 className="text-2xl font-semibold mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                {props.message || "Analisando suas respostas..."}
+                {props.message || 'Analisando suas respostas...'}
               </h3>
               <div className="w-full bg-white/20 rounded-full h-2 mb-4">
                 <div className="bg-[#B89B7A] h-2 rounded-full w-2/3 animate-pulse"></div>
@@ -163,47 +163,47 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
         );
 
       // COMPONENTES BÁSICOS
-      case "heading":
+      case 'heading':
         return (
           <div className="py-4">
             <h2
               className="text-3xl font-bold text-[#432818] leading-tight"
-              style={{ fontFamily: "Playfair Display, serif" }}
+              style={{ fontFamily: 'Playfair Display, serif' }}
             >
-              {props.text || "Heading"}
+              {props.text || 'Heading'}
             </h2>
           </div>
         );
 
-      case "paragraph":
+      case 'paragraph':
         return (
           <div className="py-3">
-            <p style={{ color: "#6B4F43" }}>{props.text || "Your paragraph text here"}</p>
+            <p style={{ color: '#6B4F43' }}>{props.text || 'Your paragraph text here'}</p>
           </div>
         );
 
-      case "button":
+      case 'button':
         return (
           <div className="py-4">
             <button className="bg-gradient-to-r from-[#B89B7A] to-[#432818] hover:from-[#432818] hover:to-[#B89B7A] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-              {props.text || "Click me"}
+              {props.text || 'Click me'}
             </button>
           </div>
         );
 
-      case "image":
+      case 'image':
         return (
           <div className="py-4">
             <div className="relative rounded-xl overflow-hidden shadow-lg">
               {props.src ? (
                 <img
                   src={props.src}
-                  alt={props.alt || "Image"}
+                  alt={props.alt || 'Image'}
                   className="w-full h-auto object-cover"
                 />
               ) : (
                 <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-64 flex items-center justify-center">
-                  <div style={{ color: "#8B7355" }}>
+                  <div style={{ color: '#8B7355' }}>
                     <ImageIcon className="w-12 h-12 mx-auto mb-2" />
                     <p>Adicione uma imagem</p>
                   </div>
@@ -216,91 +216,91 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "container":
+      case 'container':
         return (
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="space-y-4">
-              {props.title && <h3 style={{ borderColor: "#E5DDD5" }}>{props.title}</h3>}
-              <div style={{ color: "#6B4F43" }}>{props.content || "Container content here"}</div>
+              {props.title && <h3 style={{ borderColor: '#E5DDD5' }}>{props.title}</h3>}
+              <div style={{ color: '#6B4F43' }}>{props.content || 'Container content here'}</div>
             </div>
           </div>
         );
 
-      case "divider":
+      case 'divider':
         return (
           <div className="py-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div style={{ borderColor: "#E5DDD5" }}></div>
+                <div style={{ borderColor: '#E5DDD5' }}></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span style={{ color: "#8B7355" }}>{props.text || ""}</span>
+                <span style={{ color: '#8B7355' }}>{props.text || ''}</span>
               </div>
             </div>
           </div>
         );
 
-      case "spacer":
-        return <div style={{ height: props.height || "2rem" }}></div>;
+      case 'spacer':
+        return <div style={{ height: props.height || '2rem' }}></div>;
 
       // COMPONENTES DE LAYOUT
-      case "flex-container-horizontal":
+      case 'flex-container-horizontal':
         return (
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="text-center flex-1 min-w-[200px]">
               <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
                 <StretchHorizontal className="w-6 h-6 text-white" />
               </div>
               <h4 className="font-semibold text-[#432818] mb-2">Container Horizontal</h4>
-              <p style={{ color: "#6B4F43" }}>Elementos organizados lado a lado</p>
+              <p style={{ color: '#6B4F43' }}>Elementos organizados lado a lado</p>
             </div>
             <div className="text-center flex-1 min-w-[200px]">
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 1</p>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 1</p>
               </div>
             </div>
             <div className="text-center flex-1 min-w-[200px]">
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 2</p>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 2</p>
               </div>
             </div>
           </div>
         );
 
-      case "flex-container-vertical":
+      case 'flex-container-vertical':
         return (
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="text-center">
               <div className="w-12 h-12 bg-[#B89B7A] rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Rows3 className="w-6 h-6 text-white" />
               </div>
               <h4 className="font-semibold text-[#432818] mb-2">Container Vertical</h4>
-              <p style={{ color: "#6B4F43" }}>Elementos organizados verticalmente</p>
+              <p style={{ color: '#6B4F43' }}>Elementos organizados verticalmente</p>
             </div>
             <div className="space-y-3">
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 1</p>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 1</p>
               </div>
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 2</p>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 2</p>
               </div>
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <p style={{ color: "#8B7355" }}>Espaço para conteúdo 3</p>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <p style={{ color: '#8B7355' }}>Espaço para conteúdo 3</p>
               </div>
             </div>
           </div>
         );
 
       // COMPONENTES MODERNOS AVANÇADOS
-      case "testimonial-slider":
+      case 'testimonial-slider':
         return <TestimonialSlider autoPlay={true} interval={5000} />;
 
-      case "countdown-timer-real":
+      case 'countdown-timer-real':
         return (
           <CountdownTimer title="⏰ Oferta Limitada!" urgencyText="Aproveite enquanto há tempo" />
         );
 
-      case "pricing-card-modern":
+      case 'pricing-card-modern':
         return (
           <PricingCard
             title="Transformação Completa"
@@ -311,7 +311,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           />
         );
 
-      case "progress-bar-modern":
+      case 'progress-bar-modern':
         return (
           <InteractiveProgressBar
             currentStep={props.currentStep || 8}
@@ -321,11 +321,11 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           />
         );
 
-      case "social-proof":
+      case 'social-proof':
         return <SocialProofBanner showLiveCounter={true} />;
 
       // BLOCOS DE QUIZ CONFIGURÁVEIS
-      case "quiz-question":
+      case 'quiz-question':
         return (
           <div className="bg-white border border-[#B89B7A] rounded-xl p-6 shadow-lg">
             <div className="text-center mb-6">
@@ -333,12 +333,12 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <HelpCircle className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-[#432818] mb-2">
-                {props.question || "Qual dessas opções representa melhor seu estilo?"}
+                {props.question || 'Qual dessas opções representa melhor seu estilo?'}
               </h3>
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 {props.allowMultiple
                   ? `Selecione até ${props.maxSelections || 3} opções`
-                  : "Selecione uma opção"}
+                  : 'Selecione uma opção'}
               </p>
             </div>
 
@@ -346,18 +346,18 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               {(
                 props.options || [
                   {
-                    id: "1",
-                    text: "Clássico e elegante",
-                    styleCategory: "Clássico",
+                    id: '1',
+                    text: 'Clássico e elegante',
+                    styleCategory: 'Clássico',
                   },
                   {
-                    id: "2",
-                    text: "Moderno e descolado",
-                    styleCategory: "Contemporâneo",
+                    id: '2',
+                    text: 'Moderno e descolado',
+                    styleCategory: 'Contemporâneo',
                   },
                 ]
               ).map((option: any) => (
-                <div key={option.id} style={{ borderColor: "#E5DDD5" }}>
+                <div key={option.id} style={{ borderColor: '#E5DDD5' }}>
                   <div className="font-medium text-[#432818]">{option.text}</div>
                   {option.styleCategory && (
                     <div className="text-sm text-[#B89B7A] mt-1">
@@ -370,7 +370,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "quiz-question-configurable":
+      case 'quiz-question-configurable':
         return (
           <div className="bg-gradient-to-br from-white to-[#f9f4ef] border-2 border-[#B89B7A] rounded-xl p-8 shadow-xl">
             <div className="text-center mb-8">
@@ -379,13 +379,13 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </div>
               <h3
                 className="text-2xl font-bold text-[#432818] mb-3"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                {props.question || "Questão Configurável Avançada"}
+                {props.question || 'Questão Configurável Avançada'}
               </h3>
               <div className="flex justify-center gap-4 text-sm">
                 <span className="bg-[#B89B7A] text-white px-3 py-1 rounded-full">
-                  ID: {props.questionId || "question-1"}
+                  ID: {props.questionId || 'question-1'}
                 </span>
                 {props.autoAdvance && (
                   <span className="bg-green-500 text-white px-3 py-1 rounded-full">
@@ -399,34 +399,34 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               {(
                 props.options || [
                   {
-                    id: "1",
-                    text: "Clássico e elegante",
-                    styleCategory: "Clássico",
+                    id: '1',
+                    text: 'Clássico e elegante',
+                    styleCategory: 'Clássico',
                     points: 2,
                   },
                   {
-                    id: "2",
-                    text: "Moderno e descolado",
-                    styleCategory: "Contemporâneo",
+                    id: '2',
+                    text: 'Moderno e descolado',
+                    styleCategory: 'Contemporâneo',
                     points: 3,
                   },
                   {
-                    id: "3",
-                    text: "Natural e autêntico",
-                    styleCategory: "Natural",
+                    id: '3',
+                    text: 'Natural e autêntico',
+                    styleCategory: 'Natural',
                     points: 1,
                   },
                 ]
               ).map((option: any) => (
-                <div key={option.id} style={{ borderColor: "#E5DDD5" }}>
+                <div key={option.id} style={{ borderColor: '#E5DDD5' }}>
                   <div className="font-semibold text-[#432818] mb-2">{option.text}</div>
-                  <div style={{ color: "#8B7355" }}>
+                  <div style={{ color: '#8B7355' }}>
                     <div>
-                      Categoria:{" "}
+                      Categoria:{' '}
                       <span className="text-[#B89B7A] font-medium">{option.styleCategory}</span>
                     </div>
                     <div>
-                      Pontos:{" "}
+                      Pontos:{' '}
                       <span className="bg-[#432818] text-white px-2 py-0.5 rounded">
                         {option.points}
                       </span>
@@ -434,7 +434,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                     {option.keywords && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {option.keywords.map((keyword: string, idx: number) => (
-                          <span key={idx} style={{ color: "#6B4F43" }}>
+                          <span key={idx} style={{ color: '#6B4F43' }}>
                             {keyword}
                           </span>
                         ))}
@@ -447,7 +447,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "quiz-result-calculated":
+      case 'quiz-result-calculated':
         return (
           <div className="bg-gradient-to-br from-[#432818] to-[#6B5B73] rounded-xl p-8 text-white shadow-2xl">
             <div className="text-center mb-8">
@@ -456,7 +456,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </div>
               <h3
                 className="text-3xl font-bold mb-2"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Seu Resultado Calculado
               </h3>
@@ -489,7 +489,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "quiz-start-page":
+      case 'quiz-start-page':
         return (
           <div className="min-h-[500px] bg-gradient-to-br from-[#f9f4ef] via-white to-[#f9f4ef] rounded-xl p-8 text-center">
             <div className="max-w-2xl mx-auto">
@@ -499,14 +499,14 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
 
               <h1
                 className="text-4xl md:text-5xl font-bold text-[#432818] mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                {props.title || "Descubra Seu Estilo"}
+                {props.title || 'Descubra Seu Estilo'}
               </h1>
 
               <p className="text-lg text-[#6B5B73] mb-8 leading-relaxed">
                 {props.subtitle ||
-                  "Um quiz personalizado para descobrir seu estilo único e transformar seu guarda-roupa"}
+                  'Um quiz personalizado para descobrir seu estilo único e transformar seu guarda-roupa'}
               </p>
 
               <div className="bg-white rounded-lg p-6 shadow-lg mb-8">
@@ -516,34 +516,34 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                       <Clock className="w-6 h-6 text-[#B89B7A]" />
                     </div>
                     <div className="font-semibold text-[#432818]">5 minutos</div>
-                    <div style={{ color: "#6B4F43" }}>Duração estimada</div>
+                    <div style={{ color: '#6B4F43' }}>Duração estimada</div>
                   </div>
                   <div>
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <HelpCircle className="w-6 h-6 text-[#B89B7A]" />
                     </div>
                     <div className="font-semibold text-[#432818]">16 questões</div>
-                    <div style={{ color: "#6B4F43" }}>Cuidadosamente selecionadas</div>
+                    <div style={{ color: '#6B4F43' }}>Cuidadosamente selecionadas</div>
                   </div>
                   <div>
                     <div className="w-12 h-12 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Award className="w-6 h-6 text-[#B89B7A]" />
                     </div>
                     <div className="font-semibold text-[#432818]">Resultado único</div>
-                    <div style={{ color: "#6B4F43" }}>Personalizado para você</div>
+                    <div style={{ color: '#6B4F43' }}>Personalizado para você</div>
                   </div>
                 </div>
               </div>
 
               <button className="bg-gradient-to-r from-[#B89B7A] to-[#432818] hover:from-[#432818] hover:to-[#B89B7A] text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                {props.buttonText || "Começar Quiz Agora"}
+                {props.buttonText || 'Começar Quiz Agora'}
               </button>
             </div>
           </div>
         );
 
       // COMPONENTES ESPECÍFICOS DA PÁGINA DE RESULTADO
-      case "header-component-real":
+      case 'header-component-real':
         return (
           <div className="bg-white shadow-sm border-b border-[#B89B7A]/20 py-6">
             <div className="container mx-auto px-4 max-w-4xl">
@@ -557,7 +557,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <div>
                     <h1
                       className="text-2xl font-bold text-[#432818]"
-                      style={{ fontFamily: "Playfair Display, serif" }}
+                      style={{ fontFamily: 'Playfair Display, serif' }}
                     >
                       Seu Resultado Personalizado
                     </h1>
@@ -569,13 +569,13 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "result-header-inline":
+      case 'result-header-inline':
         return (
           <div className="bg-white p-6 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
             <div className="text-center mb-6">
               <h2
                 className="text-3xl font-bold text-[#432818] mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 🎉 Parabéns! Descobrimos seu estilo
               </h2>
@@ -587,7 +587,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <div className="w-full bg-[#F3E8E6] rounded-full h-3">
                   <div
                     className="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] h-3 rounded-full"
-                    style={{ width: "92%" }}
+                    style={{ width: '92%' }}
                   ></div>
                 </div>
               </div>
@@ -597,13 +597,13 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 <h3 className="text-xl font-semibold text-[#432818] mb-3">
                   Estilo Romântico Clássico
                 </h3>
-                <p style={{ color: "#6B4F43" }}>
+                <p style={{ color: '#6B4F43' }}>
                   Você possui uma elegância natural que combina feminilidade e sofisticação. Seu
                   estilo é atemporal, com peças que valorizam sua personalidade única.
                 </p>
                 <div className="bg-[#f9f4ef] rounded-lg p-4">
                   <h4 className="font-medium text-[#432818] mb-2">Características principais:</h4>
-                  <ul style={{ color: "#6B4F43" }}>
+                  <ul style={{ color: '#6B4F43' }}>
                     <li>• Feminilidade e delicadeza</li>
                     <li>• Elegância atemporal</li>
                     <li>• Versatilidade para todas as ocasiões</li>
@@ -621,20 +621,20 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "before-after-component-real":
+      case 'before-after-component-real':
         return (
           <div className="bg-gradient-to-br from-[#f9f4ef] to-white p-8 rounded-xl mb-8">
             <h3
               className="text-2xl font-bold text-center text-[#432818] mb-6"
-              style={{ fontFamily: "Playfair Display, serif" }}
+              style={{ fontFamily: 'Playfair Display, serif' }}
             >
               A Transformação que Você Merece
             </h3>
             <div className="grid md:grid-cols-2 gap-8">
               <div className="text-center">
-                <div style={{ backgroundColor: "#E5DDD5" }}>
-                  <h4 style={{ color: "#6B4F43" }}>Antes</h4>
-                  <p style={{ color: "#6B4F43" }}>
+                <div style={{ backgroundColor: '#E5DDD5' }}>
+                  <h4 style={{ color: '#6B4F43' }}>Antes</h4>
+                  <p style={{ color: '#6B4F43' }}>
                     Guarda-roupa desorganizado, compras por impulso, dúvidas sobre o que vestir a
                     cada ocasião.
                   </p>
@@ -652,14 +652,14 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "motivation-component-real":
+      case 'motivation-component-real':
         return (
           <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
             <div className="text-center mb-6">
               <Award className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
               <h3
                 className="text-2xl font-bold text-[#432818] mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Por que Investir no Seu Estilo?
               </h3>
@@ -670,58 +670,58 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <Star className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Confiança</h4>
-                <p style={{ color: "#6B4F43" }}>Sinta-se poderosa e autêntica em cada look</p>
+                <p style={{ color: '#6B4F43' }}>Sinta-se poderosa e autêntica em cada look</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Clock className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Praticidade</h4>
-                <p style={{ color: "#6B4F43" }}>Economize tempo decidindo o que vestir</p>
+                <p style={{ color: '#6B4F43' }}>Economize tempo decidindo o que vestir</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-[#B89B7A]/20 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Gift className="w-8 h-8 text-[#B89B7A]" />
                 </div>
                 <h4 className="font-semibold text-[#432818] mb-2">Economia</h4>
-                <p style={{ color: "#6B4F43" }}>Compre apenas o que realmente funciona</p>
+                <p style={{ color: '#6B4F43' }}>Compre apenas o que realmente funciona</p>
               </div>
             </div>
           </div>
         );
 
-      case "bonus-component-real":
+      case 'bonus-component-real':
         return (
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-xl border border-green-200 mb-8">
             <div className="text-center mb-6">
               <Gift className="w-12 h-12 text-green-600 mx-auto mb-4" />
               <h3
                 className="text-2xl font-bold text-green-800 mb-2"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Bônus Exclusivos
               </h3>
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 Conteúdos extras para potencializar seus resultados
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white p-4 rounded-lg border border-green-200">
                 <h4 className="font-semibold text-green-800 mb-2">🎯 Guia de Peças-Chave</h4>
-                <p style={{ color: "#6B4F43" }}>As 10 peças essenciais para seu guarda-roupa</p>
+                <p style={{ color: '#6B4F43' }}>As 10 peças essenciais para seu guarda-roupa</p>
               </div>
               <div className="bg-white p-4 rounded-lg border border-green-200">
                 <h4 className="font-semibold text-green-800 mb-2">✨ Visagismo Facial</h4>
-                <p style={{ color: "#6B4F43" }}>Como valorizar seu rosto com as escolhas certas</p>
+                <p style={{ color: '#6B4F43' }}>Como valorizar seu rosto com as escolhas certas</p>
               </div>
             </div>
           </div>
         );
 
-      case "testimonials-component-real":
+      case 'testimonials-component-real':
         return <TestimonialSlider autoPlay={true} interval={5000} />;
 
-      case "cta-section-inline":
+      case 'cta-section-inline':
         return (
           <div className="text-center my-10">
             <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
@@ -736,14 +736,14 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
               onClick={async () => {
                 // 🚀 SUPABASE: Rastrear clique no botão de compra
-                await trackEvent("checkout_click", {
-                  button_text: "Quero meu Guia de Estilo Agora",
-                  location: "result_page_top",
+                await trackEvent('checkout_click', {
+                  button_text: 'Quero meu Guia de Estilo Agora',
+                  location: 'result_page_top',
                 });
 
                 // Redirect para checkout
                 window.location.href =
-                  "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+                  'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
               }}
             >
               <span className="flex items-center justify-center gap-2">
@@ -751,21 +751,21 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                 Quero meu Guia de Estilo Agora
               </span>
             </button>
-            <div style={{ color: "#6B4F43" }}>
+            <div style={{ color: '#6B4F43' }}>
               <Lock className="w-4 h-4" />
               <span>Compra 100% segura</span>
             </div>
           </div>
         );
 
-      case "guarantee-component-real":
+      case 'guarantee-component-real':
         return (
           <div className="bg-[#B89B7A]/10 p-8 rounded-xl border border-[#B89B7A]/30 mb-8">
             <div className="text-center">
               <Shield className="w-12 h-12 text-[#B89B7A] mx-auto mb-4" />
               <h3
                 className="text-2xl font-bold text-[#432818] mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Garantia de 7 Dias
               </h3>
@@ -777,18 +777,18 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "mentor-component-real":
+      case 'mentor-component-real':
         return (
           <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-8">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
                 <h3
                   className="text-2xl font-bold text-[#432818] mb-4"
-                  style={{ fontFamily: "Playfair Display, serif" }}
+                  style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   Sobre Gisele Galvão
                 </h3>
-                <p style={{ color: "#6B4F43" }}>
+                <p style={{ color: '#6B4F43' }}>
                   Consultora de imagem com mais de 10 anos de experiência, já transformou a vida de
                   milhares de mulheres através do poder do estilo pessoal.
                 </p>
@@ -808,12 +808,12 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
           </div>
         );
 
-      case "value-stack-inline":
+      case 'value-stack-inline':
         return (
           <div className="text-center mt-10">
             <h2
               className="text-2xl md:text-3xl font-bold text-[#aa6b5d] mb-6"
-              style={{ fontFamily: "Playfair Display, serif" }}
+              style={{ fontFamily: 'Playfair Display, serif' }}
             >
               Vista-se de Você — na Prática
             </h2>
@@ -843,7 +843,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
                   <span>Valor Total</span>
                   <div className="relative">
                     <span>R$ 175,00</span>
-                    <div style={{ backgroundColor: "#FAF9F7" }}></div>
+                    <div style={{ backgroundColor: '#FAF9F7' }}></div>
                   </div>
                 </div>
               </div>
@@ -851,7 +851,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               <div className="text-center p-4 bg-[#f9f4ef] rounded-lg">
                 <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
                 <p className="text-4xl font-bold text-[#432818]">R$ 39,00</p>
-                <p style={{ color: "#8B7355" }}>Pagamento único</p>
+                <p style={{ color: '#8B7355' }}>Pagamento único</p>
               </div>
             </div>
 
@@ -859,15 +859,15 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
               onClick={async () => {
                 // 🚀 SUPABASE: Rastrear clique no botão de compra
-                await trackEvent("checkout_click", {
-                  button_text: "Garantir Meu Guia + Bônus Especiais",
-                  location: "offer_section_bottom",
-                  offer_price: "R$ 39,00",
+                await trackEvent('checkout_click', {
+                  button_text: 'Garantir Meu Guia + Bônus Especiais',
+                  location: 'offer_section_bottom',
+                  offer_price: 'R$ 39,00',
                 });
 
                 // Redirect para checkout
                 window.location.href =
-                  "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+                  'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
               }}
             >
               <span className="flex items-center justify-center gap-2">
@@ -876,7 +876,7 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
               </span>
             </button>
 
-            <div style={{ color: "#6B4F43" }}>
+            <div style={{ color: '#6B4F43' }}>
               <div className="flex items-center gap-1">
                 <Lock className="w-4 h-4" />
                 <span>Compra segura</span>
@@ -892,28 +892,28 @@ const DynamicBlockRenderer: React.FC<DynamicBlockRendererProps> = ({
       // FALLBACK
       default:
         return (
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="text-center">
-              <div style={{ backgroundColor: "#E5DDD5" }}>
-                <Code style={{ color: "#8B7355" }} />
+              <div style={{ backgroundColor: '#E5DDD5' }}>
+                <Code style={{ color: '#8B7355' }} />
               </div>
-              <h3 style={{ color: "#6B4F43" }}>Componente: {componentType}</h3>
-              <p style={{ color: "#8B7355" }}>
+              <h3 style={{ color: '#6B4F43' }}>Componente: {componentType}</h3>
+              <p style={{ color: '#8B7355' }}>
                 Este componente agora possui um design personalizado
               </p>
               {props.title && (
                 <div className="bg-white rounded-lg p-3 mb-3">
-                  <h4 style={{ color: "#6B4F43" }}>{props.title}</h4>
+                  <h4 style={{ color: '#6B4F43' }}>{props.title}</h4>
                 </div>
               )}
               {props.content && (
                 <div className="bg-white rounded-lg p-3 mb-3">
-                  <p style={{ color: "#6B4F43" }}>{props.content}</p>
+                  <p style={{ color: '#6B4F43' }}>{props.content}</p>
                 </div>
               )}
               {props.text && (
                 <div className="bg-white rounded-lg p-3">
-                  <p style={{ color: "#6B4F43" }}>{props.text}</p>
+                  <p style={{ color: '#6B4F43' }}>{props.text}</p>
                 </div>
               )}
               <div className="mt-4 p-3 bg-[#B89B7A]/10 rounded-lg">

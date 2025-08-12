@@ -1,13 +1,13 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 interface StatsPropertyEditorProps {
   value: string;
@@ -39,7 +39,7 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
         <Input
           id="value"
           value={value}
-          onChange={e => onChange("value", e.target.value)}
+          onChange={e => onChange('value', e.target.value)}
           placeholder="95%"
         />
       </div>
@@ -49,14 +49,14 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
         <Input
           id="label"
           value={label}
-          onChange={e => onChange("label", e.target.value)}
+          onChange={e => onChange('label', e.target.value)}
           placeholder="Satisfação"
         />
       </div>
 
       <div>
         <Label htmlFor="icon">Ícone</Label>
-        <Select value={icon} onValueChange={value => onChange("icon", value)}>
+        <Select value={icon} onValueChange={value => onChange('icon', value)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -73,7 +73,7 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
 
       <div>
         <Label htmlFor="size">Tamanho</Label>
-        <Select value={size} onValueChange={value => onChange("size", value)}>
+        <Select value={size} onValueChange={value => onChange('size', value)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
@@ -91,7 +91,7 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
           id="valueColor"
           type="color"
           value={valueColor}
-          onChange={e => onChange("valueColor", e.target.value)}
+          onChange={e => onChange('valueColor', e.target.value)}
         />
       </div>
 
@@ -101,7 +101,7 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
           id="labelColor"
           type="color"
           value={labelColor}
-          onChange={e => onChange("labelColor", e.target.value)}
+          onChange={e => onChange('labelColor', e.target.value)}
         />
       </div>
 
@@ -111,7 +111,7 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
           id="backgroundColor"
           type="color"
           value={backgroundColor}
-          onChange={e => onChange("backgroundColor", e.target.value)}
+          onChange={e => onChange('backgroundColor', e.target.value)}
         />
       </div>
 
@@ -119,7 +119,7 @@ export const StatsPropertyEditor: React.FC<StatsPropertyEditorProps> = ({
         <Switch
           id="animated"
           checked={animated}
-          onCheckedChange={checked => onChange("animated", checked)}
+          onCheckedChange={checked => onChange('animated', checked)}
         />
         <Label htmlFor="animated">Animação</Label>
       </div>

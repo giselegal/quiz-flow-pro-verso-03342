@@ -1,10 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps, CountdownTimerBlock } from "@/types/blocks";
-import { motion } from "framer-motion";
-import { AlertTriangle, Clock, Flame, Timer } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { InlineEditableText } from "./InlineEditableText";
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps, CountdownTimerBlock } from '@/types/blocks';
+import { motion } from 'framer-motion';
+import { AlertTriangle, Clock, Flame, Timer } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { InlineEditableText } from './InlineEditableText';
 
 interface CountdownTimerBlockProps extends BlockComponentProps {
   block: CountdownTimerBlock;
@@ -19,13 +19,13 @@ interface TimeUnit {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string | undefined,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (!numValue || isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr"; // Margens negativas
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr'; // Margens negativas
   if (numValue < 0) {
     const absValue = Math.abs(numValue);
     if (absValue <= 4) return `-${prefix}-1`;
@@ -68,27 +68,27 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const properties = block?.properties as any; // Type assertion para propriedades dinâmicas
   const {
-    title = "Oferta por Tempo Limitado",
-    subtitle = "Aproveite antes que expire!",
+    title = 'Oferta por Tempo Limitado',
+    subtitle = 'Aproveite antes que expire!',
     endDate,
     durationMinutes = 15,
-    urgencyText = "Restam apenas:",
+    urgencyText = 'Restam apenas:',
     showDays = true,
     showHours = true,
     showMinutes = true,
     showSeconds = true,
-    layout = "cards",
-    theme = "urgent",
+    layout = 'cards',
+    theme = 'urgent',
     autoStart = true,
     showUrgencyMessages = true,
     urgencyThreshold = 5,
-    backgroundColor = "#ffffff",
-    textColor: _textColor = "#432818",
-    accentColor = "#dc2626",
+    backgroundColor = '#ffffff',
+    textColor: _textColor = '#432818',
+    accentColor = '#dc2626',
     pulseAnimation = true,
     showProgress = false,
     // Sistema completo de margens com controles deslizantes
@@ -167,41 +167,41 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
 
   const getThemeClasses = () => {
     switch (theme) {
-      case "elegant":
+      case 'elegant':
         return {
           container:
-            "bg-gradient-to-br from-[#B89B7A] via-[#D4C2A8] to-[#E8D5C4] text-[#432818] shadow-xl",
-          card: "bg-white/90 backdrop-blur-sm border border-[#B89B7A]/30 shadow-lg hover:shadow-xl transition-all duration-300",
-          text: "text-[#432818]",
-          accent: "text-[#B89B7A]",
-          glow: "shadow-[#B89B7A]/25",
+            'bg-gradient-to-br from-[#B89B7A] via-[#D4C2A8] to-[#E8D5C4] text-[#432818] shadow-xl',
+          card: 'bg-white/90 backdrop-blur-sm border border-[#B89B7A]/30 shadow-lg hover:shadow-xl transition-all duration-300',
+          text: 'text-[#432818]',
+          accent: 'text-[#B89B7A]',
+          glow: 'shadow-[#B89B7A]/25',
         };
-      case "minimal":
+      case 'minimal':
         return {
           container:
-            "bg-gradient-to-br from-[#E8D5C4] to-white text-[#432818] border border-[#B89B7A]/20",
-          card: "bg-white border border-[#B89B7A]/20 shadow-sm hover:shadow-md transition-all duration-300",
-          text: "text-[#432818]",
-          accent: "text-[#B89B7A]",
-          glow: "shadow-[#B89B7A]/10",
+            'bg-gradient-to-br from-[#E8D5C4] to-white text-[#432818] border border-[#B89B7A]/20',
+          card: 'bg-white border border-[#B89B7A]/20 shadow-sm hover:shadow-md transition-all duration-300',
+          text: 'text-[#432818]',
+          accent: 'text-[#B89B7A]',
+          glow: 'shadow-[#B89B7A]/10',
         };
-      case "neon":
+      case 'neon':
         return {
-          container: "bg-gradient-to-br from-[#432818] to-black text-[#B89B7A]",
-          card: "bg-[#432818]/80 border border-[#B89B7A] shadow-lg shadow-[#B89B7A]/20 hover:shadow-[#B89B7A]/40 transition-all duration-300",
-          text: "text-[#B89B7A]",
-          accent: "text-[#E8D5C4]",
-          glow: "shadow-[#B89B7A]/30",
+          container: 'bg-gradient-to-br from-[#432818] to-black text-[#B89B7A]',
+          card: 'bg-[#432818]/80 border border-[#B89B7A] shadow-lg shadow-[#B89B7A]/20 hover:shadow-[#B89B7A]/40 transition-all duration-300',
+          text: 'text-[#B89B7A]',
+          accent: 'text-[#E8D5C4]',
+          glow: 'shadow-[#B89B7A]/30',
         };
-      case "urgent":
+      case 'urgent':
       default:
         return {
           container:
-            "bg-gradient-to-br from-red-600 via-red-500 to-orange-600 text-white shadow-xl",
-          card: "bg-white/15 backdrop-blur-sm border border-white/30 shadow-lg hover:bg-white/20 transition-all duration-300",
-          text: "text-white",
-          accent: "text-orange-200",
-          glow: "shadow-red-500/25",
+            'bg-gradient-to-br from-red-600 via-red-500 to-orange-600 text-white shadow-xl',
+          card: 'bg-white/15 backdrop-blur-sm border border-white/30 shadow-lg hover:bg-white/20 transition-all duration-300',
+          text: 'text-white',
+          accent: 'text-orange-200',
+          glow: 'shadow-red-500/25',
         };
     }
   };
@@ -213,73 +213,73 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
 
   const renderTimeUnit = (unit: TimeUnit, index: number) => {
     const shouldShow =
-      (unit.label === "dias" && showDays) ||
-      (unit.label === "horas" && showHours) ||
-      (unit.label === "minutos" && showMinutes) ||
-      (unit.label === "segundos" && showSeconds);
+      (unit.label === 'dias' && showDays) ||
+      (unit.label === 'horas' && showHours) ||
+      (unit.label === 'minutos' && showMinutes) ||
+      (unit.label === 'segundos' && showSeconds);
 
     if (!shouldShow) return null;
 
     switch (layout) {
-      case "compact":
+      case 'compact':
         return (
           <span key={unit.label} className="inline-flex items-baseline gap-1">
             <span
               className={cn(
-                "text-xl sm:text-2xl md:text-3xl font-bold tabular-nums px-2 py-1 rounded-lg transition-all duration-300",
-                pulseAnimation && isUrgent && "animate-pulse",
-                theme === "elegant"
-                  ? "bg-white/20 text-[#432818] shadow-lg"
-                  : theme === "minimal"
-                    ? "bg-[#E8D5C4]/30 text-[#432818]"
-                    : theme === "neon"
-                      ? "bg-[#B89B7A]/20 text-[#B89B7A] shadow-lg shadow-[#B89B7A]/25"
-                      : "bg-white/20 text-white",
+                'text-xl sm:text-2xl md:text-3xl font-bold tabular-nums px-2 py-1 rounded-lg transition-all duration-300',
+                pulseAnimation && isUrgent && 'animate-pulse',
+                theme === 'elegant'
+                  ? 'bg-white/20 text-[#432818] shadow-lg'
+                  : theme === 'minimal'
+                    ? 'bg-[#E8D5C4]/30 text-[#432818]'
+                    : theme === 'neon'
+                      ? 'bg-[#B89B7A]/20 text-[#B89B7A] shadow-lg shadow-[#B89B7A]/25'
+                      : 'bg-white/20 text-white',
                 themeClasses.text,
                 // Margens universais com controles deslizantes
-                getMarginClass(marginTop, "top"),
-                getMarginClass(marginBottom, "bottom"),
-                getMarginClass(marginLeft, "left"),
-                getMarginClass(marginRight, "right")
+                getMarginClass(marginTop, 'top'),
+                getMarginClass(marginBottom, 'bottom'),
+                getMarginClass(marginLeft, 'left'),
+                getMarginClass(marginRight, 'right')
               )}
             >
-              {unit.value.toString().padStart(2, "0")}
+              {unit.value.toString().padStart(2, '0')}
             </span>
             <span
               className={cn(
-                "text-xs sm:text-sm font-medium uppercase tracking-wider",
+                'text-xs sm:text-sm font-medium uppercase tracking-wider',
                 themeClasses.accent
               )}
             >
               {unit.shortLabel}
             </span>
             {index < 3 && (
-              <span className={cn("mx-0.5 sm:mx-1 text-lg font-bold", themeClasses.accent)}>:</span>
+              <span className={cn('mx-0.5 sm:mx-1 text-lg font-bold', themeClasses.accent)}>:</span>
             )}
           </span>
         );
 
-      case "digital":
+      case 'digital':
         return (
           <div key={unit.label} className="flex flex-col items-center">
             <div
               className={cn(
-                "px-2 py-1 sm:px-3 sm:py-2 rounded-lg font-mono text-xl sm:text-2xl md:text-3xl font-bold border shadow-lg transition-all duration-300 hover:scale-105",
-                theme === "elegant"
-                  ? "bg-[#432818] text-[#B89B7A] border-[#B89B7A]/30 shadow-[#B89B7A]/20"
-                  : theme === "minimal"
-                    ? "bg-white text-[#432818] border-[#B89B7A]/30 shadow-[#B89B7A]/10"
-                    : theme === "neon"
-                      ? "bg-black text-[#B89B7A] border-[#B89B7A] shadow-[#B89B7A]/30"
-                      : "bg-black/90 text-white border-white/30 shadow-white/10",
-                pulseAnimation && isUrgent && "animate-pulse"
+                'px-2 py-1 sm:px-3 sm:py-2 rounded-lg font-mono text-xl sm:text-2xl md:text-3xl font-bold border shadow-lg transition-all duration-300 hover:scale-105',
+                theme === 'elegant'
+                  ? 'bg-[#432818] text-[#B89B7A] border-[#B89B7A]/30 shadow-[#B89B7A]/20'
+                  : theme === 'minimal'
+                    ? 'bg-white text-[#432818] border-[#B89B7A]/30 shadow-[#B89B7A]/10'
+                    : theme === 'neon'
+                      ? 'bg-black text-[#B89B7A] border-[#B89B7A] shadow-[#B89B7A]/30'
+                      : 'bg-black/90 text-white border-white/30 shadow-white/10',
+                pulseAnimation && isUrgent && 'animate-pulse'
               )}
             >
-              {unit.value.toString().padStart(2, "0")}
+              {unit.value.toString().padStart(2, '0')}
             </div>
             <span
               className={cn(
-                "text-xs mt-1 font-medium uppercase tracking-wider",
+                'text-xs mt-1 font-medium uppercase tracking-wider',
                 themeClasses.accent
               )}
             >
@@ -288,11 +288,11 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           </div>
         );
 
-      case "circular":
+      case 'circular':
         const circumference = 2 * Math.PI * 40;
         const strokeDasharray = circumference;
         const strokeDashoffset =
-          circumference - (unit.value / (unit.label === "segundos" ? 60 : 24)) * circumference;
+          circumference - (unit.value / (unit.label === 'segundos' ? 60 : 24)) * circumference;
 
         return (
           <div key={unit.label} className="flex flex-col items-center group">
@@ -315,12 +315,12 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   cy="50"
                   r="40"
                   stroke={
-                    theme === "elegant"
-                      ? "#B89B7A"
-                      : theme === "minimal"
-                        ? "#B89B7A"
-                        : theme === "neon"
-                          ? "#B89B7A"
+                    theme === 'elegant'
+                      ? '#B89B7A'
+                      : theme === 'minimal'
+                        ? '#B89B7A'
+                        : theme === 'neon'
+                          ? '#B89B7A'
                           : accentColor
                   }
                   strokeWidth="6"
@@ -329,15 +329,15 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                   strokeDashoffset={strokeDashoffset}
                   className="transition-all duration-500 drop-shadow-sm"
                   style={{
-                    filter: theme === "neon" ? `drop-shadow(0 0 4px #B89B7A)` : undefined,
+                    filter: theme === 'neon' ? `drop-shadow(0 0 4px #B89B7A)` : undefined,
                   }}
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span
                   className={cn(
-                    "text-base sm:text-lg md:text-xl font-bold tabular-nums transition-all duration-300",
-                    pulseAnimation && isUrgent && "animate-pulse",
+                    'text-base sm:text-lg md:text-xl font-bold tabular-nums transition-all duration-300',
+                    pulseAnimation && isUrgent && 'animate-pulse',
                     themeClasses.text
                   )}
                 >
@@ -347,7 +347,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
             </div>
             <span
               className={cn(
-                "text-xs mt-1 font-medium uppercase tracking-wider",
+                'text-xs mt-1 font-medium uppercase tracking-wider',
                 themeClasses.accent
               )}
             >
@@ -356,33 +356,33 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           </div>
         );
 
-      case "cards":
+      case 'cards':
       default:
         return (
           <motion.div
             key={unit.label}
             initial={{ scale: 1 }}
             animate={{
-              scale: pulseAnimation && isUrgent && unit.label === "segundos" ? [1, 1.05, 1] : 1,
+              scale: pulseAnimation && isUrgent && unit.label === 'segundos' ? [1, 1.05, 1] : 1,
             }}
             transition={{ duration: 1, repeat: Infinity }}
             whileHover={{ scale: 1.02, y: -2 }}
           >
-            <Card className={cn(themeClasses.card, "relative overflow-hidden group")}>
+            <Card className={cn(themeClasses.card, 'relative overflow-hidden group')}>
               <div className="absolute inset-0 bg-gradient-to-br from-[#B89B7A]/5 to-[#E8D5C4]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <CardContent className="p-3 sm:p-4 text-center relative z-10">
                 <div
                   className={cn(
-                    "text-2xl sm:text-3xl md:text-4xl font-bold tabular-nums mb-1 transition-all duration-300",
+                    'text-2xl sm:text-3xl md:text-4xl font-bold tabular-nums mb-1 transition-all duration-300',
                     themeClasses.text,
-                    pulseAnimation && isUrgent && "animate-pulse drop-shadow-lg"
+                    pulseAnimation && isUrgent && 'animate-pulse drop-shadow-lg'
                   )}
                 >
-                  {unit.value.toString().padStart(2, "0")}
+                  {unit.value.toString().padStart(2, '0')}
                 </div>
                 <div
                   className={cn(
-                    "text-xs sm:text-sm font-medium opacity-80 uppercase tracking-wider",
+                    'text-xs sm:text-sm font-medium opacity-80 uppercase tracking-wider',
                     themeClasses.accent
                   )}
                 >
@@ -391,14 +391,14 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
                 {/* Decorative accent */}
                 <div
                   className={cn(
-                    "w-8 h-0.5 mx-auto mt-2 rounded-full bg-gradient-to-r transition-all duration-300",
-                    theme === "elegant"
-                      ? "from-[#B89B7A] to-[#E8D5C4]"
-                      : theme === "minimal"
-                        ? "from-[#B89B7A]/50 to-[#E8D5C4]/50"
-                        : theme === "neon"
-                          ? "from-[#B89B7A] to-[#E8D5C4]"
-                          : "from-orange-200 to-yellow-200"
+                    'w-8 h-0.5 mx-auto mt-2 rounded-full bg-gradient-to-r transition-all duration-300',
+                    theme === 'elegant'
+                      ? 'from-[#B89B7A] to-[#E8D5C4]'
+                      : theme === 'minimal'
+                        ? 'from-[#B89B7A]/50 to-[#E8D5C4]/50'
+                        : theme === 'neon'
+                          ? 'from-[#B89B7A] to-[#E8D5C4]'
+                          : 'from-orange-200 to-yellow-200'
                   )}
                 />
               </CardContent>
@@ -409,10 +409,10 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
   };
 
   const units: TimeUnit[] = [
-    { value: timeLeft.days, label: "dias", shortLabel: "d" },
-    { value: timeLeft.hours, label: "horas", shortLabel: "h" },
-    { value: timeLeft.minutes, label: "minutos", shortLabel: "m" },
-    { value: timeLeft.seconds, label: "segundos", shortLabel: "s" },
+    { value: timeLeft.days, label: 'dias', shortLabel: 'd' },
+    { value: timeLeft.hours, label: 'horas', shortLabel: 'h' },
+    { value: timeLeft.minutes, label: 'minutos', shortLabel: 'm' },
+    { value: timeLeft.seconds, label: 'segundos', shortLabel: 's' },
   ];
 
   const getUrgencyMessage = () => {
@@ -423,7 +423,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          style={{ color: "#432818" }}
+          style={{ color: '#432818' }}
         >
           <AlertTriangle className="w-5 h-5" />
           Oferta Expirada!
@@ -437,14 +437,14 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           animate={{ scale: [1, 1.05, 1] }}
           transition={{ duration: 1, repeat: Infinity }}
           className={cn(
-            "flex items-center justify-center gap-2 font-bold px-4 py-2 rounded-lg border",
-            theme === "elegant"
-              ? "text-[#432818] bg-orange-100 border-orange-200"
-              : theme === "minimal"
-                ? "text-[#432818] bg-[#E8D5C4] border-[#B89B7A]/30"
-                : theme === "neon"
-                  ? "text-orange-400 bg-orange-900/20 border-orange-400/30"
-                  : "text-orange-200 bg-orange-900/20 border-orange-400/30"
+            'flex items-center justify-center gap-2 font-bold px-4 py-2 rounded-lg border',
+            theme === 'elegant'
+              ? 'text-[#432818] bg-orange-100 border-orange-200'
+              : theme === 'minimal'
+                ? 'text-[#432818] bg-[#E8D5C4] border-[#B89B7A]/30'
+                : theme === 'neon'
+                  ? 'text-orange-400 bg-orange-900/20 border-orange-400/30'
+                  : 'text-orange-200 bg-orange-900/20 border-orange-400/30'
           )}
         >
           <Flame className="w-5 h-5" />
@@ -461,9 +461,9 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
     return (
       <div
         className={cn(
-          "bg-gradient-to-br from-[#E8D5C4] to-white p-4 sm:p-6 md:p-8 rounded-xl text-[#432818] flex flex-col items-center justify-center min-h-[150px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer transition-all duration-300 border border-[#B89B7A]/20",
-          isSelected && "ring-2 ring-[#B89B7A]/40 shadow-lg shadow-[#B89B7A]/10",
-          !isSelected && "hover:shadow-lg hover:shadow-[#B89B7A]/5 hover:border-[#B89B7A]/30",
+          'bg-gradient-to-br from-[#E8D5C4] to-white p-4 sm:p-6 md:p-8 rounded-xl text-[#432818] flex flex-col items-center justify-center min-h-[150px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer transition-all duration-300 border border-[#B89B7A]/20',
+          isSelected && 'ring-2 ring-[#B89B7A]/40 shadow-lg shadow-[#B89B7A]/10',
+          !isSelected && 'hover:shadow-lg hover:shadow-[#B89B7A]/5 hover:border-[#B89B7A]/30',
           className
         )}
         onClick={onClick}
@@ -501,9 +501,9 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
   return (
     <div
       className={cn(
-        "py-4 sm:py-6 md:py-8 px-4 cursor-pointer transition-all duration-300 w-full rounded-xl relative overflow-hidden",
-        isSelected && "ring-2 ring-[#B89B7A]/40 shadow-lg",
-        !isSelected && "hover:shadow-lg hover:scale-[1.01]",
+        'py-4 sm:py-6 md:py-8 px-4 cursor-pointer transition-all duration-300 w-full rounded-xl relative overflow-hidden',
+        isSelected && 'ring-2 ring-[#B89B7A]/40 shadow-lg',
+        !isSelected && 'hover:shadow-lg hover:scale-[1.01]',
         themeClasses.container,
         themeClasses.glow && `shadow-lg ${themeClasses.glow}`,
         className
@@ -512,7 +512,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
       style={{
-        backgroundColor: backgroundColor !== "#ffffff" ? backgroundColor : undefined,
+        backgroundColor: backgroundColor !== '#ffffff' ? backgroundColor : undefined,
       }}
     >
       {/* Decorative background pattern */}
@@ -526,23 +526,23 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         {title && (
           <h2
             className={cn(
-              "text-xl sm:text-2xl md:text-3xl font-bold mb-2 drop-shadow-sm",
+              'text-xl sm:text-2xl md:text-3xl font-bold mb-2 drop-shadow-sm',
               themeClasses.text
             )}
           >
             <InlineEditableText
               value={title}
-              onChange={(value: string) => handlePropertyChange("title", value)}
+              onChange={(value: string) => handlePropertyChange('title', value)}
               className="inline-block"
               placeholder="Título do countdown"
             />
           </h2>
         )}
         {subtitle && (
-          <p className={cn("text-base sm:text-lg mb-3 sm:mb-4 font-medium", themeClasses.accent)}>
+          <p className={cn('text-base sm:text-lg mb-3 sm:mb-4 font-medium', themeClasses.accent)}>
             <InlineEditableText
               value={subtitle}
-              onChange={(value: string) => handlePropertyChange("subtitle", value)}
+              onChange={(value: string) => handlePropertyChange('subtitle', value)}
               className="inline-block"
               placeholder="Subtítulo do countdown"
             />
@@ -552,14 +552,14 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         {urgencyText && !isExpired && (
           <div
             className={cn(
-              "flex items-center justify-center gap-2 mb-3 sm:mb-4 px-4 py-2 rounded-lg",
-              theme === "elegant"
-                ? "bg-white/20 backdrop-blur-sm"
-                : theme === "minimal"
-                  ? "bg-[#B89B7A]/10"
-                  : theme === "neon"
-                    ? "bg-[#B89B7A]/20"
-                    : "bg-white/20 backdrop-blur-sm"
+              'flex items-center justify-center gap-2 mb-3 sm:mb-4 px-4 py-2 rounded-lg',
+              theme === 'elegant'
+                ? 'bg-white/20 backdrop-blur-sm'
+                : theme === 'minimal'
+                  ? 'bg-[#B89B7A]/10'
+                  : theme === 'neon'
+                    ? 'bg-[#B89B7A]/20'
+                    : 'bg-white/20 backdrop-blur-sm'
             )}
           >
             <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -572,15 +572,15 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
 
       {/* Timer Display */}
       <div className="max-w-4xl mx-auto">
-        {layout === "compact" ? (
+        {layout === 'compact' ? (
           <div className="text-center text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold font-mono">
             {units.map((unit, index) => renderTimeUnit(unit, index))}
           </div>
         ) : (
           <div
             className={cn(
-              "grid gap-3 sm:gap-4 justify-center",
-              layout === "circular" ? "grid-cols-2" : "grid-cols-2"
+              'grid gap-3 sm:gap-4 justify-center',
+              layout === 'circular' ? 'grid-cols-2' : 'grid-cols-2'
             )}
           >
             {units.map((unit, index) => renderTimeUnit(unit, index))}
@@ -592,33 +592,33 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
           <div className="mt-6 sm:mt-8">
             <div
               className={cn(
-                "w-full rounded-full h-2 overflow-hidden shadow-inner",
-                theme === "elegant"
-                  ? "bg-white/30"
-                  : theme === "minimal"
-                    ? "bg-[#B89B7A]/20"
-                    : theme === "neon"
-                      ? "bg-[#432818]/50"
-                      : "bg-white/20"
+                'w-full rounded-full h-2 overflow-hidden shadow-inner',
+                theme === 'elegant'
+                  ? 'bg-white/30'
+                  : theme === 'minimal'
+                    ? 'bg-[#B89B7A]/20'
+                    : theme === 'neon'
+                      ? 'bg-[#432818]/50'
+                      : 'bg-white/20'
               )}
             >
               <motion.div
                 className={cn(
-                  "h-full rounded-full",
-                  theme === "elegant"
-                    ? "bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4]"
-                    : theme === "minimal"
-                      ? "bg-gradient-to-r from-[#B89B7A] to-[#432818]"
-                      : theme === "neon"
-                        ? "bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] shadow-[#B89B7A]/50 shadow-lg"
-                        : "bg-gradient-to-r from-white to-orange-200"
+                  'h-full rounded-full',
+                  theme === 'elegant'
+                    ? 'bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4]'
+                    : theme === 'minimal'
+                      ? 'bg-gradient-to-r from-[#B89B7A] to-[#432818]'
+                      : theme === 'neon'
+                        ? 'bg-gradient-to-r from-[#B89B7A] to-[#E8D5C4] shadow-[#B89B7A]/50 shadow-lg'
+                        : 'bg-gradient-to-r from-white to-orange-200'
                 )}
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
                 transition={{ duration: 0.5 }}
               />
             </div>
-            <p className={cn("text-center text-xs sm:text-sm mt-2", themeClasses.accent)}>
+            <p className={cn('text-center text-xs sm:text-sm mt-2', themeClasses.accent)}>
               {Math.round(progressPercentage)}% da oferta já expirou
             </p>
           </div>
@@ -630,7 +630,7 @@ const CountdownTimerBlock: React.FC<CountdownTimerBlockProps> = ({
         <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-black/20 rounded-md">
           <p className="text-xs sm:text-sm opacity-80">
             Modo de edição: Layout {layout} • Tema {theme} •
-            {isExpired ? "Expirado" : `${timeLeft.total}s restantes`}
+            {isExpired ? 'Expirado' : `${timeLeft.total}s restantes`}
           </p>
         </div>
       )}

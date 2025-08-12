@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from '@/components/ui/card';
 
 interface QuizOption {
   id: string;
@@ -33,7 +33,7 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = []
 
           <div className="space-y-2">
             {question.options.map(option => (
-              <div key={option.id} style={{ backgroundColor: "#FAF9F7" }}>
+              <div key={option.id} style={{ backgroundColor: '#FAF9F7' }}>
                 {option.imageUrl && (
                   <img
                     src={option.imageUrl}
@@ -42,7 +42,7 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = []
                   />
                 )}
                 <span className="text-sm">{option.text}</span>
-                <span style={{ color: "#8B7355" }}>{option.styleCategory}</span>
+                <span style={{ color: '#8B7355' }}>{option.styleCategory}</span>
               </div>
             ))}
           </div>
@@ -50,7 +50,7 @@ export const QuizEditorSteps: React.FC<QuizEditorStepsProps> = ({ questions = []
       ))}
 
       {questions.length === 0 && (
-        <Card style={{ color: "#8B7355" }}>
+        <Card style={{ color: '#8B7355' }}>
           <p>Nenhuma questão configurada ainda</p>
         </Card>
       )}

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { RefreshCcw, Download, Trash2, Filter, LayoutGrid, LayoutList } from "lucide-react";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { RefreshCcw, Download, Trash2, Filter, LayoutGrid, LayoutList } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,19 +9,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+} from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DashboardHeaderProps {
-  timeRange: "7d" | "30d" | "all";
-  onTimeRangeChange: (range: "7d" | "30d" | "all") => void;
+  timeRange: '7d' | '30d' | 'all';
+  onTimeRangeChange: (range: '7d' | '30d' | 'all') => void;
   onRefresh: () => void;
   onExportData: () => void;
   onClearData: () => void;
@@ -53,7 +53,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   const handleTimeRangeChange = (value: string) => {
-    onTimeRangeChange(value as "7d" | "30d" | "all");
+    onTimeRangeChange(value as '7d' | '30d' | 'all');
   };
 
   const toggleEvent = (eventType: string) => {
@@ -65,13 +65,13 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   const eventLabels: Record<string, string> = {
-    quiz_start: "Início do Quiz",
-    quiz_complete: "Quiz Completo",
-    quiz_answer: "Respostas",
-    result_view: "Visualização de Resultado",
-    lead_generated: "Leads Gerados",
-    sale: "Vendas",
-    button_click: "Cliques em Botões",
+    quiz_start: 'Início do Quiz',
+    quiz_complete: 'Quiz Completo',
+    quiz_answer: 'Respostas',
+    result_view: 'Visualização de Resultado',
+    lead_generated: 'Leads Gerados',
+    sale: 'Vendas',
+    button_click: 'Cliques em Botões',
   };
 
   return (
@@ -98,7 +98,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {compactView ? "Expandir visualização" : "Compactar visualização"}
+                  {compactView ? 'Expandir visualização' : 'Compactar visualização'}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -145,7 +145,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               onClick={handleRefresh}
               disabled={isRefreshing}
             >
-              <RefreshCcw className={`h-3.5 w-3.5 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+              <RefreshCcw className={`h-3.5 w-3.5 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
               <span className="text-xs">Atualizar</span>
             </Button>
 
@@ -154,7 +154,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               <span className="text-xs">Exportar</span>
             </Button>
 
-            <Button variant="outline" size="sm" style={{ color: "#432818" }} onClick={onClearData}>
+            <Button variant="outline" size="sm" style={{ color: '#432818' }} onClick={onClearData}>
               <Trash2 className="h-3.5 w-3.5 mr-2" />
               <span className="text-xs">Limpar Dados</span>
             </Button>

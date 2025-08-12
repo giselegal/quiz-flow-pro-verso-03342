@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft } from 'lucide-react';
 
 interface VerticalCanvasHeaderProps {
   logoSrc?: string;
@@ -20,11 +20,11 @@ interface VerticalCanvasHeaderProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,8 +64,8 @@ const getMarginClass = (value, type) => {
 };
 
 const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
-  logoSrc = "",
-  logoAlt = "Logo",
+  logoSrc = '',
+  logoAlt = 'Logo',
   logoWidth = 120,
   logoHeight = 40,
   progressValue = 0,
@@ -73,9 +73,9 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
   showProgress = true,
   showBackButton = false,
   onBackClick = () => {},
-  containerWidth = "100%",
-  gap = "1rem",
-  className = "",
+  containerWidth = '100%',
+  gap = '1rem',
+  className = '',
 }) => {
   const progressPercentage = progressMax > 0 ? (progressValue / progressMax) * 100 : 0;
 
@@ -102,7 +102,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               className="object-contain"
             />
           ) : (
-            <div style={{ color: "#8B7355" }} style={{ width: logoWidth, height: logoHeight }}>
+            <div style={{ color: '#8B7355' }} style={{ width: logoWidth, height: logoHeight }}>
               Logo
             </div>
           )}
@@ -111,7 +111,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
         {/* Progress Section */}
         {showProgress && (
           <div className="flex-1 max-w-md mx-4">
-            <div style={{ color: "#6B4F43" }}>
+            <div style={{ color: '#6B4F43' }}>
               <span>Progresso</span>
               <span>{Math.round(progressPercentage)}%</span>
             </div>

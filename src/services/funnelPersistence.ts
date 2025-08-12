@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
-import type { Database } from "@/lib/supabase";
+import { supabase } from '@/lib/supabase';
+import type { Database } from '@/lib/supabase';
 
 export interface FunnelData {
   id: string;
@@ -24,14 +24,14 @@ export interface FunnelPage {
 }
 
 class FunnelPersistenceService {
-  private readonly STORAGE_PREFIX = "funnel_";
+  private readonly STORAGE_PREFIX = 'funnel_';
 
   // Save to localStorage as fallback
   private saveToLocalStorage(id: string, data: FunnelData): void {
     try {
       localStorage.setItem(`${this.STORAGE_PREFIX}${id}`, JSON.stringify(data));
     } catch (error) {
-      console.error("Failed to save to localStorage:", error);
+      console.error('Failed to save to localStorage:', error);
     }
   }
 
@@ -41,7 +41,7 @@ class FunnelPersistenceService {
       const data = localStorage.getItem(`${this.STORAGE_PREFIX}${id}`);
       return data ? JSON.parse(data) : null;
     } catch (error) {
-      console.error("Failed to load from localStorage:", error);
+      console.error('Failed to load from localStorage:', error);
       return null;
     }
   }
@@ -51,7 +51,7 @@ class FunnelPersistenceService {
     try {
       // Save to Supabase first
       const { data: funnel, error: funnelError } = await supabase
-        .from("funnels")
+        .from('funnels')
         .upsert({
           id: data.id,
           name: data.name,
@@ -66,19 +66,19 @@ class FunnelPersistenceService {
         .single();
 
       if (funnelError) {
-        console.error("Supabase funnel error:", funnelError);
+        console.error('Supabase funnel error:', funnelError);
         // Fallback to localStorage
         this.saveToLocalStorage(data.id, data);
         return {
           success: false,
-          error: "Failed to save to database, saved locally instead",
+          error: 'Failed to save to database, saved locally instead',
         };
       }
 
       // Save pages if they exist
       if (data.pages && data.pages.length > 0) {
         // Delete existing pages first
-        await supabase.from("funnel_pages").delete().eq("funnel_id", data.id);
+        await supabase.from('funnel_pages').delete().eq('funnel_id', data.id);
 
         // Insert new pages
         const pagesData = data.pages.map(page => ({
@@ -91,12 +91,12 @@ class FunnelPersistenceService {
           metadata: page.metadata,
         }));
 
-        const { error: pagesError } = await supabase.from("funnel_pages").insert(pagesData);
+        const { error: pagesError } = await supabase.from('funnel_pages').insert(pagesData);
 
         if (pagesError) {
-          console.error("Supabase pages error:", pagesError);
+          console.error('Supabase pages error:', pagesError);
           this.saveToLocalStorage(data.id, data);
-          return { success: false, error: "Failed to save pages to database" };
+          return { success: false, error: 'Failed to save pages to database' };
         }
       }
 
@@ -105,10 +105,10 @@ class FunnelPersistenceService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error saving funnel:", error);
+      console.error('Error saving funnel:', error);
       // Fallback to localStorage
       this.saveToLocalStorage(data.id, data);
-      return { success: false, error: "Network error, saved locally" };
+      return { success: false, error: 'Network error, saved locally' };
     }
   }
 
@@ -117,18 +117,18 @@ class FunnelPersistenceService {
     try {
       // Try loading from Supabase first
       const { data: funnel, error } = await supabase
-        .from("funnels")
+        .from('funnels')
         .select(
           `
           *,
           funnel_pages (*)
         `
         )
-        .eq("id", id)
+        .eq('id', id)
         .single();
 
       if (error || !funnel) {
-        console.warn("Failed to load from Supabase, trying localStorage:", error);
+        console.warn('Failed to load from Supabase, trying localStorage:', error);
         return this.loadFromLocalStorage(id);
       }
 
@@ -159,7 +159,7 @@ class FunnelPersistenceService {
 
       return transformedFunnel;
     } catch (error) {
-      console.error("Error loading funnel:", error);
+      console.error('Error loading funnel:', error);
       return this.loadFromLocalStorage(id);
     }
   }
@@ -168,17 +168,17 @@ class FunnelPersistenceService {
   async listFunnels(): Promise<FunnelData[]> {
     try {
       const { data: funnels, error } = await supabase
-        .from("funnels")
+        .from('funnels')
         .select(
           `
           *,
           funnel_pages (*)
         `
         )
-        .order("updated_at", { ascending: false });
+        .order('updated_at', { ascending: false });
 
       if (error || !funnels) {
-        console.warn("Failed to load funnels from Supabase:", error);
+        console.warn('Failed to load funnels from Supabase:', error);
         return [];
       }
 
@@ -203,7 +203,7 @@ class FunnelPersistenceService {
         updatedAt: funnel.updated_at || undefined,
       }));
     } catch (error) {
-      console.error("Error listing funnels:", error);
+      console.error('Error listing funnels:', error);
       return [];
     }
   }
@@ -211,11 +211,11 @@ class FunnelPersistenceService {
   // Delete funnel
   async deleteFunnel(id: string): Promise<{ success: boolean; error?: string }> {
     try {
-      const { error } = await supabase.from("funnels").delete().eq("id", id);
+      const { error } = await supabase.from('funnels').delete().eq('id', id);
 
       if (error) {
-        console.error("Supabase delete error:", error);
-        return { success: false, error: "Failed to delete from database" };
+        console.error('Supabase delete error:', error);
+        return { success: false, error: 'Failed to delete from database' };
       }
 
       // Also remove from localStorage
@@ -223,8 +223,8 @@ class FunnelPersistenceService {
 
       return { success: true };
     } catch (error) {
-      console.error("Error deleting funnel:", error);
-      return { success: false, error: "Network error" };
+      console.error('Error deleting funnel:', error);
+      return { success: false, error: 'Network error' };
     }
   }
 
@@ -232,22 +232,22 @@ class FunnelPersistenceService {
   async publishFunnel(id: string): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase
-        .from("funnels")
+        .from('funnels')
         .update({
           is_published: true,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", id);
+        .eq('id', id);
 
       if (error) {
-        console.error("Supabase publish error:", error);
-        return { success: false, error: "Failed to publish" };
+        console.error('Supabase publish error:', error);
+        return { success: false, error: 'Failed to publish' };
       }
 
       return { success: true };
     } catch (error) {
-      console.error("Error publishing funnel:", error);
-      return { success: false, error: "Network error" };
+      console.error('Error publishing funnel:', error);
+      return { success: false, error: 'Network error' };
     }
   }
 }

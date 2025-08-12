@@ -1,6 +1,6 @@
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
+import { cn } from '@/lib/utils';
 
 interface SizeSliderProps {
   value: number;
@@ -20,13 +20,13 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
   min = 0,
   max = 100,
   step = 1,
-  unit = "px",
-  label = "Tamanho",
+  unit = 'px',
+  label = 'Tamanho',
   showValue = true,
   className,
 }) => {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium text-[#432818]">{label}</Label>
         {showValue && (
@@ -48,7 +48,7 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
         />
       </div>
 
-      <div style={{ color: "#8B7355" }}>
+      <div style={{ color: '#8B7355' }}>
         <span>
           {min}
           {unit}

@@ -4,7 +4,7 @@ interface GuaranteeSealProps {
 }
 
 // Componente minimalista sem informações redundantes
-const GuaranteeSeal: React.FC<GuaranteeSealProps> = ({ className = "" }) => {
+const GuaranteeSeal: React.FC<GuaranteeSealProps> = ({ className = '' }) => {
   return (
     <div className={`bg-white rounded-xl p-4 ${className}`}>
       <div className="text-center">

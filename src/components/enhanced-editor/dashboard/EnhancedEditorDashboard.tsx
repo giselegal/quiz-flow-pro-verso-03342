@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from "lucide-react";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from 'lucide-react';
 
 interface DashboardStats {
   totalFunnels: number;
@@ -15,7 +15,7 @@ interface FunnelSummary {
   id: string;
   title: string;
   description: string;
-  status: "draft" | "published" | "archived";
+  status: 'draft' | 'published' | 'archived';
   views: number;
   conversions: number;
   lastModified: string;
@@ -40,31 +40,31 @@ const DEFAULT_STATS: DashboardStats = {
 
 const DEFAULT_FUNNELS: FunnelSummary[] = [
   {
-    id: "1",
-    title: "Quiz de Estilo Pessoal",
-    description: "Funil completo para descoberta de estilo",
-    status: "published",
+    id: '1',
+    title: 'Quiz de Estilo Pessoal',
+    description: 'Funil completo para descoberta de estilo',
+    status: 'published',
     views: 856,
     conversions: 107,
-    lastModified: "2 horas atrás",
+    lastModified: '2 horas atrás',
   },
   {
-    id: "2",
-    title: "Guia de Cores Pessoais",
-    description: "Quiz para análise de paleta de cores",
-    status: "draft",
+    id: '2',
+    title: 'Guia de Cores Pessoais',
+    description: 'Quiz para análise de paleta de cores',
+    status: 'draft',
     views: 234,
     conversions: 31,
-    lastModified: "1 dia atrás",
+    lastModified: '1 dia atrás',
   },
   {
-    id: "3",
-    title: "Consultoria de Imagem",
-    description: "Funil de vendas para consultoria",
-    status: "published",
+    id: '3',
+    title: 'Consultoria de Imagem',
+    description: 'Funil de vendas para consultoria',
+    status: 'published',
     views: 157,
     conversions: 19,
-    lastModified: "3 dias atrás",
+    lastModified: '3 dias atrás',
   },
 ];
 
@@ -79,39 +79,39 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
 }) => {
   const [selectedFunnel, setSelectedFunnel] = useState<string | null>(null);
 
-  const getStatusColor = (status: FunnelSummary["status"]) => {
+  const getStatusColor = (status: FunnelSummary['status']) => {
     switch (status) {
-      case "published":
-        return "bg-green-100 text-green-700";
-      case "draft":
-        return "bg-stone-100 text-stone-700";
-      case "archived":
-        return "bg-gray-100 text-gray-700";
+      case 'published':
+        return 'bg-green-100 text-green-700';
+      case 'draft':
+        return 'bg-stone-100 text-stone-700';
+      case 'archived':
+        return 'bg-gray-100 text-gray-700';
       default:
-        return "bg-gray-100 text-gray-700";
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
-  const getStatusLabel = (status: FunnelSummary["status"]) => {
+  const getStatusLabel = (status: FunnelSummary['status']) => {
     switch (status) {
-      case "published":
-        return "Publicado";
-      case "draft":
-        return "Rascunho";
-      case "archived":
-        return "Arquivado";
+      case 'published':
+        return 'Publicado';
+      case 'draft':
+        return 'Rascunho';
+      case 'archived':
+        return 'Arquivado';
       default:
-        return "Desconhecido";
+        return 'Desconhecido';
     }
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 style={{ color: "#432818" }}>Dashboard de Funis</h1>
-          <p style={{ color: "#6B4F43" }}>Gerencie seus funis de conversão</p>
+          <h1 style={{ color: '#432818' }}>Dashboard de Funis</h1>
+          <p style={{ color: '#6B4F43' }}>Gerencie seus funis de conversão</p>
         </div>
         <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
           <Plus className="w-4 h-4 mr-2" />
@@ -123,7 +123,7 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Total de Funis</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Total de Funis</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -135,7 +135,7 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Visualizações</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Visualizações</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -147,7 +147,7 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Taxa de Conversão</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Taxa de Conversão</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
@@ -159,11 +159,11 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle style={{ color: "#6B4F43" }}>Usuários Ativos</CardTitle>
+            <CardTitle style={{ color: '#6B4F43' }}>Usuários Ativos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center">
-              <Users style={{ color: "#B89B7A" }} />
+              <Users style={{ color: '#B89B7A' }} />
               <span className="text-2xl font-bold">{stats.activeUsers}</span>
             </div>
           </CardContent>
@@ -182,22 +182,22 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
                 key={funnel.id}
                 className={`p-4 border rounded-lg transition-all cursor-pointer hover:shadow-md ${
                   selectedFunnel === funnel.id
-                    ? "border-[#B89B7A] bg-[#B89B7A]/5"
-                    : "border-gray-200"
+                    ? 'border-[#B89B7A] bg-[#B89B7A]/5'
+                    : 'border-gray-200'
                 }`}
                 onClick={() => setSelectedFunnel(funnel.id)}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 style={{ color: "#432818" }}>{funnel.title}</h3>
+                      <h3 style={{ color: '#432818' }}>{funnel.title}</h3>
                       <Badge className={getStatusColor(funnel.status)}>
                         {getStatusLabel(funnel.status)}
                       </Badge>
                     </div>
-                    <p style={{ color: "#6B4F43" }}>{funnel.description}</p>
+                    <p style={{ color: '#6B4F43' }}>{funnel.description}</p>
 
-                    <div style={{ color: "#8B7355" }}>
+                    <div style={{ color: '#8B7355' }}>
                       <span>{funnel.views} visualizações</span>
                       <span>{funnel.conversions} conversões</span>
                       <span>Modificado {funnel.lastModified}</span>
@@ -238,7 +238,7 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
                     <Button
                       size="sm"
                       variant="ghost"
-                      style={{ color: "#432818" }}
+                      style={{ color: '#432818' }}
                       onClick={e => {
                         e.stopPropagation();
                         onDeleteFunnel?.(funnel.id);

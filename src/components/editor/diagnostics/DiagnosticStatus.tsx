@@ -3,10 +3,10 @@
  * Mostra status em tempo real do editor
  */
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { useEditorDiagnostics } from "@/hooks/useEditorDiagnostics";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { useEditorDiagnostics } from '@/hooks/useEditorDiagnostics';
 import {
   AlertTriangle,
   CheckCircle,
@@ -15,8 +15,8 @@ import {
   RefreshCw,
   Wrench,
   XCircle,
-} from "lucide-react";
-import React, { useState } from "react";
+} from 'lucide-react';
+import React, { useState } from 'react';
 
 interface DiagnosticStatusProps {
   autoRun?: boolean;
@@ -40,19 +40,19 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
 
   // 🎨 Obter cor do status baseado na saúde
   const getHealthColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   // 🎨 Obter ícone do status
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "success":
+      case 'success':
         return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case "warning":
+      case 'warning':
         return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
-      case "error":
+      case 'error':
         return <XCircle className="w-4 h-4 text-red-600" />;
       default:
         return null;
@@ -129,7 +129,7 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
           disabled={diagnostic.isRunning}
           className="flex items-center gap-1"
         >
-          <RefreshCw className={`w-3 h-3 ${diagnostic.isRunning ? "animate-spin" : ""}`} />
+          <RefreshCw className={`w-3 h-3 ${diagnostic.isRunning ? 'animate-spin' : ''}`} />
           Verificar
         </Button>
 
@@ -178,9 +178,9 @@ export const DiagnosticStatus: React.FC<DiagnosticStatusProps> = ({
               console.log(report);
 
               // Criar modal ou download do relatório
-              const blob = new Blob([report], { type: "text/plain" });
+              const blob = new Blob([report], { type: 'text/plain' });
               const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
+              const a = document.createElement('a');
               a.href = url;
               a.download = `diagnostic-report-${new Date().toISOString().slice(0, 10)}.txt`;
               a.click();

@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { useQuiz } from "@/hooks/useQuiz";
-import { styleConfig } from "@/config/styleConfig";
-import { Progress } from "@/components/ui/progress";
+import { cn } from '@/lib/utils';
+import { useQuiz } from '@/hooks/useQuiz';
+import { styleConfig } from '@/config/styleConfig';
+import { Progress } from '@/components/ui/progress';
 
 interface StyleCardBlockProps {
   showProgress?: boolean;
@@ -12,11 +12,11 @@ interface StyleCardBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -67,13 +67,13 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
     return (
       <div
         className={cn(
-          "p-6 text-center text-[#432818]",
+          'p-6 text-center text-[#432818]',
           className,
           // Margens universais com controles deslizantes
-          getMarginClass((marginTop as number | string) ?? 0, "top"),
-          getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
-          getMarginClass((marginLeft as number | string) ?? 0, "left"),
-          getMarginClass((marginRight as number | string) ?? 0, "right")
+          getMarginClass((marginTop as number | string) ?? 0, 'top'),
+          getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
+          getMarginClass((marginLeft as number | string) ?? 0, 'left'),
+          getMarginClass((marginRight as number | string) ?? 0, 'right')
         )}
       >
         <p>Finalize o quiz para ver seu estilo predominante</p>
@@ -82,14 +82,14 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
   }
 
   // Handle both string and object style types
-  const category = typeof primaryStyle === "string" ? primaryStyle : (primaryStyle as any).category;
-  const percentage = typeof primaryStyle === "object" ? (primaryStyle as any).percentage || 85 : 85;
+  const category = typeof primaryStyle === 'string' ? primaryStyle : (primaryStyle as any).category;
+  const percentage = typeof primaryStyle === 'object' ? (primaryStyle as any).percentage || 85 : 85;
 
   const styleData = styleConfig[category as keyof typeof styleConfig];
 
   if (!styleData) {
     return (
-      <div className={cn("p-6 text-center text-[#432818]", className)}>
+      <div className={cn('p-6 text-center text-[#432818]', className)}>
         <p>Estilo não encontrado: {category}</p>
       </div>
     );
@@ -100,7 +100,7 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
   return (
     <div
       className={cn(
-        "p-6 bg-white shadow-md border border-[#B89B7A]/20 rounded-lg card-elegant",
+        'p-6 bg-white shadow-md border border-[#B89B7A]/20 rounded-lg card-elegant',
         className
       )}
     >

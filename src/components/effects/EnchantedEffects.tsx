@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface FloatingElement {
   id: number;
@@ -11,7 +11,7 @@ interface FloatingElement {
 }
 
 interface EnchantedBackgroundProps {
-  phase: "intro" | "quiz" | "strategic" | "results";
+  phase: 'intro' | 'quiz' | 'strategic' | 'results';
   intensity?: number;
 }
 
@@ -23,24 +23,24 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
 
   const phaseConfig = {
     intro: {
-      emojis: ["✨", "🌟", "💫", "⭐"],
+      emojis: ['✨', '🌟', '💫', '⭐'],
       count: 3,
-      colors: ["#B89B7A", "#A78BFA"],
+      colors: ['#B89B7A', '#A78BFA'],
     },
     quiz: {
-      emojis: ["💭", "🤔", "💡", "🧠"],
+      emojis: ['💭', '🤔', '💡', '🧠'],
       count: 2,
-      colors: ["#6366F1", "#B89B7A"],
+      colors: ['#6366F1', '#B89B7A'],
     },
     strategic: {
-      emojis: ["🎯", "💎", "🚀", "⚡"],
+      emojis: ['🎯', '💎', '🚀', '⚡'],
       count: 4,
-      colors: ["#aa6b5d", "#F97316"],
+      colors: ['#aa6b5d', '#F97316'],
     },
     results: {
-      emojis: ["🎉", "🎊", "🌟", "✨"],
+      emojis: ['🎉', '🎊', '🌟', '✨'],
       count: 6,
-      colors: ["#10B981", "#34D399"],
+      colors: ['#10B981', '#34D399'],
     },
   };
 
@@ -88,10 +88,10 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
               top: `${element.y}%`,
               transform: `scale(${element.scale})`,
             }}
-            initial={{ opacity: 0, y: "100vh" }}
+            initial={{ opacity: 0, y: '100vh' }}
             animate={{
               opacity: 0.2,
-              y: "-10vh",
+              y: '-10vh',
               rotate: [0, 5, -5, 0],
             }}
             exit={{ opacity: 0 }}
@@ -101,7 +101,7 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
               rotate: {
                 duration: 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: 'easeInOut',
               },
             }}
           >
@@ -115,23 +115,23 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
 
 interface MorphingProgressProps {
   progress: number;
-  phase: "normal" | "strategic" | "complete";
+  phase: 'normal' | 'strategic' | 'complete';
 }
 
 export const MorphingProgress: React.FC<MorphingProgressProps> = ({ progress, phase }) => {
   const phaseColors = {
-    normal: "from-[#B89B7A] to-[#A1835D]", // Cores da marca: bege principal para bege escuro
-    strategic: "from-[#aa6b5d] to-[#B89B7A]", // Cores da marca: terracota para bege
-    complete: "from-[#B89B7A] to-[#D4B79F]", // Cores da marca: bege principal para bege claro
+    normal: 'from-[#B89B7A] to-[#A1835D]', // Cores da marca: bege principal para bege escuro
+    strategic: 'from-[#aa6b5d] to-[#B89B7A]', // Cores da marca: terracota para bege
+    complete: 'from-[#B89B7A] to-[#D4B79F]', // Cores da marca: bege principal para bege claro
   };
 
   return (
-    <div style={{ backgroundColor: "#E5DDD5" }}>
+    <div style={{ backgroundColor: '#E5DDD5' }}>
       <motion.div
         className={`h-full bg-gradient-to-r ${phaseColors[phase]} relative`}
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         {/* Shimmer effect */}
         <motion.div
@@ -140,20 +140,20 @@ export const MorphingProgress: React.FC<MorphingProgressProps> = ({ progress, ph
           transition={{
             duration: 2,
             repeat: Infinity,
-            ease: "linear",
+            ease: 'linear',
           }}
-          style={{ width: "100px" }}
+          style={{ width: '100px' }}
         />
 
         {/* Pulse on strategic questions */}
-        {phase === "strategic" && (
+        {phase === 'strategic' && (
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500"
             animate={{ opacity: [0.3, 0.7, 0.3] }}
             transition={{
               duration: 1,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
           />
         )}

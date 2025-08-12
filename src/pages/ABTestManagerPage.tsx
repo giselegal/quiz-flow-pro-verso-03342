@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "wouter";
-import { ABTest, ABTestVariation } from "@/hooks/useABTest";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'wouter';
+import { ABTest, ABTestVariation } from '@/hooks/useABTest';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import {
   ArrowLeft,
   BarChart,
@@ -19,16 +19,16 @@ import {
   Save,
   Trash2,
   PieChart,
-} from "lucide-react";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
+} from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
 
 const ABTestManagerPage: React.FC = () => {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [tests, setTests] = useState<ABTest[]>([]);
   const [selectedTest, setSelectedTest] = useState<ABTest | null>(null);
-  const [selectedTabId, setSelectedTabId] = useState<"active" | "archived">("active");
+  const [selectedTabId, setSelectedTabId] = useState<'active' | 'archived'>('active');
   const [editMode, setEditMode] = useState(false);
   const [isCreatingTest, setIsCreatingTest] = useState(false);
 
@@ -41,7 +41,7 @@ const ABTestManagerPage: React.FC = () => {
 
   const loadTests = () => {
     try {
-      const savedTests = localStorage.getItem("ab_tests");
+      const savedTests = localStorage.getItem('ab_tests');
       if (savedTests) {
         const parsedTests = JSON.parse(savedTests);
         setTests(parsedTests);
@@ -52,29 +52,29 @@ const ABTestManagerPage: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Erro ao carregar testes:", error);
+      console.error('Erro ao carregar testes:', error);
       toast({
-        title: "Erro ao carregar testes",
-        description: "Não foi possível carregar os testes A/B salvos.",
-        variant: "destructive",
+        title: 'Erro ao carregar testes',
+        description: 'Não foi possível carregar os testes A/B salvos.',
+        variant: 'destructive',
       });
     }
   };
 
   const handleSaveTests = (updatedTests: ABTest[]) => {
     try {
-      localStorage.setItem("ab_tests", JSON.stringify(updatedTests));
+      localStorage.setItem('ab_tests', JSON.stringify(updatedTests));
       setTests(updatedTests);
       toast({
-        title: "Testes salvos",
-        description: "Os testes A/B foram salvos com sucesso.",
+        title: 'Testes salvos',
+        description: 'Os testes A/B foram salvos com sucesso.',
       });
     } catch (error) {
-      console.error("Erro ao salvar testes:", error);
+      console.error('Erro ao salvar testes:', error);
       toast({
-        title: "Erro ao salvar testes",
-        description: "Não foi possível salvar os testes A/B.",
-        variant: "destructive",
+        title: 'Erro ao salvar testes',
+        description: 'Não foi possível salvar os testes A/B.',
+        variant: 'destructive',
       });
     }
   };
@@ -82,20 +82,20 @@ const ABTestManagerPage: React.FC = () => {
   const handleCreateTest = () => {
     const newTest: ABTest = {
       id: `test_${Date.now()}`,
-      name: "Novo Teste A/B",
-      type: "result",
+      name: 'Novo Teste A/B',
+      type: 'result',
       isActive: true,
       startDate: new Date().toISOString(),
       variations: [
         {
           id: `var_${Date.now()}_a`,
-          name: "Variação A (Original)",
+          name: 'Variação A (Original)',
           trafficPercentage: 50,
           content: {},
         },
         {
           id: `var_${Date.now()}_b`,
-          name: "Variação B",
+          name: 'Variação B',
           trafficPercentage: 50,
           content: {},
         },
@@ -112,7 +112,7 @@ const ABTestManagerPage: React.FC = () => {
 
   const handleDeleteTest = (testId: string) => {
     if (
-      window.confirm("Tem certeza que deseja excluir este teste? Esta ação não pode ser desfeita.")
+      window.confirm('Tem certeza que deseja excluir este teste? Esta ação não pode ser desfeita.')
     ) {
       const updatedTests = tests.filter(test => test.id !== testId);
       handleSaveTests(updatedTests);
@@ -201,9 +201,9 @@ const ABTestManagerPage: React.FC = () => {
     if (editedTest) {
       if (editedTest.variations.length <= 2) {
         toast({
-          title: "Operação não permitida",
-          description: "Um teste A/B precisa ter pelo menos duas variações.",
-          variant: "destructive",
+          title: 'Operação não permitida',
+          description: 'Um teste A/B precisa ter pelo menos duas variações.',
+          variant: 'destructive',
         });
         return;
       }
@@ -310,7 +310,7 @@ const ABTestManagerPage: React.FC = () => {
 
   // Filtra os testes com base na aba selecionada
   const filteredTests = tests.filter(test =>
-    selectedTabId === "active" ? test.isActive : !test.isActive
+    selectedTabId === 'active' ? test.isActive : !test.isActive
   );
 
   const getConversionRate = (testId: string, variationId: string) => {
@@ -325,20 +325,20 @@ const ABTestManagerPage: React.FC = () => {
       const conversions = localStorage.getItem(conversionKey);
       const conversionsCount = conversions ? parseInt(conversions, 10) : 0;
 
-      if (visitorsCount === 0) return "0%";
+      if (visitorsCount === 0) return '0%';
 
       const rate = (conversionsCount / visitorsCount) * 100;
       return `${rate.toFixed(2)}%`;
     } catch (error) {
-      console.error("Erro ao calcular taxa de conversão:", error);
-      return "N/A";
+      console.error('Erro ao calcular taxa de conversão:', error);
+      return 'N/A';
     }
   };
 
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center gap-4 mb-6">
-        <Button variant="outline" size="sm" onClick={() => setLocation("/admin")}>
+        <Button variant="outline" size="sm" onClick={() => setLocation('/admin')}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Voltar
         </Button>
@@ -360,7 +360,7 @@ const ABTestManagerPage: React.FC = () => {
               <Tabs
                 defaultValue="active"
                 value={selectedTabId}
-                onValueChange={value => setSelectedTabId(value as "active" | "archived")}
+                onValueChange={value => setSelectedTabId(value as 'active' | 'archived')}
                 className="w-full"
               >
                 <TabsList className="w-full mb-4">
@@ -375,7 +375,7 @@ const ABTestManagerPage: React.FC = () => {
 
               {filteredTests.length === 0 ? (
                 <div className="text-center py-4 text-muted-foreground">
-                  Nenhum teste {selectedTabId === "active" ? "ativo" : "arquivado"} encontrado.
+                  Nenhum teste {selectedTabId === 'active' ? 'ativo' : 'arquivado'} encontrado.
                 </div>
               ) : (
                 <ul className="space-y-2">
@@ -384,13 +384,13 @@ const ABTestManagerPage: React.FC = () => {
                       key={test.id}
                       className={`
                         p-3 rounded-md cursor-pointer hover:bg-muted transition-colors
-                        ${selectedTest?.id === test.id ? "bg-muted border-l-4 border-primary" : ""}
+                        ${selectedTest?.id === test.id ? 'bg-muted border-l-4 border-primary' : ''}
                       `}
                       onClick={() => setSelectedTest(test)}
                     >
                       <div className="font-medium">{test.name}</div>
                       <div className="text-xs text-muted-foreground">
-                        {test.type === "result" ? "Página de Resultados" : "Página de Vendas"}
+                        {test.type === 'result' ? 'Página de Resultados' : 'Página de Vendas'}
                       </div>
                     </li>
                   ))}
@@ -410,7 +410,7 @@ const ABTestManagerPage: React.FC = () => {
                     <div className="flex justify-between items-center mb-6">
                       <div className="space-y-1 flex-1">
                         <Input
-                          value={editedTest?.name || ""}
+                          value={editedTest?.name || ''}
                           onChange={e =>
                             setEditedTest(prev => (prev ? { ...prev, name: e.target.value } : null))
                           }
@@ -433,13 +433,13 @@ const ABTestManagerPage: React.FC = () => {
                         <div>
                           <Label>Tipo de Teste</Label>
                           <select
-                            value={editedTest?.type || "result"}
+                            value={editedTest?.type || 'result'}
                             onChange={e =>
                               setEditedTest(prev =>
                                 prev
                                   ? {
                                       ...prev,
-                                      type: e.target.value as "result" | "sales",
+                                      type: e.target.value as 'result' | 'sales',
                                     }
                                   : null
                               )
@@ -457,8 +457,8 @@ const ABTestManagerPage: React.FC = () => {
                             type="date"
                             value={
                               editedTest?.startDate
-                                ? new Date(editedTest.startDate).toISOString().split("T")[0]
-                                : ""
+                                ? new Date(editedTest.startDate).toISOString().split('T')[0]
+                                : ''
                             }
                             onChange={e =>
                               setEditedTest(prev =>
@@ -487,7 +487,7 @@ const ABTestManagerPage: React.FC = () => {
                                 )
                               }
                             />
-                            <Label>{editedTest?.isActive ? "Ativo" : "Inativo"}</Label>
+                            <Label>{editedTest?.isActive ? 'Ativo' : 'Inativo'}</Label>
                           </div>
                         </div>
 
@@ -497,8 +497,8 @@ const ABTestManagerPage: React.FC = () => {
                             type="date"
                             value={
                               editedTest?.endDate
-                                ? new Date(editedTest.endDate).toISOString().split("T")[0]
-                                : ""
+                                ? new Date(editedTest.endDate).toISOString().split('T')[0]
+                                : ''
                             }
                             onChange={e => {
                               const value = e.target.value;
@@ -537,7 +537,7 @@ const ABTestManagerPage: React.FC = () => {
                                 <Input
                                   value={variation.name}
                                   onChange={e =>
-                                    handleUpdateVariation(variation.id, "name", e.target.value)
+                                    handleUpdateVariation(variation.id, 'name', e.target.value)
                                   }
                                   className="mt-1"
                                 />
@@ -548,9 +548,9 @@ const ABTestManagerPage: React.FC = () => {
                                 <div className="flex items-center mt-1">
                                   <Globe className="h-4 w-4 mr-2 text-muted-foreground" />
                                   <Input
-                                    value={variation.domain || ""}
+                                    value={variation.domain || ''}
                                     onChange={e =>
-                                      handleUpdateVariation(variation.id, "domain", e.target.value)
+                                      handleUpdateVariation(variation.id, 'domain', e.target.value)
                                     }
                                     placeholder="ex: variacao-a.meudominio.com.br"
                                   />
@@ -567,7 +567,7 @@ const ABTestManagerPage: React.FC = () => {
                                   onChange={e =>
                                     handleUpdateVariation(
                                       variation.id,
-                                      "trafficPercentage",
+                                      'trafficPercentage',
                                       parseInt(e.target.value, 10)
                                     )
                                   }
@@ -579,11 +579,11 @@ const ABTestManagerPage: React.FC = () => {
                             <div className="mt-4">
                               <Label>URL de Checkout (para variação de teste)</Label>
                               <Input
-                                value={(variation.content?.checkoutUrl as string) || ""}
+                                value={(variation.content?.checkoutUrl as string) || ''}
                                 onChange={e =>
                                   handleUpdateVariationContent(
                                     variation.id,
-                                    "checkoutUrl",
+                                    'checkoutUrl',
                                     e.target.value
                                   )
                                 }
@@ -601,7 +601,7 @@ const ABTestManagerPage: React.FC = () => {
                                   </Label>
                                   <Input
                                     value={
-                                      (variation.content?.pricing?.regularPrice as string) || ""
+                                      (variation.content?.pricing?.regularPrice as string) || ''
                                     }
                                     onChange={e => {
                                       const pricing = {
@@ -610,7 +610,7 @@ const ABTestManagerPage: React.FC = () => {
                                       };
                                       handleUpdateVariationContent(
                                         variation.id,
-                                        "pricing",
+                                        'pricing',
                                         pricing
                                       );
                                     }}
@@ -625,7 +625,7 @@ const ABTestManagerPage: React.FC = () => {
                                   </Label>
                                   <Input
                                     value={
-                                      (variation.content?.pricing?.currentPrice as string) || ""
+                                      (variation.content?.pricing?.currentPrice as string) || ''
                                     }
                                     onChange={e => {
                                       const pricing = {
@@ -634,7 +634,7 @@ const ABTestManagerPage: React.FC = () => {
                                       };
                                       handleUpdateVariationContent(
                                         variation.id,
-                                        "pricing",
+                                        'pricing',
                                         pricing
                                       );
                                     }}
@@ -649,7 +649,7 @@ const ABTestManagerPage: React.FC = () => {
                                   </Label>
                                   <Input
                                     value={
-                                      (variation.content?.pricing?.installments as string) || ""
+                                      (variation.content?.pricing?.installments as string) || ''
                                     }
                                     onChange={e => {
                                       const pricing = {
@@ -658,7 +658,7 @@ const ABTestManagerPage: React.FC = () => {
                                       };
                                       handleUpdateVariationContent(
                                         variation.id,
-                                        "pricing",
+                                        'pricing',
                                         pricing
                                       );
                                     }}
@@ -701,9 +701,9 @@ const ABTestManagerPage: React.FC = () => {
                       <div>
                         <h2 className="text-xl font-semibold">{selectedTest.name}</h2>
                         <p className="text-sm text-muted-foreground">
-                          {selectedTest.type === "result"
-                            ? "Página de Resultados"
-                            : "Página de Vendas"}
+                          {selectedTest.type === 'result'
+                            ? 'Página de Resultados'
+                            : 'Página de Vendas'}
                         </p>
                       </div>
 
@@ -715,7 +715,7 @@ const ABTestManagerPage: React.FC = () => {
                               handleToggleTestActive(selectedTest.id, checked)
                             }
                           />
-                          <Label>{selectedTest.isActive ? "Ativo" : "Inativo"}</Label>
+                          <Label>{selectedTest.isActive ? 'Ativo' : 'Inativo'}</Label>
                         </div>
 
                         <Button variant="outline" onClick={handleEditTest}>
@@ -748,7 +748,7 @@ const ABTestManagerPage: React.FC = () => {
                         <p>
                           {selectedTest.endDate
                             ? new Date(selectedTest.endDate).toLocaleDateString()
-                            : "Não definida"}
+                            : 'Não definida'}
                         </p>
                       </div>
 
@@ -757,11 +757,11 @@ const ABTestManagerPage: React.FC = () => {
                         <div
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             selectedTest.isActive
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
                           }`}
                         >
-                          {selectedTest.isActive ? "Ativo" : "Inativo"}
+                          {selectedTest.isActive ? 'Ativo' : 'Inativo'}
                         </div>
                       </div>
                     </div>

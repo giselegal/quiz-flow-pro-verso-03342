@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import ColorPicker from "@/components/visual-controls/ColorPicker";
-import { Plus, Trash2 } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import ColorPicker from '@/components/visual-controls/ColorPicker';
+import { Plus, Trash2 } from 'lucide-react';
 
 interface ResultStepPropertiesProps {
   properties: Record<string, any>;
@@ -21,64 +21,64 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
   onUpdate,
 }) => {
   const {
-    title = "Seu Resultado",
-    description = "Baseado nas suas respostas, descobrimos seu estilo:",
-    mainResultTitle = "Seu Estilo Predominante",
-    mainResultDescription = "Descrição do estilo descoberto",
-    resultImage = "",
-    ctaText = "Ver Guia Completo",
-    ctaUrl = "",
-    ctaColor = "#B89B7A",
+    title = 'Seu Resultado',
+    description = 'Baseado nas suas respostas, descobrimos seu estilo:',
+    mainResultTitle = 'Seu Estilo Predominante',
+    mainResultDescription = 'Descrição do estilo descoberto',
+    resultImage = '',
+    ctaText = 'Ver Guia Completo',
+    ctaUrl = '',
+    ctaColor = '#B89B7A',
     showSecondaryStyles = true,
     secondaryStyles = [],
     bonusItems = [],
-    personalizationLevel = "high",
+    personalizationLevel = 'high',
     showProgress = false,
-    backgroundColor = "#FAF9F7",
-    textColor = "#432818",
+    backgroundColor = '#FAF9F7',
+    textColor = '#432818',
   } = properties;
 
   const handleAddSecondaryStyle = () => {
     const newStyle = {
       id: `secondary-${Date.now()}`,
-      name: "Estilo Secundário",
-      description: "Descrição do estilo secundário",
-      percentage: "25%",
-      image: "",
+      name: 'Estilo Secundário',
+      description: 'Descrição do estilo secundário',
+      percentage: '25%',
+      image: '',
     };
-    onUpdate("secondaryStyles", [...secondaryStyles, newStyle]);
+    onUpdate('secondaryStyles', [...secondaryStyles, newStyle]);
   };
 
   const handleRemoveSecondaryStyle = (index: number) => {
     const updatedStyles = secondaryStyles.filter((_: any, i: number) => i !== index);
-    onUpdate("secondaryStyles", updatedStyles);
+    onUpdate('secondaryStyles', updatedStyles);
   };
 
   const handleUpdateSecondaryStyle = (index: number, field: string, value: any) => {
     const updatedStyles = [...secondaryStyles];
     updatedStyles[index] = { ...updatedStyles[index], [field]: value };
-    onUpdate("secondaryStyles", updatedStyles);
+    onUpdate('secondaryStyles', updatedStyles);
   };
 
   const handleAddBonusItem = () => {
     const newBonus = {
       id: `bonus-${Date.now()}`,
-      title: "Bônus",
-      description: "Descrição do bônus",
-      image: "",
+      title: 'Bônus',
+      description: 'Descrição do bônus',
+      image: '',
     };
-    onUpdate("bonusItems", [...bonusItems, newBonus]);
+    onUpdate('bonusItems', [...bonusItems, newBonus]);
   };
 
   const handleRemoveBonusItem = (index: number) => {
     const updatedBonus = bonusItems.filter((_: any, i: number) => i !== index);
-    onUpdate("bonusItems", updatedBonus);
+    onUpdate('bonusItems', updatedBonus);
   };
 
   const handleUpdateBonusItem = (index: number, field: string, value: any) => {
     const updatedBonus = [...bonusItems];
     updatedBonus[index] = { ...updatedBonus[index], [field]: value };
-    onUpdate("bonusItems", updatedBonus);
+    onUpdate('bonusItems', updatedBonus);
   };
 
   return (
@@ -94,7 +94,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Input
               id="title"
               value={title}
-              onChange={e => onUpdate("title", e.target.value)}
+              onChange={e => onUpdate('title', e.target.value)}
               placeholder="Título principal da página de resultado"
             />
           </div>
@@ -104,7 +104,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Textarea
               id="description"
               value={description}
-              onChange={e => onUpdate("description", e.target.value)}
+              onChange={e => onUpdate('description', e.target.value)}
               placeholder="Texto introdutório antes do resultado"
               rows={3}
             />
@@ -123,7 +123,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Input
               id="mainResultTitle"
               value={mainResultTitle}
-              onChange={e => onUpdate("mainResultTitle", e.target.value)}
+              onChange={e => onUpdate('mainResultTitle', e.target.value)}
               placeholder="Nome do estilo descoberto"
             />
           </div>
@@ -133,7 +133,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Textarea
               id="mainResultDescription"
               value={mainResultDescription}
-              onChange={e => onUpdate("mainResultDescription", e.target.value)}
+              onChange={e => onUpdate('mainResultDescription', e.target.value)}
               placeholder="Descrição detalhada do estilo"
               rows={4}
             />
@@ -144,7 +144,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Input
               id="resultImage"
               value={resultImage}
-              onChange={e => onUpdate("resultImage", e.target.value)}
+              onChange={e => onUpdate('resultImage', e.target.value)}
               placeholder="URL da imagem representativa"
             />
           </div>
@@ -162,7 +162,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Input
               id="ctaText"
               value={ctaText}
-              onChange={e => onUpdate("ctaText", e.target.value)}
+              onChange={e => onUpdate('ctaText', e.target.value)}
               placeholder="Texto do botão principal"
             />
           </div>
@@ -172,14 +172,14 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Input
               id="ctaUrl"
               value={ctaUrl}
-              onChange={e => onUpdate("ctaUrl", e.target.value)}
+              onChange={e => onUpdate('ctaUrl', e.target.value)}
               placeholder="https://..."
             />
           </div>
 
           <div>
             <Label htmlFor="ctaColor">Cor do Botão</Label>
-            <ColorPicker value={ctaColor} onChange={color => onUpdate("ctaColor", color)} />
+            <ColorPicker value={ctaColor} onChange={color => onUpdate('ctaColor', color)} />
           </div>
         </CardContent>
       </Card>
@@ -193,7 +193,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
               <Switch
                 id="showSecondaryStyles"
                 checked={showSecondaryStyles}
-                onCheckedChange={checked => onUpdate("showSecondaryStyles", checked)}
+                onCheckedChange={checked => onUpdate('showSecondaryStyles', checked)}
               />
               <Button
                 size="sm"
@@ -232,8 +232,8 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                         </Label>
                         <Input
                           id={`style-name-${index}`}
-                          value={style.name || ""}
-                          onChange={e => handleUpdateSecondaryStyle(index, "name", e.target.value)}
+                          value={style.name || ''}
+                          onChange={e => handleUpdateSecondaryStyle(index, 'name', e.target.value)}
                           placeholder="Nome do estilo"
                         />
                       </div>
@@ -244,9 +244,9 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                         </Label>
                         <Textarea
                           id={`style-description-${index}`}
-                          value={style.description || ""}
+                          value={style.description || ''}
                           onChange={e =>
-                            handleUpdateSecondaryStyle(index, "description", e.target.value)
+                            handleUpdateSecondaryStyle(index, 'description', e.target.value)
                           }
                           placeholder="Descrição do estilo"
                           rows={2}
@@ -260,9 +260,9 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                           </Label>
                           <Input
                             id={`style-percentage-${index}`}
-                            value={style.percentage || ""}
+                            value={style.percentage || ''}
                             onChange={e =>
-                              handleUpdateSecondaryStyle(index, "percentage", e.target.value)
+                              handleUpdateSecondaryStyle(index, 'percentage', e.target.value)
                             }
                             placeholder="25%"
                           />
@@ -274,9 +274,9 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                           </Label>
                           <Input
                             id={`style-image-${index}`}
-                            value={style.image || ""}
+                            value={style.image || ''}
                             onChange={e =>
-                              handleUpdateSecondaryStyle(index, "image", e.target.value)
+                              handleUpdateSecondaryStyle(index, 'image', e.target.value)
                             }
                             placeholder="URL da imagem"
                           />
@@ -326,8 +326,8 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                       </Label>
                       <Input
                         id={`bonus-title-${index}`}
-                        value={bonus.title || ""}
-                        onChange={e => handleUpdateBonusItem(index, "title", e.target.value)}
+                        value={bonus.title || ''}
+                        onChange={e => handleUpdateBonusItem(index, 'title', e.target.value)}
                         placeholder="Título do bônus"
                       />
                     </div>
@@ -338,8 +338,8 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                       </Label>
                       <Textarea
                         id={`bonus-description-${index}`}
-                        value={bonus.description || ""}
-                        onChange={e => handleUpdateBonusItem(index, "description", e.target.value)}
+                        value={bonus.description || ''}
+                        onChange={e => handleUpdateBonusItem(index, 'description', e.target.value)}
                         placeholder="Descrição do bônus"
                         rows={2}
                       />
@@ -351,8 +351,8 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
                       </Label>
                       <Input
                         id={`bonus-image-${index}`}
-                        value={bonus.image || ""}
-                        onChange={e => handleUpdateBonusItem(index, "image", e.target.value)}
+                        value={bonus.image || ''}
+                        onChange={e => handleUpdateBonusItem(index, 'image', e.target.value)}
                         placeholder="URL da imagem"
                       />
                     </div>
@@ -377,7 +377,7 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <select
               id="personalizationLevel"
               value={personalizationLevel}
-              onChange={e => onUpdate("personalizationLevel", e.target.value)}
+              onChange={e => onUpdate('personalizationLevel', e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
             >
               <option value="low">Básico</option>
@@ -399,20 +399,20 @@ export const ResultStepProperties: React.FC<ResultStepPropertiesProps> = ({
             <Label htmlFor="backgroundColor">Cor de Fundo</Label>
             <ColorPicker
               value={backgroundColor}
-              onChange={color => onUpdate("backgroundColor", color)}
+              onChange={color => onUpdate('backgroundColor', color)}
             />
           </div>
 
           <div>
             <Label htmlFor="textColor">Cor do Texto</Label>
-            <ColorPicker value={textColor} onChange={color => onUpdate("textColor", color)} />
+            <ColorPicker value={textColor} onChange={color => onUpdate('textColor', color)} />
           </div>
 
           <div className="flex items-center space-x-2">
             <Switch
               id="showProgress"
               checked={showProgress}
-              onCheckedChange={checked => onUpdate("showProgress", checked)}
+              onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
             <Label htmlFor="showProgress">Mostrar Indicador de Progresso</Label>
           </div>

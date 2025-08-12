@@ -21,8 +21,8 @@ export interface QuizVersion {
 }
 
 export interface VersionChange {
-  type: "added" | "modified" | "deleted";
-  entity: "quiz" | "question" | "option" | "setting";
+  type: 'added' | 'modified' | 'deleted';
+  entity: 'quiz' | 'question' | 'option' | 'setting';
   field?: string;
   old_value?: any;
   new_value?: any;
@@ -51,21 +51,21 @@ export class VersioningService {
       settings?: any;
     }
   ): Promise<QuizVersion> {
-    console.log("Would create version for quiz:", quizId);
+    console.log('Would create version for quiz:', quizId);
 
     const newVersion: QuizVersion = {
       id: `version_${Date.now()}`,
       quiz_id: quizId,
-      version_number: "1.0.0",
-      title: "Quiz Title",
-      description: "Quiz Description",
+      version_number: '1.0.0',
+      title: 'Quiz Title',
+      description: 'Quiz Description',
       data: {
         quiz: data?.quiz || {},
         questions: data?.questions || [],
         settings: data?.settings || {},
       },
       changes_summary: changesSummary,
-      created_by: "user",
+      created_by: 'user',
       created_at: new Date().toISOString(),
       is_current: true,
       file_size: 1024,
@@ -83,20 +83,20 @@ export class VersioningService {
       includeData?: boolean;
     }
   ): Promise<QuizVersion[]> {
-    console.log("Would get versions for quiz:", quizId);
+    console.log('Would get versions for quiz:', quizId);
     return [];
   }
 
   static async getVersion(versionId: string): Promise<QuizVersion> {
-    console.log("Would get version:", versionId);
+    console.log('Would get version:', versionId);
     return {
       id: versionId,
-      quiz_id: "quiz-1",
-      version_number: "1.0.0",
-      title: "Quiz Title",
+      quiz_id: 'quiz-1',
+      version_number: '1.0.0',
+      title: 'Quiz Title',
       data: { quiz: {}, questions: [], settings: {} },
-      changes_summary: "Initial version",
-      created_by: "user",
+      changes_summary: 'Initial version',
+      created_by: 'user',
       created_at: new Date().toISOString(),
       is_current: true,
       file_size: 1024,
@@ -104,16 +104,16 @@ export class VersioningService {
   }
 
   static async getCurrentVersion(quizId: string): Promise<QuizVersion | null> {
-    console.log("Would get current version for quiz:", quizId);
+    console.log('Would get current version for quiz:', quizId);
     return null;
   }
 
   static async restoreVersion(versionId: string): Promise<void> {
-    console.log("Would restore version:", versionId);
+    console.log('Would restore version:', versionId);
   }
 
   static async compareVersions(versionAId: string, versionBId: string): Promise<VersionComparison> {
-    console.log("Would compare versions:", versionAId, versionBId);
+    console.log('Would compare versions:', versionAId, versionBId);
     const version = await this.getVersion(versionAId);
     return {
       version_a: version,
@@ -129,16 +129,16 @@ export class VersioningService {
   }
 
   static async deleteVersion(versionId: string): Promise<void> {
-    console.log("Would delete version:", versionId);
+    console.log('Would delete version:', versionId);
   }
 
   static async exportVersion(versionId: string): Promise<Blob> {
-    console.log("Would export version:", versionId);
-    return new Blob(["{}"], { type: "application/json" });
+    console.log('Would export version:', versionId);
+    return new Blob(['{}'], { type: 'application/json' });
   }
 
   static async getVersioningStats(quizId: string) {
-    console.log("Would get versioning stats for quiz:", quizId);
+    console.log('Would get versioning stats for quiz:', quizId);
     return {
       total_versions: 0,
       total_size_bytes: 0,
@@ -146,7 +146,7 @@ export class VersioningService {
       days_since_first_version: 0,
       first_version_date: null,
       last_version_date: null,
-      versions_per_day: "0",
+      versions_per_day: '0',
     };
   }
 }

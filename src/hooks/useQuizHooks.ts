@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { QuizQuestion, UserResponse, StyleResult } from "@/types/quiz";
+import { useState, useCallback } from 'react';
+import { QuizQuestion, UserResponse, StyleResult } from '@/types/quiz';
 
 export const useQuizHooks = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -15,18 +15,18 @@ export const useQuizHooks = () => {
     // Simplified calculation for demo purposes
     return [
       {
-        category: "Natural",
+        category: 'Natural',
         score: 85,
         percentage: 45.2,
-        style: "natural",
+        style: 'natural',
         points: 85,
         rank: 1,
       },
       {
-        category: "Clássico",
+        category: 'Clássico',
         score: 70,
         percentage: 32.1,
-        style: "classico",
+        style: 'classico',
         points: 70,
         rank: 2,
       },

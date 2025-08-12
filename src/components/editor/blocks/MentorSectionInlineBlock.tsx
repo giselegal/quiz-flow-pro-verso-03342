@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Crown, Star, Quote, Award } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import { cn } from '@/lib/utils';
+import { Crown, Star, Quote, Award } from 'lucide-react';
+import type { BlockData } from '@/types/blocks';
 
 interface MentorSectionInlineBlockProps {
   block: BlockData;
@@ -19,11 +19,11 @@ interface MentorSectionInlineBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -71,23 +71,23 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   className,
 }) => {
   const properties = block.properties || {};
-  const mentorName = properties.mentorName || "Juliana Estilo";
-  const mentorTitle = properties.mentorTitle || "Consultora de Imagem e Estilo";
+  const mentorName = properties.mentorName || 'Juliana Estilo';
+  const mentorTitle = properties.mentorTitle || 'Consultora de Imagem e Estilo';
   const mentorImage =
-    properties.mentorImage || "https://placehold.co/200x200/cccccc/333333?text=Mentora";
+    properties.mentorImage || 'https://placehold.co/200x200/cccccc/333333?text=Mentora';
   const mentorBio =
     properties.mentorBio ||
-    "Com mais de 10 anos de experiência, já transformei a vida de mais de 5.000 mulheres através da consultoria de imagem personalizada.";
+    'Com mais de 10 anos de experiência, já transformei a vida de mais de 5.000 mulheres através da consultoria de imagem personalizada.';
   const achievements = properties.achievements || [
-    "+ 5.000 clientes transformadas",
-    "+ 10 anos de experiência",
-    "Certificada internacionalmente",
-    "Featured na Vogue e Marie Claire",
+    '+ 5.000 clientes transformadas',
+    '+ 10 anos de experiência',
+    'Certificada internacionalmente',
+    'Featured na Vogue e Marie Claire',
   ];
   const credentials = properties.credentials || [
-    "Certificação Internacional em Personal Styling",
-    "Pós-graduação em Consultoria de Imagem",
-    "Mentora de outros consultores",
+    'Certificação Internacional em Personal Styling',
+    'Pós-graduação em Consultoria de Imagem',
+    'Mentora de outros consultores',
   ];
 
   const handleEdit = (field: string, value: any) => {
@@ -99,22 +99,22 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        "w-full p-4 md:p-6 transition-all duration-200",
-        "bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg",
-        isSelected && "ring-2 ring-purple-400 bg-[#B89B7A]/10",
-        !disabled && "cursor-pointer hover:bg-[#B89B7A]/10/80",
+        'w-full p-4 md:p-6 transition-all duration-200',
+        'bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg',
+        isSelected && 'ring-2 ring-purple-400 bg-[#B89B7A]/10',
+        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
       {/* Header com Badge */}
       <div className="text-center mb-6">
-        <div style={{ backgroundColor: "#B89B7A" }}>
+        <div style={{ backgroundColor: '#B89B7A' }}>
           <Crown className="w-4 h-4" />
           Sua Mentora Especialista
         </div>
@@ -140,14 +140,14 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
         {/* Coluna do Conteúdo */}
         <div className="order-1 lg:order-2 text-center lg:text-left">
           {/* Nome e Título */}
-          <h3 style={{ color: "#432818" }}>{mentorName}</h3>
+          <h3 style={{ color: '#432818' }}>{mentorName}</h3>
 
           <p className="text-[#B89B7A] font-semibold text-sm md:text-base mb-4">{mentorTitle}</p>
 
           {/* Bio */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-purple-100 mb-6">
             <Quote className="w-5 h-5 text-purple-400 mb-2" />
-            <p style={{ color: "#6B4F43" }}>{mentorBio}</p>
+            <p style={{ color: '#6B4F43' }}>{mentorBio}</p>
           </div>
 
           {/* Achievements */}
@@ -155,7 +155,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
             {achievements.map((achievement: string, index: number) => (
               <div key={index} className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 bg-purple-400 rounded-full flex-shrink-0" />
-                <span style={{ color: "#6B4F43" }}>{achievement}</span>
+                <span style={{ color: '#6B4F43' }}>{achievement}</span>
               </div>
             ))}
           </div>
@@ -164,7 +164,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
 
       {/* Credenciais */}
       <div className="mt-8 p-4 bg-white rounded-lg border border-purple-100">
-        <h4 style={{ color: "#432818" }}>
+        <h4 style={{ color: '#432818' }}>
           <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
           Certificações & Credenciais
         </h4>
@@ -172,7 +172,7 @@ const MentorSectionInlineBlock: React.FC<MentorSectionInlineBlockProps> = ({
           {credentials.map((credential: string, index: number) => (
             <div key={index} className="flex items-center gap-2 text-xs md:text-sm">
               <div className="w-1.5 h-1.5 bg-purple-400 rounded-full flex-shrink-0" />
-              <span style={{ color: "#6B4F43" }}>{credential}</span>
+              <span style={{ color: '#6B4F43' }}>{credential}</span>
             </div>
           ))}
         </div>

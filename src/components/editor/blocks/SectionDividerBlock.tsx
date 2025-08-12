@@ -1,13 +1,13 @@
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -51,52 +51,52 @@ const SectionDividerBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange: _onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    style = "solid",
-    color = "#e5e7eb",
+    style = 'solid',
+    color = '#e5e7eb',
     thickness = 1,
     margin = 32,
-    width = "100%",
+    width = '100%',
   } = block.properties || {};
 
   const getLineStyle = () => {
     switch (style) {
-      case "dashed":
-        return "border-dashed";
-      case "dotted":
-        return "border-dotted";
-      case "double":
-        return "border-double";
+      case 'dashed':
+        return 'border-dashed';
+      case 'dotted':
+        return 'border-dotted';
+      case 'double':
+        return 'border-double';
       default:
-        return "border-solid";
+        return 'border-solid';
     }
   };
 
   return (
     <div
       className={cn(
-        "w-full flex items-center justify-center transition-all duration-200",
-        "hover:bg-stone-50 rounded-lg",
-        isSelected && "bg-brand/10 ring-2 ring-brand/30",
+        'w-full flex items-center justify-center transition-all duration-200',
+        'hover:bg-stone-50 rounded-lg',
+        isSelected && 'bg-brand/10 ring-2 ring-brand/30',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, "top"),
-        getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
-        getMarginClass((marginLeft as number | string) ?? 0, "left"),
-        getMarginClass((marginRight as number | string) ?? 0, "right")
+        getMarginClass((marginTop as number | string) ?? 0, 'top'),
+        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
+        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
+        getMarginClass((marginRight as number | string) ?? 0, 'right')
       )}
       style={{ marginTop: margin / 2, marginBottom: margin / 2 }}
       onClick={onClick}
     >
       <hr
-        className={cn("border-0 border-t", getLineStyle())}
+        className={cn('border-0 border-t', getLineStyle())}
         style={{
           borderColor: color,
           borderTopWidth: thickness,
           width: width,
-          maxWidth: "100%",
+          maxWidth: '100%',
         }}
       />
     </div>

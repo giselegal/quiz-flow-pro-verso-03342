@@ -1,10 +1,10 @@
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import ClientLayout from "./components/ClientLayout";
-import "./index.css";
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import ClientLayout from './components/ClientLayout';
+import './index.css';
 // 🚀 SUPABASE: Inicialização do serviço de dados
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
-import { cleanupConsoleWarnings } from "./utils/development";
+import { cleanupConsoleWarnings } from './utils/development';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // Adiciona tipagem para import.meta.env
@@ -23,14 +23,14 @@ if (import.meta.env.DEV) {
 }
 
 // 🚀 SUPABASE: Configuração inicial do serviço
-console.log("🚀 Inicializando serviços Supabase...");
-console.log("🔧 DEBUG: main.tsx carregado");
+console.log('🚀 Inicializando serviços Supabase...');
+console.log('🔧 DEBUG: main.tsx carregado');
 // O serviço é inicializado automaticamente na importação
 
-console.log("🔧 DEBUG: Criando root do React...");
-createRoot(document.getElementById("root")!).render(
+console.log('🔧 DEBUG: Criando root do React...');
+createRoot(document.getElementById('root')!).render(
   <ClientLayout>
     <App />
   </ClientLayout>
 );
-console.log("✅ DEBUG: App renderizado com sucesso");
+console.log('✅ DEBUG: App renderizado com sucesso');

@@ -1,5 +1,5 @@
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface QuizSocialProofProps extends ComponentProps {
   customerCount?: string;
@@ -9,10 +9,10 @@ interface QuizSocialProofProps extends ComponentProps {
 }
 
 const QuizSocialProof: React.FC<QuizSocialProofProps> = ({
-  customerCount = "5.000",
-  rating = "4.9",
-  reviewCount = "1.247",
-  text = "Mais de {customerCount} clientes satisfeitos",
+  customerCount = '5.000',
+  rating = '4.9',
+  reviewCount = '1.247',
+  text = 'Mais de {customerCount} clientes satisfeitos',
   isSelected,
   onClick,
 }) => {
@@ -21,7 +21,7 @@ const QuizSocialProof: React.FC<QuizSocialProofProps> = ({
     onClick?.();
   };
 
-  const formattedText = text.replace("{customerCount}", customerCount);
+  const formattedText = text.replace('{customerCount}', customerCount);
 
   const renderStars = (rating: number) => {
     const fullStars = Math.floor(rating);
@@ -46,7 +46,7 @@ const QuizSocialProof: React.FC<QuizSocialProofProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.socialProof} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.socialProof} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
     >
       <div className={styles.socialProofCard}>

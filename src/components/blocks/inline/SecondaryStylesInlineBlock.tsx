@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { BlockComponentProps } from "@/types/blocks";
+import { cn } from '@/lib/utils';
+import { BlockComponentProps } from '@/types/blocks';
 
 const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
   block,
@@ -8,21 +8,21 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
   onPropertyChange,
 }) => {
   const secondaryStyles = block?.properties?.secondaryStyles || [
-    { name: "Moderno", percentage: 20, color: "#432818" },
-    { name: "Casual", percentage: 15, color: "#432818" },
-    { name: "Romântico", percentage: 10, color: "#432818" },
+    { name: 'Moderno', percentage: 20, color: '#432818' },
+    { name: 'Casual', percentage: 15, color: '#432818' },
+    { name: 'Romântico', percentage: 10, color: '#432818' },
   ];
 
-  const title = block?.properties?.title || "Seus Estilos Secundários";
+  const title = block?.properties?.title || 'Seus Estilos Secundários';
   const showPercentages = block?.properties?.showPercentages !== false;
 
   return (
     <div
       className={cn(
-        "secondary-styles p-6 border border-gray-200 rounded-lg bg-white",
-        "hover:shadow-md transition-all duration-200",
-        isSelected && "ring-2 ring-[#432818] bg-[#432818]",
-        "cursor-pointer"
+        'secondary-styles p-6 border border-gray-200 rounded-lg bg-white',
+        'hover:shadow-md transition-all duration-200',
+        isSelected && 'ring-2 ring-[#432818] bg-[#432818]',
+        'cursor-pointer'
         // Margens universais com controles deslizantes
       )}
       onClick={onClick}
@@ -31,7 +31,7 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
 
       <div className="grid gap-4 md:grid-cols-3">
         {secondaryStyles.map((style: any, index: number) => (
-          <div key={index} style={{ backgroundColor: "#E5DDD5" }}>
+          <div key={index} style={{ backgroundColor: '#E5DDD5' }}>
             {/* Círculo com porcentagem */}
             <div className="relative inline-block mb-3">
               <div
@@ -46,15 +46,15 @@ const SecondaryStylesInlineBlock: React.FC<BlockComponentProps> = ({
             <h4 className="font-medium text-[#432818] mb-1">{style.name}</h4>
 
             {/* Descrição opcional */}
-            {style.description && <p style={{ color: "#6B4F43" }}>{style.description}</p>}
+            {style.description && <p style={{ color: '#6B4F43' }}>{style.description}</p>}
           </div>
         ))}
       </div>
 
       {/* Área editável quando selecionado */}
       {isSelected && onPropertyChange && (
-        <div style={{ borderColor: "#E5DDD5" }}>
-          <div style={{ color: "#8B7355" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ color: '#8B7355' }}>
             <p>
               💡 <strong>Editável:</strong> Personalize os estilos secundários
             </p>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
 
 interface InlineTextEditorProps {
   value: string;
@@ -16,19 +16,19 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
   className,
   multiline = false,
 }) => {
-  const [text, setText] = useState(value || "");
+  const [text, setText] = useState(value || '');
   const [isEditing, setIsEditing] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
 
   useEffect(() => {
-    setText(value || "");
+    setText(value || '');
   }, [value]);
 
   useEffect(() => {
     if (isEditing && editorRef.current) {
       editorRef.current.focus();
 
-      if ("setSelectionRange" in editorRef.current) {
+      if ('setSelectionRange' in editorRef.current) {
         const length = editorRef.current.value.length;
         editorRef.current.setSelectionRange(length, length);
       }
@@ -50,7 +50,7 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && !multiline) {
+    if (e.key === 'Enter' && !e.shiftKey && !multiline) {
       e.preventDefault();
       setIsEditing(false);
       onChange?.(text);
@@ -68,15 +68,15 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className={cn("w-full min-h-[60px] resize-none", className)}
-            rows={Math.max(3, text.split("\n").length)}
+            className={cn('w-full min-h-[60px] resize-none', className)}
+            rows={Math.max(3, text.split('\n').length)}
           />
         ) : (
           <div
             onClick={handleClick}
             className={cn(
-              "w-full cursor-text whitespace-pre-wrap",
-              !text && "text-gray-400",
+              'w-full cursor-text whitespace-pre-wrap',
+              !text && 'text-gray-400',
               className
             )}
           >
@@ -98,12 +98,12 @@ const InlineTextEditor: React.FC<InlineTextEditorProps> = ({
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className={cn("w-full", className)}
+          className={cn('w-full', className)}
         />
       ) : (
         <div
           onClick={handleClick}
-          className={cn("w-full cursor-text", !text && "text-gray-400", className)}
+          className={cn('w-full cursor-text', !text && 'text-gray-400', className)}
         >
           {text || placeholder}
         </div>

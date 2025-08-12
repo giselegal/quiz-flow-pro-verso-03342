@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Check, ShoppingCart } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Check, ShoppingCart } from 'lucide-react';
 
 interface ValueAnchoringBlockProps {
   title?: string;
@@ -10,11 +10,11 @@ interface ValueAnchoringBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,15 +54,15 @@ const getMarginClass = (value, type) => {
 };
 
 const ValueAnchoringBlock: React.FC<ValueAnchoringBlockProps> = ({
-  title = "O Que Você Recebe Hoje",
+  title = 'O Que Você Recebe Hoje',
   showPricing = true,
   className,
 }) => {
   // Dados reais da página de resultado do funil
   const valueItems = [
-    { item: "Guia Principal", value: 67 },
-    { item: "Bônus - Peças-chave", value: 79 },
-    { item: "Bônus - Visagismo Facial", value: 29 },
+    { item: 'Guia Principal', value: 67 },
+    { item: 'Bônus - Peças-chave', value: 79 },
+    { item: 'Bônus - Visagismo Facial', value: 29 },
   ];
 
   const totalValue = valueItems.reduce((sum, item) => sum + item.value, 0);
@@ -70,22 +70,22 @@ const ValueAnchoringBlock: React.FC<ValueAnchoringBlockProps> = ({
   const savings = totalValue - currentPrice;
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
     }).format(price);
   };
 
   return (
     <div
       className={cn(
-        "py-8",
+        'py-8',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="max-w-md mx-auto">

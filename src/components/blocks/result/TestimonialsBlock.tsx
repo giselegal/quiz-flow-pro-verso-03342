@@ -1,5 +1,5 @@
 // @ts-nocheck
-import Testimonials from "@/components/quiz-result/sales/Testimonials";
+import Testimonials from '@/components/quiz-result/sales/Testimonials';
 
 /**
  * BLOCO EDITÁVEL: Grid de Depoimentos
@@ -42,17 +42,17 @@ export interface TestimonialsBlockProps {
   showStars?: boolean;
   showImages?: boolean;
   backgroundColor?: string;
-  cardStyle?: "default" | "modern" | "minimal";
+  cardStyle?: 'default' | 'modern' | 'minimal';
   className?: string;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -92,39 +92,39 @@ const getMarginClass = (value, type) => {
 };
 
 const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
-  blockId = "testimonials-block",
+  blockId = 'testimonials-block',
   testimonials = [
     {
-      name: "Maria Silva",
-      text: "O CaktoQuiz transformou completamente meu guarda-roupa! Agora sei exatamente o que combina comigo.",
+      name: 'Maria Silva',
+      text: 'O CaktoQuiz transformou completamente meu guarda-roupa! Agora sei exatamente o que combina comigo.',
       image:
-        "https://images.unsplash.com/photo-1494790108755-2616b612b167?w=100&h=100&fit=crop&crop=face",
+        'https://images.unsplash.com/photo-1494790108755-2616b612b167?w=100&h=100&fit=crop&crop=face',
       rating: 5,
-      location: "São Paulo, SP",
+      location: 'São Paulo, SP',
     },
     {
-      name: "Ana Costa",
-      text: "Finalmente descobri meu estilo! As dicas são incríveis e muito práticas.",
+      name: 'Ana Costa',
+      text: 'Finalmente descobri meu estilo! As dicas são incríveis e muito práticas.',
       image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
       rating: 5,
-      location: "Rio de Janeiro, RJ",
+      location: 'Rio de Janeiro, RJ',
     },
     {
-      name: "Júlia Santos",
-      text: "Recomendo para todas as amigas! É um investimento que vale muito a pena.",
+      name: 'Júlia Santos',
+      text: 'Recomendo para todas as amigas! É um investimento que vale muito a pena.',
       image:
-        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+        'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face',
       rating: 5,
-      location: "Belo Horizonte, MG",
+      location: 'Belo Horizonte, MG',
     },
   ],
   columns = 3,
   showStars = true,
   showImages = true,
-  backgroundColor = "#ffffff",
-  cardStyle = "default",
-  className = "",
+  backgroundColor = '#ffffff',
+  cardStyle = 'default',
+  className = '',
 }) => {
   return (
     <div

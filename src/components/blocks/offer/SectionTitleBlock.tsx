@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Award } from "lucide-react";
+import { Award } from 'lucide-react';
 
 /**
  * BLOCO EDITÁVEL: Título de Seção
@@ -30,7 +30,7 @@ export interface SectionTitleBlockProps {
   subtitle?: string;
   showBadge?: boolean;
   badgeText?: string;
-  alignment?: "left" | "center" | "right";
+  alignment?: 'left' | 'center' | 'right';
   titleColor?: string;
   subtitleColor?: string;
   badgeColor?: string;
@@ -39,11 +39,11 @@ export interface SectionTitleBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -83,16 +83,16 @@ const getMarginClass = (value, type) => {
 };
 
 const SectionTitleBlock: React.FC<SectionTitleBlockProps> = ({
-  blockId = "section-title",
-  title = "Por que escolher o CaktoQuiz?",
-  subtitle = "A solução mais completa para descobrir seu estilo pessoal",
+  blockId = 'section-title',
+  title = 'Por que escolher o CaktoQuiz?',
+  subtitle = 'A solução mais completa para descobrir seu estilo pessoal',
   showBadge = true,
-  badgeText = "3000+ mulheres transformadas",
-  alignment = "center",
-  titleColor = "#432818",
-  subtitleColor = "#6B5B73",
-  badgeColor = "#B89B7A",
-  className = "",
+  badgeText = '3000+ mulheres transformadas',
+  alignment = 'center',
+  titleColor = '#432818',
+  subtitleColor = '#6B5B73',
+  badgeColor = '#B89B7A',
+  className = '',
 }) => {
   return (
     <div className={`section-title-block py-12 px-6 ${className}`} data-block-id={blockId}>
@@ -116,7 +116,7 @@ const SectionTitleBlock: React.FC<SectionTitleBlockProps> = ({
         <h2
           className="text-3xl md:text-4xl font-bold mb-6"
           style={{
-            fontFamily: "Playfair Display, serif",
+            fontFamily: 'Playfair Display, serif',
             color: titleColor,
           }}
         >

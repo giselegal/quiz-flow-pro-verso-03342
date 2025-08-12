@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { useLocation } from "wouter";
+import { Button } from '@/components/ui/button';
+import { useLocation } from 'wouter';
 
 const ErrorState: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -12,7 +12,7 @@ const ErrorState: React.FC = () => {
           Não conseguimos carregar seu resultado do quiz. Por favor, tente novamente.
         </p>
         <Button
-          onClick={() => setLocation("/quiz")}
+          onClick={() => setLocation('/quiz')}
           className="bg-[#aa6b5d] hover:bg-[#9a5b4d] text-white"
         >
           Refazer o Quiz

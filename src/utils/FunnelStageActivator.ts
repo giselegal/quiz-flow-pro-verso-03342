@@ -1,5 +1,5 @@
-import { FunnelStage } from "@/types/editor";
-import React from "react";
+import { FunnelStage } from '@/types/editor';
+import React from 'react';
 
 /**
  * Sistema de Ativação Automática das Etapas
@@ -13,64 +13,64 @@ import React from "react";
 
 export interface ActivationRules {
   intro: {
-    activateOn: "name-filled";
+    activateOn: 'name-filled';
     requiredField: string;
   };
   questions: {
-    activateOn: "min-selections";
+    activateOn: 'min-selections';
     minSelections: number;
     autoAdvance: boolean;
     stages: number[];
   };
   strategic: {
-    activateOn: "single-selection";
+    activateOn: 'single-selection';
     autoAdvance: false;
     manualClick: true;
     stages: number[];
   };
   transitions: {
-    activateOn: "automatic";
+    activateOn: 'automatic';
     delay: number;
     stages: number[];
   };
   results: {
-    activateOn: "calculation-complete";
+    activateOn: 'calculation-complete';
     stages: number[];
   };
   conversion: {
-    activateOn: "user-interaction";
+    activateOn: 'user-interaction';
     stages: number[];
   };
 }
 
 export const FUNNEL_ACTIVATION_RULES: ActivationRules = {
   intro: {
-    activateOn: "name-filled",
-    requiredField: "userName",
+    activateOn: 'name-filled',
+    requiredField: 'userName',
   },
   questions: {
-    activateOn: "min-selections",
+    activateOn: 'min-selections',
     minSelections: 3,
     autoAdvance: true,
     stages: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
   },
   strategic: {
-    activateOn: "single-selection",
+    activateOn: 'single-selection',
     autoAdvance: false,
     manualClick: true,
     stages: [16, 17, 18],
   },
   transitions: {
-    activateOn: "automatic",
+    activateOn: 'automatic',
     delay: 3000,
     stages: [15, 19],
   },
   results: {
-    activateOn: "calculation-complete",
+    activateOn: 'calculation-complete',
     stages: [20],
   },
   conversion: {
-    activateOn: "user-interaction",
+    activateOn: 'user-interaction',
     stages: [21],
   },
 };
@@ -110,7 +110,7 @@ export class FunnelStageActivator {
       try {
         callback(stage);
       } catch (error) {
-        console.error("Erro no listener de ativação:", error);
+        console.error('Erro no listener de ativação:', error);
       }
     });
   }
@@ -139,7 +139,7 @@ export class FunnelStageActivator {
     console.log(`📝 Campo preenchido:`, { fieldName, value });
 
     // Verificar ativação da etapa 1 (nome preenchido)
-    if (fieldName === "userName" && value.trim().length >= 2) {
+    if (fieldName === 'userName' && value.trim().length >= 2) {
       this.activateStage(2); // Ativar primeira questão
     }
   }
@@ -248,27 +248,27 @@ export class FunnelStageActivator {
    */
   private getStepName(stepNumber: number): string {
     const names = {
-      1: "Introdução",
-      2: "Q1 - Tipo de Roupa",
-      3: "Q2 - Nome Pessoal",
-      4: "Q3 - Estilo Pessoal",
-      5: "Q4 - Ocasiões",
-      6: "Q5 - Cores",
-      7: "Q6 - Textura",
-      8: "Q7 - Silhueta",
-      9: "Q8 - Acessórios",
-      10: "Q9 - Inspiração",
-      11: "Q10 - Conforto",
-      12: "Q11 - Tendências",
-      13: "Q12 - Investimento",
-      14: "Q13 - Personalidade",
-      15: "Transição",
-      16: "Q14 - Estratégica 1",
-      17: "Q15 - Estratégica 2",
-      18: "Q16 - Estratégica 3",
-      19: "Processamento",
-      20: "Resultado",
-      21: "Oferta",
+      1: 'Introdução',
+      2: 'Q1 - Tipo de Roupa',
+      3: 'Q2 - Nome Pessoal',
+      4: 'Q3 - Estilo Pessoal',
+      5: 'Q4 - Ocasiões',
+      6: 'Q5 - Cores',
+      7: 'Q6 - Textura',
+      8: 'Q7 - Silhueta',
+      9: 'Q8 - Acessórios',
+      10: 'Q9 - Inspiração',
+      11: 'Q10 - Conforto',
+      12: 'Q11 - Tendências',
+      13: 'Q12 - Investimento',
+      14: 'Q13 - Personalidade',
+      15: 'Transição',
+      16: 'Q14 - Estratégica 1',
+      17: 'Q15 - Estratégica 2',
+      18: 'Q16 - Estratégica 3',
+      19: 'Processamento',
+      20: 'Resultado',
+      21: 'Oferta',
     };
 
     return names[stepNumber as keyof typeof names] || `Etapa ${stepNumber}`;
@@ -279,15 +279,15 @@ export class FunnelStageActivator {
    */
   private getStepType(
     stepNumber: number
-  ): "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final" {
-    if (stepNumber === 1) return "intro";
-    if (stepNumber >= 2 && stepNumber <= 14) return "question";
-    if (stepNumber === 15 || stepNumber === 19) return "transition";
-    if (stepNumber >= 16 && stepNumber <= 18) return "question"; // Questões estratégicas são do tipo question
-    if (stepNumber === 20) return "result";
-    if (stepNumber === 21) return "offer";
+  ): 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final' {
+    if (stepNumber === 1) return 'intro';
+    if (stepNumber >= 2 && stepNumber <= 14) return 'question';
+    if (stepNumber === 15 || stepNumber === 19) return 'transition';
+    if (stepNumber >= 16 && stepNumber <= 18) return 'question'; // Questões estratégicas são do tipo question
+    if (stepNumber === 20) return 'result';
+    if (stepNumber === 21) return 'offer';
 
-    return "question";
+    return 'question';
   }
 
   /**
@@ -310,7 +310,7 @@ export class FunnelStageActivator {
   reset() {
     this.activatedStages.clear();
     this.userAnswers = {};
-    console.log("🔄 Sistema de ativação resetado");
+    console.log('🔄 Sistema de ativação resetado');
   }
 
   /**
@@ -342,13 +342,13 @@ export function useFunnelStageActivation() {
     };
 
     // Listener para mudanças
-    stageActivator.addListener("react-hook", updateState);
+    stageActivator.addListener('react-hook', updateState);
 
     // Estado inicial
     updateState();
 
     return () => {
-      stageActivator.removeListener("react-hook");
+      stageActivator.removeListener('react-hook');
     };
   }, []);
 

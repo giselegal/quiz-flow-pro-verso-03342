@@ -1,4 +1,4 @@
-import type { BlockData } from "@/types/blocks";
+import type { BlockData } from '@/types/blocks';
 
 export interface AdvancedEditorProps {
   initialBlocks?: BlockData[];

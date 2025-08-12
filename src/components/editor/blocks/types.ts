@@ -1,4 +1,4 @@
-import { EditorBlock } from "@/types/editor";
+import { EditorBlock } from '@/types/editor';
 
 export interface BlockEditorProps {
   block: EditorBlock;

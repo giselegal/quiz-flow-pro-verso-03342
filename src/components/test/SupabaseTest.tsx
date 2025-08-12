@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { supabase } from "@/integrations/supabase/client";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { supabase } from '@/integrations/supabase/client';
 
 export const SupabaseTest: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<string[]>([]);
-  const [funnelId, setFunnelId] = useState("");
+  const [funnelId, setFunnelId] = useState('');
 
   const addResult = (message: string) => {
     setResults(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
@@ -16,7 +16,7 @@ export const SupabaseTest: React.FC = () => {
   const testConnection = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.from("funnels").select("count");
+      const { data, error } = await supabase.from('funnels').select('count');
       if (error) throw error;
       addResult(`✅ Conexão bem-sucedida. Dados encontrados: ${data?.length || 0}`);
     } catch (error) {
@@ -29,13 +29,13 @@ export const SupabaseTest: React.FC = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("funnels")
+        .from('funnels')
         .insert([
           {
             id: `test-${Date.now()}`,
-            name: "Teste Quiz",
-            description: "Quiz de teste criado automaticamente",
-            user_id: "test-user",
+            name: 'Teste Quiz',
+            description: 'Quiz de teste criado automaticamente',
+            user_id: 'test-user',
           },
         ])
         .select();
@@ -51,7 +51,7 @@ export const SupabaseTest: React.FC = () => {
   const testRead = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.from("funnels").select("*").limit(5);
+      const { data, error } = await supabase.from('funnels').select('*').limit(5);
 
       if (error) throw error;
       addResult(`✅ Leitura bem-sucedida: ${data?.length || 0} registros encontrados`);
@@ -63,19 +63,19 @@ export const SupabaseTest: React.FC = () => {
 
   const testUpdate = async () => {
     if (!funnelId) {
-      addResult("❌ Forneça um ID de funil para testar a atualização");
+      addResult('❌ Forneça um ID de funil para testar a atualização');
       return;
     }
 
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("funnels")
+        .from('funnels')
         .update({
-          name: "Teste Quiz Atualizado",
+          name: 'Teste Quiz Atualizado',
           updated_at: new Date().toISOString(),
         })
-        .eq("id", funnelId)
+        .eq('id', funnelId)
         .select();
 
       if (error) throw error;
@@ -90,13 +90,13 @@ export const SupabaseTest: React.FC = () => {
 
   const testDelete = async () => {
     if (!funnelId) {
-      addResult("❌ Forneça um ID de funil para testar a exclusão");
+      addResult('❌ Forneça um ID de funil para testar a exclusão');
       return;
     }
 
     setLoading(true);
     try {
-      const { error } = await supabase.from("funnels").delete().eq("id", funnelId);
+      const { error } = await supabase.from('funnels').delete().eq('id', funnelId);
 
       if (error) throw error;
       addResult(`✅ Exclusão bem-sucedida para ID: ${funnelId}`);
@@ -110,7 +110,7 @@ export const SupabaseTest: React.FC = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("funnel_pages")
+        .from('funnel_pages')
         .select(
           `
           *,
@@ -133,29 +133,29 @@ export const SupabaseTest: React.FC = () => {
 
   const testRealTimeSubscription = () => {
     const subscription = supabase
-      .channel("funnels-changes")
+      .channel('funnels-changes')
       .on(
-        "postgres_changes",
+        'postgres_changes',
         {
-          event: "*",
-          schema: "public",
-          table: "funnels",
+          event: '*',
+          schema: 'public',
+          table: 'funnels',
         },
         payload => {
           addResult(`🔄 Mudança em tempo real detectada: ${payload.eventType}`);
         }
       )
       .subscribe(status => {
-        if (status === "SUBSCRIBED") {
-          addResult("✅ Subscrição em tempo real ativa");
-        } else if (status === "CHANNEL_ERROR") {
+        if (status === 'SUBSCRIBED') {
+          addResult('✅ Subscrição em tempo real ativa');
+        } else if (status === 'CHANNEL_ERROR') {
           addResult(`❌ Erro na subscrição: ${status}`);
         }
       });
 
     setTimeout(() => {
       subscription.unsubscribe();
-      addResult("🔄 Subscrição em tempo real encerrada");
+      addResult('🔄 Subscrição em tempo real encerrada');
     }, 10000);
   };
 
@@ -198,14 +198,14 @@ export const SupabaseTest: React.FC = () => {
             </Button>
           </div>
 
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             {results.map((result, index) => (
               <div key={index} className="text-sm font-mono">
                 {result}
               </div>
             ))}
             {results.length === 0 && (
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 Nenhum teste executado ainda. Clique nos botões acima para começar.
               </div>
             )}

@@ -1,7 +1,7 @@
 // 🎯 HOOK DE VALIDAÇÃO STEP01 - CONTROLE DE BOTÃO POR NOME
 // Sistema para ativação de botão baseada no input de nome
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 interface Step01ValidationState {
   isNameValid: boolean;
@@ -18,7 +18,7 @@ interface QuizInputChangeEvent {
 export const useStep01Validation = () => {
   const [validationState, setValidationState] = useState<Step01ValidationState>({
     isNameValid: false,
-    nameValue: "",
+    nameValue: '',
     isButtonEnabled: false,
   });
 
@@ -29,10 +29,10 @@ export const useStep01Validation = () => {
 
       // ✅ Verifica se é o input de nome (vários IDs possíveis)
       const nameInputIds = [
-        "name-input-modular",
-        "intro-name-input",
-        "user-name-input",
-        "userName",
+        'name-input-modular',
+        'intro-name-input',
+        'user-name-input',
+        'userName',
       ];
 
       if (nameInputIds.includes(blockId)) {
@@ -47,9 +47,9 @@ export const useStep01Validation = () => {
 
         // ✅ Disparar evento para atualizar botão
         window.dispatchEvent(
-          new CustomEvent("step01-button-state-change", {
+          new CustomEvent('step01-button-state-change', {
             detail: {
-              buttonId: "cta-button-modular",
+              buttonId: 'cta-button-modular',
               enabled: isValid,
               disabled: !isValid,
               requiresValidInput: !isValid,
@@ -57,7 +57,7 @@ export const useStep01Validation = () => {
           })
         );
 
-        console.log("🎯 Step01 Validation:", {
+        console.log('🎯 Step01 Validation:', {
           blockId,
           value: value.trim(),
           isValid,
@@ -67,11 +67,11 @@ export const useStep01Validation = () => {
     };
 
     // ✅ Adicionar listener
-    window.addEventListener("quiz-input-change", handleInputChange as EventListener);
+    window.addEventListener('quiz-input-change', handleInputChange as EventListener);
 
     // ✅ Cleanup
     return () => {
-      window.removeEventListener("quiz-input-change", handleInputChange as EventListener);
+      window.removeEventListener('quiz-input-change', handleInputChange as EventListener);
     };
   }, []);
 

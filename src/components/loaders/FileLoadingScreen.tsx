@@ -1,13 +1,13 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress";
+import React, { useState, useEffect } from 'react';
+import { Progress } from '@/components/ui/progress';
 
 interface FileLoadingScreenProps {
   onFileLoaded?: () => void;
 }
 
 const FileLoadingScreen: React.FC<FileLoadingScreenProps> = ({
-  fileUrl = "",
+  fileUrl = '',
   onFileLoaded = () => {},
   onError = () => {},
 }) => {

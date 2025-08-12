@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import SecurePurchaseElement from "@/components/result/SecurePurchaseElement";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ShoppingCart, Clock } from "lucide-react";
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, ShoppingCart, Clock } from 'lucide-react';
 
 interface PricingSectionProps {
   price?: string;
@@ -14,10 +14,10 @@ interface PricingSectionProps {
 }
 
 const PricingSection: React.FC<PricingSectionProps> = ({
-  price = "39,00",
-  regularPrice = "175,00",
-  ctaText = "Transformar Meu Estilo Agora",
-  ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+  price = '39,00',
+  regularPrice = '175,00',
+  ctaText = 'Transformar Meu Estilo Agora',
+  ctaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -35,7 +35,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
+      viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.8 }}
     >
       <Card className="p-8 border-[#aa6b5d] border-2 bg-white relative overflow-hidden card-elegant">
@@ -43,12 +43,12 @@ const PricingSection: React.FC<PricingSectionProps> = ({
         <motion.div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-10 pointer-events-none"
           animate={{
-            x: ["-100%", "100%"],
+            x: ['-100%', '100%'],
           }}
           transition={{
             repeat: Infinity,
             duration: 3,
-            ease: "linear",
+            ease: 'linear',
             repeatDelay: 1.5,
           }}
         />
@@ -67,7 +67,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             transition={{ duration: 0.5, delay: 0.4 }}
             whileHover={{
               y: -2,
-              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
             }}
           >
             <motion.h4
@@ -88,9 +88,9 @@ const PricingSection: React.FC<PricingSectionProps> = ({
 
             <motion.div className="space-y-2.5">
               {[
-                { label: "Guia Principal", value: "67,00" },
-                { label: "Bônus 1 - Peças-chave", value: "79,00" },
-                { label: "Bônus 2 - Visagismo Facial", value: "29,00" },
+                { label: 'Guia Principal', value: '67,00' },
+                { label: 'Bônus 1 - Peças-chave', value: '79,00' },
+                { label: 'Bônus 2 - Visagismo Facial', value: '29,00' },
               ].map((item, index) => (
                 <motion.div
                   key={index}
@@ -120,7 +120,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                   <motion.div
                     className="absolute top-1/2 left-0 right-0 h-[2px] bg-[#ff5a5a] transform -translate-y-1/2 -rotate-3"
                     initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
+                    animate={{ width: '100%' }}
                     transition={{ duration: 0.4, delay: 1.2 }}
                   />
                 </motion.span>
@@ -138,7 +138,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             <motion.div
               className="transform rotate-[-5deg] relative"
               whileHover={{ rotate: -8, scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              transition={{ type: 'spring', stiffness: 300 }}
             >
               <p className="text-sm text-[#3a3a3a]/60 mb-1">De</p>
               <p className="text-2xl line-through text-[#3a3a3a]/60">R$ {regularPrice}</p>
@@ -146,12 +146,12 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 className="absolute -top-1 -left-1 -right-1 -bottom-1 border-2 border-[#ff5a5a] transform rotate-[-8deg] rounded-sm"
                 animate={{
                   rotate: [-8, -10, -8],
-                  borderWidth: ["2px", "3px", "2px"],
+                  borderWidth: ['2px', '3px', '2px'],
                 }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  repeatType: "reverse",
+                  repeatType: 'reverse',
                 }}
               />
             </motion.div>
@@ -159,7 +159,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             <motion.div
               className="text-center transform rotate-[2deg]"
               whileHover={{ rotate: 4, scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              transition={{ type: 'spring', stiffness: 300 }}
             >
               <p className="text-sm text-[#aa6b5d] mb-1">Por apenas</p>
               <div className="flex items-baseline gap-1 justify-center relative">
@@ -167,17 +167,17 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                 <motion.p
                   className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-amber-500 to-amber-700"
                   animate={{
-                    backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+                    backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
                   }}
                   transition={{
                     duration: 5,
                     repeat: Infinity,
-                    repeatType: "reverse",
+                    repeatType: 'reverse',
                   }}
                 >
-                  {price.split(",")[0]}
+                  {price.split(',')[0]}
                 </motion.p>
-                <span className="text-lg">,{price.split(",")[1] || "00"}</span>
+                <span className="text-lg">,{price.split(',')[1] || '00'}</span>
                 <motion.div
                   className="absolute -top-2 -right-4 rotate-12 text-xs bg-[#aa6b5d] text-white px-2 py-0.5 rounded-full"
                   animate={{
@@ -187,7 +187,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
                   transition={{
                     duration: 2,
                     repeat: Infinity,
-                    repeatType: "reverse",
+                    repeatType: 'reverse',
                   }}
                 >
                   HOJE
@@ -282,12 +282,12 @@ const PricingSection: React.FC<PricingSectionProps> = ({
             {/* Elegant shadow beneath button */}
             <motion.div
               className="h-2 bg-gradient-to-r from-transparent via-[#B89B7A]/30 to-transparent rounded-full mt-2 mx-auto"
-              initial={{ width: "60%" }}
-              animate={{ width: "80%" }}
+              initial={{ width: '60%' }}
+              animate={{ width: '80%' }}
               transition={{
                 duration: 1,
                 repeat: Infinity,
-                repeatType: "reverse",
+                repeatType: 'reverse',
               }}
             />
           </motion.div>
@@ -301,7 +301,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
           >
             <motion.div
               animate={{ rotate: [0, 360] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
             >
               <Clock className="w-3 h-3 text-[#aa6b5d]" />
             </motion.div>

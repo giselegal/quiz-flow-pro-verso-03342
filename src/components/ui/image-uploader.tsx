@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Button } from "./button";
-import { ImagePlus, Trash } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState } from 'react';
+import { Button } from './button';
+import { ImagePlus, Trash } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ImageUploaderProps {
   currentImage?: string;
@@ -35,11 +35,11 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const handleRemoveImage = () => {
     setPreviewUrl(null);
-    onImageUpload("");
+    onImageUpload('');
   };
 
   return (
-    <div className={cn("flex flex-col items-center gap-2", className)}>
+    <div className={cn('flex flex-col items-center gap-2', className)}>
       {previewUrl ? (
         <div className="relative w-full">
           <img
@@ -58,9 +58,9 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
           </Button>
         </div>
       ) : (
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <ImagePlus className="w-12 h-12 text-gray-400 mb-2" />
-          <p style={{ color: "#8B7355" }}>Clique para fazer upload de uma imagem</p>
+          <p style={{ color: '#8B7355' }}>Clique para fazer upload de uma imagem</p>
           <input
             type="file"
             accept="image/*"
@@ -74,10 +74,10 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
             variant="outline"
             size="sm"
             className="text-xs"
-            onClick={() => document.getElementById("image-upload")?.click()}
+            onClick={() => document.getElementById('image-upload')?.click()}
             disabled={isUploading}
           >
-            {isUploading ? "Enviando..." : "Procurar imagens"}
+            {isUploading ? 'Enviando...' : 'Procurar imagens'}
           </Button>
         </div>
       )}

@@ -8,11 +8,11 @@ interface ImageDisplayInlineProps {
 }
 
 const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
-  src = "",
-  alt = "Imagem",
+  src = '',
+  alt = 'Imagem',
   width = 400,
   height = 300,
-  className = "",
+  className = '',
   onClick,
 }) => {
   if (!src) {

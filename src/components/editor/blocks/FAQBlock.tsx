@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { InlineEditableText } from "./InlineEditableText";
+import React, { useState } from 'react';
+import { InlineEditableText } from './InlineEditableText';
 import {
   ChevronDown,
   ChevronUp,
@@ -9,13 +9,13 @@ import {
   MessageSquare,
   CheckCircle,
   Info,
-} from "lucide-react";
-import type { BlockComponentProps, FAQBlock, FAQItem } from "@/types/blocks";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import type { BlockComponentProps, FAQBlock, FAQItem } from '@/types/blocks';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface FAQBlockProps extends BlockComponentProps {
   block: FAQBlock;
@@ -23,11 +23,11 @@ interface FAQBlockProps extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -72,64 +72,64 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Perguntas Frequentes",
-    subtitle = "Tire suas dúvidas sobre nosso produto",
+    title = 'Perguntas Frequentes',
+    subtitle = 'Tire suas dúvidas sobre nosso produto',
     faqs = [
       {
-        id: "faq-1",
-        question: "Como funciona o processo de análise de estilo?",
+        id: 'faq-1',
+        question: 'Como funciona o processo de análise de estilo?',
         answer:
-          "Nossa análise é baseada em suas respostas ao quiz e leva em consideração suas preferências pessoais, biotipo, estilo de vida e objetivos. O resultado é um guia personalizado com recomendações específicas para você.",
-        category: "Processo",
+          'Nossa análise é baseada em suas respostas ao quiz e leva em consideração suas preferências pessoais, biotipo, estilo de vida e objetivos. O resultado é um guia personalizado com recomendações específicas para você.',
+        category: 'Processo',
         isHighlight: true,
-        tags: ["análise", "personalização"],
+        tags: ['análise', 'personalização'],
       },
       {
-        id: "faq-2",
-        question: "Quanto tempo demora para receber o resultado?",
+        id: 'faq-2',
+        question: 'Quanto tempo demora para receber o resultado?',
         answer:
-          "Você recebe seu resultado imediatamente após completar o quiz. O material complementar é enviado por email em até 24 horas.",
-        category: "Prazo",
+          'Você recebe seu resultado imediatamente após completar o quiz. O material complementar é enviado por email em até 24 horas.',
+        category: 'Prazo',
         isHighlight: false,
-        tags: ["prazo", "entrega"],
+        tags: ['prazo', 'entrega'],
       },
       {
-        id: "faq-3",
-        question: "Posso usar o método em qualquer idade?",
+        id: 'faq-3',
+        question: 'Posso usar o método em qualquer idade?',
         answer:
-          "Sim! Nosso método é adaptável para mulheres de todas as idades, desde jovens adultas até mulheres maduras. O importante é descobrir seu estilo autêntico.",
-        category: "Aplicação",
+          'Sim! Nosso método é adaptável para mulheres de todas as idades, desde jovens adultas até mulheres maduras. O importante é descobrir seu estilo autêntico.',
+        category: 'Aplicação',
         isHighlight: false,
-        tags: ["idade", "aplicação"],
+        tags: ['idade', 'aplicação'],
       },
       {
-        id: "faq-4",
-        question: "Há garantia de satisfação?",
+        id: 'faq-4',
+        question: 'Há garantia de satisfação?',
         answer:
-          "Oferecemos 30 dias de garantia incondicional. Se não ficar satisfeita com o resultado, devolvemos 100% do seu investimento.",
-        category: "Garantia",
+          'Oferecemos 30 dias de garantia incondicional. Se não ficar satisfeita com o resultado, devolvemos 100% do seu investimento.',
+        category: 'Garantia',
         isHighlight: true,
-        tags: ["garantia", "satisfação"],
+        tags: ['garantia', 'satisfação'],
       },
     ],
-    layout = "accordion",
+    layout = 'accordion',
     showSearch = true,
     showCategories = true,
     allowMultipleOpen = false,
     animateEntrance = true,
-    backgroundColor = "#ffffff",
-    textColor = "#432818",
-    accentColor = "#B89B7A",
-    cardStyle = "modern",
-    searchPlaceholder = "Buscar perguntas...",
+    backgroundColor = '#ffffff',
+    textColor = '#432818',
+    accentColor = '#B89B7A',
+    cardStyle = 'modern',
+    searchPlaceholder = 'Buscar perguntas...',
   } = block?.properties || {};
 
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
@@ -161,29 +161,29 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
   };
 
   const getCardStyleClasses = (isHighlight: boolean = false) => {
-    const baseClasses = "transition-all duration-300 cursor-pointer";
+    const baseClasses = 'transition-all duration-300 cursor-pointer';
 
-    let styleClasses = "";
+    let styleClasses = '';
     switch (cardStyle) {
-      case "classic":
-        styleClasses = "bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md";
+      case 'classic':
+        styleClasses = 'bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md';
         break;
-      case "flat":
-        styleClasses = "bg-transparent border-b border-gray-200 rounded-none hover:bg-gray-50";
+      case 'flat':
+        styleClasses = 'bg-transparent border-b border-gray-200 rounded-none hover:bg-gray-50';
         break;
-      case "classic":
+      case 'classic':
         styleClasses =
-          "bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg hover:shadow-xl";
+          'bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg hover:shadow-xl';
         break;
-      case "modern":
+      case 'modern':
       default:
         styleClasses =
-          "bg-white border border-gray-100 rounded-xl shadow-md hover:shadow-lg hover:border-[#B89B7A]/30";
+          'bg-white border border-gray-100 rounded-xl shadow-md hover:shadow-lg hover:border-[#B89B7A]/30';
         break;
     }
 
     if (isHighlight) {
-      styleClasses += " border-[#B89B7A]/40 bg-[#FAF9F7]";
+      styleClasses += ' border-[#B89B7A]/40 bg-[#FAF9F7]';
     }
 
     return `${baseClasses} ${styleClasses}`;
@@ -192,12 +192,12 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
   // Filter FAQs based on search and category
   const filteredFAQs = faqs.filter(faq => {
     const matchesSearch =
-      searchTerm === "" ||
+      searchTerm === '' ||
       faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (faq.tags && faq.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())));
 
-    const matchesCategory = selectedCategory === "all" || faq.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -229,13 +229,13 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                     )}
                     <h3
                       className={cn(
-                        "font-semibold text-lg leading-relaxed",
-                        faq.isHighlight ? "text-[#B89B7A]" : "text-gray-800",
+                        'font-semibold text-lg leading-relaxed',
+                        faq.isHighlight ? 'text-[#B89B7A]' : 'text-gray-800',
                         // Margens universais com controles deslizantes
-                        getMarginClass(marginTop, "top"),
-                        getMarginClass(marginBottom, "bottom"),
-                        getMarginClass(marginLeft, "left"),
-                        getMarginClass(marginRight, "right")
+                        getMarginClass(marginTop, 'top'),
+                        getMarginClass(marginBottom, 'bottom'),
+                        getMarginClass(marginLeft, 'left'),
+                        getMarginClass(marginRight, 'right')
                       )}
                     >
                       {faq.question}
@@ -243,7 +243,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                   </div>
 
                   {faq.category && showCategories && (
-                    <Badge variant="secondary" style={{ color: "#6B4F43" }}>
+                    <Badge variant="secondary" style={{ color: '#6B4F43' }}>
                       {faq.category}
                     </Badge>
                   )}
@@ -261,14 +261,14 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
               {isOpen && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
+                  animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
                   <div className="px-4 md:px-6 pb-4 md:pb-6">
                     <div className="border-t border-gray-100 pt-4">
-                      <p style={{ color: "#6B4F43" }}>{faq.answer}</p>
+                      <p style={{ color: '#6B4F43' }}>{faq.answer}</p>
 
                       {faq.tags && faq.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-4">
@@ -298,9 +298,9 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
     return (
       <div
         className={cn(
-          "bg-gray-100 p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center min-h-[300px] cursor-pointer transition-all duration-200",
-          isSelected && "ring-1 ring-gray-400/40 bg-gray-50/30",
-          !isSelected && "hover:shadow-sm",
+          'bg-gray-100 p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center min-h-[300px] cursor-pointer transition-all duration-200',
+          isSelected && 'ring-1 ring-gray-400/40 bg-gray-50/30',
+          !isSelected && 'hover:shadow-sm',
           className
         )}
         onClick={onClick}
@@ -316,9 +316,9 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
   return (
     <div
       className={cn(
-        "py-8 px-4 cursor-pointer transition-all duration-200 w-full",
-        isSelected && "ring-1 ring-gray-400/40 bg-gray-50/30",
-        !isSelected && "hover:shadow-sm",
+        'py-8 px-4 cursor-pointer transition-all duration-200 w-full',
+        isSelected && 'ring-1 ring-gray-400/40 bg-gray-50/30',
+        !isSelected && 'hover:shadow-sm',
         className
       )}
       onClick={onClick}
@@ -332,16 +332,16 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
           <h2 className="text-2xl md:text-3xl font-bold mb-2">
             <InlineEditableText
               value={title}
-              onChange={(value: string) => handlePropertyChange("title", value)}
+              onChange={(value: string) => handlePropertyChange('title', value)}
               className="inline-block"
               placeholder="Título do FAQ"
             />
           </h2>
           {subtitle && (
-            <p style={{ color: "#6B4F43" }}>
+            <p style={{ color: '#6B4F43' }}>
               <InlineEditableText
                 value={subtitle}
-                onChange={(value: string) => handlePropertyChange("subtitle", value)}
+                onChange={(value: string) => handlePropertyChange('subtitle', value)}
                 className="inline-block"
                 placeholder="Subtítulo do FAQ"
               />
@@ -362,7 +362,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                 placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                style={{ borderColor: "#E5DDD5" }}
+                style={{ borderColor: '#E5DDD5' }}
                 onClick={e => e.stopPropagation()}
               />
             </div>
@@ -373,14 +373,14 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
             <div className="flex flex-wrap gap-2">
               <button
                 className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
-                  selectedCategory === "all"
-                    ? "bg-[#B89B7A] text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
+                  selectedCategory === 'all'
+                    ? 'bg-[#B89B7A] text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 )}
                 onClick={e => {
                   e.stopPropagation();
-                  setSelectedCategory("all");
+                  setSelectedCategory('all');
                 }}
               >
                 Todas
@@ -389,14 +389,14 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
                 <button
                   key={category}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                    'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
                     selectedCategory === category
-                      ? "bg-[#B89B7A] text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      ? 'bg-[#B89B7A] text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   )}
                   onClick={e => {
                     e.stopPropagation();
-                    setSelectedCategory(category || "all");
+                    setSelectedCategory(category || 'all');
                   }}
                 >
                   {category}
@@ -416,13 +416,13 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
         ) : (
           <div className="text-center py-12">
             <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p style={{ color: "#8B7355" }}>Nenhuma pergunta encontrada para "{searchTerm}"</p>
+            <p style={{ color: '#8B7355' }}>Nenhuma pergunta encontrada para "{searchTerm}"</p>
             <button
               className="mt-4 text-[#B89B7A] hover:underline"
               onClick={e => {
                 e.stopPropagation();
-                setSearchTerm("");
-                setSelectedCategory("all");
+                setSearchTerm('');
+                setSelectedCategory('all');
               }}
             >
               Limpar filtros
@@ -433,7 +433,7 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
 
       {/* Stats */}
       <div className="max-w-4xl mx-auto mt-8 text-center">
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <div className="flex items-center gap-1">
             <MessageSquare className="w-4 h-4" />
             <span>{filteredFAQs.length} pergunta(s)</span>
@@ -449,8 +449,8 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
       {isEditing && (
         <div className="mt-8 p-4 bg-[#FAF9F7] border border-[#B89B7A]/20 rounded-md">
           <p className="text-sm text-[#8F7A6A]">
-            Modo de edição: {faqs.length} FAQ(s) • Layout: {layout} • Filtros:{" "}
-            {searchTerm || "nenhum"} • Categoria: {selectedCategory}
+            Modo de edição: {faqs.length} FAQ(s) • Layout: {layout} • Filtros:{' '}
+            {searchTerm || 'nenhum'} • Categoria: {selectedCategory}
           </p>
         </div>
       )}

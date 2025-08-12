@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Block } from '@/types/editor';
 
 interface HeaderBlockEditorProps {
   block: Block;
@@ -18,7 +18,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
         <Textarea
           id="title"
           rows={2}
-          value={content.title || ""}
+          value={content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Olá, seu Estilo Predominante é:"
         />
@@ -29,7 +29,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
         <Textarea
           id="subtitle"
           rows={2}
-          value={content.subtitle || ""}
+          value={content.subtitle || ''}
           onChange={e => onUpdate({ subtitle: e.target.value })}
           placeholder="Subtítulo personalizado"
         />
@@ -39,12 +39,12 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
         <Label htmlFor="logo">URL do Logo</Label>
         <Input
           id="logo"
-          value={content.logo || ""}
+          value={content.logo || ''}
           onChange={e => onUpdate({ logo: e.target.value })}
           placeholder="https://exemplo.com/seu-logo.png"
         />
         {content.logo && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img src={content.logo} alt="Logo" className="h-10 object-contain mx-auto" />
           </div>
         )}
@@ -54,7 +54,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
         <Label htmlFor="logoAlt">Texto Alternativo do Logo</Label>
         <Input
           id="logoAlt"
-          value={content.logoAlt || ""}
+          value={content.logoAlt || ''}
           onChange={e => onUpdate({ logoAlt: e.target.value })}
           placeholder="Logo Gisele Galvão"
         />
@@ -65,7 +65,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           <Label htmlFor="logoWidth">Largura do Logo</Label>
           <Input
             id="logoWidth"
-            value={content.logoWidth || ""}
+            value={content.logoWidth || ''}
             onChange={e => onUpdate({ logoWidth: e.target.value })}
             placeholder="auto"
           />
@@ -74,7 +74,7 @@ const HeaderBlockEditor: React.FC<HeaderBlockEditorProps> = ({ block, onUpdate }
           <Label htmlFor="logoHeight">Altura do Logo</Label>
           <Input
             id="logoHeight"
-            value={content.logoHeight || ""}
+            value={content.logoHeight || ''}
             onChange={e => onUpdate({ logoHeight: e.target.value })}
             placeholder="auto"
           />

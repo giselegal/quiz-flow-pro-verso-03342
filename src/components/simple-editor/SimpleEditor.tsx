@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Save, Palette, Type, Eye, Settings, ArrowLeft } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
-import { safeLocalStorage } from "@/utils/safeLocalStorage";
-import { Link } from "wouter";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Save, Palette, Type, Eye, Settings, ArrowLeft } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
+import { safeLocalStorage } from '@/utils/safeLocalStorage';
+import { Link } from 'wouter';
 
 interface EditorConfig {
   cores: {
@@ -27,40 +27,40 @@ interface EditorConfig {
   layout: {
     espacamento: number;
     larguraMaxima: string;
-    alinhamento: "left" | "center" | "right";
+    alinhamento: 'left' | 'center' | 'right';
   };
 }
 
 const SimpleEditor: React.FC = () => {
   const [config, setConfig] = useState<EditorConfig>({
     cores: {
-      primaria: "#B89B7A",
-      secundaria: "#aa6b5d",
-      fundo: "#fffaf7",
-      texto: "#432818",
-      destaque: "#D4A574",
+      primaria: '#B89B7A',
+      secundaria: '#aa6b5d',
+      fundo: '#fffaf7',
+      texto: '#432818',
+      destaque: '#D4A574',
     },
     texto: {
-      titulo: "Descubra Seu Estilo Único",
-      subtitulo: "Guia Personalizado de Estilo",
-      descricao: "Transforme sua imagem com confiança e autenticidade.",
-      botao: "Começar Quiz",
-      introducao: "Um quiz personalizado para descobrir o seu estilo único",
+      titulo: 'Descubra Seu Estilo Único',
+      subtitulo: 'Guia Personalizado de Estilo',
+      descricao: 'Transforme sua imagem com confiança e autenticidade.',
+      botao: 'Começar Quiz',
+      introducao: 'Um quiz personalizado para descobrir o seu estilo único',
     },
     layout: {
       espacamento: 2,
-      larguraMaxima: "max-w-4xl",
-      alinhamento: "center",
+      larguraMaxima: 'max-w-4xl',
+      alinhamento: 'center',
     },
   });
 
   const [modoPreview, setModoPreview] = useState(false);
 
   const salvar = () => {
-    safeLocalStorage.setItem("simpleEditorConfig", JSON.stringify(config));
+    safeLocalStorage.setItem('simpleEditorConfig', JSON.stringify(config));
     toast({
-      title: "Salvo!",
-      description: "Configurações foram salvas com sucesso.",
+      title: 'Salvo!',
+      description: 'Configurações foram salvas com sucesso.',
     });
   };
 
@@ -100,9 +100,9 @@ const SimpleEditor: React.FC = () => {
           className="text-5xl font-bold mb-6"
           style={{
             background: `linear-gradient(135deg, ${config.cores.primaria}, ${config.cores.secundaria})`,
-            backgroundClip: "text",
-            WebkitBackgroundClip: "text",
-            color: "transparent",
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
           }}
         >
           {config.texto.titulo}
@@ -136,7 +136,7 @@ const SimpleEditor: React.FC = () => {
               <h3 className="text-xl font-semibold mb-3" style={{ color: config.cores.primaria }}>
                 Recurso {i}
               </h3>
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 Descrição do recurso que demonstra como o editor simples pode criar layouts
                 elegantes.
               </p>
@@ -173,7 +173,7 @@ const SimpleEditor: React.FC = () => {
   }
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       {/* Header */}
       <div className="bg-white border-b p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -181,8 +181,8 @@ const SimpleEditor: React.FC = () => {
             <Link to="/admin" className="text-[#B89B7A] hover:text-[#A38A69]">
               <ArrowLeft className="w-5 h-5" />
             </Link>
-            <h1 style={{ color: "#432818" }}>Simple Editor</h1>
-            <span style={{ backgroundColor: "#E5DDD5" }}>Modo Simples</span>
+            <h1 style={{ color: '#432818' }}>Simple Editor</h1>
+            <span style={{ backgroundColor: '#E5DDD5' }}>Modo Simples</span>
           </div>
 
           <div className="flex gap-2">
@@ -216,7 +216,7 @@ const SimpleEditor: React.FC = () => {
               <div className="space-y-4">
                 {Object.entries(config.cores).map(([chave, valor]) => (
                   <div key={chave}>
-                    <Label className="capitalize">{chave.replace(/([A-Z])/g, " $1")}</Label>
+                    <Label className="capitalize">{chave.replace(/([A-Z])/g, ' $1')}</Label>
                     <div className="flex gap-2 mt-1">
                       <Input
                         type="color"
@@ -246,8 +246,8 @@ const SimpleEditor: React.FC = () => {
               <div className="space-y-4">
                 {Object.entries(config.texto).map(([chave, valor]) => (
                   <div key={chave}>
-                    <Label className="capitalize">{chave.replace(/([A-Z])/g, " $1")}</Label>
-                    {chave === "descricao" || chave === "introducao" ? (
+                    <Label className="capitalize">{chave.replace(/([A-Z])/g, ' $1')}</Label>
+                    {chave === 'descricao' || chave === 'introducao' ? (
                       <Textarea
                         value={valor}
                         onChange={e => atualizarTexto(chave, e.target.value)}
@@ -281,7 +281,7 @@ const SimpleEditor: React.FC = () => {
                     min="1"
                     max="8"
                     value={config.layout.espacamento}
-                    onChange={e => atualizarLayout("espacamento", Number(e.target.value))}
+                    onChange={e => atualizarLayout('espacamento', Number(e.target.value))}
                     className="mt-1"
                   />
                 </div>
@@ -290,7 +290,7 @@ const SimpleEditor: React.FC = () => {
                   <Label>Largura Máxima</Label>
                   <select
                     value={config.layout.larguraMaxima}
-                    onChange={e => atualizarLayout("larguraMaxima", e.target.value)}
+                    onChange={e => atualizarLayout('larguraMaxima', e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
                   >
                     <option value="max-w-2xl">Pequena (2xl)</option>
@@ -304,7 +304,7 @@ const SimpleEditor: React.FC = () => {
                   <Label>Alinhamento</Label>
                   <select
                     value={config.layout.alinhamento}
-                    onChange={e => atualizarLayout("alinhamento", e.target.value)}
+                    onChange={e => atualizarLayout('alinhamento', e.target.value)}
                     className="w-full mt-1 p-2 border rounded-md"
                   >
                     <option value="left">Esquerda</option>
@@ -322,7 +322,7 @@ const SimpleEditor: React.FC = () => {
               <div className="p-4 border-b">
                 <h3 className="text-lg font-semibold">Preview em Tempo Real</h3>
               </div>
-              <div style={{ backgroundColor: "#E5DDD5" }}>
+              <div style={{ backgroundColor: '#E5DDD5' }}>
                 <ComponentePreview />
               </div>
             </Card>

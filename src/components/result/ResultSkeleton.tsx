@@ -1,7 +1,7 @@
-import { Card } from "@/components/ui/card";
-import { StyleResult } from "@/types/quiz";
-import { styleConfig } from "@/config/styleConfig";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Card } from '@/components/ui/card';
+import { StyleResult } from '@/types/quiz';
+import { styleConfig } from '@/config/styleConfig';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface ResultSkeletonProps {
   primaryStyle?: StyleResult;
@@ -75,7 +75,7 @@ const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
               {[1, 2, 3].map(i => (
                 <div
                   key={i}
-                  className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${i === 1 ? "bg-[#aa6b5d]/50" : "bg-gray-200"}`}
+                  className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full ${i === 1 ? 'bg-[#aa6b5d]/50' : 'bg-gray-200'}`}
                 />
               ))}
             </div>

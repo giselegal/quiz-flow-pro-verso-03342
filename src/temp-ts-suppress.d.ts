@@ -1,6 +1,6 @@
 // @ts-nocheck
 // Temporary global suppression for all TypeScript errors in blocks
-declare module "*.tsx" {
+declare module '*.tsx' {
   const component: any;
   export default component;
 }

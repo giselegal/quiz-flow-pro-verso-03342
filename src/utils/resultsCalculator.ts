@@ -1,4 +1,4 @@
-import { StyleResult } from "../types/quiz";
+import { StyleResult } from '../types/quiz';
 
 /**
  * Representa a resposta de um usuário para uma pergunta
@@ -17,7 +17,7 @@ export interface UserAnswer {
  */
 export const calculateResults = (answers: Record<string, UserAnswer[]>) => {
   // Implementação simplificada para mock
-  const styles = ["Clássico", "Romântico", "Dramático", "Natural", "Criativo"];
+  const styles = ['Clássico', 'Romântico', 'Dramático', 'Natural', 'Criativo'];
   const randomStyle = styles[Math.floor(Math.random() * styles.length)];
 
   return {
@@ -25,7 +25,7 @@ export const calculateResults = (answers: Record<string, UserAnswer[]>) => {
     description: `Seu estilo predominante é ${randomStyle}. Este estilo reflete sua personalidade única e forma de expressão. Através das suas escolhas, podemos ver uma clara preferência por elementos que representam este estilo.`,
     score: 85,
     percentage: 100, // Added percentage property to match StyleResult
-    colorPalette: ["#a67c52", "#d4c1a9", "#7a5c58"],
-    styleAttributes: ["Elegante", "Sofisticado", "Atemporal"],
+    colorPalette: ['#a67c52', '#d4c1a9', '#7a5c58'],
+    styleAttributes: ['Elegante', 'Sofisticado', 'Atemporal'],
   };
 };

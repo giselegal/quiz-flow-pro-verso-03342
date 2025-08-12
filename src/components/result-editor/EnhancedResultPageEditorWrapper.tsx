@@ -1,5 +1,5 @@
-import { StyleResult, QuizFunnel } from "@/types/quiz";
-import { EnhancedResultPageEditor } from "./EnhancedResultPageEditor";
+import { StyleResult, QuizFunnel } from '@/types/quiz';
+import { EnhancedResultPageEditor } from './EnhancedResultPageEditor';
 
 interface EnhancedResultPageEditorWrapperProps {
   primaryStyle?: StyleResult;

@@ -1,16 +1,16 @@
-import { LucideIcon } from "lucide-react";
+import { LucideIcon } from 'lucide-react';
 
 export enum PropertyType {
-  TEXT = "text",
-  TEXTAREA = "textarea",
-  NUMBER = "number",
-  BOOLEAN = "boolean",
-  COLOR = "color",
-  SELECT = "select",
-  RANGE = "range",
-  IMAGE = "image",
-  OPTION_SCORE = "option_score",
-  OPTION_CATEGORY = "option_category",
+  TEXT = 'text',
+  TEXTAREA = 'textarea',
+  NUMBER = 'number',
+  BOOLEAN = 'boolean',
+  COLOR = 'color',
+  SELECT = 'select',
+  RANGE = 'range',
+  IMAGE = 'image',
+  OPTION_SCORE = 'option_score',
+  OPTION_CATEGORY = 'option_category',
 }
 
 export interface PropertyDefinition {
@@ -18,7 +18,7 @@ export interface PropertyDefinition {
   type: PropertyType;
   label: string;
   description?: string;
-  category?: "basic" | "style" | "advanced" | "quiz";
+  category?: 'basic' | 'style' | 'advanced' | 'quiz';
   required?: boolean;
   defaultValue?: any;
   options?: Array<{ value: string; label: string }>;
@@ -28,7 +28,7 @@ export interface PropertyDefinition {
 }
 
 export interface PropertySchema {
-  type: "string" | "number" | "boolean" | "select" | "textarea" | "array" | "color" | "range";
+  type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'array' | 'color' | 'range';
 
   default: any;
 
@@ -36,7 +36,7 @@ export interface PropertySchema {
 
   description?: string;
 
-  category?: "general" | "layout" | "styling" | "content" | "behavior" | "validation" | "advanced";
+  category?: 'general' | 'layout' | 'styling' | 'content' | 'behavior' | 'validation' | 'advanced';
 
   required?: boolean;
 
@@ -79,76 +79,76 @@ export interface BlockDefinition {
 
 export type BlockType =
   // Tipos gerais de blocos
-  | "headline"
-  | "text"
-  | "image"
-  | "button"
-  | "spacer"
+  | 'headline'
+  | 'text'
+  | 'image'
+  | 'button'
+  | 'spacer'
 
   // Blocos inline
-  | "text-inline"
-  | "image-inline"
-  | "image-display-inline"
-  | "badge-inline"
-  | "progress-inline"
-  | "stat-inline"
-  | "countdown-inline"
-  | "spacer-inline"
-  | "heading-inline"
-  | "button-inline"
-  | "input-field"
-  | "form-input"
-  | "legal-notice-inline"
+  | 'text-inline'
+  | 'image-inline'
+  | 'image-display-inline'
+  | 'badge-inline'
+  | 'progress-inline'
+  | 'stat-inline'
+  | 'countdown-inline'
+  | 'spacer-inline'
+  | 'heading-inline'
+  | 'button-inline'
+  | 'input-field'
+  | 'form-input'
+  | 'legal-notice-inline'
 
   // Blocos de quiz
-  | "quiz-intro-header"
-  | "quiz-start-page-inline"
-  | "quiz-question-inline"
-  | "quiz-result-inline"
-  | "quiz-offer-cta-inline"
-  | "step-header-inline"
-  | "step01-intro"
+  | 'quiz-intro-header'
+  | 'quiz-start-page-inline'
+  | 'quiz-question-inline'
+  | 'quiz-result-inline'
+  | 'quiz-offer-cta-inline'
+  | 'step-header-inline'
+  | 'step01-intro'
 
   // Blocos de resultado e estilo
-  | "style-result"
-  | "style-card-inline"
-  | "result-card-inline"
-  | "result-header-inline"
-  | "secondary-styles"
-  | "secondaryStylesTitle"
+  | 'style-result'
+  | 'style-card-inline'
+  | 'result-card-inline'
+  | 'result-header-inline'
+  | 'secondary-styles'
+  | 'secondaryStylesTitle'
 
   // Blocos de layout
-  | "two-column"
-  | "form-container"
-  | "options-grid"
-  | "hero-section"
-  | "hero"
-  | "header"
-  | "carousel"
-  | "decorative-bar-inline"
+  | 'two-column'
+  | 'form-container'
+  | 'options-grid'
+  | 'hero-section'
+  | 'hero'
+  | 'header'
+  | 'carousel'
+  | 'decorative-bar-inline'
 
   // Blocos de acessibilidade
-  | "accessibility-skip-link"
-  | "animation-block"
-  | "loading-animation"
+  | 'accessibility-skip-link'
+  | 'animation-block'
+  | 'loading-animation'
 
   // Blocos de conteúdo
-  | "benefits"
-  | "benefitsList"
-  | "testimonials"
-  | "testimonial"
-  | "testimonial-card-inline"
-  | "testimonialsSection"
-  | "pricing"
-  | "pricing-card-inline"
-  | "guarantee"
-  | "cta"
-  | "offerHero"
-  | "products"
-  | "video"
-  | "icon"
-  | "faq"
-  | "custom-code";
+  | 'benefits'
+  | 'benefitsList'
+  | 'testimonials'
+  | 'testimonial'
+  | 'testimonial-card-inline'
+  | 'testimonialsSection'
+  | 'pricing'
+  | 'pricing-card-inline'
+  | 'guarantee'
+  | 'cta'
+  | 'offerHero'
+  | 'products'
+  | 'video'
+  | 'icon'
+  | 'faq'
+  | 'custom-code';
 
 export interface FAQItem {
   id: string;
@@ -173,11 +173,11 @@ export interface EditableContent {
 
   borderRadius?: string;
 
-  objectFit?: "cover" | "contain" | "fill" | "none" | "scale-down";
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 
   fontSize?: string;
 
-  alignment?: "left" | "center" | "right" | "justify";
+  alignment?: 'left' | 'center' | 'right' | 'justify';
 
   maxWidth?: number;
 
@@ -297,7 +297,7 @@ export interface FunnelStage {
 
   order: number;
 
-  type: "intro" | "question" | "transition" | "processing" | "result" | "lead" | "offer" | "final";
+  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' | 'final';
 
   description?: string;
 
@@ -327,7 +327,7 @@ export interface EditorConfig {
  */
 export interface OptimizedEditorConfig extends EditorConfig {
   version: string;
-  optimizationLevel: "basic" | "advanced" | "performance";
+  optimizationLevel: 'basic' | 'advanced' | 'performance';
   inlineComponents: string[];
   performanceSettings: {
     enableAutoSave: boolean;

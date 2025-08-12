@@ -1,20 +1,20 @@
-import React, { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { BlockData } from "@/types/blocks";
+import React, { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+import { BlockData } from '@/types/blocks';
 
 export interface InlineBaseWrapperProps {
   children: ReactNode;
   className?: string;
   minHeight?: string;
   editLabel?: string;
-  gap?: "none" | "sm" | "md" | "lg";
-  justify?: "start" | "center" | "end";
-  align?: "center" | "start" | "end" | "stretch";
-  direction?: "row" | "col";
+  gap?: 'none' | 'sm' | 'md' | 'lg';
+  justify?: 'start' | 'center' | 'end';
+  align?: 'center' | 'start' | 'end' | 'stretch';
+  direction?: 'row' | 'col';
   wrap?: boolean;
   trackingData?: Record<string, any>;
   isLoading?: boolean;
-  onMove?: (direction: "up" | "down") => void;
+  onMove?: (direction: 'up' | 'down') => void;
   responsive?: boolean | Record<string, any>;
   onEdit?: () => void;
   maxWidth?: string;
@@ -31,13 +31,13 @@ export interface InlineBaseWrapperProps {
 
 const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   children,
-  className = "",
-  minHeight = "2rem",
-  editLabel: _editLabel = "Editar",
-  gap = "md",
-  justify = "start",
-  align = "start",
-  direction = "col",
+  className = '',
+  minHeight = '2rem',
+  editLabel: _editLabel = 'Editar',
+  gap = 'md',
+  justify = 'start',
+  align = 'start',
+  direction = 'col',
   wrap = false,
   trackingData: _trackingData,
   isLoading: _isLoading = false,
@@ -51,38 +51,38 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
   onPropertyChange: _onPropertyChange,
 }) => {
   const gapClasses = {
-    none: "gap-0",
-    sm: "gap-2",
-    md: "gap-4",
-    lg: "gap-6",
+    none: 'gap-0',
+    sm: 'gap-2',
+    md: 'gap-4',
+    lg: 'gap-6',
   };
 
   const justifyClasses = {
-    start: "justify-start",
-    center: "justify-center",
-    end: "justify-end",
+    start: 'justify-start',
+    center: 'justify-center',
+    end: 'justify-end',
   };
 
   const alignClasses = {
-    start: "items-start",
-    center: "items-center",
-    end: "items-end",
-    stretch: "items-stretch",
+    start: 'items-start',
+    center: 'items-center',
+    end: 'items-end',
+    stretch: 'items-stretch',
   };
 
   // Handle responsive as boolean or object
-  const isResponsive = typeof responsive === "boolean" ? responsive : false;
+  const isResponsive = typeof responsive === 'boolean' ? responsive : false;
 
   return (
     <div
       className={cn(
-        "inline-base-wrapper",
-        direction === "row" ? "flex flex-row" : "flex flex-col",
+        'inline-base-wrapper',
+        direction === 'row' ? 'flex flex-row' : 'flex flex-col',
         gapClasses[gap],
         justifyClasses[justify],
         alignClasses[align],
-        wrap && "flex-wrap",
-        isResponsive && "w-full",
+        wrap && 'flex-wrap',
+        isResponsive && 'w-full',
         className
       )}
       style={{

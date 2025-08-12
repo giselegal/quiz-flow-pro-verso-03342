@@ -2,10 +2,10 @@
 // components/editor/components/PropertyTemplates.tsx - Templates de propriedades
 // =====================================================================
 
-import { Button } from "../../ui/button";
-import { Card, CardContent } from "../../ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { Badge } from "../../ui/badge";
+import { Button } from '../../ui/button';
+import { Card, CardContent } from '../../ui/card';
+import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
+import { Badge } from '../../ui/badge';
 import {
   Palette,
   Layout,
@@ -15,14 +15,14 @@ import {
   PieChart,
   MessageSquare,
   Star,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface PropertyTemplate {
   id: string;
   name: string;
   description: string;
   icon: React.ComponentType<any>;
-  category: "layout" | "styling" | "content" | "interaction";
+  category: 'layout' | 'styling' | 'content' | 'interaction';
   properties: Record<string, any>;
 }
 
@@ -32,141 +32,141 @@ interface PropertyTemplatesProps {
 
 const templates: PropertyTemplate[] = [
   {
-    id: "quiz-card",
-    name: "Card de Quiz",
-    description: "Layout moderno para questões de quiz",
+    id: 'quiz-card',
+    name: 'Card de Quiz',
+    description: 'Layout moderno para questões de quiz',
     icon: Target,
-    category: "layout",
+    category: 'layout',
     properties: {
-      layout: "vertical",
-      backgroundColor: "#ffffff",
+      layout: 'vertical',
+      backgroundColor: '#ffffff',
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: "#e5e7eb",
-      shadow: "md",
+      borderColor: '#e5e7eb',
+      shadow: 'md',
       spacing: 20,
       required: true,
     },
   },
   {
-    id: "minimal-clean",
-    name: "Minimalista",
-    description: "Design limpo e minimalista",
+    id: 'minimal-clean',
+    name: 'Minimalista',
+    description: 'Design limpo e minimalista',
     icon: Layout,
-    category: "styling",
+    category: 'styling',
     properties: {
-      backgroundColor: "#fafafa",
-      textColor: "#374151",
+      backgroundColor: '#fafafa',
+      textColor: '#374151',
       borderRadius: 8,
       borderWidth: 0,
-      shadow: "none",
+      shadow: 'none',
       spacing: 16,
     },
   },
   {
-    id: "colorful-modern",
-    name: "Moderno Colorido",
-    description: "Visual vibrante e moderno",
+    id: 'colorful-modern',
+    name: 'Moderno Colorido',
+    description: 'Visual vibrante e moderno',
     icon: Palette,
-    category: "styling",
+    category: 'styling',
     properties: {
-      backgroundColor: "#3b82f6",
-      textColor: "#ffffff",
+      backgroundColor: '#3b82f6',
+      textColor: '#ffffff',
       borderRadius: 16,
       borderWidth: 0,
-      shadow: "lg",
+      shadow: 'lg',
       spacing: 24,
-      animation: "fade",
+      animation: 'fade',
       delay: 200,
     },
   },
   {
-    id: "grid-layout",
-    name: "Layout em Grade",
-    description: "Organização em grade responsiva",
+    id: 'grid-layout',
+    name: 'Layout em Grade',
+    description: 'Organização em grade responsiva',
     icon: Layout,
-    category: "layout",
+    category: 'layout',
     properties: {
-      layout: "grid",
+      layout: 'grid',
       columns: 2,
       spacing: 16,
-      alignment: "center",
+      alignment: 'center',
     },
   },
   {
-    id: "survey-style",
-    name: "Estilo Pesquisa",
-    description: "Formato tradicional de pesquisa",
+    id: 'survey-style',
+    name: 'Estilo Pesquisa',
+    description: 'Formato tradicional de pesquisa',
     icon: FileText,
-    category: "content",
+    category: 'content',
     properties: {
-      layout: "vertical",
+      layout: 'vertical',
       multipleChoice: false,
       required: true,
       autoAdvance: true,
-      backgroundColor: "#f9fafb",
+      backgroundColor: '#f9fafb',
       borderRadius: 6,
       spacing: 12,
     },
   },
   {
-    id: "assessment-quiz",
-    name: "Quiz de Avaliação",
-    description: "Para avaliações e testes",
+    id: 'assessment-quiz',
+    name: 'Quiz de Avaliação',
+    description: 'Para avaliações e testes',
     icon: PieChart,
-    category: "interaction",
+    category: 'interaction',
     properties: {
       multipleChoice: true,
       maxSelections: 1,
       required: true,
       autoAdvance: false,
-      backgroundColor: "#ffffff",
-      borderColor: "#d1d5db",
+      backgroundColor: '#ffffff',
+      borderColor: '#d1d5db',
       borderWidth: 2,
       borderRadius: 8,
     },
   },
   {
-    id: "feedback-form",
-    name: "Formulário de Feedback",
-    description: "Para coletar opiniões",
+    id: 'feedback-form',
+    name: 'Formulário de Feedback',
+    description: 'Para coletar opiniões',
     icon: MessageSquare,
-    category: "content",
+    category: 'content',
     properties: {
       multipleChoice: true,
       maxSelections: 3,
       required: false,
-      backgroundColor: "#fef3c7",
-      textColor: "#92400e",
+      backgroundColor: '#fef3c7',
+      textColor: '#92400e',
       borderRadius: 10,
       spacing: 18,
     },
   },
   {
-    id: "premium-style",
-    name: "Estilo Premium",
-    description: "Design sofisticado e elegante",
+    id: 'premium-style',
+    name: 'Estilo Premium',
+    description: 'Design sofisticado e elegante',
     icon: Star,
-    category: "styling",
+    category: 'styling',
     properties: {
-      backgroundColor: "#1f2937",
-      textColor: "#f9fafb",
-      borderColor: "#6b7280",
+      backgroundColor: '#1f2937',
+      textColor: '#f9fafb',
+      borderColor: '#6b7280',
       borderWidth: 1,
       borderRadius: 12,
-      shadow: "xl",
+      shadow: 'xl',
       spacing: 24,
-      animation: "slide",
+      animation: 'slide',
       delay: 300,
     },
   },
 ];
 
 const categoryColors = {
-  layout: "bg-[#B89B7A]/20 text-[#432818]",
-  styling: "bg-[#B89B7A]/20 text-purple-800",
-  content: "bg-green-100 text-green-800",
-  interaction: "bg-[#B89B7A]/20 text-orange-800",
+  layout: 'bg-[#B89B7A]/20 text-[#432818]',
+  styling: 'bg-[#B89B7A]/20 text-purple-800',
+  content: 'bg-green-100 text-green-800',
+  interaction: 'bg-[#B89B7A]/20 text-orange-800',
 };
 
 const categoryIcons = {
@@ -199,8 +199,8 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
       <PopoverContent className="w-96 p-4" align="start">
         <div className="space-y-4">
           <div>
-            <h3 style={{ color: "#432818" }}>Templates de Propriedades</h3>
-            <p style={{ color: "#6B4F43" }}>Aplique configurações predefinidas rapidamente</p>
+            <h3 style={{ color: '#432818' }}>Templates de Propriedades</h3>
+            <p style={{ color: '#6B4F43' }}>Aplique configurações predefinidas rapidamente</p>
           </div>
 
           {Object.entries(categorizedTemplates).map(([category, categoryTemplates]) => {
@@ -226,17 +226,17 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
                     return (
                       <Card
                         key={template.id}
-                        style={{ borderColor: "#E5DDD5" }}
+                        style={{ borderColor: '#E5DDD5' }}
                         onClick={() => onApplyTemplate(template.properties)}
                       >
                         <CardContent className="p-3">
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0">
-                              <TemplateIcon style={{ color: "#6B4F43" }} />
+                              <TemplateIcon style={{ color: '#6B4F43' }} />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h5 style={{ color: "#432818" }}>{template.name}</h5>
-                              <p style={{ color: "#6B4F43" }}>{template.description}</p>
+                              <h5 style={{ color: '#432818' }}>{template.name}</h5>
+                              <p style={{ color: '#6B4F43' }}>{template.description}</p>
                             </div>
                           </div>
                         </CardContent>
@@ -248,8 +248,8 @@ export const PropertyTemplates: React.FC<PropertyTemplatesProps> = ({ onApplyTem
             );
           })}
 
-          <div style={{ borderColor: "#E5DDD5" }}>
-            <p style={{ color: "#8B7355" }}>Clique em um template para aplicar as propriedades</p>
+          <div style={{ borderColor: '#E5DDD5' }}>
+            <p style={{ color: '#8B7355' }}>Clique em um template para aplicar as propriedades</p>
           </div>
         </div>
       </PopoverContent>

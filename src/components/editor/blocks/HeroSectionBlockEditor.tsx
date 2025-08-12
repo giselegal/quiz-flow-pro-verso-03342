@@ -1,16 +1,16 @@
 // @ts-nocheck
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { BlockEditorProps } from './types';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,7 +56,7 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Label htmlFor={`${block.id}-heroImage`}>Imagem Principal</Label>
         <Input
           id={`${block.id}-heroImage`}
-          value={block.content.heroImage || ""}
+          value={block.content.heroImage || ''}
           onChange={e => onUpdate({ heroImage: e.target.value })}
           className="mt-1"
           placeholder="URL da imagem principal"
@@ -67,7 +67,7 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Label htmlFor={`${block.id}-heroImageAlt`}>Texto Alternativo da Imagem</Label>
         <Input
           id={`${block.id}-heroImageAlt`}
-          value={block.content.heroImageAlt || ""}
+          value={block.content.heroImageAlt || ''}
           onChange={e => onUpdate({ heroImageAlt: e.target.value })}
           className="mt-1"
           placeholder="Descrição da imagem para acessibilidade"
@@ -78,7 +78,7 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Label htmlFor={`${block.id}-quote`}>Depoimento</Label>
         <Textarea
           id={`${block.id}-quote`}
-          value={block.content.quote || ""}
+          value={block.content.quote || ''}
           onChange={e => onUpdate({ quote: e.target.value })}
           className="mt-1"
           placeholder="Digite o depoimento do cliente"
@@ -89,7 +89,7 @@ const HeroSectionBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate })
         <Label htmlFor={`${block.id}-quoteAuthor`}>Autor do Depoimento</Label>
         <Input
           id={`${block.id}-quoteAuthor`}
-          value={block.content.quoteAuthor || ""}
+          value={block.content.quoteAuthor || ''}
           onChange={e => onUpdate({ quoteAuthor: e.target.value })}
           className="mt-1"
           placeholder="Nome e idade do cliente"

@@ -1,8 +1,8 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash } from "lucide-react";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash } from 'lucide-react';
+import { Block } from '@/types/editor';
 
 interface CarouselBlockEditorProps {
   block: Block;
@@ -21,8 +21,8 @@ export const CarouselBlockEditor: React.FC<CarouselBlockEditorProps> = ({ block,
       ...(block.content.images || []),
       {
         id: Date.now().toString(),
-        imageUrl: "",
-        caption: "",
+        imageUrl: '',
+        caption: '',
       },
     ];
     onUpdate({ ...block.content, images });
@@ -46,7 +46,7 @@ export const CarouselBlockEditor: React.FC<CarouselBlockEditorProps> = ({ block,
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
+          value={block.content.title || ''}
           onChange={e => onUpdate({ ...block.content, title: e.target.value })}
           className="mt-1"
         />
@@ -63,7 +63,7 @@ export const CarouselBlockEditor: React.FC<CarouselBlockEditorProps> = ({ block,
                   variant="ghost"
                   size="sm"
                   onClick={() => removeImage(index)}
-                  style={{ color: "#432818" }}
+                  style={{ color: '#432818' }}
                 >
                   <Trash className="w-4 h-4" />
                 </Button>
@@ -71,16 +71,16 @@ export const CarouselBlockEditor: React.FC<CarouselBlockEditorProps> = ({ block,
               <div>
                 <Label>URL da Imagem</Label>
                 <Input
-                  value={image.imageUrl || ""}
-                  onChange={e => updateImage(index, "imageUrl", e.target.value)}
+                  value={image.imageUrl || ''}
+                  onChange={e => updateImage(index, 'imageUrl', e.target.value)}
                   placeholder="https://exemplo.com/imagem.jpg"
                 />
               </div>
               <div>
                 <Label>Legenda</Label>
                 <Input
-                  value={image.caption || ""}
-                  onChange={e => updateImage(index, "caption", e.target.value)}
+                  value={image.caption || ''}
+                  onChange={e => updateImage(index, 'caption', e.target.value)}
                   placeholder="Legenda opcional"
                 />
               </div>

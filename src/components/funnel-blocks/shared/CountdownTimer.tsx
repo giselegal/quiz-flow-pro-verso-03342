@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 interface CountdownTimerProps {
   hours?: number;
@@ -8,7 +8,7 @@ interface CountdownTimerProps {
   endTime?: Date | string;
   onComplete?: () => void;
   className?: string;
-  variant?: "default" | "compact" | "large";
+  variant?: 'default' | 'compact' | 'large';
   showLabels?: boolean;
   autoStart?: boolean;
 }
@@ -25,8 +25,8 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   seconds = 0,
   endTime,
   onComplete,
-  className = "",
-  variant = "default",
+  className = '',
+  variant = 'default',
   showLabels = true,
   autoStart = true,
 }) => {
@@ -107,38 +107,38 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
   // Formatar número para ter dois dígitos
   const formatNumber = (num: number): string => {
-    return num.toString().padStart(2, "0");
+    return num.toString().padStart(2, '0');
   };
 
   // Classes com base na variante
   const containerClasses = cn(
-    "flex items-center justify-center",
+    'flex items-center justify-center',
     {
-      "gap-2": variant === "default",
-      "gap-1 text-sm": variant === "compact",
-      "gap-4": variant === "large",
+      'gap-2': variant === 'default',
+      'gap-1 text-sm': variant === 'compact',
+      'gap-4': variant === 'large',
     },
     className
   );
 
   const digitClasses = cn(
-    "bg-gray-800 text-white rounded font-mono font-bold flex items-center justify-center",
+    'bg-gray-800 text-white rounded font-mono font-bold flex items-center justify-center',
     {
-      "w-12 h-12 text-xl": variant === "default",
-      "w-8 h-8 text-sm": variant === "compact",
-      "w-16 h-16 text-2xl": variant === "large",
+      'w-12 h-12 text-xl': variant === 'default',
+      'w-8 h-8 text-sm': variant === 'compact',
+      'w-16 h-16 text-2xl': variant === 'large',
     }
   );
 
-  const separatorClasses = cn("text-gray-800 font-bold", {
-    "text-xl": variant === "default",
-    "text-sm": variant === "compact",
-    "text-2xl": variant === "large",
+  const separatorClasses = cn('text-gray-800 font-bold', {
+    'text-xl': variant === 'default',
+    'text-sm': variant === 'compact',
+    'text-2xl': variant === 'large',
   });
 
-  const labelClasses = cn("text-gray-500 text-xs text-center mt-1", {
-    "text-[10px]": variant === "compact",
-    "text-sm": variant === "large",
+  const labelClasses = cn('text-gray-500 text-xs text-center mt-1', {
+    'text-[10px]': variant === 'compact',
+    'text-sm': variant === 'large',
   });
 
   return (

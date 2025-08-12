@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface InlineEditTextProps {
   value: string;
@@ -7,7 +7,7 @@ interface InlineEditTextProps {
   multiline?: boolean;
   disabled?: boolean;
   className?: string;
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div" | "label";
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'span' | 'div' | 'label';
   style?: React.CSSProperties;
   autoSelect?: boolean;
   preventDefault?: boolean;
@@ -21,11 +21,11 @@ interface InlineEditTextProps {
 export const InlineEditText: React.FC<InlineEditTextProps> = ({
   value,
   onSave: _onSave,
-  placeholder = "Clique para selecionar...",
+  placeholder = 'Clique para selecionar...',
   multiline: _multiline = false,
   disabled = false,
-  className = "",
-  as = "p",
+  className = '',
+  as = 'p',
   style,
   autoSelect: _autoSelect = true,
   preventDefault = true,
@@ -56,11 +56,11 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
   return (
     <Component
       className={cn(
-        "cursor-pointer transition-all duration-200",
-        "hover:bg-brand/10 hover:ring-1 hover:ring-brand/30 rounded px-2 py-1",
-        "min-h-[1.5em] inline-block",
-        isSelected && "bg-brand/10 ring-2 ring-brand",
-        disabled && "cursor-not-allowed opacity-50",
+        'cursor-pointer transition-all duration-200',
+        'hover:bg-brand/10 hover:ring-1 hover:ring-brand/30 rounded px-2 py-1',
+        'min-h-[1.5em] inline-block',
+        isSelected && 'bg-brand/10 ring-2 ring-brand',
+        disabled && 'cursor-not-allowed opacity-50',
         className
       )}
       style={style}

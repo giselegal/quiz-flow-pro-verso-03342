@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/ui/logo";
-import { motion } from "framer-motion";
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/ui/logo';
+import { motion } from 'framer-motion';
 import {
   Save,
   Eye,
@@ -11,8 +11,8 @@ import {
   Tablet,
   Monitor,
   LayoutGrid,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
@@ -22,8 +22,8 @@ interface EditorToolbarProps {
   onRedo?: () => void;
   canUndo?: boolean;
   canRedo?: boolean;
-  viewportSize?: "sm" | "md" | "lg" | "xl";
-  onViewportSizeChange?: (size: "sm" | "md" | "lg" | "xl") => void;
+  viewportSize?: 'sm' | 'md' | 'lg' | 'xl';
+  onViewportSizeChange?: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
 }
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = ({
@@ -34,13 +34,13 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
   onRedo,
   canUndo = false,
   canRedo = false,
-  viewportSize = "lg",
+  viewportSize = 'lg',
   onViewportSizeChange = () => {},
 }) => {
   return (
     <div
       className="border-b border-amber-700/30 p-3 flex items-center justify-between shadow-lg backdrop-blur-sm"
-      style={{ backgroundColor: "#d1b586" }}
+      style={{ backgroundColor: '#d1b586' }}
     >
       {/* Logo à esquerda com animação Framer Motion */}
       <div className="flex items-center">
@@ -48,7 +48,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           className="relative group cursor-pointer"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           whileHover={{
             scale: 1.05,
             rotate: [0, -1, 1, 0],
@@ -59,15 +59,15 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           <motion.div
             animate={{
               filter: [
-                "brightness(1) saturate(1)",
-                "brightness(1.1) saturate(1.1)",
-                "brightness(1) saturate(1)",
+                'brightness(1) saturate(1)',
+                'brightness(1.1) saturate(1.1)',
+                'brightness(1) saturate(1)',
               ],
             }}
             transition={{
               duration: 3,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             }}
           >
             <Logo className="h-8 w-auto transform-gpu" />
@@ -120,10 +120,10 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "sm" && "bg-white/30 shadow-md"
+            'text-white hover:bg-white/20 transition-all',
+            viewportSize === 'sm' && 'bg-white/30 shadow-md'
           )}
-          onClick={() => onViewportSizeChange("sm")}
+          onClick={() => onViewportSizeChange('sm')}
           title="Mobile"
         >
           <Smartphone className="h-4 w-4" />
@@ -133,10 +133,10 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "md" && "bg-white/30 shadow-md"
+            'text-white hover:bg-white/20 transition-all',
+            viewportSize === 'md' && 'bg-white/30 shadow-md'
           )}
-          onClick={() => onViewportSizeChange("md")}
+          onClick={() => onViewportSizeChange('md')}
           title="Tablet"
         >
           <Tablet className="h-4 w-4" />
@@ -146,10 +146,10 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "lg" && "bg-white/30 shadow-md"
+            'text-white hover:bg-white/20 transition-all',
+            viewportSize === 'lg' && 'bg-white/30 shadow-md'
           )}
-          onClick={() => onViewportSizeChange("lg")}
+          onClick={() => onViewportSizeChange('lg')}
           title="Desktop"
         >
           <Monitor className="h-4 w-4" />
@@ -159,10 +159,10 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           variant="ghost"
           size="sm"
           className={cn(
-            "text-white hover:bg-white/20 transition-all",
-            viewportSize === "xl" && "bg-white/30 shadow-md"
+            'text-white hover:bg-white/20 transition-all',
+            viewportSize === 'xl' && 'bg-white/30 shadow-md'
           )}
-          onClick={() => onViewportSizeChange("xl")}
+          onClick={() => onViewportSizeChange('xl')}
           title="Desktop Large"
         >
           <LayoutGrid className="h-4 w-4" />
@@ -190,7 +190,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({
           )}
         </Button>
 
-        <Button onClick={onSave} size="sm" style={{ backgroundColor: "#FAF9F7" }}>
+        <Button onClick={onSave} size="sm" style={{ backgroundColor: '#FAF9F7' }}>
           <Save className="mr-2 h-4 w-4" />
           Salvar
         </Button>

@@ -1,15 +1,15 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import type { BlockData } from "@/types/blocks";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import type { BlockData } from '@/types/blocks';
 import {
   Copy,
   Eye,
@@ -22,8 +22,8 @@ import {
   Tablet,
   Trash2,
   Type,
-} from "lucide-react";
-import React, { useState } from "react";
+} from 'lucide-react';
+import React, { useState } from 'react';
 
 interface EnhancedPropertiesPanelProps {
   selectedBlock?: BlockData | null;
@@ -32,101 +32,101 @@ interface EnhancedPropertiesPanelProps {
   onDuplicate?: () => void;
   onReset?: () => void;
   onClose?: () => void;
-  previewMode?: "desktop" | "tablet" | "mobile";
-  onPreviewModeChange?: (mode: "desktop" | "tablet" | "mobile") => void;
+  previewMode?: 'desktop' | 'tablet' | 'mobile';
+  onPreviewModeChange?: (mode: 'desktop' | 'tablet' | 'mobile') => void;
 }
 
 // Definições de propriedades por categoria
 const PROPERTY_CATEGORIES = {
   visual: {
     icon: Palette,
-    label: "Visual",
-    description: "Cores, tipografia e estilo",
+    label: 'Visual',
+    description: 'Cores, tipografia e estilo',
     properties: [
-      "backgroundColor",
-      "color",
-      "primaryColor",
-      "secondaryColor",
-      "accentColor",
-      "borderColor",
-      "borderWidth",
-      "borderRadius",
-      "shadow",
-      "gradient",
+      'backgroundColor',
+      'color',
+      'primaryColor',
+      'secondaryColor',
+      'accentColor',
+      'borderColor',
+      'borderWidth',
+      'borderRadius',
+      'shadow',
+      'gradient',
     ],
   },
   content: {
     icon: Type,
-    label: "Conteúdo",
-    description: "Texto, imagens e mídia",
+    label: 'Conteúdo',
+    description: 'Texto, imagens e mídia',
     properties: [
-      "content",
-      "text",
-      "title",
-      "description",
-      "imageUrl",
-      "logoUrl",
-      "placeholder",
-      "label",
-      "value",
-      "options",
+      'content',
+      'text',
+      'title',
+      'description',
+      'imageUrl',
+      'logoUrl',
+      'placeholder',
+      'label',
+      'value',
+      'options',
     ],
   },
   layout: {
     icon: Settings,
-    label: "Layout",
-    description: "Tamanho, espaçamento e posição",
+    label: 'Layout',
+    description: 'Tamanho, espaçamento e posição',
     properties: [
-      "width",
-      "height",
-      "padding",
-      "margin",
-      "marginTop",
-      "marginBottom",
-      "marginLeft",
-      "marginRight",
-      "spacing",
-      "gap",
-      "columns",
-      "alignment",
+      'width',
+      'height',
+      'padding',
+      'margin',
+      'marginTop',
+      'marginBottom',
+      'marginLeft',
+      'marginRight',
+      'spacing',
+      'gap',
+      'columns',
+      'alignment',
     ],
   },
   behavior: {
     icon: Settings,
-    label: "Comportamento",
-    description: "Interatividade e funcionalidade",
+    label: 'Comportamento',
+    description: 'Interatividade e funcionalidade',
     properties: [
-      "onClick",
-      "href",
-      "target",
-      "validation",
-      "required",
-      "disabled",
-      "multiSelect",
-      "maxSelections",
-      "minSelections",
-      "animation",
+      'onClick',
+      'href',
+      'target',
+      'validation',
+      'required',
+      'disabled',
+      'multiSelect',
+      'maxSelections',
+      'minSelections',
+      'animation',
     ],
   },
 };
 
 // Mapeamento de tipos de propriedades
 const getPropertyType = (key: string, value: any): string => {
-  if (typeof value === "boolean") return "boolean";
-  if (typeof value === "number") return "number";
-  if (key.toLowerCase().includes("color")) return "color";
-  if (key.toLowerCase().includes("url") || key.toLowerCase().includes("href")) return "url";
-  if (key === "options" || Array.isArray(value)) return "array";
-  if (key.toLowerCase().includes("margin") || key.toLowerCase().includes("padding"))
-    return "spacing";
+  if (typeof value === 'boolean') return 'boolean';
+  if (typeof value === 'number') return 'number';
+  if (key.toLowerCase().includes('color')) return 'color';
+  if (key.toLowerCase().includes('url') || key.toLowerCase().includes('href')) return 'url';
+  if (key === 'options' || Array.isArray(value)) return 'array';
+  if (key.toLowerCase().includes('margin') || key.toLowerCase().includes('padding'))
+    return 'spacing';
   if (
-    key.toLowerCase().includes("size") ||
-    key.toLowerCase().includes("width") ||
-    key.toLowerCase().includes("height")
+    key.toLowerCase().includes('size') ||
+    key.toLowerCase().includes('width') ||
+    key.toLowerCase().includes('height')
   )
-    return "size";
-  if (value && typeof value === "string" && value.length > 50) return "textarea";
-  return "string";
+    return 'size';
+  if (value && typeof value === 'string' && value.length > 50) return 'textarea';
+  return 'string';
 };
 
 const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
@@ -136,11 +136,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   onDuplicate,
   onReset,
   onClose,
-  previewMode = "desktop",
+  previewMode = 'desktop',
   onPreviewModeChange,
 }) => {
-  const [activeTab, setActiveTab] = useState("visual");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState('visual');
+  const [searchTerm, setSearchTerm] = useState('');
 
   if (!selectedBlock) {
     return (
@@ -199,10 +199,10 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   // Renderizar controle baseado no tipo da propriedade
   const renderPropertyControl = (key: string, value: any) => {
     const type = getPropertyType(key, value);
-    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
+    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
 
     switch (type) {
-      case "boolean":
+      case 'boolean':
         return (
           <div key={key} className="flex items-center justify-between">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -216,7 +216,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         );
 
-      case "color":
+      case 'color':
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -226,12 +226,12 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               <Input
                 id={key}
                 type="color"
-                value={value || "#000000"}
+                value={value || '#000000'}
                 onChange={e => updateProperty(key, e.target.value)}
                 className="w-12 h-10 border-[#B89B7A]/30 cursor-pointer"
               />
               <Input
-                value={value || "#000000"}
+                value={value || '#000000'}
                 onChange={e => updateProperty(key, e.target.value)}
                 className="flex-1 border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
                 placeholder="#000000"
@@ -240,9 +240,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         );
 
-      case "number":
-      case "spacing":
-      case "size":
+      case 'number':
+      case 'spacing':
+      case 'size':
         return (
           <div key={key} className="space-y-2">
             <div className="flex justify-between">
@@ -251,20 +251,20 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               </Label>
               <span className="text-[#B89B7A] text-sm font-mono">
                 {value || 0}
-                {type === "spacing" || type === "size" ? "px" : ""}
+                {type === 'spacing' || type === 'size' ? 'px' : ''}
               </span>
             </div>
             <Slider
               value={[value || 0]}
               onValueChange={values => updateProperty(key, values[0])}
-              max={type === "spacing" ? 100 : type === "size" ? 500 : 1000}
+              max={type === 'spacing' ? 100 : type === 'size' ? 500 : 1000}
               step={1}
               className="w-full"
             />
           </div>
         );
 
-      case "textarea":
+      case 'textarea':
         return (
           <div key={key} className="space-y-2">
             <Label htmlFor={key} className="text-sm font-medium text-[#432818]">
@@ -272,7 +272,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             </Label>
             <Textarea
               id={key}
-              value={value || ""}
+              value={value || ''}
               onChange={e => updateProperty(key, e.target.value)}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20 min-h-[80px]"
               placeholder={`Digite o ${label.toLowerCase()}...`}
@@ -288,7 +288,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
             </Label>
             <Input
               id={key}
-              value={value || ""}
+              value={value || ''}
               onChange={e => updateProperty(key, e.target.value)}
               className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
               placeholder={`Digite o ${label.toLowerCase()}...`}
@@ -335,14 +335,14 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
 
           {/* Controles de preview e ações */}
           <div className="flex items-center gap-2 pt-2">
-            <div style={{ backgroundColor: "#E5DDD5" }}>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === "desktop" ? "default" : "ghost"}
+                      variant={previewMode === 'desktop' ? 'default' : 'ghost'}
                       size="sm"
-                      onClick={() => onPreviewModeChange?.("desktop")}
+                      onClick={() => onPreviewModeChange?.('desktop')}
                       className="px-2"
                     >
                       <Monitor className="w-4 h-4" />
@@ -356,9 +356,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === "tablet" ? "default" : "ghost"}
+                      variant={previewMode === 'tablet' ? 'default' : 'ghost'}
                       size="sm"
-                      onClick={() => onPreviewModeChange?.("tablet")}
+                      onClick={() => onPreviewModeChange?.('tablet')}
                       className="px-2"
                     >
                       <Tablet className="w-4 h-4" />
@@ -372,9 +372,9 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === "mobile" ? "default" : "ghost"}
+                      variant={previewMode === 'mobile' ? 'default' : 'ghost'}
                       size="sm"
-                      onClick={() => onPreviewModeChange?.("mobile")}
+                      onClick={() => onPreviewModeChange?.('mobile')}
                       className="px-2"
                     >
                       <Smartphone className="w-4 h-4" />
@@ -415,7 +415,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={onDelete}
-                      style={{ color: "#432818" }}
+                      style={{ color: '#432818' }}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -441,7 +441,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           {filteredProperties ? (
             // Modo de busca
             <div className="space-y-4">
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 {filteredProperties.length} propriedades encontradas
               </p>
               {filteredProperties.map(([key, value]) => renderPropertyControl(key, value))}
@@ -474,7 +474,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       <category.icon className="w-4 h-4" />
                       {category.label}
                     </h3>
-                    <p style={{ color: "#6B4F43" }}>{category.description}</p>
+                    <p style={{ color: '#6B4F43' }}>{category.description}</p>
                   </div>
 
                   <Separator className="bg-[#B89B7A]/20" />
@@ -486,7 +486,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                       )}
                     </div>
                   ) : (
-                    <div style={{ color: "#8B7355" }}>
+                    <div style={{ color: '#8B7355' }}>
                       <category.icon className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma propriedade {category.label.toLowerCase()}</p>
                     </div>
@@ -499,7 +499,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
                 <TabsContent value="other" className="space-y-4">
                   <div className="mb-4">
                     <h3 className="font-medium text-[#432818]">Outras Propriedades</h3>
-                    <p style={{ color: "#6B4F43" }}>Propriedades específicas do componente</p>
+                    <p style={{ color: '#6B4F43' }}>Propriedades específicas do componente</p>
                   </div>
 
                   <Separator className="bg-[#B89B7A]/20" />

@@ -1,11 +1,11 @@
-import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { blockDefinitions } from "@/config/blockDefinitionsOptimized";
-import { MODULAR_COMPONENTS, type ModularComponent } from "@/config/modularComponents";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { type BlockDefinition } from "@/types/blocks";
+import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { blockDefinitions } from '@/config/blockDefinitionsOptimized';
+import { MODULAR_COMPONENTS, type ModularComponent } from '@/config/modularComponents';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { type BlockDefinition } from '@/types/blocks';
 import {
   ChevronDown,
   ChevronRight,
@@ -15,16 +15,16 @@ import {
   Search,
   Settings,
   Trophy,
-} from "lucide-react";
-import React, { useState } from "react";
+} from 'lucide-react';
+import React, { useState } from 'react';
 
 interface ComponentsSidebarSimpleProps {}
 
 const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
-  const { scrollRef } = useSyncedScroll({ source: "components" });
-  const [searchQuery, setSearchQuery] = useState("");
+  const { scrollRef } = useSyncedScroll({ source: 'components' });
+  const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    "Componentes Modulares": true,
+    'Componentes Modulares': true,
     Quiz: true,
     Interativo: true,
     CTA: true,
@@ -39,7 +39,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
       type: modularComp.type,
       name: `📦 ${modularComp.name}`,
       description: modularComp.description,
-      category: "Componentes Modulares",
+      category: 'Componentes Modulares',
       icon: Settings,
       properties: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
         acc[key] = {
@@ -49,7 +49,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
             key.charAt(0).toUpperCase() +
             key
               .slice(1)
-              .replace(/([A-Z])/g, " $1")
+              .replace(/([A-Z])/g, ' $1')
               .trim(),
         };
         return acc;
@@ -86,7 +86,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
 
   const groupedBlocks = filteredBlocks.reduce(
     (groups, block) => {
-      const category = block.category || "Outros";
+      const category = block.category || 'Outros';
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -97,17 +97,17 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
   );
 
   const categoryOrder = [
-    "Componentes Modulares", // 🎯 NOVA CATEGORIA EM PRIMEIRO
-    "Quiz",
-    "Interativo",
-    "CTA",
-    "Conteúdo",
-    "Legal",
-    "Estrutura",
+    'Componentes Modulares', // 🎯 NOVA CATEGORIA EM PRIMEIRO
+    'Quiz',
+    'Interativo',
+    'CTA',
+    'Conteúdo',
+    'Legal',
+    'Estrutura',
   ];
 
   const categoryIcons: Record<string, React.ComponentType<any>> = {
-    "Componentes Modulares": Settings,
+    'Componentes Modulares': Settings,
     Quiz: Trophy,
     Interativo: HelpCircle,
     CTA: Layers,
@@ -149,7 +149,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
                       <ChevronRight className="h-4 w-4" />
                     )}
                     {React.createElement(categoryIcons[category] || GripVertical, {
-                      className: "h-4 w-4 text-primary",
+                      className: 'h-4 w-4 text-primary',
                     })}
                     <span className="text-sm font-medium">{category}</span>
                   </div>

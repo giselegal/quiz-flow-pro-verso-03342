@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { FunnelStepProps } from "@/types/funnel";
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { FunnelStepProps } from '@/types/funnel';
 
 interface FunnelProgressBarProps {
   currentStep: number;
@@ -44,18 +44,18 @@ const FunnelIntroStep: React.FC<FunnelIntroStepProps> = ({
   data = {},
 }) => {
   const {
-    title = "Bem-vindo ao Quiz",
-    subtitle = "Descubra seu estilo pessoal",
-    buttonText = "Começar Quiz",
+    title = 'Bem-vindo ao Quiz',
+    subtitle = 'Descubra seu estilo pessoal',
+    buttonText = 'Começar Quiz',
     logoUrl,
     showProgressBar = true,
-    backgroundColor = "#FFFAF0",
+    backgroundColor = '#FFFAF0',
   } = data;
 
   return (
     <div
       id={id}
-      className={`min-h-screen flex flex-col items-center justify-center p-6 ${className || ""}`}
+      className={`min-h-screen flex flex-col items-center justify-center p-6 ${className || ''}`}
       style={{ backgroundColor, ...style }}
     >
       <div className="max-w-2xl mx-auto text-center space-y-8">

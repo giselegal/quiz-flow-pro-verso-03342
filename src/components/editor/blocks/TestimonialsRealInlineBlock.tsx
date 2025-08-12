@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Star, Quote } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import { cn } from '@/lib/utils';
+import { Star, Quote } from 'lucide-react';
+import type { BlockData } from '@/types/blocks';
 
 interface TestimonialsRealInlineBlockProps {
   block: BlockData;
@@ -19,11 +19,11 @@ interface TestimonialsRealInlineBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -73,15 +73,15 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
   const properties = block.properties || {};
   const testimonials = properties.testimonials || [
     {
-      name: "Ana Silva",
-      text: "A consultoria mudou completamente minha forma de me vestir. Agora me sinto mais confiante e elegante!",
+      name: 'Ana Silva',
+      text: 'A consultoria mudou completamente minha forma de me vestir. Agora me sinto mais confiante e elegante!',
       rating: 5,
-      image: "https://placehold.co/80x80/cccccc/333333?text=AS",
-      occupation: "Executiva",
+      image: 'https://placehold.co/80x80/cccccc/333333?text=AS',
+      occupation: 'Executiva',
     },
   ];
-  const title = properties.title || "Depoimentos Reais";
-  const layout = properties.layout || "grid";
+  const title = properties.title || 'Depoimentos Reais';
+  const layout = properties.layout || 'grid';
   const showRating = properties.showRating !== false;
 
   const handleEdit = (field: string, value: any) => {
@@ -95,13 +95,13 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
       <Star
         key={i}
         className={cn(
-          "w-4 h-4",
-          i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300",
+          'w-4 h-4',
+          i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300',
           // Margens universais com controles deslizantes
-          getMarginClass(marginTop, "top"),
-          getMarginClass(marginBottom, "bottom"),
-          getMarginClass(marginLeft, "left"),
-          getMarginClass(marginRight, "right")
+          getMarginClass(marginTop, 'top'),
+          getMarginClass(marginBottom, 'bottom'),
+          getMarginClass(marginLeft, 'left'),
+          getMarginClass(marginRight, 'right')
         )}
       />
     ));
@@ -116,7 +116,7 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
       <Quote className="w-6 h-6 text-pink-400 mb-3 flex-shrink-0" />
 
       {/* Depoimento */}
-      <p style={{ color: "#6B4F43" }}>"{testimonial.text}"</p>
+      <p style={{ color: '#6B4F43' }}>"{testimonial.text}"</p>
 
       {/* Rating */}
       {showRating && (
@@ -126,13 +126,13 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
       {/* Cliente Info */}
       <div className="flex items-center gap-3">
         <img
-          src={testimonial.image || "https://placehold.co/50x50/cccccc/333333?text=?"}
+          src={testimonial.image || 'https://placehold.co/50x50/cccccc/333333?text=?'}
           alt={testimonial.name}
           className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-pink-200"
         />
         <div>
-          <p style={{ color: "#432818" }}>{testimonial.name}</p>
-          {testimonial.occupation && <p style={{ color: "#6B4F43" }}>{testimonial.occupation}</p>}
+          <p style={{ color: '#432818' }}>{testimonial.name}</p>
+          {testimonial.occupation && <p style={{ color: '#6B4F43' }}>{testimonial.occupation}</p>}
         </div>
       </div>
     </div>
@@ -141,28 +141,28 @@ const TestimonialsRealInlineBlock: React.FC<TestimonialsRealInlineBlockProps> = 
   return (
     <div
       className={cn(
-        "w-full p-4 md:p-6 transition-all duration-200",
-        "bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg",
-        isSelected && "ring-2 ring-pink-400 bg-pink-50",
-        !disabled && "cursor-pointer hover:bg-pink-50/80",
+        'w-full p-4 md:p-6 transition-all duration-200',
+        'bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg',
+        isSelected && 'ring-2 ring-pink-400 bg-pink-50',
+        !disabled && 'cursor-pointer hover:bg-pink-50/80',
         className
       )}
       onClick={onClick}
     >
       {/* Título */}
       <div className="mb-6">
-        <h3 style={{ color: "#432818" }}>{title}</h3>
+        <h3 style={{ color: '#432818' }}>{title}</h3>
         <div className="w-16 h-1 bg-gradient-to-r from-pink-400 to-purple-400 mx-auto rounded-full" />
       </div>
 
       {/* Grid de Depoimentos */}
       <div
         className={cn(
-          "grid gap-4 md:gap-6",
-          layout === "grid" && testimonials.length > 1
-            ? "grid-cols-1 lg:grid-cols-2"
-            : "grid-cols-1",
-          "auto-rows-fr" // Altura uniforme
+          'grid gap-4 md:gap-6',
+          layout === 'grid' && testimonials.length > 1
+            ? 'grid-cols-1 lg:grid-cols-2'
+            : 'grid-cols-1',
+          'auto-rows-fr' // Altura uniforme
         )}
       >
         {testimonials.map((testimonial: any, index: number) =>

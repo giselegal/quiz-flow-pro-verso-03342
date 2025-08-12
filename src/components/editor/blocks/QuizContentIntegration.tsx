@@ -17,13 +17,13 @@ interface QuizContentIntegrationProps {
 const QuizContentIntegration: React.FC<QuizContentIntegrationProps> = ({ properties, config }) => {
   // Por enquanto, questão mockada para funcionar
   const mockQuestion = {
-    id: config?.questionId || "1",
-    question: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
+    id: config?.questionId || '1',
+    question: 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
     options: [
-      "Conforto, leveza e praticidade no vestir.",
-      "Discrição, caimento clássico e sobriedade.",
-      "Praticidade com um toque de estilo atual.",
-      "Elegância refinada, moderna e sem exageros.",
+      'Conforto, leveza e praticidade no vestir.',
+      'Discrição, caimento clássico e sobriedade.',
+      'Praticidade com um toque de estilo atual.',
+      'Elegância refinada, moderna e sem exageros.',
     ],
   };
 
@@ -49,7 +49,7 @@ const QuizContentIntegration: React.FC<QuizContentIntegrationProps> = ({ propert
       </div>
       {!isStrategic && (
         <p className="text-xs text-[#8F7A6A] mt-3 text-center">
-          Selecione até {maxSelection} opção{maxSelection > 1 ? "s" : ""}.
+          Selecione até {maxSelection} opção{maxSelection > 1 ? 's' : ''}.
         </p>
       )}
     </div>

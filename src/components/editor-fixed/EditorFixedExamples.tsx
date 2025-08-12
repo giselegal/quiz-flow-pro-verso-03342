@@ -1,6 +1,6 @@
-import { EditorProvider } from "@/context/EditorContext";
-import type { Block, FunnelStage } from "@/types/editor";
-import { DefaultEditorFixed, EditorFixed, useEditorFixed } from "./EditorFixed";
+import { EditorProvider } from '@/context/EditorContext';
+import type { Block, FunnelStage } from '@/types/editor';
+import { DefaultEditorFixed, EditorFixed, useEditorFixed } from './EditorFixed';
 
 /**
  * 🎯 EXEMPLOS DE USO: EditorFixed com Compound Components
@@ -20,8 +20,8 @@ const SimpleEditorExample: React.FC = () => {
     <EditorProvider>
       <DefaultEditorFixed
         config={{
-          theme: "light",
-          viewport: "lg",
+          theme: 'light',
+          viewport: 'lg',
           features: {
             toolbar: true,
             properties: true,
@@ -43,9 +43,9 @@ const CustomEditorExample: React.FC = () => {
     <EditorProvider>
       <EditorFixed.Root
         config={{
-          theme: "dark",
-          layout: "three-column",
-          viewport: "xl",
+          theme: 'dark',
+          layout: 'three-column',
+          viewport: 'xl',
         }}
       >
         <div className="flex flex-col h-screen">
@@ -59,7 +59,7 @@ const CustomEditorExample: React.FC = () => {
                     onClick={actions.togglePreview}
                     className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
                   >
-                    {isPreviewing ? "✏️ Edit" : "👁️ Preview"}
+                    {isPreviewing ? '✏️ Edit' : '👁️ Preview'}
                   </button>
                   <button
                     onClick={actions.save}
@@ -89,8 +89,8 @@ const CustomEditorExample: React.FC = () => {
                         onClick={() => actions.selectStage(stage.id)}
                         className={`p-3 rounded cursor-pointer ${
                           stage.id === activeStageId
-                            ? "bg-blue-600 text-white"
-                            : "bg-white hover:bg-blue-50"
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white hover:bg-blue-50'
                         }`}
                       >
                         <div className="font-medium">{stage.name}</div>
@@ -112,7 +112,7 @@ const CustomEditorExample: React.FC = () => {
 
                   <div
                     className={`mx-auto bg-white rounded-lg shadow-2xl p-6 ${
-                      viewport === "sm" ? "max-w-sm" : viewport === "md" ? "max-w-2xl" : "max-w-4xl"
+                      viewport === 'sm' ? 'max-w-sm' : viewport === 'md' ? 'max-w-2xl' : 'max-w-4xl'
                     } min-h-[700px]`}
                   >
                     {/* Drop Zone */}
@@ -131,8 +131,8 @@ const CustomEditorExample: React.FC = () => {
                           onClick={() => actions.selectBlock(block.id)}
                           className={`group p-4 border-2 rounded-lg cursor-pointer transition-all ${
                             selectedBlock?.id === block.id
-                              ? "border-blue-500 bg-blue-50 shadow-lg"
-                              : "border-gray-200 hover:border-blue-300 hover:shadow-md"
+                              ? 'border-blue-500 bg-blue-50 shadow-lg'
+                              : 'border-gray-200 hover:border-blue-300 hover:shadow-md'
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -280,7 +280,7 @@ const CustomToolbar: React.FC = () => {
 const AdvancedEditorExample: React.FC = () => {
   return (
     <EditorProvider>
-      <EditorFixed.Root config={{ theme: "light", viewport: "lg" }}>
+      <EditorFixed.Root config={{ theme: 'light', viewport: 'lg' }}>
         <div className="h-screen flex flex-col">
           <CustomToolbar />
 

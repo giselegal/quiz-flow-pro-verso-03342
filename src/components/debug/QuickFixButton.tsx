@@ -4,8 +4,8 @@
  * Adicione este componente em qualquer local da introdução do quiz
  * para corrigir rapidamente o problema das imagens embaçadas
  */
-import React, { useState, useEffect } from "react";
-import { replaceBlurryIntroImages } from "../../utils/images/blurry-image-fixer";
+import React, { useState, useEffect } from 'react';
+import { replaceBlurryIntroImages } from '../../utils/images/blurry-image-fixer';
 
 const QuickFixButton = () => {
   const [isFixing, setIsFixing] = useState(false);
@@ -42,40 +42,40 @@ const QuickFixButton = () => {
     }, 3000);
   };
 
-  if (!showButton && process.env.NODE_ENV !== "development") {
+  if (!showButton && process.env.NODE_ENV !== 'development') {
     return null;
   }
 
   return (
     <div
       style={{
-        position: "fixed",
-        bottom: "20px",
-        left: "20px",
+        position: 'fixed',
+        bottom: '20px',
+        left: '20px',
         zIndex: 9999,
-        backgroundColor: isFixing ? "#FFC107" : "#e91e63",
-        color: "white",
-        padding: "10px 15px",
-        borderRadius: "30px",
-        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-        display: "flex",
-        alignItems: "center",
-        cursor: "pointer",
-        transition: "all 0.3s ease",
-        userSelect: "none",
+        backgroundColor: isFixing ? '#FFC107' : '#e91e63',
+        color: 'white',
+        padding: '10px 15px',
+        borderRadius: '30px',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        userSelect: 'none',
       }}
       onClick={!isFixing ? fixImages : undefined}
     >
       {isFixing ? (
         <>
-          <span style={{ marginRight: "10px" }}>🔄</span>
+          <span style={{ marginRight: '10px' }}>🔄</span>
           <span>
             Corrigindo imagens... ({stats.fixed}/{stats.total})
           </span>
         </>
       ) : (
         <>
-          <span style={{ marginRight: "10px" }}>🔍</span>
+          <span style={{ marginRight: '10px' }}>🔍</span>
           <span>Corrigir imagens embaçadas</span>
         </>
       )}

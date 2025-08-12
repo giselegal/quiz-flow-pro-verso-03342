@@ -1,12 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
-import { Clock, Eye, Monitor, RefreshCw, Smartphone, Tablet, Zap } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import type { BlockData } from '@/types/blocks';
+import { Clock, Eye, Monitor, RefreshCw, Smartphone, Tablet, Zap } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface ResponsivePreviewProps {
   blocks?: BlockData[];
@@ -15,26 +15,26 @@ interface ResponsivePreviewProps {
   className?: string;
 }
 
-type PreviewMode = "desktop" | "tablet" | "mobile";
+type PreviewMode = 'desktop' | 'tablet' | 'mobile';
 
 const PREVIEW_DIMENSIONS = {
-  desktop: { width: "100%", height: "auto", maxWidth: "1200px" },
-  tablet: { width: "768px", height: "auto", maxWidth: "768px" },
-  mobile: { width: "375px", height: "auto", maxWidth: "375px" },
+  desktop: { width: '100%', height: 'auto', maxWidth: '1200px' },
+  tablet: { width: '768px', height: 'auto', maxWidth: '768px' },
+  mobile: { width: '375px', height: 'auto', maxWidth: '375px' },
 };
 
 const DEVICE_FRAMES = {
   desktop: {
-    className: "bg-gray-100 border rounded-lg shadow-lg",
-    paddingClass: "p-4",
+    className: 'bg-gray-100 border rounded-lg shadow-lg',
+    paddingClass: 'p-4',
   },
   tablet: {
-    className: "bg-gray-900 border-2 border-gray-800 rounded-[2rem] shadow-2xl relative",
-    paddingClass: "p-8 pt-16 pb-16",
+    className: 'bg-gray-900 border-2 border-gray-800 rounded-[2rem] shadow-2xl relative',
+    paddingClass: 'p-8 pt-16 pb-16',
   },
   mobile: {
-    className: "bg-gray-900 border-2 border-gray-800 rounded-[3rem] shadow-2xl relative",
-    paddingClass: "p-6 pt-16 pb-20",
+    className: 'bg-gray-900 border-2 border-gray-800 rounded-[3rem] shadow-2xl relative',
+    paddingClass: 'p-6 pt-16 pb-20',
   },
 };
 
@@ -44,7 +44,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
   onBlockSelect,
   className,
 }) => {
-  const [previewMode, setPreviewMode] = useState<PreviewMode>("desktop");
+  const [previewMode, setPreviewMode] = useState<PreviewMode>('desktop');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [loadTime, setLoadTime] = useState(0);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -72,10 +72,10 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
     return {
       width: dimensions.width,
       maxWidth: dimensions.maxWidth,
-      minHeight: "400px",
-      margin: "0 auto",
-      transition: "all 0.3s ease-in-out",
-      transform: previewMode === "mobile" ? "scale(0.9)" : "scale(1)",
+      minHeight: '400px',
+      margin: '0 auto',
+      transition: 'all 0.3s ease-in-out',
+      transform: previewMode === 'mobile' ? 'scale(0.9)' : 'scale(1)',
     };
   };
 
@@ -84,18 +84,18 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
 
     return (
       <div
-        className={cn(frame.className, "transition-all duration-300")}
+        className={cn(frame.className, 'transition-all duration-300')}
         style={getPreviewStyles()}
       >
         {/* Device-specific decorations */}
-        {previewMode === "tablet" && (
+        {previewMode === 'tablet' && (
           <>
             <div className="absolute top-6 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-700 rounded-full" />
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-12 h-12 border-2 border-gray-700 rounded-full" />
           </>
         )}
 
-        {previewMode === "mobile" && (
+        {previewMode === 'mobile' && (
           <>
             <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-gray-700 rounded-full" />
             <div className="absolute top-6 right-6 w-2 h-2 bg-gray-700 rounded-full" />
@@ -103,7 +103,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           </>
         )}
 
-        <div className={cn(frame.paddingClass, "bg-white rounded-lg overflow-auto h-full")}>
+        <div className={cn(frame.paddingClass, 'bg-white rounded-lg overflow-auto h-full')}>
           {children}
         </div>
       </div>
@@ -117,13 +117,13 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
       <div
         key={block.id}
         className={cn(
-          "relative transition-all duration-200 cursor-pointer group",
-          isSelected && "ring-2 ring-[#B89B7A] ring-offset-2"
+          'relative transition-all duration-200 cursor-pointer group',
+          isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
         )}
         onClick={() => onBlockSelect?.(block.id)}
       >
         {/* Preview do bloco */}
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex items-center justify-between mb-2">
             <Badge variant="outline" className="text-xs">
               {block.type}
@@ -134,14 +134,14 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           {/* Simulação do conteúdo do bloco */}
           <div className="space-y-2">
             {block.properties?.content && (
-              <p style={{ color: "#432818" }}>{block.properties.content}</p>
+              <p style={{ color: '#432818' }}>{block.properties.content}</p>
             )}
             {block.properties?.title && (
-              <h3 style={{ color: "#432818" }}>{block.properties.title}</h3>
+              <h3 style={{ color: '#432818' }}>{block.properties.title}</h3>
             )}
             {block.properties?.imageUrl && (
-              <div style={{ borderColor: "#E5DDD5" }}>
-                <span style={{ color: "#8B7355" }}>Imagem</span>
+              <div style={{ borderColor: '#E5DDD5' }}>
+                <span style={{ color: '#8B7355' }}>Imagem</span>
               </div>
             )}
           </div>
@@ -150,8 +150,8 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
         {/* Overlay de hover */}
         <div
           className={cn(
-            "absolute inset-0 bg-[#B89B7A]/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg pointer-events-none",
-            isSelected && "opacity-20"
+            'absolute inset-0 bg-[#B89B7A]/10 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg pointer-events-none',
+            isSelected && 'opacity-20'
           )}
         />
       </div>
@@ -160,7 +160,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
 
   return (
     <TooltipProvider>
-      <Card className={cn("h-full flex flex-col", className)}>
+      <Card className={cn('h-full flex flex-col', className)}>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg text-[#432818] flex items-center gap-2">
@@ -170,7 +170,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
 
             <div className="flex items-center gap-2">
               {/* Métricas de performance */}
-              <div style={{ color: "#6B4F43" }}>
+              <div style={{ color: '#6B4F43' }}>
                 <Clock className="w-3 h-3" />
                 {loadTime}ms
               </div>
@@ -178,13 +178,13 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
               <Separator orientation="vertical" className="h-6" />
 
               {/* Controles de preview */}
-              <div style={{ backgroundColor: "#E5DDD5" }}>
+              <div style={{ backgroundColor: '#E5DDD5' }}>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === "desktop" ? "default" : "ghost"}
+                      variant={previewMode === 'desktop' ? 'default' : 'ghost'}
                       size="sm"
-                      onClick={() => setPreviewMode("desktop")}
+                      onClick={() => setPreviewMode('desktop')}
                       className="px-2"
                     >
                       <Monitor className="w-4 h-4" />
@@ -196,9 +196,9 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === "tablet" ? "default" : "ghost"}
+                      variant={previewMode === 'tablet' ? 'default' : 'ghost'}
                       size="sm"
-                      onClick={() => setPreviewMode("tablet")}
+                      onClick={() => setPreviewMode('tablet')}
                       className="px-2"
                     >
                       <Tablet className="w-4 h-4" />
@@ -210,9 +210,9 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={previewMode === "mobile" ? "default" : "ghost"}
+                      variant={previewMode === 'mobile' ? 'default' : 'ghost'}
                       size="sm"
-                      onClick={() => setPreviewMode("mobile")}
+                      onClick={() => setPreviewMode('mobile')}
                       className="px-2"
                     >
                       <Smartphone className="w-4 h-4" />
@@ -227,7 +227,7 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button variant="ghost" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
-                    <RefreshCw className={cn("w-4 h-4", isRefreshing && "animate-spin")} />
+                    <RefreshCw className={cn('w-4 h-4', isRefreshing && 'animate-spin')} />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Atualizar Preview</TooltipContent>
@@ -236,13 +236,13 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           </div>
 
           {/* Informações do modo atual */}
-          <div style={{ color: "#6B4F43" }}>
+          <div style={{ color: '#6B4F43' }}>
             <Badge variant="secondary" className="bg-[#B89B7A]/10 text-[#432818]">
-              {previewMode === "desktop"
-                ? "Desktop"
-                : previewMode === "tablet"
-                  ? "Tablet"
-                  : "Mobile"}
+              {previewMode === 'desktop'
+                ? 'Desktop'
+                : previewMode === 'tablet'
+                  ? 'Tablet'
+                  : 'Mobile'}
             </Badge>
             <span>•</span>
             <span>{PREVIEW_DIMENSIONS[previewMode].maxWidth}</span>
@@ -251,14 +251,14 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
           </div>
         </CardHeader>
 
-        <CardContent style={{ backgroundColor: "#FAF9F7" }}>
+        <CardContent style={{ backgroundColor: '#FAF9F7' }}>
           <div ref={previewRef} className="min-h-full p-4">
             {blocks.length > 0 ? (
               renderDeviceFrame(
                 <div className="space-y-4">{blocks.map(block => renderBlock(block))}</div>
               )
             ) : (
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 <div className="text-center">
                   <Eye className="w-12 h-12 mx-auto mb-4 opacity-50" />
                   <p className="text-lg font-medium">Nenhum bloco para preview</p>
@@ -270,8 +270,8 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
         </CardContent>
 
         {/* Performance indicator */}
-        <div style={{ backgroundColor: "#FAF9F7" }}>
-          <div style={{ color: "#6B4F43" }}>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
+          <div style={{ color: '#6B4F43' }}>
             <div className="flex items-center gap-2">
               <Zap className="w-3 h-3" />
               <span>Tempo de renderização: {loadTime}ms</span>
@@ -279,11 +279,11 @@ const ResponsivePreview: React.FC<ResponsivePreviewProps> = ({
             <div className="flex items-center gap-1">
               <div
                 className={cn(
-                  "w-2 h-2 rounded-full",
-                  loadTime < 100 ? "bg-green-500" : loadTime < 300 ? "bg-yellow-500" : "bg-red-500"
+                  'w-2 h-2 rounded-full',
+                  loadTime < 100 ? 'bg-green-500' : loadTime < 300 ? 'bg-yellow-500' : 'bg-red-500'
                 )}
               />
-              <span>{loadTime < 100 ? "Excelente" : loadTime < 300 ? "Bom" : "Lento"}</span>
+              <span>{loadTime < 100 ? 'Excelente' : loadTime < 300 ? 'Bom' : 'Lento'}</span>
             </div>
           </div>
         </div>

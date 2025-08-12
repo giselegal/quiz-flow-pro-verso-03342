@@ -1,11 +1,11 @@
 /* @ts-nocheck */
 // @ts-nocheck
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { User, Award, Star, Heart, Users, TrendingUp } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { DeviceView, StyleProps } from "./types";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { User, Award, Star, Heart, Users, TrendingUp } from 'lucide-react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { DeviceView, StyleProps } from './types';
 
 interface MentorInfo {
   name: string;
@@ -26,7 +26,7 @@ interface MentorSectionProps extends StyleProps {
   /** Subtítulo/descrição da seção */
   subtitle?: string;
   /** Layout da seção */
-  layout?: "horizontal" | "vertical" | "card";
+  layout?: 'horizontal' | 'vertical' | 'card';
   /** Mostrar credenciais */
   showCredentials?: boolean;
   /** Mostrar conquistas */
@@ -53,45 +53,45 @@ interface MentorSectionProps extends StyleProps {
  */
 export const MentorSection: React.FC<MentorSectionProps> = ({
   mentor,
-  title = "Conheça sua Mentora",
+  title = 'Conheça sua Mentora',
   subtitle,
-  layout = "horizontal",
+  layout = 'horizontal',
   showCredentials = true,
   showAchievements = true,
   showSpecialties = true,
   animationConfig = {},
-  deviceView = "desktop",
+  deviceView = 'desktop',
   onAction,
-  actionText = "Quero Começar Agora",
+  actionText = 'Quero Começar Agora',
   className,
   style,
   customStyles,
 }) => {
   const { disabled: animationsDisabled, duration = 400, delay = 0 } = animationConfig;
-  const isLowPerformance = deviceView === "mobile";
+  const isLowPerformance = deviceView === 'mobile';
 
   const getLayoutClasses = () => {
-    if (layout === "vertical" || deviceView === "mobile") {
-      return "flex flex-col items-center text-center space-y-2";
+    if (layout === 'vertical' || deviceView === 'mobile') {
+      return 'flex flex-col items-center text-center space-y-2';
     }
-    if (layout === "card") {
-      return "text-center";
+    if (layout === 'card') {
+      return 'text-center';
     }
-    return "grid md:grid-cols-2 gap-8 items-center";
+    return 'grid md:grid-cols-2 gap-8 items-center';
   };
 
   const getImageClasses = () => {
-    if (layout === "card") {
-      return "w-24 h-24 mx-auto";
+    if (layout === 'card') {
+      return 'w-24 h-24 mx-auto';
     }
-    if (layout === "vertical" || deviceView === "mobile") {
-      return "w-32 h-32 mx-auto";
+    if (layout === 'vertical' || deviceView === 'mobile') {
+      return 'w-32 h-32 mx-auto';
     }
-    return "w-48 h-48";
+    return 'w-48 h-48';
   };
 
   return (
-    <div className={`py-12 ${className || ""}`} style={style}>
+    <div className={`py-12 ${className || ''}`} style={style}>
       {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
@@ -110,18 +110,18 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
       {/* Content */}
       <div className="max-w-full mx-auto">
         <AnimatedWrapper
-          animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+          animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
           show={true}
           duration={duration}
           delay={delay}
         >
           <Card
-            className={`p-8 bg-white shadow-lg border border-[#B89B7A]/20 ${layout === "card" ? "max-w-sm mx-auto" : ""}`}
+            className={`p-8 bg-white shadow-lg border border-[#B89B7A]/20 ${layout === 'card' ? 'max-w-sm mx-auto' : ''}`}
           >
             <div className={getLayoutClasses()}>
               {/* Image */}
               <div
-                className={`relative ${layout === "horizontal" && deviceView !== "mobile" ? "order-2" : ""}`}
+                className={`relative ${layout === 'horizontal' && deviceView !== 'mobile' ? 'order-2' : ''}`}
               >
                 <div
                   className={`${getImageClasses()} rounded-full overflow-hidden border-4 border-[#B89B7A] shadow-lg relative`}
@@ -141,7 +141,7 @@ export const MentorSection: React.FC<MentorSectionProps> = ({
 
               {/* Content */}
               <div
-                className={`space-y-2 ${layout === "horizontal" && deviceView !== "mobile" ? "order-1" : ""}`}
+                className={`space-y-2 ${layout === 'horizontal' && deviceView !== 'mobile' ? 'order-1' : ''}`}
               >
                 {/* Name and title */}
                 <div>

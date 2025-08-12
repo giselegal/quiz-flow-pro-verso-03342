@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "@/utils/images/preloading";
-import { usePageConfig } from "@/hooks/usePageConfig";
-import DynamicBlockRenderer from "@/components/DynamicBlockRenderer";
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import React, { useEffect, useState } from 'react';
+import { preloadCriticalImages } from '@/utils/images/preloading';
+import { usePageConfig } from '@/hooks/usePageConfig';
+import DynamicBlockRenderer from '@/components/DynamicBlockRenderer';
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
 import {
   ChevronRight,
   Check,
@@ -22,8 +22,8 @@ import {
   CheckCircle,
   ArrowDown,
   Hourglass,
-} from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+} from 'lucide-react';
+import { trackButtonClick } from '@/utils/analytics';
 
 // CSS simplificado e otimizado
 const customStyles = `
@@ -89,42 +89,42 @@ const customStyles = `
 
 // Constantes para otimização de imagens - URLs atualizadas
 const HERO_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp';
 const HERO_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp';
 const PROBLEM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp';
 const SOLUTION_QUIZ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp';
 const GUIDES_BENEFITS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp';
 const GUIDES_BENEFITS_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp';
 const BONUS_1_KEY_PIECES_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp';
 const BONUS_1_KEY_PIECES_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515075/Espanhol_Portugu%C3%AAs_1_uru4r3.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515075/Espanhol_Portugu%C3%AAs_1_uru4r3.webp';
 const BONUS_2_VISAGISM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp';
 const BONUS_2_VISAGISM_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp';
 const MENTOR_GISELE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp';
 const TESTIMONIALS_RESULTS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp';
 // Imagens de transformação reais da ResultPage
 const TRANSFORMATION_REAL_IMAGE_1_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334756/ChatGPT_Image_4_de_mai._de_2025_01_42_42_jlugsc.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746334756/ChatGPT_Image_4_de_mai._de_2025_01_42_42_jlugsc.webp';
 const TRANSFORMATION_REAL_IMAGE_2_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp';
 const TRANSFORMATION_REAL_IMAGE_3_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp';
 const GUARANTEE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp';
 const GUARANTEE_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp';
 const FAQ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp';
 
 // Componente de estrelas para avaliações (mantido)
 const RatingStars = ({ rating }: { rating: number }) => {
@@ -134,7 +134,7 @@ const RatingStars = ({ rating }: { rating: number }) => {
         <Star
           key={i}
           size={16}
-          className={`${i < rating ? "text-yellow-500 fill-yellow-500" : "text-gray-300"} mr-0.5`}
+          className={`${i < rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'} mr-0.5`}
         />
       ))}
     </div>
@@ -167,7 +167,7 @@ const CountdownTimer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const formatNumber = (num: number) => num.toString().padStart(2, "0");
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
     <div className="flex flex-col items-center">
@@ -198,44 +198,44 @@ const FaqSectionNew = () => {
 
   const faqItems = [
     {
-      question: "Quanto tempo leva para fazer o quiz?",
+      question: 'Quanto tempo leva para fazer o quiz?',
       answer:
-        "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.",
+        'O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.',
     },
     {
-      question: "Como recebo os materiais após a compra?",
+      question: 'Como recebo os materiais após a compra?',
       answer:
-        "Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais.",
+        'Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais.',
     },
     {
-      question: "Os guias servem para qualquer tipo físico?",
+      question: 'Os guias servem para qualquer tipo físico?',
       answer:
-        "Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único.",
+        'Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único.',
     },
     {
-      question: "Preciso ter conhecimento prévio sobre moda?",
+      question: 'Preciso ter conhecimento prévio sobre moda?',
       answer:
-        "Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática.",
+        'Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática.',
     },
     {
-      question: "Posso acessar os materiais pelo celular?",
+      question: 'Posso acessar os materiais pelo celular?',
       answer:
-        "Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone.",
+        'Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone.',
     },
     {
-      question: "E se eu não gostar do conteúdo?",
+      question: 'E se eu não gostar do conteúdo?',
       answer:
-        "Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento.",
+        'Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento.',
     },
     {
-      question: "Quanto tempo terei acesso aos materiais?",
+      question: 'Quanto tempo terei acesso aos materiais?',
       answer:
-        "O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração.",
+        'O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração.',
     },
     {
-      question: "Os guias funcionam para qualquer idade?",
+      question: 'Os guias funcionam para qualquer idade?',
       answer:
-        "Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida.",
+        'Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida.',
     },
   ];
 
@@ -255,15 +255,15 @@ const FaqSectionNew = () => {
             key={index}
             className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-[#B89B7A]"
           >
-            <button onClick={() => toggleItem(index)} style={{ backgroundColor: "#FAF9F7" }}>
+            <button onClick={() => toggleItem(index)} style={{ backgroundColor: '#FAF9F7' }}>
               <span className="font-medium text-[#432818] text-lg">{item.question}</span>
               <ChevronRight
                 size={24}
-                className={`text-[#B89B7A] transition-transform duration-300 ${openItem === index ? "transform rotate-90" : ""}`}
+                className={`text-[#B89B7A] transition-transform duration-300 ${openItem === index ? 'transform rotate-90' : ''}`}
               />
             </button>
 
-            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
+            {openItem === index && <div style={{ color: '#6B4F43' }}>{item.answer}</div>}
           </div>
         ))}
       </div>
@@ -275,13 +275,13 @@ const FaqSectionNew = () => {
 const SectionTitle: React.FC<{
   children: React.ReactNode;
   subtitle?: string;
-  size?: "lg" | "xl";
+  size?: 'lg' | 'xl';
   className?: string;
-  variant?: "primary" | "secondary" | "simple";
-}> = ({ children, subtitle, size = "xl", className = "", variant = "simple" }) => (
+  variant?: 'primary' | 'secondary' | 'simple';
+}> = ({ children, subtitle, size = 'xl', className = '', variant = 'simple' }) => (
   <div className={`text-center mb-16 animate-fade-in-up ${className}`}>
     {/* Decoração superior - APENAS para títulos principais */}
-    {variant === "primary" && (
+    {variant === 'primary' && (
       <div className="flex justify-center mb-4">
         <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] rounded-full"></div>
       </div>
@@ -290,11 +290,11 @@ const SectionTitle: React.FC<{
     {/* Título principal - estilos diferenciados */}
     <h2
       className={`font-bold font-playfair leading-tight mb-6 ${
-        variant === "primary"
-          ? "text-4xl md:text-5xl lg:text-6xl text-brand-dark"
-          : variant === "secondary"
-            ? "text-3xl md:text-4xl lg:text-5xl text-brand-dark"
-            : "text-3xl md:text-4xl font-bold text-brand-dark"
+        variant === 'primary'
+          ? 'text-4xl md:text-5xl lg:text-6xl text-brand-dark'
+          : variant === 'secondary'
+            ? 'text-3xl md:text-4xl lg:text-5xl text-brand-dark'
+            : 'text-3xl md:text-4xl font-bold text-brand-dark'
       }`}
     >
       {children}
@@ -309,34 +309,34 @@ const SectionTitle: React.FC<{
 
 const QuizOfferPage: React.FC = () => {
   // Integração com o editor visual
-  const { config: pageConfig, loading: configLoading } = usePageConfig("quiz-offer-page");
+  const { config: pageConfig, loading: configLoading } = usePageConfig('quiz-offer-page');
 
   const testimonials = [
     {
       rating: 5 as number,
-      text: "Transformou completamente meu guarda-roupa!",
-      author: "Maria Silva",
+      text: 'Transformou completamente meu guarda-roupa!',
+      author: 'Maria Silva',
     },
     {
       rating: 5 as number,
-      text: "Finalmente entendi meu estilo pessoal.",
-      author: "Ana Costa",
+      text: 'Finalmente entendi meu estilo pessoal.',
+      author: 'Ana Costa',
     },
   ];
 
   const renderStars = (num: number) => {
     return Array.from({ length: 5 }, (_, index: number) => (
-      <span key={index} className={index < num ? "text-yellow-400" : "text-gray-300"}>
+      <span key={index} className={index < num ? 'text-yellow-400' : 'text-gray-300'}>
         ★
       </span>
     ));
   };
 
   const benefits = [
-    "Análise personalizada do seu biotipo",
-    "Guia completo de peças que valorizam seu corpo",
-    "Consultoria de 1 hora com nossa especialista",
-    "Acesso a materiais exclusivos",
+    'Análise personalizada do seu biotipo',
+    'Guia completo de peças que valorizam seu corpo',
+    'Consultoria de 1 hora com nossa especialista',
+    'Acesso a materiais exclusivos',
   ].map((benefit, index: number) => (
     <li key={index} className="flex items-start space-x-3">
       <span className="text-[#B89B7A] text-xl">✓</span>
@@ -346,7 +346,7 @@ const QuizOfferPage: React.FC = () => {
 
   useEffect(() => {
     // Inject custom styles
-    const styleElement = document.createElement("style");
+    const styleElement = document.createElement('style');
     styleElement.textContent = customStyles;
     document.head.appendChild(styleElement);
 
@@ -367,8 +367,8 @@ const QuizOfferPage: React.FC = () => {
       { quality: 95 }
     );
 
-    if (typeof window !== "undefined" && "performance" in window) {
-      window.performance.mark("offer-page-mounted");
+    if (typeof window !== 'undefined' && 'performance' in window) {
+      window.performance.mark('offer-page-mounted');
     }
 
     return () => {
@@ -377,8 +377,8 @@ const QuizOfferPage: React.FC = () => {
     };
   }, []);
 
-  const handleCtaClick = (buttonId: string, action: string = "Comprar Agora") => {
-    trackButtonClick(buttonId, action, "quiz_offer_page");
+  const handleCtaClick = (buttonId: string, action: string = 'Comprar Agora') => {
+    trackButtonClick(buttonId, action, 'quiz_offer_page');
   };
 
   /**
@@ -402,14 +402,14 @@ const QuizOfferPage: React.FC = () => {
   useEffect(() => {
     if (pageConfig && !configLoading) {
       // Apply editor styles if available
-      console.log("Page config loaded:", pageConfig);
+      console.log('Page config loaded:', pageConfig);
     }
   }, [pageConfig, configLoading]);
 
   return (
     <div
       className="min-h-screen bg-[var(--background)]"
-      style={{ fontFamily: "Inter, sans-serif" }}
+      style={{ fontFamily: 'Inter, sans-serif' }}
     >
       {/* Header limpo */}
       <header className="py-4 px-6 sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
@@ -432,13 +432,13 @@ const QuizOfferPage: React.FC = () => {
               {/* Badge credibilidade */}
               <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
                 <Award size={18} className="text-green-600" />
-                <span style={{ color: "#6B4F43" }}>3000+ mulheres transformadas</span>
+                <span style={{ color: '#6B4F43' }}>3000+ mulheres transformadas</span>
               </div>
 
               {/* Headline simplificada - DADOS REAIS ETAPA 21 */}
               <h1
                 className="text-hierarchy-1 text-[var(--text-dark)] mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Etapa 21: <span className="text-[var(--primary)]">Oferta Exclusiva</span>
                 <br />
@@ -447,7 +447,7 @@ const QuizOfferPage: React.FC = () => {
 
               {/* Subheadline focada - BASEADA NO RESULTADO DO QUIZ */}
               <p className="text-body text-[var(--text-medium)] mb-8 max-w-2xl mx-auto">
-                Leve sua transformação de estilo para o próximo nível com nosso{" "}
+                Leve sua transformação de estilo para o próximo nível com nosso{' '}
                 <strong>Guia Completo personalizado</strong> para seu resultado
               </p>
 
@@ -465,10 +465,10 @@ const QuizOfferPage: React.FC = () => {
               {/* CTA principal único - TEXTO REAL DA ETAPA 21 */}
               <button
                 onClick={() => {
-                  handleCtaClick("hero_cta", "Sim! Quero Garantir Meu Acesso");
+                  handleCtaClick('hero_cta', 'Sim! Quero Garantir Meu Acesso');
                   window.open(
-                    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                    "_blank"
+                    'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+                    '_blank'
                   );
                 }}
                 className="btn-primary-clean mb-6"
@@ -500,7 +500,7 @@ const QuizOfferPage: React.FC = () => {
                 <div>
                   <h2
                     className="text-hierarchy-2 text-[var(--text-dark)] mb-6"
-                    style={{ fontFamily: "Playfair Display, serif" }}
+                    style={{ fontFamily: 'Playfair Display, serif' }}
                   >
                     Você se identifica com isso?
                   </h2>
@@ -517,7 +517,7 @@ const QuizOfferPage: React.FC = () => {
                   </div>
                   <div className="bg-[#B89B7A]/10 p-4 rounded-lg border-l-4 border-orange-400 mt-6">
                     <p className="text-[var(--text-dark)] font-semibold">
-                      Isso acontece porque você ainda não descobriu seu{" "}
+                      Isso acontece porque você ainda não descobriu seu{' '}
                       <strong>estilo predominante</strong>.
                     </p>
                   </div>
@@ -542,7 +542,7 @@ const QuizOfferPage: React.FC = () => {
             <div className="card-clean text-center">
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 A Solução: Quiz de Estilo
               </h2>
@@ -558,16 +558,16 @@ const QuizOfferPage: React.FC = () => {
               </div>
 
               <p className="text-body text-[var(--text-medium)] mb-8 max-w-2xl mx-auto">
-                Método preciso para identificar seu estilo entre os{" "}
+                Método preciso para identificar seu estilo entre os{' '}
                 <strong>7 estilos universais</strong> + guia personalizado completo.
               </p>
 
               <button
                 onClick={() => {
-                  handleCtaClick("solution_cta", "Fazer Quiz");
+                  handleCtaClick('solution_cta', 'Fazer Quiz');
                   window.open(
-                    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                    "_blank"
+                    'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+                    '_blank'
                   );
                 }}
                 className="btn-primary-clean mb-6"
@@ -588,7 +588,7 @@ const QuizOfferPage: React.FC = () => {
               <div className="text-center mb-8">
                 <h2
                   className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-                  style={{ fontFamily: "Playfair Display, serif" }}
+                  style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   Transformação Completa
                 </h2>
@@ -663,10 +663,10 @@ const QuizOfferPage: React.FC = () => {
               <div className="text-center">
                 <button
                   onClick={() => {
-                    handleCtaClick("final_cta", "Garantir Transformação");
+                    handleCtaClick('final_cta', 'Garantir Transformação');
                     window.open(
-                      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                      "_blank"
+                      'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+                      '_blank'
                     );
                   }}
                   className="btn-primary-clean"
@@ -692,7 +692,7 @@ const QuizOfferPage: React.FC = () => {
               />
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 7 Dias de Garantia
               </h2>
@@ -710,7 +710,7 @@ const QuizOfferPage: React.FC = () => {
             <div className="card-clean">
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] text-center mb-8"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Perguntas Frequentes
               </h2>

@@ -1,8 +1,8 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Block } from '@/types/editor';
 
 interface VideoBlockEditorProps {
   block: Block;
@@ -13,7 +13,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
   const content = block.content;
 
   const getVideoId = (url: string) => {
-    if (!url) return "";
+    if (!url) return '';
 
     // For YouTube URLs
     const youtubeRegex =
@@ -27,16 +27,16 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
     const vimeoMatch = url.match(vimeoRegex);
     if (vimeoMatch) return vimeoMatch[1];
 
-    return "";
+    return '';
   };
 
   const getEmbedUrl = (url: string) => {
-    if (!url) return "";
+    if (!url) return '';
     const videoId = getVideoId(url);
 
-    if (url.includes("youtube")) {
+    if (url.includes('youtube')) {
       return `https://www.youtube.com/embed/${videoId}`;
-    } else if (url.includes("vimeo")) {
+    } else if (url.includes('vimeo')) {
       return `https://player.vimeo.com/video/${videoId}`;
     }
 
@@ -49,7 +49,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="videoUrl">URL do Vídeo (YouTube ou Vimeo)</Label>
         <Input
           id="videoUrl"
-          value={content.videoUrl || ""}
+          value={content.videoUrl || ''}
           onChange={e => onUpdate({ videoUrl: e.target.value })}
           placeholder="https://www.youtube.com/watch?v=..."
         />
@@ -59,7 +59,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="videoTitle">Título do Vídeo</Label>
         <Input
           id="videoTitle"
-          value={content.videoTitle || ""}
+          value={content.videoTitle || ''}
           onChange={e => onUpdate({ videoTitle: e.target.value })}
           placeholder="Título do vídeo"
         />
@@ -70,7 +70,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
         <Textarea
           id="videoDescription"
           rows={3}
-          value={content.videoDescription || ""}
+          value={content.videoDescription || ''}
           onChange={e => onUpdate({ videoDescription: e.target.value })}
           placeholder="Descrição do vídeo"
         />
@@ -80,7 +80,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="videoThumbnail">URL da Miniatura</Label>
         <Input
           id="videoThumbnail"
-          value={content.videoThumbnail || ""}
+          value={content.videoThumbnail || ''}
           onChange={e => onUpdate({ videoThumbnail: e.target.value })}
           placeholder="https://exemplo.com/miniatura.jpg"
         />
@@ -110,7 +110,7 @@ const VideoBlockEditor: React.FC<VideoBlockEditorProps> = ({ block, onUpdate }) 
             <iframe
               src={getEmbedUrl(content.videoUrl)}
               className="w-full h-full"
-              title={content.videoTitle || "Video"}
+              title={content.videoTitle || 'Video'}
               frameBorder="0"
               allowFullScreen
             />

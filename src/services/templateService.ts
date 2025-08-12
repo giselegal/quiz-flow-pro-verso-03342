@@ -1,5 +1,5 @@
-import { STEP_TEMPLATES } from "../config/templates/templates";
-import type { Block } from "../types/editor";
+import { STEP_TEMPLATES } from '../config/templates/templates';
+import type { Block } from '../types/editor';
 
 // Interfaces para corresponder à estrutura real dos templates
 export interface TemplateMetadata {
@@ -124,7 +124,7 @@ export const templateService = {
   },
 
   async getTemplate(id: string): Promise<TemplateData | null> {
-    const step = parseInt(id.replace("step-", ""));
+    const step = parseInt(id.replace('step-', ''));
 
     if (!isValidStep(step)) {
       return null;

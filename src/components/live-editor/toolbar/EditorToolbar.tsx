@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Save, Eye, Undo, Redo } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Save, Eye, Undo, Redo } from 'lucide-react';
 
 interface EditorToolbarProps {
   onSave?: () => void;

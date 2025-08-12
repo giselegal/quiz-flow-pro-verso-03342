@@ -1,11 +1,11 @@
-import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import { cn } from '@/lib/utils';
+import React, { useState } from 'react';
 
 interface ButtonInlineProps {
   text?: string;
-  style?: "primary" | "secondary" | "outline";
-  variant?: "primary" | "secondary" | "outline";
-  size?: "small" | "medium" | "large";
+  style?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline';
+  size?: 'small' | 'medium' | 'large';
   backgroundColor?: string;
   textColor?: string;
   onClick?: () => void;
@@ -36,28 +36,28 @@ interface ButtonInlineProps {
 }
 
 export function ButtonInline({
-  text = "Clique aqui",
-  style = "primary",
-  variant = "primary",
-  size = "medium",
-  backgroundColor = "#B89B7A",
-  textColor = "#ffffff",
+  text = 'Clique aqui',
+  style = 'primary',
+  variant = 'primary',
+  size = 'medium',
+  backgroundColor = '#B89B7A',
+  textColor = '#ffffff',
   onClick,
-  className = "",
+  className = '',
   fullWidth = false,
-  borderRadius = "rounded-lg",
+  borderRadius = 'rounded-lg',
   padding,
   fontSize,
-  fontWeight = "font-bold",
+  fontWeight = 'font-bold',
   boxShadow,
   hoverEffect = true,
   requiresValidInput = false,
   disabled = false,
-  textAlign = "text-center",
-  justifyContent: _justifyContent = "center",
-  alignItems: _alignItems = "center",
-  display: _display = "flex",
-  margin: _margin = "0 auto",
+  textAlign = 'text-center',
+  justifyContent: _justifyContent = 'center',
+  alignItems: _alignItems = 'center',
+  display: _display = 'flex',
+  margin: _margin = '0 auto',
   marginTop = 0,
   marginBottom = 0,
   marginLeft = 0,
@@ -68,50 +68,50 @@ export function ButtonInline({
   isSelected = false,
 }: ButtonInlineProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [tempText, setTempText] = useState("");
+  const [tempText, setTempText] = useState('');
 
   // Usar variant se style não estiver definido
   const actualVariant = variant || style;
 
   const sizeClasses = {
-    small: "px-4 py-2 text-sm",
-    medium: "px-6 py-3 text-base",
-    large: "px-8 py-4 text-lg",
+    small: 'px-4 py-2 text-sm',
+    medium: 'px-6 py-3 text-base',
+    large: 'px-8 py-4 text-lg',
   };
 
   // Converter fontSize numérico em classes Tailwind
   const getFontSizeClass = (size: string | number | undefined): string => {
-    if (typeof size === "number") {
-      if (size <= 12) return "text-xs";
-      if (size <= 14) return "text-sm";
-      if (size <= 16) return "text-base";
-      if (size <= 18) return "text-lg";
-      if (size <= 20) return "text-xl";
-      if (size <= 24) return "text-2xl";
-      return "text-3xl";
+    if (typeof size === 'number') {
+      if (size <= 12) return 'text-xs';
+      if (size <= 14) return 'text-sm';
+      if (size <= 16) return 'text-base';
+      if (size <= 18) return 'text-lg';
+      if (size <= 20) return 'text-xl';
+      if (size <= 24) return 'text-2xl';
+      return 'text-3xl';
     }
-    return size || "text-base";
+    return size || 'text-base';
   };
 
   // Converter fontWeight numérico em classes Tailwind
   const getFontWeightClass = (weight: string | number | undefined): string => {
-    if (typeof weight === "number" || !isNaN(Number(weight))) {
+    if (typeof weight === 'number' || !isNaN(Number(weight))) {
       const numWeight = Number(weight);
-      if (numWeight <= 300) return "font-light";
-      if (numWeight <= 400) return "font-normal";
-      if (numWeight <= 500) return "font-medium";
-      if (numWeight <= 600) return "font-semibold";
-      if (numWeight <= 700) return "font-bold";
-      return "font-extrabold";
+      if (numWeight <= 300) return 'font-light';
+      if (numWeight <= 400) return 'font-normal';
+      if (numWeight <= 500) return 'font-medium';
+      if (numWeight <= 600) return 'font-semibold';
+      if (numWeight <= 700) return 'font-bold';
+      return 'font-extrabold';
     }
-    return weight || "font-bold";
+    return weight || 'font-bold';
   };
 
   // Função para converter margens numéricas em classes Tailwind
-  const getMarginClass = (value: number, type: "top" | "bottom" | "left" | "right"): string => {
-    if (!value || value === 0) return "";
+  const getMarginClass = (value: number, type: 'top' | 'bottom' | 'left' | 'right'): string => {
+    if (!value || value === 0) return '';
 
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+    const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
     // Converter pixels em unidades Tailwind (aproximadamente)
     if (value <= 4) return `${prefix}-1`;
@@ -140,20 +140,20 @@ export function ButtonInline({
 
   const handleSave = () => {
     if (onPropertyChange && tempText.trim()) {
-      onPropertyChange("text", tempText.trim());
+      onPropertyChange('text', tempText.trim());
     }
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    setTempText("");
+    setTempText('');
     setIsEditing(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       handleSave();
-    } else if (e.key === "Escape") {
+    } else if (e.key === 'Escape') {
       handleCancel();
     }
   };
@@ -172,24 +172,24 @@ export function ButtonInline({
           style={{
             backgroundColor,
             color: textColor,
-            minWidth: "120px",
+            minWidth: '120px',
           }}
           placeholder="Texto do botão..."
         />
         <div
           style={{
-            position: "absolute",
-            top: "100%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontSize: "10px",
-            color: "#666",
-            background: "white",
-            padding: "2px 4px",
-            borderRadius: "4px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-            whiteSpace: "nowrap",
-            marginTop: "4px",
+            position: 'absolute',
+            top: '100%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '10px',
+            color: '#666',
+            background: 'white',
+            padding: '2px 4px',
+            borderRadius: '4px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            whiteSpace: 'nowrap',
+            marginTop: '4px',
           }}
         >
           Enter para salvar • Esc para cancelar
@@ -204,18 +204,18 @@ export function ButtonInline({
       disabled={disabled || requiresValidInput}
       className={cn(
         // Base styles
-        "inline-flex items-center justify-center transition-all duration-300 border",
-        "focus:outline-none focus:ring-4 focus:ring-opacity-50",
+        'inline-flex items-center justify-center transition-all duration-300 border',
+        'focus:outline-none focus:ring-4 focus:ring-opacity-50',
         // Editable styles
-        isEditable && isSelected && "ring-2 ring-blue-400 ring-opacity-50",
-        isEditable && "hover:ring-2 hover:ring-blue-300 hover:ring-opacity-30",
+        isEditable && isSelected && 'ring-2 ring-blue-400 ring-opacity-50',
+        isEditable && 'hover:ring-2 hover:ring-blue-300 hover:ring-opacity-30',
 
         // Size
         padding || sizeClasses[size],
 
         // Layout
-        fullWidth && "w-full",
-        borderRadius || "rounded-lg",
+        fullWidth && 'w-full',
+        borderRadius || 'rounded-lg',
         textAlign,
 
         // Typography
@@ -224,53 +224,53 @@ export function ButtonInline({
 
         // Effects
         boxShadow,
-        hoverEffect && "hover:shadow-lg hover:scale-105 active:scale-95",
+        hoverEffect && 'hover:shadow-lg hover:scale-105 active:scale-95',
 
         // States
-        disabled && "opacity-50 cursor-not-allowed",
-        requiresValidInput && "opacity-75 cursor-not-allowed",
+        disabled && 'opacity-50 cursor-not-allowed',
+        requiresValidInput && 'opacity-75 cursor-not-allowed',
 
         // Margins
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right"),
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right'),
 
         // Custom classes
         className
       )}
       style={{
         backgroundColor:
-          actualVariant === "primary"
+          actualVariant === 'primary'
             ? backgroundColor
-            : actualVariant === "secondary"
+            : actualVariant === 'secondary'
               ? undefined
-              : "transparent",
+              : 'transparent',
         color:
-          actualVariant === "primary"
+          actualVariant === 'primary'
             ? textColor
-            : actualVariant === "outline"
+            : actualVariant === 'outline'
               ? backgroundColor
               : textColor,
         borderColor: backgroundColor,
-        ...(actualVariant === "outline" &&
+        ...(actualVariant === 'outline' &&
           ({
-            "--hover-bg": backgroundColor,
+            '--hover-bg': backgroundColor,
           } as React.CSSProperties)),
       }}
       onMouseEnter={e => {
-        if (actualVariant === "outline") {
+        if (actualVariant === 'outline') {
           e.currentTarget.style.backgroundColor = backgroundColor;
           e.currentTarget.style.color = textColor;
         }
       }}
       onMouseLeave={e => {
-        if (actualVariant === "outline") {
-          e.currentTarget.style.backgroundColor = "transparent";
+        if (actualVariant === 'outline') {
+          e.currentTarget.style.backgroundColor = 'transparent';
           e.currentTarget.style.color = backgroundColor;
         }
       }}
-      title={isEditable ? "Clique para editar texto do botão" : undefined}
+      title={isEditable ? 'Clique para editar texto do botão' : undefined}
     >
       {text}
       {isEditable && isSelected && <span className="ml-2 text-xs opacity-60">✎</span>}

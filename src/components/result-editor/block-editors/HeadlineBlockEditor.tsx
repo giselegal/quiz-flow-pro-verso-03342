@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Block } from '@/types/editor';
 
 interface HeadlineBlockEditorProps {
   block: Block;
@@ -18,7 +18,7 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
         <Textarea
           id="title"
           rows={2}
-          value={content.title || ""}
+          value={content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           placeholder="Digite o título aqui"
         />
@@ -29,7 +29,7 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
         <Textarea
           id="subtitle"
           rows={2}
-          value={content.subtitle || ""}
+          value={content.subtitle || ''}
           onChange={e => onUpdate({ subtitle: e.target.value })}
           placeholder="Digite o subtítulo aqui"
         />
@@ -40,7 +40,7 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
         <Input
           id="textColor"
           type="color"
-          value={content.textColor || "#432818"}
+          value={content.textColor || '#432818'}
           onChange={e => onUpdate({ textColor: e.target.value })}
         />
       </div>
@@ -51,27 +51,27 @@ const HeadlineBlockEditor: React.FC<HeadlineBlockEditorProps> = ({ block, onUpda
           <button
             type="button"
             className={`p-2 border rounded-md ${
-              (content.alignment || "center") === "left" ? "bg-[#B89B7A]/20" : ""
+              (content.alignment || 'center') === 'left' ? 'bg-[#B89B7A]/20' : ''
             }`}
-            onClick={() => onUpdate({ alignment: "left" })}
+            onClick={() => onUpdate({ alignment: 'left' })}
           >
             Esquerda
           </button>
           <button
             type="button"
             className={`p-2 border rounded-md ${
-              (content.alignment || "center") === "center" ? "bg-[#B89B7A]/20" : ""
+              (content.alignment || 'center') === 'center' ? 'bg-[#B89B7A]/20' : ''
             }`}
-            onClick={() => onUpdate({ alignment: "center" })}
+            onClick={() => onUpdate({ alignment: 'center' })}
           >
             Centro
           </button>
           <button
             type="button"
             className={`p-2 border rounded-md ${
-              (content.alignment || "center") === "right" ? "bg-[#B89B7A]/20" : ""
+              (content.alignment || 'center') === 'right' ? 'bg-[#B89B7A]/20' : ''
             }`}
-            onClick={() => onUpdate({ alignment: "right" })}
+            onClick={() => onUpdate({ alignment: 'right' })}
           >
             Direita
           </button>

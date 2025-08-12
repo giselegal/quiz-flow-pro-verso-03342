@@ -5,12 +5,12 @@
  * Analisa e resolve problemas de templates, performance e inicialização
  */
 
-import { TemplateJsonLoader } from "./TemplateJsonLoader";
-import { TemplateManager } from "./TemplateManager";
+import { TemplateJsonLoader } from './TemplateJsonLoader';
+import { TemplateManager } from './TemplateManager';
 
 export interface DiagnosticResult {
   category: string;
-  status: "success" | "warning" | "error";
+  status: 'success' | 'warning' | 'error';
   message: string;
   details?: any;
   fix?: () => Promise<void>;
@@ -23,7 +23,7 @@ export class EditorDiagnostics {
    * 🔍 Executar diagnóstico completo
    */
   static async runFullDiagnostic(): Promise<DiagnosticResult[]> {
-    console.log("🔍 Iniciando diagnóstico completo do editor...");
+    console.log('🔍 Iniciando diagnóstico completo do editor...');
     this.results = [];
 
     // Testar templates JSON
@@ -37,7 +37,7 @@ export class EditorDiagnostics {
     // Testar inicialização
     await this.testInitializationFlow();
 
-    console.log("✅ Diagnóstico completo finalizado:", this.results);
+    console.log('✅ Diagnóstico completo finalizado:', this.results);
     return this.results;
   }
 
@@ -46,27 +46,27 @@ export class EditorDiagnostics {
    */
   private static async testTemplateAvailability(): Promise<void> {
     const templatePaths = [
-      "/templates/step-01-template.json",
-      "/templates/step-02-template.json",
-      "/templates/step-03-template.json",
-      "/templates/step-04-template.json",
-      "/templates/step-05-template.json",
-      "/templates/step-06-template.json",
-      "/templates/step-07-template.json",
-      "/templates/step-08-template.json",
-      "/templates/step-09-template.json",
-      "/templates/step-10-template.json",
-      "/templates/step-11-template.json",
-      "/templates/step-12-template.json",
-      "/templates/step-13-template.json",
-      "/templates/step-14-template.json",
-      "/templates/step-15-template.json",
-      "/templates/step-16-template.json",
-      "/templates/step-17-template.json",
-      "/templates/step-18-template.json",
-      "/templates/step-19-template.json",
-      "/templates/step-20-template.json",
-      "/templates/step-21-template.json",
+      '/templates/step-01-template.json',
+      '/templates/step-02-template.json',
+      '/templates/step-03-template.json',
+      '/templates/step-04-template.json',
+      '/templates/step-05-template.json',
+      '/templates/step-06-template.json',
+      '/templates/step-07-template.json',
+      '/templates/step-08-template.json',
+      '/templates/step-09-template.json',
+      '/templates/step-10-template.json',
+      '/templates/step-11-template.json',
+      '/templates/step-12-template.json',
+      '/templates/step-13-template.json',
+      '/templates/step-14-template.json',
+      '/templates/step-15-template.json',
+      '/templates/step-16-template.json',
+      '/templates/step-17-template.json',
+      '/templates/step-18-template.json',
+      '/templates/step-19-template.json',
+      '/templates/step-20-template.json',
+      '/templates/step-21-template.json',
     ];
 
     let availableCount = 0;
@@ -87,15 +87,15 @@ export class EditorDiagnostics {
 
     if (availableCount === 21) {
       this.results.push({
-        category: "Templates",
-        status: "success",
+        category: 'Templates',
+        status: 'success',
         message: `✅ Todos os 21 templates estão disponíveis`,
         details: { available: availableCount, total: 21 },
       });
     } else {
       this.results.push({
-        category: "Templates",
-        status: "error",
+        category: 'Templates',
+        status: 'error',
         message: `❌ ${21 - availableCount} templates estão faltando`,
         details: { missing: missingTemplates, available: availableCount, total: 21 },
       });
@@ -116,7 +116,7 @@ export class EditorDiagnostics {
         if (blocks && blocks.length > 0) {
           loadedCount++;
         } else {
-          failedLoads.push({ stepId, reason: "Empty blocks array" });
+          failedLoads.push({ stepId, reason: 'Empty blocks array' });
         }
       } catch (error) {
         failedLoads.push({
@@ -128,15 +128,15 @@ export class EditorDiagnostics {
 
     if (loadedCount === 21) {
       this.results.push({
-        category: "Template Loading",
-        status: "success",
+        category: 'Template Loading',
+        status: 'success',
         message: `✅ Todos os 21 templates carregaram corretamente`,
         details: { loaded: loadedCount, total: 21 },
       });
     } else {
       this.results.push({
-        category: "Template Loading",
-        status: "error",
+        category: 'Template Loading',
+        status: 'error',
         message: `❌ ${21 - loadedCount} templates falharam ao carregar`,
         details: { failed: failedLoads, loaded: loadedCount, total: 21 },
       });
@@ -147,7 +147,7 @@ export class EditorDiagnostics {
    * 🧪 Testar conteúdo dos templates
    */
   private static async testTemplateContent(): Promise<void> {
-    const sampleSteps = ["step-1", "step-2", "step-10", "step-21"];
+    const sampleSteps = ['step-1', 'step-2', 'step-10', 'step-21'];
     const contentIssues = [];
 
     for (const stepId of sampleSteps) {
@@ -156,20 +156,20 @@ export class EditorDiagnostics {
 
         // Verificar se tem blocos
         if (!blocks || blocks.length === 0) {
-          contentIssues.push({ stepId, issue: "No blocks found" });
+          contentIssues.push({ stepId, issue: 'No blocks found' });
           continue;
         }
 
         // Verificar estrutura dos blocos
         for (const block of blocks) {
           if (!block.id) {
-            contentIssues.push({ stepId, issue: "Block missing ID", block });
+            contentIssues.push({ stepId, issue: 'Block missing ID', block });
           }
           if (!block.type) {
-            contentIssues.push({ stepId, issue: "Block missing type", block });
+            contentIssues.push({ stepId, issue: 'Block missing type', block });
           }
           if (!block.properties && !block.content) {
-            contentIssues.push({ stepId, issue: "Block missing properties/content", block });
+            contentIssues.push({ stepId, issue: 'Block missing properties/content', block });
           }
         }
       } catch (error) {
@@ -182,15 +182,15 @@ export class EditorDiagnostics {
 
     if (contentIssues.length === 0) {
       this.results.push({
-        category: "Template Content",
-        status: "success",
+        category: 'Template Content',
+        status: 'success',
         message: `✅ Conteúdo dos templates está estruturado corretamente`,
         details: { samplesChecked: sampleSteps.length },
       });
     } else {
       this.results.push({
-        category: "Template Content",
-        status: "warning",
+        category: 'Template Content',
+        status: 'warning',
         message: `⚠️ ${contentIssues.length} problemas de conteúdo encontrados`,
         details: { issues: contentIssues },
       });
@@ -206,22 +206,22 @@ export class EditorDiagnostics {
     // Testar tempo de carregamento de template
     const startTime = performance.now();
     try {
-      await TemplateManager.loadStepBlocks("step-1");
+      await TemplateManager.loadStepBlocks('step-1');
       const loadTime = performance.now() - startTime;
 
       if (loadTime > 500) {
         performanceIssues.push({
-          metric: "Template Load Time",
+          metric: 'Template Load Time',
           value: loadTime,
           threshold: 500,
-          status: "slow",
+          status: 'slow',
         });
       }
     } catch (error) {
       performanceIssues.push({
-        metric: "Template Load",
+        metric: 'Template Load',
         error: error instanceof Error ? error.message : String(error),
-        status: "failed",
+        status: 'failed',
       });
     }
 
@@ -243,15 +243,15 @@ export class EditorDiagnostics {
 
     if (performanceIssues.length === 0) {
       this.results.push({
-        category: "Performance",
-        status: "success",
+        category: 'Performance',
+        status: 'success',
         message: `✅ Métricas de performance estão dentro dos limites`,
         details: { setTimeoutCalls, longTimeouts },
       });
     } else {
       this.results.push({
-        category: "Performance",
-        status: "warning",
+        category: 'Performance',
+        status: 'warning',
         message: `⚠️ ${performanceIssues.length} problemas de performance detectados`,
         details: { issues: performanceIssues, setTimeoutCalls, longTimeouts },
       });
@@ -267,15 +267,15 @@ export class EditorDiagnostics {
     // Testar cache
     try {
       TemplateManager.clearCache();
-      await TemplateManager.loadStepBlocks("step-1");
-      const cached = await TemplateManager.loadStepBlocks("step-1");
+      await TemplateManager.loadStepBlocks('step-1');
+      const cached = await TemplateManager.loadStepBlocks('step-1');
 
       if (!cached) {
-        initIssues.push({ issue: "Cache não está funcionando" });
+        initIssues.push({ issue: 'Cache não está funcionando' });
       }
     } catch (error) {
       initIssues.push({
-        issue: "Erro no sistema de cache",
+        issue: 'Erro no sistema de cache',
         error: error instanceof Error ? error.message : String(error),
       });
     }
@@ -285,21 +285,21 @@ export class EditorDiagnostics {
       await TemplateManager.preloadCommonTemplates();
     } catch (error) {
       initIssues.push({
-        issue: "Erro no preload de templates",
+        issue: 'Erro no preload de templates',
         error: error instanceof Error ? error.message : String(error),
       });
     }
 
     if (initIssues.length === 0) {
       this.results.push({
-        category: "Initialization",
-        status: "success",
+        category: 'Initialization',
+        status: 'success',
         message: `✅ Fluxo de inicialização funcionando corretamente`,
       });
     } else {
       this.results.push({
-        category: "Initialization",
-        status: "error",
+        category: 'Initialization',
+        status: 'error',
         message: `❌ ${initIssues.length} problemas de inicialização encontrados`,
         details: { issues: initIssues },
       });
@@ -310,7 +310,7 @@ export class EditorDiagnostics {
    * 🔧 Aplicar correções automáticas
    */
   static async applyAutomaticFixes(): Promise<DiagnosticResult[]> {
-    console.log("🔧 Aplicando correções automáticas...");
+    console.log('🔧 Aplicando correções automáticas...');
 
     const fixes = [];
 
@@ -321,15 +321,15 @@ export class EditorDiagnostics {
       await TemplateManager.preloadCommonTemplates();
 
       fixes.push({
-        category: "Auto-Fix",
-        status: "success" as const,
-        message: "✅ Cache limpo e templates recarregados",
+        category: 'Auto-Fix',
+        status: 'success' as const,
+        message: '✅ Cache limpo e templates recarregados',
       });
     } catch (error) {
       fixes.push({
-        category: "Auto-Fix",
-        status: "error" as const,
-        message: "❌ Erro ao aplicar correções",
+        category: 'Auto-Fix',
+        status: 'error' as const,
+        message: '❌ Erro ao aplicar correções',
         details: { error: error instanceof Error ? error.message : String(error) },
       });
     }
@@ -341,7 +341,7 @@ export class EditorDiagnostics {
    * 📊 Gerar relatório detalhado
    */
   static generateReport(): string {
-    const report = ["🔍 RELATÓRIO DE DIAGNÓSTICO DO EDITOR", "=".repeat(50), ""];
+    const report = ['🔍 RELATÓRIO DE DIAGNÓSTICO DO EDITOR', '='.repeat(50), ''];
 
     const categories = [...new Set(this.results.map(r => r.category))];
 
@@ -350,26 +350,26 @@ export class EditorDiagnostics {
       report.push(`📋 ${category.toUpperCase()}`);
 
       for (const result of categoryResults) {
-        const icon = result.status === "success" ? "✅" : result.status === "warning" ? "⚠️" : "❌";
+        const icon = result.status === 'success' ? '✅' : result.status === 'warning' ? '⚠️' : '❌';
         report.push(`  ${icon} ${result.message}`);
 
         if (result.details) {
           report.push(`     Detalhes: ${JSON.stringify(result.details, null, 2)}`);
         }
       }
-      report.push("");
+      report.push('');
     }
 
-    report.push("📈 RESUMO GERAL");
-    const successCount = this.results.filter(r => r.status === "success").length;
-    const warningCount = this.results.filter(r => r.status === "warning").length;
-    const errorCount = this.results.filter(r => r.status === "error").length;
+    report.push('📈 RESUMO GERAL');
+    const successCount = this.results.filter(r => r.status === 'success').length;
+    const warningCount = this.results.filter(r => r.status === 'warning').length;
+    const errorCount = this.results.filter(r => r.status === 'error').length;
 
     report.push(`✅ Sucessos: ${successCount}`);
     report.push(`⚠️ Avisos: ${warningCount}`);
     report.push(`❌ Erros: ${errorCount}`);
 
-    return report.join("\n");
+    return report.join('\n');
   }
 }
 

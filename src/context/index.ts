@@ -1,12 +1,12 @@
 // Exportações dos contextos
-export { AdminAuthProvider, useAdminAuth } from "./AdminAuthContext";
-export { AuthProvider, useAuth } from "./AuthContext";
-export { EditorProvider, useEditor } from "./EditorContext";
-export { EditorQuizProvider, useEditorQuiz } from "./EditorQuizContext";
-export { FunnelsProvider, useFunnels } from "./FunnelsContext";
-export { QuizProvider, useQuiz, useQuizContext } from "./QuizContext";
-export { ScrollSyncProvider, useScrollSync } from "./ScrollSyncContext";
-export { StepsProvider, useSteps } from "./StepsContext";
+export { AdminAuthProvider, useAdminAuth } from './AdminAuthContext';
+export { AuthProvider, useAuth } from './AuthContext';
+export { EditorProvider, useEditor } from './EditorContext';
+export { EditorQuizProvider, useEditorQuiz } from './EditorQuizContext';
+export { FunnelsProvider, useFunnels } from './FunnelsContext';
+export { QuizProvider, useQuiz, useQuizContext } from './QuizContext';
+export { ScrollSyncProvider, useScrollSync } from './ScrollSyncContext';
+export { StepsProvider, useSteps } from './StepsContext';
 
 // Estatísticas dos contextos
 export const CONTEXTS_STATS = {

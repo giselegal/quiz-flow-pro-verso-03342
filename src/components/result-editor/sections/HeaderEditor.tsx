@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 interface HeaderEditorProps {
   content: {
@@ -32,7 +32,7 @@ export const HeaderEditor: React.FC<HeaderEditorProps> = ({
             <Label htmlFor="logo">URL do Logo</Label>
             <Input
               id="logo"
-              value={content.logo || ""}
+              value={content.logo || ''}
               onChange={e => onUpdate({ ...content, logo: e.target.value })}
             />
             {content.logo && (
@@ -44,7 +44,7 @@ export const HeaderEditor: React.FC<HeaderEditorProps> = ({
             <Label htmlFor="logoAlt">Texto alternativo do Logo</Label>
             <Input
               id="logoAlt"
-              value={content.logoAlt || ""}
+              value={content.logoAlt || ''}
               onChange={e => onUpdate({ ...content, logoAlt: e.target.value })}
             />
           </div>
@@ -53,7 +53,7 @@ export const HeaderEditor: React.FC<HeaderEditorProps> = ({
             <Label htmlFor="title">Título</Label>
             <Input
               id="title"
-              value={content.title || ""}
+              value={content.title || ''}
               onChange={e => onUpdate({ ...content, title: e.target.value })}
             />
           </div>

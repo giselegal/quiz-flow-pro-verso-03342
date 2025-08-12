@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { CheckCircle } from 'lucide-react';
 
 interface BeforeAfterBlockProps {
   title?: string;
@@ -10,11 +10,11 @@ interface BeforeAfterBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,35 +54,35 @@ const getMarginClass = (value, type) => {
 };
 
 const BeforeAfterBlock: React.FC<BeforeAfterBlockProps> = ({
-  title = "Sua Transformação Começa Agora",
+  title = 'Sua Transformação Começa Agora',
   showComparison = true,
   className,
 }) => {
   // Dados reais da seção Before/After da ResultPage
   const beforeItems = [
-    "Compra peças por impulso que não combinam entre si",
+    'Compra peças por impulso que não combinam entre si',
     'Sente que tem um guarda-roupa cheio, mas "nada para vestir"',
-    "Investe em tendências que não valorizam sua imagem",
-    "Tem dificuldade em criar uma imagem coerente e autêntica",
+    'Investe em tendências que não valorizam sua imagem',
+    'Tem dificuldade em criar uma imagem coerente e autêntica',
   ];
 
   const afterItems = [
-    "Cria looks harmoniosos com menos peças",
-    "Investe conscientemente em peças que valorizam sua beleza",
-    "Desenvolve uma assinatura visual autêntica e marcante",
-    "Projeta confiança e profissionalismo em qualquer ambiente",
+    'Cria looks harmoniosos com menos peças',
+    'Investe conscientemente em peças que valorizam sua beleza',
+    'Desenvolve uma assinatura visual autêntica e marcante',
+    'Projeta confiança e profissionalismo em qualquer ambiente',
   ];
 
   return (
     <div
       className={cn(
-        "py-4 sm:py-6 md:py-8 px-4",
+        'py-4 sm:py-6 md:py-8 px-4',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="text-center mb-6 sm:mb-8">

@@ -1,6 +1,6 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import { trackButtonClick } from "@/utils/analytics";
-import { LucideIcon, ShoppingCart } from "lucide-react";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
+import { trackButtonClick } from '@/utils/analytics';
+import { LucideIcon, ShoppingCart } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -56,8 +56,8 @@ export const OfferProductShowcase: React.FC<OfferProductShowcaseProps> = ({
   const FinalCtaIcon = iconMap[finalCtaIcon] || ShoppingCart;
 
   const handleFinalCtaClick = () => {
-    trackButtonClick("final_cta", finalCtaText, "offer_product_showcase");
-    window.open(finalCtaUrl, "_blank");
+    trackButtonClick('final_cta', finalCtaText, 'offer_product_showcase');
+    window.open(finalCtaUrl, '_blank');
   };
 
   return (
@@ -68,7 +68,7 @@ export const OfferProductShowcase: React.FC<OfferProductShowcaseProps> = ({
           <div className="text-center mb-8">
             <h2
               className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-              style={{ fontFamily: "Playfair Display, serif" }}
+              style={{ fontFamily: 'Playfair Display, serif' }}
             >
               {title}
             </h2>

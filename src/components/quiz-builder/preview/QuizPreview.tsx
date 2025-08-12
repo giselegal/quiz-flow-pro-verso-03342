@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { QuizStage, QuizComponentData } from "@/types/quizBuilder";
-import { Button } from "@/components/ui/button";
-import { QuizContainer } from "@/components/quiz/QuizContainer";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { StyleResult } from "@/types/quiz";
-import ResultPreview from "./ResultPreview";
-import StagePreview from "./StagePreview";
+import React, { useState } from 'react';
+import { QuizStage, QuizComponentData } from '@/types/quizBuilder';
+import { Button } from '@/components/ui/button';
+import { QuizContainer } from '@/components/quiz/QuizContainer';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { StyleResult } from '@/types/quiz';
+import ResultPreview from './ResultPreview';
+import StagePreview from './StagePreview';
 
 interface QuizPreviewProps {
   stages: QuizStage[];
@@ -56,7 +56,7 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ stages, components, previewRe
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center">
-          <p style={{ color: "#8B7355" }}>Nenhuma etapa adicionada ao quiz ainda.</p>
+          <p style={{ color: '#8B7355' }}>Nenhuma etapa adicionada ao quiz ainda.</p>
           <p className="text-gray-400 text-sm">
             Adicione etapas no modo editor para visualizar aqui.
           </p>
@@ -92,9 +92,9 @@ const QuizPreview: React.FC<QuizPreviewProps> = ({ stages, components, previewRe
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium text-[#432818]">
-            Prévia: {currentStage?.title || "Etapa sem título"}
+            Prévia: {currentStage?.title || 'Etapa sem título'}
           </h2>
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             Etapa {currentStageIndex + 1} de {sortedStages.length}
           </div>
         </div>

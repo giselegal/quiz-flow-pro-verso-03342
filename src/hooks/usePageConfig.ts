@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface PageConfig {
   title?: string;
@@ -18,7 +18,7 @@ export const usePageConfig = (pageType: string) => {
       try {
         setConfig(JSON.parse(savedConfig));
       } catch (error) {
-        console.error("Error loading page config:", error);
+        console.error('Error loading page config:', error);
       }
     }
     setLoading(false);

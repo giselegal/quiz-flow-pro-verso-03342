@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   BarChart,
   Bar,
@@ -10,10 +10,10 @@ import {
   Legend,
   ResponsiveContainer,
   Cell,
-} from "recharts";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { Progress } from "@/components/ui/progress";
-import { GridLayout } from "@/components/shared/GridLayout";
+} from 'recharts';
+import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import { Progress } from '@/components/ui/progress';
+import { GridLayout } from '@/components/shared/GridLayout';
 
 interface FunnelTabProps {
   analyticsData: any;
@@ -29,44 +29,44 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
 
     return [
       {
-        name: "Início Quiz",
+        name: 'Início Quiz',
         value: metrics.totalStarts,
-        text: "Usuários iniciaram o quiz",
+        text: 'Usuários iniciaram o quiz',
       },
       {
-        name: "Meio (50%)",
+        name: 'Meio (50%)',
         value: Math.round(metrics.totalStarts * 0.7),
-        text: "Chegaram na metade do quiz",
+        text: 'Chegaram na metade do quiz',
       },
       {
-        name: "Quiz Completo",
+        name: 'Quiz Completo',
         value: metrics.totalCompletes,
-        text: "Usuários completaram o quiz",
+        text: 'Usuários completaram o quiz',
       },
       {
-        name: "Resultado",
+        name: 'Resultado',
         value: metrics.totalResultViews,
-        text: "Usuários viram seus resultados",
+        text: 'Usuários viram seus resultados',
       },
       {
-        name: "Checkout",
+        name: 'Checkout',
         value: Math.round(metrics.totalLeads * 0.45),
-        text: "Iniciaram checkout",
+        text: 'Iniciaram checkout',
       },
-      { name: "Venda", value: metrics.totalSales, text: "Compras realizadas" },
+      { name: 'Venda', value: metrics.totalSales, text: 'Compras realizadas' },
     ];
   }, [metrics]);
 
   // Chart configuration
   const chartConfig: ChartConfig = {
     value: {
-      label: "Valor",
-      theme: { light: "#4f46e5", dark: "#818cf8" },
+      label: 'Valor',
+      theme: { light: '#4f46e5', dark: '#818cf8' },
     },
   };
 
   // Define colors with gradients for funnel steps
-  const FUNNEL_COLORS = ["#4f46e5", "#6366f1", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
+  const FUNNEL_COLORS = ['#4f46e5', '#6366f1', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
   // Custom tooltip renderer
   const renderTooltipContent = (props: any) => {
@@ -80,7 +80,7 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
       <div className="bg-white p-1.5 border border-gray-100 shadow-lg rounded-md">
         <p className="text-[7px] font-medium mb-0.5">{data.name}</p>
         <p className="text-[7px] font-semibold">{data.value} usuários</p>
-        <p style={{ color: "#8B7355" }}>{data.text}</p>
+        <p style={{ color: '#8B7355' }}>{data.text}</p>
       </div>
     );
   };
@@ -118,15 +118,15 @@ export const FunnelTab: React.FC<FunnelTabProps> = ({ analyticsData, loading }) 
                 <XAxis
                   type="number"
                   stroke="#888888"
-                  tick={{ fill: "#888888", fontSize: 7 }}
-                  tickLine={{ stroke: "#e0e0e0" }}
+                  tick={{ fill: '#888888', fontSize: 7 }}
+                  tickLine={{ stroke: '#e0e0e0' }}
                 />
                 <YAxis
                   dataKey="name"
                   type="category"
                   stroke="#888888"
-                  tick={{ fill: "#888888", fontSize: 7 }}
-                  tickLine={{ stroke: "#e0e0e0" }}
+                  tick={{ fill: '#888888', fontSize: 7 }}
+                  tickLine={{ stroke: '#e0e0e0' }}
                   width={35}
                 />
                 <Tooltip content={renderTooltipContent} />

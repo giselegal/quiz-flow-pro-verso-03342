@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { blockDefinitions } from "@/config/blockDefinitions";
+import { blockDefinitions } from '@/config/blockDefinitions';
 
 interface ComponentsPanelProps {
   onAddComponent: (type: string) => void;
@@ -7,11 +7,11 @@ interface ComponentsPanelProps {
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -52,8 +52,8 @@ const getMarginClass = (value, type) => {
 
 const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => {
   return (
-    <div style={{ borderColor: "#E5DDD5" }}>
-      <h3 style={{ color: "#432818" }}>Componentes</h3>
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <h3 style={{ color: '#432818' }}>Componentes</h3>
       <div className="space-y-2">
         {blockDefinitions.map(block => {
           const IconComponent = block.icon;
@@ -61,12 +61,12 @@ const ComponentsPanel: React.FC<ComponentsPanelProps> = ({ onAddComponent }) => 
             <button
               key={block.type}
               onClick={() => onAddComponent(block.type)}
-              style={{ borderColor: "#E5DDD5" }}
+              style={{ borderColor: '#E5DDD5' }}
             >
               <IconComponent size={20} />
               <div>
-                <div style={{ color: "#432818" }}>{block.name}</div>
-                <div style={{ color: "#8B7355" }}>{block.description}</div>
+                <div style={{ color: '#432818' }}>{block.name}</div>
+                <div style={{ color: '#8B7355' }}>{block.description}</div>
               </div>
             </button>
           );

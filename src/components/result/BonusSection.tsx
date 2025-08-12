@@ -1,21 +1,21 @@
 // @ts-nocheck
-import { Card } from "@/components/ui/card";
-import { Gift, Star } from "lucide-react";
-import { optimizeCloudinaryUrl } from "@/utils/imageUtils";
-import { motion } from "framer-motion";
-import ProgressiveImage from "@/components/ui/progressive-image";
+import { Card } from '@/components/ui/card';
+import { Gift, Star } from 'lucide-react';
+import { optimizeCloudinaryUrl } from '@/utils/imageUtils';
+import { motion } from 'framer-motion';
+import ProgressiveImage from '@/components/ui/progressive-image';
 
 const BonusSection: React.FC = () => {
   // Criar imagem otimizada de alta qualidade
   const bonus1ImageUrl = optimizeCloudinaryUrl(
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
-    { quality: 95, format: "webp" }
+    'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp',
+    { quality: 95, format: 'webp' }
   );
 
   // Criar imagem otimizada para o segundo bônus
   const bonus2ImageUrl = optimizeCloudinaryUrl(
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
-    { quality: 95, format: "webp" }
+    'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp',
+    { quality: 95, format: 'webp' }
   );
 
   return (
@@ -36,7 +36,7 @@ const BonusSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              type: "spring",
+              type: 'spring',
               stiffness: 300,
               damping: 25,
               delay: 0.2,
@@ -47,10 +47,10 @@ const BonusSection: React.FC = () => {
               <picture>
                 <source
                   srcSet={`
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp", { width: 200, quality: 95, format: "webp" })} 200w,
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp", { width: 300, quality: 95, format: "webp" })} 300w,
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp", { width: 400, quality: 95, format: "webp" })} 400w,
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp", { width: 600, quality: 95, format: "webp" })} 600w
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp', { width: 200, quality: 95, format: 'webp' })} 200w,
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp', { width: 300, quality: 95, format: 'webp' })} 300w,
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp', { width: 400, quality: 95, format: 'webp' })} 400w,
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp', { width: 600, quality: 95, format: 'webp' })} 600w
                   `}
                   sizes="(max-width: 768px) 45vw, 300px"
                   type="image/webp"
@@ -89,7 +89,7 @@ const BonusSection: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
-              type: "spring",
+              type: 'spring',
               stiffness: 300,
               damping: 25,
               delay: 0.4,
@@ -100,10 +100,10 @@ const BonusSection: React.FC = () => {
               <picture>
                 <source
                   srcSet={`
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp", { width: 200, quality: 95, format: "webp" })} 200w,
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp", { width: 300, quality: 95, format: "webp" })} 300w,
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp", { width: 400, quality: 95, format: "webp" })} 400w,
-                    ${optimizeCloudinaryUrl("https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp", { width: 600, quality: 95, format: "webp" })} 600w
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp', { width: 200, quality: 95, format: 'webp' })} 200w,
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp', { width: 300, quality: 95, format: 'webp' })} 300w,
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp', { width: 400, quality: 95, format: 'webp' })} 400w,
+                    ${optimizeCloudinaryUrl('https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp', { width: 600, quality: 95, format: 'webp' })} 600w
                   `}
                   sizes="(max-width: 768px) 45vw, 300px"
                   type="image/webp"

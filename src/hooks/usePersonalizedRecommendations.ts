@@ -1,10 +1,10 @@
-import { styleConfig } from "@/config/styleConfig";
-import { StyleResult } from "@/types/quiz";
-import { useEffect, useState } from "react";
+import { styleConfig } from '@/config/styleConfig';
+import { StyleResult } from '@/types/quiz';
+import { useEffect, useState } from 'react';
 
 interface Recommendation {
   id: string;
-  type: "color" | "pattern" | "fabric" | "accessory";
+  type: 'color' | 'pattern' | 'fabric' | 'accessory';
   title: string;
   description: string;
   priority: number;
@@ -31,11 +31,11 @@ export const usePersonalizedRecommendations = (
         primaryConfig.colors.forEach((color, index) => {
           recommendations.push({
             id: `color-${index}`,
-            type: "color",
+            type: 'color',
             title: `${color.name}`,
             description:
               color.description ||
-              `${color.name} é uma cor que harmoniza perfeitamente com seu estilo ${primaryStyle.category}${userName ? `, ${userName}` : ""}.`,
+              `${color.name} é uma cor que harmoniza perfeitamente com seu estilo ${primaryStyle.category}${userName ? `, ${userName}` : ''}.`,
             priority: (primaryStyle.percentage / 100) * (color.priority || 1),
             confidence: Math.min(primaryStyle.percentage, 100),
           });
@@ -47,7 +47,7 @@ export const usePersonalizedRecommendations = (
         primaryConfig.patterns.forEach((pattern, index) => {
           recommendations.push({
             id: `pattern-${index}`,
-            type: "pattern",
+            type: 'pattern',
             title: `${pattern.name}`,
             description:
               pattern.description ||
@@ -63,7 +63,7 @@ export const usePersonalizedRecommendations = (
         primaryConfig.fabrics.forEach((fabric, index) => {
           recommendations.push({
             id: `fabric-${index}`,
-            type: "fabric",
+            type: 'fabric',
             title: `${fabric.name}`,
             description:
               fabric.description ||
@@ -85,7 +85,7 @@ export const usePersonalizedRecommendations = (
             .forEach((color, index) => {
               recommendations.push({
                 id: `secondary-color-${style.category}-${index}`,
-                type: "color",
+                type: 'color',
                 title: `${color.name} (Complementar)`,
                 description: `${color.name} pode ser usado como cor de apoio, refletindo a influência do seu estilo secundário ${style.category}.`,
                 priority: (style.percentage / 100) * (color.priority || 1) * 0.7,
@@ -109,7 +109,7 @@ export const usePersonalizedRecommendations = (
     recommendations,
     isLoading,
     // Funções auxiliares para filtrar recomendações
-    getByType: (type: "color" | "pattern" | "fabric" | "accessory") =>
+    getByType: (type: 'color' | 'pattern' | 'fabric' | 'accessory') =>
       recommendations.filter(r => r.type === type),
     getTopRecommendations: (limit: number = 5) => recommendations.slice(0, limit),
     getHighConfidenceRecommendations: (threshold: number = 80) =>

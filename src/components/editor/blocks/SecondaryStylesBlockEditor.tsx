@@ -1,14 +1,14 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { BlockEditorProps } from './types';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,7 +54,7 @@ const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdat
         <Label htmlFor={`${block.id}-title`}>Título dos Estilos Secundários</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
+          value={block.content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
           placeholder="Seus Estilos Complementares"
@@ -65,7 +65,7 @@ const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdat
         <Label htmlFor={`${block.id}-description`}>Descrição dos Estilos Secundários</Label>
         <Input
           id={`${block.id}-description`}
-          value={block.content.text || ""}
+          value={block.content.text || ''}
           onChange={e => onUpdate({ text: e.target.value })}
           className="mt-1"
           placeholder="Descrição dos estilos complementares"

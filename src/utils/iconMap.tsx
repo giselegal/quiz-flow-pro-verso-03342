@@ -18,7 +18,7 @@ import {
   Eye,
   BadgeCheck,
   type LucideIcon,
-} from "lucide-react";
+} from 'lucide-react';
 
 // Mapa de nomes de ícones para componentes
 const iconMap: Record<string, LucideIcon> = {

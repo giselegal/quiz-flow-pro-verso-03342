@@ -1,6 +1,6 @@
-import { styleConfig } from "@/config/styleConfig";
-import { StyleResult } from "@/types/quiz";
-import { useEffect, useState } from "react";
+import { styleConfig } from '@/config/styleConfig';
+import { StyleResult } from '@/types/quiz';
+import { useEffect, useState } from 'react';
 
 interface StyleCalculations {
   compatibilityScore: number;

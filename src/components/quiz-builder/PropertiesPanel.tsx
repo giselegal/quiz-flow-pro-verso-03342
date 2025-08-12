@@ -1,16 +1,16 @@
 // @ts-nocheck
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Trash2 } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { QuizComponentData } from '@/types/quizBuilder';
+import { Trash2 } from 'lucide-react';
 
 interface PropertiesPanelProps {
   selectedComponentId: string | null;
   components: QuizComponentData[];
-  onUpdate: (id: string, data: Partial<QuizComponentData["data"]>) => void;
+  onUpdate: (id: string, data: Partial<QuizComponentData['data']>) => void;
   onDelete: (id: string) => void;
 }
 
@@ -51,7 +51,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         <Button
           variant="ghost"
           size="sm"
-          style={{ color: "#432818" }}
+          style={{ color: '#432818' }}
           onClick={() => onDelete(selectedComponentId)}
         >
           <Trash2 className="w-4 h-4" />
@@ -63,9 +63,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <Label htmlFor="title">Título</Label>
           <Input
             id="title"
-            value={data.title || ""}
+            value={data.title || ''}
             placeholder="Digite o título"
-            onChange={e => handleUpdate("title", e.target.value)}
+            onChange={e => handleUpdate('title', e.target.value)}
           />
         </div>
 
@@ -73,47 +73,47 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           <Label htmlFor="subtitle">Subtítulo</Label>
           <Input
             id="subtitle"
-            value={data.subtitle || ""}
+            value={data.subtitle || ''}
             placeholder="Digite o subtítulo"
-            onChange={e => handleUpdate("subtitle", e.target.value)}
+            onChange={e => handleUpdate('subtitle', e.target.value)}
           />
         </div>
 
-        {component.type === "text" && (
+        {component.type === 'text' && (
           <div className="space-y-2">
             <Label htmlFor="text">Texto</Label>
             <Textarea
               id="text"
-              value={data.text || ""}
+              value={data.text || ''}
               placeholder="Digite o texto"
               className="min-h-[100px]"
-              onChange={e => handleUpdate("text", e.target.value)}
+              onChange={e => handleUpdate('text', e.target.value)}
             />
           </div>
         )}
 
-        {(component.type === "image" || data.imageUrl !== undefined) && (
+        {(component.type === 'image' || data.imageUrl !== undefined) && (
           <div className="space-y-2">
             <Label htmlFor="imageUrl">URL da Imagem</Label>
             <Input
               id="imageUrl"
-              value={data.imageUrl || ""}
+              value={data.imageUrl || ''}
               placeholder="https://exemplo.com/imagem.jpg"
-              onChange={e => handleUpdate("imageUrl", e.target.value)}
+              onChange={e => handleUpdate('imageUrl', e.target.value)}
             />
           </div>
         )}
 
-        {component.type === "stageQuestion" && (
+        {component.type === 'stageQuestion' && (
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="question">Pergunta</Label>
               <Textarea
                 id="question"
-                value={data.question || ""}
+                value={data.question || ''}
                 placeholder="Digite a pergunta"
                 className="min-h-[80px]"
-                onChange={e => handleUpdate("question", e.target.value)}
+                onChange={e => handleUpdate('question', e.target.value)}
               />
             </div>
 
@@ -125,7 +125,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 min="0"
                 max="10"
                 value={data.multiSelect || 0}
-                onChange={e => handleUpdate("multiSelect", parseInt(e.target.value) || 0)}
+                onChange={e => handleUpdate('multiSelect', parseInt(e.target.value) || 0)}
               />
               <p className="text-xs text-[#8F7A6A]">0 para escolha única, 1+ para múltipla</p>
             </div>

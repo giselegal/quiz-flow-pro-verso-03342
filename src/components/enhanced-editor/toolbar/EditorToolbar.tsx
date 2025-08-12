@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Eye, Save, Smartphone, Tablet, Monitor, Maximize2, Settings } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Eye, Save, Smartphone, Tablet, Monitor, Maximize2, Settings } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
-  viewportSize: "sm" | "md" | "lg" | "xl";
-  onViewportSizeChange: (size: "sm" | "md" | "lg" | "xl") => void;
+  viewportSize: 'sm' | 'md' | 'lg' | 'xl';
+  onViewportSizeChange: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
   onTogglePreview: () => void;
   onSave: () => void;
   onShowFunnelSettings?: () => void;
@@ -32,10 +32,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("sm")}
+                  onClick={() => onViewportSizeChange('sm')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "sm" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'sm' && 'bg-white shadow-sm'
                   )}
                 >
                   <Smartphone className="w-4 h-4 text-[#8F7A6A]" />
@@ -49,10 +49,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("md")}
+                  onClick={() => onViewportSizeChange('md')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "md" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'md' && 'bg-white shadow-sm'
                   )}
                 >
                   <Tablet className="w-4 h-4 text-[#8F7A6A]" />
@@ -66,10 +66,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("lg")}
+                  onClick={() => onViewportSizeChange('lg')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "lg" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'lg' && 'bg-white shadow-sm'
                   )}
                 >
                   <Monitor className="w-4 h-4 text-[#8F7A6A]" />
@@ -83,10 +83,10 @@ export function EditorToolbar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onViewportSizeChange("xl")}
+                  onClick={() => onViewportSizeChange('xl')}
                   className={cn(
-                    "w-8 h-8 rounded-md",
-                    viewportSize === "xl" && "bg-white shadow-sm"
+                    'w-8 h-8 rounded-md',
+                    viewportSize === 'xl' && 'bg-white shadow-sm'
                   )}
                 >
                   <Maximize2 className="w-4 h-4 text-[#8F7A6A]" />
@@ -118,7 +118,7 @@ export function EditorToolbar({
           className="border-[#B89B7A] text-[#432818]"
         >
           <Eye className="w-4 h-4 mr-2" />
-          {isPreviewing ? "Editar" : "Visualizar"}
+          {isPreviewing ? 'Editar' : 'Visualizar'}
         </Button>
 
         <Button

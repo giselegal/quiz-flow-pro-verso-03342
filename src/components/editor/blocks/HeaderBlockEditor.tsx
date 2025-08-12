@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { BlockEditorProps } from './types';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,7 +55,7 @@ const HeaderBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Label htmlFor={`${block.id}-logo`}>Logo URL</Label>
         <Input
           id={`${block.id}-logo`}
-          value={block.content.logo || ""}
+          value={block.content.logo || ''}
           onChange={e => onUpdate({ logo: e.target.value })}
           className="mt-1"
           placeholder="URL da imagem do logo"
@@ -67,7 +67,7 @@ const HeaderBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Input
           id={`${block.id}-logoHeight`}
           type="number"
-          value={block.content.logoHeight || "56"}
+          value={block.content.logoHeight || '56'}
           onChange={e => onUpdate({ logoHeight: e.target.value })}
           className="mt-1"
           placeholder="56"
@@ -78,7 +78,7 @@ const HeaderBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Label htmlFor={`${block.id}-logoAlt`}>Texto Alternativo do Logo</Label>
         <Input
           id={`${block.id}-logoAlt`}
-          value={block.content.logoAlt || ""}
+          value={block.content.logoAlt || ''}
           onChange={e => onUpdate({ logoAlt: e.target.value })}
           className="mt-1"
           placeholder="Logo Gisele Galvão"

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Gift } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Gift } from 'lucide-react';
 
 interface BonusBlockProps {
   title?: string;
@@ -10,11 +10,11 @@ interface BonusBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,40 +54,40 @@ const getMarginClass = (value, type) => {
 };
 
 const BonusBlock: React.FC<BonusBlockProps> = ({
-  title = "Bônus Exclusivos para Você",
+  title = 'Bônus Exclusivos para Você',
   showImages = true,
   className,
 }) => {
   // Dados reais dos bônus da ResultPage
   const bonuses = [
     {
-      title: "Peças-chave do Guarda-roupa",
+      title: 'Peças-chave do Guarda-roupa',
       description:
-        "Lista completa das peças essenciais que toda mulher deve ter no guarda-roupa, organizadas por estilo e ocasião.",
+        'Lista completa das peças essenciais que toda mulher deve ter no guarda-roupa, organizadas por estilo e ocasião.',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
-      value: "R$ 79,00",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp',
+      value: 'R$ 79,00',
     },
     {
-      title: "Visagismo Facial",
+      title: 'Visagismo Facial',
       description:
-        "Guia completo de maquiagem e penteados ideais para o formato do seu rosto e estilo pessoal.",
+        'Guia completo de maquiagem e penteados ideais para o formato do seu rosto e estilo pessoal.',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
-      value: "R$ 29,00",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp',
+      value: 'R$ 29,00',
     },
   ];
 
   return (
     <div
       className={cn(
-        "py-10",
+        'py-10',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <h2 className="text-2xl md:text-3xl font-bold text-[#aa6b5d] text-center mb-2">{title}</h2>

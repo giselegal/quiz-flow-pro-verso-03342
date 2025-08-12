@@ -1,4 +1,4 @@
-import type { Block } from "@/types/editor";
+import type { Block } from '@/types/editor';
 
 /**
  * Interfaces para Templates JSON
@@ -14,8 +14,8 @@ export interface JsonTemplateMetadata {
 }
 
 export interface JsonTemplateLayout {
-  containerWidth?: "small" | "medium" | "large" | "full";
-  spacing?: "none" | "small" | "normal" | "large";
+  containerWidth?: 'small' | 'medium' | 'large' | 'full';
+  spacing?: 'none' | 'small' | 'normal' | 'large';
   backgroundColor?: string;
   responsive?: boolean;
 }
@@ -135,30 +135,30 @@ export class TemplateJsonLoader {
    */
   private static validateTemplate(template: JsonTemplate): void {
     if (!template.metadata?.id) {
-      throw new Error("Template deve ter metadata.id");
+      throw new Error('Template deve ter metadata.id');
     }
 
     if (!template.blocks || template.blocks.length === 0) {
-      throw new Error("Template deve ter pelo menos um bloco");
+      throw new Error('Template deve ter pelo menos um bloco');
     }
 
     // Valida IDs únicos
     const ids = template.blocks.map(b => b.id);
     const uniqueIds = new Set(ids);
     if (ids.length !== uniqueIds.size) {
-      throw new Error("IDs dos blocos devem ser únicos");
+      throw new Error('IDs dos blocos devem ser únicos');
     }
 
     // Valida tipos de bloco conhecidos
     const knownTypes = [
-      "text-inline",
-      "button-inline",
-      "image-display-inline",
-      "options-grid",
-      "quiz-intro-header",
-      "form-input",
-      "decorative-bar-inline",
-      "legal-notice-inline",
+      'text-inline',
+      'button-inline',
+      'image-display-inline',
+      'options-grid',
+      'quiz-intro-header',
+      'form-input',
+      'decorative-bar-inline',
+      'legal-notice-inline',
     ];
 
     for (const block of template.blocks) {

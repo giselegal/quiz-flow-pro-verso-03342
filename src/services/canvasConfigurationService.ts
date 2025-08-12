@@ -1,7 +1,7 @@
 // Simplified Canvas Configuration Service
 // Generates BlockData with proper content and order properties
 
-import { BlockData } from "@/types/blocks";
+import { BlockData } from '@/types/blocks';
 
 export const createSimpleBlockData = (
   id: string,
@@ -18,17 +18,17 @@ export const createSimpleBlockData = (
 
 // Simple configuration that avoids complex type issues
 export const getStep20CanvasConfig = (userResult: any) => {
-  console.log("Canvas config requested for:", userResult);
+  console.log('Canvas config requested for:', userResult);
 
   // Return minimal configuration to avoid TypeScript errors
   return {
-    name: "Página de Resultado",
-    id: "step-20-result",
+    name: 'Página de Resultado',
+    id: 'step-20-result',
     order: 20,
     components: [
-      createSimpleBlockData("header", "header", { title: "Resultado" }, 0),
-      createSimpleBlockData("content", "text", { text: "Conteúdo do resultado" }, 1),
-      createSimpleBlockData("cta", "button", { text: "Ação Principal" }, 2),
+      createSimpleBlockData('header', 'header', { title: 'Resultado' }, 0),
+      createSimpleBlockData('content', 'text', { text: 'Conteúdo do resultado' }, 1),
+      createSimpleBlockData('cta', 'button', { text: 'Ação Principal' }, 2),
     ],
   };
 };

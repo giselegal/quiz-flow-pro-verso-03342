@@ -2,11 +2,11 @@
 export default function ComponentPalette() {
   // Função para converter valores de margem em classes Tailwind (Sistema Universal)
   const getMarginClass = (value, type) => {
-    const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+    const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-    if (isNaN(numValue) || numValue === 0) return "";
+    if (isNaN(numValue) || numValue === 0) return '';
 
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+    const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
     // Margens negativas
     if (numValue < 0) {
@@ -46,16 +46,16 @@ export default function ComponentPalette() {
   };
 
   const componentTypes = [
-    { id: "heading", label: "Título", icon: "📝" },
-    { id: "paragraph", label: "Parágrafo", icon: "📄" },
-    { id: "image", label: "Imagem", icon: "🖼️" },
-    { id: "button", label: "Botão", icon: "🔘" },
-    { id: "divider", label: "Divisor", icon: "➖" },
-    { id: "container", label: "Container", icon: "📦" },
+    { id: 'heading', label: 'Título', icon: '📝' },
+    { id: 'paragraph', label: 'Parágrafo', icon: '📄' },
+    { id: 'image', label: 'Imagem', icon: '🖼️' },
+    { id: 'button', label: 'Botão', icon: '🔘' },
+    { id: 'divider', label: 'Divisor', icon: '➖' },
+    { id: 'container', label: 'Container', icon: '📦' },
   ];
 
   const handleDragStart = (e: React.DragEvent, type: string) => {
-    e.dataTransfer.setData("componentType", type);
+    e.dataTransfer.setData('componentType', type);
   };
   return (
     <div className="space-y-4">
@@ -66,7 +66,7 @@ export default function ComponentPalette() {
             key={component.id}
             draggable
             onDragStart={e => handleDragStart(e, component.id)}
-            style={{ backgroundColor: "#FAF9F7" }}
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             <div className="flex items-center gap-2">
               <span>{component.icon}</span>
@@ -76,7 +76,7 @@ export default function ComponentPalette() {
         ))}
       </div>
 
-      <div style={{ color: "#8B7355" }}>
+      <div style={{ color: '#8B7355' }}>
         💡 Arraste os componentes para o canvas para começar a editar
       </div>
     </div>

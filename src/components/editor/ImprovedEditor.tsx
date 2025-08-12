@@ -1,19 +1,19 @@
 // @ts-nocheck
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { FileText, Layers, PanelLeft, PanelRight } from "lucide-react";
-import React, { useCallback, useMemo, useState } from "react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { FileText, Layers, PanelLeft, PanelRight } from 'lucide-react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 // Importar nossos novos componentes
-import type { BlockData } from "@/types/blocks";
-import EditorHistory from "./history/EditorHistory";
-import ResponsivePreview from "./preview/ResponsivePreview";
-import EnhancedPropertiesPanel from "./properties/EnhancedPropertiesPanel";
-import ComponentsLibrary from "./sidebar/ComponentsLibrary";
+import type { BlockData } from '@/types/blocks';
+import EditorHistory from './history/EditorHistory';
+import ResponsivePreview from './preview/ResponsivePreview';
+import EnhancedPropertiesPanel from './properties/EnhancedPropertiesPanel';
+import ComponentsLibrary from './sidebar/ComponentsLibrary';
 
 interface ImprovedEditorProps {
   initialBlocks?: BlockData[];
@@ -29,14 +29,14 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
   onSave,
   onBlocksChange,
   className,
-  title = "Editor de Quiz",
+  title = 'Editor de Quiz',
   stepNumber,
 }) => {
   const [blocks, setBlocks] = useState<BlockData[]>(initialBlocks);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [leftPanelVisible, setLeftPanelVisible] = useState(true);
   const [rightPanelVisible, setRightPanelVisible] = useState(true);
-  const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
 
   // Bloco selecionado
   const selectedBlock = useMemo(
@@ -126,7 +126,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
 
   return (
     <TooltipProvider>
-      <div className={cn("h-screen flex flex-col bg-gray-50", className)}>
+      <div className={cn('h-screen flex flex-col bg-gray-50', className)}>
         {/* Header */}
         <div className="bg-white border-b border-[#B89B7A]/20 p-4">
           <div className="flex items-center justify-between">
@@ -138,14 +138,14 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                 </div>
                 <div>
                   <h1 className="text-xl font-semibold text-[#432818]">{title}</h1>
-                  {stepNumber && <p style={{ color: "#6B4F43" }}>Etapa {stepNumber}</p>}
+                  {stepNumber && <p style={{ color: '#6B4F43' }}>Etapa {stepNumber}</p>}
                 </div>
               </div>
 
               <Separator orientation="vertical" className="h-8" />
 
               {/* Estatísticas */}
-              <div style={{ color: "#6B4F43" }}>
+              <div style={{ color: '#6B4F43' }}>
                 <div className="flex items-center gap-1">
                   <Layers className="w-4 h-4" />
                   <span>{blocks.length} blocos</span>
@@ -175,7 +175,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={leftPanelVisible ? "default" : "outline"}
+                      variant={leftPanelVisible ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setLeftPanelVisible(!leftPanelVisible)}
                     >
@@ -183,14 +183,14 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {leftPanelVisible ? "Ocultar" : "Mostrar"} Biblioteca
+                    {leftPanelVisible ? 'Ocultar' : 'Mostrar'} Biblioteca
                   </TooltipContent>
                 </Tooltip>
 
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={rightPanelVisible ? "default" : "outline"}
+                      variant={rightPanelVisible ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setRightPanelVisible(!rightPanelVisible)}
                     >
@@ -198,7 +198,7 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    {rightPanelVisible ? "Ocultar" : "Mostrar"} Propriedades
+                    {rightPanelVisible ? 'Ocultar' : 'Mostrar'} Propriedades
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -257,10 +257,10 @@ const ImprovedEditor: React.FC<ImprovedEditorProps> = ({
 
         {/* Status bar */}
         <div className="bg-white border-t border-[#B89B7A]/20 px-4 py-2">
-          <div style={{ color: "#6B4F43" }}>
+          <div style={{ color: '#6B4F43' }}>
             <div className="flex items-center gap-4">
               <span>
-                {blocks.length} {blocks.length === 1 ? "bloco" : "blocos"}
+                {blocks.length} {blocks.length === 1 ? 'bloco' : 'blocos'}
               </span>
               {selectedBlock && (
                 <>

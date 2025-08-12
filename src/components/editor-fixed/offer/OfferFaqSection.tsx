@@ -1,5 +1,5 @@
-import { ChevronRight } from "lucide-react";
-import React, { useState } from "react";
+import { ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface FaqItem {
   question: string;
@@ -30,7 +30,7 @@ export const OfferFaqSection: React.FC<OfferFaqSectionProps> = ({ title, questio
         <div className="card-clean">
           <h2
             className="text-hierarchy-2 text-[var(--text-dark)] text-center mb-8"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
             {title}
           </h2>
@@ -45,20 +45,20 @@ export const OfferFaqSection: React.FC<OfferFaqSectionProps> = ({ title, questio
                   <button
                     onClick={() => toggleItem(index)}
                     className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors"
-                    style={{ backgroundColor: openItem === index ? "#FAF9F7" : "white" }}
+                    style={{ backgroundColor: openItem === index ? '#FAF9F7' : 'white' }}
                   >
                     <span className="font-medium text-[#432818] text-lg pr-4">{item.question}</span>
                     <ChevronRight
                       size={24}
                       className={`text-[#B89B7A] transition-transform duration-300 flex-shrink-0 ${
-                        openItem === index ? "transform rotate-90" : ""
+                        openItem === index ? 'transform rotate-90' : ''
                       }`}
                     />
                   </button>
 
                   {openItem === index && (
                     <div className="px-6 pb-4">
-                      <div className="text-base leading-relaxed" style={{ color: "#6B4F43" }}>
+                      <div className="text-base leading-relaxed" style={{ color: '#6B4F43' }}>
                         {item.answer}
                       </div>
                     </div>

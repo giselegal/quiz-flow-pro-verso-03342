@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { ChartArea } from "lucide-react";
-import { InlineEditableText } from "./InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import { ChartArea } from 'lucide-react';
+import { InlineEditableText } from './InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,13 +54,13 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Gráfico de Área",
+    title = 'Gráfico de Área',
     data = [],
-    xAxisKey = "x",
-    yAxisKey = "y",
+    xAxisKey = 'x',
+    yAxisKey = 'y',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -73,7 +73,7 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         py-6 text-center bg-gray-100 rounded-lg border border-gray-200 cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -83,19 +83,19 @@ const ChartAreaBlock: React.FC<BlockComponentProps> = ({
       <h3 className="text-xl font-bold text-[#432818] mb-4">
         <InlineEditableText
           value={title}
-          onChange={(value: string) => handlePropertyChange("title", value)}
+          onChange={(value: string) => handlePropertyChange('title', value)}
           className="inline-block"
           placeholder="Título do gráfico"
         />
       </h3>
-      <div style={{ color: "#8B7355" }}>
+      <div style={{ color: '#8B7355' }}>
         <div className="text-center">
           <ChartArea className="w-12 h-12 opacity-50 mx-auto mb-2" />
           <p>Visualização do Gráfico de Área</p>
           <p className="text-xs mt-1">Dados: {Array.isArray(data) ? data.length : 0} pontos</p>
         </div>
       </div>
-      <p style={{ color: "#6B4F43" }}>Configure os dados no painel de propriedades.</p>
+      <p style={{ color: '#6B4F43' }}>Configure os dados no painel de propriedades.</p>
     </div>
   );
 };

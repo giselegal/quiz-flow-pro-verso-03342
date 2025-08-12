@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   TrendingUp,
   TrendingDown,
@@ -21,8 +21,8 @@ import {
   RefreshCcw,
   AlertCircle,
   CheckCircle2,
-} from "lucide-react";
-import { optimizedSetInterval } from "@/utils/performanceOptimizations";
+} from 'lucide-react';
+import { optimizedSetInterval } from '@/utils/performanceOptimizations';
 
 interface CreativeStats {
   creative_name: string;
@@ -40,21 +40,21 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
   const [creativesData, setCreativesData] = useState<Record<string, CreativeStats>>({});
   const [selectedPeriod, setSelectedPeriod] = useState<number>(7);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedView, setSelectedView] = useState<"overview" | "detailed">("overview");
+  const [selectedView, setSelectedView] = useState<'overview' | 'detailed'>('overview');
 
   // Cores da identidade visual da marca
   const brandColors = {
-    primary: "#B89B7A",
-    secondary: "#432818",
-    accent: "#aa6b5d",
-    background: "#FFFBF7",
-    success: "#22c55e",
-    warning: "#f59e0b",
-    danger: "#ef4444",
+    primary: '#B89B7A',
+    secondary: '#432818',
+    accent: '#aa6b5d',
+    background: '#FFFBF7',
+    success: '#22c55e',
+    warning: '#f59e0b',
+    danger: '#ef4444',
     text: {
-      dark: "#432818",
-      medium: "#6B4F43",
-      light: "#8B7355",
+      dark: '#432818',
+      medium: '#6B4F43',
+      light: '#8B7355',
     },
   };
 
@@ -64,43 +64,43 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       try {
         // Mock data for now since getCreativePerformance doesn't work as expected
         const mockData: Record<string, CreativeStats> = {
-          "creative-1": {
-            creative_name: "Elegante Mulher Vestido",
+          'creative-1': {
+            creative_name: 'Elegante Mulher Vestido',
             page_views: 1250,
             quiz_starts: 890,
             quiz_completions: 678,
             leads: 234,
             purchases: 45,
             revenue: 4500,
-            conversion_rate: "2.3",
+            conversion_rate: '2.3',
             cost_per_lead: 15.5,
           },
-          "creative-2": {
-            creative_name: "Casual Moderna",
+          'creative-2': {
+            creative_name: 'Casual Moderna',
             page_views: 980,
             quiz_starts: 720,
             quiz_completions: 540,
             leads: 180,
             purchases: 32,
             revenue: 3200,
-            conversion_rate: "1.8",
+            conversion_rate: '1.8',
             cost_per_lead: 18.2,
           },
-          "creative-3": {
-            creative_name: "Romântica Floral",
+          'creative-3': {
+            creative_name: 'Romântica Floral',
             page_views: 756,
             quiz_starts: 456,
             quiz_completions: 389,
             leads: 145,
             purchases: 28,
             revenue: 2800,
-            conversion_rate: "1.9",
+            conversion_rate: '1.9',
             cost_per_lead: 16.9,
           },
         };
         setCreativesData(mockData);
       } catch (error) {
-        console.error("Erro ao carregar dados de criativos:", error);
+        console.error('Erro ao carregar dados de criativos:', error);
         setCreativesData({});
       } finally {
         setIsLoading(false);
@@ -114,7 +114,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
 
   const creativesList = Object.values(creativesData);
   const bestPerformingCreative = creativesList.reduce((best, current) => {
-    return parseFloat(current.conversion_rate) > parseFloat(best.conversion_rate || "0")
+    return parseFloat(current.conversion_rate) > parseFloat(best.conversion_rate || '0')
       ? current
       : best;
   }, {} as CreativeStats);
@@ -130,9 +130,9 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
   );
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
     }).format(value);
   };
 
@@ -140,14 +140,14 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
     const rate = parseFloat(conversionRate);
     if (rate >= 2.0)
       return (
-        <Badge style={{ color: "#6B4F43" }}>
+        <Badge style={{ color: '#6B4F43' }}>
           <CheckCircle2 size={12} className="mr-1" />
           Excelente
         </Badge>
       );
     if (rate >= 1.0)
       return (
-        <Badge style={{ borderColor: "#E5DDD5" }}>
+        <Badge style={{ borderColor: '#E5DDD5' }}>
           <Target size={12} className="mr-1" />
           Bom
         </Badge>
@@ -160,7 +160,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         </Badge>
       );
     return (
-      <Badge style={{ borderColor: "#E5DDD5" }}>
+      <Badge style={{ borderColor: '#E5DDD5' }}>
         <TrendingDown size={12} className="mr-1" />
         Baixo
       </Badge>
@@ -195,7 +195,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
           {trend && (
             <div
               className={`flex items-center space-x-1 text-xs px-2 py-1 rounded-full ${
-                trend > 0 ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
+                trend > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
               }`}
             >
               {trend > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -287,7 +287,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               {creative.conversion_rate}
             </span>
           </div>
-          <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="h-2 rounded-full transition-all duration-500"
               style={{
@@ -308,7 +308,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         style={{ backgroundColor: brandColors.background }}
       >
         <div className="text-center space-y-4">
-          <div style={{ borderColor: "#E5DDD5", borderTopColor: brandColors.primary }}></div>
+          <div style={{ borderColor: '#E5DDD5', borderTopColor: brandColors.primary }}></div>
           <p className="text-lg font-medium" style={{ color: brandColors.text.medium }}>
             Carregando dados dos criativos...
           </p>
@@ -327,7 +327,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               className="text-4xl font-bold mb-2"
               style={{
                 color: brandColors.text.dark,
-                fontFamily: "Playfair Display, serif",
+                fontFamily: 'Playfair Display, serif',
               }}
             >
               Analytics de Criativos
@@ -344,10 +344,10 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               {[7, 14, 30].map(days => (
                 <Button
                   key={days}
-                  variant={selectedPeriod === days ? "default" : "ghost"}
+                  variant={selectedPeriod === days ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setSelectedPeriod(days)}
-                  className={selectedPeriod === days ? "text-white shadow-sm" : "hover:bg-gray-50"}
+                  className={selectedPeriod === days ? 'text-white shadow-sm' : 'hover:bg-gray-50'}
                   style={
                     selectedPeriod === days
                       ? {
@@ -364,12 +364,12 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
             </div>
 
             {/* Botões de ação */}
-            <Button variant="outline" size="sm" style={{ borderColor: "#E5DDD5" }}>
+            <Button variant="outline" size="sm" style={{ borderColor: '#E5DDD5' }}>
               <RefreshCcw size={14} className="mr-2" />
               Atualizar
             </Button>
 
-            <Button variant="outline" size="sm" style={{ borderColor: "#E5DDD5" }}>
+            <Button variant="outline" size="sm" style={{ borderColor: '#E5DDD5' }}>
               <Download size={14} className="mr-2" />
               Exportar
             </Button>
@@ -406,11 +406,11 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
         <MetricCard
           icon={Award}
           title="Melhor Criativo"
-          value={bestPerformingCreative.creative_name || "N/A"}
+          value={bestPerformingCreative.creative_name || 'N/A'}
           subtitle={
             bestPerformingCreative.conversion_rate
               ? `${bestPerformingCreative.conversion_rate}% conv.`
-              : ""
+              : ''
           }
           color={brandColors.secondary}
         />
@@ -420,12 +420,12 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
       <div className="mb-6">
         <div className="flex bg-white rounded-lg p-1 shadow-sm border inline-flex">
           <Button
-            variant={selectedView === "overview" ? "default" : "ghost"}
+            variant={selectedView === 'overview' ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setSelectedView("overview")}
-            className={selectedView === "overview" ? "text-white shadow-sm" : "hover:bg-gray-50"}
+            onClick={() => setSelectedView('overview')}
+            className={selectedView === 'overview' ? 'text-white shadow-sm' : 'hover:bg-gray-50'}
             style={
-              selectedView === "overview"
+              selectedView === 'overview'
                 ? {
                     backgroundColor: brandColors.primary,
                     borderColor: brandColors.primary,
@@ -437,12 +437,12 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
             Visão Geral
           </Button>
           <Button
-            variant={selectedView === "detailed" ? "default" : "ghost"}
+            variant={selectedView === 'detailed' ? 'default' : 'ghost'}
             size="sm"
-            onClick={() => setSelectedView("detailed")}
-            className={selectedView === "detailed" ? "text-white shadow-sm" : "hover:bg-gray-50"}
+            onClick={() => setSelectedView('detailed')}
+            className={selectedView === 'detailed' ? 'text-white shadow-sm' : 'hover:bg-gray-50'}
             style={
-              selectedView === "detailed"
+              selectedView === 'detailed'
                 ? {
                     backgroundColor: brandColors.primary,
                     borderColor: brandColors.primary,
@@ -539,7 +539,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                     {creative.conversion_rate}%
                   </span>
                 </div>
-                <div style={{ backgroundColor: "#E5DDD5" }}>
+                <div style={{ backgroundColor: '#E5DDD5' }}>
                   <div
                     className="h-2 rounded-full transition-all duration-500"
                     style={{
@@ -583,7 +583,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                   <span>Aumentar budget nos criativos com conversão acima de 1.5%</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <span style={{ color: "#432818" }}>•</span>
+                  <span style={{ color: '#432818' }}>•</span>
                   <span>Pausar criativos com conversão abaixo de 0.5%</span>
                 </li>
               </ul>
@@ -598,7 +598,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
                   <span>Criar variações do melhor criativo</span>
                 </li>
                 <li className="flex items-start space-x-2">
-                  <span style={{ color: "#B89B7A" }}>•</span>
+                  <span style={{ color: '#B89B7A' }}>•</span>
                   <span>Testar novos ângulos baseados no winner</span>
                 </li>
                 <li className="flex items-start space-x-2">

@@ -1,23 +1,23 @@
 // Verificação de componentes Step01 na sidebar
 // src/test/sidebar-step01-verification.tsx
 
-import { generateBlockDefinitions } from "@/config/enhancedBlockRegistry";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
+import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
 
 // Função para gerar blocos do quiz (simulando o que está na sidebar)
 const generateQuizBlocks = () => {
   const headerBlock = {
-    type: "quiz-intro-header",
-    name: "Cabeçalho do Quiz",
-    description: "Cabeçalho configurável com logo e barra decorativa",
-    category: "Questões do Quiz",
+    type: 'quiz-intro-header',
+    name: 'Cabeçalho do Quiz',
+    description: 'Cabeçalho configurável com logo e barra decorativa',
+    category: 'Questões do Quiz',
   };
 
   const introBlock = {
-    type: "step01-intro",
-    name: "Introdução - Step 1",
-    description: "Componente de introdução para a primeira etapa do quiz",
-    category: "Questões do Quiz",
+    type: 'step01-intro',
+    name: 'Introdução - Step 1',
+    description: 'Componente de introdução para a primeira etapa do quiz',
+    category: 'Questões do Quiz',
   };
 
   // Blocos das etapas do quiz
@@ -25,7 +25,7 @@ const generateQuizBlocks = () => {
     type: `quiz-${step.type}`,
     name: `${step.title}`,
     description: step.description || `Etapa ${index + 1} do quiz de estilo pessoal`,
-    category: "Questões do Quiz",
+    category: 'Questões do Quiz',
   }));
 
   return [headerBlock, introBlock, ...stepBlocks];
@@ -40,7 +40,7 @@ export const SidebarStep01Verification = () => {
   // Agrupar por categoria
   const groupedBlocks = allBlocks.reduce(
     (groups, block) => {
-      const category = block.category || "Outros";
+      const category = block.category || 'Outros';
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -51,7 +51,7 @@ export const SidebarStep01Verification = () => {
   );
 
   const step01Blocks = allBlocks.filter(
-    block => block.type.includes("step01") || block.type.includes("intro")
+    block => block.type.includes('step01') || block.type.includes('intro')
   );
 
   return (

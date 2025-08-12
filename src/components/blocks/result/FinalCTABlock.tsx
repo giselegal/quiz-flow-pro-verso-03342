@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 /**
  * BLOCO EDITÁVEL: Call-to-Action Final
@@ -33,22 +33,22 @@ export interface FinalCTABlockProps {
   description?: string;
   buttonText?: string;
   buttonUrl?: string;
-  buttonStyle?: "primary" | "secondary" | "success" | "warning";
-  buttonSize?: "sm" | "lg" | "default";
+  buttonStyle?: 'primary' | 'secondary' | 'success' | 'warning';
+  buttonSize?: 'sm' | 'lg' | 'default';
   showUrgency?: boolean;
   urgencyText?: string;
   backgroundColor?: string;
-  textAlign?: "left" | "center" | "right";
+  textAlign?: 'left' | 'center' | 'right';
   className?: string;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -88,23 +88,23 @@ const getMarginClass = (value, type) => {
 };
 
 const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
-  blockId = "final-cta",
-  title = "Sua transformação começa agora!",
-  subtitle = "Não deixe para depois",
-  description = "Garante já seu acesso completo ao CaktoQuiz e descubra seu estilo único.",
-  buttonText = "Quero me transformar agora",
-  buttonUrl = "#",
-  buttonStyle = "primary",
-  buttonSize = "lg",
+  blockId = 'final-cta',
+  title = 'Sua transformação começa agora!',
+  subtitle = 'Não deixe para depois',
+  description = 'Garante já seu acesso completo ao CaktoQuiz e descubra seu estilo único.',
+  buttonText = 'Quero me transformar agora',
+  buttonUrl = '#',
+  buttonStyle = 'primary',
+  buttonSize = 'lg',
   showUrgency = true,
-  urgencyText = "⏰ Oferta por tempo limitado",
-  backgroundColor = "#f8f9fa",
-  textAlign = "center",
-  className = "",
+  urgencyText = '⏰ Oferta por tempo limitado',
+  backgroundColor = '#f8f9fa',
+  textAlign = 'center',
+  className = '',
 }) => {
   const handleClick = () => {
-    if (buttonUrl && buttonUrl !== "#") {
-      window.open(buttonUrl, "_blank");
+    if (buttonUrl && buttonUrl !== '#') {
+      window.open(buttonUrl, '_blank');
     }
   };
 
@@ -128,30 +128,30 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
 
         <h2
           className="text-3xl md:text-4xl font-bold text-[#432818] mb-4"
-          style={{ fontFamily: "Playfair Display, serif" }}
+          style={{ fontFamily: 'Playfair Display, serif' }}
         >
           {title}
         </h2>
 
         {subtitle && <h3 className="text-xl md:text-2xl text-[#6B5B73] mb-6">{subtitle}</h3>}
 
-        {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         <Button
           onClick={handleClick}
           size={buttonSize}
           className={`
             px-8 py-4 text-white font-semibold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl
-            ${buttonStyle === "primary" ? "bg-[#B89B7A] hover:bg-[#a68a6d]" : ""}
-            ${buttonStyle === "secondary" ? "bg-gray-600 hover:bg-gray-700" : ""}
-            ${buttonStyle === "success" ? "bg-green-600 hover:bg-green-700" : ""}
-            ${buttonStyle === "warning" ? "bg-orange-600 hover:bg-orange-700" : ""}
+            ${buttonStyle === 'primary' ? 'bg-[#B89B7A] hover:bg-[#a68a6d]' : ''}
+            ${buttonStyle === 'secondary' ? 'bg-gray-600 hover:bg-gray-700' : ''}
+            ${buttonStyle === 'success' ? 'bg-green-600 hover:bg-green-700' : ''}
+            ${buttonStyle === 'warning' ? 'bg-orange-600 hover:bg-orange-700' : ''}
           `}
         >
           {buttonText}
         </Button>
 
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <p>✅ Acesso imediato • ✅ Garantia de 7 dias • ✅ Suporte especializado</p>
         </div>
       </div>

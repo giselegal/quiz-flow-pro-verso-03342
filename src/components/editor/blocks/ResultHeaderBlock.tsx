@@ -1,7 +1,7 @@
 // @ts-nocheck
-import type { BlockComponentProps } from "../../../types/blocks";
-import { cn } from "@/lib/utils";
-import { useAuth } from "@/context/AuthContext";
+import type { BlockComponentProps } from '../../../types/blocks';
+import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 interface ResultHeaderBlockProps {
   title?: string;
@@ -13,11 +13,11 @@ interface ResultHeaderBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -57,25 +57,25 @@ const getMarginClass = (value, type) => {
 };
 
 const ResultHeaderBlock: React.FC<ResultHeaderBlockProps> = ({
-  title = "Parabéns!",
-  subtitle = "Seu Estilo Pessoal foi Revelado",
-  logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+  title = 'Parabéns!',
+  subtitle = 'Seu Estilo Pessoal foi Revelado',
+  logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
   showLogo = true,
   className,
 }) => {
   const { user } = useAuth();
-  const userName = (user as any)?.userName || localStorage.getItem("userName") || "";
+  const userName = (user as any)?.userName || localStorage.getItem('userName') || '';
 
   return (
     <div
       className={cn(
-        "text-center py-8 bg-gradient-to-b from-[#faf8f5] to-transparent",
+        'text-center py-8 bg-gradient-to-b from-[#faf8f5] to-transparent',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="max-w-4xl mx-auto px-4">

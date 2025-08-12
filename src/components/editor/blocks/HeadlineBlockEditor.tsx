@@ -1,16 +1,16 @@
 // @ts-nocheck
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { BlockEditorProps } from './types';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,7 +56,7 @@ const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
+          value={block.content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
         />
@@ -66,7 +66,7 @@ const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
         <Label htmlFor={`${block.id}-subtitle`}>Subtítulo</Label>
         <Input
           id={`${block.id}-subtitle`}
-          value={block.content.subtitle || ""}
+          value={block.content.subtitle || ''}
           onChange={e => onUpdate({ subtitle: e.target.value })}
           className="mt-1"
         />
@@ -75,7 +75,7 @@ const HeadlineBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
       <div>
         <Label>Alinhamento</Label>
         <RadioGroup
-          value={block.content.alignment || "left"}
+          value={block.content.alignment || 'left'}
           onValueChange={value => onUpdate({ alignment: value })}
           className="flex space-x-4 mt-1"
         >

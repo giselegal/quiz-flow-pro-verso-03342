@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Link, useLocation } from "wouter";
+import { Link, useLocation } from 'wouter';
 import {
   BarChart3,
   Settings,
@@ -10,50 +10,50 @@ import {
   TrendingUp,
   Home,
   Layers,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const sidebarItems = [
   {
-    title: "Dashboard",
-    href: "/admin",
+    title: 'Dashboard',
+    href: '/admin',
     icon: Home,
   },
   {
-    title: "Quiz",
-    href: "/admin/quiz",
+    title: 'Quiz',
+    href: '/admin/quiz',
     icon: Palette,
   },
   {
-    title: "Funis",
-    href: "/admin/funis",
+    title: 'Funis',
+    href: '/admin/funis',
     icon: Layers,
-    description: "Gerenciar funis de vendas",
+    description: 'Gerenciar funis de vendas',
   },
   {
-    title: "Testes A/B",
-    href: "/admin/ab-tests",
+    title: 'Testes A/B',
+    href: '/admin/ab-tests',
     icon: Target,
   },
   {
-    title: "Configurações",
-    href: "/admin/settings",
+    title: 'Configurações',
+    href: '/admin/settings',
     icon: Settings,
-    description: "Pixel, UTM, URL, Tokens API",
+    description: 'Pixel, UTM, URL, Tokens API',
   },
   {
-    title: "Criativos",
-    href: "/admin/criativos",
+    title: 'Criativos',
+    href: '/admin/criativos',
     icon: TrendingUp,
   },
   {
-    title: "Analytics",
-    href: "/admin/analytics",
+    title: 'Analytics',
+    href: '/admin/analytics',
     icon: BarChart3,
   },
   {
-    title: "Editor",
-    href: "/editor-fixed",
+    title: 'Editor',
+    href: '/editor-fixed',
     icon: Code,
   },
 ];
@@ -77,8 +77,8 @@ export function AdminSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors",
-                isActive ? "bg-[#B89B7A] text-white" : "text-[#432818] hover:bg-[#F5F2E9]"
+                'flex flex-col gap-1 px-4 py-3 rounded-lg transition-colors',
+                isActive ? 'bg-[#B89B7A] text-white' : 'text-[#432818] hover:bg-[#F5F2E9]'
               )}
             >
               <div className="flex items-center gap-3">
@@ -86,7 +86,7 @@ export function AdminSidebar() {
                 <span className="font-medium">{item.title}</span>
               </div>
               {item.description && (
-                <span className={cn("text-xs ml-8", isActive ? "text-white/70" : "text-[#8F7A6A]")}>
+                <span className={cn('text-xs ml-8', isActive ? 'text-white/70' : 'text-[#8F7A6A]')}>
                   {item.description}
                 </span>
               )}

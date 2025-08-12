@@ -1,6 +1,6 @@
-import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
-import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
-import type { BlockComponentProps } from "@/types/blocks";
+import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
+import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * UnifiedFunnelBlock - Wrapper que usa componentes base do funil real
@@ -22,14 +22,14 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Configuração do bloco inválida</p>
-        <p style={{ color: "#432818" }}>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>
+        <p style={{ color: '#432818' }}>
           O componente precisa de um objeto 'block' com 'properties' válidas.
         </p>
       </div>
@@ -38,12 +38,12 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
 
   // Renderizar o componente correto baseado no tipo
   switch (block.type) {
-    case "FunnelHeroBlock":
+    case 'FunnelHeroBlock':
       return (
         <FunnelHeroSection
-          title={block.properties.title || "Título do Hero"}
-          description={block.properties.description || "Descrição do hero section"}
-          ctaText={block.properties.ctaText || "Call to Action"}
+          title={block.properties.title || 'Título do Hero'}
+          description={block.properties.description || 'Descrição do hero section'}
+          ctaText={block.properties.ctaText || 'Call to Action'}
           {...block.properties}
           isSelected={isSelected}
           onClick={onClick}
@@ -51,10 +51,10 @@ const UnifiedFunnelBlock: React.FC<UnifiedFunnelBlockProps> = ({
         />
       );
 
-    case "FunnelPainBlock":
+    case 'FunnelPainBlock':
       return (
         <FunnelPainSection
-          title={block.properties.title || "Problemas que Resolvemos"}
+          title={block.properties.title || 'Problemas que Resolvemos'}
           painPoints={block.properties.painPoints || []}
           {...block.properties}
           isSelected={isSelected}

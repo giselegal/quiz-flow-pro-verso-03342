@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { QuizQuestion } from "@/types/quiz";
-import QuestionEditor from "./QuestionEditor";
-import { Plus } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { QuizQuestion } from '@/types/quiz';
+import QuestionEditor from './QuestionEditor';
+import { Plus } from 'lucide-react';
 
 interface QuizEditorProps {
   initialTemplate?: any;
@@ -26,8 +26,8 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
         ...question,
         id: `question-${Date.now()}`,
         order: questions.length,
-        question: question.title || question.question || "", // Ensure question property is set
-        type: "normal",
+        question: question.title || question.question || '', // Ensure question property is set
+        type: 'normal',
       };
       setQuestions(prev => [...prev, newQuestion]);
     } else {
@@ -36,7 +36,7 @@ const QuizEditor: React.FC<QuizEditorProps> = ({ initialTemplate }) => {
           q.id === question.id
             ? {
                 ...question,
-                question: question.title || question.question || "",
+                question: question.title || question.question || '',
               }
             : q
         )

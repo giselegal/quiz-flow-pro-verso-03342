@@ -1,17 +1,17 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Button } from "../../ui/button";
-import { Badge } from "../../ui/badge";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 // Componente de fallback mais rico para componentes não implementados
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,81 +56,81 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
   onClick,
   onPropertyChange,
   blockType,
-  className = "",
+  className = '',
 }) => {
   const getComponentInfo = (type: string) => {
     const componentMap: Record<
       string,
       { name: string; description: string; category: string; icon: string }
     > = {
-      "section-divider": {
-        name: "Divisor de Seção",
-        description: "Linha divisória entre seções com estilo customizável",
-        category: "Layout",
-        icon: "➖",
+      'section-divider': {
+        name: 'Divisor de Seção',
+        description: 'Linha divisória entre seções com estilo customizável',
+        category: 'Layout',
+        icon: '➖',
       },
-      "flex-container-horizontal": {
-        name: "Container Flex Horizontal",
-        description: "Container flexbox para organizar elementos horizontalmente",
-        category: "Layout",
-        icon: "↔️",
+      'flex-container-horizontal': {
+        name: 'Container Flex Horizontal',
+        description: 'Container flexbox para organizar elementos horizontalmente',
+        category: 'Layout',
+        icon: '↔️',
       },
-      "flex-container-vertical": {
-        name: "Container Flex Vertical",
-        description: "Container flexbox para organizar elementos verticalmente",
-        category: "Layout",
-        icon: "↕️",
+      'flex-container-vertical': {
+        name: 'Container Flex Vertical',
+        description: 'Container flexbox para organizar elementos verticalmente',
+        category: 'Layout',
+        icon: '↕️',
       },
-      "feature-highlight": {
-        name: "Destaque de Recurso",
-        description: "Card destacado para apresentar recursos importantes",
-        category: "Conteúdo",
-        icon: "⭐",
+      'feature-highlight': {
+        name: 'Destaque de Recurso',
+        description: 'Card destacado para apresentar recursos importantes',
+        category: 'Conteúdo',
+        icon: '⭐',
       },
-      "testimonial-card": {
-        name: "Card de Depoimento",
-        description: "Card individual para exibir depoimentos de clientes",
-        category: "Social Proof",
-        icon: "💬",
+      'testimonial-card': {
+        name: 'Card de Depoimento',
+        description: 'Card individual para exibir depoimentos de clientes',
+        category: 'Social Proof',
+        icon: '💬',
       },
-      "stats-counter": {
-        name: "Contador de Estatísticas",
-        description: "Números animados para exibir estatísticas importantes",
-        category: "Métricas",
-        icon: "📊",
+      'stats-counter': {
+        name: 'Contador de Estatísticas',
+        description: 'Números animados para exibir estatísticas importantes',
+        category: 'Métricas',
+        icon: '📊',
       },
-      "progress-bar-modern": {
-        name: "Barra de Progresso Moderna",
-        description: "Barra de progresso com animações e estilo moderno",
-        category: "UI",
-        icon: "📈",
+      'progress-bar-modern': {
+        name: 'Barra de Progresso Moderna',
+        description: 'Barra de progresso com animações e estilo moderno',
+        category: 'UI',
+        icon: '📈',
       },
-      "quiz-question-modern": {
-        name: "Questão Quiz Moderna",
-        description: "Componente de questão com design moderno e interativo",
-        category: "Quiz",
-        icon: "❓",
+      'quiz-question-modern': {
+        name: 'Questão Quiz Moderna',
+        description: 'Componente de questão com design moderno e interativo',
+        category: 'Quiz',
+        icon: '❓',
       },
-      "quiz-question-configurable": {
-        name: "Questão Quiz Configurável",
-        description: "Questão totalmente configurável com múltiplas opções",
-        category: "Quiz",
-        icon: "⚙️",
+      'quiz-question-configurable': {
+        name: 'Questão Quiz Configurável',
+        description: 'Questão totalmente configurável com múltiplas opções',
+        category: 'Quiz',
+        icon: '⚙️',
       },
-      "image-text-card": {
-        name: "Card Imagem + Texto",
-        description: "Card combinando imagem e texto de forma elegante",
-        category: "Conteúdo",
-        icon: "🖼️",
+      'image-text-card': {
+        name: 'Card Imagem + Texto',
+        description: 'Card combinando imagem e texto de forma elegante',
+        category: 'Conteúdo',
+        icon: '🖼️',
       },
     };
 
     return (
       componentMap[type] || {
-        name: type.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
-        description: "Componente personalizado em desenvolvimento",
-        category: "Personalizado",
-        icon: "🔧",
+        name: type.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        description: 'Componente personalizado em desenvolvimento',
+        category: 'Personalizado',
+        icon: '🔧',
       }
     );
   };
@@ -140,15 +140,15 @@ const EnhancedFallbackBlock: React.FC<BlockComponentProps & { blockType: string 
   return (
     <div
       className={cn(
-        "border-2 border-dashed border-[#B89B7A]/40 bg-[#B89B7A]/10 rounded-lg p-6 text-center transition-all duration-200",
-        "hover:border-orange-400 hover:bg-[#B89B7A]/20",
-        isSelected && "border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200",
+        'border-2 border-dashed border-[#B89B7A]/40 bg-[#B89B7A]/10 rounded-lg p-6 text-center transition-all duration-200',
+        'hover:border-orange-400 hover:bg-[#B89B7A]/20',
+        isSelected && 'border-orange-500 bg-[#B89B7A]/20 ring-2 ring-orange-200',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >

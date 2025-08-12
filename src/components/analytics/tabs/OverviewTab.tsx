@@ -1,6 +1,6 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MetricCard } from "../MetricCard";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MetricCard } from '../MetricCard';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   ResponsiveContainer,
   LineChart,
@@ -12,7 +12,7 @@ import {
   Legend,
   BarChart,
   Bar,
-} from "recharts";
+} from 'recharts';
 
 interface OverviewTabProps {
   analyticsData: any;
@@ -40,7 +40,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
     const eventsByDate = analyticsData.events.reduce((acc: any, event: any) => {
       if (!event.timestamp) return acc;
 
-      const date = new Date(event.timestamp).toISOString().split("T")[0];
+      const date = new Date(event.timestamp).toISOString().split('T')[0];
       if (!acc[date]) {
         acc[date] = {
           date,
@@ -67,53 +67,53 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
   // Format date labels for chart
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString("pt-BR", {
-      month: "short",
-      day: "numeric",
+    return date.toLocaleDateString('pt-BR', {
+      month: 'short',
+      day: 'numeric',
     });
   };
 
   // Safe access to metrics with defaults
   const safeMetric = (value: any, defaultValue: number = 0) => {
-    return typeof value === "number" ? value : defaultValue;
+    return typeof value === 'number' ? value : defaultValue;
   };
 
   const formatPercentage = (value: any) => {
-    if (value === undefined || value === null) return "0.0%";
+    if (value === undefined || value === null) return '0.0%';
     return `${safeMetric(value, 0).toFixed(1)}%`;
   };
 
   const conversionMetrics = [
     {
-      title: "Taxa de Conclusão",
+      title: 'Taxa de Conclusão',
       value: formatPercentage(metrics.completionRate),
-      description: "Quiz iniciado → Quiz completo",
-      change: "+2.5%",
-      trend: "up",
-      color: "#4f46e5",
+      description: 'Quiz iniciado → Quiz completo',
+      change: '+2.5%',
+      trend: 'up',
+      color: '#4f46e5',
     },
     {
-      title: "Taxa de Conversão",
+      title: 'Taxa de Conversão',
       value: formatPercentage(metrics.conversionRate),
-      description: "Quiz iniciado → Lead",
-      change: "+1.2%",
-      trend: "up",
-      color: "#10b981",
+      description: 'Quiz iniciado → Lead',
+      change: '+1.2%',
+      trend: 'up',
+      color: '#10b981',
     },
     {
-      title: "Taxa de Vendas",
+      title: 'Taxa de Vendas',
       value: formatPercentage(metrics.salesRate),
-      description: "Lead → Venda",
-      change: "-0.8%",
-      trend: "down",
-      color: "#f59e0b",
+      description: 'Lead → Venda',
+      change: '-0.8%',
+      trend: 'down',
+      color: '#f59e0b',
     },
   ];
 
   return (
     <div className="space-y-6">
       <div
-        className={`grid ${compactView ? "grid-cols-2 md:grid-cols-4 xl:grid-cols-7" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-4"} gap-4`}
+        className={`grid ${compactView ? 'grid-cols-2 md:grid-cols-4 xl:grid-cols-7' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4'} gap-4`}
       >
         <MetricCard
           title="Inicios de Quiz"
@@ -179,7 +179,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
           <CardDescription>Visualização dos eventos por data</CardDescription>
         </CardHeader>
         <CardContent className="px-2">
-          <div className={`w-full ${compactView ? "h-[250px]" : "h-[400px]"}`}>
+          <div className={`w-full ${compactView ? 'h-[250px]' : 'h-[400px]'}`}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
                 data={chartData}
@@ -196,29 +196,29 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
                 <Tooltip
                   formatter={(value, name) => [
                     value,
-                    name === "quiz_start"
-                      ? "Início do Quiz"
-                      : name === "quiz_complete"
-                        ? "Quiz Completo"
-                        : name === "result_view"
-                          ? "Visualizações"
-                          : name === "lead_generated"
-                            ? "Leads"
-                            : "Vendas",
+                    name === 'quiz_start'
+                      ? 'Início do Quiz'
+                      : name === 'quiz_complete'
+                        ? 'Quiz Completo'
+                        : name === 'result_view'
+                          ? 'Visualizações'
+                          : name === 'lead_generated'
+                            ? 'Leads'
+                            : 'Vendas',
                   ]}
                   labelFormatter={label => `Data: ${formatDate(label)}`}
                 />
                 <Legend
                   formatter={value =>
-                    value === "quiz_start"
-                      ? "Início do Quiz"
-                      : value === "quiz_complete"
-                        ? "Quiz Completo"
-                        : value === "result_view"
-                          ? "Visualizações"
-                          : value === "lead_generated"
-                            ? "Leads"
-                            : "Vendas"
+                    value === 'quiz_start'
+                      ? 'Início do Quiz'
+                      : value === 'quiz_complete'
+                        ? 'Quiz Completo'
+                        : value === 'result_view'
+                          ? 'Visualizações'
+                          : value === 'lead_generated'
+                            ? 'Leads'
+                            : 'Vendas'
                   }
                 />
                 <Line type="monotone" dataKey="quiz_start" stroke="#8884d8" activeDot={{ r: 8 }} />
@@ -238,7 +238,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
           <CardDescription>Análise das taxas de conversão entre etapas do funil</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className={`w-full ${compactView ? "h-[200px]" : "h-[300px]"}`}>
+          <div className={`w-full ${compactView ? 'h-[200px]' : 'h-[300px]'}`}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={conversionMetrics}
@@ -253,7 +253,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({ analyticsData, loading
                 <XAxis dataKey="title" />
                 <YAxis tickFormatter={value => `${value}%`} />
                 <Tooltip
-                  formatter={value => [value, "Taxa"]}
+                  formatter={value => [value, 'Taxa']}
                   labelFormatter={label => `${label}`}
                 />
                 <Bar dataKey="value" name="Taxa" fill="#4f46e5" />

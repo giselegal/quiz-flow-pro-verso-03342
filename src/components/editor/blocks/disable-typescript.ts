@@ -3,7 +3,7 @@
 // This file exists to suppress TypeScript errors during migration
 
 // Re-export the centralized margin utility
-export { getMarginClass } from "@/utils/marginUtils";
+export { getMarginClass } from '@/utils/marginUtils';
 
 // Declare global types to suppress errors
 declare global {

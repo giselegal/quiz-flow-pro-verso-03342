@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Cloud,
   CloudOff,
@@ -12,8 +12,8 @@ import {
   History,
   Wifi,
   WifiOff,
-} from "lucide-react";
-import { type AutoSaveState } from "@/services/schemaDrivenFunnelService";
+} from 'lucide-react';
+import { type AutoSaveState } from '@/services/schemaDrivenFunnelService';
 
 interface SyncStatusProps {
   autoSaveState: AutoSaveState;
@@ -33,7 +33,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
   onManualSave,
   onSync,
   onToggleAutoSave,
-  className = "",
+  className = '',
   compact = false,
 }) => {
   const getStatusIcon = () => {
@@ -50,7 +50,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
     }
 
     if (autoSaveState.errorCount > 0) {
-      return <AlertCircle style={{ color: "#432818" }} />;
+      return <AlertCircle style={{ color: '#432818' }} />;
     }
 
     return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -58,15 +58,15 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
   const getStatusText = () => {
     if (isSaving) {
-      return "Salvando...";
+      return 'Salvando...';
     }
 
     if (!isOnline) {
-      return "Offline";
+      return 'Offline';
     }
 
     if (autoSaveState.pendingChanges) {
-      return "Mudanças pendentes";
+      return 'Mudanças pendentes';
     }
 
     if (autoSaveState.errorCount > 0) {
@@ -84,15 +84,15 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
       }
     }
 
-    return "Aguardando mudanças";
+    return 'Aguardando mudanças';
   };
 
   const getStatusBadgeVariant = () => {
-    if (isSaving) return "secondary";
-    if (!isOnline) return "destructive";
-    if (autoSaveState.pendingChanges) return "secondary";
-    if (autoSaveState.errorCount > 0) return "destructive";
-    return "default";
+    if (isSaving) return 'secondary';
+    if (!isOnline) return 'destructive';
+    if (autoSaveState.pendingChanges) return 'secondary';
+    if (autoSaveState.errorCount > 0) return 'destructive';
+    return 'default';
   };
 
   if (compact) {
@@ -164,22 +164,22 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
             {getStatusIcon()}
             <span className="text-sm">{getStatusText()}</span>
           </div>
-          <Badge variant={getStatusBadgeVariant()}>{isOnline ? "Online" : "Offline"}</Badge>
+          <Badge variant={getStatusBadgeVariant()}>{isOnline ? 'Online' : 'Offline'}</Badge>
         </div>
 
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
-          <div style={{ color: "#6B4F43" }}>
-            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : "Desabilitado"}
+          <div style={{ color: '#6B4F43' }}>
+            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : 'Desabilitado'}
           </div>
           <Button size="sm" variant="outline" onClick={onToggleAutoSave} className="h-7 text-xs">
-            {autoSaveState.isEnabled ? "Desabilitar" : "Habilitar"}
+            {autoSaveState.isEnabled ? 'Desabilitar' : 'Habilitar'}
           </Button>
         </div>
 
         {/* Informações de erro */}
         {autoSaveState.errorCount > 0 && (
-          <div style={{ color: "#432818" }}>
+          <div style={{ color: '#432818' }}>
             <div className="flex items-center space-x-1">
               <AlertCircle className="w-3 h-3" />
               <span>Falhas no auto-save: {autoSaveState.errorCount}</span>
@@ -190,7 +190,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
 
         {/* Última sincronização */}
         {autoSaveState.lastSave && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <History className="w-3 h-3" />
             <span>Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}</span>
           </div>

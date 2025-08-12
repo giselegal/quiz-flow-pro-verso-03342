@@ -40,9 +40,9 @@ export function generateSemanticId(config: SemanticIdConfig): string {
   }
 
   return parts
-    .join("-")
+    .join('-')
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, "");
+    .replace(/[^a-z0-9-]/g, '');
 }
 
 /**
@@ -56,17 +56,17 @@ export function generateQuizComponentId(
   return generateSemanticId({
     context: `quiz-${context}`,
     type: componentType,
-    identifier: index ? `item-${index}` : "default",
+    identifier: index ? `item-${index}` : 'default',
   });
 }
 
 /**
  * Gera ID para questões e opções
  */
-export function generateQuestionId(questionNumber: number, questionType: string = "style"): string {
+export function generateQuestionId(questionNumber: number, questionType: string = 'style'): string {
   return generateSemanticId({
-    context: "quiz",
-    type: "question",
+    context: 'quiz',
+    type: 'question',
     identifier: `q${questionNumber}-${questionType}`,
   });
 }
@@ -81,8 +81,8 @@ export function generateOptionId(
     : `q${questionNumber}-${optionType}`;
 
   return generateSemanticId({
-    context: "quiz",
-    type: "option",
+    context: 'quiz',
+    type: 'option',
     identifier,
   });
 }
@@ -95,7 +95,7 @@ export function generateBlockId(stageId: string, blockType: string, order?: numb
 
   return generateSemanticId({
     context: stageId,
-    type: "block",
+    type: 'block',
     identifier,
   });
 }
@@ -105,7 +105,7 @@ export function generateBlockId(stageId: string, blockType: string, order?: numb
  */
 export function generateResultId(userId: string, resultType: string): string {
   return generateSemanticId({
-    context: "result",
+    context: 'result',
     type: resultType,
     identifier: userId,
   });
@@ -122,23 +122,23 @@ export function duplicateSemanticId(originalId: string, context: DuplicationCont
   const { newContext, copyNumber = 1, preserveType } = context;
 
   // Parse do ID original
-  const parts = originalId.split("-");
+  const parts = originalId.split('-');
 
   if (parts.length < 3) {
     // Fallback para IDs não semânticos
     return generateSemanticId({
       context: newContext,
-      type: "duplicated",
+      type: 'duplicated',
       identifier: `copy-${copyNumber}`,
     });
   }
 
   const [originalContext, type, ...identifierParts] = parts;
-  const identifier = identifierParts.join("-");
+  const identifier = identifierParts.join('-');
 
   return generateSemanticId({
     context: newContext,
-    type: preserveType ? type : "copy",
+    type: preserveType ? type : 'copy',
     identifier: `${identifier}-copy-${copyNumber}`,
   });
 }
@@ -147,8 +147,8 @@ export function duplicateSemanticId(originalId: string, context: DuplicationCont
  * Gera próximo ID em sequência
  */
 export function generateNextSequenceId(baseId: string, existingIds: string[]): string {
-  const baseParts = baseId.split("-");
-  const baseWithoutNumber = baseParts.slice(0, -1).join("-");
+  const baseParts = baseId.split('-');
+  const baseWithoutNumber = baseParts.slice(0, -1).join('-');
 
   // Encontrar próximo número disponível
   let nextNumber = 1;
@@ -168,7 +168,7 @@ export function generateNextSequenceId(baseId: string, existingIds: string[]): s
  */
 export function convertTimestampToSemantic(timestampId: string, config: SemanticIdConfig): string {
   // Detectar padrões timestamp
-  if (timestampId.includes("Date.now()") || /\d{13}/.test(timestampId)) {
+  if (timestampId.includes('Date.now()') || /\d{13}/.test(timestampId)) {
     console.warn(`🔄 Convertendo timestamp ID: ${timestampId}`);
     return generateSemanticId(config);
   }
@@ -188,7 +188,7 @@ export function migrateIdMapping(
   Object.entries(oldMapping).forEach(([key, value], index) => {
     const newKey = generateSemanticId({
       context: contextPrefix,
-      type: "migrated",
+      type: 'migrated',
       identifier: `item-${index + 1}`,
     });
 
@@ -207,7 +207,7 @@ export function migrateIdMapping(
  */
 export function isSemanticId(id: string): boolean {
   // ID semântico deve ter pelo menos 3 partes separadas por hífen
-  const parts = id.split("-");
+  const parts = id.split('-');
   return parts.length >= 3 && !parts.some(part => /^\d{10,}$/.test(part));
 }
 
@@ -217,13 +217,13 @@ export function isSemanticId(id: string): boolean {
 export function parseSemanticId(id: string): SemanticIdConfig | null {
   if (!isSemanticId(id)) return null;
 
-  const parts = id.split("-");
+  const parts = id.split('-');
   const [context, type, ...identifierParts] = parts;
 
   return {
     context,
     type,
-    identifier: identifierParts.join("-"),
+    identifier: identifierParts.join('-'),
   };
 }
 
@@ -253,23 +253,23 @@ export function analyzeIdCollection(ids: string[]): {
  */
 export const QuizStyleIds = {
   questions: {
-    personality: () => generateQuestionId(1, "personality"),
-    style: () => generateQuestionId(2, "style"),
-    colors: () => generateQuestionId(3, "colors"),
-    outfit: () => generateQuestionId(4, "outfit"),
+    personality: () => generateQuestionId(1, 'personality'),
+    style: () => generateQuestionId(2, 'style'),
+    colors: () => generateQuestionId(3, 'colors'),
+    outfit: () => generateQuestionId(4, 'outfit'),
   },
 
   options: {
-    classic: (questionNum: number) => generateOptionId(questionNum, "classic"),
-    romantic: (questionNum: number) => generateOptionId(questionNum, "romantic"),
-    modern: (questionNum: number) => generateOptionId(questionNum, "modern"),
-    creative: (questionNum: number) => generateOptionId(questionNum, "creative"),
+    classic: (questionNum: number) => generateOptionId(questionNum, 'classic'),
+    romantic: (questionNum: number) => generateOptionId(questionNum, 'romantic'),
+    modern: (questionNum: number) => generateOptionId(questionNum, 'modern'),
+    creative: (questionNum: number) => generateOptionId(questionNum, 'creative'),
   },
 
   results: {
-    primary: (userId: string) => generateResultId(userId, "primary-style"),
-    secondary: (userId: string) => generateResultId(userId, "secondary-styles"),
-    calculation: (userId: string) => generateResultId(userId, "calculation-data"),
+    primary: (userId: string) => generateResultId(userId, 'primary-style'),
+    secondary: (userId: string) => generateResultId(userId, 'secondary-styles'),
+    calculation: (userId: string) => generateResultId(userId, 'calculation-data'),
   },
 };
 
@@ -278,23 +278,23 @@ export const QuizStyleIds = {
  */
 export const StepTemplateIds = {
   step01: {
-    intro: () => generateBlockId("step01", "intro", 1),
-    form: () => generateBlockId("step01", "form", 2),
-    cta: () => generateBlockId("step01", "cta", 3),
+    intro: () => generateBlockId('step01', 'intro', 1),
+    form: () => generateBlockId('step01', 'form', 2),
+    cta: () => generateBlockId('step01', 'cta', 3),
   },
 
   result: {
     header: (userName: string) =>
       generateSemanticId({
-        context: "result",
-        type: "header",
-        identifier: userName.toLowerCase().replace(/\s+/g, "-"),
+        context: 'result',
+        type: 'header',
+        identifier: userName.toLowerCase().replace(/\s+/g, '-'),
       }),
     styleCard: (styleName: string) =>
       generateSemanticId({
-        context: "result",
-        type: "style-card",
-        identifier: styleName.toLowerCase().replace(/\s+/g, "-"),
+        context: 'result',
+        type: 'style-card',
+        identifier: styleName.toLowerCase().replace(/\s+/g, '-'),
       }),
   },
 };

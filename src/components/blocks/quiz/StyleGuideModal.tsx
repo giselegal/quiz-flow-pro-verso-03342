@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { styleConfig } from "@/data/styleConfig";
-import { XIcon } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { styleConfig } from '@/data/styleConfig';
+import { XIcon } from 'lucide-react';
 
 interface StyleGuideModalProps {
   style: keyof typeof styleConfig;
@@ -32,11 +32,11 @@ const StyleGuideModal: React.FC<StyleGuideModalProps> = ({ style, onClose }) => 
           <img src={styleData.guideImage} alt={`Guia ${style}`} className="w-full h-auto" />
         </div>
 
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
             <div>
               <h3 className="font-semibold text-[#432818]">{style}</h3>
-              <p style={{ color: "#6B4F43" }}>{styleData.description}</p>
+              <p style={{ color: '#6B4F43' }}>{styleData.description}</p>
             </div>
             <Button onClick={onClose} className="bg-[#B89B7A] hover:bg-[#A08766] min-w-[120px]">
               Fechar

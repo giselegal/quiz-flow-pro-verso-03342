@@ -1,6 +1,6 @@
-import { supabase } from "@/integrations/supabase/client";
-import type { Session } from "@supabase/supabase-js";
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { supabase } from '@/integrations/supabase/client';
+import type { Session } from '@supabase/supabase-js';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface User {
   id: string;
@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
@@ -48,9 +48,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setTimeout(async () => {
           try {
             const { data: profile } = await supabase
-              .from("profiles")
-              .select("*")
-              .eq("id", session.user.id)
+              .from('profiles')
+              .select('*')
+              .eq('id', session.user.id)
               .single();
 
             setUser({
@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const cleanupAuthState = () => {
     Object.keys(localStorage).forEach(key => {
-      if (key.startsWith("supabase.auth.") || key.includes("sb-")) {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
         localStorage.removeItem(key);
       }
     });
@@ -103,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       cleanupAuthState();
       try {
-        await supabase.auth.signOut({ scope: "global" });
+        await supabase.auth.signOut({ scope: 'global' });
       } catch (err) {
         // Continue mesmo se falhar
       }
@@ -123,11 +123,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       cleanupAuthState();
-      await supabase.auth.signOut({ scope: "global" });
+      await supabase.auth.signOut({ scope: 'global' });
       setUser(null);
       setSession(null);
     } catch (error) {
-      console.error("Logout error:", error);
+      console.error('Logout error:', error);
       // Forçar limpeza local mesmo com erro
       setUser(null);
       setSession(null);

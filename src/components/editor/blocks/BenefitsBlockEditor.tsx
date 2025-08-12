@@ -1,17 +1,17 @@
 // @ts-nocheck
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Plus, Trash } from "lucide-react";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash } from 'lucide-react';
+import { BlockEditorProps } from './types';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -53,11 +53,11 @@ const getMarginClass = (value, type) => {
 const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
   // Ensure items is always a string array for benefits
   const items = Array.isArray(block.content.items)
-    ? block.content.items.filter((item): item is string => typeof item === "string")
+    ? block.content.items.filter((item): item is string => typeof item === 'string')
     : [];
 
   const addItem = () => {
-    const newItems = [...items, ""];
+    const newItems = [...items, ''];
     onUpdate({ items: newItems });
   };
 
@@ -79,7 +79,7 @@ const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
         <Label htmlFor={`${block.id}-title`}>Título</Label>
         <Input
           id={`${block.id}-title`}
-          value={block.content.title || ""}
+          value={block.content.title || ''}
           onChange={e => onUpdate({ title: e.target.value })}
           className="mt-1"
         />
@@ -99,7 +99,7 @@ const BenefitsBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) =>
                 variant="ghost"
                 size="sm"
                 onClick={() => removeItem(index)}
-                style={{ color: "#432818" }}
+                style={{ color: '#432818' }}
               >
                 <Trash className="w-4 h-4" />
               </Button>

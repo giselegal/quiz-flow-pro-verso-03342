@@ -1,14 +1,14 @@
 // @ts-nocheck
-import { Check, X } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import { Check, X } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -51,21 +51,21 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Comparação de Opções",
+    title = 'Comparação de Opções',
     items = [
       {
-        name: "Opção Básica",
-        price: "R$ 97",
-        features: ["Recurso 1", "Recurso 2"],
+        name: 'Opção Básica',
+        price: 'R$ 97',
+        features: ['Recurso 1', 'Recurso 2'],
         highlight: false,
       },
       {
-        name: "Opção Premium",
-        price: "R$ 197",
-        features: ["Recurso 1", "Recurso 2", "Recurso 3"],
+        name: 'Opção Premium',
+        price: 'R$ 197',
+        features: ['Recurso 1', 'Recurso 2', 'Recurso 3'],
         highlight: true,
       },
     ],
@@ -78,8 +78,8 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
         p-4 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-brand bg-brand/10"
-            : "border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5"
+            ? 'border-2 border-brand bg-brand/10'
+            : 'border-2 border-dashed border-transparent hover:border-brand/40 hover:bg-brand/5'
         }
         ${className}
       `}
@@ -95,8 +95,8 @@ const ComparisonTableInlineBlock: React.FC<BlockComponentProps> = ({
                 p-6 rounded-lg border-2 transition-all duration-200
                 ${
                   item.highlight
-                    ? "border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5 shadow-lg"
-                    : "border-gray-200 bg-white"
+                    ? 'border-[#B89B7A] bg-gradient-to-br from-[#B89B7A]/10 to-[#B89B7A]/5 shadow-lg'
+                    : 'border-gray-200 bg-white'
                 }
               `}
             >

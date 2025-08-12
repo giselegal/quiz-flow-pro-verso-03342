@@ -1,10 +1,11 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useFunnelStageActivation } from "@/utils/FunnelStageActivator";
-import { Activity, ArrowRight, CheckCircle, Circle, Play, RotateCcw } from "lucide-react";
+import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useFunnelStageActivation } from '@/utils/FunnelStageActivator';
+import { Activity, ArrowRight, CheckCircle, Circle, Play, RotateCcw } from 'lucide-react';
 
 interface FunnelDebugPanelProps {
   isVisible?: boolean;
@@ -36,35 +37,35 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
   const [debugLogs, setDebugLogs] = React.useState<
     Array<{
       timestamp: Date;
-      type: "activation" | "answer" | "field" | "reset";
+      type: 'activation' | 'answer' | 'field' | 'reset';
       message: string;
     }>
   >([]);
 
   // Mock functions para testes
   const handleTestNameFill = () => {
-    registerFieldFilled("userName", "Teste Usuario");
-    addDebugLog("field", "Nome preenchido: 'Teste Usuario'");
+    registerFieldFilled('userName', 'Teste Usuario');
+    addDebugLog('field', "Nome preenchido: 'Teste Usuario'");
   };
 
   const handleTestAnswer = (stepNumber: number) => {
-    const mockAnswers = ["opção A", "opção B", "opção C"];
+    const mockAnswers = ['opção A', 'opção B', 'opção C'];
     registerAnswer(`q${stepNumber}`, mockAnswers, stepNumber);
-    addDebugLog("answer", `Resposta registrada para Q${stepNumber}: ${mockAnswers.join(", ")}`);
+    addDebugLog('answer', `Resposta registrada para Q${stepNumber}: ${mockAnswers.join(', ')}`);
   };
 
   const handleTestActivation = (stepNumber: number) => {
     activateStage(stepNumber);
-    addDebugLog("activation", `Etapa ${stepNumber} ativada manualmente`);
+    addDebugLog('activation', `Etapa ${stepNumber} ativada manualmente`);
   };
 
   const handleReset = () => {
     reset();
     setDebugLogs([]);
-    addDebugLog("reset", "Sistema resetado");
+    addDebugLog('reset', 'Sistema resetado');
   };
 
-  const addDebugLog = (type: "activation" | "answer" | "field" | "reset", message: string) => {
+  const addDebugLog = (type: 'activation' | 'answer' | 'field' | 'reset', message: string) => {
     setDebugLogs(prev => [
       {
         timestamp: new Date(),
@@ -151,10 +152,10 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
                     key={stage.number}
                     className={`flex items-center gap-2 p-2 rounded text-xs ${
                       stage.isActive
-                        ? "bg-green-100 text-green-800 border border-green-200"
+                        ? 'bg-green-100 text-green-800 border border-green-200'
                         : stage.isNextToActivate
-                          ? "bg-blue-100 text-blue-800 border border-blue-200"
-                          : "bg-gray-50 text-gray-600"
+                          ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                          : 'bg-gray-50 text-gray-600'
                     }`}
                   >
                     {stage.isActive ? (
@@ -165,7 +166,7 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
                       <Circle className="w-3 h-3 text-gray-400" />
                     )}
 
-                    <span className="font-mono">{stage.number.toString().padStart(2, "0")}</span>
+                    <span className="font-mono">{stage.number.toString().padStart(2, '0')}</span>
                     <span className="flex-1">{stage.name}</span>
 
                     <Badge variant="secondary" className="text-xs py-0">
@@ -193,13 +194,13 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
                       <span className="ml-2">
                         <Badge
                           variant={
-                            log.type === "activation"
-                              ? "default"
-                              : log.type === "answer"
-                                ? "secondary"
-                                : log.type === "field"
-                                  ? "outline"
-                                  : "destructive"
+                            log.type === 'activation'
+                              ? 'default'
+                              : log.type === 'answer'
+                                ? 'secondary'
+                                : log.type === 'field'
+                                  ? 'outline'
+                                  : 'destructive'
                           }
                           className="text-xs py-0 mr-2"
                         >
@@ -222,41 +223,41 @@ export function FunnelDebugPanel({ isVisible = true, onToggle }: FunnelDebugPane
 // Funções auxiliares (duplicadas para independência do componente)
 function getStepName(stepNumber: number): string {
   const names = {
-    1: "Introdução",
-    2: "Q1 - Tipo de Roupa",
-    3: "Q2 - Nome Pessoal",
-    4: "Q3 - Estilo Pessoal",
-    5: "Q4 - Ocasiões",
-    6: "Q5 - Cores",
-    7: "Q6 - Textura",
-    8: "Q7 - Silhueta",
-    9: "Q8 - Acessórios",
-    10: "Q9 - Inspiração",
-    11: "Q10 - Conforto",
-    12: "Q11 - Tendências",
-    13: "Q12 - Investimento",
-    14: "Q13 - Personalidade",
-    15: "Transição",
-    16: "Q14 - Estratégica 1",
-    17: "Q15 - Estratégica 2",
-    18: "Q16 - Estratégica 3",
-    19: "Processamento",
-    20: "Resultado",
-    21: "Oferta",
+    1: 'Introdução',
+    2: 'Q1 - Tipo de Roupa',
+    3: 'Q2 - Nome Pessoal',
+    4: 'Q3 - Estilo Pessoal',
+    5: 'Q4 - Ocasiões',
+    6: 'Q5 - Cores',
+    7: 'Q6 - Textura',
+    8: 'Q7 - Silhueta',
+    9: 'Q8 - Acessórios',
+    10: 'Q9 - Inspiração',
+    11: 'Q10 - Conforto',
+    12: 'Q11 - Tendências',
+    13: 'Q12 - Investimento',
+    14: 'Q13 - Personalidade',
+    15: 'Transição',
+    16: 'Q14 - Estratégica 1',
+    17: 'Q15 - Estratégica 2',
+    18: 'Q16 - Estratégica 3',
+    19: 'Processamento',
+    20: 'Resultado',
+    21: 'Oferta',
   };
 
   return names[stepNumber as keyof typeof names] || `Etapa ${stepNumber}`;
 }
 
 function getStepType(stepNumber: number): string {
-  if (stepNumber === 1) return "intro";
-  if (stepNumber >= 2 && stepNumber <= 14) return "question";
-  if (stepNumber === 15 || stepNumber === 19) return "transition";
-  if (stepNumber >= 16 && stepNumber <= 18) return "strategic";
-  if (stepNumber === 20) return "result";
-  if (stepNumber === 21) return "offer";
+  if (stepNumber === 1) return 'intro';
+  if (stepNumber >= 2 && stepNumber <= 14) return 'question';
+  if (stepNumber === 15 || stepNumber === 19) return 'transition';
+  if (stepNumber >= 16 && stepNumber <= 18) return 'strategic';
+  if (stepNumber === 20) return 'result';
+  if (stepNumber === 21) return 'offer';
 
-  return "question";
+  return 'question';
 }
 
 export default FunnelDebugPanel;

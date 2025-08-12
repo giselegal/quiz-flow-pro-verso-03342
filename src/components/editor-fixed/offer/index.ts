@@ -6,21 +6,21 @@
  */
 
 // Componentes principais
-export { default as OfferFaqSection } from "./OfferFaqSection";
-export { default as OfferGuaranteeSection } from "./OfferGuaranteeSection";
-export { default as OfferHeader } from "./OfferHeader";
-export { default as OfferHeroSection } from "./OfferHeroSection";
-export { default as OfferProblemSection } from "./OfferProblemSection";
-export { default as OfferProductShowcase } from "./OfferProductShowcase";
-export { default as OfferSolutionSection } from "./OfferSolutionSection";
+export { default as OfferFaqSection } from './OfferFaqSection';
+export { default as OfferGuaranteeSection } from './OfferGuaranteeSection';
+export { default as OfferHeader } from './OfferHeader';
+export { default as OfferHeroSection } from './OfferHeroSection';
+export { default as OfferProblemSection } from './OfferProblemSection';
+export { default as OfferProductShowcase } from './OfferProductShowcase';
+export { default as OfferSolutionSection } from './OfferSolutionSection';
 
 // Estilos
-export { injectOfferPageStyles, offerPageStyles } from "./offerStyles";
+export { injectOfferPageStyles, offerPageStyles } from './offerStyles';
 
 // Types para componentes de oferta
 export interface OfferComponentProps {
-  containerWidth?: "full" | "narrow" | "medium";
-  spacing?: "small" | "medium" | "large";
+  containerWidth?: 'full' | 'narrow' | 'medium';
+  spacing?: 'small' | 'medium' | 'large';
   backgroundColor?: string;
 }
 
@@ -63,11 +63,11 @@ export interface FaqItem {
 
 // Mapping de tipos para o ENHANCED_BLOCK_REGISTRY
 export const OFFER_COMPONENT_TYPES = {
-  "offer-header": "OfferHeader",
-  "offer-hero-section": "OfferHeroSection",
-  "offer-problem-section": "OfferProblemSection",
-  "offer-solution-section": "OfferSolutionSection",
-  "offer-product-showcase": "OfferProductShowcase",
-  "offer-guarantee-section": "OfferGuaranteeSection",
-  "offer-faq-section": "OfferFaqSection",
+  'offer-header': 'OfferHeader',
+  'offer-hero-section': 'OfferHeroSection',
+  'offer-problem-section': 'OfferProblemSection',
+  'offer-solution-section': 'OfferSolutionSection',
+  'offer-product-showcase': 'OfferProductShowcase',
+  'offer-guarantee-section': 'OfferGuaranteeSection',
+  'offer-faq-section': 'OfferFaqSection',
 } as const;

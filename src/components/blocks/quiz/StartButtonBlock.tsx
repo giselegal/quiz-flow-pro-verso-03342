@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 /**
  * StartButtonBlock - Botão de início isolado para uso no editor visual
@@ -41,10 +41,10 @@ export interface StartButtonBlockProps {
   loading?: boolean;
 
   // Estilo
-  size?: "sm" | "md" | "lg";
-  variant?: "primary" | "secondary" | "outline";
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline';
   fullWidth?: boolean;
-  alignment?: "left" | "center" | "right";
+  alignment?: 'left' | 'center' | 'right';
 
   // Cores customizáveis
   colors?: {
@@ -58,7 +58,7 @@ export interface StartButtonBlockProps {
   // Funcionalidade
   onClick?: () => void;
   href?: string;
-  target?: "_blank" | "_self";
+  target?: '_blank' | '_self';
 
   // Animações
   enableHoverEffect?: boolean;
@@ -67,11 +67,11 @@ export interface StartButtonBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -111,38 +111,38 @@ const getMarginClass = (value, type) => {
 };
 
 const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
-  blockId = "start-button-block",
-  className = "",
+  blockId = 'start-button-block',
+  className = '',
   style = {},
 
   // Conteúdo padrão
-  text = "Começar Quiz",
-  icon = "",
-  loadingText = "Carregando...",
+  text = 'Começar Quiz',
+  icon = '',
+  loadingText = 'Carregando...',
 
   // Estados
   disabled = false,
   loading = false,
 
   // Estilo
-  size = "md",
-  variant = "primary",
+  size = 'md',
+  variant = 'primary',
   fullWidth = false,
-  alignment = "center",
+  alignment = 'center',
 
   // Cores padrão (iguais ao tema original)
   colors = {
-    primary: "#B89B7A",
-    primaryDark: "#A1835D",
-    text: "#FFFFFF",
-    background: "#FEFEFE",
-    border: "#B89B7A",
+    primary: '#B89B7A',
+    primaryDark: '#A1835D',
+    text: '#FFFFFF',
+    background: '#FEFEFE',
+    border: '#B89B7A',
   },
 
   // Funcionalidade
   onClick,
   href,
-  target = "_self",
+  target = '_self',
 
   // Animações
   enableHoverEffect = true,
@@ -150,30 +150,30 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
 }) => {
   // Classes de tamanho
   const sizeClasses = {
-    sm: "py-2 px-4 text-sm",
-    md: "py-3 px-6 text-base",
-    lg: "py-4 px-8 text-lg",
+    sm: 'py-2 px-4 text-sm',
+    md: 'py-3 px-6 text-base',
+    lg: 'py-4 px-8 text-lg',
   };
 
   // Classes de alinhamento do container
   const alignmentClasses = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
   };
 
   // Classes base do botão
   const baseClasses = cn(
-    "font-semibold rounded-md shadow-md transition-all duration-300",
-    "focus:outline-none focus:ring-2 focus:ring-offset-2",
-    "inline-flex items-center justify-center gap-2",
+    'font-semibold rounded-md shadow-md transition-all duration-300',
+    'focus:outline-none focus:ring-2 focus:ring-offset-2',
+    'inline-flex items-center justify-center gap-2',
     sizeClasses[size],
-    fullWidth ? "w-full" : "w-auto",
-    disabled || loading ? "cursor-not-allowed opacity-60" : "cursor-pointer",
+    fullWidth ? 'w-full' : 'w-auto',
+    disabled || loading ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
     enableHoverEffect && !disabled && !loading
-      ? "hover:shadow-lg transform hover:scale-[1.02]"
-      : "",
-    enablePulseEffect && !disabled && !loading ? "animate-pulse" : "",
+      ? 'hover:shadow-lg transform hover:scale-[1.02]'
+      : '',
+    enablePulseEffect && !disabled && !loading ? 'animate-pulse' : '',
     className
   );
 
@@ -186,7 +186,7 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
     };
 
     switch (variant) {
-      case "secondary":
+      case 'secondary':
         return {
           ...baseStyle,
           backgroundColor: colors.background,
@@ -194,10 +194,10 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
           borderColor: colors.border,
           border: `2px solid ${colors.border}`,
         };
-      case "outline":
+      case 'outline':
         return {
           ...baseStyle,
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
           color: colors.primary,
           borderColor: colors.border,
           border: `2px solid ${colors.border}`,
@@ -207,7 +207,7 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
           ...baseStyle,
           backgroundColor: disabled || loading ? `${colors.primary}80` : colors.primary,
           color: colors.text,
-          border: "none",
+          border: 'none',
         };
     }
   };
@@ -224,19 +224,19 @@ const StartButtonBlock: React.FC<StartButtonBlockProps> = ({
     }
 
     // Web Vitals reporting
-    if (typeof window !== "undefined" && "performance" in window) {
-      window.performance.mark("button-interaction");
+    if (typeof window !== 'undefined' && 'performance' in window) {
+      window.performance.mark('button-interaction');
     }
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
-    if (variant === "primary" && enableHoverEffect && !disabled && !loading && colors.primaryDark) {
+    if (variant === 'primary' && enableHoverEffect && !disabled && !loading && colors.primaryDark) {
       e.currentTarget.style.backgroundColor = colors.primaryDark;
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
-    if (variant === "primary" && enableHoverEffect && !disabled && !loading && colors.primary) {
+    if (variant === 'primary' && enableHoverEffect && !disabled && !loading && colors.primary) {
       e.currentTarget.style.backgroundColor = colors.primary;
     }
   };

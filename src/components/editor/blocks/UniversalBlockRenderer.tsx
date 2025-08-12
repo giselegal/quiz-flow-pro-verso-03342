@@ -1,7 +1,7 @@
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -21,13 +21,13 @@ export interface UniversalBlockRendererProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (!numValue || isNaN(numValue) || numValue === 0) return "";
+  if (!numValue || isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -82,7 +82,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
   // Log para debug das propriedades de container (apenas em desenvolvimento)
   if (
-    process.env.NODE_ENV === "development" &&
+    process.env.NODE_ENV === 'development' &&
     (block.properties?.containerWidth || block.properties?.containerPosition)
   ) {
     console.log(`🎯 Container properties for ${block.id}:`, {
@@ -98,13 +98,13 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     return (
       <div
         className={cn(
-          "p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500",
+          'p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500',
           containerClasses,
           // Margens universais com controles deslizantes
-          getMarginClass(block.properties?.marginTop ?? 0, "top"),
-          getMarginClass(block.properties?.marginBottom ?? 0, "bottom"),
-          getMarginClass(block.properties?.marginLeft ?? 0, "left"),
-          getMarginClass(block.properties?.marginRight ?? 0, "right")
+          getMarginClass(block.properties?.marginTop ?? 0, 'top'),
+          getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
+          getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
+          getMarginClass(block.properties?.marginRight ?? 0, 'right')
         )}
         onClick={onClick}
         style={inlineStyles}
@@ -119,9 +119,9 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     return (
       <div
         className={cn(
-          "block-wrapper transition-all duration-200",
+          'block-wrapper transition-all duration-200',
           containerClasses,
-          isSelected && "ring-2 ring-[#B89B7A] ring-offset-2"
+          isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
         )}
         onClick={onClick}
         style={inlineStyles}
@@ -138,10 +138,10 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     console.error(`Erro ao renderizar bloco ${block.type}:`, error);
 
     return (
-      <div style={{ borderColor: "#B89B7A" }} onClick={onClick}>
+      <div style={{ borderColor: '#B89B7A' }} onClick={onClick}>
         <p>Erro ao renderizar: {block.type}</p>
         <p className="text-xs mt-1">
-          {error instanceof Error ? error.message : "Erro desconhecido"}
+          {error instanceof Error ? error.message : 'Erro desconhecido'}
         </p>
       </div>
     );

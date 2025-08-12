@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step07Template - Componente para Etapa 7 do Quiz
@@ -40,18 +40,18 @@ interface Step07TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step07Template: React.FC<Step07TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 6 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 6 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 6 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 6 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 35,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step07Template: React.FC<Step07TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step07Template: React.FC<Step07TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step07-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step07-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step07Template: React.FC<Step07TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step07Template: React.FC<Step07TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,104 +199,104 @@ export const getStep07Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
-      id: "step07-header",
-      type: "quiz-intro-header",
+      id: 'step07-header',
+      type: 'quiz-intro-header',
       properties: {
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 35,
         progressMax: 100,
         showBackButton: true,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step07-question-title",
-      type: "text-inline",
+      id: 'step07-question-title',
+      type: 'text-inline',
       properties: {
-        content: "QUAL CASACO É SEU FAVORITO?",
-        level: "h2",
-        fontSize: "text-2xl",
-        fontWeight: "font-bold",
-        textAlign: "text-center",
-        color: "#432818",
+        content: 'QUAL CASACO É SEU FAVORITO?',
+        level: 'h2',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 0,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step07-question-counter",
-      type: "text-inline",
+      id: 'step07-question-counter',
+      type: 'text-inline',
       properties: {
-        content: "Questão 6 de 10",
-        fontSize: "text-sm",
-        textAlign: "text-center",
-        color: "#6B7280",
+        content: 'Questão 6 de 10',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#6B7280',
         marginBottom: 24,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step07-jacket-options",
-      type: "options-grid",
+      id: 'step07-jacket-options',
+      type: 'options-grid',
       properties: {
-        questionId: "q6",
+        questionId: 'q6',
         options: [
           {
-            id: "6a",
-            text: "Casaco Clássico",
-            value: "6a",
-            category: "Clássico",
-            styleCategory: "Clássico",
+            id: '6a',
+            text: 'Casaco Clássico',
+            value: '6a',
+            category: 'Clássico',
+            styleCategory: 'Clássico',
             points: 1,
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_CLASSICO_MARROM_z9vhq3.webp",
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_CLASSICO_MARROM_z9vhq3.webp',
             marginTop: 0,
-            spacing: "small",
+            spacing: 'small',
             marginBottom: 0,
           },
           {
-            id: "6b",
-            text: "Casaco Moderno",
-            value: "6b",
-            category: "Contemporâneo",
-            styleCategory: "Contemporâneo",
+            id: '6b',
+            text: 'Casaco Moderno',
+            value: '6b',
+            category: 'Contemporâneo',
+            styleCategory: 'Contemporâneo',
             points: 1,
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_MODERNO_BEGE_xlk4v7.webp",
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_MODERNO_BEGE_xlk4v7.webp',
           },
           {
-            id: "6c",
-            text: "Casaco Elegante",
-            value: "6c",
-            category: "Elegante",
-            styleCategory: "Elegante",
+            id: '6c',
+            text: 'Casaco Elegante',
+            value: '6c',
+            category: 'Elegante',
+            styleCategory: 'Elegante',
             points: 1,
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_ELEGANTE_CARAMELO_j1p8hz.webp",
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_ELEGANTE_CARAMELO_j1p8hz.webp',
           },
           {
-            id: "6d",
-            text: "Casaco Casual",
-            value: "6d",
-            category: "Natural",
-            styleCategory: "Natural",
+            id: '6d',
+            text: 'Casaco Casual',
+            value: '6d',
+            category: 'Natural',
+            styleCategory: 'Natural',
             points: 1,
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_CASUAL_DOURADO_w8qy0x.webp",
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911571/CASACO_CASUAL_DOURADO_w8qy0x.webp',
           },
         ],
         columns: 2,
@@ -304,7 +304,7 @@ export const getStep07Template = () => {
         multipleSelection: false,
         maxSelections: 1,
         minSelections: 1,
-        validationMessage: "Selecione uma opção",
+        validationMessage: 'Selecione uma opção',
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
@@ -318,19 +318,19 @@ export const getStep07Template = () => {
 
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step07-continue-button",
-      type: "button-inline",
+      id: 'step07-continue-button',
+      type: 'button-inline',
       properties: {
-        text: "Continuar",
-        variant: "primary",
-        size: "large",
+        text: 'Continuar',
+        variant: 'primary',
+        size: 'large',
         fullWidth: true,
-        backgroundColor: "#B89B7A",
-        textColor: "#ffffff",
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
         disabled: true,
         requiresValidSelection: true,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },

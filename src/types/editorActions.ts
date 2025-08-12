@@ -1,7 +1,7 @@
-import { EditorBlock, EditableContent, EditorConfig } from "./editor";
+import { EditorBlock, EditableContent, EditorConfig } from './editor';
 
 export interface EditorActions {
-  addBlock: (type: EditorBlock["type"]) => string;
+  addBlock: (type: EditorBlock['type']) => string;
   updateBlock: (id: string, content: Partial<EditableContent>) => void;
   deleteBlock: (id: string) => void;
   reorderBlocks: (startIndex: number, endIndex: number) => void;

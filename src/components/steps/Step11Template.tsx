@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step11Template - Componente para Etapa 11 do Quiz
@@ -40,18 +40,18 @@ interface Step11TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step11Template: React.FC<Step11TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 10 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 10 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 10 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 10 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 55,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step11-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step11-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step11Template: React.FC<Step11TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,20 +199,20 @@ export const getStep11Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: "quiz-header-step11",
-      type: "quiz-header",
+      id: 'quiz-header-step11',
+      type: 'quiz-header',
       properties: {
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 80,
         logoHeight: 80,
         progressValue: 55,
         progressMax: 100,
         showBackButton: true,
         showProgress: true,
-        stepNumber: "11 de 21",
-        spacing: "small",
+        stepNumber: '11 de 21',
+        spacing: 'small',
         marginTop: 0,
         marginBottom: 0,
       },
@@ -220,52 +220,52 @@ export const getStep11Template = () => {
 
     // 🎨 BARRA DECORATIVA
     {
-      id: "decorative-bar-step11",
-      type: "decorative-bar-inline",
+      id: 'decorative-bar-step11',
+      type: 'decorative-bar-inline',
       properties: {
-        width: "100%",
+        width: '100%',
         height: 3,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        color: '#B89B7A',
+        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
         borderRadius: 2,
         marginTop: 0,
         marginBottom: 20,
         showShadow: true,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 📝 PERGUNTA PRINCIPAL
     {
-      id: "question-text-step11",
-      type: "text-inline",
+      id: 'question-text-step11',
+      type: 'text-inline',
       properties: {
-        content: "No ambiente de trabalho, você se veste:",
-        fontSize: "text-2xl",
-        fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
-        textAlign: "text-center",
-        color: "#432818",
+        content: 'No ambiente de trabalho, você se veste:',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        fontFamily: 'Playfair Display, serif',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 24,
-        lineHeight: "1.3",
-        spacing: "small",
+        lineHeight: '1.3',
+        spacing: 'small',
         marginTop: 0,
       },
     },
 
     // 🖼️ IMAGEM DA PERGUNTA
     {
-      id: "question-image-step11",
-      type: "image-display-inline",
+      id: 'question-image-step11',
+      type: 'image-display-inline',
       properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838148/20250509_2147_Trabalho_e_Profissionalismo_simple_compose_01jtvta4gb3qhd4d6v3xr3jvtw_wnpshv.webp",
-        alt: "Imagem da pergunta 11",
+        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838148/20250509_2147_Trabalho_e_Profissionalismo_simple_compose_01jtvta4gb3qhd4d6v3xr3jvtw_wnpshv.webp',
+        alt: 'Imagem da pergunta 11',
         width: 400,
         height: 300,
-        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
-        textAlign: "text-center",
+        className: 'object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md',
+        textAlign: 'text-center',
         marginBottom: 24,
-        spacing: "small",
+        spacing: 'small',
         marginTop: 0,
       },
     },
@@ -273,12 +273,12 @@ export const getStep11Template = () => {
     // 🎯 OPÇÕES DE RESPOSTA
 
     {
-      id: "option-1-step11",
-      type: "quiz-option",
+      id: 'option-1-step11',
+      type: 'quiz-option',
       properties: {
-        optionId: "executiva-formal",
-        label: "Executiva e formal",
-        value: "executiva-formal",
+        optionId: 'executiva-formal',
+        label: 'Executiva e formal',
+        value: 'executiva-formal',
         points: {
           elegante: 3,
           casual: 1,
@@ -287,28 +287,28 @@ export const getStep11Template = () => {
           romantico: 1,
           minimalista: 2,
           boho: 1,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
     {
-      id: "option-2-step11",
-      type: "quiz-option",
+      id: 'option-2-step11',
+      type: 'quiz-option',
       properties: {
-        optionId: "smart-casual",
-        label: "Smart casual - elegante mas descontraída",
-        value: "smart-casual",
+        optionId: 'smart-casual',
+        label: 'Smart casual - elegante mas descontraída',
+        value: 'smart-casual',
         points: {
           elegante: 2,
           casual: 2,
@@ -317,28 +317,28 @@ export const getStep11Template = () => {
           romantico: 2,
           minimalista: 3,
           boho: 1,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
     {
-      id: "option-3-step11",
-      type: "quiz-option",
+      id: 'option-3-step11',
+      type: 'quiz-option',
       properties: {
-        optionId: "feminina-profissional",
-        label: "Feminina e profissional",
-        value: "feminina-profissional",
+        optionId: 'feminina-profissional',
+        label: 'Feminina e profissional',
+        value: 'feminina-profissional',
         points: {
           elegante: 2,
           casual: 1,
@@ -347,28 +347,28 @@ export const getStep11Template = () => {
           romantico: 3,
           minimalista: 2,
           boho: 1,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
     {
-      id: "option-4-step11",
-      type: "quiz-option",
+      id: 'option-4-step11',
+      type: 'quiz-option',
       properties: {
-        optionId: "criativa-autentica",
-        label: "Criativa e autêntica",
-        value: "criativa-autentica",
+        optionId: 'criativa-autentica',
+        label: 'Criativa e autêntica',
+        value: 'criativa-autentica',
         points: {
           elegante: 1,
           casual: 2,
@@ -377,42 +377,42 @@ export const getStep11Template = () => {
           romantico: 1,
           minimalista: 1,
           boho: 3,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
 
     // 🎯 BOTÃO CONTINUAR
     {
-      id: "continue-button-step11",
-      type: "button-inline",
+      id: 'continue-button-step11',
+      type: 'button-inline',
       properties: {
-        text: "Continuar →",
-        variant: "primary",
-        size: "large",
+        text: 'Continuar →',
+        variant: 'primary',
+        size: 'large',
         fullWidth: true,
-        backgroundColor: "#B89B7A",
-        textColor: "#ffffff",
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
         requiresSelection: true,
-        textAlign: "text-center",
-        borderRadius: "rounded-full",
-        padding: "py-3 px-6",
-        fontSize: "text-base",
-        fontWeight: "font-semibold",
+        textAlign: 'text-center',
+        borderRadius: 'rounded-full',
+        padding: 'py-3 px-6',
+        fontSize: 'text-base',
+        fontWeight: 'font-semibold',
         marginTop: 24,
         disabled: true,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },

@@ -1,19 +1,19 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import ColorPicker from "@/components/visual-controls/ColorPicker";
-import { Plus, Trash2 } from "lucide-react";
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import ColorPicker from '@/components/visual-controls/ColorPicker';
+import { Plus, Trash2 } from 'lucide-react';
 
 interface QuestionStepPropertiesProps {
   properties: Record<string, any>;
@@ -28,21 +28,21 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
   onUpdate,
 }) => {
   const {
-    questionTitle = "Pergunta do Quiz",
-    questionDescription = "",
+    questionTitle = 'Pergunta do Quiz',
+    questionDescription = '',
     options = [],
     multiSelect = 3,
     autoAdvance = true,
-    layout = "2col",
+    layout = '2col',
     showImages = true,
     imageSize = { width: 256, height: 256 },
     columns = 2,
-    borderColor = "#E5E7EB",
-    selectedBorderColor = "#B89B7A",
-    hoverColor = "#F3E8D3",
-    validationMessage = "Selecione as opções necessárias para avançar.",
-    buttonText = "Próxima Questão →",
-    buttonDisabledText = "Selecione pelo menos 3 opções",
+    borderColor = '#E5E7EB',
+    selectedBorderColor = '#B89B7A',
+    hoverColor = '#F3E8D3',
+    validationMessage = 'Selecione as opções necessárias para avançar.',
+    buttonText = 'Próxima Questão →',
+    buttonDisabledText = 'Selecione pelo menos 3 opções',
     showProgress = true,
     progressValue = 50,
   } = properties;
@@ -50,23 +50,23 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
   const handleAddOption = () => {
     const newOption = {
       id: `option-${Date.now()}`,
-      text: "Nova opção",
-      imageUrl: "",
-      styleCategory: "Natural",
+      text: 'Nova opção',
+      imageUrl: '',
+      styleCategory: 'Natural',
       points: 1,
     };
-    onUpdate("options", [...options, newOption]);
+    onUpdate('options', [...options, newOption]);
   };
 
   const handleRemoveOption = (index: number) => {
     const updatedOptions = options.filter((_: any, i: number) => i !== index);
-    onUpdate("options", updatedOptions);
+    onUpdate('options', updatedOptions);
   };
 
   const handleUpdateOption = (index: number, field: string, value: any) => {
     const updatedOptions = [...options];
     updatedOptions[index] = { ...updatedOptions[index], [field]: value };
-    onUpdate("options", updatedOptions);
+    onUpdate('options', updatedOptions);
   };
 
   return (
@@ -82,7 +82,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Input
               id="questionTitle"
               value={questionTitle}
-              onChange={e => onUpdate("questionTitle", e.target.value)}
+              onChange={e => onUpdate('questionTitle', e.target.value)}
               placeholder="Digite a pergunta"
             />
           </div>
@@ -92,7 +92,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Input
               id="questionDescription"
               value={questionDescription}
-              onChange={e => onUpdate("questionDescription", e.target.value)}
+              onChange={e => onUpdate('questionDescription', e.target.value)}
               placeholder="Instruções adicionais"
             />
           </div>
@@ -110,7 +110,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <div className="mt-2">
               <Slider
                 value={[multiSelect]}
-                onValueChange={value => onUpdate("multiSelect", value[0])}
+                onValueChange={value => onUpdate('multiSelect', value[0])}
                 max={8}
                 min={1}
                 step={1}
@@ -128,7 +128,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Switch
               id="autoAdvance"
               checked={autoAdvance}
-              onCheckedChange={checked => onUpdate("autoAdvance", checked)}
+              onCheckedChange={checked => onUpdate('autoAdvance', checked)}
             />
             <Label htmlFor="autoAdvance">Avançar Automaticamente</Label>
           </div>
@@ -138,7 +138,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Input
               id="validationMessage"
               value={validationMessage}
-              onChange={e => onUpdate("validationMessage", e.target.value)}
+              onChange={e => onUpdate('validationMessage', e.target.value)}
               placeholder="Mensagem quando não atinge o mínimo"
             />
           </div>
@@ -153,7 +153,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="layout">Tipo de Layout</Label>
-            <Select value={layout} onValueChange={value => onUpdate("layout", value)}>
+            <Select value={layout} onValueChange={value => onUpdate('layout', value)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -170,7 +170,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <div className="mt-2">
               <Slider
                 value={[columns]}
-                onValueChange={value => onUpdate("columns", value[0])}
+                onValueChange={value => onUpdate('columns', value[0])}
                 max={4}
                 min={1}
                 step={1}
@@ -188,7 +188,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Switch
               id="showImages"
               checked={showImages}
-              onCheckedChange={checked => onUpdate("showImages", checked)}
+              onCheckedChange={checked => onUpdate('showImages', checked)}
             />
             <Label htmlFor="showImages">Mostrar Imagens nas Opções</Label>
           </div>
@@ -206,7 +206,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
                     type="number"
                     value={imageSize.width}
                     onChange={e =>
-                      onUpdate("imageSize", { ...imageSize, width: parseInt(e.target.value) })
+                      onUpdate('imageSize', { ...imageSize, width: parseInt(e.target.value) })
                     }
                   />
                 </div>
@@ -219,7 +219,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
                     type="number"
                     value={imageSize.height}
                     onChange={e =>
-                      onUpdate("imageSize", { ...imageSize, height: parseInt(e.target.value) })
+                      onUpdate('imageSize', { ...imageSize, height: parseInt(e.target.value) })
                     }
                   />
                 </div>
@@ -237,20 +237,20 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
         <CardContent className="space-y-4">
           <div>
             <Label>Borda Padrão</Label>
-            <ColorPicker value={borderColor} onChange={color => onUpdate("borderColor", color)} />
+            <ColorPicker value={borderColor} onChange={color => onUpdate('borderColor', color)} />
           </div>
 
           <div>
             <Label>Borda Selecionada</Label>
             <ColorPicker
               value={selectedBorderColor}
-              onChange={color => onUpdate("selectedBorderColor", color)}
+              onChange={color => onUpdate('selectedBorderColor', color)}
             />
           </div>
 
           <div>
             <Label>Cor do Hover</Label>
-            <ColorPicker value={hoverColor} onChange={color => onUpdate("hoverColor", color)} />
+            <ColorPicker value={hoverColor} onChange={color => onUpdate('hoverColor', color)} />
           </div>
         </CardContent>
       </Card>
@@ -266,7 +266,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Input
               id="buttonText"
               value={buttonText}
-              onChange={e => onUpdate("buttonText", e.target.value)}
+              onChange={e => onUpdate('buttonText', e.target.value)}
               placeholder="Texto quando ativo"
             />
           </div>
@@ -276,7 +276,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Input
               id="buttonDisabledText"
               value={buttonDisabledText}
-              onChange={e => onUpdate("buttonDisabledText", e.target.value)}
+              onChange={e => onUpdate('buttonDisabledText', e.target.value)}
               placeholder="Texto quando não atingiu o mínimo"
             />
           </div>
@@ -318,8 +318,8 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
                       </Label>
                       <Input
                         id={`option-text-${index}`}
-                        value={option.text || ""}
-                        onChange={e => handleUpdateOption(index, "text", e.target.value)}
+                        value={option.text || ''}
+                        onChange={e => handleUpdateOption(index, 'text', e.target.value)}
                         placeholder="Texto da opção"
                       />
                     </div>
@@ -331,8 +331,8 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
                         </Label>
                         <Input
                           id={`option-image-${index}`}
-                          value={option.imageUrl || ""}
-                          onChange={e => handleUpdateOption(index, "imageUrl", e.target.value)}
+                          value={option.imageUrl || ''}
+                          onChange={e => handleUpdateOption(index, 'imageUrl', e.target.value)}
                           placeholder="URL da imagem"
                         />
                       </div>
@@ -344,8 +344,8 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
                           Categoria
                         </Label>
                         <Select
-                          value={option.styleCategory || "Natural"}
-                          onValueChange={value => handleUpdateOption(index, "styleCategory", value)}
+                          value={option.styleCategory || 'Natural'}
+                          onValueChange={value => handleUpdateOption(index, 'styleCategory', value)}
                         >
                           <SelectTrigger>
                             <SelectValue />
@@ -374,7 +374,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
                           max="10"
                           value={option.points || 1}
                           onChange={e =>
-                            handleUpdateOption(index, "points", parseInt(e.target.value))
+                            handleUpdateOption(index, 'points', parseInt(e.target.value))
                           }
                         />
                       </div>
@@ -399,7 +399,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
             <Switch
               id="showProgress"
               checked={showProgress}
-              onCheckedChange={checked => onUpdate("showProgress", checked)}
+              onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
             <Label htmlFor="showProgress">Mostrar Barra de Progresso</Label>
           </div>
@@ -410,7 +410,7 @@ export const QuestionStepProperties: React.FC<QuestionStepPropertiesProps> = ({
               <div className="mt-2">
                 <Slider
                   value={[progressValue]}
-                  onValueChange={value => onUpdate("progressValue", value[0])}
+                  onValueChange={value => onUpdate('progressValue', value[0])}
                   max={100}
                   min={0}
                   step={5}

@@ -4,9 +4,9 @@
  * Demonstração real de como o sistema funciona com templates existentes
  */
 
-import { Block } from "@/types/editor";
-import React, { useState } from "react";
-import { useEditorWithJson } from "./useEditorWithJson";
+import { Block } from '@/types/editor';
+import React, { useState } from 'react';
+import { useEditorWithJson } from './useEditorWithJson';
 
 // =============================================
 // 🎯 TESTE REAL COM TEMPLATE STEP-01
@@ -23,19 +23,19 @@ export const JsonIntegrationTest: React.FC = () => {
   };
 
   const testLoadStepTemplate = async () => {
-    addTestResult("🧪 Iniciando teste de carregamento...");
+    addTestResult('🧪 Iniciando teste de carregamento...');
 
     try {
       const success = await jsonFeatures.loadStepTemplate(1);
 
       if (success) {
-        addTestResult("✅ Template da etapa 1 carregado com sucesso!");
+        addTestResult('✅ Template da etapa 1 carregado com sucesso!');
         addTestResult(`📊 Blocos carregados: ${blocks.length}`);
         addTestResult(`📄 Template: ${jsonFeatures.currentTemplate?.name}`);
 
         // Listar tipos dos blocos carregados
         const blockTypes = blocks.map(b => b.type);
-        addTestResult(`🧩 Tipos: ${blockTypes.join(", ")}`);
+        addTestResult(`🧩 Tipos: ${blockTypes.join(', ')}`);
 
         // Verificar se componentes existem no registry
         const { getAvailableComponents } = jsonFeatures;
@@ -44,11 +44,11 @@ export const JsonIntegrationTest: React.FC = () => {
         blockTypes.forEach(type => {
           const exists = availableTypes.includes(type);
           addTestResult(
-            `${exists ? "✅" : "⚠️"} Componente "${type}": ${exists ? "OK" : "NÃO ENCONTRADO"}`
+            `${exists ? '✅' : '⚠️'} Componente "${type}": ${exists ? 'OK' : 'NÃO ENCONTRADO'}`
           );
         });
       } else {
-        addTestResult("❌ Falha ao carregar template");
+        addTestResult('❌ Falha ao carregar template');
       }
     } catch (error) {
       addTestResult(`❌ Erro: ${error}`);
@@ -56,12 +56,12 @@ export const JsonIntegrationTest: React.FC = () => {
   };
 
   const testValidation = () => {
-    addTestResult("🧪 Testando validação...");
+    addTestResult('🧪 Testando validação...');
 
     if (jsonFeatures.currentTemplate) {
       const validation = jsonFeatures.validateCurrentTemplate();
 
-      addTestResult(`✅ Template válido: ${validation.isValid ? "SIM" : "NÃO"}`);
+      addTestResult(`✅ Template válido: ${validation.isValid ? 'SIM' : 'NÃO'}`);
 
       if (validation.errors.length > 0) {
         validation.errors.forEach(error => {
@@ -76,35 +76,35 @@ export const JsonIntegrationTest: React.FC = () => {
       }
 
       if (validation.isValid) {
-        addTestResult("🎉 Validação passou sem problemas!");
+        addTestResult('🎉 Validação passou sem problemas!');
       }
     } else {
-      addTestResult("⚠️ Nenhum template carregado para validar");
+      addTestResult('⚠️ Nenhum template carregado para validar');
     }
   };
 
   const testExport = () => {
-    addTestResult("🧪 Testando export...");
+    addTestResult('🧪 Testando export...');
 
     if (blocks.length === 0) {
-      addTestResult("⚠️ Nenhum bloco para exportar");
+      addTestResult('⚠️ Nenhum bloco para exportar');
       return;
     }
 
     try {
       const template = jsonFeatures.exportCurrentAsTemplate({
-        name: "Template de Teste",
-        description: "Template criado durante teste de integração",
-        category: "custom",
+        name: 'Template de Teste',
+        description: 'Template criado durante teste de integração',
+        category: 'custom',
       });
 
-      addTestResult("✅ Template exportado com sucesso!");
+      addTestResult('✅ Template exportado com sucesso!');
       addTestResult(`📄 Nome: ${template.name}`);
       addTestResult(`🧩 Blocos exportados: ${template.blocks.length}`);
       addTestResult(`📊 Tamanho JSON: ${JSON.stringify(template).length} chars`);
 
       // Log do JSON para debug (primeiros 200 chars)
-      const jsonPreview = JSON.stringify(template, null, 2).slice(0, 200) + "...";
+      const jsonPreview = JSON.stringify(template, null, 2).slice(0, 200) + '...';
       addTestResult(`🔍 Preview JSON: ${jsonPreview}`);
     } catch (error) {
       addTestResult(`❌ Erro no export: ${error}`);
@@ -112,7 +112,7 @@ export const JsonIntegrationTest: React.FC = () => {
   };
 
   const testComponentRegistry = () => {
-    addTestResult("🧪 Testando registry de componentes...");
+    addTestResult('🧪 Testando registry de componentes...');
 
     const components = jsonFeatures.getAvailableComponents();
     addTestResult(`📊 Total de componentes: ${components.length}`);
@@ -143,7 +143,7 @@ export const JsonIntegrationTest: React.FC = () => {
 
   const runAllTests = async () => {
     setTestResults([]);
-    addTestResult("🚀 Iniciando bateria de testes completa...");
+    addTestResult('🚀 Iniciando bateria de testes completa...');
 
     // Teste 1: Registry
     testComponentRegistry();
@@ -159,7 +159,7 @@ export const JsonIntegrationTest: React.FC = () => {
       // Teste 4: Export
       testExport();
 
-      addTestResult("🏁 Todos os testes concluídos!");
+      addTestResult('🏁 Todos os testes concluídos!');
     }, 1000);
   };
 
@@ -167,7 +167,7 @@ export const JsonIntegrationTest: React.FC = () => {
     setBlocks([]);
     setTestResults([]);
     jsonFeatures.clearTemplate();
-    addTestResult("🧹 Limpeza realizada");
+    addTestResult('🧹 Limpeza realizada');
   };
 
   return (
@@ -181,7 +181,7 @@ export const JsonIntegrationTest: React.FC = () => {
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           disabled={jsonFeatures.isLoadingTemplate}
         >
-          {jsonFeatures.isLoadingTemplate ? "⏳ Testando..." : "🚀 Executar Todos os Testes"}
+          {jsonFeatures.isLoadingTemplate ? '⏳ Testando...' : '🚀 Executar Todos os Testes'}
         </button>
 
         <button
@@ -219,16 +219,16 @@ export const JsonIntegrationTest: React.FC = () => {
         <h3 className="font-bold mb-2">📊 Status Atual</h3>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <strong>Template Carregado:</strong> {jsonFeatures.currentTemplate?.name || "Nenhum"}
+            <strong>Template Carregado:</strong> {jsonFeatures.currentTemplate?.name || 'Nenhum'}
           </div>
           <div>
             <strong>Blocos:</strong> {blocks.length}
           </div>
           <div>
-            <strong>Carregando:</strong> {jsonFeatures.isLoadingTemplate ? "⏳ Sim" : "✅ Não"}
+            <strong>Carregando:</strong> {jsonFeatures.isLoadingTemplate ? '⏳ Sim' : '✅ Não'}
           </div>
           <div>
-            <strong>Erro:</strong> {jsonFeatures.templateError || "Nenhum"}
+            <strong>Erro:</strong> {jsonFeatures.templateError || 'Nenhum'}
           </div>
         </div>
 

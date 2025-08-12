@@ -9,7 +9,7 @@ const SecondaryStylesBlockPreview: React.FC<SecondaryStylesBlockPreviewProps> = 
   return (
     <div style={content.style}>
       <h3 className="text-xl font-bold mb-4 text-[#aa6b5d] text-center">
-        {content.title || "Seus Estilos Complementares"}
+        {content.title || 'Seus Estilos Complementares'}
       </h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

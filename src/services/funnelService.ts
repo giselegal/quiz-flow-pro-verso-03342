@@ -15,7 +15,7 @@ interface Funnel {
   description?: string;
 }
 
-interface InsertFunnel extends Omit<Funnel, "id"> {}
+interface InsertFunnel extends Omit<Funnel, 'id'> {}
 
 interface FunnelPage {
   id: string;
@@ -24,7 +24,7 @@ interface FunnelPage {
   path: string;
 }
 
-interface InsertFunnelPage extends Omit<FunnelPage, "id"> {}
+interface InsertFunnelPage extends Omit<FunnelPage, 'id'> {}
 
 interface FunnelVersion {
   id: string;
@@ -32,7 +32,7 @@ interface FunnelVersion {
   version: number;
 }
 
-interface InsertFunnelVersion extends Omit<FunnelVersion, "id"> {}
+interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> {}
 
 export interface FunnelData {
   id: string;
@@ -86,20 +86,20 @@ export interface BlockData {
 }
 
 class FunnelService {
-  private baseUrl = "http://localhost:3001/api";
+  private baseUrl = 'http://localhost:3001/api';
 
   // Funnel operations
-  async createFunnel(data: Omit<InsertFunnel, "userId"> & { userId?: number }): Promise<Funnel> {
+  async createFunnel(data: Omit<InsertFunnel, 'userId'> & { userId?: number }): Promise<Funnel> {
     const response = await fetch(`${this.baseUrl}/funnels`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create funnel");
+      throw new Error('Failed to create funnel');
     }
 
     const result = await response.json();
@@ -110,7 +110,7 @@ class FunnelService {
     const response = await fetch(`${this.baseUrl}/funnels/user/${userId}`);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch funnels");
+      throw new Error('Failed to fetch funnels');
     }
 
     const result = await response.json();
@@ -124,7 +124,7 @@ class FunnelService {
       if (response.status === 404) {
         return null;
       }
-      throw new Error("Failed to fetch funnel");
+      throw new Error('Failed to fetch funnel');
     }
 
     const result = await response.json();
@@ -133,15 +133,15 @@ class FunnelService {
 
   async updateFunnel(id: string, updates: Partial<InsertFunnel>): Promise<Funnel> {
     const response = await fetch(`${this.baseUrl}/funnels/${id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updates),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update funnel");
+      throw new Error('Failed to update funnel');
     }
 
     const result = await response.json();
@@ -150,26 +150,26 @@ class FunnelService {
 
   async deleteFunnel(id: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/funnels/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
 
     if (!response.ok) {
-      throw new Error("Failed to delete funnel");
+      throw new Error('Failed to delete funnel');
     }
   }
 
   // Funnel pages operations
   async createFunnelPage(data: InsertFunnelPage): Promise<FunnelPage> {
     const response = await fetch(`${this.baseUrl}/funnel-pages`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create funnel page");
+      throw new Error('Failed to create funnel page');
     }
 
     const result = await response.json();
@@ -180,7 +180,7 @@ class FunnelService {
     const response = await fetch(`${this.baseUrl}/funnel-pages/funnel/${funnelId}`);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch funnel pages");
+      throw new Error('Failed to fetch funnel pages');
     }
 
     const result = await response.json();
@@ -189,15 +189,15 @@ class FunnelService {
 
   async updateFunnelPage(id: string, updates: Partial<InsertFunnelPage>): Promise<FunnelPage> {
     const response = await fetch(`${this.baseUrl}/funnel-pages/${id}`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updates),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to update funnel page");
+      throw new Error('Failed to update funnel page');
     }
 
     const result = await response.json();
@@ -206,26 +206,26 @@ class FunnelService {
 
   async deleteFunnelPage(id: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/funnel-pages/${id}`, {
-      method: "DELETE",
+      method: 'DELETE',
     });
 
     if (!response.ok) {
-      throw new Error("Failed to delete funnel page");
+      throw new Error('Failed to delete funnel page');
     }
   }
 
   // Funnel versions operations
   async createFunnelVersion(data: InsertFunnelVersion): Promise<FunnelVersion> {
     const response = await fetch(`${this.baseUrl}/funnel-versions`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create funnel version");
+      throw new Error('Failed to create funnel version');
     }
 
     const result = await response.json();
@@ -236,7 +236,7 @@ class FunnelService {
     const response = await fetch(`${this.baseUrl}/funnel-versions/funnel/${funnelId}`);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch funnel versions");
+      throw new Error('Failed to fetch funnel versions');
     }
 
     const result = await response.json();
@@ -249,27 +249,27 @@ class FunnelService {
   async savePageConfig(pageId: string, config: any): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/page-configs/${pageId}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(config),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save page config");
+        throw new Error('Failed to save page config');
       }
 
       return true;
     } catch (error) {
-      console.error("Error saving page config:", error);
+      console.error('Error saving page config:', error);
 
       // Fallback para localStorage
       try {
         localStorage.setItem(`page-config-${pageId}`, JSON.stringify(config));
         return true;
       } catch (localError) {
-        console.error("Failed to save to localStorage:", localError);
+        console.error('Failed to save to localStorage:', localError);
         return false;
       }
     }
@@ -288,20 +288,20 @@ class FunnelService {
           const localConfig = localStorage.getItem(`page-config-${pageId}`);
           return localConfig ? JSON.parse(localConfig) : null;
         }
-        throw new Error("Failed to fetch page config");
+        throw new Error('Failed to fetch page config');
       }
 
       const result = await response.json();
       return result.data;
     } catch (error) {
-      console.error("Error fetching page config:", error);
+      console.error('Error fetching page config:', error);
 
       // Fallback para localStorage
       try {
         const localConfig = localStorage.getItem(`page-config-${pageId}`);
         return localConfig ? JSON.parse(localConfig) : null;
       } catch (localError) {
-        console.error("Failed to read from localStorage:", localError);
+        console.error('Failed to read from localStorage:', localError);
         return null;
       }
     }
@@ -315,19 +315,19 @@ class FunnelService {
       const syncPromises = funnelData.pages.map(async page => {
         const pageConfig = {
           pageId: page.id,
-          pageName: page.name || page.title || "Página sem nome",
+          pageName: page.name || page.title || 'Página sem nome',
           blocks: page.blocks || [],
           styles: {
-            backgroundColor: page.settings?.backgroundColor || "#ffffff",
-            textColor: page.settings?.textColor || "#000000",
-            fontFamily: page.settings?.fontFamily || "Arial, sans-serif",
-            customCSS: page.settings?.customCSS || "",
+            backgroundColor: page.settings?.backgroundColor || '#ffffff',
+            textColor: page.settings?.textColor || '#000000',
+            fontFamily: page.settings?.fontFamily || 'Arial, sans-serif',
+            customCSS: page.settings?.customCSS || '',
           },
           metadata: {
-            title: page.title || "",
-            description: page.metadata?.description || "",
+            title: page.title || '',
+            description: page.metadata?.description || '',
             keywords: page.metadata?.keywords || [],
-            ogImage: page.metadata?.ogImage || "",
+            ogImage: page.metadata?.ogImage || '',
           },
           settings: page.settings || {},
           lastModified: new Date().toISOString(),
@@ -340,7 +340,7 @@ class FunnelService {
       const results = await Promise.all(syncPromises);
       return results.every(result => result === true);
     } catch (error) {
-      console.error("Error syncing funnel to page configs:", error);
+      console.error('Error syncing funnel to page configs:', error);
       return false;
     }
   }
@@ -353,10 +353,10 @@ class FunnelService {
       // Encontrar páginas de quiz (etapas 1-19)
       const quizPages = funnelData.pages.filter(
         page =>
-          page.type === "question" ||
-          page.type === "intro" ||
-          page.type === "main-transition" ||
-          page.type === "strategic"
+          page.type === 'question' ||
+          page.type === 'intro' ||
+          page.type === 'main-transition' ||
+          page.type === 'strategic'
       );
 
       const syncPromises = quizPages.map(async page => {
@@ -372,15 +372,15 @@ class FunnelService {
             editable: true,
           })),
           styles: {
-            backgroundColor: page.settings?.backgroundColor || "#FFFBF7",
-            textColor: page.settings?.textColor || "#432818",
-            fontFamily: page.settings?.fontFamily || "Inter, sans-serif",
-            customCSS: page.settings?.customCSS || "",
+            backgroundColor: page.settings?.backgroundColor || '#FFFBF7',
+            textColor: page.settings?.textColor || '#432818',
+            fontFamily: page.settings?.fontFamily || 'Inter, sans-serif',
+            customCSS: page.settings?.customCSS || '',
           },
           metadata: {
-            title: page.title || "",
+            title: page.title || '',
             description: `Etapa ${page.order || 1} do quiz`,
-            type: "quiz-step",
+            type: 'quiz-step',
             stepNumber: page.order || 1,
             totalSteps: quizPages.length,
           },
@@ -400,7 +400,7 @@ class FunnelService {
       const results = await Promise.all(syncPromises);
       return results.every(result => result === true);
     } catch (error) {
-      console.error("Error syncing quiz blocks:", error);
+      console.error('Error syncing quiz blocks:', error);
       return false;
     }
   }
@@ -410,17 +410,17 @@ class FunnelService {
    */
   private mapBlockTypeToComponent(blockType: string): string {
     const mapping: Record<string, string> = {
-      "question-multiple": "QuizQuestionBlock",
-      "question-strategic": "QuizQuestionBlock",
-      "progress-indicator": "QuizProgressBlock",
-      navigation: "QuizNavigationBlock",
-      "main-transition": "QuizTransitionBlock",
-      "final-transition": "QuizTransitionBlock",
-      "loading-animation": "QuizTransitionBlock",
-      header: "HeaderBlock",
-      text: "TextBlock",
-      image: "ImageBlock",
-      button: "ButtonBlock",
+      'question-multiple': 'QuizQuestionBlock',
+      'question-strategic': 'QuizQuestionBlock',
+      'progress-indicator': 'QuizProgressBlock',
+      navigation: 'QuizNavigationBlock',
+      'main-transition': 'QuizTransitionBlock',
+      'final-transition': 'QuizTransitionBlock',
+      'loading-animation': 'QuizTransitionBlock',
+      header: 'HeaderBlock',
+      text: 'TextBlock',
+      image: 'ImageBlock',
+      button: 'ButtonBlock',
     };
 
     return mapping[blockType] || blockType;
@@ -439,11 +439,11 @@ class FunnelService {
 
     // Props específicas por tipo de bloco
     switch (block.type) {
-      case "question-multiple":
-      case "question-strategic":
+      case 'question-multiple':
+      case 'question-strategic':
         return {
           ...baseProps,
-          question: block.settings?.question || "Pergunta não definida",
+          question: block.settings?.question || 'Pergunta não definida',
           options: block.settings?.options || [],
           multipleSelection: block.settings?.multipleSelection || false,
           maxSelections: block.settings?.maxSelections || 1,
@@ -451,24 +451,24 @@ class FunnelService {
           showImages: block.settings?.showImages !== false,
         };
 
-      case "progress-indicator":
+      case 'progress-indicator':
         return {
           ...baseProps,
           currentQuestion: block.settings?.currentQuestion || 1,
           totalQuestions: block.settings?.totalQuestions || 10,
           showPercentage: block.settings?.showPercentage !== false,
           showNumbers: block.settings?.showNumbers !== false,
-          progressBarStyle: block.settings?.progressBarStyle || "linear",
+          progressBarStyle: block.settings?.progressBarStyle || 'linear',
         };
 
-      case "main-transition":
-      case "final-transition":
+      case 'main-transition':
+      case 'final-transition':
         return {
           ...baseProps,
-          title: block.settings?.title || "Transição",
-          message: block.settings?.message || "Processando...",
+          title: block.settings?.title || 'Transição',
+          message: block.settings?.message || 'Processando...',
           showAnimation: block.settings?.showAnimation !== false,
-          animationType: block.settings?.animationType || "celebration",
+          animationType: block.settings?.animationType || 'celebration',
           autoAdvance: block.settings?.autoAdvance || false,
         };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -6,13 +6,13 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "@/components/ui/use-toast";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { toast } from '@/components/ui/use-toast';
 
 interface GoogleAnalyticsCardProps {
   initialId?: string;
@@ -20,7 +20,7 @@ interface GoogleAnalyticsCardProps {
 }
 
 export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
-  initialId = "",
+  initialId = '',
   initialEnabled = false,
 }) => {
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState(initialId);
@@ -28,27 +28,27 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
 
   const handleSaveGoogleAnalytics = () => {
     try {
-      localStorage.setItem("ga_id", googleAnalyticsId);
-      localStorage.setItem("ga_enabled", String(googleAnalyticsEnabled));
+      localStorage.setItem('ga_id', googleAnalyticsId);
+      localStorage.setItem('ga_enabled', String(googleAnalyticsEnabled));
       toast({
-        title: "Google Analytics settings saved",
-        description: "Your Google Analytics integration settings have been updated.",
+        title: 'Google Analytics settings saved',
+        description: 'Your Google Analytics integration settings have been updated.',
       });
     } catch (error) {
       toast({
-        title: "Error saving settings",
-        description: "There was an error saving your settings. Please try again.",
-        variant: "destructive",
+        title: 'Error saving settings',
+        description: 'There was an error saving your settings. Please try again.',
+        variant: 'destructive',
       });
     }
   };
 
   const handleTestConnection = () => {
     toast({
-      title: "Testing Google Analytics connection",
-      description: "Connection test initiated. Please check the console for results.",
+      title: 'Testing Google Analytics connection',
+      description: 'Connection test initiated. Please check the console for results.',
     });
-    console.log("Testing connection to Google Analytics...");
+    console.log('Testing connection to Google Analytics...');
   };
 
   return (
@@ -61,8 +61,8 @@ export const GoogleAnalyticsCard: React.FC<GoogleAnalyticsCardProps> = ({
               Connect your Google Analytics account to track user behavior
             </CardDescription>
           </div>
-          <Badge variant={googleAnalyticsEnabled ? "default" : "outline"}>
-            {googleAnalyticsEnabled ? "Active" : "Inactive"}
+          <Badge variant={googleAnalyticsEnabled ? 'default' : 'outline'}>
+            {googleAnalyticsEnabled ? 'Active' : 'Inactive'}
           </Badge>
         </div>
       </CardHeader>

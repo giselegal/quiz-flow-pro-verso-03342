@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 export const InteractiveDemo: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -11,7 +11,7 @@ export const InteractiveDemo: React.FC = () => {
     );
   };
 
-  const items = ["Item 1", "Item 2", "Item 3", "Item 4"];
+  const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
 
   return (
     <Card className="p-6">
@@ -21,7 +21,7 @@ export const InteractiveDemo: React.FC = () => {
         {items.map(item => (
           <Button
             key={item}
-            variant={selectedItems.includes(item) ? "default" : "outline"}
+            variant={selectedItems.includes(item) ? 'default' : 'outline'}
             onClick={() => handleItemToggle(item)}
             className="w-full justify-start"
           >
@@ -30,9 +30,9 @@ export const InteractiveDemo: React.FC = () => {
         ))}
       </div>
 
-      <div style={{ backgroundColor: "#FAF9F7" }}>
-        <p style={{ color: "#6B4F43" }}>
-          Itens selecionados: {selectedItems.length > 0 ? selectedItems.join(", ") : "Nenhum"}
+      <div style={{ backgroundColor: '#FAF9F7' }}>
+        <p style={{ color: '#6B4F43' }}>
+          Itens selecionados: {selectedItems.length > 0 ? selectedItems.join(', ') : 'Nenhum'}
         </p>
       </div>
     </Card>

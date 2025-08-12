@@ -1,6 +1,6 @@
-import { Card } from "@/components/ui/card";
-import { QuoteIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { Card } from '@/components/ui/card';
+import { QuoteIcon } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface TestimonialItem {
   name: string;
@@ -15,19 +15,19 @@ interface TestimonialsProps {
 const Testimonials: React.FC<TestimonialsProps> = ({
   items = [
     {
-      name: "Mariangela",
-      role: "Engenheira",
-      text: "Antes, a roupa me vestia. Hoje, eu me visto com intenção. Essa jornada me reconectou com a mulher que sempre fui.",
+      name: 'Mariangela',
+      role: 'Engenheira',
+      text: 'Antes, a roupa me vestia. Hoje, eu me visto com intenção. Essa jornada me reconectou com a mulher que sempre fui.',
     },
     {
-      name: "Patrícia Paranhos",
-      role: "Advogada",
-      text: "Aprendi a reconhecer meu valor e refletir isso na forma como me apresento. As pessoas começaram a me enxergar diferente — porque eu estava diferente.",
+      name: 'Patrícia Paranhos',
+      role: 'Advogada',
+      text: 'Aprendi a reconhecer meu valor e refletir isso na forma como me apresento. As pessoas começaram a me enxergar diferente — porque eu estava diferente.',
     },
     {
-      name: "Sônia Spier",
-      role: "Terapeuta",
-      text: "Com a Gisele, entendi o poder da linguagem visual. Hoje eu escolho minhas roupas com consciência, propósito e leveza.",
+      name: 'Sônia Spier',
+      role: 'Terapeuta',
+      text: 'Com a Gisele, entendi o poder da linguagem visual. Hoje eu escolho minhas roupas com consciência, propósito e leveza.',
     },
   ],
 }) => {
@@ -48,7 +48,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
       opacity: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 100,
         damping: 12,
       },
@@ -73,7 +73,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
         <motion.div
           className="h-0.5 w-32 mx-auto bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]"
           initial={{ width: 0 }}
-          whileInView={{ width: "8rem" }}
+          whileInView={{ width: '8rem' }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay: 0.3 }}
         />
@@ -84,7 +84,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true, margin: '-50px' }}
       >
         {items.map((item, index) => (
           <motion.div

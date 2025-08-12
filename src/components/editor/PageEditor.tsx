@@ -1,10 +1,10 @@
-import { DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { EditorBlock } from "@/types/editor";
-import { EditorToolbar } from "./toolbar/EditorToolbar";
-import { EditorContent } from "./content/EditorContent";
-import { useEditorHistory } from "@/hooks/editor/useEditorHistory";
-import { useEditorActions } from "@/hooks/editor/useEditorActions";
+import { DragEndEvent } from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
+import { EditorBlock } from '@/types/editor';
+import { EditorToolbar } from './toolbar/EditorToolbar';
+import { EditorContent } from './content/EditorContent';
+import { useEditorHistory } from '@/hooks/editor/useEditorHistory';
+import { useEditorActions } from '@/hooks/editor/useEditorActions';
 
 interface PageEditorProps {
   blocks: EditorBlock[];

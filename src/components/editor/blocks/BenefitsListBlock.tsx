@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Check } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { Check } from 'lucide-react';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface BenefitItem {
   text: string;
@@ -21,11 +21,11 @@ interface BenefitsListBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -69,13 +69,13 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Benefícios",
+    title = 'Benefícios',
     benefits = [],
     showIcons = true,
-    layout = "list",
+    layout = 'list',
   } = block.properties || {};
 
   return (
@@ -84,8 +84,8 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-gray-300 hover:border-gray-400"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-gray-300 hover:border-gray-400'
         }
         ${className}
       `}
@@ -93,9 +93,9 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
       data-block-id={block.id}
       data-block-type={block.type}
     >
-      <h3 style={{ color: "#432818" }}>{title}</h3>
+      <h3 style={{ color: '#432818' }}>{title}</h3>
 
-      <div className={`space-y-3 ${layout === "grid" ? "grid grid-cols-2 gap-4" : ""}`}>
+      <div className={`space-y-3 ${layout === 'grid' ? 'grid grid-cols-2 gap-4' : ''}`}>
         {benefits.map((benefit: BenefitItem, index: number) => (
           <div key={index} className="flex items-start gap-3">
             {showIcons && (
@@ -103,7 +103,7 @@ const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
                 <Check className="w-3 h-3 text-white" />
               </div>
             )}
-            <span style={{ color: "#6B4F43" }}>{benefit.text}</span>
+            <span style={{ color: '#6B4F43' }}>{benefit.text}</span>
           </div>
         ))}
       </div>

@@ -2,13 +2,13 @@ interface QuizTransitionBlockProps {
   properties: {
     message?: string;
     showDivider?: boolean;
-    variant?: "success" | "transition" | "info";
+    variant?: 'success' | 'transition' | 'info';
     buttonText?: string;
     showButton?: boolean;
   };
   config?: {
-    fromSection?: "clothing" | "personality" | "strategic";
-    toSection?: "clothing" | "personality" | "strategic" | "results";
+    fromSection?: 'clothing' | 'personality' | 'strategic';
+    toSection?: 'clothing' | 'personality' | 'strategic' | 'results';
   };
 }
 
@@ -17,35 +17,35 @@ interface QuizTransitionBlockProps {
  * Usado entre seções de perguntas ou antes dos resultados
  */
 const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({ properties }) => {
-  const message = properties.message || "Ótimo! Vamos para a próxima etapa.";
+  const message = properties.message || 'Ótimo! Vamos para a próxima etapa.';
   const showDivider = properties.showDivider ?? true;
-  const variant = properties.variant || "transition";
-  const buttonText = properties.buttonText || "Continuar";
+  const variant = properties.variant || 'transition';
+  const buttonText = properties.buttonText || 'Continuar';
   const showButton = properties.showButton ?? false;
 
   const handleContinue = () => {
-    console.log("Transição: Continuar para próxima seção");
+    console.log('Transição: Continuar para próxima seção');
   };
 
   // Cores por variante
   const variantStyles = {
     success: {
-      bg: "bg-green-50",
-      border: "border-green-200",
-      text: "text-green-800",
-      button: "bg-green-600 hover:bg-green-700",
+      bg: 'bg-green-50',
+      border: 'border-green-200',
+      text: 'text-green-800',
+      button: 'bg-green-600 hover:bg-green-700',
     },
     transition: {
-      bg: "bg-[#F3E8E6]",
-      border: "border-[#B89B7A]/30",
-      text: "text-[#432818]",
-      button: "bg-[#B89B7A] hover:bg-[#a0845c]",
+      bg: 'bg-[#F3E8E6]',
+      border: 'border-[#B89B7A]/30',
+      text: 'text-[#432818]',
+      button: 'bg-[#B89B7A] hover:bg-[#a0845c]',
     },
     info: {
-      bg: "bg-blue-50",
-      border: "border-blue-200",
-      text: "text-blue-800",
-      button: "bg-blue-600 hover:bg-blue-700",
+      bg: 'bg-blue-50',
+      border: 'border-blue-200',
+      text: 'text-blue-800',
+      button: 'bg-blue-600 hover:bg-blue-700',
     },
   };
 

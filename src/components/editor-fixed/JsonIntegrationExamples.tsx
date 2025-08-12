@@ -5,10 +5,10 @@
  * SEM QUEBRAR NADA que já existe.
  */
 
-import { Block } from "@/types/editor";
-import React, { useState } from "react";
-import { JsonTemplate } from "./JsonTemplateEngine";
-import { useEditorWithJson } from "./useEditorWithJson";
+import { Block } from '@/types/editor';
+import React, { useState } from 'react';
+import { JsonTemplate } from './JsonTemplateEngine';
+import { useEditorWithJson } from './useEditorWithJson';
 
 // =============================================
 // 1️⃣ EXEMPLO: Hook no Editor Existente
@@ -24,20 +24,20 @@ const EditorWithJsonIntegration: React.FC = () => {
     const success = await jsonFeatures.loadStepTemplate(stepNumber);
     if (success) {
       console.log(`✅ Etapa ${stepNumber} carregada com sucesso!`);
-      console.log("📊 Template atual:", jsonFeatures.currentTemplate?.name);
-      console.log("🧩 Blocos carregados:", blocks.length);
+      console.log('📊 Template atual:', jsonFeatures.currentTemplate?.name);
+      console.log('🧩 Blocos carregados:', blocks.length);
     }
   };
 
   const handleExportCurrent = () => {
     const template = jsonFeatures.exportCurrentAsTemplate({
-      name: "Meu Template Personalizado",
-      description: "Template criado no editor",
-      category: "custom",
+      name: 'Meu Template Personalizado',
+      description: 'Template criado no editor',
+      category: 'custom',
     });
 
     jsonFeatures.saveTemplateToFile(template);
-    console.log("💾 Template exportado!");
+    console.log('💾 Template exportado!');
   };
 
   return (
@@ -121,11 +121,11 @@ const SimpleJsonIntegration: React.FC<SimpleJsonIntegrationProps> = ({
   return (
     <div className="simple-integration">
       <button onClick={() => loadStepTemplate(1)} disabled={isLoadingTemplate}>
-        {isLoadingTemplate ? "⏳ Carregando..." : "🚀 Adicionar Introdução"}
+        {isLoadingTemplate ? '⏳ Carregando...' : '🚀 Adicionar Introdução'}
       </button>
 
       <button onClick={() => loadStepTemplate(2)} disabled={isLoadingTemplate}>
-        {isLoadingTemplate ? "⏳ Carregando..." : "❓ Adicionar Pergunta"}
+        {isLoadingTemplate ? '⏳ Carregando...' : '❓ Adicionar Pergunta'}
       </button>
     </div>
   );
@@ -140,7 +140,7 @@ const JsonTemplatePreview: React.FC = () => {
   const { loadCustomTemplate } = useEditorWithJson();
 
   const previewTemplate = async (stepNumber: number) => {
-    const stepId = stepNumber.toString().padStart(2, "0");
+    const stepId = stepNumber.toString().padStart(2, '0');
     const ok = await loadCustomTemplate(`/templates/step-${stepId}-template.json`);
 
     if (ok) {
@@ -148,8 +148,8 @@ const JsonTemplatePreview: React.FC = () => {
       setSelectedTemplate({
         id: `step-${stepId}`,
         name: `Etapa ${stepNumber}`,
-        description: "Template carregado",
-        category: "step",
+        description: 'Template carregado',
+        category: 'step',
         blocks: [],
       } as any);
     }
@@ -184,8 +184,8 @@ const JsonTemplatePreview: React.FC = () => {
             <ul>
               {selectedTemplate.blocks.map(block => (
                 <li key={block.id}>
-                  <code>{block.type}</code> -{" "}
-                  {block.properties.title || block.properties.text || "Sem título"}
+                  <code>{block.type}</code> -{' '}
+                  {block.properties.title || block.properties.text || 'Sem título'}
                 </li>
               ))}
             </ul>
@@ -224,7 +224,7 @@ const JsonDebugPanel: React.FC<{ blocks: Block[] }> = ({ blocks }) => {
 
       <div className="debug-section">
         <h4>✅ Validação</h4>
-        <p>Válido: {debugInfo.validation.isValid ? "✅" : "❌"}</p>
+        <p>Válido: {debugInfo.validation.isValid ? '✅' : '❌'}</p>
         {debugInfo.validation.errors.length > 0 && (
           <div className="errors">
             <strong>Erros:</strong>
@@ -253,9 +253,9 @@ const JsonDebugPanel: React.FC<{ blocks: Block[] }> = ({ blocks }) => {
           onClick={() => {
             const template = exportCurrentAsTemplate({
               name: `Debug Template ${new Date().toISOString()}`,
-              category: "custom",
+              category: 'custom',
             });
-            console.log("🔍 Template JSON:", JSON.stringify(template, null, 2));
+            console.log('🔍 Template JSON:', JSON.stringify(template, null, 2));
           }}
           disabled={blocks.length === 0}
         >
@@ -290,17 +290,17 @@ export const useStepByStepBuilder = () => {
     return false;
   };
 
-  const insertStepAt = async (stepNumber: number, position: "append" | "merge" = "append") => {
+  const insertStepAt = async (stepNumber: number, position: 'append' | 'merge' = 'append') => {
     if (stepNumber < 1 || stepNumber > 21) return false;
 
-    const stepId = stepNumber.toString().padStart(2, "0");
+    const stepId = stepNumber.toString().padStart(2, '0');
     const template = await fetch(`/templates/step-${stepId}-template.json`)
       .then(res => res.json())
       .catch(() => null);
 
     if (!template) return false;
 
-    if (position === "merge") {
+    if (position === 'merge') {
       mergeTemplateWithExisting(template, allBlocks);
     } else {
       await loadStepTemplate(stepNumber);

@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { InlineEditableText } from "./InlineEditableText";
-import { SlidersHorizontal } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import { InlineEditableText } from './InlineEditableText';
+import { SlidersHorizontal } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,13 +54,13 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
     value = 75,
-    label = "Nível de Progresso",
-    color = "#3b82f6",
-    backgroundColor = "#e0e7ff",
+    label = 'Nível de Progresso',
+    color = '#3b82f6',
+    backgroundColor = '#e0e7ff',
   } = block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -70,14 +70,14 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
   };
 
   const displayValue = value ?? 75;
-  const displayColor = color || "#3b82f6";
-  const displayBgColor = backgroundColor || "#e0e7ff";
+  const displayColor = color || '#3b82f6';
+  const displayBgColor = backgroundColor || '#e0e7ff';
 
   return (
     <div
       className={`
         py-6 text-center space-y-4 cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -91,18 +91,18 @@ const ChartLevelBlock: React.FC<BlockComponentProps> = ({
         }}
       >
         <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">
-          <span style={{ color: "#432818" }}>{displayValue}%</span>
+          <span style={{ color: '#432818' }}>{displayValue}%</span>
         </div>
       </div>
       <p className="text-lg text-[#432818]">
         <InlineEditableText
           value={label}
-          onChange={(value: string) => handlePropertyChange("label", value)}
+          onChange={(value: string) => handlePropertyChange('label', value)}
           className="inline-block"
           placeholder="Rótulo do nível"
         />
       </p>
-      <div style={{ color: "#8B7355" }}>Progresso: {displayValue}%</div>
+      <div style={{ color: '#8B7355' }}>Progresso: {displayValue}%</div>
     </div>
   );
 };

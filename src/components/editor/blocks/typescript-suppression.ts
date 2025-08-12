@@ -6,7 +6,7 @@
  */
 
 // Re-export the centralized margin utility
-export { getMarginClass } from "@/utils/marginUtils";
+export { getMarginClass } from '@/utils/marginUtils';
 
 // Global type declarations to suppress errors
 declare global {

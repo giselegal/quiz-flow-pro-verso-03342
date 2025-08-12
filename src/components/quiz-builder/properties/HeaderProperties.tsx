@@ -1,6 +1,6 @@
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { QuizComponentData } from '@/types/quizBuilder';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 interface HeaderPropertiesProps {
   component: QuizComponentData;
@@ -23,8 +23,8 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({ component, o
         <Label htmlFor="title">Título</Label>
         <Input
           id="title"
-          value={data.title || ""}
-          onChange={e => handleUpdate("title", e.target.value)}
+          value={data.title || ''}
+          onChange={e => handleUpdate('title', e.target.value)}
           placeholder="Digite o título"
         />
       </div>
@@ -33,8 +33,8 @@ export const HeaderProperties: React.FC<HeaderPropertiesProps> = ({ component, o
         <Label htmlFor="subtitle">Subtítulo</Label>
         <Input
           id="subtitle"
-          value={data.subtitle || ""}
-          onChange={e => handleUpdate("subtitle", e.target.value)}
+          value={data.subtitle || ''}
+          onChange={e => handleUpdate('subtitle', e.target.value)}
           placeholder="Digite o subtítulo"
         />
       </div>

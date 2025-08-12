@@ -1,4 +1,5 @@
-import { OfferHeader, OfferHeroSection, OfferPageJson } from "@/components/editor-fixed";
+import React from 'react';
+import { OfferHeader, OfferHeroSection, OfferPageJson } from '@/components/editor-fixed';
 
 /**
  * 🎯 EXEMPLO: Página de Oferta da Etapa 21
@@ -43,8 +44,8 @@ export const OfferPageManualExample: React.FC = () => {
         ctaIcon="ArrowRight"
         ctaUrl="https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
         trustElements={[
-          { icon: "Lock", text: "100% Seguro" },
-          { icon: "Shield", text: "7 Dias Garantia" },
+          { icon: 'Lock', text: '100% Seguro' },
+          { icon: 'Shield', text: '7 Dias Garantia' },
         ]}
       />
 
@@ -57,12 +58,12 @@ export const OfferPageManualExample: React.FC = () => {
 export const OfferPageCustomExample: React.FC = () => {
   const [customBlocks] = React.useState([
     {
-      id: "custom-hero",
-      type: "offer-hero-section",
+      id: 'custom-hero',
+      type: 'offer-hero-section',
       properties: {
-        badgeText: "Oferta Personalizada",
-        title: "Sua Transformação",
-        titleHighlight: "Começa Aqui",
+        badgeText: 'Oferta Personalizada',
+        title: 'Sua Transformação',
+        titleHighlight: 'Começa Aqui',
         // ... outras propriedades
       },
     },

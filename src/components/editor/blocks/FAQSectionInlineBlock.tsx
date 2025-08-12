@@ -4,8 +4,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import type { BlockComponentProps } from "../../../types/blocks";
+} from '@/components/ui/accordion';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface FAQItem {
   question: string;
@@ -14,11 +14,11 @@ interface FAQItem {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -62,38 +62,38 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }
 
-  const { title = "Perguntas Frequentes", faqItems = [] } = block.properties || {};
+  const { title = 'Perguntas Frequentes', faqItems = [] } = block.properties || {};
 
   const handleAddItem = () => {
     const newItem: FAQItem = {
-      question: "Nova pergunta",
-      answer: "Nova resposta",
+      question: 'Nova pergunta',
+      answer: 'Nova resposta',
     };
     const updatedItems = [...faqItems, newItem];
-    onPropertyChange?.("faqItems", updatedItems);
+    onPropertyChange?.('faqItems', updatedItems);
   };
 
   const handleUpdateItem = (index: number, field: keyof FAQItem, value: string) => {
     const updatedItems = faqItems.map((item: FAQItem, i: number) =>
       i === index ? { ...item, [field]: value } : item
     );
-    onPropertyChange?.("faqItems", updatedItems);
+    onPropertyChange?.('faqItems', updatedItems);
   };
 
   const handleRemoveItem = (index: number) => {
     const updatedItems = faqItems.filter((_: FAQItem, i: number) => i !== index);
-    onPropertyChange?.("faqItems", updatedItems);
+    onPropertyChange?.('faqItems', updatedItems);
   };
 
   return (
@@ -102,8 +102,8 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
         p-6 rounded-lg cursor-pointer transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10"
-            : "border-2 border-dashed border-gray-300 hover:border-gray-400"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10'
+            : 'border-2 border-dashed border-gray-300 hover:border-gray-400'
         }
         ${className}
       `}
@@ -111,7 +111,7 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <h3 style={{ color: "#432818" }}>{title}</h3>
+      <h3 style={{ color: '#432818' }}>{title}</h3>
 
       {faqItems.length > 0 ? (
         <Accordion type="single" collapsible className="w-full">
@@ -123,7 +123,7 @@ const FAQSectionInlineBlock: React.FC<BlockComponentProps> = ({
           ))}
         </Accordion>
       ) : (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <p>Nenhuma pergunta adicionada ainda</p>
           <p className="text-sm">Configure as perguntas nas propriedades do bloco</p>
         </div>

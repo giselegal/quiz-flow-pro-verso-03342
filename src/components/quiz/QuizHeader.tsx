@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { Progress } from "../ui/progress";
-import { AnimatedWrapper } from "../ui/animated-wrapper";
-import caktoquizQuestions from "@/data/caktoquizQuestions";
+import { Progress } from '../ui/progress';
+import { AnimatedWrapper } from '../ui/animated-wrapper';
+import caktoquizQuestions from '@/data/caktoquizQuestions';
 
 interface QuizHeaderProps {
   userName: string | null;

@@ -1,6 +1,6 @@
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { cn } from "@/lib/utils";
-import { ScrollSyncProvider } from "@/context/ScrollSyncContext";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { cn } from '@/lib/utils';
+import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
 
 interface FourColumnLayoutProps {
   stagesPanel: React.ReactNode;
@@ -19,7 +19,7 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
 }) => {
   return (
     <ScrollSyncProvider>
-      <div className={cn("h-full w-full bg-background", className)}>
+      <div className={cn('h-full w-full bg-background', className)}>
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {/* Coluna 1: Etapas do Funil */}
           <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[200px]">

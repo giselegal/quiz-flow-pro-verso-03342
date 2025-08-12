@@ -1,6 +1,6 @@
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
 export const AnalyticsLoadingState: React.FC = () => {
   return (

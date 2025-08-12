@@ -1,5 +1,5 @@
-import { useAuth } from "@/context/AuthContext";
-import { QuizResult as QuizResultType } from "@/hooks/useQuizResults";
+import { useAuth } from '@/context/AuthContext';
+import { QuizResult as QuizResultType } from '@/hooks/useQuizResults';
 
 interface QuizResultProps {
   result: QuizResultType;
@@ -17,7 +17,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
   const { user } = useAuth();
 
   // Safely get userName from user object
-  const userName = user?.name || user?.email || "Usuário";
+  const userName = user?.name || user?.email || 'Usuário';
 
   return (
     <div className="quiz-result p-6 bg-white rounded-lg shadow-md">
@@ -25,10 +25,10 @@ const QuizResult: React.FC<QuizResultProps> = ({
 
       {result ? (
         <div className="space-y-4">
-          <div style={{ color: "#6B4F43" }}>Seu resultado: {result.title}</div>
+          <div style={{ color: '#6B4F43' }}>Seu resultado: {result.title}</div>
 
           {showExplanation && result.description && (
-            <div style={{ color: "#6B4F43" }}>{result.description}</div>
+            <div style={{ color: '#6B4F43' }}>{result.description}</div>
           )}
 
           {showCategoryScores && Object.keys(categoryScores).length > 0 && (
@@ -48,7 +48,7 @@ const QuizResult: React.FC<QuizResultProps> = ({
           )}
         </div>
       ) : (
-        <p style={{ color: "#432818" }}>Resultado não disponível</p>
+        <p style={{ color: '#432818' }}>Resultado não disponível</p>
       )}
     </div>
   );

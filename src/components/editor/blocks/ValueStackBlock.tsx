@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { CheckCircle } from 'lucide-react';
 
 interface ValueStackBlockProps {
   title?: string;
@@ -10,11 +10,11 @@ interface ValueStackBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,49 +54,49 @@ const getMarginClass = (value, type) => {
 };
 
 const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
-  title = "O Que Você Recebe Hoje",
+  title = 'O Que Você Recebe Hoje',
   showPricing = true,
   className,
 }) => {
   // Dados reais da ancoragem de valor da ResultPage
   const valueItems = [
     {
-      title: "Guia de Estilo e Imagem Completo",
-      description: "Material exclusivo com seu perfil personalizado",
-      value: "R$ 197,00",
+      title: 'Guia de Estilo e Imagem Completo',
+      description: 'Material exclusivo com seu perfil personalizado',
+      value: 'R$ 197,00',
     },
     {
-      title: "Análise Detalhada do Seu Estilo",
-      description: "Relatório completo com suas características únicas",
-      value: "R$ 97,00",
+      title: 'Análise Detalhada do Seu Estilo',
+      description: 'Relatório completo com suas características únicas',
+      value: 'R$ 97,00',
     },
     {
-      title: "Bônus: Peças-chave do Guarda-roupa",
-      description: "Lista das peças essenciais para seu estilo",
-      value: "R$ 79,00",
+      title: 'Bônus: Peças-chave do Guarda-roupa',
+      description: 'Lista das peças essenciais para seu estilo',
+      value: 'R$ 79,00',
     },
     {
-      title: "Bônus: Visagismo Facial",
-      description: "Guia de maquiagem ideal para seu rosto",
-      value: "R$ 29,00",
+      title: 'Bônus: Visagismo Facial',
+      description: 'Guia de maquiagem ideal para seu rosto',
+      value: 'R$ 29,00',
     },
   ];
 
   const totalValue = valueItems.reduce((sum, item) => {
-    const value = parseInt(item.value.replace(/[^\d]/g, ""));
+    const value = parseInt(item.value.replace(/[^\d]/g, ''));
     return sum + value;
   }, 0);
 
   return (
     <div
       className={cn(
-        "py-4 sm:py-6 md:py-8 px-4",
+        'py-4 sm:py-6 md:py-8 px-4',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="max-w-4xl mx-auto">
@@ -151,7 +151,7 @@ const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
                       Valor total se comprado separadamente:
                     </span>
                     <div className="text-xl sm:text-2xl font-bold text-gray-400 line-through">
-                      R$ {totalValue.toLocaleString("pt-BR")},00
+                      R$ {totalValue.toLocaleString('pt-BR')},00
                     </div>
                   </div>
 
@@ -159,7 +159,7 @@ const ValueStackBlock: React.FC<ValueStackBlockProps> = ({
                     <div className="text-xs sm:text-sm opacity-90 mb-2">Seu investimento hoje:</div>
                     <div className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">R$ 97,00</div>
                     <div className="text-xs sm:text-sm opacity-90 leading-relaxed">
-                      Economize R$ {(totalValue - 97).toLocaleString("pt-BR")}
+                      Economize R$ {(totalValue - 97).toLocaleString('pt-BR')}
                       ,00 (mais de 75% de desconto)
                     </div>
                   </div>

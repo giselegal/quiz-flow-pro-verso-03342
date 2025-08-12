@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface InteractiveQuizBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -8,11 +8,11 @@ interface InteractiveQuizBlockProps extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -62,16 +62,16 @@ const InteractiveQuizBlock: React.FC<InteractiveQuizBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
 
   // Debug das propriedades recebidas
-  console.log("🔍 [InteractiveQuizBlock] Propriedades recebidas:", block.properties);
+  console.log('🔍 [InteractiveQuizBlock] Propriedades recebidas:', block.properties);
 
-  const { title = "InteractiveQuizBlock Título", content = "Conteúdo do InteractiveQuizBlock" } =
+  const { title = 'InteractiveQuizBlock Título', content = 'Conteúdo do InteractiveQuizBlock' } =
     block?.properties || {};
 
   const handlePropertyChange = (key: string, value: any) => {
@@ -83,15 +83,15 @@ const InteractiveQuizBlock: React.FC<InteractiveQuizBlockProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full p-4 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
-        "cursor-pointer hover:border-gray-400 transition-colors",
+        'relative w-full p-4 rounded-lg border-2 border-dashed',
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
+        'cursor-pointer hover:border-gray-400 transition-colors',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >

@@ -1,12 +1,12 @@
-import { StyleResult, StyleType } from "@/types/quiz";
+import { StyleResult, StyleType } from '@/types/quiz';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { styleConfig, StyleConfigMap } from "@/config/styleConfig";
+} from '@/components/ui/select';
+import { styleConfig, StyleConfigMap } from '@/config/styleConfig';
 
 interface StyleSelectorProps {
   selectedStyle: StyleResult;

@@ -1,11 +1,11 @@
 /* @ts-nocheck */
 // @ts-nocheck
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, TrendingUp, Award, Target, Clock } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { DeviceView, StyleProps } from "./types";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { CheckCircle, TrendingUp, Award, Target, Clock } from 'lucide-react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { DeviceView, StyleProps } from './types';
 
 interface MotivationItem {
   id: string;
@@ -23,7 +23,7 @@ interface MotivationSectionProps extends StyleProps {
   /** Lista de motivações/benefícios */
   motivations: MotivationItem[];
   /** Layout da seção */
-  layout?: "grid" | "list" | "horizontal";
+  layout?: 'grid' | 'list' | 'horizontal';
   /** Mostrar ícones */
   showIcons?: boolean;
   /** Configuração de animações */
@@ -47,31 +47,31 @@ interface MotivationSectionProps extends StyleProps {
  * Destaca os principais benefícios e motivos para agir
  */
 export const MotivationSection: React.FC<MotivationSectionProps> = ({
-  title = "Por Que Isso Funciona?",
-  subtitle = "Descubra os motivos pelos quais nossa abordagem transforma vidas:",
+  title = 'Por Que Isso Funciona?',
+  subtitle = 'Descubra os motivos pelos quais nossa abordagem transforma vidas:',
   motivations,
-  layout = "grid",
+  layout = 'grid',
   showIcons = true,
   animationConfig = {},
-  deviceView = "desktop",
+  deviceView = 'desktop',
   onAction,
-  actionText = "Começar Agora",
+  actionText = 'Começar Agora',
   showAction = true,
   className,
   style,
   customStyles,
 }) => {
   const { disabled: animationsDisabled, duration = 400, staggerDelay = 200 } = animationConfig;
-  const isLowPerformance = deviceView === "mobile";
+  const isLowPerformance = deviceView === 'mobile';
 
   const getLayoutClasses = () => {
     switch (layout) {
-      case "list":
-        return "space-y-2";
-      case "horizontal":
-        return "grid grid-cols-1 md:grid-cols-3 gap-6";
+      case 'list':
+        return 'space-y-2';
+      case 'horizontal':
+        return 'grid grid-cols-1 md:grid-cols-3 gap-6';
       default:
-        return `grid ${deviceView === "mobile" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"} gap-6`;
+        return `grid ${deviceView === 'mobile' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-6`;
     }
   };
 
@@ -87,7 +87,7 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
   };
 
   return (
-    <div className={`py-12 ${className || ""}`} style={style}>
+    <div className={`py-12 ${className || ''}`} style={style}>
       {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
@@ -103,7 +103,7 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
           {motivations.map((motivation, index) => (
             <AnimatedWrapper
               key={motivation.id}
-              animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+              animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
               show={true}
               duration={duration}
               delay={staggerDelay * index}
@@ -111,19 +111,19 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
               <Card
                 className={`p-6 bg-white shadow-sm hover:shadow-md transition-all duration-300 border-0 h-full ${
                   motivation.isHighlighted
-                    ? "ring-2 ring-[#B89B7A] ring-opacity-50 bg-gradient-to-br from-white to-[#f9f4ef]"
-                    : ""
+                    ? 'ring-2 ring-[#B89B7A] ring-opacity-50 bg-gradient-to-br from-white to-[#f9f4ef]'
+                    : ''
                 }`}
               >
-                <div className={`${layout === "list" ? "flex items-start gap-4" : "text-center"}`}>
+                <div className={`${layout === 'list' ? 'flex items-start gap-4' : 'text-center'}`}>
                   {/* Icon */}
                   {showIcons && (
                     <div
-                      className={`flex-shrink-0 ${layout === "list" ? "" : "flex justify-center mb-4"}`}
+                      className={`flex-shrink-0 ${layout === 'list' ? '' : 'flex justify-center mb-4'}`}
                     >
                       <div
                         className={`w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center text-white ${
-                          motivation.isHighlighted ? "ring-2 ring-[#B89B7A] ring-opacity-30" : ""
+                          motivation.isHighlighted ? 'ring-2 ring-[#B89B7A] ring-opacity-30' : ''
                         }`}
                       >
                         {motivation.icon || getDefaultIcon(index)}
@@ -132,14 +132,14 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
                   )}
 
                   {/* Content */}
-                  <div className={layout === "list" ? "flex-1" : ""}>
+                  <div className={layout === 'list' ? 'flex-1' : ''}>
                     <h3
-                      className={`text-lg font-semibold text-[#432818] mb-3 ${layout === "list" ? "text-left" : "text-center"}`}
+                      className={`text-lg font-semibold text-[#432818] mb-3 ${layout === 'list' ? 'text-left' : 'text-center'}`}
                     >
                       {motivation.title}
                     </h3>
                     <p
-                      className={`text-[#6B4F43] leading-relaxed ${layout === "list" ? "text-left" : "text-center"}`}
+                      className={`text-[#6B4F43] leading-relaxed ${layout === 'list' ? 'text-left' : 'text-center'}`}
                     >
                       {motivation.description}
                     </p>
@@ -153,7 +153,7 @@ export const MotivationSection: React.FC<MotivationSectionProps> = ({
         {/* Action */}
         {showAction && onAction && (
           <AnimatedWrapper
-            animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+            animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
             show={true}
             duration={duration}
             delay={staggerDelay * motivations.length}

@@ -1,11 +1,11 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
-import { userResponseService } from "../../../services/userResponseService";
-import { trackQuizStart } from "../../../utils/analytics";
-import { saveQuizResponse } from "../../../services/quizSupabaseService";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { MousePointer2, Edit3, ArrowRight, Download, Play, Star } from 'lucide-react';
+import type { BlockComponentProps } from '../../../types/blocks';
+import { userResponseService } from '../../../services/userResponseService';
+import { trackQuizStart } from '../../../utils/analytics';
+import { saveQuizResponse } from '../../../services/quizSupabaseService';
 
 /**
  * ButtonInlineBlock - Componente modular inline horizontal
@@ -15,11 +15,11 @@ import { saveQuizResponse } from "../../../services/quizSupabaseService";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -63,23 +63,23 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
-    return <div style={{ color: "#432818" }}>⚠️ Erro: Propriedades do bloco não encontradas</div>;
+    return <div style={{ color: '#432818' }}>⚠️ Erro: Propriedades do bloco não encontradas</div>;
   }
 
   const {
-    text = "",
-    variant = "custom",
-    size = "medium",
-    icon = "none",
-    iconPosition = "right",
-    href = "",
-    target = "_blank",
+    text = '',
+    variant = 'custom',
+    size = 'medium',
+    icon = 'none',
+    iconPosition = 'right',
+    href = '',
+    target = '_blank',
     disabled = false,
-    customStyles = "",
+    customStyles = '',
     requiresValidInput = false,
   } = block?.properties || {};
 
@@ -89,7 +89,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   useEffect(() => {
     if (requiresValidInput) {
       // Verificar se há input válido (exemplo: nome preenchido)
-      const nameValue = userResponseService.getResponse("intro-name-input");
+      const nameValue = userResponseService.getResponse('intro-name-input');
       setIsValidated(!!nameValue && nameValue.trim().length > 0);
     } else {
       setIsValidated(true);
@@ -103,21 +103,21 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
       // Placeholder - Supabase integration will be implemented later
-      console.log("Supabase integration placeholder:", {
+      console.log('Supabase integration placeholder:', {
         name: userName,
-        utm_source: new URLSearchParams(window.location.search).get("utm_source") || undefined,
+        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
       });
 
-      console.log("✅ Quiz inicializado no Supabase com sucesso");
+      console.log('✅ Quiz inicializado no Supabase com sucesso');
     } catch (error) {
-      console.error("❌ Erro ao inicializar quiz no Supabase:", error);
+      console.error('❌ Erro ao inicializar quiz no Supabase:', error);
     }
   };
 
   // Ícones disponíveis
   const iconMap = {
     none: null,
-    "arrow-right": ArrowRight,
+    'arrow-right': ArrowRight,
     download: Download,
     play: Play,
     star: Star,
@@ -127,38 +127,38 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Variantes de cor
   const variantClasses = {
-    primary: "bg-[#B89B7A] hover:bg-[#A38A69] text-white border-[#B89B7A]",
-    secondary: "bg-gray-600 hover:bg-gray-700 text-white border-gray-600",
-    success: "bg-green-600 hover:bg-green-700 text-white border-green-600",
-    warning: "bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600",
-    danger: "bg-red-600 hover:bg-red-700 text-white border-red-600",
-    accent: "bg-purple-600 hover:bg-purple-700 text-white border-purple-600",
-    outline: "bg-transparent hover:bg-gray-50 text-gray-700 border-gray-300",
-    ghost: "bg-transparent hover:bg-gray-50 text-gray-700 border-transparent",
-    custom: customStyles || "bg-[#B89B7A] hover:bg-[#A08968] text-white border-[#B89B7A]",
+    primary: 'bg-[#B89B7A] hover:bg-[#A38A69] text-white border-[#B89B7A]',
+    secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-gray-600',
+    success: 'bg-green-600 hover:bg-green-700 text-white border-green-600',
+    warning: 'bg-yellow-600 hover:bg-yellow-700 text-white border-yellow-600',
+    danger: 'bg-red-600 hover:bg-red-700 text-white border-red-600',
+    accent: 'bg-purple-600 hover:bg-purple-700 text-white border-purple-600',
+    outline: 'bg-transparent hover:bg-gray-50 text-gray-700 border-gray-300',
+    ghost: 'bg-transparent hover:bg-gray-50 text-gray-700 border-transparent',
+    custom: customStyles || 'bg-[#B89B7A] hover:bg-[#A08968] text-white border-[#B89B7A]',
   };
 
   // Tamanhos de botão
   const sizeClasses = {
-    small: "px-3 py-1.5 text-sm gap-1.5 min-h-[32px]",
-    medium: "px-4 py-2 text-base gap-2 min-h-[40px]",
-    large: "px-6 py-3 text-lg gap-2.5 min-h-[48px]",
+    small: 'px-3 py-1.5 text-sm gap-1.5 min-h-[32px]',
+    medium: 'px-4 py-2 text-base gap-2 min-h-[40px]',
+    large: 'px-6 py-3 text-lg gap-2.5 min-h-[48px]',
   };
 
   const iconSizes = {
-    small: "w-3 h-3",
-    medium: "w-4 h-4",
-    large: "w-5 h-5",
+    small: 'w-3 h-3',
+    medium: 'w-4 h-4',
+    large: 'w-5 h-5',
   };
 
   // Função para determinar classes responsivas
   const getResponsiveClasses = () => {
     const baseClasses = cn(
       // Classes base do botão
-      "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2",
-      "disabled:pointer-events-none disabled:opacity-50",
-      "border w-full",
+      'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2',
+      'disabled:pointer-events-none disabled:opacity-50',
+      'border w-full',
 
       // Aplicar variante
       variantClasses[variant as keyof typeof variantClasses],
@@ -167,7 +167,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       sizeClasses[size as keyof typeof sizeClasses],
 
       // Estado de seleção no editor
-      isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
+      isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
 
       // Classes customizadas
       className
@@ -179,13 +179,13 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        "group relative inline-flex w-full cursor-pointer transition-all duration-200",
-        isSelected && "ring-1 ring-[#B89B7A]/40",
+        'group relative inline-flex w-full cursor-pointer transition-all duration-200',
+        isSelected && 'ring-1 ring-[#B89B7A]/40',
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
       data-block-id={block.id}
@@ -200,9 +200,9 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
           e.stopPropagation();
           if (!isButtonDisabled) {
             // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
-            if (text && text.includes("Descobrir meu Estilo")) {
-              const userName = userResponseService.getResponse("intro-name-input") || "Anônimo";
-              console.log("🚀 Iniciando tracking do quiz para:", userName);
+            if (text && text.includes('Descobrir meu Estilo')) {
+              const userName = userResponseService.getResponse('intro-name-input') || 'Anônimo';
+              console.log('🚀 Iniciando tracking do quiz para:', userName);
 
               // 🚀 INTEGRAÇÃO SUPABASE: Criar usuário e iniciar sessão
               await initializeQuizWithSupabase(userName);
@@ -211,21 +211,21 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
               trackQuizStart(userName);
 
               // Salvar timestamp de início
-              localStorage.setItem("quiz_start_time", Date.now().toString());
-              localStorage.setItem("quiz_start_tracked", "true");
-              localStorage.setItem("userName", userName);
+              localStorage.setItem('quiz_start_time', Date.now().toString());
+              localStorage.setItem('quiz_start_tracked', 'true');
+              localStorage.setItem('userName', userName);
 
               // Disparar evento customizado para outras partes do sistema
               window.dispatchEvent(
-                new CustomEvent("quiz-start", {
+                new CustomEvent('quiz-start', {
                   detail: { userName, timestamp: Date.now() },
                 })
               );
 
               // Navegar para Step 2 (primeira questão)
               window.dispatchEvent(
-                new CustomEvent("navigate-to-step", {
-                  detail: { stepId: "etapa-2", source: "step1-button" },
+                new CustomEvent('navigate-to-step', {
+                  detail: { stepId: 'etapa-2', source: 'step1-button' },
                 })
               );
             }
@@ -237,16 +237,16 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         }}
       >
         {/* Ícone à esquerda */}
-        {IconComponent && iconPosition === "left" && (
-          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], "mr-2")} />
+        {IconComponent && iconPosition === 'left' && (
+          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], 'mr-2')} />
         )}
 
         {/* Texto do botão */}
-        <span className="flex-1 text-center truncate">{text || "Clique aqui"}</span>
+        <span className="flex-1 text-center truncate">{text || 'Clique aqui'}</span>
 
         {/* Ícone à direita */}
-        {IconComponent && iconPosition === "right" && (
-          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], "ml-2")} />
+        {IconComponent && iconPosition === 'right' && (
+          <IconComponent className={cn(iconSizes[size as keyof typeof iconSizes], 'ml-2')} />
         )}
       </button>
 
@@ -259,7 +259,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Empty state */}
       {!text && (
-        <div style={{ color: "#8B7355" }}>
+        <div style={{ color: '#8B7355' }}>
           <MousePointer2 className="w-4 h-4 mr-2" />
           Clique para selecionar e editar no painel
         </div>

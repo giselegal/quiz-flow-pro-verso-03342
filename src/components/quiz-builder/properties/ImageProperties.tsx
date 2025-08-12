@@ -1,6 +1,6 @@
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { QuizComponentData } from '@/types/quizBuilder';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 interface ImagePropertiesProps {
   component: QuizComponentData;
@@ -23,8 +23,8 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({ component, onU
         <Label htmlFor="imageUrl">URL da Imagem</Label>
         <Input
           id="imageUrl"
-          value={data.imageUrl || ""}
-          onChange={e => handleUpdate("imageUrl", e.target.value)}
+          value={data.imageUrl || ''}
+          onChange={e => handleUpdate('imageUrl', e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
         />
       </div>
@@ -33,8 +33,8 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({ component, onU
         <Label htmlFor="alt">Texto Alternativo</Label>
         <Input
           id="alt"
-          value={data.alt || ""}
-          onChange={e => handleUpdate("alt", e.target.value)}
+          value={data.alt || ''}
+          onChange={e => handleUpdate('alt', e.target.value)}
           placeholder="Descrição da imagem"
         />
       </div>
@@ -44,8 +44,8 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({ component, onU
           <Label htmlFor="width">Largura</Label>
           <Input
             id="width"
-            value={data.width || ""}
-            onChange={e => handleUpdate("width", e.target.value)}
+            value={data.width || ''}
+            onChange={e => handleUpdate('width', e.target.value)}
             placeholder="100%"
           />
         </div>
@@ -53,8 +53,8 @@ export const ImageProperties: React.FC<ImagePropertiesProps> = ({ component, onU
           <Label htmlFor="height">Altura</Label>
           <Input
             id="height"
-            value={data.height || ""}
-            onChange={e => handleUpdate("height", e.target.value)}
+            value={data.height || ''}
+            onChange={e => handleUpdate('height', e.target.value)}
             placeholder="auto"
           />
         </div>

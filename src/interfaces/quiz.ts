@@ -61,38 +61,38 @@ export interface FaqItem {
 export interface SimpleComponent {
   id: string;
   type:
-    | "title"
-    | "subtitle"
-    | "text"
-    | "paragraph"
-    | "image"
-    | "button"
-    | "spacer"
-    | "input"
-    | "email"
-    | "phone"
-    | "options"
-    | "progress"
-    | "logo"
-    | "video"
-    | "testimonial"
-    | "price"
-    | "countdown"
-    | "guarantee"
-    | "bonus"
-    | "faq"
-    | "social-proof"
-    | "text-inline"
-    | "badge-inline"
-    | "stat-inline"
-    | "progress-inline"
-    | "image-display"
-    | "style-card"
-    | "pricing-card"
-    | "testimonial-card"
-    | "result-card"
-    | "countdown-inline"
-    | "pricing-inline";
+    | 'title'
+    | 'subtitle'
+    | 'text'
+    | 'paragraph'
+    | 'image'
+    | 'button'
+    | 'spacer'
+    | 'input'
+    | 'email'
+    | 'phone'
+    | 'options'
+    | 'progress'
+    | 'logo'
+    | 'video'
+    | 'testimonial'
+    | 'price'
+    | 'countdown'
+    | 'guarantee'
+    | 'bonus'
+    | 'faq'
+    | 'social-proof'
+    | 'text-inline'
+    | 'badge-inline'
+    | 'stat-inline'
+    | 'progress-inline'
+    | 'image-display'
+    | 'style-card'
+    | 'pricing-card'
+    | 'testimonial-card'
+    | 'result-card'
+    | 'countdown-inline'
+    | 'pricing-inline';
   data: {
     text?: string;
     src?: string;
@@ -137,14 +137,14 @@ export interface SimpleComponent {
     fontWeight?: string;
     variant?: string;
     maxSelections?: number;
-    alignment?: "left" | "center" | "right";
-    size?: "small" | "medium" | "large";
+    alignment?: 'left' | 'center' | 'right';
+    size?: 'small' | 'medium' | 'large';
     [key: string]: any; // Allow additional properties
   };
   style: {
     fontSize?: string;
     fontWeight?: string;
-    textAlign?: "left" | "center" | "right";
+    textAlign?: 'left' | 'center' | 'right';
     color?: string;
     backgroundColor?: string;
     padding?: string;
@@ -166,18 +166,18 @@ export interface SimplePage {
   id: string;
   title: string;
   type:
-    | "intro"
-    | "question"
-    | "loading"
-    | "result"
-    | "offer"
-    | "transition"
-    | "sales"
-    | "checkout"
-    | "upsell"
-    | "thankyou"
-    | "webinar"
-    | "launch";
+    | 'intro'
+    | 'question'
+    | 'loading'
+    | 'result'
+    | 'offer'
+    | 'transition'
+    | 'sales'
+    | 'checkout'
+    | 'upsell'
+    | 'thankyou'
+    | 'webinar'
+    | 'launch';
   progress: number;
   showHeader: boolean;
   showProgress: boolean;

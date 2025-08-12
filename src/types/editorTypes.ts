@@ -1,4 +1,4 @@
-import { Block } from "./editor";
+import { Block } from './editor';
 
 export interface EditorState {
   selectedBlockId: string | null;
@@ -8,7 +8,7 @@ export interface EditorState {
 }
 
 export interface BlockManipulationActions {
-  handleAddBlock: (type: Block["type"]) => string;
+  handleAddBlock: (type: Block['type']) => string;
   handleUpdateBlock: (id: string, content: any) => void;
   handleDeleteBlock: (id: string) => void;
   handleReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;

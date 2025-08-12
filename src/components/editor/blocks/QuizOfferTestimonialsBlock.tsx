@@ -1,17 +1,17 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Star, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Star, Users } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,32 +56,32 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "O que nossas clientes dizem",
-    textColor = "#432818",
-    backgroundColor = "#f9fafb",
+    title = 'O que nossas clientes dizem',
+    textColor = '#432818',
+    backgroundColor = '#f9fafb',
     testimonials = [
       {
-        name: "Marina S.",
-        text: "Finalmente entendi meu estilo! Agora me visto com muito mais confiança.",
+        name: 'Marina S.',
+        text: 'Finalmente entendi meu estilo! Agora me visto com muito mais confiança.',
         rating: 5,
       },
       {
-        name: "Juliana R.",
-        text: "O guia transformou completamente meu guarda-roupa. Vale cada centavo!",
+        name: 'Juliana R.',
+        text: 'O guia transformou completamente meu guarda-roupa. Vale cada centavo!',
         rating: 5,
       },
       {
-        name: "Carla M.",
-        text: "Nunca pensei que descobrir meu estilo seria tão fácil e prático.",
+        name: 'Carla M.',
+        text: 'Nunca pensei que descobrir meu estilo seria tão fácil e prático.',
         rating: 5,
       },
     ],
     showStats = true,
-    totalCustomers = "+10.000 mulheres transformadas",
-    averageRating = "4.9/5 estrelas",
+    totalCustomers = '+10.000 mulheres transformadas',
+    averageRating = '4.9/5 estrelas',
   } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -100,7 +100,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-16 px-4 transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -123,7 +123,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
                       <Star key={i} className="w-5 h-5 fill-current text-yellow-400" />
                     ))}
                   </div>
-                  <p style={{ color: "#6B4F43" }}>"{testimonial.text}"</p>
+                  <p style={{ color: '#6B4F43' }}>"{testimonial.text}"</p>
                   <p className="font-semibold" style={{ color: textColor }}>
                     {testimonial.name}
                   </p>
@@ -134,7 +134,7 @@ const QuizOfferTestimonialsBlock: React.FC<BlockComponentProps> = ({
 
           {showStats && (
             <div className="text-center mt-8">
-              <div style={{ color: "#6B4F43" }}>
+              <div style={{ color: '#6B4F43' }}>
                 <div className="flex items-center gap-2">
                   <Users className="w-5 h-5" />
                   {totalCustomers}

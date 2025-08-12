@@ -1,8 +1,8 @@
 // @ts-nocheck
-import QuizResultsBlock from "@/components/blocks/quiz/QuizResultsBlock";
-import { QuizResult, useQuizResults } from "@/hooks/useQuizResults";
-import React, { useEffect, useState } from "react";
-import { QuizBlockProps } from "./types";
+import QuizResultsBlock from '@/components/blocks/quiz/QuizResultsBlock';
+import { QuizResult, useQuizResults } from '@/hooks/useQuizResults';
+import React, { useEffect, useState } from 'react';
+import { QuizBlockProps } from './types';
 
 export interface QuizResultsBlockEditorProps extends QuizBlockProps {
   properties: {
@@ -16,11 +16,11 @@ export interface QuizResultsBlockEditorProps extends QuizBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -68,9 +68,9 @@ const QuizResultsBlockEditor: React.FC<QuizResultsBlockEditorProps> = ({
   // Parse das propriedades
   const parseResults = (): QuizResult[] => {
     try {
-      return JSON.parse(properties?.results || "[]");
+      return JSON.parse(properties?.results || '[]');
     } catch (e) {
-      console.error("Erro ao parsear resultados:", e);
+      console.error('Erro ao parsear resultados:', e);
       return [];
     }
   };
@@ -79,8 +79,8 @@ const QuizResultsBlockEditor: React.FC<QuizResultsBlockEditorProps> = ({
     try {
       return JSON.parse(properties?.calculationMethod || '{"type":"sum"}');
     } catch (e) {
-      console.error("Erro ao parsear método de cálculo:", e);
-      return { type: "sum" };
+      console.error('Erro ao parsear método de cálculo:', e);
+      return { type: 'sum' };
     }
   };
 
@@ -110,25 +110,25 @@ const QuizResultsBlockEditor: React.FC<QuizResultsBlockEditorProps> = ({
 
   // Dados simulados para demonstração
   const demoScores = [
-    { category: "Elegante", score: 7, count: 3 },
-    { category: "Clássico", score: 5, count: 2 },
-    { category: "Contemporâneo", score: 3, count: 1 },
+    { category: 'Elegante', score: 7, count: 3 },
+    { category: 'Clássico', score: 5, count: 2 },
+    { category: 'Contemporâneo', score: 3, count: 1 },
   ];
 
   // Manipuladores de eventos
   const handleReset = () => {
-    console.log("Reset demo");
+    console.log('Reset demo');
   };
 
   const handleShare = () => {
-    console.log("Share demo");
+    console.log('Share demo');
   };
 
   // Renderização
   if (!demoResult) {
     return (
-      <div style={{ backgroundColor: "#FAF9F7" }}>
-        <p style={{ color: "#8B7355" }}>Adicione resultados para visualizar a prévia</p>
+      <div style={{ backgroundColor: '#FAF9F7' }}>
+        <p style={{ color: '#8B7355' }}>Adicione resultados para visualizar a prévia</p>
       </div>
     );
   }

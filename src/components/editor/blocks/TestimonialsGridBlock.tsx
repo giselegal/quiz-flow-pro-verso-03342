@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Star } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import { Star } from 'lucide-react';
+import type { BlockData } from '@/types/blocks';
 
 interface TestimonialsGridBlockProps {
   block?: BlockData;
@@ -21,11 +21,11 @@ interface TestimonialsGridBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -70,58 +70,58 @@ const TestimonialsGridBlock: React.FC<TestimonialsGridBlockProps> = ({
   gridColumns = 3,
   showRating = true,
   showAvatar = true,
-  backgroundColor = "bg-gray-50",
-  textColor = "text-gray-900",
+  backgroundColor = 'bg-gray-50',
+  textColor = 'text-gray-900',
 }) => {
   // Usar dados do block ou valores padrão
   const blockData = block?.properties || {};
   const finalTestimonials = testimonials ||
     blockData.testimonials || [
       {
-        id: "1",
-        name: "Ana Silva",
-        role: "Empresária",
+        id: '1',
+        name: 'Ana Silva',
+        role: 'Empresária',
         content:
-          "Este quiz me ajudou a descobrir aspectos sobre minha personalidade que eu não conhecia. Recomendo!",
+          'Este quiz me ajudou a descobrir aspectos sobre minha personalidade que eu não conhecia. Recomendo!',
         rating: 5,
-        avatar: "",
+        avatar: '',
       },
       {
-        id: "2",
-        name: "Carlos Santos",
-        role: "Designer",
+        id: '2',
+        name: 'Carlos Santos',
+        role: 'Designer',
         content:
-          "Interface incrível e resultado muito preciso. Compartilhei com todos os meus amigos.",
+          'Interface incrível e resultado muito preciso. Compartilhei com todos os meus amigos.',
         rating: 5,
-        avatar: "",
+        avatar: '',
       },
       {
-        id: "3",
-        name: "Maria Costa",
-        role: "Psicóloga",
+        id: '3',
+        name: 'Maria Costa',
+        role: 'Psicóloga',
         content:
-          "Como profissional da área, posso dizer que este quiz tem uma base sólida e resultados confiáveis.",
+          'Como profissional da área, posso dizer que este quiz tem uma base sólida e resultados confiáveis.',
         rating: 5,
-        avatar: "",
+        avatar: '',
       },
     ];
 
   const finalGridColumns = gridColumns || blockData.gridColumns || 3;
   const finalShowRating = showRating ?? blockData.showRating ?? true;
   const finalShowAvatar = showAvatar ?? blockData.showAvatar ?? true;
-  const finalBackgroundColor = backgroundColor || blockData.backgroundColor || "bg-gray-50";
-  const finalTextColor = textColor || blockData.textColor || "text-gray-900";
+  const finalBackgroundColor = backgroundColor || blockData.backgroundColor || 'bg-gray-50';
+  const finalTextColor = textColor || blockData.textColor || 'text-gray-900';
 
   const getGridColumns = () => {
     switch (finalGridColumns) {
       case 1:
-        return "grid-cols-1";
+        return 'grid-cols-1';
       case 2:
-        return "grid-cols-1 md:grid-cols-2";
+        return 'grid-cols-1 md:grid-cols-2';
       case 3:
-        return "grid-cols-1 md:grid-cols-2";
+        return 'grid-cols-1 md:grid-cols-2';
       default:
-        return "grid-cols-1 md:grid-cols-2";
+        return 'grid-cols-1 md:grid-cols-2';
     }
   };
 
@@ -129,16 +129,16 @@ const TestimonialsGridBlock: React.FC<TestimonialsGridBlockProps> = ({
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
-        className={`w-4 h-4 ${index < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+        className={`w-4 h-4 ${index < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
       />
     ));
   };
 
   const getInitials = (name: string) => {
     return name
-      .split(" ")
+      .split(' ')
       .map(word => word.charAt(0))
-      .join("")
+      .join('')
       .toUpperCase()
       .slice(0, 2);
   };

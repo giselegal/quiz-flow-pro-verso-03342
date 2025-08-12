@@ -1,14 +1,14 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, X } from "lucide-react";
+import React, { useState } from 'react';
+import { QuizComponentData } from '@/types/quizBuilder';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Plus, X } from 'lucide-react';
 
 interface StageQuestionComponentProps {
-  data?: QuizComponentData["data"];
-  style?: QuizComponentData["style"];
+  data?: QuizComponentData['data'];
+  style?: QuizComponentData['style'];
   isSelected?: boolean;
   onClick?: () => void;
   onUpdate?: (updates: any) => void;
@@ -21,11 +21,11 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
   onClick,
   onUpdate,
 }) => {
-  const [newOption, setNewOption] = useState("");
+  const [newOption, setNewOption] = useState('');
 
   const {
-    question = "Digite sua pergunta aqui...",
-    options = ["Opção 1", "Opção 2"],
+    question = 'Digite sua pergunta aqui...',
+    options = ['Opção 1', 'Opção 2'],
     multiSelect = 0,
     autoAdvance = false,
     required = true,
@@ -35,7 +35,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
     if (newOption.trim()) {
       const updatedOptions = [...(data.options || []), newOption.trim()];
       onUpdate?.({ ...data, options: updatedOptions });
-      setNewOption("");
+      setNewOption('');
     }
   };
 
@@ -51,15 +51,15 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
   };
 
   const questionStyle = {
-    backgroundColor: data.backgroundColorQuestion || "#FFFAF0",
-    color: data.textColorQuestion || "#432818",
+    backgroundColor: data.backgroundColorQuestion || '#FFFAF0',
+    color: data.textColorQuestion || '#432818',
     ...style,
   };
 
   return (
     <Card
       className={`w-full min-h-[300px] p-6 cursor-pointer transition-all ${
-        isSelected ? "ring-2 ring-[#B89B7A]" : ""
+        isSelected ? 'ring-2 ring-[#B89B7A]' : ''
       }`}
       style={questionStyle}
       onClick={onClick}
@@ -69,9 +69,9 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
         <div className="text-center">
           <h2
             className="text-xl md:text-2xl font-medium mb-4"
-            style={{ color: data.textColorQuestion || "#432818" }}
+            style={{ color: data.textColorQuestion || '#432818' }}
           >
-            {question || data.question || "Digite sua pergunta aqui..."}
+            {question || data.question || 'Digite sua pergunta aqui...'}
           </h2>
 
           {(multiSelect || data.multiSelect || 0) > 0 && (
@@ -88,21 +88,21 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
               key={index}
               className="flex items-center p-3 rounded-lg border-2 border-[#B89B7A]/20 hover:border-[#B89B7A]/40 transition-colors cursor-pointer"
               style={{
-                borderColor: data.accentColor ? `${data.accentColor}40` : "#B89B7A40",
+                borderColor: data.accentColor ? `${data.accentColor}40` : '#B89B7A40',
               }}
             >
               {(multiSelect || data.multiSelect || 0) > 0 ? (
                 <input
                   type="checkbox"
                   className="mr-3"
-                  style={{ accentColor: data.accentColor || "#B89B7A" }}
+                  style={{ accentColor: data.accentColor || '#B89B7A' }}
                 />
               ) : (
                 <input
                   type="radio"
                   name="quiz-option"
                   className="mr-3"
-                  style={{ accentColor: data.accentColor || "#B89B7A" }}
+                  style={{ accentColor: data.accentColor || '#B89B7A' }}
                 />
               )}
 
@@ -123,7 +123,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
                       e.stopPropagation();
                       handleRemoveOption(index);
                     }}
-                    style={{ color: "#432818" }}
+                    style={{ color: '#432818' }}
                   >
                     <X className="w-3 h-3" />
                   </Button>
@@ -143,7 +143,7 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
               className="flex-1"
               onClick={e => e.stopPropagation()}
               onKeyPress={e => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   e.stopPropagation();
                   handleAddOption();
                 }
@@ -167,11 +167,11 @@ const StageQuestionComponent: React.FC<StageQuestionComponentProps> = ({
           <Button
             className="bg-[#B89B7A] hover:bg-[#A38A69] text-white px-8"
             style={{
-              backgroundColor: data.accentColor || "#B89B7A",
-              color: data.buttonTextColor || "white",
+              backgroundColor: data.accentColor || '#B89B7A',
+              color: data.buttonTextColor || 'white',
             }}
           >
-            {autoAdvance || data.autoAdvance ? "Próxima →" : "Continuar →"}
+            {autoAdvance || data.autoAdvance ? 'Próxima →' : 'Continuar →'}
           </Button>
         </div>
       </div>

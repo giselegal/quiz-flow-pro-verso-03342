@@ -26,9 +26,9 @@ export const BasicPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProp
 }) => {
   if (!selectedBlock) {
     return (
-      <div style={{ backgroundColor: "#FAF9F7" }}>
+      <div style={{ backgroundColor: '#FAF9F7' }}>
         <h3 className="text-lg font-semibold mb-4">Propriedades</h3>
-        <p style={{ color: "#8B7355" }}>Selecione um bloco para editar suas propriedades</p>
+        <p style={{ color: '#8B7355' }}>Selecione um bloco para editar suas propriedades</p>
       </div>
     );
   }
@@ -48,41 +48,41 @@ export const BasicPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProp
 
       <div className="space-y-4">
         <div>
-          <label style={{ color: "#6B4F43" }}>Conteúdo/Texto</label>
+          <label style={{ color: '#6B4F43' }}>Conteúdo/Texto</label>
           <input
             type="text"
-            value={selectedBlock.properties?.content || selectedBlock.properties?.text || ""}
+            value={selectedBlock.properties?.content || selectedBlock.properties?.text || ''}
             onChange={e => {
-              const prop = selectedBlock.properties?.content !== undefined ? "content" : "text";
+              const prop = selectedBlock.properties?.content !== undefined ? 'content' : 'text';
               handlePropertyChange(prop, e.target.value);
             }}
-            style={{ borderColor: "#E5DDD5" }}
+            style={{ borderColor: '#E5DDD5' }}
             placeholder="Digite o conteúdo..."
           />
         </div>
 
         <div>
-          <label style={{ color: "#6B4F43" }}>Cor</label>
+          <label style={{ color: '#6B4F43' }}>Cor</label>
           <input
             type="color"
-            value={selectedBlock.properties?.color || "#000000"}
-            onChange={e => handlePropertyChange("color", e.target.value)}
-            style={{ borderColor: "#E5DDD5" }}
+            value={selectedBlock.properties?.color || '#000000'}
+            onChange={e => handlePropertyChange('color', e.target.value)}
+            style={{ borderColor: '#E5DDD5' }}
           />
         </div>
 
         <div>
-          <label style={{ color: "#6B4F43" }}>Alinhamento</label>
+          <label style={{ color: '#6B4F43' }}>Alinhamento</label>
           <select
             value={
-              selectedBlock.properties?.textAlign || selectedBlock.properties?.alignment || "left"
+              selectedBlock.properties?.textAlign || selectedBlock.properties?.alignment || 'left'
             }
             onChange={e => {
               const prop =
-                selectedBlock.properties?.textAlign !== undefined ? "textAlign" : "alignment";
+                selectedBlock.properties?.textAlign !== undefined ? 'textAlign' : 'alignment';
               handlePropertyChange(prop, e.target.value);
             }}
-            style={{ borderColor: "#E5DDD5" }}
+            style={{ borderColor: '#E5DDD5' }}
           >
             <option value="left">Esquerda</option>
             <option value="center">Centro</option>
@@ -91,8 +91,8 @@ export const BasicPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProp
         </div>
       </div>
 
-      <div style={{ borderColor: "#E5DDD5" }}>
-        <div style={{ color: "#8B7355" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <div style={{ color: '#8B7355' }}>
           <div>ID: {selectedBlock.id}</div>
           <div>Tipo: {selectedBlock.type}</div>
         </div>

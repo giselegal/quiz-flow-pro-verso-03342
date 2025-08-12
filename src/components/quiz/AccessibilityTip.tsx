@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Info } from "lucide-react";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Info } from 'lucide-react';
 
 const AccessibilityTip: React.FC = () => {
   const [isVisible, setIsVisible] = useState(true);

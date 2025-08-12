@@ -1,12 +1,12 @@
-import FileLoadingScreen from "@/components/loaders/FileLoadingScreen";
+import FileLoadingScreen from '@/components/loaders/FileLoadingScreen';
 
 const AccessLoaderPage: React.FC = () => {
   const handleFileLoaded = () => {
-    console.log("File loading completed");
+    console.log('File loading completed');
   };
 
   const handleError = (error: Error) => {
-    console.error("File loading error:", error);
+    console.error('File loading error:', error);
   };
 
   return (

@@ -1,31 +1,31 @@
-import React, { useState } from "react";
-import { useAdminAuth } from "../../context/AdminAuthContext";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import { Label } from "../ui/label";
-import { Shield, AlertCircle, Loader2 } from "lucide-react";
-import { Alert, AlertDescription } from "../ui/alert";
+import React, { useState } from 'react';
+import { useAdminAuth } from '../../context/AdminAuthContext';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Label } from '../ui/label';
+import { Shield, AlertCircle, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription } from '../ui/alert';
 
 const AdminLogin: React.FC = () => {
   const { adminLogin, isLoading } = useAdminAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setIsSubmitting(true);
 
     try {
       const success = await adminLogin(email, password);
       if (!success) {
-        setError("Credenciais inválidas. Verifique seu email e senha.");
+        setError('Credenciais inválidas. Verifique seu email e senha.');
       }
     } catch (error) {
-      setError("Erro interno. Tente novamente mais tarde.");
+      setError('Erro interno. Tente novamente mais tarde.');
     } finally {
       setIsSubmitting(false);
     }
@@ -96,7 +96,7 @@ const AdminLogin: React.FC = () => {
                   Verificando...
                 </>
               ) : (
-                "Entrar"
+                'Entrar'
               )}
             </Button>
           </form>

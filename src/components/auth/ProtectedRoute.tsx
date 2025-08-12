@@ -1,5 +1,5 @@
-import { useAuth } from "@/context/AuthContext";
-import { Route } from "wouter";
+import { useAuth } from '@/context/AuthContext';
+import { Route } from 'wouter';
 
 interface ProtectedRouteProps {
   path: string;

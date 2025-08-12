@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { preloadCriticalImages } from "@/utils/images/preloading";
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import React, { useEffect, useState } from 'react';
+import { preloadCriticalImages } from '@/utils/images/preloading';
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
 import {
   ChevronRight,
   Check,
@@ -26,8 +26,8 @@ import {
   Crown,
   Flame,
   Eye,
-} from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+} from 'lucide-react';
+import { trackButtonClick } from '@/utils/analytics';
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico
 const customStyles = `
@@ -410,33 +410,33 @@ const customStyles = `
 
 // URLs das imagens (mantidas da versão original)
 const HERO_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp';
 const HERO_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up.jpg';
 const PROBLEM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_9_mgkdnb.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_9_mgkdnb.webp';
 const SOLUTION_QUIZ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921098/Espanhol_Portugu%C3%AAs_5_cptzyb.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921098/Espanhol_Portugu%C3%AAs_5_cptzyb.webp';
 const GUIDES_BENEFITS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp';
 const BONUS_1_KEY_PIECES_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921227/Espanhol_Portugu%C3%AAs_6_y4kqao.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921227/Espanhol_Portugu%C3%AAs_6_y4kqao.webp';
 const BONUS_2_VISAGISM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921365/Espanhol_Portugu%C3%AAs_7_eqgdqz.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921365/Espanhol_Portugu%C3%AAs_7_eqgdqz.webp';
 const GUARANTEE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/Garantia_7_dias_j8mxth.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744921750/Garantia_7_dias_j8mxth.webp';
 
 // Componente de Popup de Prova Social Dinâmica
 const SocialProofPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState('');
 
   const users = [
-    "Ana Carolina acabou de comprar",
-    "Maria Silva descobriu seu estilo",
-    "Juliana Santos transformou seu guarda-roupa",
-    "Fernanda Costa está encantada",
-    "Camila Oliveira recomenda",
+    'Ana Carolina acabou de comprar',
+    'Maria Silva descobriu seu estilo',
+    'Juliana Santos transformou seu guarda-roupa',
+    'Fernanda Costa está encantada',
+    'Camila Oliveira recomenda',
   ];
 
   useEffect(() => {
@@ -452,7 +452,7 @@ const SocialProofPopup = () => {
   return (
     <div
       className={`fixed bottom-4 left-4 z-50 transition-all duration-500 ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
       }`}
     >
       <div className="bg-green-500 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-sm">
@@ -476,7 +476,7 @@ const StarRating = ({ rating }: { rating: number }) => {
         <Star
           key={i}
           size={20}
-          className={`${i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+          className={`${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
         />
       ))}
     </div>
@@ -509,7 +509,7 @@ const DramaticCountdown = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const formatNumber = (num: number) => num.toString().padStart(2, "0");
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
     <div className="countdown-dramatic">
@@ -543,29 +543,29 @@ const FaqSectionAdvanced = () => {
 
   const faqItems = [
     {
-      question: "É realmente possível descobrir meu estilo em 5 minutos?",
+      question: 'É realmente possível descobrir meu estilo em 5 minutos?',
       answer:
-        "Sim! Nosso quiz foi desenvolvido com base em anos de experiência e metodologia científica. Em poucos minutos, você terá uma análise precisa do seu estilo predominante entre os 7 estilos universais.",
+        'Sim! Nosso quiz foi desenvolvido com base em anos de experiência e metodologia científica. Em poucos minutos, você terá uma análise precisa do seu estilo predominante entre os 7 estilos universais.',
     },
     {
-      question: "O que acontece se eu não gostar do resultado?",
+      question: 'O que acontece se eu não gostar do resultado?',
       answer:
-        "Oferecemos 7 dias de garantia total. Se não ficar satisfeita, devolvemos 100% do seu dinheiro sem perguntas. Sua satisfação é nossa prioridade.",
+        'Oferecemos 7 dias de garantia total. Se não ficar satisfeita, devolvemos 100% do seu dinheiro sem perguntas. Sua satisfação é nossa prioridade.',
     },
     {
-      question: "Quanto tempo terei acesso aos materiais?",
+      question: 'Quanto tempo terei acesso aos materiais?',
       answer:
-        "O acesso é vitalício! Você poderá baixar todos os materiais e consultá-los sempre que precisar, sem prazo de expiração.",
+        'O acesso é vitalício! Você poderá baixar todos os materiais e consultá-los sempre que precisar, sem prazo de expiração.',
     },
     {
-      question: "Funciona para todas as idades e tipos de corpo?",
+      question: 'Funciona para todas as idades e tipos de corpo?',
       answer:
-        "Absolutamente! Nosso método é universal e funciona para mulheres de todas as idades, tipos de corpo e estilos de vida. O importante é descobrir e expressar sua essência única.",
+        'Absolutamente! Nosso método é universal e funciona para mulheres de todas as idades, tipos de corpo e estilos de vida. O importante é descobrir e expressar sua essência única.',
     },
     {
-      question: "Como recebo os materiais após a compra?",
+      question: 'Como recebo os materiais após a compra?',
       answer:
-        "Logo após a confirmação do pagamento, você recebe um email com o link de acesso à área exclusiva onde poderá fazer o quiz e baixar todos os materiais imediatamente.",
+        'Logo após a confirmação do pagamento, você recebe um email com o link de acesso à área exclusiva onde poderá fazer o quiz e baixar todos os materiais imediatamente.',
     },
   ];
 
@@ -589,12 +589,12 @@ const FaqSectionAdvanced = () => {
               <ChevronRight
                 size={24}
                 className={`text-orange-500 transition-transform duration-300 flex-shrink-0 ${
-                  openItem === index ? "transform rotate-90" : ""
+                  openItem === index ? 'transform rotate-90' : ''
                 }`}
               />
             </button>
 
-            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
+            {openItem === index && <div style={{ color: '#6B4F43' }}>{item.answer}</div>}
           </div>
         ))}
       </div>
@@ -604,7 +604,7 @@ const FaqSectionAdvanced = () => {
 
 const QuizOfferPageV2: React.FC = () => {
   useEffect(() => {
-    const styleElement = document.createElement("style");
+    const styleElement = document.createElement('style');
     styleElement.textContent = customStyles;
     document.head.appendChild(styleElement);
 
@@ -622,8 +622,8 @@ const QuizOfferPageV2: React.FC = () => {
       { quality: 95 }
     );
 
-    if (typeof window !== "undefined" && "performance" in window) {
-      window.performance.mark("offer-page-v2-mounted");
+    if (typeof window !== 'undefined' && 'performance' in window) {
+      window.performance.mark('offer-page-v2-mounted');
     }
 
     return () => {
@@ -631,14 +631,14 @@ const QuizOfferPageV2: React.FC = () => {
     };
   }, []);
 
-  const handleCtaClick = (buttonId: string, action: string = "Comprar Agora") => {
-    trackButtonClick(buttonId, action, "quiz_offer_page_v2");
+  const handleCtaClick = (buttonId: string, action: string = 'Comprar Agora') => {
+    trackButtonClick(buttonId, action, 'quiz_offer_page_v2');
   };
 
   return (
     <div
       className="min-h-screen bg-[var(--background)]"
-      style={{ fontFamily: "Inter, sans-serif" }}
+      style={{ fontFamily: 'Inter, sans-serif' }}
     >
       {/* Banner de Urgência no Topo */}
       <div className="urgency-banner">
@@ -661,7 +661,7 @@ const QuizOfferPageV2: React.FC = () => {
           />
           <div className="text-right">
             <div className="text-2xl font-bold text-green-600">5x R$ 8,83</div>
-            <div style={{ color: "#6B4F43" }}>ou R$ 39,90 à vista</div>
+            <div style={{ color: '#6B4F43' }}>ou R$ 39,90 à vista</div>
           </div>
         </div>
       </header>
@@ -687,19 +687,19 @@ const QuizOfferPageV2: React.FC = () => {
               {/* Headline Mais Impactante */}
               <h1
                 className="text-hierarchy-1 mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 DESCUBRA SEU ESTILO
                 <br />
-                <span style={{ color: "#ff6b6b" }}>EM 5 MINUTOS</span>
+                <span style={{ color: '#ff6b6b' }}>EM 5 MINUTOS</span>
               </h1>
 
               {/* Subheadline Mais Persuasiva */}
               <p className="text-body mb-8 max-w-4xl mx-auto">
                 <strong>Pare de desperdiçar dinheiro em roupas que não combinam!</strong>
                 <br />
-                Descubra seu estilo predominante e tenha um guarda-roupa que{" "}
-                <span style={{ color: "#ff6b6b", fontWeight: "bold" }}>funciona 100%</span>
+                Descubra seu estilo predominante e tenha um guarda-roupa que{' '}
+                <span style={{ color: '#ff6b6b', fontWeight: 'bold' }}>funciona 100%</span>
               </p>
 
               {/* Hero Video/Image com Destaque */}
@@ -719,13 +719,13 @@ const QuizOfferPageV2: React.FC = () => {
               {/* CTA Principal Mais Impactante */}
               <button
                 onClick={() => {
-                  handleCtaClick("hero_cta_v2", "Descobrir Meu Estilo Agora");
+                  handleCtaClick('hero_cta_v2', 'Descobrir Meu Estilo Agora');
                   const checkoutUrl =
-                    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+                    'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
 
                   // Comportamento responsivo: nova aba desktop, mesma aba mobile
                   if (window.innerWidth >= 768) {
-                    window.open(checkoutUrl, "_blank");
+                    window.open(checkoutUrl, '_blank');
                   } else {
                     window.location.href = checkoutUrl;
                   }
@@ -758,39 +758,39 @@ const QuizOfferPageV2: React.FC = () => {
             <div className="card-impact animate-slide-up animate-delay-2">
               <h2
                 className="text-hierarchy-2 text-center mb-8"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                <span style={{ color: "#ff6b6b" }}>ANTES</span> vs{" "}
-                <span style={{ color: "#00c851" }}>DEPOIS</span>
+                <span style={{ color: '#ff6b6b' }}>ANTES</span> vs{' '}
+                <span style={{ color: '#00c851' }}>DEPOIS</span>
               </h2>
 
               <div className="before-after">
                 <div className="before-section">
                   <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Eye style={{ color: "#432818" }} size={24} />
+                    <Eye style={{ color: '#432818' }} size={24} />
                     SEM O QUIZ
                   </h3>
                   <ul className="space-y-3">
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
                         <strong>Guarda-roupa cheio</strong> mas "nada para vestir"
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
                         <strong>Compras por impulso</strong> que nunca usa
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
                         <strong>Dinheiro desperdiçado</strong> em peças que não combinam
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span style={{ color: "#432818" }}>✗</span>
+                      <span style={{ color: '#432818' }}>✗</span>
                       <span>
                         <strong>Baixa autoestima</strong> com a própria imagem
                       </span>
@@ -888,13 +888,13 @@ const QuizOfferPageV2: React.FC = () => {
           <div className="container-main text-center">
             <button
               onClick={() => {
-                handleCtaClick("final_cta_v2", "Garantir Transformação");
+                handleCtaClick('final_cta_v2', 'Garantir Transformação');
                 const checkoutUrl =
-                  "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+                  'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
 
                 // Comportamento responsivo: nova aba desktop, mesma aba mobile
                 if (window.innerWidth >= 768) {
-                  window.open(checkoutUrl, "_blank");
+                  window.open(checkoutUrl, '_blank');
                 } else {
                   window.location.href = checkoutUrl;
                 }
@@ -906,7 +906,7 @@ const QuizOfferPageV2: React.FC = () => {
               <Flame size={32} />
             </button>
 
-            <div style={{ color: "#6B4F43" }}>
+            <div style={{ color: '#6B4F43' }}>
               ⚡ Acesso imediato • 🔒 Pagamento seguro • 🛡️ 7 dias de garantia
             </div>
           </div>
@@ -918,9 +918,9 @@ const QuizOfferPageV2: React.FC = () => {
             <div className="card-impact animate-slide-up animate-delay-4">
               <h2
                 className="text-hierarchy-2 text-center mb-8"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                Perguntas <span style={{ color: "#ff6b6b" }}>Frequentes</span>
+                Perguntas <span style={{ color: '#ff6b6b' }}>Frequentes</span>
               </h2>
               <FaqSectionAdvanced />
             </div>

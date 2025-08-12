@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { ResultPageConfig } from "@/types/resultPageConfig";
+import { useState, useCallback } from 'react';
+import { ResultPageConfig } from '@/types/resultPageConfig';
 
 interface UseQuizResultConfigReturn {
   config: ResultPageConfig;
@@ -29,8 +29,8 @@ export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn
       hero: {
         visible: true,
         content: {
-          title: "Oferta Especial",
-          subtitle: "Descubra mais sobre seu estilo",
+          title: 'Oferta Especial',
+          subtitle: 'Descubra mais sobre seu estilo',
         },
         style: {},
       },
@@ -75,7 +75,7 @@ export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn
       localStorage.setItem(`quiz_result_config_${category}`, JSON.stringify(config));
       return true;
     } catch (error) {
-      console.error("Error saving config:", error);
+      console.error('Error saving config:', error);
       return false;
     }
   }, [category, config]);
@@ -101,8 +101,8 @@ export const useQuizResultConfig = (category: string): UseQuizResultConfigReturn
         hero: {
           visible: true,
           content: {
-            title: "Oferta Especial",
-            subtitle: "Descubra mais sobre seu estilo",
+            title: 'Oferta Especial',
+            subtitle: 'Descubra mais sobre seu estilo',
           },
           style: {},
         },

@@ -1,49 +1,49 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { giseleStyleTemplate } from "@/services/templates/giseleStyleTemplate";
-import { useResultPageConfig } from "@/hooks/useResultPageConfig";
-import { toast } from "@/components/ui/use-toast";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { giseleStyleTemplate } from '@/services/templates/giseleStyleTemplate';
+import { useResultPageConfig } from '@/hooks/useResultPageConfig';
+import { toast } from '@/components/ui/use-toast';
 
 interface TemplateListProps {
   onSelectTemplate?: () => void;
 }
 
 export const TemplateList: React.FC<TemplateListProps> = ({ onSelectTemplate }) => {
-  const { updateSection } = useResultPageConfig("Natural");
+  const { updateSection } = useResultPageConfig('Natural');
 
   const handleSelectTemplate = (template: any) => {
     try {
       // Update sections individually since we don't have importConfig
       if (template.header) {
-        updateSection("header", template.header);
+        updateSection('header', template.header);
       }
       if (template.mainContent) {
-        updateSection("mainContent", template.mainContent);
+        updateSection('mainContent', template.mainContent);
       }
       if (template.offer) {
-        updateSection("offer", template.offer);
+        updateSection('offer', template.offer);
       }
       if (template.globalStyles) {
-        updateSection("globalStyles", template.globalStyles);
+        updateSection('globalStyles', template.globalStyles);
       }
       if (template.blocks) {
-        updateSection("blocks", template.blocks);
+        updateSection('blocks', template.blocks);
       }
 
       toast({
-        title: "Template aplicado",
-        description: "O template foi aplicado com sucesso",
+        title: 'Template aplicado',
+        description: 'O template foi aplicado com sucesso',
       });
 
       if (onSelectTemplate) {
         onSelectTemplate();
       }
     } catch (error) {
-      console.error("Error applying template:", error);
+      console.error('Error applying template:', error);
       toast({
-        title: "Erro ao aplicar template",
-        description: "Ocorreu um erro ao aplicar o template",
-        variant: "destructive",
+        title: 'Erro ao aplicar template',
+        description: 'Ocorreu um erro ao aplicar o template',
+        variant: 'destructive',
       });
     }
   };

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step19Template - Componente para Etapa 19 do Quiz
@@ -40,18 +40,18 @@ interface Step19TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step19Template: React.FC<Step19TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 18 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 18 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 18 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 18 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 95,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step19-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step19-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step19Template: React.FC<Step19TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,17 +199,17 @@ export const getStep19Template = () => {
   return [
     // 🎉 RESULTADO PRINCIPAL
     {
-      id: "step19-result-header",
-      type: "quiz-intro-header",
+      id: 'step19-result-header',
+      type: 'quiz-intro-header',
       properties: {
-        title: "Seu Resultado está Pronto!",
-        subtitle: "Descubra seu estilo predominante",
+        title: 'Seu Resultado está Pronto!',
+        subtitle: 'Descubra seu estilo predominante',
         showIcon: true,
-        textAlign: "center",
+        textAlign: 'center',
         fontSize: 24,
-        fontWeight: "bold",
-        color: "#432818",
-        backgroundColor: "transparent",
+        fontWeight: 'bold',
+        color: '#432818',
+        backgroundColor: 'transparent',
         marginTop: 0,
         marginBottom: 20,
       },
@@ -217,31 +217,31 @@ export const getStep19Template = () => {
 
     // 📊 RESULTADO DETALHADO
     {
-      id: "step19-result-display",
-      type: "text-inline",
+      id: 'step19-result-display',
+      type: 'text-inline',
       properties: {
-        text: "Baseado nas suas respostas, identificamos seu estilo predominante e preparamos recomendações personalizadas para você!",
+        text: 'Baseado nas suas respostas, identificamos seu estilo predominante e preparamos recomendações personalizadas para você!',
         fontSize: 16,
-        textAlign: "center",
-        color: "#6B7280",
+        textAlign: 'center',
+        color: '#6B7280',
         marginBottom: 30,
       },
     },
 
     // 🎯 CALL TO ACTION
     {
-      id: "step19-cta-button",
-      type: "button-inline",
+      id: 'step19-cta-button',
+      type: 'button-inline',
       properties: {
-        text: "Ver Meu Estilo Completo",
-        variant: "primary",
-        size: "large",
-        action: "next-step",
-        backgroundColor: "#B89B7A",
-        textColor: "#FFFFFF",
+        text: 'Ver Meu Estilo Completo',
+        variant: 'primary',
+        size: 'large',
+        action: 'next-step',
+        backgroundColor: '#B89B7A',
+        textColor: '#FFFFFF',
         borderRadius: 8,
-        fontWeight: "semibold",
-        textAlign: "center",
+        fontWeight: 'semibold',
+        textAlign: 'center',
         marginTop: 20,
       },
     },

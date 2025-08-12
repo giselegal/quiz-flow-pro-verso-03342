@@ -1,16 +1,16 @@
-import { trackButtonClick } from "./analytics";
-import { ABTestVariant, ABTestConfig } from "@/types/abtest";
+import { trackButtonClick } from './analytics';
+import { ABTestVariant, ABTestConfig } from '@/types/abtest';
 
 // Configuração do teste A/B para landing pages
 export const LANDING_PAGE_AB_TEST: ABTestConfig = {
-  testName: "landing_page_conversion_test",
+  testName: 'landing_page_conversion_test',
   variantA: {
-    route: "/resultado",
-    description: "Página de Resultado Original",
+    route: '/resultado',
+    description: 'Página de Resultado Original',
   },
   variantB: {
-    route: "/descubra-seu-estilo",
-    description: "Landing Page Quiz Estilo",
+    route: '/descubra-seu-estilo',
+    description: 'Landing Page Quiz Estilo',
   },
   trafficSplit: 50, // 50% para cada versão
 };
@@ -27,7 +27,7 @@ export function getABTestVariant(testConfig: ABTestConfig): ABTestVariant {
   const hash = simpleHash(userKey + testConfig.testName);
   const percentage = Math.abs(hash) % 100;
 
-  const variant: ABTestVariant = percentage < testConfig.trafficSplit ? "B" : "A";
+  const variant: ABTestVariant = percentage < testConfig.trafficSplit ? 'B' : 'A';
 
   // Track da variante atribuída
   trackABTestAssignment(testConfig.testName, variant);
@@ -40,7 +40,7 @@ export function getABTestVariant(testConfig: ABTestConfig): ABTestVariant {
  */
 function getUserUniqueKey(): string {
   // Tenta usar sessionStorage primeiro para manter consistência na sessão
-  const sessionKey = "ab_test_user_key";
+  const sessionKey = 'ab_test_user_key';
   let userKey = sessionStorage.getItem(sessionKey);
 
   if (!userKey) {
@@ -51,7 +51,7 @@ function getUserUniqueKey(): string {
       screen.width,
       screen.height,
       new Date().getDate(), // Muda diariamente para rebalanceamento
-    ].join("|");
+    ].join('|');
 
     userKey = fingerprint;
     sessionStorage.setItem(sessionKey, userKey);
@@ -85,7 +85,7 @@ function trackABTestAssignment(testName: string, variant: ABTestVariant) {
 
     console.log(`✅ A/B Test: Usuário atribuído à variante ${variant} do teste ${testName}`);
   } catch (error) {
-    console.error("Erro ao rastrear atribuição do teste A/B:", error);
+    console.error('Erro ao rastrear atribuição do teste A/B:', error);
   }
 }
 
@@ -112,7 +112,7 @@ export function trackABTestConversion(
       );
     }
   } catch (error) {
-    console.error("Erro ao rastrear conversão do teste A/B:", error);
+    console.error('Erro ao rastrear conversão do teste A/B:', error);
   }
 }
 
@@ -121,7 +121,7 @@ export function trackABTestConversion(
  */
 export function getABTestRedirectUrl(testConfig: ABTestConfig): string {
   const variant = getABTestVariant(testConfig);
-  return variant === "A" ? testConfig.variantA.route : testConfig.variantB.route;
+  return variant === 'A' ? testConfig.variantA.route : testConfig.variantB.route;
 }
 
 /**
@@ -129,7 +129,7 @@ export function getABTestRedirectUrl(testConfig: ABTestConfig): string {
  */
 export function useABTestInfo(testConfig: ABTestConfig) {
   const variant = getABTestVariant(testConfig);
-  const currentVariant = variant === "A" ? testConfig.variantA : testConfig.variantB;
+  const currentVariant = variant === 'A' ? testConfig.variantA : testConfig.variantB;
 
   return {
     variant,
@@ -145,7 +145,7 @@ export function useABTestInfo(testConfig: ABTestConfig) {
  */
 export function forceABTestVariant(testName: string, variant: ABTestVariant) {
   localStorage.setItem(`ab_test_${testName}_variant`, variant);
-  localStorage.setItem(`ab_test_${testName}_forced`, "true");
+  localStorage.setItem(`ab_test_${testName}_forced`, 'true');
   console.log(`🔧 A/B Test: Forçando variante ${variant} para o teste ${testName}`);
 }
 
@@ -155,14 +155,14 @@ export function forceABTestVariant(testName: string, variant: ABTestVariant) {
 export function clearForcedABTestVariant(testName: string) {
   localStorage.removeItem(`ab_test_${testName}_variant`);
   localStorage.removeItem(`ab_test_${testName}_forced`);
-  sessionStorage.removeItem("ab_test_user_key");
+  sessionStorage.removeItem('ab_test_user_key');
   console.log(`🔧 A/B Test: Removendo forçamento para o teste ${testName}`);
 }
 
 export const logABTestView = (
   testName: string,
   variant: ABTestVariant,
-  page: string = "unknown"
+  page: string = 'unknown'
 ) => {
   try {
     const logEntry = {
@@ -172,12 +172,12 @@ export const logABTestView = (
       page: page,
     };
 
-    const existingLogs = localStorage.getItem("ab_test_views") || "[]";
+    const existingLogs = localStorage.getItem('ab_test_views') || '[]';
     const logs = JSON.parse(existingLogs);
     logs.push(logEntry);
-    localStorage.setItem("ab_test_views", JSON.stringify(logs));
+    localStorage.setItem('ab_test_views', JSON.stringify(logs));
   } catch (error) {
-    console.error("Error logging AB test view:", error);
+    console.error('Error logging AB test view:', error);
   }
 };
 
@@ -185,7 +185,7 @@ export const logABTestConversion = (
   testName: string,
   variant: ABTestVariant,
   conversionType: string,
-  page: string = "unknown"
+  page: string = 'unknown'
 ) => {
   try {
     const logEntry = {
@@ -196,11 +196,11 @@ export const logABTestConversion = (
       page: page,
     };
 
-    const existingLogs = localStorage.getItem("ab_test_conversions") || "[]";
+    const existingLogs = localStorage.getItem('ab_test_conversions') || '[]';
     const logs = JSON.parse(existingLogs);
     logs.push(logEntry);
-    localStorage.setItem("ab_test_conversions", JSON.stringify(logs));
+    localStorage.setItem('ab_test_conversions', JSON.stringify(logs));
   } catch (error) {
-    console.error("Error logging AB test conversion:", error);
+    console.error('Error logging AB test conversion:', error);
   }
 };

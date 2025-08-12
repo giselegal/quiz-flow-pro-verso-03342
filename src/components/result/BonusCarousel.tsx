@@ -4,7 +4,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from '@/components/ui/carousel';
 
 interface Bonus {
   title: string;

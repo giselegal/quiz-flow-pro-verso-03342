@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { QuizQuestion, QuizAnswer, QuizResult, StyleResult } from "@/types/quiz";
-import { getStyleColor } from "@/utils/styleUtils";
-import caktoquizQuestions from "@/data/caktoquizQuestions";
+import { useState, useCallback } from 'react';
+import { QuizQuestion, QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
+import { getStyleColor } from '@/utils/styleUtils';
+import caktoquizQuestions from '@/data/caktoquizQuestions';
 
 interface UseQuizLogicProps {
   questions: QuizQuestion[];
@@ -77,7 +77,7 @@ export const useQuizLogic = () => {
     const sortedStyles = Object.entries(styleScores).sort(
       ([, scoreA], [, scoreB]) => scoreB - scoreA
     );
-    const topStyle = sortedStyles[0]?.[0] || "estilo-neutro";
+    const topStyle = sortedStyles[0]?.[0] || 'estilo-neutro';
 
     const primaryResult = createStyleResult(topStyle, styleScores[topStyle] || 0);
 

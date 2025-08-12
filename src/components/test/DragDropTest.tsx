@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import DroppableCanvas from "../editor/dnd/DroppableCanvas";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import DroppableCanvas from '../editor/dnd/DroppableCanvas';
 
 const DragDropTest: React.FC = () => {
   const [blocks, setBlocks] = useState<any[]>([]);
@@ -37,9 +37,9 @@ const DragDropTest: React.FC = () => {
       />
 
       <div className="mt-4 space-x-2">
-        <Button onClick={() => handleBlockSelect("test")}>Select Test Block</Button>
-        <Button onClick={() => handleBlockDelete("test")}>Delete Test Block</Button>
-        <Button onClick={() => handleBlockDuplicate("test")}>Duplicate Test Block</Button>
+        <Button onClick={() => handleBlockSelect('test')}>Select Test Block</Button>
+        <Button onClick={() => handleBlockDelete('test')}>Delete Test Block</Button>
+        <Button onClick={() => handleBlockDuplicate('test')}>Duplicate Test Block</Button>
       </div>
     </div>
   );

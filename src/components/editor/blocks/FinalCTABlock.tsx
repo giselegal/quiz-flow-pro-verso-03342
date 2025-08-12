@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { ArrowRight, ShieldCheck, Clock } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { ArrowRight, ShieldCheck, Clock } from 'lucide-react';
+import { trackButtonClick } from '@/utils/analytics';
 
 interface FinalCTABlockProps {
   mainText?: string;
@@ -14,11 +14,11 @@ interface FinalCTABlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -58,8 +58,8 @@ const getMarginClass = (value, type) => {
 };
 
 const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
-  mainText = "Descubra Como Aplicar Seu Estilo na Prática",
-  buttonText = "Quero meu Guia de Estilo Agora",
+  mainText = 'Descubra Como Aplicar Seu Estilo na Prática',
+  buttonText = 'Quero meu Guia de Estilo Agora',
   showGuarantee = true,
   showSecurityBadge = true,
   className,
@@ -67,20 +67,20 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   const handleCTAClick = () => {
-    trackButtonClick("final_cta_button", "CTA Final - Página de Resultado", "result_page");
-    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    trackButtonClick('final_cta_button', 'CTA Final - Página de Resultado', 'result_page');
+    window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
   };
 
   return (
     <div
       className={cn(
-        "py-12 bg-gradient-to-br from-[#fff7f3] to-[#f9f4ef]",
+        'py-12 bg-gradient-to-br from-[#fff7f3] to-[#f9f4ef]',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="max-w-4xl mx-auto text-center px-4">
@@ -107,16 +107,16 @@ const FinalCTABlock: React.FC<FinalCTABlockProps> = ({
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className={cn(
-              "inline-flex items-center gap-3 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl",
-              "border-2 border-transparent hover:border-white",
-              isHovered && "animate-pulse"
+              'inline-flex items-center gap-3 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-2xl',
+              'border-2 border-transparent hover:border-white',
+              isHovered && 'animate-pulse'
             )}
           >
             {buttonText}
             <ArrowRight
               className={cn(
-                "w-5 h-5 transition-transform duration-300",
-                isHovered && "translate-x-1"
+                'w-5 h-5 transition-transform duration-300',
+                isHovered && 'translate-x-1'
               )}
             />
           </button>

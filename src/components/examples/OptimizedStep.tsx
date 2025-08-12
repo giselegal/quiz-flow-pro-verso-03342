@@ -12,7 +12,7 @@ import {
   useQuizStepContainer,
   useSmartDebounce,
   useTemplateActions,
-} from "@/hooks";
+} from '@/hooks';
 
 interface OptimizedStepProps {
   stepId: number;
@@ -34,8 +34,8 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
 }) => {
   // 🏗️ Container com otimizações automáticas
   const container = useQuizStepContainer(stepId, {
-    containerWidth: "large",
-    spacing: "comfortable",
+    containerWidth: 'large',
+    spacing: 'comfortable',
     enableMobileOptimizations: true,
     enablePerformanceOptimizations: true,
   });
@@ -48,7 +48,7 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
   });
 
   // 📝 Templates para reutilização
-  const templates = useTemplateActions("quiz-step");
+  const templates = useTemplateActions('quiz-step');
 
   // 🔄 Debounce inteligente para respostas
   const debouncedAnswer = useSmartDebounce(userAnswers[stepId], 300);
@@ -76,14 +76,14 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
       style={container.inlineStyles}
     >
       {/* 📊 Debug info (apenas em desenvolvimento) */}
-      {process.env.NODE_ENV === "development" && container.stats && (
-        <div style={{ backgroundColor: "#E5DDD5" }}>
+      {process.env.NODE_ENV === 'development' && container.stats && (
+        <div style={{ backgroundColor: '#E5DDD5' }}>
           <strong>🔧 Hook Stats:</strong>
           <ul>
-            <li>📱 Mobile: {container.isMobile ? "Sim" : "Não"}</li>
+            <li>📱 Mobile: {container.isMobile ? 'Sim' : 'Não'}</li>
             <li>⚡ Otimizações: {container.stats.totalOptimizations}</li>
             <li>📈 Render: {performance.metrics?.renderCount || 0}x</li>
-            <li>🔮 Preload: {performance.preloadStatus.nextStepReady ? "✅" : "⏳"}</li>
+            <li>🔮 Preload: {performance.preloadStatus.nextStepReady ? '✅' : '⏳'}</li>
             <li>📝 Templates: {templates.availableTemplates.length}</li>
           </ul>
         </div>
@@ -99,12 +99,12 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
             <button
               onClick={() => {
                 const currentBlock = {
-                  type: "quiz-step",
+                  type: 'quiz-step',
                   properties: { stepId, ...userAnswers[stepId] },
                 };
                 templates.saveAsTemplate(currentBlock, `Step ${stepId} Template`);
               }}
-              style={{ backgroundColor: "#B89B7A" }}
+              style={{ backgroundColor: '#B89B7A' }}
             >
               💾 Salvar como Template ({templates.availableTemplates.length} disponíveis)
             </button>
@@ -117,14 +117,14 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
         {/* Aqui vai o conteúdo real do step */}
         <div className="space-y-4">
           <div className="p-6 bg-white rounded-lg shadow-sm border">
-            <p style={{ color: "#6B4F43" }}>Este é um step otimizado usando hooks compostos!</p>
+            <p style={{ color: '#6B4F43' }}>Este é um step otimizado usando hooks compostos!</p>
 
             {/* 📊 Informações de performance */}
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="font-medium">Device:</span>
-                <span className={container.isMobile ? "text-orange-600" : "text-green-600"}>
-                  {container.isMobile ? " 📱 Mobile" : " 💻 Desktop"}
+                <span className={container.isMobile ? 'text-orange-600' : 'text-green-600'}>
+                  {container.isMobile ? ' 📱 Mobile' : ' 💻 Desktop'}
                 </span>
               </div>
 
@@ -132,10 +132,10 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
                 <span className="font-medium">Performance:</span>
                 <span
                   className={
-                    performance.device.shouldOptimize ? "text-orange-600" : "text-green-600"
+                    performance.device.shouldOptimize ? 'text-orange-600' : 'text-green-600'
                   }
                 >
-                  {performance.device.shouldOptimize ? " ⚡ Otimizado" : " 🚀 Normal"}
+                  {performance.device.shouldOptimize ? ' ⚡ Otimizado' : ' 🚀 Normal'}
                 </span>
               </div>
             </div>
@@ -143,25 +143,25 @@ export const OptimizedStep: React.FC<OptimizedStepProps> = ({
 
           {/* 🔮 Status do preload */}
           {performance.preloadStatus.isPreloading && (
-            <div style={{ color: "#8B7355" }}>🔮 Preparando próximo step...</div>
+            <div style={{ color: '#8B7355' }}>🔮 Preparando próximo step...</div>
           )}
         </div>
       </div>
 
       {/* 🎛️ Controles */}
       <div className="mt-8 flex justify-between items-center">
-        <div style={{ color: "#8B7355" }}>Debounce: {performance.debounceTime}ms</div>
+        <div style={{ color: '#8B7355' }}>Debounce: {performance.debounceTime}ms</div>
 
         <button
           onClick={onNext}
           disabled={!performance.preloadStatus.nextStepReady}
           className={`px-6 py-2 rounded-lg font-medium transition-all ${
             performance.preloadStatus.nextStepReady
-              ? "bg-blue-500 text-white hover:bg-blue-600 transform hover:scale-105"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              ? 'bg-blue-500 text-white hover:bg-blue-600 transform hover:scale-105'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
-          {performance.preloadStatus.nextStepReady ? "➡️ Próximo" : "⏳ Carregando..."}
+          {performance.preloadStatus.nextStepReady ? '➡️ Próximo' : '⏳ Carregando...'}
         </button>
       </div>
     </div>
@@ -178,12 +178,12 @@ export const SimpleOptimizedStep: React.FC<OptimizedStepProps> = ({ stepId, onNe
   return (
     <div className={stepClasses}>
       <h2 className="text-xl font-bold mb-4">
-        Step {stepId} {isMobile && "📱"}
+        Step {stepId} {isMobile && '📱'}
       </h2>
 
       <p className="mb-6">Este é um exemplo simples de step otimizado!</p>
 
-      <button onClick={onNext} style={{ backgroundColor: "#B89B7A" }}>
+      <button onClick={onNext} style={{ backgroundColor: '#B89B7A' }}>
         Continuar
       </button>
     </div>

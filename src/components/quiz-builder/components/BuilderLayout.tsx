@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { QuizComponentData, QuizStage, QuizComponentType } from "@/types/quizBuilder";
-import { ComponentsSidebar } from "../ComponentsSidebar";
-import PreviewPanel from "../PreviewPanel";
-import { PropertyPanel } from "./PropertyPanel";
+import React, { useState } from 'react';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { QuizComponentData, QuizStage, QuizComponentType } from '@/types/quizBuilder';
+import { ComponentsSidebar } from '../ComponentsSidebar';
+import PreviewPanel from '../PreviewPanel';
+import { PropertyPanel } from './PropertyPanel';
 
 interface BuilderLayoutProps {
   components: QuizComponentData[];

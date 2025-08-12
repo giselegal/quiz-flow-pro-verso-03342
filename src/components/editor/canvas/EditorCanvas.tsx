@@ -1,10 +1,10 @@
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { SortableBlockWrapper } from "./SortableBlockWrapper";
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableBlockWrapper } from './SortableBlockWrapper';
 
 interface EditorCanvasProps {
   blocks: Block[];
@@ -14,7 +14,7 @@ interface EditorCanvasProps {
   onDeleteBlock: (blockId: string) => void;
   onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
   isPreviewing?: boolean;
-  viewportSize?: "sm" | "md" | "lg";
+  viewportSize?: 'sm' | 'md' | 'lg';
 }
 
 export const EditorCanvas: React.FC<EditorCanvasProps> = ({
@@ -25,7 +25,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   onDeleteBlock,
   onReorderBlocks,
   isPreviewing = false,
-  viewportSize = "lg",
+  viewportSize = 'lg',
 }) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -42,14 +42,14 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   const getViewportClasses = () => {
     switch (viewportSize) {
-      case "sm":
-        return "max-w-full mx-auto px-2";
-      case "md":
-        return "max-w-full mx-auto px-4";
-      case "lg":
-        return "max-w-full mx-auto px-6";
+      case 'sm':
+        return 'max-w-full mx-auto px-2';
+      case 'md':
+        return 'max-w-full mx-auto px-4';
+      case 'lg':
+        return 'max-w-full mx-auto px-6';
       default:
-        return "max-w-full mx-auto px-6";
+        return 'max-w-full mx-auto px-6';
     }
   };
 
@@ -64,7 +64,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
     if (!Component) {
       return (
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <p>Componente não encontrado: {block.type}</p>
         </div>
       );
@@ -80,7 +80,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     };
 
     return (
-      <div className={cn("transition-all duration-200", containerClasses)} style={inlineStyles}>
+      <div className={cn('transition-all duration-200', containerClasses)} style={inlineStyles}>
         <Component {...componentProps} />
       </div>
     );
@@ -122,7 +122,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
               </div>
             ))}
             {blocks.length === 0 && (
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 <p>Nenhum componente adicionado ainda.</p>
                 <p className="text-sm">Arraste componentes da barra lateral para começar.</p>
               </div>

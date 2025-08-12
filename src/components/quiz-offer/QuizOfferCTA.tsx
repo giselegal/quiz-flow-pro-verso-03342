@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
-import { trackButtonClick, trackSaleConversion } from "@/utils/analytics";
-import { getCtaUrl } from "@/services/pixelManager";
-import SecurePurchaseElement from "@/components/result/SecurePurchaseElement";
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ShoppingCart } from 'lucide-react';
+import { trackButtonClick, trackSaleConversion } from '@/utils/analytics';
+import { getCtaUrl } from '@/services/pixelManager';
+import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
 
 interface QuizOfferCTAProps {
   price?: string;
@@ -12,15 +12,15 @@ interface QuizOfferCTAProps {
 }
 
 export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
-  price = "39,00",
-  regularPrice = "175,00",
+  price = '39,00',
+  regularPrice = '175,00',
 }) => {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const handleCTAClick = () => {
-    trackButtonClick("main-cta", "Comprar Quiz Completo", "cta-section");
+    trackButtonClick('main-cta', 'Comprar Quiz Completo', 'cta-section');
     // Registrar início de checkout
-    trackSaleConversion(39.0, "BRL", "Quiz de Estilo Completo");
+    trackSaleConversion(39.0, 'BRL', 'Quiz de Estilo Completo');
     // Redirecionar para checkout
     window.location.href = getCtaUrl();
   };
@@ -42,8 +42,8 @@ export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
             <p className="text-sm text-[#aa6b5d] uppercase font-medium">Hoje por apenas</p>
             <div className="flex items-baseline justify-center">
               <span className="text-sm mr-1">R$</span>
-              <p className="text-4xl font-bold gold-text">{price.split(",")[0]}</p>
-              <span className="text-lg">,{price.split(",")[1]}</span>
+              <p className="text-4xl font-bold gold-text">{price.split(',')[0]}</p>
+              <span className="text-lg">,{price.split(',')[1]}</span>
             </div>
             <p className="text-xs text-[#3a3a3a]/60 mt-1">Pagamento único</p>
             <p className="text-sm text-[#432818] mt-2">
@@ -67,7 +67,7 @@ export const QuizOfferCTA: React.FC<QuizOfferCTAProps> = ({
         >
           <span className="flex items-center justify-center gap-2">
             <ShoppingCart
-              className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? "scale-110" : ""}`}
+              className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`}
             />
             Quero o Quiz Completo + Bônus
           </span>

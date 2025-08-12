@@ -1,5 +1,5 @@
-import FunnelDebugPanel from "@/components/debug/FunnelDebugPanel";
-import FunnelActivationDemo from "@/components/demo/FunnelActivationDemo";
+import FunnelDebugPanel from '@/components/debug/FunnelDebugPanel';
+import FunnelActivationDemo from '@/components/demo/FunnelActivationDemo';
 
 /**
  * Página de Teste do Sistema de Ativação das 21 Etapas
@@ -37,7 +37,7 @@ export default function TestFunnelActivationPage() {
               onClick={() => setShowDebugPanel(!showDebugPanel)}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
-              {showDebugPanel ? "Ocultar Debug" : "Mostrar Debug"}
+              {showDebugPanel ? 'Ocultar Debug' : 'Mostrar Debug'}
             </button>
           </div>
         </div>

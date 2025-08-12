@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { safeGetBlockProperties, logBlockDebug, isValidBlock } from "@/utils/blockUtils";
+import { safeGetBlockProperties, logBlockDebug, isValidBlock } from '@/utils/blockUtils';
 
 interface QuestionBlockProps {
   question: string;
@@ -33,11 +33,11 @@ interface QuestionBlockProps {
 const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
   // Validate block first
   if (!isValidBlock(block)) {
-    console.warn("⚠️ Invalid block received:", block);
-    return <div style={{ borderColor: "#E5DDD5" }}>Block inválido</div>;
+    console.warn('⚠️ Invalid block received:', block);
+    return <div style={{ borderColor: '#E5DDD5' }}>Block inválido</div>;
   }
 
-  logBlockDebug("DynamicBlockRenderer", block);
+  logBlockDebug('DynamicBlockRenderer', block);
   const properties = safeGetBlockProperties(block);
 
   const renderQuestionBlock = (questionProps: QuestionBlockProps) => {
@@ -47,7 +47,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
       allowMultiple = false,
       maxSelections = 1,
       showImages = false,
-      height = "auto",
+      height = 'auto',
       questionId = block.id,
       autoAdvance = false,
       title,
@@ -70,7 +70,7 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
           {options.map(option => (
             <div
               key={option.id}
-              style={{ backgroundColor: "#FAF9F7" }}
+              style={{ backgroundColor: '#FAF9F7' }}
               onClick={() => {
                 if (autoAdvance) {
                   console.log(
@@ -96,29 +96,29 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
 
   // Handle different block types
   switch (block.type) {
-    case "question":
-    case "quiz-question":
+    case 'question':
+    case 'quiz-question':
       return renderQuestionBlock(properties as QuestionBlockProps);
 
-    case "text":
+    case 'text':
       return (
         <div className="text-block p-4">
-          <p>{properties.text || "Texto não definido"}</p>
+          <p>{properties.text || 'Texto não definido'}</p>
         </div>
       );
 
-    case "image":
+    case 'image':
       return (
         <div className="image-block">
           {properties.imageUrl ? (
             <img
               src={properties.imageUrl}
-              alt={properties.alt || "Imagem"}
+              alt={properties.alt || 'Imagem'}
               className="max-w-full h-auto rounded"
             />
           ) : (
-            <div style={{ backgroundColor: "#E5DDD5" }}>
-              <span style={{ color: "#8B7355" }}>Imagem não definida</span>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
+              <span style={{ color: '#8B7355' }}>Imagem não definida</span>
             </div>
           )}
         </div>
@@ -126,8 +126,8 @@ const DynamicBlockRenderer: React.FC<{ block: any }> = ({ block }) => {
 
     default:
       return (
-        <div style={{ borderColor: "#E5DDD5" }}>
-          <p style={{ color: "#6B4F43" }}>Tipo de bloco desconhecido: {block.type}</p>
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <p style={{ color: '#6B4F43' }}>Tipo de bloco desconhecido: {block.type}</p>
         </div>
       );
   }

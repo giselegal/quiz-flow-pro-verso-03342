@@ -1,13 +1,13 @@
-import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { CheckCircle2, Shield } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Shield } from 'lucide-react';
 
 interface GuaranteeProps {
   text?: string;
 }
 
 const Guarantee: React.FC<GuaranteeProps> = ({
-  text = "Garantia incondicional de 7 dias. Teste o guia completo e todos os bônus. Se não ficar satisfeita por qualquer motivo, devolvemos 100% do seu investimento. Sem perguntas.",
+  text = 'Garantia incondicional de 7 dias. Teste o guia completo e todos os bônus. Se não ficar satisfeita por qualquer motivo, devolvemos 100% do seu investimento. Sem perguntas.',
 }) => {
   // Variantes para animação do Shield
   const shieldVariants = {
@@ -17,9 +17,9 @@ const Guarantee: React.FC<GuaranteeProps> = ({
       opacity: 1,
       transition: {
         repeat: Infinity,
-        repeatType: "reverse" as const,
+        repeatType: 'reverse' as const,
         duration: 2.5,
-        ease: "easeInOut",
+        ease: 'easeInOut',
       },
     },
   };
@@ -31,9 +31,9 @@ const Guarantee: React.FC<GuaranteeProps> = ({
       opacity: 0.8,
       transition: {
         repeat: Infinity,
-        repeatType: "reverse" as const,
+        repeatType: 'reverse' as const,
         duration: 2,
-        ease: "easeInOut",
+        ease: 'easeInOut',
       },
     },
   };
@@ -65,7 +65,7 @@ const Guarantee: React.FC<GuaranteeProps> = ({
         variants={glowVariants}
         initial="initial"
         animate="animate"
-        style={{ animationDelay: "1s" }}
+        style={{ animationDelay: '1s' }}
       />
 
       <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
@@ -85,7 +85,7 @@ const Guarantee: React.FC<GuaranteeProps> = ({
                 opacity: 0.8,
                 transition: {
                   repeat: Infinity,
-                  repeatType: "reverse",
+                  repeatType: 'reverse',
                   duration: 3,
                 },
               }}

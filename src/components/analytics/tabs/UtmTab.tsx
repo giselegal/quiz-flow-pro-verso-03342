@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   PieChart,
   Pie,
@@ -13,7 +13,7 @@ import {
   Legend,
   Cell,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 import {
   Table,
   TableBody,
@@ -21,9 +21,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { GridLayout } from "@/components/shared/GridLayout";
+} from '@/components/ui/table';
+import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import { GridLayout } from '@/components/shared/GridLayout';
 type UtmData = {
   source: string;
   medium: string;
@@ -48,7 +48,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
         setLoading(true);
 
         // Fetch data from the server API
-        const response = await fetch("http://localhost:3001/api/utm-analytics");
+        const response = await fetch('http://localhost:3001/api/utm-analytics');
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -57,7 +57,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
         const result = await response.json();
 
         if (!result.success) {
-          console.error("Error fetching UTM data:", result.error);
+          console.error('Error fetching UTM data:', result.error);
           return;
         }
 
@@ -65,7 +65,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
         const processedData = processUtmData(result.data || []);
         setUtmData(processedData);
       } catch (err) {
-        console.error("Error processing UTM data:", err);
+        console.error('Error processing UTM data:', err);
       } finally {
         setLoading(false);
       }
@@ -80,41 +80,41 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
     if (!data || data.length === 0) {
       return [
         {
-          source: "google",
-          medium: "cpc",
-          campaign: "brand",
+          source: 'google',
+          medium: 'cpc',
+          campaign: 'brand',
           users: 250,
           conversions: 42,
           conversionRate: 16.8,
         },
         {
-          source: "facebook",
-          medium: "social",
-          campaign: "retargeting",
+          source: 'facebook',
+          medium: 'social',
+          campaign: 'retargeting',
           users: 180,
           conversions: 27,
           conversionRate: 15.0,
         },
         {
-          source: "instagram",
-          medium: "social",
-          campaign: "influencer",
+          source: 'instagram',
+          medium: 'social',
+          campaign: 'influencer',
           users: 120,
           conversions: 15,
           conversionRate: 12.5,
         },
         {
-          source: "direct",
-          medium: "none",
-          campaign: "none",
+          source: 'direct',
+          medium: 'none',
+          campaign: 'none',
           users: 350,
           conversions: 22,
           conversionRate: 6.3,
         },
         {
-          source: "email",
-          medium: "email",
-          campaign: "newsletter",
+          source: 'email',
+          medium: 'email',
+          campaign: 'newsletter',
           users: 85,
           conversions: 19,
           conversionRate: 22.3,
@@ -126,13 +126,13 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
     const groupedData: Record<string, UtmData> = {};
 
     data.forEach(item => {
-      const key = `${item.utm_source || "direct"}-${item.utm_medium || "none"}-${item.utm_campaign || "none"}`;
+      const key = `${item.utm_source || 'direct'}-${item.utm_medium || 'none'}-${item.utm_campaign || 'none'}`;
 
       if (!groupedData[key]) {
         groupedData[key] = {
-          source: item.utm_source || "direct",
-          medium: item.utm_medium || "none",
-          campaign: item.utm_campaign || "none",
+          source: item.utm_source || 'direct',
+          medium: item.utm_medium || 'none',
+          campaign: item.utm_campaign || 'none',
           users: 1,
           conversions: 0,
           conversionRate: 0,
@@ -162,7 +162,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
         if (existingSource) {
           existingSource.value += item.users;
         } else {
-          acc.push({ name: item.source || "direct", value: item.users });
+          acc.push({ name: item.source || 'direct', value: item.users });
         }
         return acc;
       },
@@ -171,13 +171,13 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
   }, [utmData]);
 
   // Colors for the pie chart
-  const COLORS = ["#B89B7A", "#10b981", "#f59e0b", "#ef4444", "#0ea5e9", "#ec4899"];
+  const COLORS = ['#B89B7A', '#10b981', '#f59e0b', '#ef4444', '#0ea5e9', '#ec4899'];
 
   // Chart configuration
   const chartConfig: ChartConfig = {
     conversionRate: {
-      label: "Taxa de Conversão (%)",
-      theme: { light: "#B89B7A", dark: "#A78BFA" },
+      label: 'Taxa de Conversão (%)',
+      theme: { light: '#B89B7A', dark: '#A78BFA' },
     },
   };
 
@@ -192,10 +192,10 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
     return (
       <div className="bg-white p-1.5 border border-gray-100 shadow-lg rounded-md">
         <p className="text-[7px] font-medium mb-0.5">
-          {data.name === "value" ? props.label : data.name}
+          {data.name === 'value' ? props.label : data.name}
         </p>
         <p className="text-[7px] font-semibold">
-          {data.value} {data.name === "conversionRate" ? "%" : ""}
+          {data.value} {data.name === 'conversionRate' ? '%' : ''}
         </p>
       </div>
     );
@@ -255,16 +255,16 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
             <div className="h-[55px]">
               <ChartContainer config={chartConfig}>
                 <BarChart
-                  data={utmData.filter(d => d.campaign && d.campaign !== "none")}
+                  data={utmData.filter(d => d.campaign && d.campaign !== 'none')}
                   margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis
                     dataKey="campaign"
-                    tick={{ fill: "#888888", fontSize: 7 }}
-                    tickLine={{ stroke: "#e0e0e0" }}
+                    tick={{ fill: '#888888', fontSize: 7 }}
+                    tickLine={{ stroke: '#e0e0e0' }}
                   />
-                  <YAxis tick={{ fill: "#888888", fontSize: 7 }} />
+                  <YAxis tick={{ fill: '#888888', fontSize: 7 }} />
                   <Tooltip content={renderTooltipContent} />
                   <Bar
                     dataKey="conversionRate"
@@ -303,9 +303,9 @@ export const UtmTab: React.FC<UtmTabProps> = ({ analyticsData, loading: initialL
                 {utmData.length > 0 ? (
                   utmData.map((item, i) => (
                     <TableRow key={i}>
-                      <TableCell className="py-1.5 text-xs">{item.source || "direct"}</TableCell>
-                      <TableCell className="py-1.5 text-xs">{item.medium || "none"}</TableCell>
-                      <TableCell className="py-1.5 text-xs">{item.campaign || "none"}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.source || 'direct'}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.medium || 'none'}</TableCell>
+                      <TableCell className="py-1.5 text-xs">{item.campaign || 'none'}</TableCell>
                       <TableCell className="py-1.5 text-xs">{item.users}</TableCell>
                       <TableCell className="py-1.5 text-xs">{item.conversions}</TableCell>
                       <TableCell className="py-1.5 text-xs">

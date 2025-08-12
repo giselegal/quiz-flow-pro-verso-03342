@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { useQuizTracking } from "@/hooks/useQuizTracking";
-import type { BlockComponentProps } from "../../../types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { useQuizTracking } from '@/hooks/useQuizTracking';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 /**
  * QuizIntroBlock - Schema-driven compatible version
@@ -34,7 +34,7 @@ export interface QuizIntroBlockProps extends BlockComponentProps {
   onStart?: (nome: string) => void;
 }
 
-import { getMarginClass, type MarginProps } from "@/utils/marginUtils";
+import { getMarginClass, type MarginProps } from '@/utils/marginUtils';
 
 // Variáveis de margem para compatibilidade com o sistema de controles deslizantes
 let marginTop: number | undefined = 0;
@@ -49,19 +49,19 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
   onClick,
   onPropertyChange,
   onStart,
-  className = "",
+  className = '',
 }) => {
-  const [nome, setNome] = useState("");
-  const [error, setError] = useState("");
+  const [nome, setNome] = useState('');
+  const [error, setError] = useState('');
   const { trackUIInteraction, trackCTAClick } = useQuizTracking();
 
   // Validação defensiva para evitar erro quando block ou properties não existem
   if (!block || !block.properties) {
-    console.warn("QuizIntroBlock: block ou block.properties não foi fornecido", { block });
+    console.warn('QuizIntroBlock: block ou block.properties não foi fornecido', { block });
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Configuração do bloco inválida</p>
-        <p style={{ color: "#432818" }}>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Configuração do bloco inválida</p>
+        <p style={{ color: '#432818' }}>
           O componente QuizIntroBlock precisa de um objeto 'block' com 'properties' válidas.
         </p>
       </div>
@@ -70,19 +70,19 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
 
   // Extrair propriedades do schema com valores padrão (usando cores da marca)
   const {
-    title = "Descubra Seu Estilo Pessoal",
-    subtitle = "Um quiz personalizado para descobrir seu estilo único",
-    description = "Responda algumas perguntas e descubra o estilo que combina perfeitamente com você.",
-    inputPlaceholder = "Digite seu primeiro nome",
-    buttonText = "Iniciar Quiz",
-    backgroundColor = "#fffaf7", // brand-cream
-    textColor = "#432818", // brand-coffee
+    title = 'Descubra Seu Estilo Pessoal',
+    subtitle = 'Um quiz personalizado para descobrir seu estilo único',
+    description = 'Responda algumas perguntas e descubra o estilo que combina perfeitamente com você.',
+    inputPlaceholder = 'Digite seu primeiro nome',
+    buttonText = 'Iniciar Quiz',
+    backgroundColor = '#fffaf7', // brand-cream
+    textColor = '#432818', // brand-coffee
     backgroundImage,
     showBenefits = true,
     benefits = [
-      "Descubra seu estilo único",
-      "Recomendações personalizadas",
-      "Resultado instantâneo",
+      'Descubra seu estilo único',
+      'Recomendações personalizadas',
+      'Resultado instantâneo',
     ],
   } = block.properties;
 
@@ -90,15 +90,15 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
     e.preventDefault();
 
     if (!nome.trim()) {
-      setError("Por favor, digite seu nome para continuar");
-      trackUIInteraction("form_validation", "name_input", "validation_error", {
-        error: "empty_name",
+      setError('Por favor, digite seu nome para continuar');
+      trackUIInteraction('form_validation', 'name_input', 'validation_error', {
+        error: 'empty_name',
       });
       return;
     }
 
-    setError("");
-    trackCTAClick("quiz_start", `Iniciar Quiz - ${nome.trim()}`);
+    setError('');
+    trackCTAClick('quiz_start', `Iniciar Quiz - ${nome.trim()}`);
 
     if (onStart) {
       onStart(nome.trim());
@@ -108,11 +108,11 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNome(value);
-    setError("");
+    setError('');
 
     if (value.length > 0 && nome.length === 0) {
-      trackUIInteraction("form_field", "name_input", "first_input", {
-        field: "name",
+      trackUIInteraction('form_field', 'name_input', 'first_input', {
+        field: 'name',
       });
     }
   };
@@ -130,23 +130,23 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined" && "performance" in window) {
-      window.performance.mark("component-mounted");
+    if (typeof window !== 'undefined' && 'performance' in window) {
+      window.performance.mark('component-mounted');
     }
   }, []);
 
   return (
     <div
       className={cn(
-        "min-h-screen flex flex-col items-center justify-center p-8",
-        "transition-all duration-200",
-        isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
+        'min-h-screen flex flex-col items-center justify-center p-8',
+        'transition-all duration-200',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       style={{ backgroundColor, color: textColor }}
       onClick={handleClick}
@@ -166,38 +166,38 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
         <div className="space-y-4">
           <h1
             className={cn(
-              "text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
+              'text-4xl md:text-5xl font-bold leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
             )}
             style={{ color: textColor }}
             onClick={onClick}
             title="Clique para editar no Painel de Propriedades"
           >
-            {title || "Título do quiz"}
+            {title || 'Título do quiz'}
           </h1>
 
           <h2
             className={cn(
-              "text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
+              'text-xl md:text-2xl text-opacity-80 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
             )}
             style={{ color: textColor }}
             onClick={onClick}
             title="Clique para editar no Painel de Propriedades"
           >
-            {subtitle || "Subtítulo explicativo"}
+            {subtitle || 'Subtítulo explicativo'}
           </h2>
 
           <p
             className={cn(
-              "text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-              isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
+              'text-lg text-opacity-70 cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+              isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
             )}
             style={{ color: textColor }}
             onClick={onClick}
             title="Clique para editar no Painel de Propriedades"
           >
-            {description || "Descrição detalhada"}
+            {description || 'Descrição detalhada'}
           </p>
         </div>
 
@@ -225,31 +225,31 @@ const QuizIntroBlock: React.FC<QuizIntroBlockProps> = ({
               value={nome}
               onChange={handleInputChange}
               className={cn(
-                "w-full p-4 text-lg rounded-lg border-2 bg-white/90",
+                'w-full p-4 text-lg rounded-lg border-2 bg-white/90',
                 error
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20"
+                  ? 'border-red-500 focus:ring-red-500'
+                  : 'border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20'
               )}
               autoFocus
               required
             />
-            {error && <p style={{ color: "#432818" }}>{error}</p>}
+            {error && <p style={{ color: '#432818' }}>{error}</p>}
           </div>
 
           <button
             type="submit"
             disabled={!nome.trim()}
             className={cn(
-              "w-full py-4 px-6 text-lg font-semibold rounded-lg",
-              "transition-all duration-300 transform",
-              "focus:outline-none focus:ring-4 focus:ring-opacity-50",
+              'w-full py-4 px-6 text-lg font-semibold rounded-lg',
+              'transition-all duration-300 transform',
+              'focus:outline-none focus:ring-4 focus:ring-opacity-50',
               nome.trim()
-                ? "bg-[#B89B7A] hover:bg-[#A38A69] text-white hover:scale-105 shadow-lg focus:ring-[#B89B7A]"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                ? 'bg-[#B89B7A] hover:bg-[#A38A69] text-white hover:scale-105 shadow-lg focus:ring-[#B89B7A]'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             )}
             title="Texto do botão editável no Painel de Propriedades"
           >
-            {buttonText || "Iniciar Quiz"}
+            {buttonText || 'Iniciar Quiz'}
           </button>
         </form>
 

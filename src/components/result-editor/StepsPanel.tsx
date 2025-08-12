@@ -1,15 +1,15 @@
-"use client";
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Plus, MoreVertical, Edit2, Copy, Trash2, Eye, EyeOff, GripVertical } from "lucide-react";
+'use client';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Plus, MoreVertical, Edit2, Copy, Trash2, Eye, EyeOff, GripVertical } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
 interface Step {
   id: string;
@@ -46,7 +46,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   collapsed,
 }) => {
   const [editingStepId, setEditingStepId] = useState<string | null>(null);
-  const [editingName, setEditingName] = useState("");
+  const [editingName, setEditingName] = useState('');
 
   const handleEditStart = (step: Step) => {
     setEditingStepId(step.id);
@@ -58,12 +58,12 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
       onUpdateStep(editingStepId, { name: editingName.trim() });
     }
     setEditingStepId(null);
-    setEditingName("");
+    setEditingName('');
   };
 
   const handleEditCancel = () => {
     setEditingStepId(null);
-    setEditingName("");
+    setEditingName('');
   };
 
   if (collapsed) {
@@ -75,8 +75,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               key={step.id}
               className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center cursor-pointer ${
                 activeStepId === step.id
-                  ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+                  : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => onStepSelect(step.id)}
               title={step.name}
@@ -94,7 +94,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
 
   return (
     <div className="flex-1 flex flex-col">
-      <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <Button variant="outline" className="w-full" onClick={() => onAddStep()}>
           <Plus className="w-4 h-4 mr-2" />
           Nova Etapa
@@ -108,8 +108,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
               key={step.id}
               className={`border-2 rounded-lg p-3 cursor-pointer transition-colors ${
                 activeStepId === step.id
-                  ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+                  : 'border-gray-200 hover:border-gray-300'
               }`}
               onClick={() => onStepSelect(step.id)}
             >
@@ -164,7 +164,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                       {steps.length > 1 && (
                         <DropdownMenuItem
                           onClick={() => onDeleteStep(step.id)}
-                          style={{ color: "#432818" }}
+                          style={{ color: '#432818' }}
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
                           Excluir
@@ -181,8 +181,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                     value={editingName}
                     onChange={e => setEditingName(e.target.value)}
                     onKeyDown={e => {
-                      if (e.key === "Enter") handleEditSave();
-                      if (e.key === "Escape") handleEditCancel();
+                      if (e.key === 'Enter') handleEditSave();
+                      if (e.key === 'Escape') handleEditCancel();
                     }}
                     className="text-sm"
                     autoFocus
@@ -200,7 +200,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
                 <h4 className="font-medium text-sm mb-1">{step.name}</h4>
               )}
 
-              <div style={{ color: "#8B7355" }}>
+              <div style={{ color: '#8B7355' }}>
                 <span>{step.items.length} componentes</span>
                 <div className="flex gap-1">
                   {step.settings.showLogo && <span>🏷️</span>}

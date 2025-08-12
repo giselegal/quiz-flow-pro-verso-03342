@@ -1,6 +1,6 @@
 // Importações
-import { templateService } from "../services/templateService";
-import type { Block } from "../types/editor";
+import { templateService } from '../services/templateService';
+import type { Block } from '../types/editor';
 
 /**
  * Template Manager - Gerencia carregamento de templates JSON
@@ -19,7 +19,7 @@ export class TemplateManager {
         return this.cache.get(stepId)!;
       }
 
-      const stepNumber = parseInt(stepId.replace("step-", ""));
+      const stepNumber = parseInt(stepId.replace('step-', ''));
       console.log(`🔄 Carregando template para etapa ${stepNumber} via templateService`);
 
       // Carrega o template usando o templateService
@@ -48,43 +48,43 @@ export class TemplateManager {
    * Retorna blocos de fallback
    */
   private static getFallbackBlocks(stepId: string): Block[] {
-    const stepNumber = parseInt(stepId.replace("step-", ""));
+    const stepNumber = parseInt(stepId.replace('step-', ''));
 
     return [
       {
         id: `${stepId}-generic-title`,
-        type: "text-inline",
+        type: 'text-inline',
         order: 0,
         properties: {
           content: `Etapa ${stepNumber}`,
-          fontSize: "text-2xl",
-          fontWeight: "font-bold",
-          textAlign: "text-center",
-          color: "#374151",
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#374151',
         },
         content: {
           content: `Etapa ${stepNumber}`,
-          fontSize: "text-2xl",
-          fontWeight: "font-bold",
-          textAlign: "text-center",
-          color: "#374151",
+          fontSize: 'text-2xl',
+          fontWeight: 'font-bold',
+          textAlign: 'text-center',
+          color: '#374151',
         },
       },
       {
         id: `${stepId}-generic-description`,
-        type: "text-inline",
+        type: 'text-inline',
         order: 1,
         properties: {
-          content: "Template em desenvolvimento. Em breve!",
-          fontSize: "text-lg",
-          textAlign: "text-center",
-          color: "#6b7280",
+          content: 'Template em desenvolvimento. Em breve!',
+          fontSize: 'text-lg',
+          textAlign: 'text-center',
+          color: '#6b7280',
         },
         content: {
-          content: "Template em desenvolvimento. Em breve!",
-          fontSize: "text-lg",
-          textAlign: "text-center",
-          color: "#6b7280",
+          content: 'Template em desenvolvimento. Em breve!',
+          fontSize: 'text-lg',
+          textAlign: 'text-center',
+          color: '#6b7280',
         },
       },
     ];
@@ -96,7 +96,7 @@ export class TemplateManager {
   static async preloadCommonTemplates(): Promise<void> {
     const steps = Array.from({ length: 21 }, (_, i) => i + 1);
 
-    console.log("🚀 Pre-carregando templates...");
+    console.log('🚀 Pre-carregando templates...');
 
     const promises = steps.map(async stepNumber => {
       const stepId = `step-${stepNumber}`;
@@ -108,7 +108,7 @@ export class TemplateManager {
     });
 
     await Promise.allSettled(promises);
-    console.log("✅ Pre-carregamento concluído");
+    console.log('✅ Pre-carregamento concluído');
   }
 
   /**
@@ -130,7 +130,7 @@ export class TemplateManager {
    * Verifica se um template está disponível
    */
   static hasTemplate(stepId: string): boolean {
-    const stepNumber = parseInt(stepId.replace("step-", ""));
+    const stepNumber = parseInt(stepId.replace('step-', ''));
     return stepNumber >= 1 && stepNumber <= 21;
   }
 

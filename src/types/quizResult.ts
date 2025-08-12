@@ -1,18 +1,18 @@
-import { StyleResult } from "./quiz";
+import { StyleResult } from './quiz';
 
 export interface ResultPageBlock {
   id: string;
   type:
-    | "title"
-    | "subtitle"
-    | "styleResult"
-    | "image"
-    | "text"
-    | "cta"
-    | "testimonial"
-    | "bonus"
-    | "guarantee"
-    | "carousel";
+    | 'title'
+    | 'subtitle'
+    | 'styleResult'
+    | 'image'
+    | 'text'
+    | 'cta'
+    | 'testimonial'
+    | 'bonus'
+    | 'guarantee'
+    | 'carousel';
   content: string;
   imageUrl?: string;
   order: number;
@@ -40,14 +40,14 @@ export interface ResultPageBlock {
 }
 
 export interface StyleResultBlock extends ResultPageBlock {
-  type: "styleResult";
+  type: 'styleResult';
   styleCategory: string;
   percentage?: number;
   description?: string;
 }
 
 export interface CTABlock extends ResultPageBlock {
-  type: "cta";
+  type: 'cta';
   buttonText: string;
   url: string;
   pixelId?: string;
@@ -56,14 +56,14 @@ export interface CTABlock extends ResultPageBlock {
 }
 
 export interface TestimonialBlock extends ResultPageBlock {
-  type: "testimonial";
+  type: 'testimonial';
   author: string;
   authorImage?: string;
   rating?: number;
 }
 
 export interface CarouselBlock extends ResultPageBlock {
-  type: "carousel";
+  type: 'carousel';
   items: {
     id: string;
     imageUrl: string;

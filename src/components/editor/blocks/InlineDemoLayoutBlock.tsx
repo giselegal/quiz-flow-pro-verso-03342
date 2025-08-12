@@ -1,16 +1,16 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import InlineBaseWrapper from "./base/InlineBaseWrapper";
-import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import InlineBaseWrapper from './base/InlineBaseWrapper';
+import InlineEditableText from './base/InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
+} from '@/utils/inlineComponentUtils';
 import {
   Layout,
   Monitor,
@@ -22,7 +22,7 @@ import {
   Star,
   Users,
   TrendingUp,
-} from "lucide-react";
+} from 'lucide-react';
 
 /**
  * InlineDemoLayoutBlock - Demonstração completa de componentes lado a lado responsivos
@@ -37,11 +37,11 @@ import {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -84,25 +84,25 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Layout Horizontal Responsivo",
-    subtitle = "Demonstração de componentes lado a lado",
+    title = 'Layout Horizontal Responsivo',
+    subtitle = 'Demonstração de componentes lado a lado',
     itemCount = 3,
-    gap = "md",
-    alignment = "center",
-    breakpoint = "md",
+    gap = 'md',
+    alignment = 'center',
+    breakpoint = 'md',
     showDevicePreview = true,
-    animation = "fadeIn",
+    animation = 'fadeIn',
     trackingEnabled = true,
   } = block?.properties || {};
 
-  const [activeDevice, setActiveDevice] = useState<"mobile" | "tablet" | "desktop">("desktop");
+  const [activeDevice, setActiveDevice] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
 
   useEffect(() => {
     if (trackingEnabled) {
-      trackComponentView(block.id, "inline-demo-layout");
+      trackComponentView(block.id, 'inline-demo-layout');
     }
   }, [trackingEnabled, block.id]);
 
@@ -114,15 +114,15 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
 
   const getResponsiveClasses = () => {
     const gapClasses = {
-      sm: "gap-2",
-      md: "gap-4",
-      lg: "gap-6",
+      sm: 'gap-2',
+      md: 'gap-4',
+      lg: 'gap-6',
     };
 
     return cn(
-      "flex flex-wrap",
+      'flex flex-wrap',
       gapClasses[gap as keyof typeof gapClasses],
-      "flex-col",
+      'flex-col',
       `${breakpoint}:flex-row`
     );
   };
@@ -131,13 +131,13 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
     id: index + 1,
     title: `Item ${index + 1}`,
     content: `Conteúdo do item ${index + 1}`,
-    color: ["bg-[#B89B7A]/20", "bg-green-100", "bg-[#B89B7A]/20"][index % 3],
+    color: ['bg-[#B89B7A]/20', 'bg-green-100', 'bg-[#B89B7A]/20'][index % 3],
   }));
 
   const deviceClasses = {
-    mobile: "max-w-sm mx-auto",
-    tablet: "max-w-2xl mx-auto",
-    desktop: "max-w-none",
+    mobile: 'max-w-sm mx-auto',
+    tablet: 'max-w-2xl mx-auto',
+    desktop: 'max-w-none',
   };
 
   return (
@@ -149,10 +149,10 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         className,
         INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       gap="lg"
       justify="start"
@@ -161,8 +161,8 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
       wrap={false}
       minHeight="15rem"
       trackingData={{
-        componentName: "InlineDemoLayoutBlock",
-        category: "demo",
+        componentName: 'InlineDemoLayoutBlock',
+        category: 'demo',
         metadata: { itemCount, gap, breakpoint },
       }}
       editLabel="Editar Demo Layout"
@@ -174,20 +174,20 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
             <Layout className="w-5 h-5 text-[#B89B7A]" />
             <InlineEditableText
               value={title}
-              onChange={value => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange('title', value)}
               placeholder="Título da demonstração..."
               fontSize="xl"
               fontWeight="bold"
-              style={{ color: "#432818" }}
+              style={{ color: '#432818' }}
             />
           </div>
 
           <InlineEditableText
             value={subtitle}
-            onChange={value => handlePropertyChange("subtitle", value)}
+            onChange={value => handlePropertyChange('subtitle', value)}
             placeholder="Subtítulo explicativo..."
             fontSize="sm"
-            style={{ color: "#6B4F43" }}
+            style={{ color: '#6B4F43' }}
             multiline={true}
             maxLines={2}
           />
@@ -195,23 +195,23 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
 
         {/* Device Preview Controls */}
         {showDevicePreview && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
-            <span style={{ color: "#6B4F43" }}>Preview:</span>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
+            <span style={{ color: '#6B4F43' }}>Preview:</span>
 
-            {["mobile", "tablet", "desktop"].map(device => (
+            {['mobile', 'tablet', 'desktop'].map(device => (
               <button
                 key={device}
                 onClick={() => setActiveDevice(device as any)}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-all duration-200",
+                  'flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-all duration-200',
                   activeDevice === device
-                    ? "bg-[#B89B7A]/100 text-white shadow-md"
-                    : "bg-white text-gray-600 hover:bg-gray-100"
+                    ? 'bg-[#B89B7A]/100 text-white shadow-md'
+                    : 'bg-white text-gray-600 hover:bg-gray-100'
                 )}
               >
-                {device === "mobile" && <Smartphone className="w-4 h-4" />}
-                {device === "tablet" && <Tablet className="w-4 h-4" />}
-                {device === "desktop" && <Monitor className="w-4 h-4" />}
+                {device === 'mobile' && <Smartphone className="w-4 h-4" />}
+                {device === 'tablet' && <Tablet className="w-4 h-4" />}
+                {device === 'desktop' && <Monitor className="w-4 h-4" />}
                 <span className="capitalize">{device}</span>
               </button>
             ))}
@@ -221,11 +221,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         {/* Configuration */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-[#B89B7A]/10 rounded-lg">
           <div>
-            <label style={{ color: "#6B4F43" }}>Items</label>
+            <label style={{ color: '#6B4F43' }}>Items</label>
             <select
               value={itemCount}
-              onChange={e => handlePropertyChange("itemCount", parseInt(e.target.value))}
-              style={{ borderColor: "#E5DDD5" }}
+              onChange={e => handlePropertyChange('itemCount', parseInt(e.target.value))}
+              style={{ borderColor: '#E5DDD5' }}
             >
               {[1, 2, 3, 4, 5, 6].map(n => (
                 <option key={n} value={n}>
@@ -236,11 +236,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div>
-            <label style={{ color: "#6B4F43" }}>Gap</label>
+            <label style={{ color: '#6B4F43' }}>Gap</label>
             <select
               value={gap}
-              onChange={e => handlePropertyChange("gap", e.target.value)}
-              style={{ borderColor: "#E5DDD5" }}
+              onChange={e => handlePropertyChange('gap', e.target.value)}
+              style={{ borderColor: '#E5DDD5' }}
             >
               <option value="sm">Pequeno</option>
               <option value="md">Médio</option>
@@ -249,11 +249,11 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           </div>
 
           <div>
-            <label style={{ color: "#6B4F43" }}>Breakpoint</label>
+            <label style={{ color: '#6B4F43' }}>Breakpoint</label>
             <select
               value={breakpoint}
-              onChange={e => handlePropertyChange("breakpoint", e.target.value)}
-              style={{ borderColor: "#E5DDD5" }}
+              onChange={e => handlePropertyChange('breakpoint', e.target.value)}
+              style={{ borderColor: '#E5DDD5' }}
             >
               <option value="sm">sm</option>
               <option value="md">md</option>
@@ -265,15 +265,15 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
         {/* Demo Preview */}
         <div
           className={cn(
-            "border-2 border-dashed border-gray-300 rounded-lg p-6 transition-all duration-300",
+            'border-2 border-dashed border-gray-300 rounded-lg p-6 transition-all duration-300',
             deviceClasses[activeDevice]
           )}
         >
           <div className="mb-4 flex items-center justify-between">
-            <h3 style={{ color: "#6B4F43" }}>
+            <h3 style={{ color: '#6B4F43' }}>
               Preview {activeDevice} ({itemCount} items)
             </h3>
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               Gap: {gap} | Breakpoint: {breakpoint}
             </div>
           </div>
@@ -283,18 +283,18 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
               <div
                 key={item.id}
                 className={cn(
-                  "flex-1 min-w-0 p-4 rounded-lg border border-gray-200 transition-all duration-200",
+                  'flex-1 min-w-0 p-4 rounded-lg border border-gray-200 transition-all duration-200',
                   item.color,
-                  "hover:shadow-md hover:scale-105"
+                  'hover:shadow-md hover:scale-105'
                 )}
                 style={{
-                  minWidth: activeDevice === "mobile" ? "100%" : "200px",
+                  minWidth: activeDevice === 'mobile' ? '100%' : '200px',
                 }}
               >
                 <div className="space-y-2">
-                  <div style={{ color: "#432818" }}>{item.title}</div>
-                  <div style={{ color: "#6B4F43" }}>{item.content}</div>
-                  <div style={{ color: "#8B7355" }}>
+                  <div style={{ color: '#432818' }}>{item.title}</div>
+                  <div style={{ color: '#6B4F43' }}>{item.content}</div>
+                  <div style={{ color: '#8B7355' }}>
                     <Eye className="w-3 h-3" />
                     <span>Inline Block</span>
                   </div>
@@ -310,7 +310,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
           <div>{`.inline-container {`}</div>
           <div className="ml-4">{`display: flex;`}</div>
           <div className="ml-4">{`flex-wrap: wrap;`}</div>
-          <div className="ml-4">{`gap: ${gap === "sm" ? "0.5rem" : gap === "md" ? "1rem" : "1.5rem"};`}</div>
+          <div className="ml-4">{`gap: ${gap === 'sm' ? '0.5rem' : gap === 'md' ? '1rem' : '1.5rem'};`}</div>
           <div className="ml-4">{`flex-direction: column;`}</div>
           <div className="ml-4">{`/* ${breakpoint}+ */ flex-direction: row;`}</div>
           <div>{`}`}</div>
@@ -323,7 +323,7 @@ const InlineDemoLayoutBlock: React.FC<BlockComponentProps> = ({
               <Grid className="w-4 h-4" />
               Vantagens
             </h4>
-            <ul style={{ color: "#6B4F43" }}>
+            <ul style={{ color: '#6B4F43' }}>
               <li>• Componentes lado a lado</li>
               <li>• Responsividade nativa</li>
               <li>• Distribuição inteligente</li>

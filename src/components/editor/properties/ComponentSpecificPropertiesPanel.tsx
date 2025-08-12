@@ -1,19 +1,19 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import {
   AlignCenter,
   AlignLeft,
@@ -24,8 +24,8 @@ import {
   Settings,
   Type,
   X,
-} from "lucide-react";
-import React, { useState } from "react";
+} from 'lucide-react';
+import React, { useState } from 'react';
 
 interface ComponentSpecificPropertiesPanelProps {
   selectedBlock: {
@@ -51,7 +51,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
   onClose,
   onPreview,
 }) => {
-  const [activeTab, setActiveTab] = useState<"style" | "content" | "behavior">("content");
+  const [activeTab, setActiveTab] = useState<'style' | 'content' | 'behavior'>('content');
 
   const handlePropertyUpdate = (property: string, value: any) => {
     onUpdate(selectedBlock.id, { [property]: value });
@@ -59,25 +59,25 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
 
   const getComponentIcon = (type: string) => {
     // Verificar tipos específicos primeiro
-    if (type === "quiz-intro-header") {
+    if (type === 'quiz-intro-header') {
       return <Settings className="w-4 h-4" />;
     }
 
     const normalizedType = type
-      .replace("-inline", "")
-      .replace("-display", "")
-      .replace("-component", "");
+      .replace('-inline', '')
+      .replace('-display', '')
+      .replace('-component', '');
 
     switch (normalizedType) {
-      case "text":
-      case "heading":
-      case "paragraph":
+      case 'text':
+      case 'heading':
+      case 'paragraph':
         return <Type className="w-4 h-4" />;
-      case "button":
+      case 'button':
         return <Settings className="w-4 h-4" />;
-      case "image":
+      case 'image':
         return <Image className="w-4 h-4" />;
-      case "quiz":
+      case 'quiz':
         return <Settings className="w-4 h-4" />;
       default:
         return <Settings className="w-4 h-4" />;
@@ -86,25 +86,25 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
 
   const getComponentDisplayName = (type: string) => {
     // Verificar tipos específicos primeiro
-    if (type === "quiz-intro-header") {
-      return "Cabeçalho do Quiz";
+    if (type === 'quiz-intro-header') {
+      return 'Cabeçalho do Quiz';
     }
 
     const normalizedType = type
-      .replace("-inline", "")
-      .replace("-display", "")
-      .replace("-component", "");
+      .replace('-inline', '')
+      .replace('-display', '')
+      .replace('-component', '');
 
     const names: Record<string, string> = {
-      text: "Texto",
-      button: "Botão",
-      image: "Imagem",
-      input: "Campo de Entrada",
-      heading: "Título",
-      paragraph: "Parágrafo",
-      divider: "Divisor",
-      spacer: "Espaçador",
-      quiz: "Quiz",
+      text: 'Texto',
+      button: 'Botão',
+      image: 'Imagem',
+      input: 'Campo de Entrada',
+      heading: 'Título',
+      paragraph: 'Parágrafo',
+      divider: 'Divisor',
+      spacer: 'Espaçador',
+      quiz: 'Quiz',
     };
     return (
       names[normalizedType] || normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)
@@ -123,11 +123,11 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             selectedBlock.properties?.text ||
             selectedBlock.properties?.content ||
             selectedBlock.content?.text ||
-            ""
+            ''
           }
           onChange={e => {
-            handlePropertyUpdate("text", e.target.value);
-            handlePropertyUpdate("content", e.target.value); // Garantir compatibilidade
+            handlePropertyUpdate('text', e.target.value);
+            handlePropertyUpdate('content', e.target.value); // Garantir compatibilidade
           }}
           placeholder="Digite o texto aqui..."
           rows={3}
@@ -139,22 +139,22 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label>Alinhamento</Label>
         <div className="flex space-x-2">
           {[
-            { value: "left", icon: <AlignLeft className="w-4 h-4" />, label: "Esquerda" },
-            { value: "center", icon: <AlignCenter className="w-4 h-4" />, label: "Centro" },
-            { value: "right", icon: <AlignRight className="w-4 h-4" />, label: "Direita" },
+            { value: 'left', icon: <AlignLeft className="w-4 h-4" />, label: 'Esquerda' },
+            { value: 'center', icon: <AlignCenter className="w-4 h-4" />, label: 'Centro' },
+            { value: 'right', icon: <AlignRight className="w-4 h-4" />, label: 'Direita' },
           ].map(align => (
             <Button
               key={align.value}
               variant={
                 (selectedBlock.properties?.textAlign || selectedBlock.properties?.alignment) ===
                 align.value
-                  ? "default"
-                  : "outline"
+                  ? 'default'
+                  : 'outline'
               }
               size="sm"
               onClick={() => {
-                handlePropertyUpdate("textAlign", align.value);
-                handlePropertyUpdate("alignment", align.value); // Garantir compatibilidade
+                handlePropertyUpdate('textAlign', align.value);
+                handlePropertyUpdate('alignment', align.value); // Garantir compatibilidade
               }}
               className="flex-1"
             >
@@ -168,8 +168,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       <div className="space-y-2">
         <Label htmlFor="font-size">Tamanho da Fonte</Label>
         <Select
-          value={selectedBlock.properties?.fontSize?.toString() || "16"}
-          onValueChange={value => handlePropertyUpdate("fontSize", parseInt(value))}
+          value={selectedBlock.properties?.fontSize?.toString() || '16'}
+          onValueChange={value => handlePropertyUpdate('fontSize', parseInt(value))}
         >
           <SelectTrigger>
             <SelectValue />
@@ -195,21 +195,21 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             id="text-color"
             type="color"
             value={
-              selectedBlock.properties?.color || selectedBlock.properties?.textColor || "#000000"
+              selectedBlock.properties?.color || selectedBlock.properties?.textColor || '#000000'
             }
             onChange={e => {
-              handlePropertyUpdate("color", e.target.value);
-              handlePropertyUpdate("textColor", e.target.value);
+              handlePropertyUpdate('color', e.target.value);
+              handlePropertyUpdate('textColor', e.target.value);
             }}
             className="w-12 h-10 p-1"
           />
           <Input
             value={
-              selectedBlock.properties?.color || selectedBlock.properties?.textColor || "#000000"
+              selectedBlock.properties?.color || selectedBlock.properties?.textColor || '#000000'
             }
             onChange={e => {
-              handlePropertyUpdate("color", e.target.value);
-              handlePropertyUpdate("textColor", e.target.value);
+              handlePropertyUpdate('color', e.target.value);
+              handlePropertyUpdate('textColor', e.target.value);
             }}
             placeholder="#000000"
             className="flex-1"
@@ -221,8 +221,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       <div className="space-y-2">
         <Label>Peso da Fonte</Label>
         <Select
-          value={selectedBlock.properties?.fontWeight?.toString() || "normal"}
-          onValueChange={value => handlePropertyUpdate("fontWeight", value)}
+          value={selectedBlock.properties?.fontWeight?.toString() || 'normal'}
+          onValueChange={value => handlePropertyUpdate('fontWeight', value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -242,8 +242,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       <div className="space-y-2">
         <Label>Largura do Elemento</Label>
         <Select
-          value={selectedBlock.properties?.width?.toString() || "100%"}
-          onValueChange={value => handlePropertyUpdate("width", value)}
+          value={selectedBlock.properties?.width?.toString() || '100%'}
+          onValueChange={value => handlePropertyUpdate('width', value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -271,8 +271,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Input
           id="max-width"
           type="text"
-          value={selectedBlock.properties?.maxWidth || ""}
-          onChange={e => handlePropertyUpdate("maxWidth", e.target.value)}
+          value={selectedBlock.properties?.maxWidth || ''}
+          onChange={e => handlePropertyUpdate('maxWidth', e.target.value)}
           placeholder="ex: 600px, 80rem, none"
         />
       </div>
@@ -286,8 +286,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label htmlFor="button-text">Texto do Botão</Label>
         <Input
           id="button-text"
-          value={selectedBlock.properties?.text || "Clique aqui"}
-          onChange={e => handlePropertyUpdate("text", e.target.value)}
+          value={selectedBlock.properties?.text || 'Clique aqui'}
+          onChange={e => handlePropertyUpdate('text', e.target.value)}
           placeholder="Digite o texto do botão..."
         />
       </div>
@@ -296,8 +296,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       <div className="space-y-2">
         <Label>Estilo</Label>
         <Select
-          value={selectedBlock.properties?.variant || selectedBlock.properties?.style || "primary"}
-          onValueChange={value => handlePropertyUpdate("variant", value)}
+          value={selectedBlock.properties?.variant || selectedBlock.properties?.style || 'primary'}
+          onValueChange={value => handlePropertyUpdate('variant', value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -314,8 +314,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       <div className="space-y-2">
         <Label>Tamanho</Label>
         <Select
-          value={selectedBlock.properties?.size || "medium"}
-          onValueChange={value => handlePropertyUpdate("size", value)}
+          value={selectedBlock.properties?.size || 'medium'}
+          onValueChange={value => handlePropertyUpdate('size', value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -335,13 +335,13 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           <Input
             id="bg-color"
             type="color"
-            value={selectedBlock.properties?.backgroundColor || "#B89B7A"}
-            onChange={e => handlePropertyUpdate("backgroundColor", e.target.value)}
+            value={selectedBlock.properties?.backgroundColor || '#B89B7A'}
+            onChange={e => handlePropertyUpdate('backgroundColor', e.target.value)}
             className="w-12 h-10 p-1"
           />
           <Input
-            value={selectedBlock.properties?.backgroundColor || "#B89B7A"}
-            onChange={e => handlePropertyUpdate("backgroundColor", e.target.value)}
+            value={selectedBlock.properties?.backgroundColor || '#B89B7A'}
+            onChange={e => handlePropertyUpdate('backgroundColor', e.target.value)}
             placeholder="#B89B7A"
             className="flex-1"
           />
@@ -355,13 +355,13 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           <Input
             id="button-text-color"
             type="color"
-            value={selectedBlock.properties?.textColor || "#ffffff"}
-            onChange={e => handlePropertyUpdate("textColor", e.target.value)}
+            value={selectedBlock.properties?.textColor || '#ffffff'}
+            onChange={e => handlePropertyUpdate('textColor', e.target.value)}
             className="w-12 h-10 p-1"
           />
           <Input
-            value={selectedBlock.properties?.textColor || "#ffffff"}
-            onChange={e => handlePropertyUpdate("textColor", e.target.value)}
+            value={selectedBlock.properties?.textColor || '#ffffff'}
+            onChange={e => handlePropertyUpdate('textColor', e.target.value)}
             placeholder="#ffffff"
             className="flex-1"
           />
@@ -373,7 +373,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="full-width"
           checked={selectedBlock.properties?.fullWidth || false}
-          onCheckedChange={checked => handlePropertyUpdate("fullWidth", checked)}
+          onCheckedChange={checked => handlePropertyUpdate('fullWidth', checked)}
         />
         <Label htmlFor="full-width">Largura total</Label>
       </div>
@@ -383,7 +383,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="hover-effect"
           checked={selectedBlock.properties?.hoverEffect !== false}
-          onCheckedChange={checked => handlePropertyUpdate("hoverEffect", checked)}
+          onCheckedChange={checked => handlePropertyUpdate('hoverEffect', checked)}
         />
         <Label htmlFor="hover-effect">Efeito hover</Label>
       </div>
@@ -397,8 +397,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label htmlFor="image-url">URL da Imagem</Label>
         <Input
           id="image-url"
-          value={selectedBlock.properties?.src || selectedBlock.properties?.url || ""}
-          onChange={e => handlePropertyUpdate("src", e.target.value)}
+          value={selectedBlock.properties?.src || selectedBlock.properties?.url || ''}
+          onChange={e => handlePropertyUpdate('src', e.target.value)}
           placeholder="https://exemplo.com/imagem.jpg"
         />
       </div>
@@ -408,8 +408,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label htmlFor="alt-text">Texto Alternativo</Label>
         <Input
           id="alt-text"
-          value={selectedBlock.properties?.alt || ""}
-          onChange={e => handlePropertyUpdate("alt", e.target.value)}
+          value={selectedBlock.properties?.alt || ''}
+          onChange={e => handlePropertyUpdate('alt', e.target.value)}
           placeholder="Descrição da imagem..."
         />
       </div>
@@ -419,8 +419,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label htmlFor="image-width">Largura</Label>
         <Input
           id="image-width"
-          value={selectedBlock.properties?.width || ""}
-          onChange={e => handlePropertyUpdate("width", e.target.value)}
+          value={selectedBlock.properties?.width || ''}
+          onChange={e => handlePropertyUpdate('width', e.target.value)}
           placeholder="auto, 100%, 300px..."
         />
       </div>
@@ -430,8 +430,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label htmlFor="image-height">Altura</Label>
         <Input
           id="image-height"
-          value={selectedBlock.properties?.height || ""}
-          onChange={e => handlePropertyUpdate("height", e.target.value)}
+          value={selectedBlock.properties?.height || ''}
+          onChange={e => handlePropertyUpdate('height', e.target.value)}
           placeholder="auto, 200px..."
         />
       </div>
@@ -440,8 +440,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
       <div className="space-y-2">
         <Label>Ajuste da Imagem</Label>
         <Select
-          value={selectedBlock.properties?.objectFit || "cover"}
-          onValueChange={value => handlePropertyUpdate("objectFit", value)}
+          value={selectedBlock.properties?.objectFit || 'cover'}
+          onValueChange={value => handlePropertyUpdate('objectFit', value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -461,15 +461,15 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label>Alinhamento</Label>
         <div className="flex space-x-2">
           {[
-            { value: "left", icon: <AlignLeft className="w-4 h-4" />, label: "Esquerda" },
-            { value: "center", icon: <AlignCenter className="w-4 h-4" />, label: "Centro" },
-            { value: "right", icon: <AlignRight className="w-4 h-4" />, label: "Direita" },
+            { value: 'left', icon: <AlignLeft className="w-4 h-4" />, label: 'Esquerda' },
+            { value: 'center', icon: <AlignCenter className="w-4 h-4" />, label: 'Centro' },
+            { value: 'right', icon: <AlignRight className="w-4 h-4" />, label: 'Direita' },
           ].map(align => (
             <Button
               key={align.value}
-              variant={selectedBlock.properties?.textAlign === align.value ? "default" : "outline"}
+              variant={selectedBlock.properties?.textAlign === align.value ? 'default' : 'outline'}
               size="sm"
-              onClick={() => handlePropertyUpdate("textAlign", align.value)}
+              onClick={() => handlePropertyUpdate('textAlign', align.value)}
               className="flex-1"
             >
               {align.icon}
@@ -488,7 +488,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="header-enabled"
           checked={selectedBlock.properties?.enabled !== false}
-          onCheckedChange={checked => handlePropertyUpdate("enabled", checked)}
+          onCheckedChange={checked => handlePropertyUpdate('enabled', checked)}
         />
         <Label htmlFor="header-enabled">Habilitar cabeçalho</Label>
       </div>
@@ -498,7 +498,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="show-logo"
           checked={selectedBlock.properties?.showLogo !== false}
-          onCheckedChange={checked => handlePropertyUpdate("showLogo", checked)}
+          onCheckedChange={checked => handlePropertyUpdate('showLogo', checked)}
         />
         <Label htmlFor="show-logo">Mostrar logo</Label>
       </div>
@@ -511,9 +511,9 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             id="logo-url"
             value={
               selectedBlock.properties?.logoUrl ||
-              "https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png"
+              'https://res.cloudinary.com/dg3fsapzu/image/upload/v1723251877/LOGO_completa_white_clfcga.png'
             }
-            onChange={e => handlePropertyUpdate("logoUrl", e.target.value)}
+            onChange={e => handlePropertyUpdate('logoUrl', e.target.value)}
             placeholder="https://exemplo.com/logo.png"
           />
         </div>
@@ -525,8 +525,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           <Label htmlFor="logo-alt">Texto Alternativo</Label>
           <Input
             id="logo-alt"
-            value={selectedBlock.properties?.logoAlt || "Logo"}
-            onChange={e => handlePropertyUpdate("logoAlt", e.target.value)}
+            value={selectedBlock.properties?.logoAlt || 'Logo'}
+            onChange={e => handlePropertyUpdate('logoAlt', e.target.value)}
             placeholder="Descrição da logo"
           />
         </div>
@@ -542,7 +542,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             min="20"
             max="200"
             value={selectedBlock.properties?.logoSize || 100}
-            onChange={e => handlePropertyUpdate("logoSize", parseInt(e.target.value) || 100)}
+            onChange={e => handlePropertyUpdate('logoSize', parseInt(e.target.value) || 100)}
             placeholder="100"
           />
         </div>
@@ -553,7 +553,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Switch
           id="show-bar"
           checked={selectedBlock.properties?.showDecorativeBar !== false}
-          onCheckedChange={checked => handlePropertyUpdate("showDecorativeBar", checked)}
+          onCheckedChange={checked => handlePropertyUpdate('showDecorativeBar', checked)}
         />
         <Label htmlFor="show-bar">Mostrar barra decorativa</Label>
       </div>
@@ -566,13 +566,13 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             <Input
               id="bar-color"
               type="color"
-              value={selectedBlock.properties?.barColor || "#B89B7A"}
-              onChange={e => handlePropertyUpdate("barColor", e.target.value)}
+              value={selectedBlock.properties?.barColor || '#B89B7A'}
+              onChange={e => handlePropertyUpdate('barColor', e.target.value)}
               className="w-12 h-10 p-1"
             />
             <Input
-              value={selectedBlock.properties?.barColor || "#B89B7A"}
-              onChange={e => handlePropertyUpdate("barColor", e.target.value)}
+              value={selectedBlock.properties?.barColor || '#B89B7A'}
+              onChange={e => handlePropertyUpdate('barColor', e.target.value)}
               placeholder="#B89B7A"
               className="flex-1"
             />
@@ -590,7 +590,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             min="2"
             max="10"
             value={selectedBlock.properties?.barHeight || 4}
-            onChange={e => handlePropertyUpdate("barHeight", parseInt(e.target.value) || 4)}
+            onChange={e => handlePropertyUpdate('barHeight', parseInt(e.target.value) || 4)}
             placeholder="4"
           />
         </div>
@@ -601,8 +601,8 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <div className="space-y-2">
           <Label>Posição da Barra</Label>
           <Select
-            value={selectedBlock.properties?.barPosition || "bottom"}
-            onValueChange={value => handlePropertyUpdate("barPosition", value)}
+            value={selectedBlock.properties?.barPosition || 'bottom'}
+            onValueChange={value => handlePropertyUpdate('barPosition', value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -621,15 +621,15 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
         <Label>Alinhamento</Label>
         <div className="flex space-x-2">
           {[
-            { value: "left", icon: <AlignLeft className="w-4 h-4" />, label: "Esquerda" },
-            { value: "center", icon: <AlignCenter className="w-4 h-4" />, label: "Centro" },
-            { value: "right", icon: <AlignRight className="w-4 h-4" />, label: "Direita" },
+            { value: 'left', icon: <AlignLeft className="w-4 h-4" />, label: 'Esquerda' },
+            { value: 'center', icon: <AlignCenter className="w-4 h-4" />, label: 'Centro' },
+            { value: 'right', icon: <AlignRight className="w-4 h-4" />, label: 'Direita' },
           ].map(align => (
             <Button
               key={align.value}
-              variant={selectedBlock.properties?.alignment === align.value ? "default" : "outline"}
+              variant={selectedBlock.properties?.alignment === align.value ? 'default' : 'outline'}
               size="sm"
-              onClick={() => handlePropertyUpdate("alignment", align.value)}
+              onClick={() => handlePropertyUpdate('alignment', align.value)}
               className="flex-1"
             >
               {align.icon}
@@ -647,7 +647,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
           min="50"
           max="110"
           value={selectedBlock.properties?.scale || 100}
-          onChange={e => handlePropertyUpdate("scale", parseInt(e.target.value) || 100)}
+          onChange={e => handlePropertyUpdate('scale', parseInt(e.target.value) || 100)}
           placeholder="100"
         />
       </div>
@@ -659,25 +659,25 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
 
     // Normalizar tipos com sufixos (text-inline -> text, button-inline -> button, etc.)
     const normalizedType = blockType
-      .replace("-inline", "")
-      .replace("-display", "")
-      .replace("-component", "");
+      .replace('-inline', '')
+      .replace('-display', '')
+      .replace('-component', '');
 
     // Verificar tipos específicos primeiro (antes da normalização)
-    if (blockType === "quiz-intro-header") {
+    if (blockType === 'quiz-intro-header') {
       return renderQuizIntroHeaderProperties();
     }
 
     switch (normalizedType) {
-      case "text":
-      case "heading":
-      case "paragraph":
+      case 'text':
+      case 'heading':
+      case 'paragraph':
         return renderTextProperties();
-      case "button":
+      case 'button':
         return renderButtonProperties();
-      case "image":
+      case 'image':
         return renderImageProperties();
-      case "quiz":
+      case 'quiz':
         return renderQuizIntroHeaderProperties();
       default:
         return (
@@ -729,17 +729,17 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             {/* Abas de propriedades */}
             <div className="flex space-x-1 mb-4 p-1 bg-gray-100 rounded-lg">
               {[
-                { id: "content", label: "Conteúdo", icon: <Type className="w-3 h-3" /> },
-                { id: "style", label: "Visual", icon: <Palette className="w-3 h-3" /> },
-                { id: "behavior", label: "Comportamento", icon: <Settings className="w-3 h-3" /> },
+                { id: 'content', label: 'Conteúdo', icon: <Type className="w-3 h-3" /> },
+                { id: 'style', label: 'Visual', icon: <Palette className="w-3 h-3" /> },
+                { id: 'behavior', label: 'Comportamento', icon: <Settings className="w-3 h-3" /> },
               ].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex-1 flex items-center justify-center space-x-1 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
                     activeTab === tab.id
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   {tab.icon}
@@ -751,9 +751,9 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
             <Separator className="my-4" />
 
             {/* Propriedades específicas do componente */}
-            {activeTab === "content" && renderPropertiesByType()}
+            {activeTab === 'content' && renderPropertiesByType()}
 
-            {activeTab === "style" && (
+            {activeTab === 'style' && (
               <div className="space-y-4">
                 {/* Margens */}
                 <div className="space-y-2">
@@ -768,7 +768,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
                         type="number"
                         value={selectedBlock.properties?.marginTop || 0}
                         onChange={e =>
-                          handlePropertyUpdate("marginTop", parseInt(e.target.value) || 0)
+                          handlePropertyUpdate('marginTop', parseInt(e.target.value) || 0)
                         }
                         placeholder="0"
                         className="text-xs"
@@ -783,7 +783,7 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
                         type="number"
                         value={selectedBlock.properties?.marginBottom || 0}
                         onChange={e =>
-                          handlePropertyUpdate("marginBottom", parseInt(e.target.value) || 0)
+                          handlePropertyUpdate('marginBottom', parseInt(e.target.value) || 0)
                         }
                         placeholder="0"
                         className="text-xs"
@@ -794,13 +794,13 @@ export const ComponentSpecificPropertiesPanel: React.FC<ComponentSpecificPropert
               </div>
             )}
 
-            {activeTab === "behavior" && (
+            {activeTab === 'behavior' && (
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Switch
                     id="is-editable"
                     checked={selectedBlock.properties?.isEditable !== false}
-                    onCheckedChange={checked => handlePropertyUpdate("isEditable", checked)}
+                    onCheckedChange={checked => handlePropertyUpdate('isEditable', checked)}
                   />
                   <Label htmlFor="is-editable">Editável inline</Label>
                 </div>

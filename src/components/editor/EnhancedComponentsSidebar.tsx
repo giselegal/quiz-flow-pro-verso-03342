@@ -1,11 +1,11 @@
-import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { blockDefinitions } from "@/config/blockDefinitionsOptimized";
-import { MODULAR_COMPONENTS, type ModularComponent } from "@/config/modularComponents";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { type BlockDefinition } from "@/types/blocks";
+import { DraggableComponentItem } from '@/components/editor/dnd/DraggableComponentItem';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { blockDefinitions } from '@/config/blockDefinitionsOptimized';
+import { MODULAR_COMPONENTS, type ModularComponent } from '@/config/modularComponents';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { type BlockDefinition } from '@/types/blocks';
 import {
   ChevronDown,
   ChevronRight,
@@ -18,17 +18,17 @@ import {
   Settings,
   Trophy,
   Zap,
-} from "lucide-react";
-import React, { useState } from "react";
+} from 'lucide-react';
+import React, { useState } from 'react';
 
 interface EnhancedComponentsSidebarProps {}
 
 const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () => {
-  const { scrollRef } = useSyncedScroll({ source: "components" });
-  const [searchQuery, setSearchQuery] = useState("");
+  const { scrollRef } = useSyncedScroll({ source: 'components' });
+  const [searchQuery, setSearchQuery] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
-    "Edição JSON": true,
-    "Componentes Modulares": true,
+    'Edição JSON': true,
+    'Componentes Modulares': true,
     Quiz: true,
     Interativo: true,
     CTA: true,
@@ -40,38 +40,38 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   // 🎯 COMPONENTES DE EDIÇÃO JSON ATIVA
   const jsonEditingBlocks: BlockDefinition[] = [
     {
-      type: "json-template-loader",
-      name: "🔧 Carregar Template JSON",
-      description: "Carrega templates JSON das etapas",
-      category: "Edição JSON",
+      type: 'json-template-loader',
+      name: '🔧 Carregar Template JSON',
+      description: 'Carrega templates JSON das etapas',
+      category: 'Edição JSON',
       icon: FileCode,
       properties: {
-        stepNumber: { type: "number", default: 1, label: "Número da Etapa" },
-        templatePath: { type: "text", default: "", label: "Caminho do Template" },
+        stepNumber: { type: 'number', default: 1, label: 'Número da Etapa' },
+        templatePath: { type: 'text', default: '', label: 'Caminho do Template' },
       },
-      defaultProps: { stepNumber: 1, templatePath: "" },
+      defaultProps: { stepNumber: 1, templatePath: '' },
     },
     {
-      type: "json-integration-test",
-      name: "🧪 Teste Integração JSON",
-      description: "Teste prático da integração JSON",
-      category: "Edição JSON",
+      type: 'json-integration-test',
+      name: '🧪 Teste Integração JSON',
+      description: 'Teste prático da integração JSON',
+      category: 'Edição JSON',
       icon: Edit3,
       properties: {
-        testMode: { type: "boolean", default: true, label: "Modo Teste" },
-        logResults: { type: "boolean", default: true, label: "Log Resultados" },
+        testMode: { type: 'boolean', default: true, label: 'Modo Teste' },
+        logResults: { type: 'boolean', default: true, label: 'Log Resultados' },
       },
       defaultProps: { testMode: true, logResults: true },
     },
     {
-      type: "json-system-demo",
-      name: "⚡ Demo Sistema JSON",
-      description: "Demonstração completa do sistema JSON",
-      category: "Edição JSON",
+      type: 'json-system-demo',
+      name: '⚡ Demo Sistema JSON',
+      description: 'Demonstração completa do sistema JSON',
+      category: 'Edição JSON',
       icon: Zap,
       properties: {
-        demoStep: { type: "number", default: 1, label: "Etapa Demo" },
-        autoLoad: { type: "boolean", default: false, label: "Carregamento Automático" },
+        demoStep: { type: 'number', default: 1, label: 'Etapa Demo' },
+        autoLoad: { type: 'boolean', default: false, label: 'Carregamento Automático' },
       },
       defaultProps: { demoStep: 1, autoLoad: false },
     },
@@ -83,7 +83,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       type: modularComp.type,
       name: `📦 ${modularComp.name}`,
       description: modularComp.description,
-      category: "Componentes Modulares",
+      category: 'Componentes Modulares',
       icon: Settings,
       properties: Object.entries(modularComp.properties).reduce((acc, [key, propConfig]) => {
         acc[key] = {
@@ -93,7 +93,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
             key.charAt(0).toUpperCase() +
             key
               .slice(1)
-              .replace(/([A-Z])/g, " $1")
+              .replace(/([A-Z])/g, ' $1')
               .trim(),
         };
         return acc;
@@ -130,7 +130,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   const groupedBlocks = filteredBlocks.reduce(
     (groups, block) => {
-      const category = block.category || "Outros";
+      const category = block.category || 'Outros';
       if (!groups[category]) {
         groups[category] = [];
       }
@@ -141,17 +141,17 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   );
 
   const categoryOrder = [
-    "Componentes Modulares", // 🎯 NOVA CATEGORIA EM PRIMEIRO
-    "Quiz",
-    "Interativo",
-    "CTA",
-    "Conteúdo",
-    "Legal",
-    "Estrutura",
+    'Componentes Modulares', // 🎯 NOVA CATEGORIA EM PRIMEIRO
+    'Quiz',
+    'Interativo',
+    'CTA',
+    'Conteúdo',
+    'Legal',
+    'Estrutura',
   ];
 
   const categoryIcons: Record<string, React.ComponentType<any>> = {
-    "Componentes Modulares": Settings,
+    'Componentes Modulares': Settings,
     Quiz: Trophy,
     Interativo: HelpCircle,
     CTA: Layers,
@@ -193,7 +193,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
                       <ChevronRight className="h-4 w-4" />
                     )}
                     {React.createElement(categoryIcons[category] || GripVertical, {
-                      className: "h-4 w-4 text-primary",
+                      className: 'h-4 w-4 text-primary',
                     })}
                     <span className="text-sm font-medium">{category}</span>
                   </div>

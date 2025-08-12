@@ -1,28 +1,28 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import {
   CarouselBlock,
   CTABlock,
   ResultPageBlock,
   StyleResultBlock,
   TestimonialBlock,
-} from "@/types/quizResult";
-import { Copy, PlusCircle, Trash2 } from "lucide-react";
-import React, { useState } from "react";
+} from '@/types/quizResult';
+import { Copy, PlusCircle, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface ResultPageBlockEditorProps {
   block: ResultPageBlock;
@@ -41,7 +41,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
   abTestVariants = [],
   abTestEnabled = false,
 }) => {
-  const [activeTab, setActiveTab] = useState("content");
+  const [activeTab, setActiveTab] = useState('content');
 
   const handleContentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     onUpdate({
@@ -70,19 +70,19 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
   const handleAbTestVariantChange = (variant: string) => {
     onUpdate({
       ...block,
-      abTestVariant: variant === "all" ? "" : variant,
+      abTestVariant: variant === 'all' ? '' : variant,
     });
   };
 
   const renderSpecificBlockEditor = () => {
     switch (block.type) {
-      case "styleResult":
+      case 'styleResult':
         return renderStyleResultEditor(block as StyleResultBlock);
-      case "cta":
+      case 'cta':
         return renderCTAEditor(block as CTABlock);
-      case "testimonial":
+      case 'testimonial':
         return renderTestimonialEditor(block as TestimonialBlock);
-      case "carousel":
+      case 'carousel':
         return renderCarouselEditor(block as CarouselBlock);
       default:
         return renderDefaultEditor();
@@ -129,7 +129,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="description">Descrição</Label>
         <Textarea
           id="description"
-          value={styleBlock.description || ""}
+          value={styleBlock.description || ''}
           onChange={e => onUpdate({ ...styleBlock, description: e.target.value })}
           rows={4}
         />
@@ -161,7 +161,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="pixelId">ID do Pixel (opcional)</Label>
         <Input
           id="pixelId"
-          value={ctaBlock.pixelId || ""}
+          value={ctaBlock.pixelId || ''}
           onChange={e => onUpdate({ ...ctaBlock, pixelId: e.target.value })}
         />
       </div>
@@ -173,11 +173,11 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             id="backgroundColor"
             type="color"
             className="w-12 h-10 p-1"
-            value={ctaBlock.backgroundColor || "#000000"}
+            value={ctaBlock.backgroundColor || '#000000'}
             onChange={e => onUpdate({ ...ctaBlock, backgroundColor: e.target.value })}
           />
           <Input
-            value={ctaBlock.backgroundColor || "#000000"}
+            value={ctaBlock.backgroundColor || '#000000'}
             onChange={e => onUpdate({ ...ctaBlock, backgroundColor: e.target.value })}
             className="flex-1"
           />
@@ -191,11 +191,11 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
             id="textColor"
             type="color"
             className="w-12 h-10 p-1"
-            value={ctaBlock.textColor || "#ffffff"}
+            value={ctaBlock.textColor || '#ffffff'}
             onChange={e => onUpdate({ ...ctaBlock, textColor: e.target.value })}
           />
           <Input
-            value={ctaBlock.textColor || "#ffffff"}
+            value={ctaBlock.textColor || '#ffffff'}
             onChange={e => onUpdate({ ...ctaBlock, textColor: e.target.value })}
             className="flex-1"
           />
@@ -229,7 +229,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Label htmlFor="authorImage">Imagem do Autor (URL)</Label>
         <Input
           id="authorImage"
-          value={testimonialBlock.authorImage || ""}
+          value={testimonialBlock.authorImage || ''}
           onChange={e => onUpdate({ ...testimonialBlock, authorImage: e.target.value })}
         />
       </div>
@@ -252,8 +252,8 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
     const addCarouselItem = () => {
       const newItem = {
         id: `item-${Date.now()}`,
-        imageUrl: "",
-        caption: "",
+        imageUrl: '',
+        caption: '',
       };
 
       onUpdate({
@@ -311,7 +311,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                     <Input
                       id={`item-${index}-image`}
                       value={item.imageUrl}
-                      onChange={e => updateCarouselItem(index, "imageUrl", e.target.value)}
+                      onChange={e => updateCarouselItem(index, 'imageUrl', e.target.value)}
                     />
                   </div>
 
@@ -319,8 +319,8 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                     <Label htmlFor={`item-${index}-caption`}>Legenda</Label>
                     <Input
                       id={`item-${index}-caption`}
-                      value={item.caption || ""}
-                      onChange={e => updateCarouselItem(index, "caption", e.target.value)}
+                      value={item.caption || ''}
+                      onChange={e => updateCarouselItem(index, 'caption', e.target.value)}
                     />
                   </div>
                 </div>
@@ -339,12 +339,12 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
         <Textarea id="content" value={block.content} onChange={handleContentChange} rows={6} />
       </div>
 
-      {block.type === "image" && (
+      {block.type === 'image' && (
         <div className="space-y-2">
           <Label htmlFor="imageUrl">URL da Imagem</Label>
           <Input
             id="imageUrl"
-            value={block.imageUrl || ""}
+            value={block.imageUrl || ''}
             onChange={e => onUpdate({ ...block, imageUrl: e.target.value })}
           />
         </div>
@@ -384,7 +384,7 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
               <div className="space-y-2">
                 <Label htmlFor="abTestVariant">Variante de Teste A/B</Label>
                 <Select
-                  value={block.abTestVariant || "all"}
+                  value={block.abTestVariant || 'all'}
                   onValueChange={handleAbTestVariantChange}
                 >
                   <SelectTrigger id="abTestVariant">
@@ -416,8 +416,8 @@ export const ResultPageBlockEditor: React.FC<ResultPageBlockEditorProps> = ({
                 </div>
                 <p className="text-sm text-[#8F7A6A]">
                   {block.isVisible !== false
-                    ? "🟢 Este bloco será exibido na página de resultados"
-                    : "🔴 Este bloco está oculto e não será exibido"}
+                    ? '🟢 Este bloco será exibido na página de resultados'
+                    : '🔴 Este bloco está oculto e não será exibido'}
                 </p>
               </div>
             </div>

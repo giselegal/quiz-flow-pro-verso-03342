@@ -1,5 +1,5 @@
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface QuizVideoProps extends ComponentProps {
   src?: string;
@@ -11,12 +11,12 @@ interface QuizVideoProps extends ComponentProps {
 }
 
 const QuizVideo: React.FC<QuizVideoProps> = ({
-  src = "",
-  poster = "",
+  src = '',
+  poster = '',
   autoplay = false,
   controls = true,
-  width = "100%",
-  aspectRatio = "16/9",
+  width = '100%',
+  aspectRatio = '16/9',
   isSelected,
   onClick,
 }) => {
@@ -27,11 +27,11 @@ const QuizVideo: React.FC<QuizVideoProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
       style={{
         width,
-        maxWidth: "100%",
+        maxWidth: '100%',
         aspectRatio: aspectRatio,
       }}
     >
@@ -43,10 +43,10 @@ const QuizVideo: React.FC<QuizVideoProps> = ({
           controls={controls}
           className={styles.video}
           style={{
-            width: "100%",
-            height: "100%",
-            borderRadius: "8px",
-            objectFit: "cover",
+            width: '100%',
+            height: '100%',
+            borderRadius: '8px',
+            objectFit: 'cover',
           }}
         >
           Seu navegador não suporta o elemento de vídeo.
@@ -55,15 +55,15 @@ const QuizVideo: React.FC<QuizVideoProps> = ({
         <div
           className={styles.videoPlaceholder}
           style={{
-            width: "100%",
-            height: "200px",
-            backgroundColor: "#f3f4f6",
-            border: "2px dashed #d1d5db",
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#6b7280",
+            width: '100%',
+            height: '200px',
+            backgroundColor: '#f3f4f6',
+            border: '2px dashed #d1d5db',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#6b7280',
           }}
         >
           <div className="text-center">

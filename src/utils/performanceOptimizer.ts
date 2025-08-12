@@ -32,7 +32,7 @@ class AnimationFrameScheduler {
       try {
         callback();
       } catch (error) {
-        console.error("Animation frame callback error:", error);
+        console.error('Animation frame callback error:', error);
       }
     });
   }
@@ -66,7 +66,7 @@ class MessageChannelScheduler {
       try {
         callback();
       } catch (error) {
-        console.error("MessageChannel callback error:", error);
+        console.error('MessageChannel callback error:', error);
       }
     });
   }
@@ -83,20 +83,20 @@ class SmartTimeout {
   static schedule(
     callback: () => void,
     delay: number = 0,
-    strategy: "animation" | "message" | "timeout" = "animation"
+    strategy: 'animation' | 'message' | 'timeout' = 'animation'
   ): number {
     switch (strategy) {
-      case "animation":
+      case 'animation':
         // Para UI updates, usar requestAnimationFrame
         this.animationScheduler.schedule(callback);
         return 0; // requestAnimationFrame não retorna ID cancelável
 
-      case "message":
+      case 'message':
         // Para non-blocking operations
         this.messageScheduler.schedule(callback);
         return 0;
 
-      case "timeout":
+      case 'timeout':
       default:
         // Fallback para setTimeout nativo quando necessário
         return window.setTimeout(callback, Math.max(delay, 4)) as unknown as number;
@@ -109,9 +109,9 @@ class SmartTimeout {
   static scheduleInterval(
     callback: () => void,
     delay: number,
-    strategy: "animation" | "timeout" = "animation"
+    strategy: 'animation' | 'timeout' = 'animation'
   ): number {
-    if (strategy === "animation" && delay < 100) {
+    if (strategy === 'animation' && delay < 100) {
       // Para intervalos rápidos, usar requestAnimationFrame recursivo
       const recursiveCallback = () => {
         callback();
@@ -155,7 +155,7 @@ class OptimizedDebounce {
             fn(...args);
           },
           delay,
-          "timeout"
+          'timeout'
         );
 
         this.timers.set(uniqueKey, timerId);
@@ -181,16 +181,16 @@ export const QUIZ_PERF = {
   markerTimings: {} as Record<string, number>,
   mark: (name: string) => {
     QUIZ_PERF.markerTimings[name] = performance.now() - QUIZ_PERF.startTime;
-    if (typeof window !== "undefined" && "performance" in window) {
+    if (typeof window !== 'undefined' && 'performance' in window) {
       window.performance.mark(name);
     }
   },
   measure: (name: string, startMark: string, endMark: string) => {
-    if (typeof window !== "undefined" && "performance" in window) {
+    if (typeof window !== 'undefined' && 'performance' in window) {
       try {
         window.performance.measure(name, startMark, endMark);
       } catch (e) {
-        console.error("Error measuring performance:", e);
+        console.error('Error measuring performance:', e);
       }
     }
   },
@@ -214,10 +214,10 @@ export const PerformanceOptimizer = {
   getSuggestedStrategy: (
     delay: number,
     isUIUpdate = false
-  ): "animation" | "message" | "timeout" => {
-    if (isUIUpdate || delay < 16) return "animation";
-    if (delay < 100) return "message";
-    return "timeout";
+  ): 'animation' | 'message' | 'timeout' => {
+    if (isUIUpdate || delay < 16) return 'animation';
+    if (delay < 100) return 'message';
+    return 'timeout';
   },
 };
 
@@ -225,7 +225,7 @@ export const PerformanceOptimizer = {
  * Inicializa observadores de performance
  */
 export function initPerformanceObservers() {
-  if (typeof window === "undefined" || !("PerformanceObserver" in window)) {
+  if (typeof window === 'undefined' || !('PerformanceObserver' in window)) {
     return;
   }
 
@@ -247,7 +247,7 @@ export function initPerformanceObservers() {
       }
     });
 
-    lcpObserver.observe({ type: "largest-contentful-paint", buffered: true });
+    lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
 
     // FID Observer
     const fidObserver = new PerformanceObserver(entryList => {
@@ -268,7 +268,7 @@ export function initPerformanceObservers() {
       }
     });
 
-    fidObserver.observe({ type: "first-input", buffered: true });
+    fidObserver.observe({ type: 'first-input', buffered: true });
 
     // Metrics para CLS
     let cumulativeLayoutShift = 0;
@@ -293,11 +293,11 @@ export function initPerformanceObservers() {
       }
     });
 
-    clsObserver.observe({ type: "layout-shift", buffered: true });
+    clsObserver.observe({ type: 'layout-shift', buffered: true });
 
     return [lcpObserver, fidObserver, clsObserver];
   } catch (error) {
-    console.error("[Performance] Error initializing observers:", error);
+    console.error('[Performance] Error initializing observers:', error);
     return [];
   }
 }

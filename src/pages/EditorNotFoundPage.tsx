@@ -1,12 +1,12 @@
-import { Link, useLocation } from "wouter";
-import { Button } from "../components/ui/button";
+import { Link, useLocation } from 'wouter';
+import { Button } from '../components/ui/button';
 
 const EditorNotFoundPage = () => {
   const [, setLocation] = useLocation();
 
   const handleRetry = () => {
     // Tenta recarregar a página do editor
-    setLocation("/editor");
+    setLocation('/editor');
   };
 
   return (
@@ -15,9 +15,9 @@ const EditorNotFoundPage = () => {
         <h1 className="text-4xl font-bold mb-4 text-[#432818]">404</h1>
         <p className="text-xl mb-4 text-[#8F7A6A]">Página não encontrada</p>
 
-        <div style={{ borderColor: "#E5DDD5" }}>
-          <h2 style={{ color: "#432818" }}>Possíveis soluções:</h2>
-          <ul style={{ color: "#6B4F43" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <h2 style={{ color: '#432818' }}>Possíveis soluções:</h2>
+          <ul style={{ color: '#6B4F43' }}>
             <li>Verifique se você está logado no sistema</li>
             <li>Limpe o cache do navegador e tente novamente</li>
             <li>Verifique sua conexão com a internet</li>

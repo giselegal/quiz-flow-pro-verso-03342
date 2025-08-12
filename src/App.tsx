@@ -1,42 +1,42 @@
-import { lazy, Suspense } from "react";
-import { Route, Router, Switch } from "wouter";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
-import ErrorBoundary from "./components/common/ErrorBoundary";
-import PixelInitializer from "./components/PixelInitializer";
-import { Toaster } from "./components/ui/toaster";
-import { AdminAuthProvider } from "./context/AdminAuthContext";
-import { AuthProvider } from "./context/AuthContext";
-import { EditorProvider } from "./context/EditorContext";
-import { ScrollSyncProvider } from "./context/ScrollSyncContext";
+import { lazy, Suspense } from 'react';
+import { Route, Router, Switch } from 'wouter';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import ErrorBoundary from './components/common/ErrorBoundary';
+import PixelInitializer from './components/PixelInitializer';
+import { Toaster } from './components/ui/toaster';
+import { AdminAuthProvider } from './context/AdminAuthContext';
+import { AuthProvider } from './context/AuthContext';
+import { EditorProvider } from './context/EditorContext';
+import { ScrollSyncProvider } from './context/ScrollSyncContext';
 
 // Lazy load das páginas principais para code splitting
-const Home = lazy(() => import("./pages/Home"));
-const AuthPage = lazy(() => import("./pages/AuthPage"));
+const Home = lazy(() => import('./pages/Home'));
+const AuthPage = lazy(() => import('./pages/AuthPage'));
 // Editor inline component to bypass TypeScript config issues
-const TemplatesIA = lazy(() => import("./pages/TemplatesIA"));
-const FunnelsPage = lazy(() => import("./pages/FunnelsPage"));
-const ResultPage = lazy(() => import("./pages/ResultPage"));
+const TemplatesIA = lazy(() => import('./pages/TemplatesIA'));
+const FunnelsPage = lazy(() => import('./pages/FunnelsPage'));
+const ResultPage = lazy(() => import('./pages/ResultPage'));
 const ResultConfigPage = lazy(() =>
-  import("./pages/ResultConfigPage").then(module => ({ default: module.ResultConfigPage }))
+  import('./pages/ResultConfigPage').then(module => ({ default: module.ResultConfigPage }))
 );
-const QuizPageUser = lazy(() => import("./components/QuizPageUser"));
+const QuizPageUser = lazy(() => import('./components/QuizPageUser'));
 
 // Lazy load das páginas admin
-const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
-const MigrationPanel = lazy(() => import("./components/admin/MigrationPanel"));
+const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
+const MigrationPanel = lazy(() => import('./components/admin/MigrationPanel'));
 
 // Lazy load das páginas de debug (apenas em desenvolvimento)
-const DebugEditorContext = lazy(() => import("./pages/debug-editor"));
-const TestButton = lazy(() => import("./pages/test-button"));
-const TestPropertiesPanel = lazy(() => import("./pages/test-properties"));
-const DebugStep02 = lazy(() => import("./components/debug/DebugStep02"));
-const TestAllTemplates = lazy(() => import("./components/debug/TestAllTemplates"));
-const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRendering"));
-const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
-const TestStep21 = lazy(() => import("./components/editor-fixed/OfferPageJson"));
-const EditorFixedPageWithDragDrop = lazy(() => import("./pages/editor-fixed-dragdrop"));
+const DebugEditorContext = lazy(() => import('./pages/debug-editor'));
+const TestButton = lazy(() => import('./pages/test-button'));
+const TestPropertiesPanel = lazy(() => import('./pages/test-properties'));
+const DebugStep02 = lazy(() => import('./components/debug/DebugStep02'));
+const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'));
+const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
+const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
+const TestStep21 = lazy(() => import('./components/editor-fixed/OfferPageJson'));
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
 
-const ComponentTestingPage = lazy(() => import("./pages/component-testing"));
+const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 
 // Loading component
 const PageLoading = () => (
@@ -46,12 +46,12 @@ const PageLoading = () => (
 );
 
 function App() {
-  console.log("🔧 DEBUG: App component iniciado");
+  console.log('🔧 DEBUG: App component iniciado');
   return (
     <ErrorBoundary
       onError={(error, errorInfo) => {
-        console.error("🚨 App Error:", error);
-        console.error("🔍 Error Info:", errorInfo);
+        console.error('🚨 App Error:', error);
+        console.error('🔍 Error Info:', errorInfo);
       }}
     >
       <AuthProvider>
@@ -63,13 +63,13 @@ function App() {
                 {/* Redirect /editor para /editor-fixed */}
                 <Route path="/editor">
                   {() => {
-                    window.location.href = "/editor-fixed";
+                    window.location.href = '/editor-fixed';
                     return null;
                   }}
                 </Route>
                 <Route path="/editor/:id">
                   {() => {
-                    window.location.href = "/editor-fixed";
+                    window.location.href = '/editor-fixed';
                     return null;
                   }}
                 </Route>

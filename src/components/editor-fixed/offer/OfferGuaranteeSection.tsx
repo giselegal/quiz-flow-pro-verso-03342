@@ -1,4 +1,4 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
 
 interface OfferGuaranteeSectionProps {
   title: string;
@@ -7,7 +7,7 @@ interface OfferGuaranteeSectionProps {
   imageAlt: string;
   imageWidth: number;
   imageHeight: number;
-  layout: "centered" | "side-by-side";
+  layout: 'centered' | 'side-by-side';
 }
 
 /**
@@ -23,11 +23,11 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
   imageAlt,
   imageWidth,
   imageHeight,
-  layout = "centered",
+  layout = 'centered',
 }) => {
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split("**").map((part, index) => {
+    return text.split('**').map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -35,7 +35,7 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
     });
   };
 
-  if (layout === "centered") {
+  if (layout === 'centered') {
     return (
       <section className="section-gap">
         <div className="container-main">
@@ -49,7 +49,7 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
             />
             <h2
               className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-              style={{ fontFamily: "Playfair Display, serif" }}
+              style={{ fontFamily: 'Playfair Display, serif' }}
             >
               {title}
             </h2>
@@ -79,7 +79,7 @@ export const OfferGuaranteeSection: React.FC<OfferGuaranteeSectionProps> = ({
             <div>
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 {title}
               </h2>

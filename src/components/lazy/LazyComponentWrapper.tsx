@@ -1,6 +1,6 @@
-import React, { Suspense, lazy, ComponentType } from "react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
-import { usePerformanceOptimization } from "@/hooks/usePerformanceOptimization";
+import React, { Suspense, lazy, ComponentType } from 'react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { usePerformanceOptimization } from '@/hooks/usePerformanceOptimization';
 
 interface LazyComponentWrapperProps {
   fallback?: React.ReactNode;
@@ -33,7 +33,7 @@ class LazyErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("[LazyComponent] Error loading component:", error, errorInfo);
+    console.error('[LazyComponent] Error loading component:', error, errorInfo);
   }
 
   render() {

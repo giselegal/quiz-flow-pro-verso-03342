@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Quote, Star, Edit3 } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Quote, Star, Edit3 } from 'lucide-react';
 
 interface TestimonialInlineBlockProps {
   text?: string;
@@ -15,11 +15,11 @@ interface TestimonialInlineBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -59,9 +59,9 @@ const getMarginClass = (value: string | number, type: string): string => {
 };
 
 const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
-  text = "Descobri meu estilo autêntico e agora me visto com muito mais confiança!",
-  authorName = "Maria Silva",
-  authorRole = "Cliente satisfeita",
+  text = 'Descobri meu estilo autêntico e agora me visto com muito mais confiança!',
+  authorName = 'Maria Silva',
+  authorRole = 'Cliente satisfeita',
   rating = 5,
   showStars = true,
   onClick,
@@ -72,16 +72,16 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        "inline-flex items-start gap-3 p-4 bg-[#fff7f3] rounded-lg border border-[#B89B7A]/20",
-        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
-        "w-full",
-        disabled && "opacity-75 cursor-not-allowed",
+        'inline-flex items-start gap-3 p-4 bg-[#fff7f3] rounded-lg border border-[#B89B7A]/20',
+        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
+        'w-full',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, "top"),
-        getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
-        getMarginClass((marginLeft as number | string) ?? 0, "left"),
-        getMarginClass((marginRight as number | string) ?? 0, "right")
+        getMarginClass((marginTop as number | string) ?? 0, 'top'),
+        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
+        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
+        getMarginClass((marginRight as number | string) ?? 0, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -99,8 +99,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
               <Star
                 key={i}
                 className={cn(
-                  "w-3 h-3",
-                  i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
+                  'w-3 h-3',
+                  i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
                 )}
               />
             ))}
@@ -113,8 +113,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newText = prompt("Novo depoimento:", text);
-              if (newText !== null) onPropertyChange("text", newText);
+              const newText = prompt('Novo depoimento:', text);
+              if (newText !== null) onPropertyChange('text', newText);
             }
           }}
         >
@@ -128,8 +128,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newName = prompt("Novo nome:", authorName);
-                if (newName !== null) onPropertyChange("authorName", newName);
+                const newName = prompt('Novo nome:', authorName);
+                if (newName !== null) onPropertyChange('authorName', newName);
               }
             }}
           >
@@ -142,8 +142,8 @@ const TestimonialInlineBlock: React.FC<TestimonialInlineBlockProps> = ({
                 onClick={e => {
                   e.stopPropagation();
                   if (onPropertyChange && !disabled) {
-                    const newRole = prompt("Novo cargo/descrição:", authorRole);
-                    if (newRole !== null) onPropertyChange("authorRole", newRole);
+                    const newRole = prompt('Novo cargo/descrição:', authorRole);
+                    if (newRole !== null) onPropertyChange('authorRole', newRole);
                   }
                 }}
               >

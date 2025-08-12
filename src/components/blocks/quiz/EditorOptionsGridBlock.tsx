@@ -1,5 +1,5 @@
-import type { BlockComponentProps } from "@/types/blocks";
-import QuizOptionsGridBlock from "./QuizOptionsGridBlock";
+import type { BlockComponentProps } from '@/types/blocks';
+import QuizOptionsGridBlock from './QuizOptionsGridBlock';
 
 /**
  * Wrapper/Adaptador para o QuizOptionsGridBlock no contexto do Editor
@@ -19,7 +19,7 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
   ...otherProps
 }) => {
   // 🔍 DEBUG: Log das propriedades recebidas
-  console.log("🔍 EditorOptionsGridBlock - props recebidas:", {
+  console.log('🔍 EditorOptionsGridBlock - props recebidas:', {
     blockId: block.id,
     blockType: block.type,
     properties: block.properties,
@@ -47,7 +47,7 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
     (!finalProperties.options || finalProperties.options.length === 0) &&
     (block as any).content?.options
   ) {
-    console.log("🔧 EditorOptionsGridBlock: Usando content.options ao invés de properties.options");
+    console.log('🔧 EditorOptionsGridBlock: Usando content.options ao invés de properties.options');
     finalProperties = {
       ...finalProperties,
       ...(block as any).content,
@@ -64,7 +64,7 @@ export const EditorOptionsGridBlock: React.FC<BlockComponentProps> = ({
   return (
     <QuizOptionsGridBlock
       id={block.id}
-      type={block.type || "options-grid"}
+      type={block.type || 'options-grid'}
       properties={properties}
       onPropertyChange={handlePropertyChange}
       isSelected={isSelected}

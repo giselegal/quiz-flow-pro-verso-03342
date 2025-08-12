@@ -1,18 +1,18 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface AnimationBlockPreviewProps {
   content: {
     animationType?:
-      | "fade-in"
-      | "slide-up"
-      | "slide-down"
-      | "slide-left"
-      | "slide-right"
-      | "zoom-in"
-      | "zoom-out";
+      | 'fade-in'
+      | 'slide-up'
+      | 'slide-down'
+      | 'slide-left'
+      | 'slide-right'
+      | 'zoom-in'
+      | 'zoom-out';
     animationDuration?: string;
     animationDelay?: string;
-    animationTrigger?: "onLoad" | "onScroll" | "onHover";
+    animationTrigger?: 'onLoad' | 'onScroll' | 'onHover';
     children?: any;
     style?: any;
   };
@@ -20,20 +20,20 @@ interface AnimationBlockPreviewProps {
 
 const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }) => {
   const {
-    animationType = "fade-in",
-    animationDuration = "500",
-    animationDelay = "0",
-    animationTrigger = "onLoad",
+    animationType = 'fade-in',
+    animationDuration = '500',
+    animationDelay = '0',
+    animationTrigger = 'onLoad',
     children,
     style = {},
   } = content;
 
-  const [isVisible, setIsVisible] = React.useState(animationTrigger !== "onScroll");
+  const [isVisible, setIsVisible] = React.useState(animationTrigger !== 'onScroll');
   const [isHovered, setIsHovered] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    if (animationTrigger !== "onScroll") return;
+    if (animationTrigger !== 'onScroll') return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -57,7 +57,7 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
   // Gerar os estilos de animação com base nos parâmetros
   const getAnimationStyle = () => {
     // Só aplicar animação se estiver visível ou com hover quando necessário
-    const shouldAnimate = isVisible || (animationTrigger === "onHover" && isHovered);
+    const shouldAnimate = isVisible || (animationTrigger === 'onHover' && isHovered);
 
     if (!shouldAnimate) {
       return { opacity: 0 };
@@ -70,46 +70,46 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
 
     // Estilos específicos para cada tipo de animação
     switch (animationType) {
-      case "fade-in":
+      case 'fade-in':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
         };
-      case "slide-up":
+      case 'slide-up':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
-          transform: shouldAnimate ? "translateY(0)" : "translateY(20px)",
+          transform: shouldAnimate ? 'translateY(0)' : 'translateY(20px)',
         };
-      case "slide-down":
+      case 'slide-down':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
-          transform: shouldAnimate ? "translateY(0)" : "translateY(-20px)",
+          transform: shouldAnimate ? 'translateY(0)' : 'translateY(-20px)',
         };
-      case "slide-left":
+      case 'slide-left':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
-          transform: shouldAnimate ? "translateX(0)" : "translateX(20px)",
+          transform: shouldAnimate ? 'translateX(0)' : 'translateX(20px)',
         };
-      case "slide-right":
+      case 'slide-right':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
-          transform: shouldAnimate ? "translateX(0)" : "translateX(-20px)",
+          transform: shouldAnimate ? 'translateX(0)' : 'translateX(-20px)',
         };
-      case "zoom-in":
+      case 'zoom-in':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
-          transform: shouldAnimate ? "scale(1)" : "scale(0.95)",
+          transform: shouldAnimate ? 'scale(1)' : 'scale(0.95)',
         };
-      case "zoom-out":
+      case 'zoom-out':
         return {
           ...baseStyle,
           opacity: shouldAnimate ? 1 : 0,
-          transform: shouldAnimate ? "scale(1)" : "scale(1.05)",
+          transform: shouldAnimate ? 'scale(1)' : 'scale(1.05)',
         };
       default:
         return baseStyle;
@@ -123,9 +123,9 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
         ...style,
         ...getAnimationStyle(),
       }}
-      className={cn("w-full", animationTrigger === "onHover" && "transition-all duration-300")}
-      onMouseEnter={animationTrigger === "onHover" ? () => setIsHovered(true) : undefined}
-      onMouseLeave={animationTrigger === "onHover" ? () => setIsHovered(false) : undefined}
+      className={cn('w-full', animationTrigger === 'onHover' && 'transition-all duration-300')}
+      onMouseEnter={animationTrigger === 'onHover' ? () => setIsHovered(true) : undefined}
+      onMouseLeave={animationTrigger === 'onHover' ? () => setIsHovered(false) : undefined}
     >
       {children || (
         <div className="p-6 text-center text-gray-400 border border-dashed rounded-md">

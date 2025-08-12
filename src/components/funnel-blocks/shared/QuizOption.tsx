@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface QuizOptionProps {
   id: string;
@@ -11,8 +11,8 @@ interface QuizOptionProps {
   className?: string;
   multiSelect?: boolean;
   showCheckmark?: boolean;
-  variant?: "default" | "image" | "card" | "text-only";
-  size?: "sm" | "md" | "lg";
+  variant?: 'default' | 'image' | 'card' | 'text-only';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /**
@@ -28,17 +28,17 @@ const QuizOption: React.FC<QuizOptionProps> = ({
   isSelected,
   onSelect,
   disabled = false,
-  className = "",
+  className = '',
   multiSelect = false,
   showCheckmark = true,
-  variant = "default",
-  size = "md",
+  variant = 'default',
+  size = 'md',
 }) => {
   // Classes de tamanho
   const sizeClasses = {
-    sm: "p-2 text-sm",
-    md: "p-3 text-base",
-    lg: "p-4 text-lg",
+    sm: 'p-2 text-sm',
+    md: 'p-3 text-base',
+    lg: 'p-4 text-lg',
   };
 
   // Função de clique
@@ -51,15 +51,15 @@ const QuizOption: React.FC<QuizOptionProps> = ({
   // Renderização baseada no tipo
   switch (variant) {
     // Opção com imagem em destaque
-    case "image":
+    case 'image':
       return (
         <div
           className={cn(
-            "relative rounded-lg border overflow-hidden cursor-pointer transition-all duration-200",
+            'relative rounded-lg border overflow-hidden cursor-pointer transition-all duration-200',
             isSelected
-              ? "ring-2 ring-[#B89B7A] border-[#B89B7A]"
-              : "border-gray-200 hover:border-gray-300",
-            disabled && "opacity-50 cursor-not-allowed",
+              ? 'ring-2 ring-[#B89B7A] border-[#B89B7A]'
+              : 'border-gray-200 hover:border-gray-300',
+            disabled && 'opacity-50 cursor-not-allowed',
             className
           )}
           onClick={handleClick}
@@ -103,8 +103,8 @@ const QuizOption: React.FC<QuizOptionProps> = ({
             <div className="absolute top-3 right-3">
               <div
                 className={cn(
-                  "w-5 h-5 border rounded-full flex items-center justify-center transition-colors",
-                  isSelected ? "bg-[#B89B7A] border-[#B89B7A]" : "border-gray-300"
+                  'w-5 h-5 border rounded-full flex items-center justify-center transition-colors',
+                  isSelected ? 'bg-[#B89B7A] border-[#B89B7A]' : 'border-gray-300'
                 )}
               >
                 {isSelected && (
@@ -130,15 +130,15 @@ const QuizOption: React.FC<QuizOptionProps> = ({
       );
 
     // Opção tipo card
-    case "card":
+    case 'card':
       return (
         <div
           className={cn(
-            "relative rounded-lg border p-4 cursor-pointer transition-all duration-200",
+            'relative rounded-lg border p-4 cursor-pointer transition-all duration-200',
             isSelected
-              ? "bg-[#B89B7A] bg-opacity-10 border-[#B89B7A]"
-              : "border-gray-200 hover:border-gray-300",
-            disabled && "opacity-50 cursor-not-allowed",
+              ? 'bg-[#B89B7A] bg-opacity-10 border-[#B89B7A]'
+              : 'border-gray-200 hover:border-gray-300',
+            disabled && 'opacity-50 cursor-not-allowed',
             className
           )}
           onClick={handleClick}
@@ -148,8 +148,8 @@ const QuizOption: React.FC<QuizOptionProps> = ({
             {/* Indicador de seleção */}
             <div
               className={cn(
-                "w-5 h-5 border rounded-full flex items-center justify-center flex-shrink-0",
-                isSelected ? "bg-[#B89B7A] border-[#B89B7A]" : "border-gray-300"
+                'w-5 h-5 border rounded-full flex items-center justify-center flex-shrink-0',
+                isSelected ? 'bg-[#B89B7A] border-[#B89B7A]' : 'border-gray-300'
               )}
             >
               {isSelected && (
@@ -186,13 +186,13 @@ const QuizOption: React.FC<QuizOptionProps> = ({
       );
 
     // Opção apenas texto
-    case "text-only":
+    case 'text-only':
       return (
         <div
           className={cn(
-            "relative rounded-lg border px-4 py-3 cursor-pointer transition-all duration-200",
-            isSelected ? "bg-[#B89B7A] text-white" : "border-gray-200 hover:border-gray-300",
-            disabled && "opacity-50 cursor-not-allowed",
+            'relative rounded-lg border px-4 py-3 cursor-pointer transition-all duration-200',
+            isSelected ? 'bg-[#B89B7A] text-white' : 'border-gray-200 hover:border-gray-300',
+            disabled && 'opacity-50 cursor-not-allowed',
             className
           )}
           onClick={handleClick}
@@ -207,11 +207,11 @@ const QuizOption: React.FC<QuizOptionProps> = ({
       return (
         <div
           className={cn(
-            "relative rounded-lg border cursor-pointer transition-all duration-200 overflow-hidden",
+            'relative rounded-lg border cursor-pointer transition-all duration-200 overflow-hidden',
             isSelected
-              ? "ring-2 ring-[#B89B7A] border-[#B89B7A]"
-              : "border-gray-200 hover:border-gray-300",
-            disabled && "opacity-50 cursor-not-allowed",
+              ? 'ring-2 ring-[#B89B7A] border-[#B89B7A]'
+              : 'border-gray-200 hover:border-gray-300',
+            disabled && 'opacity-50 cursor-not-allowed',
             className
           )}
           onClick={handleClick}
@@ -228,9 +228,9 @@ const QuizOption: React.FC<QuizOptionProps> = ({
             {/* Texto */}
             <div
               className={cn(
-                "flex-grow",
+                'flex-grow',
                 sizeClasses[size],
-                isSelected ? "bg-[#B89B7A] bg-opacity-10" : ""
+                isSelected ? 'bg-[#B89B7A] bg-opacity-10' : ''
               )}
             >
               <p className="font-medium">{text}</p>
@@ -241,8 +241,8 @@ const QuizOption: React.FC<QuizOptionProps> = ({
               <div className="p-3">
                 <div
                   className={cn(
-                    "w-5 h-5 border rounded flex items-center justify-center transition-colors",
-                    isSelected ? "bg-[#B89B7A] border-[#B89B7A]" : "border-gray-300"
+                    'w-5 h-5 border rounded flex items-center justify-center transition-colors',
+                    isSelected ? 'bg-[#B89B7A] border-[#B89B7A]' : 'border-gray-300'
                   )}
                 >
                   {isSelected && (

@@ -2,11 +2,11 @@
 // components/editor/demo/EditorShowcase.tsx - Showcase das funcionalidades
 // =====================================================================
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { Badge } from "../../ui/badge";
-import { Button } from "../../ui/button";
-import { Separator } from "../../ui/separator";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Badge } from '../../ui/badge';
+import { Button } from '../../ui/button';
+import { Separator } from '../../ui/separator';
 import {
   Sparkles,
   Monitor,
@@ -17,128 +17,128 @@ import {
   Layers,
   Clock,
   CheckCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
 export const EditorShowcase: React.FC = () => {
-  const [activeDemo, setActiveDemo] = useState<string>("overview");
+  const [activeDemo, setActiveDemo] = useState<string>('overview');
 
   const features = [
     {
-      id: "responsive",
-      title: "Preview Responsivo",
-      description: "Teste seu design em desktop, tablet e mobile",
+      id: 'responsive',
+      title: 'Preview Responsivo',
+      description: 'Teste seu design em desktop, tablet e mobile',
       icon: <Monitor className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "properties",
-      title: "Painel de Propriedades Avançado",
-      description: "7 seções organizadas para configuração completa",
+      id: 'properties',
+      title: 'Painel de Propriedades Avançado',
+      description: '7 seções organizadas para configuração completa',
       icon: <Settings className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "history",
-      title: "Histórico de Propriedades",
-      description: "Undo/Redo com até 50 entradas",
+      id: 'history',
+      title: 'Histórico de Propriedades',
+      description: 'Undo/Redo com até 50 entradas',
       icon: <History className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "dragdrop",
-      title: "Drag & Drop",
-      description: "Reordenação intuitiva de elementos",
+      id: 'dragdrop',
+      title: 'Drag & Drop',
+      description: 'Reordenação intuitiva de elementos',
       icon: <Layers className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "templates",
-      title: "Sistema de Templates",
-      description: "Templates predefinidos para agilizar desenvolvimento",
+      id: 'templates',
+      title: 'Sistema de Templates',
+      description: 'Templates predefinidos para agilizar desenvolvimento',
       icon: <Sparkles className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "colorpicker",
-      title: "Color Picker Avançado",
-      description: "Seleção de cores com presets e picker nativo",
+      id: 'colorpicker',
+      title: 'Color Picker Avançado',
+      description: 'Seleção de cores com presets e picker nativo',
       icon: <Palette className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "keyboard",
-      title: "Atalhos de Teclado",
-      description: "Ctrl+Z, Ctrl+Y, Del para navegação rápida",
+      id: 'keyboard',
+      title: 'Atalhos de Teclado',
+      description: 'Ctrl+Z, Ctrl+Y, Del para navegação rápida',
       icon: <Target className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
     {
-      id: "performance",
-      title: "Otimização de Performance",
-      description: "Debouncing, memoização e lazy loading",
+      id: 'performance',
+      title: 'Otimização de Performance',
+      description: 'Debouncing, memoização e lazy loading',
       icon: <CheckCircle className="w-6 h-6" />,
-      status: "Implementado",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      status: 'Implementado',
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
     },
   ];
 
   const implementationDetails = {
     responsive: {
-      title: "Preview Responsivo",
-      description: "Sistema de preview que permite visualizar o design em diferentes dispositivos.",
-      components: ["SchemaDrivenEditorResponsive.tsx", "PreviewModeButtons"],
+      title: 'Preview Responsivo',
+      description: 'Sistema de preview que permite visualizar o design em diferentes dispositivos.',
+      components: ['SchemaDrivenEditorResponsive.tsx', 'PreviewModeButtons'],
       features: [
-        "Botões de alternância Desktop/Tablet/Mobile",
-        "Canvas responsivo com dimensões específicas",
-        "Indicador visual do modo ativo",
-        "Transições suaves entre modos",
+        'Botões de alternância Desktop/Tablet/Mobile',
+        'Canvas responsivo com dimensões específicas',
+        'Indicador visual do modo ativo',
+        'Transições suaves entre modos',
       ],
     },
     properties: {
-      title: "Painel de Propriedades Dinâmico",
-      description: "Sistema schema-driven para configuração automática e completa de componentes.",
-      components: ["DynamicPropertiesPanel.tsx", "PropertyInput.tsx", "blockDefinitions.ts"],
+      title: 'Painel de Propriedades Dinâmico',
+      description: 'Sistema schema-driven para configuração automática e completa de componentes.',
+      components: ['DynamicPropertiesPanel.tsx', 'PropertyInput.tsx', 'blockDefinitions.ts'],
       features: [
-        "Schema automático baseado em blockDefinitions",
-        "Suporte a propriedades aninhadas",
-        "Validação automática de tipos",
-        "Interface responsiva e moderna",
-        "Configuração de funnel global",
-        "Suporte a todos os 44+ componentes inline",
-        "Configuração dinâmica por tipo de bloco",
+        'Schema automático baseado em blockDefinitions',
+        'Suporte a propriedades aninhadas',
+        'Validação automática de tipos',
+        'Interface responsiva e moderna',
+        'Configuração de funnel global',
+        'Suporte a todos os 44+ componentes inline',
+        'Configuração dinâmica por tipo de bloco',
       ],
     },
     history: {
-      title: "Sistema de Histórico",
-      description: "Controle completo do histórico de alterações com navegação temporal.",
-      components: ["usePropertyHistory.ts", "PropertyHistory.tsx"],
+      title: 'Sistema de Histórico',
+      description: 'Controle completo do histórico de alterações com navegação temporal.',
+      components: ['usePropertyHistory.ts', 'PropertyHistory.tsx'],
       features: [
-        "Até 50 entradas no histórico",
-        "Timestamps para cada ação",
-        "Descrições automáticas das alterações",
-        "Interface visual para navegação",
-        "Integração com atalhos de teclado",
+        'Até 50 entradas no histórico',
+        'Timestamps para cada ação',
+        'Descrições automáticas das alterações',
+        'Interface visual para navegação',
+        'Integração com atalhos de teclado',
       ],
     },
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -147,15 +147,15 @@ export const EditorShowcase: React.FC = () => {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 style={{ color: "#432818" }}>Editor Visual Avançado</h1>
-              <p style={{ color: "#6B4F43" }}>
+              <h1 style={{ color: '#432818' }}>Editor Visual Avançado</h1>
+              <p style={{ color: '#6B4F43' }}>
                 Sistema completo de edição com recursos modernos e interface intuitiva
               </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <Badge variant="outline" style={{ color: "#6B4F43" }}>
+            <Badge variant="outline" style={{ color: '#6B4F43' }}>
               <CheckCircle className="w-3 h-3 mr-1" />8 Funcionalidades Implementadas
             </Badge>
             <Badge variant="outline" className="bg-[#B89B7A]/10 text-[#A38A69] border-[#B89B7A]/30">
@@ -167,16 +167,16 @@ export const EditorShowcase: React.FC = () => {
 
         {/* Navigation */}
         <div className="mb-6">
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             {[
-              { id: "overview", label: "Visão Geral" },
-              { id: "responsive", label: "Responsivo" },
-              { id: "properties", label: "Propriedades" },
-              { id: "history", label: "Histórico" },
+              { id: 'overview', label: 'Visão Geral' },
+              { id: 'responsive', label: 'Responsivo' },
+              { id: 'properties', label: 'Propriedades' },
+              { id: 'history', label: 'Histórico' },
             ].map(tab => (
               <Button
                 key={tab.id}
-                variant={activeDemo === tab.id ? "default" : "ghost"}
+                variant={activeDemo === tab.id ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setActiveDemo(tab.id)}
                 className="flex-1"
@@ -188,7 +188,7 @@ export const EditorShowcase: React.FC = () => {
         </div>
 
         {/* Content */}
-        {activeDemo === "overview" && (
+        {activeDemo === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {features.map(feature => (
               <Card key={feature.id} className="hover:shadow-md transition-shadow">
@@ -204,7 +204,7 @@ export const EditorShowcase: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <CardTitle className="text-base mb-2">{feature.title}</CardTitle>
-                  <p style={{ color: "#6B4F43" }}>{feature.description}</p>
+                  <p style={{ color: '#6B4F43' }}>{feature.description}</p>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -220,7 +220,7 @@ export const EditorShowcase: React.FC = () => {
         )}
 
         {/* Detail Views */}
-        {activeDemo !== "overview" &&
+        {activeDemo !== 'overview' &&
           implementationDetails[activeDemo as keyof typeof implementationDetails] && (
             <div className="space-y-6">
               <Card>
@@ -236,7 +236,7 @@ export const EditorShowcase: React.FC = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <p style={{ color: "#6B4F43" }}>
+                  <p style={{ color: '#6B4F43' }}>
                     {
                       implementationDetails[activeDemo as keyof typeof implementationDetails]
                         .description
@@ -278,9 +278,9 @@ export const EditorShowcase: React.FC = () => {
 
         {/* Footer */}
         <div className="mt-12 text-center">
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <Sparkles className="w-4 h-4 text-[#B89B7A]" />
-            <span style={{ color: "#6B4F43" }}>
+            <span style={{ color: '#6B4F43' }}>
               Sistema completo implementado com React, TypeScript e Tailwind CSS
             </span>
           </div>

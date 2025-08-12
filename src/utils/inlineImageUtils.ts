@@ -33,8 +33,8 @@ export const loadTinyImageAsBase64 = async (imageUrl: string): Promise<string> =
       reader.readAsDataURL(blob);
     });
   } catch (error) {
-    console.error("[ImageLoader] Failed to load tiny image:", error);
-    return "";
+    console.error('[ImageLoader] Failed to load tiny image:', error);
+    return '';
   }
 };
 
@@ -56,7 +56,7 @@ export const getOptimizedImageUrl = (
   quality: number
 ): string => {
   // Configuração otimizada para performance e qualidade
-  return `${baseUrl}f_${format},q_${quality},w_${width},c_limit,dpr_auto,fl_progressive,fl_lossy${width > 300 ? ",e_sharpen:30" : ""}/${imageId}.${format}`;
+  return `${baseUrl}f_${format},q_${quality},w_${width},c_limit,dpr_auto,fl_progressive,fl_lossy${width > 300 ? ',e_sharpen:30' : ''}/${imageId}.${format}`;
 };
 
 /**

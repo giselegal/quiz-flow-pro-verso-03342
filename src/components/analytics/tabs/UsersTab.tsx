@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useState, useMemo } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useMemo } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -12,8 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Search,
   User,
@@ -24,7 +24,7 @@ import {
   Eye,
   Mail,
   ShoppingCart,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -32,7 +32,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 interface UsersTabProps {
   analyticsData: any;
@@ -40,7 +40,7 @@ interface UsersTabProps {
 }
 
 export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [selectedUserData, setSelectedUserData] = useState<any>(null);
   const [userEvents, setUserEvents] = useState<any[]>([]);
@@ -52,13 +52,13 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
     const uniqueUsers = new Map();
 
     analyticsData.events.forEach((event: any) => {
-      const userId = event.sessionId || event.userEmail || "unknown";
+      const userId = event.sessionId || event.userEmail || 'unknown';
 
       if (!uniqueUsers.has(userId)) {
         uniqueUsers.set(userId, {
           id: userId,
-          name: event.userName || "Anônimo",
-          email: event.userEmail || event.email || "N/A",
+          name: event.userName || 'Anônimo',
+          email: event.userEmail || event.email || 'N/A',
           startTime: null,
           lastActivity: null,
           completed: false,
@@ -81,12 +81,12 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
         }
       }
 
-      if (event.type === "quiz_complete") {
+      if (event.type === 'quiz_complete') {
         user.completed = true;
         user.completeTime = new Date(event.timestamp);
       }
 
-      if (event.type === "quiz_answer") {
+      if (event.type === 'quiz_answer') {
         user.totalQuestions++;
       }
     });
@@ -125,33 +125,33 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
 
   // Format date for display
   const formatDate = (date: Date | null) => {
-    if (!date) return "N/A";
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    if (!date) return 'N/A';
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     }).format(date);
   };
 
   // Get icon for event type
   const getEventIcon = (eventType: string) => {
     switch (eventType) {
-      case "quiz_start":
+      case 'quiz_start':
         return <Play className="h-4 w-4 text-[#B89B7A]" />;
-      case "quiz_complete":
+      case 'quiz_complete':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "quiz_answer":
-        return <Clock style={{ color: "#B89B7A" }} />;
-      case "result_view":
+      case 'quiz_answer':
+        return <Clock style={{ color: '#B89B7A' }} />;
+      case 'result_view':
         return <Eye className="h-4 w-4 text-indigo-500" />;
-      case "lead_generated":
+      case 'lead_generated':
         return <Mail className="h-4 w-4 text-yellow-500" />;
-      case "sale":
+      case 'sale':
         return <ShoppingCart className="h-4 w-4 text-green-500" />;
       default:
-        return <User style={{ color: "#8B7355" }} />;
+        return <User style={{ color: '#8B7355' }} />;
     }
   };
 
@@ -227,38 +227,38 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                             <DialogHeader>
                               <DialogTitle>Detalhes do Usuário</DialogTitle>
                               <DialogDescription>
-                                Histórico completo de atividades do usuário:{" "}
+                                Histórico completo de atividades do usuário:{' '}
                                 {selectedUserData?.name}
                               </DialogDescription>
                             </DialogHeader>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                               <div>
-                                <p style={{ color: "#8B7355" }}>Nome</p>
+                                <p style={{ color: '#8B7355' }}>Nome</p>
                                 <p className="text-base">{selectedUserData?.name}</p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Email</p>
+                                <p style={{ color: '#8B7355' }}>Email</p>
                                 <p className="text-base">{selectedUserData?.email}</p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Início</p>
+                                <p style={{ color: '#8B7355' }}>Início</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.startTime)}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Conclusão</p>
+                                <p style={{ color: '#8B7355' }}>Conclusão</p>
                                 <p className="text-base">
                                   {formatDate(selectedUserData?.completeTime)}
                                 </p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Perguntas Respondidas</p>
+                                <p style={{ color: '#8B7355' }}>Perguntas Respondidas</p>
                                 <p className="text-base">{selectedUserData?.totalQuestions}</p>
                               </div>
                               <div>
-                                <p style={{ color: "#8B7355" }}>Status</p>
+                                <p style={{ color: '#8B7355' }}>Status</p>
                                 <p className="text-base">
                                   {selectedUserData?.completed ? (
                                     <Badge className="bg-green-500 text-white">Concluído</Badge>
@@ -275,7 +275,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                             </div>
 
                             <div className="border-t pt-4">
-                              <h4 style={{ color: "#8B7355" }}>Histórico de Eventos</h4>
+                              <h4 style={{ color: '#8B7355' }}>Histórico de Eventos</h4>
                               <ScrollArea className="h-[300px]">
                                 <div className="space-y-4">
                                   {userEvents.map((event, index) => (
@@ -288,30 +288,30 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                                       </div>
                                       <div className="flex-1">
                                         <p className="text-sm font-medium">
-                                          {event.type === "quiz_answer" ? (
+                                          {event.type === 'quiz_answer' ? (
                                             <>Respondeu à questão {event.questionIndex + 1}</>
-                                          ) : event.type === "quiz_start" ? (
+                                          ) : event.type === 'quiz_start' ? (
                                             <>Iniciou o quiz</>
-                                          ) : event.type === "quiz_complete" ? (
+                                          ) : event.type === 'quiz_complete' ? (
                                             <>Completou o quiz</>
-                                          ) : event.type === "result_view" ? (
+                                          ) : event.type === 'result_view' ? (
                                             <>Visualizou o resultado: {event.resultType}</>
-                                          ) : event.type === "lead_generated" ? (
+                                          ) : event.type === 'lead_generated' ? (
                                             <>Lead gerado: {event.email}</>
-                                          ) : event.type === "sale" ? (
+                                          ) : event.type === 'sale' ? (
                                             <>Realizou uma compra no valor de R$ {event.value}</>
                                           ) : (
                                             <>Evento: {event.type}</>
                                           )}
                                         </p>
-                                        <p style={{ color: "#8B7355" }}>
+                                        <p style={{ color: '#8B7355' }}>
                                           {new Date(event.timestamp).toLocaleString()}
                                         </p>
-                                        {event.type === "quiz_answer" && (
-                                          <div style={{ color: "#6B4F43" }}>
+                                        {event.type === 'quiz_answer' && (
+                                          <div style={{ color: '#6B4F43' }}>
                                             <p>
-                                              Opções selecionadas:{" "}
-                                              {event.selectedOptions?.join(", ") || "N/A"}
+                                              Opções selecionadas:{' '}
+                                              {event.selectedOptions?.join(', ') || 'N/A'}
                                             </p>
                                           </div>
                                         )}
@@ -319,7 +319,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                                     </div>
                                   ))}
                                   {userEvents.length === 0 && (
-                                    <p style={{ color: "#8B7355" }}>
+                                    <p style={{ color: '#8B7355' }}>
                                       Nenhum evento encontrado para este usuário.
                                     </p>
                                   )}
@@ -332,7 +332,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                                 variant="outline"
                                 onClick={() => {
                                   // Export functionality kept the same as original
-                                  console.log("Exporting data for user:", selectedUserData?.name);
+                                  console.log('Exporting data for user:', selectedUserData?.name);
                                 }}
                               >
                                 <Download className="h-4 w-4 mr-2" />
@@ -348,8 +348,8 @@ export const UsersTab: React.FC<UsersTabProps> = ({ analyticsData, loading }) =>
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                       {searchTerm
-                        ? "Nenhum usuário encontrado para esta busca."
-                        : "Nenhum usuário encontrado."}
+                        ? 'Nenhum usuário encontrado para esta busca.'
+                        : 'Nenhum usuário encontrado.'}
                     </TableCell>
                   </TableRow>
                 )}

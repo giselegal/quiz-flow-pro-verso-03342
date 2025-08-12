@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "@/types/blocks";
-import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '@/types/blocks';
+import { logBlockDebug, safeGetBlockProperties } from '@/utils/blockUtils';
 
 /**
  * CharacteristicsListInlineBlock - Lista de características
@@ -8,11 +8,11 @@ import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,15 +55,15 @@ const CharacteristicsListInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
-  logBlockDebug("CharacteristicsListInlineBlock", block);
+  logBlockDebug('CharacteristicsListInlineBlock', block);
   const properties = safeGetBlockProperties(block);
 
   const {
-    title = "Características",
-    items = ["Item 1", "Item 2", "Item 3"],
-    backgroundColor = "white",
+    title = 'Características',
+    items = ['Item 1', 'Item 2', 'Item 3'],
+    backgroundColor = 'white',
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
     marginBottom = 8,
@@ -74,15 +74,15 @@ const CharacteristicsListInlineBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        "w-full p-4 rounded-lg transition-all duration-200",
-        isSelected && "ring-2 ring-blue-500",
-        "cursor-pointer",
+        'w-full p-4 rounded-lg transition-all duration-200',
+        isSelected && 'ring-2 ring-blue-500',
+        'cursor-pointer',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       style={{ backgroundColor }}
       onClick={onClick}

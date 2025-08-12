@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Upload } from "lucide-react";
-import { EditableContent } from "@/types/editor";
+import { Upload } from 'lucide-react';
+import { EditableContent } from '@/types/editor';
 
 interface ImageBlockProps {
   content: EditableContent;
@@ -11,11 +11,11 @@ interface ImageBlockProps {
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -67,7 +67,7 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
       reader.onload = e => {
         onContentChange({
           url: e.target?.result as string,
-          alt: content.alt || "Uploaded image",
+          alt: content.alt || 'Uploaded image',
         });
       };
       reader.readAsDataURL(file);
@@ -76,37 +76,37 @@ const ImageBlock: React.FC<ImageBlockProps> = ({
 
   // Create a proper style object with default values
   const containerStyle = {
-    backgroundColor: content.backgroundColor || "transparent",
-    padding: content.padding || "0",
-    margin: content.margin || "0",
-    textAlign: (content.textAlign as any) || "center",
+    backgroundColor: content.backgroundColor || 'transparent',
+    padding: content.padding || '0',
+    margin: content.margin || '0',
+    textAlign: (content.textAlign as any) || 'center',
   };
 
   const imageStyle = {
-    width: content.width || "100%",
-    height: content.height || "auto",
-    objectFit: (content.objectFit as any) || "cover",
-    display: "block",
-    margin: "0 auto",
-    borderRadius: content.borderRadius || "0.5rem",
-    boxShadow: content.boxShadow || "none",
+    width: content.width || '100%',
+    height: content.height || 'auto',
+    objectFit: (content.objectFit as any) || 'cover',
+    display: 'block',
+    margin: '0 auto',
+    borderRadius: content.borderRadius || '0.5rem',
+    boxShadow: content.boxShadow || 'none',
   };
 
   return (
     <div
-      className={`relative ${isSelected ? "ring-2 ring-brand" : ""}`}
+      className={`relative ${isSelected ? 'ring-2 ring-brand' : ''}`}
       style={containerStyle}
       onClick={onClick}
     >
       {content.url ? (
         <img
           src={content.url}
-          alt={content.alt || "Image"}
+          alt={content.alt || 'Image'}
           style={imageStyle}
           className="cursor-pointer"
         />
       ) : (
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="text-stone-400 mb-4">
             <Upload size={48} />
           </div>

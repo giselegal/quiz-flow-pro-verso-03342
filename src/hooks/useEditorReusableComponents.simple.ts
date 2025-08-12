@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { ENHANCED_BLOCK_REGISTRY } from "../config/enhancedBlockRegistry";
-import { useEditor } from "../context/EditorContext";
+import React, { useCallback, useEffect, useState } from 'react';
+import { ENHANCED_BLOCK_REGISTRY } from '../config/enhancedBlockRegistry';
+import { useEditor } from '../context/EditorContext';
 
 // ============================================================================
 // HOOK SIMPLIFICADO: useEditorReusableComponents (Sem Supabase)
@@ -29,10 +29,10 @@ export const useEditorReusableComponents = () => {
       ([key, component]) => ({
         type_key: key,
         display_name: key
-          .split("-")
+          .split('-')
           .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" "),
-        category: key.includes("quiz") ? "Quiz" : key.includes("form") ? "Forms" : "Basic",
+          .join(' '),
+        category: key.includes('quiz') ? 'Quiz' : key.includes('form') ? 'Forms' : 'Basic',
         component: component as React.ComponentType<any>, // ✅ Casting explícito para resolver tipo
         is_available: true,
         default_properties: {},
@@ -56,7 +56,7 @@ export const useEditorReusableComponents = () => {
 
   const addReusableComponentToEditor = useCallback(
     (componentType: string, stepNumber?: number) => {
-      console.log("🎯 Adicionando componente ao editor:", componentType, "step:", stepNumber);
+      console.log('🎯 Adicionando componente ao editor:', componentType, 'step:', stepNumber);
       if (addBlock) {
         addBlock(componentType);
       }
@@ -66,7 +66,7 @@ export const useEditorReusableComponents = () => {
 
   const applyComponentTemplate = useCallback((templateKey: string, targetStepNumber?: number) => {
     // Mock implementation - não faz nada por enquanto
-    console.log("🎯 Aplicando template:", templateKey, "step:", targetStepNumber);
+    console.log('🎯 Aplicando template:', templateKey, 'step:', targetStepNumber);
     return Promise.resolve();
   }, []);
 

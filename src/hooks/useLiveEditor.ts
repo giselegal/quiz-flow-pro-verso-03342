@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface Stage {
   id: string;
@@ -14,7 +14,7 @@ export const useLiveEditor = () => {
 
   const loadEditor = () => {
     // Load from localStorage or initialize
-    const saved = localStorage.getItem("live_editor_stages");
+    const saved = localStorage.getItem('live_editor_stages');
     if (saved) {
       setStages(JSON.parse(saved));
     }

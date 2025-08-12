@@ -1,5 +1,5 @@
-import { generateSemanticId } from "../utils/semanticIdGenerator";
-import { Block, BlockType } from "./editor";
+import { generateSemanticId } from '../utils/semanticIdGenerator';
+import { Block, BlockType } from './editor';
 
 export interface BlockData {
   id: string;
@@ -53,7 +53,7 @@ export const createDefaultBlock = (type: BlockType, stageId: string): Block => {
   // Gerar ID semântico baseado no contexto
   const semanticId = generateSemanticId({
     context: stageId,
-    type: "block",
+    type: 'block',
     identifier: type,
     index: 1, // Será atualizado pelo EditorContext com a ordem correta
   });
@@ -70,7 +70,7 @@ export const createDefaultBlock = (type: BlockType, stageId: string): Block => {
 
 // Extended interfaces for specific block types - all properly extending BlockData
 export interface CountdownTimerBlock extends BlockData {
-  type: "countdown-timer";
+  type: 'countdown-timer';
   content: {
     title?: string;
     subtitle?: string;
@@ -81,9 +81,9 @@ export interface CountdownTimerBlock extends BlockData {
     showHours?: boolean;
     showMinutes?: boolean;
     showSeconds?: boolean;
-    size?: "sm" | "md" | "lg";
-    theme?: "default" | "urgent" | "elegant" | "minimal" | "neon";
-    layout?: "compact" | "cards" | "digital" | "circular";
+    size?: 'sm' | 'md' | 'lg';
+    theme?: 'default' | 'urgent' | 'elegant' | 'minimal' | 'neon';
+    layout?: 'compact' | 'cards' | 'digital' | 'circular';
     autoStart?: boolean;
     showUrgencyMessages?: boolean;
     urgencyThreshold?: number;
@@ -105,9 +105,9 @@ export interface CountdownTimerBlock extends BlockData {
     showHours?: boolean;
     showMinutes?: boolean;
     showSeconds?: boolean;
-    size?: "sm" | "md" | "lg";
-    theme?: "default" | "urgent" | "elegant" | "minimal" | "neon";
-    layout?: "compact" | "cards" | "digital" | "circular";
+    size?: 'sm' | 'md' | 'lg';
+    theme?: 'default' | 'urgent' | 'elegant' | 'minimal' | 'neon';
+    layout?: 'compact' | 'cards' | 'digital' | 'circular';
     autoStart?: boolean;
     showUrgencyMessages?: boolean;
     urgencyThreshold?: number;
@@ -131,12 +131,12 @@ export interface FAQItem {
 }
 
 export interface FAQBlock extends BlockData {
-  type: "faq";
+  type: 'faq';
   content: {
     title?: string;
     subtitle?: string;
     faqs?: FAQItem[];
-    layout?: "minimal" | "cards" | "accordion";
+    layout?: 'minimal' | 'cards' | 'accordion';
     showSearch?: boolean;
     showCategories?: boolean;
     allowMultipleOpen?: boolean;
@@ -145,14 +145,14 @@ export interface FAQBlock extends BlockData {
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
-    cardStyle?: "modern" | "classic" | "rounded" | "flat";
+    cardStyle?: 'modern' | 'classic' | 'rounded' | 'flat';
     searchPlaceholder?: string;
   };
   properties: {
     title?: string;
     subtitle?: string;
     faqs?: FAQItem[];
-    layout?: "minimal" | "cards" | "accordion";
+    layout?: 'minimal' | 'cards' | 'accordion';
     showSearch?: boolean;
     showCategories?: boolean;
     allowMultipleOpen?: boolean;
@@ -161,7 +161,7 @@ export interface FAQBlock extends BlockData {
     backgroundColor?: string;
     textColor?: string;
     accentColor?: string;
-    cardStyle?: "modern" | "classic" | "rounded" | "flat";
+    cardStyle?: 'modern' | 'classic' | 'rounded' | 'flat';
     searchPlaceholder?: string;
   };
 }
@@ -178,28 +178,28 @@ export interface PricingPlan {
 }
 
 export interface PriceComparisonBlock extends BlockData {
-  type: "price-comparison";
+  type: 'price-comparison';
   content: {
     title?: string;
     subtitle?: string;
     plans?: PricingPlan[];
-    layout?: "table" | "cards" | "minimal";
+    layout?: 'table' | 'cards' | 'minimal';
     showPopularBadge?: boolean;
     showOriginalPrice?: boolean;
     currency?: string;
     billingPeriod?: string;
-    cardStyle?: "modern" | "classic" | "minimal" | "gradient";
+    cardStyle?: 'modern' | 'classic' | 'minimal' | 'gradient';
   };
   properties: {
     title?: string;
     subtitle?: string;
     plans?: PricingPlan[];
-    layout?: "table" | "cards" | "minimal";
+    layout?: 'table' | 'cards' | 'minimal';
     showPopularBadge?: boolean;
     showOriginalPrice?: boolean;
     currency?: string;
     billingPeriod?: string;
-    cardStyle?: "modern" | "classic" | "minimal" | "gradient";
+    cardStyle?: 'modern' | 'classic' | 'minimal' | 'gradient';
   };
 }
 
@@ -211,7 +211,7 @@ export interface ProsConsItem {
 }
 
 export interface ProsConsBlock extends BlockData {
-  type: "pros-cons";
+  type: 'pros-cons';
   content: {
     title?: string;
     subtitle?: string;
@@ -219,7 +219,7 @@ export interface ProsConsBlock extends BlockData {
     consTitle?: string;
     pros: ProsConsItem[];
     cons: ProsConsItem[];
-    layout?: "side-by-side" | "stacked";
+    layout?: 'side-by-side' | 'stacked';
     prosColor?: string;
     consColor?: string;
     backgroundColor?: string;
@@ -232,7 +232,7 @@ export interface ProsConsBlock extends BlockData {
     consTitle?: string;
     pros: ProsConsItem[];
     cons: ProsConsItem[];
-    layout?: "side-by-side" | "stacked";
+    layout?: 'side-by-side' | 'stacked';
     prosColor?: string;
     consColor?: string;
     backgroundColor?: string;
@@ -249,12 +249,12 @@ export interface Stat {
 }
 
 export interface StatsMetricsBlock extends BlockData {
-  type: "stats-metrics";
+  type: 'stats-metrics';
   content: {
     title?: string;
     subtitle?: string;
     stats?: Stat[];
-    layout?: "grid" | "horizontal" | "vertical" | "cards";
+    layout?: 'grid' | 'horizontal' | 'vertical' | 'cards';
     columns?: number;
     showIcons?: boolean;
     animateCountUp?: boolean;
@@ -266,7 +266,7 @@ export interface StatsMetricsBlock extends BlockData {
     title?: string;
     subtitle?: string;
     stats?: Stat[];
-    layout?: "grid" | "horizontal" | "vertical" | "cards";
+    layout?: 'grid' | 'horizontal' | 'vertical' | 'cards';
     columns?: number;
     showIcons?: boolean;
     animateCountUp?: boolean;

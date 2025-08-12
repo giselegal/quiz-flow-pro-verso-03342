@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { ArrowRightLeft, Eye, EyeOff } from "lucide-react";
-import type { BlockData } from "@/types/blocks";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { ArrowRightLeft, Eye, EyeOff } from 'lucide-react';
+import type { BlockData } from '@/types/blocks';
 
 interface BeforeAfterInlineBlockProps {
   block: BlockData;
@@ -20,11 +20,11 @@ interface BeforeAfterInlineBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -72,18 +72,18 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
   className,
 }) => {
   const properties = block.properties || {};
-  const title = properties.title || "Sua Transformação";
-  const subtitle = properties.subtitle || "Veja o antes e depois da sua nova imagem";
+  const title = properties.title || 'Sua Transformação';
+  const subtitle = properties.subtitle || 'Veja o antes e depois da sua nova imagem';
   const beforeImage =
-    properties.beforeImage || "https://placehold.co/400x500/cccccc/333333?text=Antes";
+    properties.beforeImage || 'https://placehold.co/400x500/cccccc/333333?text=Antes';
   const afterImage =
-    properties.afterImage || "https://placehold.co/400x500/cccccc/333333?text=Depois";
-  const beforeLabel = properties.beforeLabel || "ANTES";
-  const afterLabel = properties.afterLabel || "DEPOIS";
+    properties.afterImage || 'https://placehold.co/400x500/cccccc/333333?text=Depois';
+  const beforeLabel = properties.beforeLabel || 'ANTES';
+  const afterLabel = properties.afterLabel || 'DEPOIS';
   const showComparison = properties.showComparison !== false;
-  const layoutStyle = properties.layoutStyle || "side-by-side";
+  const layoutStyle = properties.layoutStyle || 'side-by-side';
 
-  const [activeView, setActiveView] = useState<"before" | "after">("before");
+  const [activeView, setActiveView] = useState<'before' | 'after'>('before');
 
   const handleEdit = (field: string, value: any) => {
     if (onPropertyChange && !disabled) {
@@ -101,7 +101,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
             alt="Antes"
             className="w-full h-64 md:h-80 object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <div style={{ backgroundColor: "#FAF9F7" }}>{beforeLabel}</div>
+          <div style={{ backgroundColor: '#FAF9F7' }}>{beforeLabel}</div>
         </div>
       </div>
 
@@ -124,31 +124,31 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
   const renderToggle = () => (
     <div className="max-w-md mx-auto">
       {/* Toggle Buttons */}
-      <div style={{ backgroundColor: "#E5DDD5" }}>
+      <div style={{ backgroundColor: '#E5DDD5' }}>
         <button
-          onClick={() => setActiveView("before")}
+          onClick={() => setActiveView('before')}
           className={cn(
-            "flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all",
-            activeView === "before"
-              ? "bg-red-500 text-white shadow-sm"
-              : "text-gray-600 hover:text-gray-800",
+            'flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all',
+            activeView === 'before'
+              ? 'bg-red-500 text-white shadow-sm'
+              : 'text-gray-600 hover:text-gray-800',
             // Margens universais com controles deslizantes
-            getMarginClass(marginTop, "top"),
-            getMarginClass(marginBottom, "bottom"),
-            getMarginClass(marginLeft, "left"),
-            getMarginClass(marginRight, "right")
+            getMarginClass(marginTop, 'top'),
+            getMarginClass(marginBottom, 'bottom'),
+            getMarginClass(marginLeft, 'left'),
+            getMarginClass(marginRight, 'right')
           )}
         >
           <EyeOff className="w-4 h-4" />
           {beforeLabel}
         </button>
         <button
-          onClick={() => setActiveView("after")}
+          onClick={() => setActiveView('after')}
           className={cn(
-            "flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all",
-            activeView === "after"
-              ? "bg-green-500 text-white shadow-sm"
-              : "text-gray-600 hover:text-gray-800"
+            'flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-all',
+            activeView === 'after'
+              ? 'bg-green-500 text-white shadow-sm'
+              : 'text-gray-600 hover:text-gray-800'
           )}
         >
           <Eye className="w-4 h-4" />
@@ -159,17 +159,17 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
       {/* Image Display */}
       <div className="relative overflow-hidden rounded-lg">
         <img
-          src={activeView === "before" ? beforeImage : afterImage}
-          alt={activeView === "before" ? "Antes" : "Depois"}
+          src={activeView === 'before' ? beforeImage : afterImage}
+          alt={activeView === 'before' ? 'Antes' : 'Depois'}
           className="w-full h-64 md:h-80 object-cover transition-opacity duration-300"
         />
         <div
           className={cn(
-            "absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold text-white",
-            activeView === "before" ? "bg-red-500" : "bg-green-500"
+            'absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-semibold text-white',
+            activeView === 'before' ? 'bg-red-500' : 'bg-green-500'
           )}
         >
-          {activeView === "before" ? beforeLabel : afterLabel}
+          {activeView === 'before' ? beforeLabel : afterLabel}
         </div>
       </div>
     </div>
@@ -178,30 +178,30 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        "w-full p-4 md:p-6 transition-all duration-200",
-        "bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg",
-        isSelected && "ring-2 ring-[#B89B7A] bg-[#B89B7A]/10",
-        !disabled && "cursor-pointer hover:bg-[#B89B7A]/10/80",
+        'w-full p-4 md:p-6 transition-all duration-200',
+        'bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg',
+        isSelected && 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10',
+        !disabled && 'cursor-pointer hover:bg-[#B89B7A]/10/80',
         className
       )}
       onClick={onClick}
     >
       {/* Título */}
       <div className="text-center mb-6">
-        <h3 style={{ color: "#432818" }}>{title}</h3>
-        <p style={{ color: "#6B4F43" }}>{subtitle}</p>
+        <h3 style={{ color: '#432818' }}>{title}</h3>
+        <p style={{ color: '#6B4F43' }}>{subtitle}</p>
         <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-indigo-400 mx-auto mt-3 rounded-full" />
       </div>
 
       {/* Comparação */}
       {showComparison && (
         <div className="mb-6">
-          {layoutStyle === "side-by-side" ? renderSideBySide() : renderToggle()}
+          {layoutStyle === 'side-by-side' ? renderSideBySide() : renderToggle()}
         </div>
       )}
 
       {/* Ícone central de transformação para layout lado a lado */}
-      {layoutStyle === "side-by-side" && (
+      {layoutStyle === 'side-by-side' && (
         <div className="flex justify-center -mt-3 mb-3">
           <div className="bg-[#B89B7A]/100 text-white p-3 rounded-full shadow-lg">
             <ArrowRightLeft className="w-5 h-5" />
@@ -211,7 +211,7 @@ const BeforeAfterInlineBlock: React.FC<BeforeAfterInlineBlockProps> = ({
 
       {/* Call to Action */}
       <div className="text-center">
-        <p style={{ color: "#6B4F43" }}>
+        <p style={{ color: '#6B4F43' }}>
           Esta pode ser sua transformação! Comece hoje mesmo sua jornada rumo ao estilo dos sonhos.
         </p>
         <div className="inline-flex items-center gap-2 bg-[#B89B7A]/100 text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#B89B7A] transition-colors">

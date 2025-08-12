@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { CheckCircle } from "lucide-react";
-import React, { useState } from "react";
+} from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface Template {
   id: string;
@@ -26,46 +26,46 @@ interface TemplateSelectorProps {
 
 const allTemplates: Template[] = [
   {
-    id: "1",
-    name: "Template A",
-    image: "https://via.placeholder.com/300x200",
-    category: "Negócios",
-    description: "Template para negócios",
+    id: '1',
+    name: 'Template A',
+    image: 'https://via.placeholder.com/300x200',
+    category: 'Negócios',
+    description: 'Template para negócios',
   },
   {
-    id: "2",
-    name: "Template B",
-    image: "https://via.placeholder.com/300x200",
-    category: "Pessoal",
-    description: "Template para uso pessoal",
+    id: '2',
+    name: 'Template B',
+    image: 'https://via.placeholder.com/300x200',
+    category: 'Pessoal',
+    description: 'Template para uso pessoal',
   },
   {
-    id: "3",
-    name: "Template C",
-    image: "https://via.placeholder.com/300x200",
-    category: "Saúde",
-    description: "Template para área da saúde",
+    id: '3',
+    name: 'Template C',
+    image: 'https://via.placeholder.com/300x200',
+    category: 'Saúde',
+    description: 'Template para área da saúde',
   },
   {
-    id: "4",
-    name: "Template D",
-    image: "https://via.placeholder.com/300x200",
-    category: "Negócios",
-    description: "Template para negócios",
+    id: '4',
+    name: 'Template D',
+    image: 'https://via.placeholder.com/300x200',
+    category: 'Negócios',
+    description: 'Template para negócios',
   },
   {
-    id: "5",
-    name: "Template E",
-    image: "https://via.placeholder.com/300x200",
-    category: "Pessoal",
-    description: "Template para uso pessoal",
+    id: '5',
+    name: 'Template E',
+    image: 'https://via.placeholder.com/300x200',
+    category: 'Pessoal',
+    description: 'Template para uso pessoal',
   },
   {
-    id: "6",
-    name: "Template F",
-    image: "https://via.placeholder.com/300x200",
-    category: "Saúde",
-    description: "Template para área da saúde",
+    id: '6',
+    name: 'Template F',
+    image: 'https://via.placeholder.com/300x200',
+    category: 'Saúde',
+    description: 'Template para área da saúde',
   },
 ];
 
@@ -77,7 +77,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onCategoryChange,
 }) => {
   const getFilteredTemplates = (): Template[] => {
-    if (selectedCategory === "all") return allTemplates;
+    if (selectedCategory === 'all') return allTemplates;
     return allTemplates.filter(template => template.category === selectedCategory);
   };
 
@@ -86,15 +86,15 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   return (
     <div className="h-full flex flex-col bg-white">
       {/* Header */}
-      <div style={{ borderColor: "#E5DDD5" }}>
-        <h2 style={{ color: "#432818" }}>Selecionar Template</h2>
+      <div style={{ borderColor: '#E5DDD5' }}>
+        <h2 style={{ color: '#432818' }}>Selecionar Template</h2>
 
         {/* Category filters */}
         <div className="flex flex-wrap gap-2">
           <Button
-            variant={selectedCategory === "all" ? "default" : "outline"}
+            variant={selectedCategory === 'all' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => onCategoryChange("all")}
+            onClick={() => onCategoryChange('all')}
             className="text-xs"
           >
             Todos
@@ -102,7 +102,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
           {Array.from(categories).map(category => (
             <Button
               key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
+              variant={selectedCategory === category ? 'default' : 'outline'}
               size="sm"
               onClick={() => onCategoryChange(category)}
               className="text-xs"
@@ -116,7 +116,7 @@ export const TemplateSelector: React.FC<TemplateSelectorProps> = ({
       {/* Templates grid */}
       <div className="flex-1 overflow-y-auto p-4">
         {filteredTemplates.length === 0 ? (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <p>Nenhum template encontrado para esta categoria.</p>
           </div>
         ) : (
@@ -149,7 +149,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
     >
       <CardHeader>
         <CardTitle className="text-sm font-medium">{template.name}</CardTitle>
-        <CardDescription style={{ color: "#8B7355" }}>{template.description}</CardDescription>
+        <CardDescription style={{ color: '#8B7355' }}>{template.description}</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <img
@@ -159,7 +159,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
         />
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <span style={{ color: "#6B4F43" }}>{template.category}</span>
+        <span style={{ color: '#6B4F43' }}>{template.category}</span>
         {isSelected && <CheckCircle className="w-4 h-4 text-green-500" />}
       </CardFooter>
     </Card>

@@ -1,8 +1,8 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { useEditor } from "@/context/EditorContext";
-import { CanvasDropZone } from "./canvas/CanvasDropZone";
-import { PropertyPanel } from "./PropertyPanel";
-import ComponentsSidebar from "./sidebar/ComponentsSidebar";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { useEditor } from '@/context/EditorContext';
+import { CanvasDropZone } from './canvas/CanvasDropZone';
+import { PropertyPanel } from './PropertyPanel';
+import ComponentsSidebar from './sidebar/ComponentsSidebar';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -11,7 +11,7 @@ interface SchemaDrivenEditorResponsiveProps {
 
 const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({
   funnelId: _funnelId,
-  className = "",
+  className = '',
 }) => {
   const {
     computed: { currentBlocks, selectedBlock },

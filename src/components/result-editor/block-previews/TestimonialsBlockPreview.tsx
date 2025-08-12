@@ -10,7 +10,7 @@ const TestimonialsBlockPreview: React.FC<TestimonialsBlockPreviewProps> = ({ con
   return (
     <div style={content.style}>
       <h3 className="text-xl font-bold mb-6 text-[#aa6b5d] text-center">
-        {content.title || "O que estão dizendo"}
+        {content.title || 'O que estão dizendo'}
       </h3>
 
       {content.testimonialsImage ? (
@@ -20,7 +20,7 @@ const TestimonialsBlockPreview: React.FC<TestimonialsBlockPreviewProps> = ({ con
           className="w-full h-auto rounded-lg mx-auto"
         />
       ) : (
-        <div style={{ backgroundColor: "#E5DDD5" }}>
+        <div style={{ backgroundColor: '#E5DDD5' }}>
           <p className="text-gray-400">Adicione uma imagem de depoimentos</p>
         </div>
       )}

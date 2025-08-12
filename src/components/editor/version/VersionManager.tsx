@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { History, Clock, User, RotateCcw, Save, FileText, GitBranch } from "lucide-react";
-import { type FunnelVersion } from "@/services/schemaDrivenFunnelService";
+} from '@/components/ui/dialog';
+import { History, Clock, User, RotateCcw, Save, FileText, GitBranch } from 'lucide-react';
+import { type FunnelVersion } from '@/services/schemaDrivenFunnelService';
 
 interface VersionManagerProps {
   versions: FunnelVersion[];
@@ -26,19 +26,19 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
   versions,
   currentVersion,
   onRestoreVersion,
-  className = "",
+  className = '',
   trigger,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Intl.DateTimeFormat('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     }).format(date);
   };
 
@@ -49,12 +49,12 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffDays > 0) {
-      return `${diffDays} dia${diffDays > 1 ? "s" : ""} atrás`;
+      return `${diffDays} dia${diffDays > 1 ? 's' : ''} atrás`;
     } else if (diffHours > 0) {
-      return `${diffHours} hora${diffHours > 1 ? "s" : ""} atrás`;
+      return `${diffHours} hora${diffHours > 1 ? 's' : ''} atrás`;
     } else {
       const diffMinutes = Math.floor(diffMs / (1000 * 60));
-      return `${Math.max(1, diffMinutes)} minuto${diffMinutes > 1 ? "s" : ""} atrás`;
+      return `${Math.max(1, diffMinutes)} minuto${diffMinutes > 1 ? 's' : ''} atrás`;
     }
   };
 
@@ -121,7 +121,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
-                  <User style={{ color: "#B89B7A" }} />
+                  <User style={{ color: '#B89B7A' }} />
                   <div>
                     <p className="text-sm font-medium">Manuais</p>
                     <p className="text-2xl font-bold">
@@ -142,7 +142,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
               <ScrollArea className="h-96">
                 <div className="p-4 space-y-3">
                   {versions.length === 0 ? (
-                    <div style={{ color: "#8B7355" }}>
+                    <div style={{ color: '#8B7355' }}>
                       <History className="w-8 h-8 mx-auto mb-2 opacity-50" />
                       <p>Nenhuma versão encontrada</p>
                       <p className="text-sm">
@@ -159,10 +159,10 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                             border rounded-lg p-4 cursor-pointer transition-all duration-200
                             ${
                               selectedVersion === version.id
-                                ? "border-[#B89B7A] bg-[#B89B7A]/10"
-                                : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                                ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                             }
-                            ${currentVersion === version.version ? "ring-2 ring-green-200" : ""}
+                            ${currentVersion === version.version ? 'ring-2 ring-green-200' : ''}
                           `}
                           onClick={() => setSelectedVersion(version.id)}
                         >
@@ -171,23 +171,23 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               <div className="flex items-center space-x-2 mb-2">
                                 <Badge
                                   variant={
-                                    currentVersion === version.version ? "default" : "outline"
+                                    currentVersion === version.version ? 'default' : 'outline'
                                   }
                                 >
                                   v{version.version}
-                                  {currentVersion === version.version && " (atual)"}
+                                  {currentVersion === version.version && ' (atual)'}
                                 </Badge>
 
-                                <Badge variant={version.isAutoSave ? "secondary" : "outline"}>
-                                  {version.isAutoSave ? "Auto-save" : "Manual"}
+                                <Badge variant={version.isAutoSave ? 'secondary' : 'outline'}>
+                                  {version.isAutoSave ? 'Auto-save' : 'Manual'}
                                 </Badge>
                               </div>
 
                               <p className="font-medium text-sm mb-1">
-                                {version.description || "Sem descrição"}
+                                {version.description || 'Sem descrição'}
                               </p>
 
-                              <div style={{ color: "#8B7355" }}>
+                              <div style={{ color: '#8B7355' }}>
                                 <div className="flex items-center space-x-1">
                                   <Clock className="w-3 h-3" />
                                   <span>{formatDate(version.createdAt)}</span>
@@ -197,21 +197,21 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
                               </div>
 
                               {/* Informações da versão */}
-                              <div style={{ color: "#6B4F43" }}>
+                              <div style={{ color: '#6B4F43' }}>
                                 <span>
                                   {version.data.pages.length} página
-                                  {version.data.pages.length !== 1 ? "s" : ""} •{" "}
+                                  {version.data.pages.length !== 1 ? 's' : ''} •{' '}
                                   {version.data.pages.reduce(
                                     (total: number, page: any) => total + page.blocks.length,
                                     0
-                                  )}{" "}
+                                  )}{' '}
                                   bloco
                                   {version.data.pages.reduce(
                                     (total: number, page: any) => total + page.blocks.length,
                                     0
                                   ) !== 1
-                                    ? "s"
-                                    : ""}
+                                    ? 's'
+                                    : ''}
                                 </span>
                               </div>
                             </div>
@@ -242,7 +242,7 @@ export const VersionManager: React.FC<VersionManagerProps> = ({
           {/* Ações */}
           {selectedVersion &&
             currentVersion !== versions.find(v => v.id === selectedVersion)?.version && (
-              <div style={{ borderColor: "#E5DDD5" }}>
+              <div style={{ borderColor: '#E5DDD5' }}>
                 <div className="flex items-center space-x-2">
                   <RotateCcw className="w-4 h-4 text-stone-600" />
                   <span className="text-sm font-medium text-stone-700">

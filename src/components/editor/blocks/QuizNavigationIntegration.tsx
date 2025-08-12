@@ -26,14 +26,14 @@ const QuizNavigationIntegration: React.FC<QuizNavigationIntegrationProps> = ({
   // Texto dinâmico do botão
   const nextButtonText =
     properties.nextButtonText ||
-    (isLastQuestion ? (isStrategic ? "Finalizar" : "Próxima etapa") : "Próxima");
+    (isLastQuestion ? (isStrategic ? 'Finalizar' : 'Próxima etapa') : 'Próxima');
 
   const handlePrevious = () => {
-    console.log("Navegação: Voltar");
+    console.log('Navegação: Voltar');
   };
 
   const handleNext = () => {
-    console.log("Navegação: Avançar");
+    console.log('Navegação: Avançar');
   };
 
   return (

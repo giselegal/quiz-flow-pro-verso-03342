@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { Block } from "@/types/editor";
-import { SortableBlock } from "./SortableBlock";
+import React, { useState } from 'react';
+import { Block } from '@/types/editor';
+import { SortableBlock } from './SortableBlock';
 import {
   DndContext,
   closestCenter,
@@ -10,14 +10,14 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { restrictToVerticalAxis, restrictToParentElement } from "@dnd-kit/modifiers";
-import { ResultPageBlock } from "@/types/quizResult";
+} from '@dnd-kit/sortable';
+import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
+import { ResultPageBlock } from '@/types/quizResult';
 
 interface DraggableBlockListProps {
   blocks: Block[];

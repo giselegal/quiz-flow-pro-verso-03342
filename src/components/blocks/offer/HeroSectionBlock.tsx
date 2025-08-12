@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
-import OptimizedImage from "@/components/ui/OptimizedImage";
-import { ShoppingCart, Star, Users } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import OptimizedImage from '@/components/ui/OptimizedImage';
+import { ShoppingCart, Star, Users } from 'lucide-react';
 
 /**
  * BLOCO EDITÁVEL: Hero da Página de Oferta
@@ -44,11 +44,11 @@ export interface HeroSectionBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -88,22 +88,22 @@ const getMarginClass = (value, type) => {
 };
 
 const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
-  blockId = "hero-section",
-  title = "Descubra Seu Estilo Pessoal e Transforme Seu Guarda-Roupa",
-  subtitle = "Quiz personalizado com análise completa",
-  description = "Descubra qual é o seu estilo predominante e receba dicas personalizadas para montar looks incríveis.",
-  heroImage = "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop",
-  buttonText = "Fazer o Quiz Agora",
-  buttonUrl = "#",
+  blockId = 'hero-section',
+  title = 'Descubra Seu Estilo Pessoal e Transforme Seu Guarda-Roupa',
+  subtitle = 'Quiz personalizado com análise completa',
+  description = 'Descubra qual é o seu estilo predominante e receba dicas personalizadas para montar looks incríveis.',
+  heroImage = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop',
+  buttonText = 'Fazer o Quiz Agora',
+  buttonUrl = '#',
   showSocialProof = true,
-  socialProofText = "3000+ mulheres já descobriram seu estilo",
-  backgroundColor = "#F9F7F4",
-  textColor = "#432818",
-  className = "",
+  socialProofText = '3000+ mulheres já descobriram seu estilo',
+  backgroundColor = '#F9F7F4',
+  textColor = '#432818',
+  className = '',
 }) => {
   const handleButtonClick = () => {
-    if (buttonUrl && buttonUrl !== "#") {
-      window.open(buttonUrl, "_blank");
+    if (buttonUrl && buttonUrl !== '#') {
+      window.open(buttonUrl, '_blank');
     }
   };
 
@@ -123,7 +123,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             <h1
               className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
               style={{
-                fontFamily: "Playfair Display, serif",
+                fontFamily: 'Playfair Display, serif',
                 color: textColor,
               }}
             >
@@ -134,7 +134,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
               <h2 className="text-xl md:text-2xl text-[#6B5B73] mb-6 font-medium">{subtitle}</h2>
             )}
 
-            {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+            {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
             <Button
               onClick={handleButtonClick}
@@ -146,7 +146,7 @@ const HeroSectionBlock: React.FC<HeroSectionBlockProps> = ({
             </Button>
 
             {showSocialProof && socialProofText && (
-              <div style={{ color: "#6B4F43" }}>
+              <div style={{ color: '#6B4F43' }}>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-500 fill-current" />
                   <Star className="w-4 h-4 text-yellow-500 fill-current" />

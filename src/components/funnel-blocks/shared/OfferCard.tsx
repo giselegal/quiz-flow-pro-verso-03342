@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Check, Star } from "lucide-react";
-import CountdownTimer from "./CountdownTimer";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Check, Star } from 'lucide-react';
+import CountdownTimer from './CountdownTimer';
 
 interface OfferCardProps {
   title: string;
@@ -45,14 +45,14 @@ export const OfferCard: React.FC<OfferCardProps> = ({
   discount,
   installments,
   features = [],
-  buttonText = "Garantir agora",
+  buttonText = 'Garantir agora',
   buttonUrl,
   onButtonClick,
-  className = "",
+  className = '',
   style,
   isHighlighted = false,
   showBadge = false,
-  badgeText = "Mais Popular",
+  badgeText = 'Mais Popular',
   showCountdown = false,
   countdownHours = 24,
   rating,
@@ -72,12 +72,12 @@ export const OfferCard: React.FC<OfferCardProps> = ({
             <Star
               key={index}
               className={cn(
-                "w-4 h-4",
-                index < ratingValue ? "text-yellow-500 fill-yellow-500" : "text-gray-300"
+                'w-4 h-4',
+                index < ratingValue ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'
               )}
             />
           ))}
-        {reviewCount && <span style={{ color: "#8B7355" }}>({reviewCount})</span>}
+        {reviewCount && <span style={{ color: '#8B7355' }}>({reviewCount})</span>}
       </div>
     );
   };
@@ -85,8 +85,8 @@ export const OfferCard: React.FC<OfferCardProps> = ({
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-shadow duration-300 hover:shadow-lg",
-        isHighlighted ? "border-2 border-primary shadow-md" : "border border-gray-200",
+        'overflow-hidden transition-shadow duration-300 hover:shadow-lg',
+        isHighlighted ? 'border-2 border-primary shadow-md' : 'border border-gray-200',
         className
       )}
       style={style}
@@ -104,13 +104,13 @@ export const OfferCard: React.FC<OfferCardProps> = ({
           <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
 
           {/* Desconto sobre imagem */}
-          {discount && <div style={{ backgroundColor: "#FAF9F7" }}>{discount}</div>}
+          {discount && <div style={{ backgroundColor: '#FAF9F7' }}>{discount}</div>}
         </div>
       )}
 
-      <CardHeader className={cn("relative", imageUrl ? "pt-4 pb-2" : "")}>
+      <CardHeader className={cn('relative', imageUrl ? 'pt-4 pb-2' : '')}>
         {/* Título */}
-        <h3 className={cn("font-bold", isHighlighted ? "text-xl" : "text-lg")}>{title}</h3>
+        <h3 className={cn('font-bold', isHighlighted ? 'text-xl' : 'text-lg')}>{title}</h3>
 
         {/* Avaliação */}
         {renderRating()}
@@ -118,18 +118,18 @@ export const OfferCard: React.FC<OfferCardProps> = ({
 
       <CardContent className="space-y-4 pt-0">
         {/* Descrição */}
-        {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {/* Preço */}
         {price && (
           <div className="space-y-1">
-            {originalPrice && <div style={{ color: "#8B7355" }}>De R$ {originalPrice}</div>}
+            {originalPrice && <div style={{ color: '#8B7355' }}>De R$ {originalPrice}</div>}
 
             <div className="flex items-end gap-2">
               <span className="text-2xl font-bold text-primary">R$ {price}</span>
 
               {installments && (
-                <span style={{ color: "#6B4F43" }}>
+                <span style={{ color: '#6B4F43' }}>
                   ou {installments.count}x de R$ {installments.value}
                 </span>
               )}
@@ -145,7 +145,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
                 <div className="flex-shrink-0 mr-2 mt-1">
                   <Check className="h-3 w-3 text-green-500" />
                 </div>
-                <span style={{ color: "#6B4F43" }}>{feature}</span>
+                <span style={{ color: '#6B4F43' }}>{feature}</span>
               </li>
             ))}
           </ul>
@@ -154,7 +154,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
         {/* Contagem regressiva */}
         {showCountdown && (
           <div className="pt-2">
-            <p style={{ color: "#8B7355" }}>Esta oferta expira em:</p>
+            <p style={{ color: '#8B7355' }}>Esta oferta expira em:</p>
             <CountdownTimer hours={countdownHours} variant="compact" className="mx-auto" />
           </div>
         )}
@@ -163,7 +163,7 @@ export const OfferCard: React.FC<OfferCardProps> = ({
       <CardFooter>
         <Button
           className="w-full"
-          variant={isHighlighted ? "default" : "outline"}
+          variant={isHighlighted ? 'default' : 'outline'}
           asChild={!!buttonUrl}
           onClick={!buttonUrl ? onButtonClick : undefined}
           size="lg"

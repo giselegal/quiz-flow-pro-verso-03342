@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Heart, ArrowRight, CheckCircle } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { DeviceView, StyleProps, QuestionOption } from "./types";
+import React, { useState } from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Heart, ArrowRight, CheckCircle } from 'lucide-react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { DeviceView, StyleProps, QuestionOption } from './types';
 
 interface StrategicQuestionProps extends StyleProps {
   /** Pergunta estratégica */
@@ -44,7 +44,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
   options,
   required = true,
   animationConfig = {},
-  deviceView = "desktop",
+  deviceView = 'desktop',
   onAnswer,
   onNext,
   onPrevious,
@@ -55,7 +55,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
 }) => {
   const [selectedOption, setSelectedOption] = useState<QuestionOption | null>(null);
   const { disabled: animationsDisabled, duration = 400, staggerDelay = 100 } = animationConfig;
-  const isLowPerformance = deviceView === "mobile";
+  const isLowPerformance = deviceView === 'mobile';
 
   const handleOptionSelect = (option: QuestionOption) => {
     setSelectedOption(option);
@@ -66,14 +66,14 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
 
   return (
     <div
-      className={`min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-[#fffbf7] to-[#f9f4ef] ${className || ""}`}
+      className={`min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-[#fffbf7] to-[#f9f4ef] ${className || ''}`}
       style={style}
     >
       {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       <div className="max-w-3xl mx-auto w-full">
         <AnimatedWrapper
-          animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+          animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
           show={true}
           duration={duration}
         >
@@ -118,7 +118,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
               {options.map((option, index) => (
                 <AnimatedWrapper
                   key={option.id}
-                  animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+                  animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
                   show={true}
                   duration={duration}
                   delay={staggerDelay * index}
@@ -126,8 +126,8 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
                   <Card
                     className={`p-4 cursor-pointer transition-all duration-300 border-2 hover:shadow-md ${
                       selectedOption?.id === option.id
-                        ? "border-[#B89B7A] bg-gradient-to-r from-[#f9f4ef] to-white shadow-md"
-                        : "border-gray-200 hover:border-[#B89B7A]/50"
+                        ? 'border-[#B89B7A] bg-gradient-to-r from-[#f9f4ef] to-white shadow-md'
+                        : 'border-gray-200 hover:border-[#B89B7A]/50'
                     }`}
                     onClick={() => handleOptionSelect(option)}
                   >
@@ -136,8 +136,8 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
                       <div
                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-1 ${
                           selectedOption?.id === option.id
-                            ? "border-[#B89B7A] bg-[#B89B7A]"
-                            : "border-gray-300"
+                            ? 'border-[#B89B7A] bg-[#B89B7A]'
+                            : 'border-gray-300'
                         }`}
                       >
                         {selectedOption?.id === option.id && (
@@ -149,7 +149,7 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
                       <div className="flex-1">
                         <p
                           className={`text-[#432818] leading-relaxed ${
-                            selectedOption?.id === option.id ? "font-medium" : ""
+                            selectedOption?.id === option.id ? 'font-medium' : ''
                           }`}
                         >
                           {option.text}
@@ -182,8 +182,8 @@ export const StrategicQuestion: React.FC<StrategicQuestionProps> = ({
                     disabled={!canProceed}
                     className={`px-6 py-2 rounded-lg transition-all duration-300 ${
                       canProceed
-                        ? "bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        ? 'bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white hover:scale-105'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
                   >
                     <span className="flex items-center gap-2">

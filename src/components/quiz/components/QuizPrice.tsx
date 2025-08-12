@@ -1,5 +1,5 @@
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface QuizPriceProps extends ComponentProps {
   price?: string;
@@ -7,16 +7,16 @@ interface QuizPriceProps extends ComponentProps {
   currency?: string;
   installments?: string;
   discount?: string;
-  alignment?: "left" | "center" | "right";
+  alignment?: 'left' | 'center' | 'right';
 }
 
 const QuizPrice: React.FC<QuizPriceProps> = ({
-  price = "97",
-  originalPrice = "197",
-  currency = "R$",
-  installments = "12x de R$ 9,70",
-  discount = "50% OFF",
-  alignment = "center",
+  price = '97',
+  originalPrice = '197',
+  currency = 'R$',
+  installments = '12x de R$ 9,70',
+  discount = '50% OFF',
+  alignment = 'center',
   isSelected,
   onClick,
 }) => {
@@ -27,7 +27,7 @@ const QuizPrice: React.FC<QuizPriceProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.priceComponent} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.priceComponent} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
       style={{ textAlign: alignment }}
     >
@@ -37,7 +37,7 @@ const QuizPrice: React.FC<QuizPriceProps> = ({
         <div className={styles.priceContainer}>
           {originalPrice && (
             <div className={styles.originalPrice}>
-              De:{" "}
+              De:{' '}
               <span className={styles.strikethrough}>
                 {currency} {originalPrice}
               </span>
@@ -45,7 +45,7 @@ const QuizPrice: React.FC<QuizPriceProps> = ({
           )}
 
           <div className={styles.currentPrice}>
-            Por apenas:{" "}
+            Por apenas:{' '}
             <span className={styles.priceValue}>
               {currency} {price}
             </span>

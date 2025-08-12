@@ -1,5 +1,5 @@
-import type { QuizResponse, QuizResult, StyleType, StyleScore, QuizQuestion } from "@/types/quiz";
-import { getStyleById } from "@/data/styles";
+import type { QuizResponse, QuizResult, StyleType, StyleScore, QuizQuestion } from '@/types/quiz';
+import { getStyleById } from '@/data/styles';
 
 /**
  * Engine de cálculo de estilos do CaktoQuiz
@@ -21,7 +21,7 @@ export class StyleCalculationEngine {
     // 1. Filtrar apenas respostas de questões normais
     const normalResponses = responses.filter(response => {
       const question = normalQuestions.find(q => q.id === response.questionId);
-      return question?.type === "normal";
+      return question?.type === 'normal';
     });
 
     // 2. Contar pontos por estilo
@@ -42,7 +42,7 @@ export class StyleCalculationEngine {
     normalResponses.forEach(response => {
       response.selectedOptions.forEach(optionId => {
         // Mock implementation - in real app, would map option to style
-        const style = "classico" as StyleType; // Simplified for now
+        const style = 'classico' as StyleType; // Simplified for now
         stylePoints[style] += 1;
         responseOrder.push({
           style,
@@ -136,7 +136,7 @@ export class StyleCalculationEngine {
     normalQuestions: QuizQuestion[]
   ): { isValid: boolean; missingQuestions: string[] } {
     const answeredQuestionIds = new Set(responses.map(r => r.questionId));
-    const normalQuestionIds = normalQuestions.filter(q => q.type === "normal").map(q => q.id);
+    const normalQuestionIds = normalQuestions.filter(q => q.type === 'normal').map(q => q.id);
 
     const missingQuestions = normalQuestionIds.filter(id => !answeredQuestionIds.has(id));
 
@@ -158,10 +158,10 @@ export class StyleCalculationEngine {
     progress: number;
     currentLeadingStyle?: StyleType;
   } {
-    const totalQuestions = normalQuestions.filter(q => q.type === "normal").length;
+    const totalQuestions = normalQuestions.filter(q => q.type === 'normal').length;
     const answeredQuestions = responses.filter(response => {
       const question = normalQuestions.find(q => q.id === response.questionId);
-      return question?.type === "normal";
+      return question?.type === 'normal';
     }).length;
 
     const progress = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
@@ -183,7 +183,7 @@ export class StyleCalculationEngine {
       responses.forEach(response => {
         response.selectedOptions.forEach(optionId => {
           // Mock implementation - in real app, would map option to style
-          const style = "classico" as StyleType;
+          const style = 'classico' as StyleType;
           tempPoints[style] += 1;
         });
       });

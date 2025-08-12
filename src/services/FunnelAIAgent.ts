@@ -1,4 +1,4 @@
-import { generateSemanticId } from "@/utils/semanticIdGenerator";
+import { generateSemanticId } from '@/utils/semanticIdGenerator';
 
 export interface FunnelTemplate {
   meta: {
@@ -76,83 +76,83 @@ export class FunnelAIAgent {
   private steps: AgentStep[];
   private onStepUpdate?: (
     stepId: string,
-    status: "processing" | "completed" | "error",
+    status: 'processing' | 'completed' | 'error',
     progress: number
   ) => void;
 
   constructor(
     onStepUpdate?: (
       stepId: string,
-      status: "processing" | "completed" | "error",
+      status: 'processing' | 'completed' | 'error',
       progress: number
     ) => void
   ) {
     this.onStepUpdate = onStepUpdate;
     this.steps = [
       {
-        id: "analyze",
-        name: "Analisando Template",
-        description: "Processando estrutura JSON e validando dados...",
+        id: 'analyze',
+        name: 'Analisando Template',
+        description: 'Processando estrutura JSON e validando dados...',
         processor: this.analyzeTemplate.bind(this),
       },
       {
-        id: "design",
-        name: "Aplicando Design System",
-        description: "Configurando cores, tipografia e componentes visuais...",
+        id: 'design',
+        name: 'Aplicando Design System',
+        description: 'Configurando cores, tipografia e componentes visuais...',
         processor: this.applyDesignSystem.bind(this),
       },
       {
-        id: "intro",
-        name: "Criando Página de Introdução",
-        description: "Gerando formulário de entrada com validação...",
+        id: 'intro',
+        name: 'Criando Página de Introdução',
+        description: 'Gerando formulário de entrada com validação...',
         processor: this.createIntroStep.bind(this),
       },
       {
-        id: "questions",
-        name: "Configurando Perguntas Principais",
-        description: "Criando grids de opções com imagens e validação multiselect...",
+        id: 'questions',
+        name: 'Configurando Perguntas Principais',
+        description: 'Criando grids de opções com imagens e validação multiselect...',
         processor: this.createQuestionsSteps.bind(this),
       },
       {
-        id: "transition1",
-        name: "Tela de Transição 1",
-        description: "Implementando animação e loading entre etapas...",
+        id: 'transition1',
+        name: 'Tela de Transição 1',
+        description: 'Implementando animação e loading entre etapas...',
         processor: this.createTransitionSteps.bind(this),
       },
       {
-        id: "strategic",
-        name: "Perguntas Estratégicas",
-        description: "Configurando questões de segmentação e qualificação...",
+        id: 'strategic',
+        name: 'Perguntas Estratégicas',
+        description: 'Configurando questões de segmentação e qualificação...',
         processor: this.createStrategicSteps.bind(this),
       },
       {
-        id: "result",
-        name: "Página de Resultado",
-        description: "Gerando resultados personalizados com CTAs...",
+        id: 'result',
+        name: 'Página de Resultado',
+        description: 'Gerando resultados personalizados com CTAs...',
         processor: this.createResultStep.bind(this),
       },
       {
-        id: "logic",
-        name: "Sistema de Cálculo",
-        description: "Implementando lógica de pontuação por categoria...",
+        id: 'logic',
+        name: 'Sistema de Cálculo',
+        description: 'Implementando lógica de pontuação por categoria...',
         processor: this.implementCalculationLogic.bind(this),
       },
       {
-        id: "analytics",
-        name: "Configurando Analytics",
-        description: "Integrando eventos de tracking e conversão...",
+        id: 'analytics',
+        name: 'Configurando Analytics',
+        description: 'Integrando eventos de tracking e conversão...',
         processor: this.setupAnalytics.bind(this),
       },
       {
-        id: "optimize",
-        name: "Otimizações Finais",
-        description: "Aplicando performance e responsividade...",
+        id: 'optimize',
+        name: 'Otimizações Finais',
+        description: 'Aplicando performance e responsividade...',
         processor: this.applyOptimizations.bind(this),
       },
       {
-        id: "deploy",
-        name: "Publicando Funil",
-        description: "Disponibilizando funil para acesso público...",
+        id: 'deploy',
+        name: 'Publicando Funil',
+        description: 'Disponibilizando funil para acesso público...',
         processor: this.deployFunnel.bind(this),
       },
     ];
@@ -160,22 +160,22 @@ export class FunnelAIAgent {
 
   async generateFunnel(template: FunnelTemplate): Promise<string> {
     const funnelId = generateSemanticId({
-      context: "ai-agent",
-      type: "funnel",
-      identifier: template.meta.name.toLowerCase().replace(/\s+/g, "-"),
+      context: 'ai-agent',
+      type: 'funnel',
+      identifier: template.meta.name.toLowerCase().replace(/\s+/g, '-'),
       index: Date.now(),
     });
 
-    console.log("🤖 AI Agent: Iniciando geração de funil...", {
+    console.log('🤖 AI Agent: Iniciando geração de funil...', {
       funnelId,
       template: template.meta.name,
     });
 
     const generatedFunnel: any = {
       id: generateSemanticId({
-        context: "ai-agent",
-        type: "funnel",
-        identifier: template.meta.name.toLowerCase().replace(/\s+/g, "-"),
+        context: 'ai-agent',
+        type: 'funnel',
+        identifier: template.meta.name.toLowerCase().replace(/\s+/g, '-'),
       }),
       template: template.meta.name,
       design: template.design,
@@ -184,25 +184,25 @@ export class FunnelAIAgent {
       config: template.config,
       integrations: template.integrations || {},
       createdAt: new Date().toISOString(),
-      createdBy: "ai-agent",
+      createdBy: 'ai-agent',
     }; // Executa cada etapa do agente
     for (const step of this.steps) {
       try {
-        this.onStepUpdate?.(step.id, "processing", 0);
+        this.onStepUpdate?.(step.id, 'processing', 0);
 
         const result = await step.processor(template, progress => {
-          this.onStepUpdate?.(step.id, "processing", progress);
+          this.onStepUpdate?.(step.id, 'processing', progress);
         });
 
         generatedFunnel.steps.push(result);
 
-        this.onStepUpdate?.(step.id, "completed", 100);
+        this.onStepUpdate?.(step.id, 'completed', 100);
 
         // Simula tempo de processamento realista
         await this.delay(500 + Math.random() * 1000);
       } catch (error) {
         console.error(`❌ Erro na etapa ${step.id}:`, error);
-        this.onStepUpdate?.(step.id, "error", 0);
+        this.onStepUpdate?.(step.id, 'error', 0);
         throw error;
       }
     }
@@ -210,7 +210,7 @@ export class FunnelAIAgent {
     // Salva o funil gerado no localStorage para simulação
     this.saveFunnelToStorage(funnelId, generatedFunnel);
 
-    console.log("✅ AI Agent: Funil gerado com sucesso!", {
+    console.log('✅ AI Agent: Funil gerado com sucesso!', {
       funnelId,
       totalSteps: generatedFunnel.steps.length,
     });
@@ -226,7 +226,7 @@ export class FunnelAIAgent {
     await this.delay(300);
 
     // Valida estrutura do template
-    const requiredFields = ["meta", "design", "steps"];
+    const requiredFields = ['meta', 'design', 'steps'];
     for (const field of requiredFields) {
       if (!template[field]) {
         throw new Error(`Campo obrigatório ausente: ${field}`);
@@ -247,7 +247,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "analysis",
+      type: 'analysis',
       data: analysis,
       timestamp: new Date().toISOString(),
     };
@@ -284,7 +284,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "design-system",
+      type: 'design-system',
       data: designSystem,
       timestamp: new Date().toISOString(),
     };
@@ -298,26 +298,26 @@ export class FunnelAIAgent {
     await this.delay(500);
 
     const introStep = {
-      id: generateSemanticId({ context: "step", type: "intro", identifier: "intro-page" }),
-      type: "intro",
+      id: generateSemanticId({ context: 'step', type: 'intro', identifier: 'intro-page' }),
+      type: 'intro',
       order: 1,
       content: {
-        title: template.steps.find(s => s.type === "intro")?.title || "Bem-vindo ao Quiz",
-        subtitle: template.steps.find(s => s.type === "intro")?.descriptionTop || "",
-        description: template.steps.find(s => s.type === "intro")?.descriptionBottom || "",
-        image: template.steps.find(s => s.type === "intro")?.imageIntro || "",
+        title: template.steps.find(s => s.type === 'intro')?.title || 'Bem-vindo ao Quiz',
+        subtitle: template.steps.find(s => s.type === 'intro')?.descriptionTop || '',
+        description: template.steps.find(s => s.type === 'intro')?.descriptionBottom || '',
+        image: template.steps.find(s => s.type === 'intro')?.imageIntro || '',
         inputConfig: {
-          type: "text",
-          label: "Nome *",
-          placeholder: "Digite seu nome",
+          type: 'text',
+          label: 'Nome *',
+          placeholder: 'Digite seu nome',
           required: true,
           validation: {
             minLength: 2,
-            errorMessage: "Digite seu nome para continuar",
+            errorMessage: 'Digite seu nome para continuar',
           },
         },
         button: {
-          text: "Digite seu nome para continuar",
+          text: 'Digite seu nome para continuar',
           style: template.design.button,
         },
       },
@@ -342,7 +342,7 @@ export class FunnelAIAgent {
     await this.delay(600);
 
     // Simula criação de múltiplas perguntas
-    const questionsData = template.steps.find(s => s.type === "questions");
+    const questionsData = template.steps.find(s => s.type === 'questions');
     const questionSteps = [];
 
     if (questionsData?.questions) {
@@ -351,11 +351,11 @@ export class FunnelAIAgent {
 
         questionSteps.push({
           id: generateSemanticId({
-            context: "step",
-            type: "question",
+            context: 'step',
+            type: 'question',
             identifier: `question-${i + 1}`,
           }),
-          type: "question",
+          type: 'question',
           order: i + 2, // After intro
           content: {
             title: question.title,
@@ -368,7 +368,7 @@ export class FunnelAIAgent {
             },
           },
           design: {
-            gridColumns: question.layout === "2col" ? 2 : 1,
+            gridColumns: question.layout === '2col' ? 2 : 1,
             optionStyle: template.design.animations.optionSelect,
             progressBar: template.design.progressBar,
           },
@@ -382,7 +382,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "questions-collection",
+      type: 'questions-collection',
       data: questionSteps,
       count: questionSteps.length,
       timestamp: new Date().toISOString(),
@@ -397,15 +397,15 @@ export class FunnelAIAgent {
     await this.delay(400);
 
     const transitions = template.steps.filter(
-      s => s.type.includes("Transition") || s.type.includes("transition")
+      s => s.type.includes('Transition') || s.type.includes('transition')
     );
     const transitionSteps = transitions.map((transition, index) => ({
       id: generateSemanticId({
-        context: "step",
-        type: "transition",
+        context: 'step',
+        type: 'transition',
         identifier: `transition-${index + 1}`,
       }),
-      type: "transition",
+      type: 'transition',
       order: 10 + index, // Middle of funnel
       content: {
         title: transition.title,
@@ -415,8 +415,8 @@ export class FunnelAIAgent {
         showProgressBar: transition.progressBar?.show || false,
       },
       animations: {
-        enter: "fade-in",
-        exit: "fade-out",
+        enter: 'fade-in',
+        exit: 'fade-out',
         duration: 2000,
       },
     }));
@@ -426,7 +426,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "transitions-collection",
+      type: 'transitions-collection',
       data: transitionSteps,
       timestamp: new Date().toISOString(),
     };
@@ -439,7 +439,7 @@ export class FunnelAIAgent {
     progress(20);
     await this.delay(700);
 
-    const strategicData = template.steps.find(s => s.type === "strategicQuestions");
+    const strategicData = template.steps.find(s => s.type === 'strategicQuestions');
     const strategicSteps = [];
 
     if (strategicData?.questions) {
@@ -448,11 +448,11 @@ export class FunnelAIAgent {
 
         strategicSteps.push({
           id: generateSemanticId({
-            context: "step",
-            type: "strategic",
+            context: 'step',
+            type: 'strategic',
             identifier: `strategic-${i + 1}`,
           }),
-          type: "strategic-question",
+          type: 'strategic-question',
           order: 15 + i,
           content: {
             title: question.title,
@@ -462,13 +462,13 @@ export class FunnelAIAgent {
             options: question.options,
             validation: {
               required: 1,
-              errorMessage: "Selecione uma opção para avançar.",
+              errorMessage: 'Selecione uma opção para avançar.',
             },
           },
           design: {
             singleSelect: true,
-            imagePosition: "top",
-            optionStyle: "card",
+            imagePosition: 'top',
+            optionStyle: 'card',
           },
         });
 
@@ -480,7 +480,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "strategic-collection",
+      type: 'strategic-collection',
       data: strategicSteps,
       timestamp: new Date().toISOString(),
     };
@@ -493,23 +493,23 @@ export class FunnelAIAgent {
     progress(30);
     await this.delay(500);
 
-    const resultData = template.steps.find(s => s.type === "result");
+    const resultData = template.steps.find(s => s.type === 'result');
 
     const resultStep = {
-      id: generateSemanticId({ context: "step", type: "result", identifier: "result-page" }),
-      type: "result",
+      id: generateSemanticId({ context: 'step', type: 'result', identifier: 'result-page' }),
+      type: 'result',
       order: 21,
       content: {
-        title: resultData?.title || "Seu Resultado",
-        description: resultData?.description || "",
+        title: resultData?.title || 'Seu Resultado',
+        description: resultData?.description || '',
         styles: resultData?.styles || [],
         cta: resultData?.cta || {},
         bonus: resultData?.bonus || [],
       },
       logic: {
-        calculationMethod: "category-scoring",
-        displayLogic: "highest-score-wins",
-        fallback: "default-result",
+        calculationMethod: 'category-scoring',
+        displayLogic: 'highest-score-wins',
+        fallback: 'default-result',
       },
       design: {
         resultCardStyle: template.design.card,
@@ -535,14 +535,14 @@ export class FunnelAIAgent {
     const calculationLogic = {
       method: template.logic.calculation.method,
       categories: [
-        "Natural",
-        "Clássico",
-        "Contemporâneo",
-        "Elegante",
-        "Romântico",
-        "Sexy",
-        "Dramático",
-        "Criativo",
+        'Natural',
+        'Clássico',
+        'Contemporâneo',
+        'Elegante',
+        'Romântico',
+        'Sexy',
+        'Dramático',
+        'Criativo',
       ],
       scoring: {
         perAnswer: 1,
@@ -550,8 +550,8 @@ export class FunnelAIAgent {
         strategicWeight: 0.3,
       },
       resultDetermination: {
-        primary: "highest-score",
-        secondary: "second-highest",
+        primary: 'highest-score',
+        secondary: 'second-highest',
         threshold: 0.1,
       },
     };
@@ -561,7 +561,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "calculation-logic",
+      type: 'calculation-logic',
       data: calculationLogic,
       timestamp: new Date().toISOString(),
     };
@@ -578,11 +578,11 @@ export class FunnelAIAgent {
       events: template.config.analyticsEvents,
       tracking: template.config.tracking,
       localStorage: template.config.localStorageKeys,
-      pixelEvents: ["PageView", "Lead", "CompleteRegistration", "Purchase"],
+      pixelEvents: ['PageView', 'Lead', 'CompleteRegistration', 'Purchase'],
       conversionGoals: {
-        primary: "quiz_completed",
-        secondary: "cta_clicked",
-        conversion: "purchase_completed",
+        primary: 'quiz_completed',
+        secondary: 'cta_clicked',
+        conversion: 'purchase_completed',
       },
     };
 
@@ -591,7 +591,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "analytics-config",
+      type: 'analytics-config',
       data: analyticsConfig,
       timestamp: new Date().toISOString(),
     };
@@ -613,7 +613,7 @@ export class FunnelAIAgent {
       },
       responsiveness: {
         mobileFirst: true,
-        breakpoints: ["320px", "768px", "1024px", "1440px"],
+        breakpoints: ['320px', '768px', '1024px', '1440px'],
         touchOptimized: true,
       },
       seo: {
@@ -625,7 +625,7 @@ export class FunnelAIAgent {
       accessibility: {
         ariaLabels: true,
         keyboardNavigation: true,
-        colorContrast: "AA",
+        colorContrast: 'AA',
         screenReader: true,
       },
     };
@@ -635,7 +635,7 @@ export class FunnelAIAgent {
     progress(100);
 
     return {
-      type: "optimizations",
+      type: 'optimizations',
       data: optimizations,
       timestamp: new Date().toISOString(),
     };
@@ -655,18 +655,18 @@ export class FunnelAIAgent {
     await this.delay(400);
 
     const deploymentInfo = {
-      status: "deployed",
+      status: 'deployed',
       url: `/quiz/style-quiz-${Date.now()}`,
-      environment: "production",
-      buildTime: "12.3s",
-      bundleSize: "2.4MB",
+      environment: 'production',
+      buildTime: '12.3s',
+      bundleSize: '2.4MB',
       deployedAt: new Date().toISOString(),
     };
 
     progress(100);
 
     return {
-      type: "deployment",
+      type: 'deployment',
       data: deploymentInfo,
       timestamp: new Date().toISOString(),
     };
@@ -680,9 +680,9 @@ export class FunnelAIAgent {
     try {
       const key = `ai-generated-funnel-${funnelId}`;
       localStorage.setItem(key, JSON.stringify(funnelData));
-      console.log("💾 Funil salvo no localStorage:", key);
+      console.log('💾 Funil salvo no localStorage:', key);
     } catch (error) {
-      console.error("❌ Erro ao salvar funil:", error);
+      console.error('❌ Erro ao salvar funil:', error);
     }
   }
 
@@ -692,7 +692,7 @@ export class FunnelAIAgent {
       const data = localStorage.getItem(key);
       return data ? JSON.parse(data) : null;
     } catch (error) {
-      console.error("❌ Erro ao carregar funil:", error);
+      console.error('❌ Erro ao carregar funil:', error);
       return null;
     }
   }

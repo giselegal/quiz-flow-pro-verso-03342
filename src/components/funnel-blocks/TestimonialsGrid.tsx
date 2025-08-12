@@ -1,6 +1,6 @@
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import { Card, CardContent } from "@/components/ui/card";
-import { BlockComponentProps, Testimonial, Alignment } from "./types";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import { Card, CardContent } from '@/components/ui/card';
+import { BlockComponentProps, Testimonial, Alignment } from './types';
 
 /**
  * TestimonialsGrid - Componente de grade de depoimentos configurável
@@ -32,7 +32,7 @@ export interface TestimonialsGridProps extends BlockComponentProps {
   testimonials: Testimonial[];
 
   // Layout
-  layout?: "grid" | "carousel" | "list";
+  layout?: 'grid' | 'carousel' | 'list';
   columns?: 1 | 2 | 3 | 4;
   alignment?: Alignment;
 
@@ -43,8 +43,8 @@ export interface TestimonialsGridProps extends BlockComponentProps {
   showCompany?: boolean;
 
   // Estilo dos cards
-  cardStyle?: "elegant" | "minimal" | "bordered" | "shadow";
-  avatarSize?: "small" | "medium" | "large";
+  cardStyle?: 'elegant' | 'minimal' | 'bordered' | 'shadow';
+  avatarSize?: 'small' | 'medium' | 'large';
 
   // Configurações responsivas
   mobileColumns?: 1 | 2;
@@ -54,14 +54,14 @@ export interface TestimonialsGridProps extends BlockComponentProps {
 export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
   const {
     // Conteúdo
-    title = "Depoimentos de Clientes",
+    title = 'Depoimentos de Clientes',
     subtitle,
     testimonials,
 
     // Layout
-    layout = "grid",
+    layout = 'grid',
     columns = 3,
-    alignment = "center",
+    alignment = 'center',
 
     // Configurações
     showRatings = true,
@@ -70,34 +70,34 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
     showCompany = false,
 
     // Estilo
-    cardStyle = "elegant",
-    avatarSize = "medium",
+    cardStyle = 'elegant',
+    avatarSize = 'medium',
 
     // Responsivo
     mobileColumns = 1,
     tabletColumns = 2,
 
     // Props base
-    deviceView = "desktop",
-    className = "",
+    deviceView = 'desktop',
+    className = '',
     style = {},
-    testId = "testimonials-grid",
+    testId = 'testimonials-grid',
   } = props;
 
   // Classes de alinhamento
   const alignmentClasses = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
   };
 
   // Classes de layout da grade
   const getGridClasses = () => {
-    const baseClasses = "grid gap-6";
+    const baseClasses = 'grid gap-6';
 
-    if (deviceView === "mobile") {
+    if (deviceView === 'mobile') {
       return `${baseClasses} grid-cols-${mobileColumns}`;
-    } else if (deviceView === "tablet") {
+    } else if (deviceView === 'tablet') {
       return `${baseClasses} grid-cols-${tabletColumns}`;
     } else {
       return `${baseClasses} grid-cols-${columns}`;
@@ -107,18 +107,18 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
   // Classes de estilo do card
   const cardStyleClasses = {
     elegant:
-      "bg-white shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300",
-    minimal: "bg-gray-50 border-none hover:bg-white transition-colors duration-300",
+      'bg-white shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300',
+    minimal: 'bg-gray-50 border-none hover:bg-white transition-colors duration-300',
     bordered:
-      "bg-white border-2 border-gray-200 hover:border-[#B89B7A] transition-colors duration-300",
-    shadow: "bg-white shadow-xl border-none hover:shadow-2xl transition-shadow duration-300",
+      'bg-white border-2 border-gray-200 hover:border-[#B89B7A] transition-colors duration-300',
+    shadow: 'bg-white shadow-xl border-none hover:shadow-2xl transition-shadow duration-300',
   };
 
   // Classes de tamanho do avatar
   const avatarSizeClasses = {
-    small: "w-12 h-12",
-    medium: "w-16 h-16",
-    large: "w-20 h-20",
+    small: 'w-12 h-12',
+    medium: 'w-16 h-16',
+    large: 'w-20 h-20',
   };
 
   // Renderizar estrelas
@@ -128,7 +128,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
         {[...Array(5)].map((_, index) => (
           <svg
             key={index}
-            className={`w-5 h-5 ${index < rating ? "text-yellow-400" : "text-gray-300"}`}
+            className={`w-5 h-5 ${index < rating ? 'text-yellow-400' : 'text-gray-300'}`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -163,13 +163,13 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
             <h4 className="font-semibold text-[#432818] text-lg">{testimonial.author}</h4>
 
             {showRoles && testimonial.role && (
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 {testimonial.role}
                 {showCompany && testimonial.company && ` • ${testimonial.company}`}
               </p>
             )}
 
-            {testimonial.location && <p style={{ color: "#8B7355" }}>📍 {testimonial.location}</p>}
+            {testimonial.location && <p style={{ color: '#8B7355' }}>📍 {testimonial.location}</p>}
           </div>
         </div>
 
@@ -179,7 +179,7 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
         )}
 
         {/* Texto do Depoimento */}
-        <blockquote style={{ color: "#6B4F43" }}>
+        <blockquote style={{ color: '#6B4F43' }}>
           <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
           <span className="text-base">{testimonial.text}</span>
           <span className="text-[#B89B7A] text-4xl font-serif leading-none">"</span>
@@ -189,9 +189,9 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
   );
 
   const containerClasses = getOptimizedContainerClasses(
-    deviceView || "desktop",
-    "tight",
-    "full",
+    deviceView || 'desktop',
+    'tight',
+    'full',
     className
   );
 
@@ -205,33 +205,33 @@ export const TestimonialsGrid: React.FC<TestimonialsGridProps> = props => {
               <h2 className="text-3xl md:text-4xl font-bold text-[#432818] mb-4">{title}</h2>
             )}
 
-            {subtitle && <p style={{ color: "#6B4F43" }}>{subtitle}</p>}
+            {subtitle && <p style={{ color: '#6B4F43' }}>{subtitle}</p>}
           </div>
         )}
 
         {/* Grid de Depoimentos */}
-        {layout === "grid" && (
+        {layout === 'grid' && (
           <div className={getGridClasses()}>
             {testimonials.map((testimonial, index) => renderTestimonial(testimonial, index))}
           </div>
         )}
 
         {/* Lista de Depoimentos */}
-        {layout === "list" && (
+        {layout === 'list' && (
           <div className="space-y-2">
             {testimonials.map((testimonial, index) => renderTestimonial(testimonial, index))}
           </div>
         )}
 
         {/* Carousel de Depoimentos (versão simplificada) */}
-        {layout === "carousel" && (
+        {layout === 'carousel' && (
           <div className="overflow-x-auto">
-            <div className="flex space-x-6 pb-4" style={{ width: "max-content" }}>
+            <div className="flex space-x-6 pb-4" style={{ width: 'max-content' }}>
               {testimonials.map((testimonial, index) => (
                 <div
                   key={testimonial.id || index}
                   className="flex-shrink-0"
-                  style={{ width: deviceView === "mobile" ? "280px" : "320px" }}
+                  style={{ width: deviceView === 'mobile' ? '280px' : '320px' }}
                 >
                   {renderTestimonial(testimonial, index)}
                 </div>

@@ -1,14 +1,14 @@
 // src/components/editor/quiz/QuizQuestionBlock.tsx
 // Bloco específico para renderizar questões baseadas na configuração JSON
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
-import { useEditor } from "@/context/EditorContext";
-import { ArrowRight, CheckCircle2, Circle, RotateCcw } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { QUIZ_CONFIGURATION } from '@/config/quizConfiguration';
+import { useEditor } from '@/context/EditorContext';
+import { ArrowRight, CheckCircle2, Circle, RotateCcw } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface QuizQuestionBlockProps {
   id: string;
@@ -27,7 +27,7 @@ interface QuizQuestionBlockProps {
 
 const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {},
   isEditing = false,
@@ -55,7 +55,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
 
     let newSelection: string[] = [];
 
-    if (currentStep?.type === "questions" && currentStep.rules?.multiSelect > 1) {
+    if (currentStep?.type === 'questions' && currentStep.rules?.multiSelect > 1) {
       // Multi-seleção
       const maxSelections = currentStep.rules.multiSelect;
       if (selectedOptions.includes(optionId)) {
@@ -96,7 +96,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const calculateProgress = () => {
     if (!currentStep) return 0;
     const totalSteps = QUIZ_CONFIGURATION.steps.filter(
-      s => s.type !== "intro" && s.type !== "result"
+      s => s.type !== 'intro' && s.type !== 'result'
     ).length;
     const currentStepNumber = Number(activeStageId) || 1;
     return Math.min((currentStepNumber / totalSteps) * 100, 100);
@@ -106,19 +106,19 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const renderStepContent = () => {
     if (!currentStep) {
       return (
-        <div className="text-center p-6" style={{ color: "#6B4F43" }}>
+        <div className="text-center p-6" style={{ color: '#6B4F43' }}>
           <div className="text-sm">Carregando questão...</div>
         </div>
       );
     }
 
     switch (currentStep.type) {
-      case "intro":
+      case 'intro':
         return renderIntroStep();
-      case "questions":
-      case "strategicQuestions":
+      case 'questions':
+      case 'strategicQuestions':
         return renderQuestionStep();
-      case "result":
+      case 'result':
         return renderResultStep();
       default:
         return renderDefaultStep();
@@ -129,11 +129,11 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const renderIntroStep = () => (
     <div className="space-y-4">
       <div className="text-center">
-        <h2 className="text-lg font-semibold mb-2" style={{ color: "#432818" }}>
+        <h2 className="text-lg font-semibold mb-2" style={{ color: '#432818' }}>
           {currentStep.title}
         </h2>
         {currentStep.descriptionTop && (
-          <p className="text-sm mb-4" style={{ color: "#6B4F43" }}>
+          <p className="text-sm mb-4" style={{ color: '#6B4F43' }}>
             {currentStep.descriptionTop}
           </p>
         )}
@@ -161,17 +161,17 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       <div className="space-y-6">
         {/* Header da questão */}
         <div className="text-center">
-          <h2 className="text-lg font-semibold mb-2" style={{ color: "#432818" }}>
+          <h2 className="text-lg font-semibold mb-2" style={{ color: '#432818' }}>
             {currentStep.title}
           </h2>
           {currentStep.description && (
-            <p className="text-sm" style={{ color: "#6B4F43" }}>
+            <p className="text-sm" style={{ color: '#6B4F43' }}>
               {currentStep.description}
             </p>
           )}
           {isMultiSelect && (
             <div className="mt-2">
-              <Badge variant="outline" style={{ borderColor: "#B89B7A", color: "#B89B7A" }}>
+              <Badge variant="outline" style={{ borderColor: '#B89B7A', color: '#B89B7A' }}>
                 Selecione até {maxSelections} opções
               </Badge>
             </div>
@@ -181,7 +181,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
         {/* Barra de progresso */}
         {properties.showProgress !== false && currentStep.progressBar?.show && (
           <div className="space-y-2">
-            <div className="flex justify-between text-xs" style={{ color: "#6B4F43" }}>
+            <div className="flex justify-between text-xs" style={{ color: '#6B4F43' }}>
               <span>Progresso</span>
               <span>{Math.round(calculateProgress())}%</span>
             </div>
@@ -189,15 +189,15 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
               value={calculateProgress()}
               className="h-2"
               style={{
-                backgroundColor: "#E5DDD5",
-                ["--progress-foreground" as any]: "#B89B7A",
+                backgroundColor: '#E5DDD5',
+                ['--progress-foreground' as any]: '#B89B7A',
               }}
             />
           </div>
         )}
 
         {/* Grid de opções */}
-        <div className={`grid gap-3 ${columns === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
+        <div className={`grid gap-3 ${columns === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
           {questions.flatMap(
             (question: any) =>
               question.options?.map((option: any) => {
@@ -206,11 +206,11 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
                   <Card
                     key={option.id}
                     className={`cursor-pointer transition-all duration-200 border-2 hover:shadow-sm ${
-                      isSelected ? "border-2 shadow-sm" : "border"
-                    } ${isEditing ? "pointer-events-none" : ""}`}
+                      isSelected ? 'border-2 shadow-sm' : 'border'
+                    } ${isEditing ? 'pointer-events-none' : ''}`}
                     style={{
-                      borderColor: isSelected ? "#B89B7A" : "#E5DDD5",
-                      backgroundColor: isSelected ? "#FAF9F7" : "#FEFEFE",
+                      borderColor: isSelected ? '#B89B7A' : '#E5DDD5',
+                      backgroundColor: isSelected ? '#FAF9F7' : '#FEFEFE',
                     }}
                     onClick={() => handleOptionSelect(option.id)}
                   >
@@ -218,17 +218,17 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
                       <div className="flex items-start gap-3">
                         <div className="pt-0.5">
                           {isSelected ? (
-                            <CheckCircle2 className="h-4 w-4" style={{ color: "#B89B7A" }} />
+                            <CheckCircle2 className="h-4 w-4" style={{ color: '#B89B7A' }} />
                           ) : (
-                            <Circle className="h-4 w-4" style={{ color: "#E5DDD5" }} />
+                            <Circle className="h-4 w-4" style={{ color: '#E5DDD5' }} />
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium" style={{ color: "#432818" }}>
+                          <div className="text-sm font-medium" style={{ color: '#432818' }}>
                             {option.text}
                           </div>
                           {option.description && (
-                            <div className="text-xs mt-1" style={{ color: "#6B4F43" }}>
+                            <div className="text-xs mt-1" style={{ color: '#6B4F43' }}>
                               {option.description}
                             </div>
                           )}
@@ -253,17 +253,17 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
               variant="outline"
               size="sm"
               onClick={handleReset}
-              style={{ borderColor: "#E5DDD5", color: "#6B4F43" }}
+              style={{ borderColor: '#E5DDD5', color: '#6B4F43' }}
             >
               <RotateCcw className="h-3 w-3 mr-1" />
               Limpar
             </Button>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs" style={{ color: "#6B4F43" }}>
-                {selectedOptions.length} selecionada{selectedOptions.length !== 1 ? "s" : ""}
+              <span className="text-xs" style={{ color: '#6B4F43' }}>
+                {selectedOptions.length} selecionada{selectedOptions.length !== 1 ? 's' : ''}
               </span>
-              <Button size="sm" style={{ backgroundColor: "#B89B7A", color: "#FEFEFE" }}>
+              <Button size="sm" style={{ backgroundColor: '#B89B7A', color: '#FEFEFE' }}>
                 Continuar
                 <ArrowRight className="h-3 w-3 ml-1" />
               </Button>
@@ -278,19 +278,19 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   const renderResultStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-lg font-semibold mb-4" style={{ color: "#432818" }}>
+        <h2 className="text-lg font-semibold mb-4" style={{ color: '#432818' }}>
           Seu Estilo Pessoal
         </h2>
 
         {currentStep.styles && (
           <div className="grid gap-4 mb-6">
             {currentStep.styles.slice(0, 2).map((style: any) => (
-              <Card key={style.name} className="border" style={{ borderColor: "#E5DDD5" }}>
+              <Card key={style.name} className="border" style={{ borderColor: '#E5DDD5' }}>
                 <CardContent className="p-4">
-                  <h3 className="font-semibold text-base mb-2" style={{ color: "#432818" }}>
+                  <h3 className="font-semibold text-base mb-2" style={{ color: '#432818' }}>
                     {style.name}
                   </h3>
-                  <p className="text-sm" style={{ color: "#6B4F43" }}>
+                  <p className="text-sm" style={{ color: '#6B4F43' }}>
                     {style.description}
                   </p>
                 </CardContent>
@@ -303,7 +303,7 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
           <Button
             size="lg"
             className="w-full"
-            style={{ backgroundColor: "#B89B7A", color: "#FEFEFE" }}
+            style={{ backgroundColor: '#B89B7A', color: '#FEFEFE' }}
           >
             {currentStep.cta.text}
           </Button>
@@ -315,11 +315,11 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
   // Renderizar step padrão
   const renderDefaultStep = () => (
     <div className="text-center p-6">
-      <h2 className="text-lg font-semibold mb-2" style={{ color: "#432818" }}>
+      <h2 className="text-lg font-semibold mb-2" style={{ color: '#432818' }}>
         {currentStep.title}
       </h2>
       {currentStep.description && (
-        <p className="text-sm" style={{ color: "#6B4F43" }}>
+        <p className="text-sm" style={{ color: '#6B4F43' }}>
           {currentStep.description}
         </p>
       )}
@@ -331,11 +331,11 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       id={id}
       className={`quiz-question-block ${className}`}
       style={{
-        backgroundColor: "#FEFEFE",
-        borderRadius: "8px",
-        padding: "24px",
-        border: isEditing ? "2px dashed #B89B7A" : "none",
-        minHeight: "400px",
+        backgroundColor: '#FEFEFE',
+        borderRadius: '8px',
+        padding: '24px',
+        border: isEditing ? '2px dashed #B89B7A' : 'none',
+        minHeight: '400px',
         ...style,
       }}
     >
@@ -345,11 +345,11 @@ const QuizQuestionBlock: React.FC<QuizQuestionBlockProps> = ({
       {isEditing && (
         <div className="absolute inset-0 bg-black bg-opacity-5 rounded-lg flex items-center justify-center">
           <div className="text-center">
-            <div className="text-sm font-medium" style={{ color: "#432818" }}>
+            <div className="text-sm font-medium" style={{ color: '#432818' }}>
               Bloco de Questão do Quiz
             </div>
-            <div className="text-xs" style={{ color: "#6B4F43" }}>
-              {currentStep?.type || "Carregando..."} • Etapa {activeStageId}
+            <div className="text-xs" style={{ color: '#6B4F43' }}>
+              {currentStep?.type || 'Carregando...'} • Etapa {activeStageId}
             </div>
           </div>
         </div>

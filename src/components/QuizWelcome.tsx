@@ -1,4 +1,4 @@
-import { useLoadingState } from "@/hooks/useLoadingState";
+import { useLoadingState } from '@/hooks/useLoadingState';
 
 interface QuizWelcomeProps {
   onStart: () => void;
@@ -26,7 +26,7 @@ const QuizWelcome: React.FC<QuizWelcomeProps> = ({ onStart }) => {
         disabled={isLoading}
         className="px-8 py-3 bg-[#B89B7A]/100 text-white rounded-lg hover:bg-[#B89B7A] disabled:opacity-50"
       >
-        {isLoading ? "Carregando..." : "Começar Quiz"}
+        {isLoading ? 'Carregando...' : 'Começar Quiz'}
       </button>
     </div>
   );

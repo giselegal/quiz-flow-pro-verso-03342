@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Shield, ShoppingCart, Lock, ArrowDown } from "lucide-react";
+import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Shield, ShoppingCart, Lock, ArrowDown } from 'lucide-react';
 
 interface AdvancedCTABlockProps {
   mainText?: string;
@@ -13,11 +13,11 @@ interface AdvancedCTABlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -57,8 +57,8 @@ const getMarginClass = (value, type) => {
 };
 
 const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
-  mainText = "Descubra Como Aplicar Seu Estilo na Prática",
-  buttonText = "Quero meu Guia de Estilo Agora",
+  mainText = 'Descubra Como Aplicar Seu Estilo na Prática',
+  buttonText = 'Quero meu Guia de Estilo Agora',
   showGuarantee = true,
   showSecurityBadge = true,
   className,
@@ -66,19 +66,19 @@ const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
   const [isButtonHovered, setIsButtonHovered] = useState(false);
 
   const handleCTAClick = () => {
-    window.location.href = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912";
+    window.location.href = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912';
   };
 
   return (
     <div
       className={cn(
-        "text-center my-10",
+        'text-center my-10',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="bg-[#f9f4ef] p-6 rounded-lg border border-[#B89B7A]/10 mb-6">
@@ -94,13 +94,13 @@ const AdvancedCTABlock: React.FC<AdvancedCTABlockProps> = ({
         onMouseEnter={() => setIsButtonHovered(true)}
         onMouseLeave={() => setIsButtonHovered(false)}
         style={{
-          background: "linear-gradient(to right, #4CAF50, #45a049)",
-          boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)",
+          background: 'linear-gradient(to right, #4CAF50, #45a049)',
+          boxShadow: '0 4px 14px rgba(76, 175, 80, 0.4)',
         }}
       >
         <span className="flex items-center justify-center gap-2">
           <ShoppingCart
-            className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? "scale-110" : ""}`}
+            className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`}
           />
           {buttonText}
         </span>

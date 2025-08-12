@@ -1,4 +1,4 @@
-import { FixBlurryImagesOptions } from "./images/types";
+import { FixBlurryImagesOptions } from './images/types';
 
 interface FixedImage {
   element: HTMLImageElement;
@@ -18,11 +18,11 @@ export function fixBlurryIntroQuizImages(
 ): HTMLImageElement[] {
   const options = {
     quality: 85,
-    format: "auto",
+    format: 'auto',
     skipOptimized: true,
     forceOptimize: false,
     debug: false,
-    placeholderColor: "#f8f5f2",
+    placeholderColor: '#f8f5f2',
     ...opts,
   };
 
@@ -31,7 +31,7 @@ export function fixBlurryIntroQuizImages(
 
   try {
     // Primeiro, encontre todas as imagens no documento ou elemento raiz
-    const images = targetElement.querySelectorAll("img");
+    const images = targetElement.querySelectorAll('img');
 
     if (options.debug) {
       console.log(`[fixBlurryIntroQuizImages] Analisando ${images.length} imagens`);
@@ -40,7 +40,7 @@ export function fixBlurryIntroQuizImages(
     // Para cada imagem, verifique se precisa ser otimizada
     images.forEach(img => {
       // Ignore imagens já processadas
-      if (img.dataset.optimized === "true" && !options.forceOptimize) {
+      if (img.dataset.optimized === 'true' && !options.forceOptimize) {
         if (options.debug) {
           console.log(`[fixBlurryIntroQuizImages] Imagem já otimizada: ${img.src}`);
         }
@@ -49,14 +49,14 @@ export function fixBlurryIntroQuizImages(
 
       // Verifique se é uma imagem relevante para intro ou quiz
       const isIntroImage =
-        img.classList.contains("intro-image") ||
+        img.classList.contains('intro-image') ||
         img.closest('[data-section="intro"]') ||
-        img.id === "lcp-image";
+        img.id === 'lcp-image';
 
       const isQuizImage =
-        img.classList.contains("quiz-image") ||
+        img.classList.contains('quiz-image') ||
         img.closest('[data-section="quiz"]') ||
-        img.closest(".quiz-option-image");
+        img.closest('.quiz-option-image');
 
       if (!isIntroImage && !isQuizImage) {
         return;
@@ -67,13 +67,13 @@ export function fixBlurryIntroQuizImages(
 
       // Verifique se a imagem já tem um tamanho menor (aproximado)
       const shouldOptimize =
-        options.forceOptimize || !originalSrc.includes("w_") || !originalSrc.includes("q_");
+        options.forceOptimize || !originalSrc.includes('w_') || !originalSrc.includes('q_');
 
       if (shouldOptimize) {
         // Aplicar otimização de imagem
         const newSrc = applyOptimizations(originalSrc, options);
         img.src = newSrc;
-        img.dataset.optimized = "true";
+        img.dataset.optimized = 'true';
 
         fixedImages.push(img);
 
@@ -90,7 +90,7 @@ export function fixBlurryIntroQuizImages(
       console.log(`[fixBlurryIntroQuizImages] Total de imagens otimizadas: ${fixedImages.length}`);
     }
   } catch (error) {
-    console.error("[fixBlurryIntroQuizImages] Erro ao otimizar imagens:", error);
+    console.error('[fixBlurryIntroQuizImages] Erro ao otimizar imagens:', error);
   }
 
   return fixedImages;
@@ -103,9 +103,9 @@ function applyOptimizations(imageUrl: string, options: FixBlurryImagesOptions): 
 
   try {
     // Se for uma URL do Cloudinary, otimize adequadamente
-    if (imageUrl.includes("cloudinary.com")) {
+    if (imageUrl.includes('cloudinary.com')) {
       // Adicione parâmetros de otimização Cloudinary
-      const hasExistingTransformations = imageUrl.includes("/upload/");
+      const hasExistingTransformations = imageUrl.includes('/upload/');
 
       if (hasExistingTransformations) {
         // Inserir após /upload/
@@ -116,7 +116,7 @@ function applyOptimizations(imageUrl: string, options: FixBlurryImagesOptions): 
     // Retorna URL original se não conseguir otimizar
     return imageUrl;
   } catch (error) {
-    console.error("[applyOptimizations] Erro ao otimizar URL:", error);
+    console.error('[applyOptimizations] Erro ao otimizar URL:', error);
     return imageUrl;
   }
 }

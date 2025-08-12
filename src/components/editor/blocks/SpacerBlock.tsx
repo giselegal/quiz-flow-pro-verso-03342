@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { EditableContent } from "@/types/editor";
+import { EditableContent } from '@/types/editor';
 
 interface SpacerBlockProps {
   content: EditableContent;
@@ -10,11 +10,11 @@ interface SpacerBlockProps {
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -61,12 +61,12 @@ const SpacerBlock: React.FC<SpacerBlockProps> = ({
 }) => {
   // Convert height to string if it's a number
   const height =
-    typeof content.height === "number" ? `${content.height}px` : content.height || "40px";
+    typeof content.height === 'number' ? `${content.height}px` : content.height || '40px';
 
   return (
     <div
       className={`w-full border border-dashed border-gray-300 rounded cursor-pointer hover:border-gray-400 transition-colors ${
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "bg-gray-50"
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'bg-gray-50'
       }`}
       style={{ height }}
       onClick={onClick}

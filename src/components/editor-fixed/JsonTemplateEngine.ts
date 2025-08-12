@@ -5,8 +5,8 @@
  * SEM quebrar nada do que já está funcionando.
  */
 
-import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
-import { Block } from "@/types/editor";
+import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import { Block } from '@/types/editor';
 
 // =============================================
 // TYPES PARA JSON TEMPLATES
@@ -18,12 +18,12 @@ export interface JsonTemplate {
   name: string;
   description?: string;
   version: string;
-  category: "intro" | "question" | "transition" | "result" | "custom";
+  category: 'intro' | 'question' | 'transition' | 'result' | 'custom';
 
   // Layout e configuração
   layout: {
-    containerWidth?: "full" | "contained" | "narrow";
-    spacing?: "none" | "small" | "medium" | "large";
+    containerWidth?: 'full' | 'contained' | 'narrow';
+    spacing?: 'none' | 'small' | 'medium' | 'large';
     backgroundColor?: string;
     responsive?: boolean;
   };
@@ -32,7 +32,7 @@ export interface JsonTemplate {
   stepConfig?: {
     stepNumber: number;
     isRequired?: boolean;
-    nextStepCondition?: "always" | "on_selection" | "on_validation";
+    nextStepCondition?: 'always' | 'on_selection' | 'on_validation';
     validationRules?: {
       minSelections?: number;
       maxSelections?: number;
@@ -107,7 +107,7 @@ export class JsonTemplateEngine {
       if (!componentExists) {
         console.warn(`⚠️ Componente "${jsonBlock.type}" não encontrado no ENHANCED_BLOCK_REGISTRY`);
         // Fallback para um componente genérico ou texto
-        jsonBlock.type = "text-inline";
+        jsonBlock.type = 'text-inline';
       }
 
       // Criar bloco compatível com o sistema atual
@@ -118,9 +118,9 @@ export class JsonTemplateEngine {
 
         // Converter properties para content (compatibilidade)
         content: {
-          text: jsonBlock.properties.text || "",
-          title: jsonBlock.properties.title || "",
-          description: jsonBlock.properties.description || "",
+          text: jsonBlock.properties.text || '',
+          title: jsonBlock.properties.title || '',
+          description: jsonBlock.properties.description || '',
           ...jsonBlock.properties,
         },
 
@@ -161,15 +161,15 @@ export class JsonTemplateEngine {
 
     return {
       id: metadata.id || `template-${Date.now()}`,
-      name: metadata.name || "Template Personalizado",
-      description: metadata.description || "Template criado no editor",
-      version: metadata.version || "1.0",
-      category: metadata.category || "custom",
+      name: metadata.name || 'Template Personalizado',
+      description: metadata.description || 'Template criado no editor',
+      version: metadata.version || '1.0',
+      category: metadata.category || 'custom',
 
       layout: {
-        containerWidth: "full",
-        spacing: "medium",
-        backgroundColor: "transparent",
+        containerWidth: 'full',
+        spacing: 'medium',
+        backgroundColor: 'transparent',
         responsive: true,
         ...metadata.layout,
       },
@@ -192,10 +192,10 @@ export class JsonTemplateEngine {
     const warnings: string[] = [];
 
     // Validações básicas
-    if (!template.id) errors.push("Template deve ter um ID");
-    if (!template.name) errors.push("Template deve ter um nome");
+    if (!template.id) errors.push('Template deve ter um ID');
+    if (!template.name) errors.push('Template deve ter um nome');
     if (!template.blocks || !Array.isArray(template.blocks)) {
-      errors.push("Template deve ter uma lista de blocos");
+      errors.push('Template deve ter uma lista de blocos');
     }
 
     // Validar blocos
@@ -224,13 +224,13 @@ export class JsonTemplateEngine {
    */
   private validateBlockProperties(block: JsonBlock, warnings: string[]): void {
     switch (block.type) {
-      case "text-inline":
+      case 'text-inline':
         if (!block.properties.text) {
           warnings.push(`Bloco ${block.id}: texto não definido`);
         }
         break;
 
-      case "button-inline":
+      case 'button-inline':
         if (!block.properties.text) {
           warnings.push(`Bloco ${block.id}: texto do botão não definido`);
         }
@@ -239,13 +239,13 @@ export class JsonTemplateEngine {
         }
         break;
 
-      case "options-grid":
+      case 'options-grid':
         if (!block.properties.options || !Array.isArray(block.properties.options)) {
           warnings.push(`Bloco ${block.id}: opções não definidas`);
         }
         break;
 
-      case "quiz-intro-header":
+      case 'quiz-intro-header':
         if (!block.properties.title) {
           warnings.push(`Bloco ${block.id}: título não definido`);
         }
@@ -272,16 +272,16 @@ export class JsonTemplateEngine {
    * 🏷️ CATEGORIZAÇÃO: Inferir categoria baseada no nome do componente
    */
   private categorizeComponent(type: string): string {
-    if (type.includes("text") || type.includes("heading")) return "content";
-    if (type.includes("button") || type.includes("cta")) return "interactive";
-    if (type.includes("image") || type.includes("media")) return "media";
-    if (type.includes("quiz")) return "quiz";
-    if (type.includes("form") || type.includes("input")) return "forms";
-    if (type.includes("layout") || type.includes("divider") || type.includes("spacer"))
-      return "layout";
-    if (type.includes("pricing") || type.includes("commerce")) return "commerce";
-    if (type.includes("social") || type.includes("testimonial")) return "social";
-    return "other";
+    if (type.includes('text') || type.includes('heading')) return 'content';
+    if (type.includes('button') || type.includes('cta')) return 'interactive';
+    if (type.includes('image') || type.includes('media')) return 'media';
+    if (type.includes('quiz')) return 'quiz';
+    if (type.includes('form') || type.includes('input')) return 'forms';
+    if (type.includes('layout') || type.includes('divider') || type.includes('spacer'))
+      return 'layout';
+    if (type.includes('pricing') || type.includes('commerce')) return 'commerce';
+    if (type.includes('social') || type.includes('testimonial')) return 'social';
+    return 'other';
   }
 }
 
@@ -305,17 +305,17 @@ export const useJsonTemplate = () => {
       const validation = engine.validateTemplate(template);
 
       if (!validation.isValid) {
-        console.error("❌ Template inválido:", validation.errors);
+        console.error('❌ Template inválido:', validation.errors);
         return null;
       }
 
       if (validation.warnings.length > 0) {
-        console.warn("⚠️ Avisos do template:", validation.warnings);
+        console.warn('⚠️ Avisos do template:', validation.warnings);
       }
 
       return template;
     } catch (error) {
-      console.error("❌ Erro ao carregar template:", error);
+      console.error('❌ Erro ao carregar template:', error);
       return null;
     }
   };
@@ -353,7 +353,7 @@ export const useJsonTemplate = () => {
  * 🔧 HELPER: Carregar template das 21 etapas
  */
 export const loadStepTemplate = async (stepNumber: number): Promise<JsonTemplate | null> => {
-  const stepId = stepNumber.toString().padStart(2, "0");
+  const stepId = stepNumber.toString().padStart(2, '0');
   const templatePath = `/templates/step-${stepId}-template.json`;
 
   const { loadTemplate } = useJsonTemplate();

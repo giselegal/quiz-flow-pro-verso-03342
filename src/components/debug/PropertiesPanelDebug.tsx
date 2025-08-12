@@ -1,11 +1,11 @@
-import { useEditor } from "@/context/EditorContext";
+import { useEditor } from '@/context/EditorContext';
 
 interface PropertiesPanelDebugProps {
   title?: string;
 }
 
 export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
-  title = "Painel Debug",
+  title = 'Painel Debug',
 }) => {
   const {
     selectedBlockId,
@@ -13,7 +13,7 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
     uiState: { isPreviewing },
   } = useEditor();
 
-  console.log("🔍 PropertiesPanelDebug - Estado atual:", {
+  console.log('🔍 PropertiesPanelDebug - Estado atual:', {
     selectedBlockId,
     selectedBlock,
     currentBlocks: currentBlocks?.length || 0,
@@ -32,24 +32,24 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
   });
 
   return (
-    <div style={{ borderColor: "#E5DDD5" }}>
-      <h3 style={{ color: "#432818" }}>🔍 {title}</h3>
+    <div style={{ borderColor: '#E5DDD5' }}>
+      <h3 style={{ color: '#432818' }}>🔍 {title}</h3>
 
       <div className="space-y-2 text-sm">
         <div>
-          <strong>Selected Block ID:</strong> {selectedBlockId || "null"}
+          <strong>Selected Block ID:</strong> {selectedBlockId || 'null'}
         </div>
 
         <div>
-          <strong>Selected Block:</strong> {selectedBlock ? "Exists" : "null"}
+          <strong>Selected Block:</strong> {selectedBlock ? 'Exists' : 'null'}
         </div>
 
         <div>
-          <strong>Is Previewing:</strong> {isPreviewing ? "true" : "false"}
+          <strong>Is Previewing:</strong> {isPreviewing ? 'true' : 'false'}
         </div>
 
         <div>
-          <strong>Should Show Panel:</strong> {!isPreviewing && selectedBlock ? "true" : "false"}
+          <strong>Should Show Panel:</strong> {!isPreviewing && selectedBlock ? 'true' : 'false'}
         </div>
 
         <div>
@@ -81,7 +81,7 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
               {currentBlocks.map(block => (
                 <li
                   key={block.id}
-                  className={block.id === selectedBlockId ? "font-bold text-blue-600" : ""}
+                  className={block.id === selectedBlockId ? 'font-bold text-blue-600' : ''}
                 >
                   {block.id} - {block.type}
                 </li>

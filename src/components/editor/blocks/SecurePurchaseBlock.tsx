@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Shield, Lock, CreditCard, Clock } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Shield, Lock, CreditCard, Clock } from 'lucide-react';
 
 interface SecurePurchaseBlockProps {
   title?: string;
@@ -9,11 +9,11 @@ interface SecurePurchaseBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -53,39 +53,39 @@ const getMarginClass = (value: string | number, type: string): string => {
 };
 
 const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
-  title = "Compra 100% Segura e Protegida",
+  title = 'Compra 100% Segura e Protegida',
   showFeatures = true,
   className,
 }) => {
   const securityFeatures = [
     {
       icon: <Shield className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "SSL 256-bits",
+      text: 'SSL 256-bits',
     },
     {
       icon: <Lock className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "Dados protegidos",
+      text: 'Dados protegidos',
     },
     {
       icon: <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "Pagamento seguro",
+      text: 'Pagamento seguro',
     },
     {
       icon: <Clock className="w-3 h-3 sm:w-4 sm:h-4" />,
-      text: "Acesso imediato",
+      text: 'Acesso imediato',
     },
   ];
 
   return (
     <div
       className={cn(
-        "py-4 sm:py-6 px-4",
+        'py-4 sm:py-6 px-4',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass((marginTop as number | string) ?? 0, "top"),
-        getMarginClass((marginBottom as number | string) ?? 0, "bottom"),
-        getMarginClass((marginLeft as number | string) ?? 0, "left"),
-        getMarginClass((marginRight as number | string) ?? 0, "right")
+        getMarginClass((marginTop as number | string) ?? 0, 'top'),
+        getMarginClass((marginBottom as number | string) ?? 0, 'bottom'),
+        getMarginClass((marginLeft as number | string) ?? 0, 'left'),
+        getMarginClass((marginRight as number | string) ?? 0, 'right')
       )}
     >
       <div className="max-w-2xl mx-auto">

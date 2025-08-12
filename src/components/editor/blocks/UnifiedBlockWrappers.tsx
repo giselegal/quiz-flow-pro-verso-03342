@@ -1,5 +1,5 @@
-import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
-import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
+import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
+import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
 
 // Interface que todos os blocos do editor devem implementar
 interface BlockComponentProps {
@@ -21,11 +21,11 @@ interface BlockComponentProps {
  */
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -72,8 +72,8 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Propriedades do bloco inválidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Propriedades do bloco inválidas</p>
       </div>
     );
   }
@@ -85,9 +85,9 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
   // Usar o componente base exatamente como no funil real
   return (
     <FunnelHeroSection
-      title={block.properties.title || "Título do Hero"}
-      description={block.properties.description || "Descrição do hero section"}
-      ctaText={block.properties.ctaText || "Call to Action"}
+      title={block.properties.title || 'Título do Hero'}
+      description={block.properties.description || 'Descrição do hero section'}
+      ctaText={block.properties.ctaText || 'Call to Action'}
       {...block.properties}
       isSelected={isSelected}
       onClick={handleClick}
@@ -109,8 +109,8 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   // Validação defensiva
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Propriedades do bloco inválidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Propriedades do bloco inválidas</p>
       </div>
     );
   }
@@ -125,7 +125,7 @@ export const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   // Usar o componente base exatamente como no funil real
   return (
     <FunnelPainSection
-      title={block.properties.title || "Seção de Problemas"}
+      title={block.properties.title || 'Seção de Problemas'}
       painPoints={painPoints}
       {...block.properties}
       isSelected={isSelected}

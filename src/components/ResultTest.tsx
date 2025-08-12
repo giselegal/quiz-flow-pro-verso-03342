@@ -1,22 +1,22 @@
-import { styleConfig } from "@/config/styleConfig";
-import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { styleConfig } from '@/config/styleConfig';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 
 // Dados mock para teste
 const mockResult = {
   primaryStyle: {
-    category: "Elegante",
+    category: 'Elegante',
     score: 25,
     percentage: 45,
   },
   secondaryStyles: [
     {
-      category: "Clássico",
+      category: 'Clássico',
       score: 15,
       percentage: 27,
     },
     {
-      category: "Contemporâneo",
+      category: 'Contemporâneo',
       score: 10,
       percentage: 18,
     },
@@ -83,8 +83,8 @@ const ResultTest: React.FC = () => {
                 alt={`Estilo ${category}`}
                 className="w-full h-auto rounded-lg shadow-md"
                 onError={e => {
-                  console.error("Erro ao carregar imagem:", e);
-                  console.log("URL:", `${image}?q=auto:best&f=auto&w=238`);
+                  console.error('Erro ao carregar imagem:', e);
+                  console.log('URL:', `${image}?q=auto:best&f=auto&w=238`);
                 }}
               />
               <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
@@ -99,8 +99,8 @@ const ResultTest: React.FC = () => {
               alt={`Guia de Estilo ${category}`}
               className="w-full h-auto rounded-lg shadow-md"
               onError={e => {
-                console.error("Erro ao carregar imagem do guia:", e);
-                console.log("URL do guia:", `${guideImage}?q=auto:best&f=auto&w=540`);
+                console.error('Erro ao carregar imagem do guia:', e);
+                console.log('URL do guia:', `${guideImage}?q=auto:best&f=auto&w=540`);
               }}
             />
             <div className="absolute -top-4 -right-4 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12">
@@ -110,7 +110,7 @@ const ResultTest: React.FC = () => {
         </Card>
 
         {/* Debug info */}
-        <Card style={{ backgroundColor: "#E5DDD5" }}>
+        <Card style={{ backgroundColor: '#E5DDD5' }}>
           <h3 className="font-bold mb-2">Debug Info:</h3>
           <pre className="text-xs overflow-auto">
             {JSON.stringify(

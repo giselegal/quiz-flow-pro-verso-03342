@@ -1,12 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { QuizFunnel, SimplePage } from "@/interfaces/quiz";
-import styles from "@/styles/editor.module.css";
-import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from "lucide-react";
-import React, { useState } from "react";
-import { generateSemanticId } from "../../../utils/semanticIdGenerator";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { QuizFunnel, SimplePage } from '@/interfaces/quiz';
+import styles from '@/styles/editor.module.css';
+import { ArrowDown, ArrowUp, Copy, FolderTree, MoreVertical, Plus, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { generateSemanticId } from '../../../utils/semanticIdGenerator';
 
 interface FunnelManagementPanelProps {
   funnel: QuizFunnel;
@@ -24,20 +24,20 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
   const [showPageSettings, setShowPageSettings] = useState<string | null>(null);
   const [isCreatingPage, setIsCreatingPage] = useState(false);
   const [newPageData, setNewPageData] = useState({
-    title: "",
-    type: "question" as SimplePage["type"],
+    title: '',
+    type: 'question' as SimplePage['type'],
   });
 
   const pageTypes = [
-    { value: "intro", label: "Introdução", icon: "🏁", color: "blue" },
-    { value: "question", label: "Pergunta", icon: "❓", color: "green" },
-    { value: "loading", label: "Carregamento", icon: "⏳", color: "yellow" },
-    { value: "result", label: "Resultado", icon: "🎯", color: "purple" },
-    { value: "offer", label: "Oferta", icon: "💰", color: "orange" },
-    { value: "sales", label: "Vendas", icon: "🛒", color: "red" },
-    { value: "checkout", label: "Checkout", icon: "💳", color: "indigo" },
-    { value: "upsell", label: "Upsell", icon: "⬆️", color: "pink" },
-    { value: "thankyou", label: "Obrigado", icon: "🙏", color: "teal" },
+    { value: 'intro', label: 'Introdução', icon: '🏁', color: 'blue' },
+    { value: 'question', label: 'Pergunta', icon: '❓', color: 'green' },
+    { value: 'loading', label: 'Carregamento', icon: '⏳', color: 'yellow' },
+    { value: 'result', label: 'Resultado', icon: '🎯', color: 'purple' },
+    { value: 'offer', label: 'Oferta', icon: '💰', color: 'orange' },
+    { value: 'sales', label: 'Vendas', icon: '🛒', color: 'red' },
+    { value: 'checkout', label: 'Checkout', icon: '💳', color: 'indigo' },
+    { value: 'upsell', label: 'Upsell', icon: '⬆️', color: 'pink' },
+    { value: 'thankyou', label: 'Obrigado', icon: '🙏', color: 'teal' },
   ];
 
   const getPageTypeInfo = (type: string) => {
@@ -47,9 +47,9 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
   const handleCreatePage = () => {
     const newPage: SimplePage = {
       id: generateSemanticId({
-        context: "funnel",
-        type: "page",
-        identifier: "page",
+        context: 'funnel',
+        type: 'page',
+        identifier: 'page',
         index: Math.floor(Math.random() * 1000),
       }),
       title: newPageData.title || `Nova ${getPageTypeInfo(newPageData.type).label}`,
@@ -67,7 +67,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
 
     onFunnelUpdate(updatedFunnel);
     setIsCreatingPage(false);
-    setNewPageData({ title: "", type: "question" });
+    setNewPageData({ title: '', type: 'question' });
   };
 
   const handleDeletePage = (pageIndex: number) => {
@@ -94,9 +94,9 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
     const duplicatedPage: SimplePage = {
       ...originalPage,
       id: generateSemanticId({
-        context: "funnel",
-        type: "page",
-        identifier: "page",
+        context: 'funnel',
+        type: 'page',
+        identifier: 'page',
         index: Math.floor(Math.random() * 1000),
       }),
       title: `${originalPage.title} (Cópia)`,
@@ -192,7 +192,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
             return (
               <div key={page.id} className={styles.pageFlowItem}>
                 <Card
-                  className={`${styles.pageCard} ${isSelected ? styles.selected : ""}`}
+                  className={`${styles.pageCard} ${isSelected ? styles.selected : ''}`}
                   onClick={() => onPageSelect(index)}
                 >
                   <CardHeader className={styles.pageCardHeader}>
@@ -249,7 +249,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                             value={page.type}
                             onChange={e =>
                               handlePageUpdate(index, {
-                                type: e.target.value as SimplePage["type"],
+                                type: e.target.value as SimplePage['type'],
                               })
                             }
                             className={styles.settingSelect}
@@ -325,7 +325,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                           size="sm"
                           onClick={() => handleDeletePage(index)}
                           disabled={funnel.pages.length <= 1}
-                          style={{ color: "#432818" }}
+                          style={{ color: '#432818' }}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -373,7 +373,7 @@ const FunnelManagementPanel: React.FC<FunnelManagementPanelProps> = ({
                   onChange={e =>
                     setNewPageData(prev => ({
                       ...prev,
-                      type: e.target.value as SimplePage["type"],
+                      type: e.target.value as SimplePage['type'],
                     }))
                   }
                   className={styles.formSelect}

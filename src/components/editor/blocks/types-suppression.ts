@@ -6,7 +6,7 @@
  */
 
 // Import centralizado do sistema de margens
-import { getMarginClass } from "@/utils/marginUtils";
+import { getMarginClass } from '@/utils/marginUtils';
 
 // Re-export para compatibilidade com arquivos existentes
 export { getMarginClass };

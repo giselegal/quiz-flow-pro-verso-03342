@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import InlineBaseWrapper from "./base/InlineBaseWrapper";
-import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import InlineBaseWrapper from './base/InlineBaseWrapper';
+import InlineEditableText from './base/InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 import {
   getPersonalizedText,
   trackComponentView,
@@ -11,16 +11,16 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
-import { Crown, Star, TrendingUp, CheckCircle, Sparkles } from "lucide-react";
+} from '@/utils/inlineComponentUtils';
+import { Crown, Star, TrendingUp, CheckCircle, Sparkles } from 'lucide-react';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -63,23 +63,23 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Plano Premium",
-    badge = "Mais Popular",
-    price = "R$ 39,90",
-    originalPrice = "R$ 47,00",
-    discount = "15% Off",
-    period = "à vista",
+    title = 'Plano Premium',
+    badge = 'Mais Popular',
+    price = 'R$ 39,90',
+    originalPrice = 'R$ 47,00',
+    discount = '15% Off',
+    period = 'à vista',
     isPopular = true,
-    icon = "crown",
+    icon = 'crown',
     showIcon = true,
     useUsername = false,
-    usernamePattern = "Perfeito para {{username}}!",
+    usernamePattern = 'Perfeito para {{username}}!',
     trackingEnabled = false,
-    animation = "scaleIn",
-    theme = "primary",
+    animation = 'scaleIn',
+    theme = 'primary',
     showDiscount = true,
     showOriginalPrice = true,
     conversionValue = 39.9,
@@ -88,11 +88,11 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   // Get username from context (placeholder)
-  const username = "Usuário";
+  const username = 'Usuário';
 
   useEffect(() => {
     if (trackingEnabled) {
-      trackComponentView(block.id, "pricing-inline");
+      trackComponentView(block.id, 'pricing-inline');
     }
   }, [trackingEnabled, block.id]);
 
@@ -106,8 +106,8 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
     const iconMap = {
       crown: Crown,
       star: Star,
-      "trending-up": TrendingUp,
-      "check-circle": CheckCircle,
+      'trending-up': TrendingUp,
+      'check-circle': CheckCircle,
       sparkles: Sparkles,
     };
     const IconComponent = iconMap[icon as keyof typeof iconMap] || Crown;
@@ -116,8 +116,8 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
 
   const handleClick = async () => {
     if (trackingEnabled) {
-      trackComponentClick(block.id, "pricing-inline", "pricing_click");
-      trackComponentConversion(block.id, "pricing-inline", conversionValue);
+      trackComponentClick(block.id, 'pricing-inline', 'pricing_click');
+      trackComponentConversion(block.id, 'pricing-inline', conversionValue);
     }
   };
 
@@ -134,10 +134,10 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
         className,
         INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       minHeight="5rem"
       editLabel="Editar Preço"
@@ -153,7 +153,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="w-full bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] flex items-center justify-center py-2">
             <InlineEditableText
               value={personalizedBadge}
-              onChange={value => handlePropertyChange("badge", value)}
+              onChange={value => handlePropertyChange('badge', value)}
               placeholder="Badge do plano..."
               fontSize="sm"
               fontWeight="bold"
@@ -172,7 +172,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
             <div>
               <InlineEditableText
                 value={personalizedTitle}
-                onChange={value => handlePropertyChange("title", value)}
+                onChange={value => handlePropertyChange('title', value)}
                 placeholder="Título do plano..."
                 fontSize="xl"
                 fontWeight="bold"
@@ -189,7 +189,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                 <div className="mb-1">
                   <InlineEditableText
                     value={discount}
-                    onChange={value => handlePropertyChange("discount", value)}
+                    onChange={value => handlePropertyChange('discount', value)}
                     placeholder="Desconto..."
                     fontSize="xs"
                     fontWeight="medium"
@@ -203,7 +203,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="flex items-center justify-end gap-2">
                 <InlineEditableText
                   value={price}
-                  onChange={value => handlePropertyChange("price", value)}
+                  onChange={value => handlePropertyChange('price', value)}
                   placeholder="R$ 39,90"
                   fontSize="xl"
                   fontWeight="bold"
@@ -214,7 +214,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
                 {showOriginalPrice && originalPrice && (
                   <InlineEditableText
                     value={originalPrice}
-                    onChange={value => handlePropertyChange("originalPrice", value)}
+                    onChange={value => handlePropertyChange('originalPrice', value)}
                     placeholder="R$ 47,00"
                     fontSize="sm"
                     textAlign="right"
@@ -227,7 +227,7 @@ const PricingInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="mt-1">
                 <InlineEditableText
                   value={period}
-                  onChange={value => handlePropertyChange("period", value)}
+                  onChange={value => handlePropertyChange('period', value)}
                   placeholder="Período..."
                   fontSize="xs"
                   textAlign="right"

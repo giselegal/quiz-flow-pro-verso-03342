@@ -1,9 +1,9 @@
 // @ts-nocheck
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { EditorComponent } from "@/interfaces/editor";
-import { SimpleComponent } from "@/interfaces/quiz";
-import styles from "@/styles/editor.module.css";
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { EditorComponent } from '@/interfaces/editor';
+import { SimpleComponent } from '@/interfaces/quiz';
+import styles from '@/styles/editor.module.css';
 import {
   BarChart3,
   Clock,
@@ -20,19 +20,19 @@ import {
   Type,
   Users,
   Video,
-} from "lucide-react";
+} from 'lucide-react';
 // @ts-nocheck
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // Definição dos componentes disponíveis
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -73,116 +73,116 @@ const getMarginClass = (value, type) => {
 
 const COMPONENT_CATEGORIES = {
   basic: {
-    title: "📝 BÁSICOS",
-    color: "amber",
+    title: '📝 BÁSICOS',
+    color: 'amber',
     components: [
       {
-        id: "title",
-        name: "Título",
+        id: 'title',
+        name: 'Título',
         icon: Type,
-        description: "Título principal da página",
-        category: "content",
+        description: 'Título principal da página',
+        category: 'content',
         defaultProps: {
-          text: "Título Principal",
+          text: 'Título Principal',
           level: 1,
-          alignment: "center",
-          color: "#432818",
-          fontSize: "2rem",
-          fontWeight: "bold",
+          alignment: 'center',
+          color: '#432818',
+          fontSize: '2rem',
+          fontWeight: 'bold',
         },
       },
       {
-        id: "subtitle",
-        name: "Subtítulo",
+        id: 'subtitle',
+        name: 'Subtítulo',
         icon: Type,
-        description: "Texto secundário",
-        category: "content",
+        description: 'Texto secundário',
+        category: 'content',
         defaultProps: {
-          text: "Subtítulo",
+          text: 'Subtítulo',
           level: 2,
-          alignment: "center",
-          color: "#6b4f43",
-          fontSize: "1.5rem",
-          fontWeight: "semibold",
+          alignment: 'center',
+          color: '#6b4f43',
+          fontSize: '1.5rem',
+          fontWeight: 'semibold',
         },
       },
       {
-        id: "paragraph",
-        name: "Parágrafo",
+        id: 'paragraph',
+        name: 'Parágrafo',
         icon: Type,
-        description: "Texto normal",
-        category: "content",
+        description: 'Texto normal',
+        category: 'content',
         defaultProps: {
-          text: "Este é um parágrafo de exemplo. Você pode editar este texto para incluir qualquer conteúdo que desejar.",
-          alignment: "left",
-          color: "#432818",
-          fontSize: "1rem",
-          lineHeight: "1.6",
+          text: 'Este é um parágrafo de exemplo. Você pode editar este texto para incluir qualquer conteúdo que desejar.',
+          alignment: 'left',
+          color: '#432818',
+          fontSize: '1rem',
+          lineHeight: '1.6',
         },
       },
       {
-        id: "image",
-        name: "Imagem",
+        id: 'image',
+        name: 'Imagem',
         icon: ImageIcon,
-        description: "Imagem responsiva",
-        category: "media",
+        description: 'Imagem responsiva',
+        category: 'media',
         defaultProps: {
-          src: "https://via.placeholder.com/400x300",
-          alt: "Imagem de exemplo",
-          width: "100%",
-          height: "auto",
-          borderRadius: "8px",
-          alignment: "center",
+          src: 'https://via.placeholder.com/400x300',
+          alt: 'Imagem de exemplo',
+          width: '100%',
+          height: 'auto',
+          borderRadius: '8px',
+          alignment: 'center',
         },
       },
       {
-        id: "button",
-        name: "Botão",
+        id: 'button',
+        name: 'Botão',
         icon: MousePointer,
-        description: "Botão de ação",
-        category: "form",
+        description: 'Botão de ação',
+        category: 'form',
         defaultProps: {
-          text: "Clique aqui",
-          type: "primary",
-          size: "medium",
-          width: "auto",
-          alignment: "center",
-          action: "next",
-          backgroundColor: "#b89b7a",
-          color: "#ffffff",
+          text: 'Clique aqui',
+          type: 'primary',
+          size: 'medium',
+          width: 'auto',
+          alignment: 'center',
+          action: 'next',
+          backgroundColor: '#b89b7a',
+          color: '#ffffff',
         },
       },
       {
-        id: "spacer",
-        name: "Espaçador",
+        id: 'spacer',
+        name: 'Espaçador',
         icon: Layout,
-        description: "Espaçamento vertical",
-        category: "layout",
+        description: 'Espaçamento vertical',
+        category: 'layout',
         defaultProps: {
-          height: "2rem",
-          backgroundColor: "transparent",
+          height: '2rem',
+          backgroundColor: 'transparent',
         },
       },
     ],
   },
   interactive: {
-    title: "🎯 INTERATIVOS",
-    color: "green",
+    title: '🎯 INTERATIVOS',
+    color: 'green',
     components: [
       // Blocos críticos do quiz
       {
-        id: "quiz-question-interactive",
-        name: "Questão Interativa",
+        id: 'quiz-question-interactive',
+        name: 'Questão Interativa',
         icon: HelpCircle,
-        description: "Pergunta do quiz com opções interativas",
-        category: "quiz",
+        description: 'Pergunta do quiz com opções interativas',
+        category: 'quiz',
         defaultProps: {
-          question: "Qual dessas opções representa melhor seu estilo?",
+          question: 'Qual dessas opções representa melhor seu estilo?',
           questionNumber: 1,
           totalQuestions: 10,
           options: [
-            { id: "opt1", text: "Opção 1", value: "option1" },
-            { id: "opt2", text: "Opção 2", value: "option2" },
+            { id: 'opt1', text: 'Opção 1', value: 'option1' },
+            { id: 'opt2', text: 'Opção 2', value: 'option2' },
           ],
           allowMultiple: false,
           showImages: true,
@@ -191,11 +191,11 @@ const COMPONENT_CATEGORIES = {
         },
       },
       {
-        id: "quiz-result-calculated",
-        name: "Resultado Calculado",
+        id: 'quiz-result-calculated',
+        name: 'Resultado Calculado',
         icon: Star,
-        description: "Exibe o resultado calculado do quiz",
-        category: "quiz",
+        description: 'Exibe o resultado calculado do quiz',
+        category: 'quiz',
         defaultProps: {
           showPercentages: true,
           showSecondaryStyles: true,
@@ -203,91 +203,91 @@ const COMPONENT_CATEGORIES = {
         },
       },
       {
-        id: "progress-bar-modern",
-        name: "Barra de Progresso",
+        id: 'progress-bar-modern',
+        name: 'Barra de Progresso',
         icon: BarChart3,
-        description: "Barra de progresso moderna",
-        category: "layout",
+        description: 'Barra de progresso moderna',
+        category: 'layout',
         defaultProps: {
           percentage: 65,
           showLabel: true,
           showPercentage: true,
-          color: "#3b82f6",
-          backgroundColor: "#e5e7eb",
-          height: "md",
+          color: '#3b82f6',
+          backgroundColor: '#e5e7eb',
+          height: 'md',
           animated: true,
-          style: "modern",
+          style: 'modern',
         },
       },
       {
-        id: "progress",
-        name: "Barra de Progresso",
+        id: 'progress',
+        name: 'Barra de Progresso',
         icon: BarChart3,
-        description: "Indicador de progresso",
-        category: "layout",
+        description: 'Indicador de progresso',
+        category: 'layout',
         defaultProps: {
           value: 50,
           max: 100,
           showPercentage: true,
-          color: "#b89b7a",
-          backgroundColor: "#e5e7eb",
-          height: "8px",
+          color: '#b89b7a',
+          backgroundColor: '#e5e7eb',
+          height: '8px',
         },
       },
       {
-        id: "input",
-        name: "Campo de Entrada",
+        id: 'input',
+        name: 'Campo de Entrada',
         icon: Mail,
-        description: "Campo de texto",
-        category: "form",
+        description: 'Campo de texto',
+        category: 'form',
         defaultProps: {
-          label: "Seu nome",
-          placeholder: "Digite seu nome",
-          type: "text",
+          label: 'Seu nome',
+          placeholder: 'Digite seu nome',
+          type: 'text',
           required: true,
-          width: "100%",
+          width: '100%',
         },
       },
       {
-        id: "email",
-        name: "Campo de Email",
+        id: 'email',
+        name: 'Campo de Email',
         icon: Mail,
-        description: "Campo específico para email",
-        category: "form",
+        description: 'Campo específico para email',
+        category: 'form',
         defaultProps: {
-          label: "Seu email",
-          placeholder: "seu@email.com",
-          type: "email",
+          label: 'Seu email',
+          placeholder: 'seu@email.com',
+          type: 'email',
           required: true,
-          width: "100%",
+          width: '100%',
         },
       },
       {
-        id: "phone",
-        name: "Campo de Telefone",
+        id: 'phone',
+        name: 'Campo de Telefone',
         icon: Phone,
-        description: "Campo para número de telefone",
-        category: "form",
+        description: 'Campo para número de telefone',
+        category: 'form',
         defaultProps: {
-          label: "Seu telefone",
-          placeholder: "(11) 99999-9999",
-          type: "tel",
+          label: 'Seu telefone',
+          placeholder: '(11) 99999-9999',
+          type: 'tel',
           required: false,
-          width: "100%",
+          width: '100%',
         },
       },
       {
-        id: "quiz-options",
-        name: "Opções do Quiz",
+        id: 'quiz-options',
+        name: 'Opções do Quiz',
         icon: Layout,
-        description: "Lista de opções para escolha",
-        category: "form",
+        description: 'Lista de opções para escolha',
+        category: 'form',
         defaultProps: {
-          question: "Qual das opções abaixo mais combina com você?",
+          question: 'Qual das opções abaixo mais combina com você?',
           options: [
-            { id: "1", text: "Opção 1", value: "opcao1" },
-            { id: "2", text: "Opção 2", value: "opcao2" },
-            { id: "3", text: "Opção 3", value: "opcao3" },
+            { id: '1', text: 'Opção 1', value: 'opcao1' },
+            { id: '2', text: 'Opção 2', value: 'opcao2' },
+            { id: '3', text: 'Opção 3', value: 'opcao3' },
           ],
           multiSelect: false,
           hasImages: false,
@@ -297,61 +297,61 @@ const COMPONENT_CATEGORIES = {
     ],
   },
   sales: {
-    title: "💰 VENDAS",
-    color: "stone",
+    title: '💰 VENDAS',
+    color: 'stone',
     components: [
       {
-        id: "video",
-        name: "Vídeo",
+        id: 'video',
+        name: 'Vídeo',
         icon: Video,
-        description: "Player de vídeo",
-        category: "media",
+        description: 'Player de vídeo',
+        category: 'media',
         defaultProps: {
-          src: "",
-          poster: "",
+          src: '',
+          poster: '',
           autoplay: false,
           controls: true,
-          width: "100%",
-          aspectRatio: "16/9",
+          width: '100%',
+          aspectRatio: '16/9',
         },
       },
       {
-        id: "testimonial",
-        name: "Depoimento",
+        id: 'testimonial',
+        name: 'Depoimento',
         icon: Star,
-        description: "Depoimento de cliente",
-        category: "content",
+        description: 'Depoimento de cliente',
+        category: 'content',
         defaultProps: {
-          text: "Este produto mudou minha vida! Recomendo para todos.",
-          author: "Maria Silva",
-          role: "Cliente satisfeita",
-          avatar: "https://via.placeholder.com/64x64",
+          text: 'Este produto mudou minha vida! Recomendo para todos.',
+          author: 'Maria Silva',
+          role: 'Cliente satisfeita',
+          avatar: 'https://via.placeholder.com/64x64',
           rating: 5,
         },
       },
       {
-        id: "price",
-        name: "Preço",
+        id: 'price',
+        name: 'Preço',
         icon: DollarSign,
-        description: "Exibição de preço",
-        category: "content",
+        description: 'Exibição de preço',
+        category: 'content',
         defaultProps: {
-          price: "97",
-          originalPrice: "197",
-          currency: "R$",
-          installments: "12x de R$ 9,70",
-          discount: "50% OFF",
-          alignment: "center",
+          price: '97',
+          originalPrice: '197',
+          currency: 'R$',
+          installments: '12x de R$ 9,70',
+          discount: '50% OFF',
+          alignment: 'center',
         },
       },
       {
-        id: "countdown",
-        name: "Countdown",
+        id: 'countdown',
+        name: 'Countdown',
         icon: Clock,
-        description: "Timer de urgência",
-        category: "content",
+        description: 'Timer de urgência',
+        category: 'content',
         defaultProps: {
-          title: "Oferta por tempo limitado!",
+          title: 'Oferta por tempo limitado!',
           endTime: Date.now() + 24 * 60 * 60 * 1000, // 24 horas
           showDays: true,
           showHours: true,
@@ -360,64 +360,64 @@ const COMPONENT_CATEGORIES = {
         },
       },
       {
-        id: "guarantee",
-        name: "Garantia",
+        id: 'guarantee',
+        name: 'Garantia',
         icon: Shield,
-        description: "Selo de garantia",
-        category: "content",
+        description: 'Selo de garantia',
+        category: 'content',
         defaultProps: {
-          title: "Garantia de 30 dias",
-          description: "Se não ficar satisfeito, devolvemos 100% do seu dinheiro.",
-          icon: "shield",
-          color: "#059669",
+          title: 'Garantia de 30 dias',
+          description: 'Se não ficar satisfeito, devolvemos 100% do seu dinheiro.',
+          icon: 'shield',
+          color: '#059669',
         },
       },
       {
-        id: "bonus",
-        name: "Bônus",
+        id: 'bonus',
+        name: 'Bônus',
         icon: Gift,
-        description: "Lista de bônus",
-        category: "content",
+        description: 'Lista de bônus',
+        category: 'content',
         defaultProps: {
-          title: "Bônus Exclusivos",
+          title: 'Bônus Exclusivos',
           items: [
-            { name: "E-book Gratuito", value: "R$ 47" },
-            { name: "Consultoria Grátis", value: "R$ 197" },
-            { name: "Acesso VIP", value: "R$ 97" },
+            { name: 'E-book Gratuito', value: 'R$ 47' },
+            { name: 'Consultoria Grátis', value: 'R$ 197' },
+            { name: 'Acesso VIP', value: 'R$ 97' },
           ],
         },
       },
       {
-        id: "faq",
-        name: "FAQ",
+        id: 'faq',
+        name: 'FAQ',
         icon: HelpCircle,
-        description: "Perguntas frequentes",
-        category: "content",
+        description: 'Perguntas frequentes',
+        category: 'content',
         defaultProps: {
-          title: "Perguntas Frequentes",
+          title: 'Perguntas Frequentes',
           items: [
             {
-              question: "Como funciona o produto?",
-              answer: "O produto funciona de forma simples e intuitiva...",
+              question: 'Como funciona o produto?',
+              answer: 'O produto funciona de forma simples e intuitiva...',
             },
             {
-              question: "Qual a garantia?",
-              answer: "Oferecemos 30 dias de garantia incondicional.",
+              question: 'Qual a garantia?',
+              answer: 'Oferecemos 30 dias de garantia incondicional.',
             },
           ],
         },
       },
       {
-        id: "social-proof",
-        name: "Prova Social",
+        id: 'social-proof',
+        name: 'Prova Social',
         icon: Users,
-        description: "Contador de vendas",
-        category: "content",
+        description: 'Contador de vendas',
+        category: 'content',
         defaultProps: {
-          customerCount: "5.000",
-          rating: "4.9",
-          reviewCount: "1.247",
-          text: "Mais de {customerCount} clientes satisfeitos",
+          customerCount: '5.000',
+          rating: '4.9',
+          reviewCount: '1.247',
+          text: 'Mais de {customerCount} clientes satisfeitos',
         },
       },
     ],
@@ -430,19 +430,19 @@ interface ComponentListProps {
 }
 
 const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, selectedComponent }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const handleComponentDragStart = (e: React.DragEvent, component: EditorComponent) => {
-    e.dataTransfer.setData("component", JSON.stringify(component));
-    e.dataTransfer.effectAllowed = "copy";
+    e.dataTransfer.setData('component', JSON.stringify(component));
+    e.dataTransfer.effectAllowed = 'copy';
   };
 
   const handleComponentClick = (component: EditorComponent) => {
     // Create a new component instance
     const newComponent: SimpleComponent = {
       id: `${component.id}_${Date.now()}`,
-      type: component.id as SimpleComponent["type"],
+      type: component.id as SimpleComponent['type'],
       data: { ...component.defaultProps },
       style: {},
     };
@@ -470,7 +470,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
           placeholder="Buscar componentes..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          style={{ boxShadow: "0 0 0 3px rgba(184, 155, 122, 0.5)" }}
+          style={{ boxShadow: '0 0 0 3px rgba(184, 155, 122, 0.5)' }}
         />
       </div>
 
@@ -498,7 +498,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
                   return (
                     <div
                       key={component.id}
-                      className={`${styles.componentItem} ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+                      className={`${styles.componentItem} ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
                       draggable
                       onDragStart={e => handleComponentDragStart(e, component)}
                       onClick={() => handleComponentClick(component)}
@@ -516,7 +516,7 @@ const ComponentList: React.FC<ComponentListProps> = ({ onComponentSelect, select
           ))}
 
           {filteredCategories.length === 0 && (
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               <Layout className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>Nenhum componente encontrado</p>
               <p className="text-sm">Tente buscar por outros termos</p>

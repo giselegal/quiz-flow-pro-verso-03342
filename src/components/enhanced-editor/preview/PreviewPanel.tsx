@@ -1,17 +1,17 @@
-import { Block } from "@/types/editor";
-import { cn } from "@/lib/utils";
-import { StyleResult } from "@/types/quiz";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { BlockPreviewRenderer } from "./BlockPreviewRenderer";
-import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { Block } from '@/types/editor';
+import { cn } from '@/lib/utils';
+import { StyleResult } from '@/types/quiz';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { BlockPreviewRenderer } from './BlockPreviewRenderer';
+import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 interface PreviewPanelProps {
   blocks: Block[];
   selectedBlockId: string | null;
   onSelectBlock: (id: string) => void;
   isPreviewing: boolean;
-  viewportSize: "sm" | "md" | "lg" | "xl";
+  viewportSize: 'sm' | 'md' | 'lg' | 'xl';
   primaryStyle?: StyleResult;
   onReorderBlocks: (sourceIndex: number, destinationIndex: number) => void;
 }
@@ -49,12 +49,12 @@ export function PreviewPanel({
         <div className="h-full flex justify-center">
           <div
             className={cn(
-              "bg-white rounded-md shadow overflow-hidden transition-all duration-200 h-full",
-              isPreviewing ? "shadow-md" : "shadow-sm"
+              'bg-white rounded-md shadow overflow-hidden transition-all duration-200 h-full',
+              isPreviewing ? 'shadow-md' : 'shadow-sm'
             )}
             style={{
               width: `${viewportWidths[viewportSize]}px`,
-              maxWidth: "100%",
+              maxWidth: '100%',
             }}
           >
             <ScrollArea className="h-full">

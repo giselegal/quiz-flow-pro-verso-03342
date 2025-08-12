@@ -1,25 +1,25 @@
 // Importar templates das 21 etapas
-import step01Template from "./step-01.json";
-import step02Template from "./step-02.json";
-import step03Template from "./step-03.json";
-import step04Template from "./step-04.json";
-import step05Template from "./step-05.json";
-import step06Template from "./step-06.json";
-import step07Template from "./step-07.json";
-import step08Template from "./step-08.json";
-import step09Template from "./step-09.json";
-import step10Template from "./step-10.json";
-import step11Template from "./step-11.json";
-import step12Template from "./step-12.json";
-import step13Template from "./step-13.json";
-import step14Template from "./step-14.json";
-import step15Template from "./step-15.json";
-import step16Template from "./step-16.json";
-import step17Template from "./step-17.json";
-import step18Template from "./step-18.json";
-import step19Template from "./step-19.json";
-import step20Template from "./step-20.json";
-import step21Template from "./step-21.json";
+import step01Template from './step-01.json';
+import step02Template from './step-02.json';
+import step03Template from './step-03.json';
+import step04Template from './step-04.json';
+import step05Template from './step-05.json';
+import step06Template from './step-06.json';
+import step07Template from './step-07.json';
+import step08Template from './step-08.json';
+import step09Template from './step-09.json';
+import step10Template from './step-10.json';
+import step11Template from './step-11.json';
+import step12Template from './step-12.json';
+import step13Template from './step-13.json';
+import step14Template from './step-14.json';
+import step15Template from './step-15.json';
+import step16Template from './step-16.json';
+import step17Template from './step-17.json';
+import step18Template from './step-18.json';
+import step19Template from './step-19.json';
+import step20Template from './step-20.json';
+import step21Template from './step-21.json';
 
 // Mapear templates das 21 etapas
 export const STEP_TEMPLATES = {

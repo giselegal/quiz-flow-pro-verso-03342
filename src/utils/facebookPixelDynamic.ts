@@ -1,5 +1,5 @@
 // Facebook Pixel utility functions for A/B test
-import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from "../services/pixelManager";
+import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from '../services/pixelManager';
 
 /**
  * Initialize Facebook Pixel with the provided ID
@@ -9,7 +9,7 @@ import { getPixelId, getCurrentFunnelConfig, trackFunnelEvent } from "../service
 export const initFacebookPixel = (pixelId: string): boolean => {
   try {
     if (!pixelId) {
-      console.warn("Facebook Pixel ID not provided");
+      console.warn('Facebook Pixel ID not provided');
       return false;
     }
 
@@ -21,14 +21,14 @@ export const initFacebookPixel = (pixelId: string): boolean => {
       };
       window._fbq = window.fbq;
       (window.fbq as any).loaded = true;
-      (window.fbq as any).version = "2.0";
+      (window.fbq as any).version = '2.0';
     }
 
-    window.fbq("init", pixelId);
+    window.fbq('init', pixelId);
     console.log(`Facebook Pixel initialized with ID: ${pixelId}`);
     return true;
   } catch (error) {
-    console.error("Error initializing Facebook Pixel:", error);
+    console.error('Error initializing Facebook Pixel:', error);
     return false;
   }
 };
@@ -40,18 +40,18 @@ export const initFacebookPixel = (pixelId: string): boolean => {
  */
 export const trackPixelEvent = (eventName: string, params?: Record<string, unknown>): void => {
   try {
-    if (typeof window === "undefined" || !window.fbq) {
-      console.warn("Facebook Pixel not initialized");
+    if (typeof window === 'undefined' || !window.fbq) {
+      console.warn('Facebook Pixel not initialized');
       return;
     }
 
     if (params) {
-      window.fbq("track", eventName, params);
+      window.fbq('track', eventName, params);
     } else {
-      window.fbq("track", eventName);
+      window.fbq('track', eventName);
     }
 
-    console.log(`Tracked Facebook Pixel event: ${eventName}`, params || "");
+    console.log(`Tracked Facebook Pixel event: ${eventName}`, params || '');
   } catch (error) {
     console.error(`Error tracking Facebook Pixel event ${eventName}:`, error);
   }
@@ -71,16 +71,16 @@ export const loadFacebookPixelDynamic = (): void => {
       console.log(`Loaded Facebook Pixel for funnel: ${funnelConfig.funnelName} (${pixelId})`);
 
       // Dispara evento de inicialização específico do funil
-      trackFunnelEvent("PixelInitialized", {
+      trackFunnelEvent('PixelInitialized', {
         pixel_id: pixelId,
         funnel_type: funnelConfig.funnelName,
         page_url: window.location.href,
       });
     } else {
-      console.warn("No Facebook Pixel ID found for current route");
+      console.warn('No Facebook Pixel ID found for current route');
     }
   } catch (error) {
-    console.error("Error loading Facebook Pixel:", error);
+    console.error('Error loading Facebook Pixel:', error);
   }
 };
 

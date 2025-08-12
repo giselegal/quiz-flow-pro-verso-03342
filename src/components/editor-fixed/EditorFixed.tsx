@@ -1,6 +1,6 @@
-import { useEditor as useEditorContext } from "@/context/EditorContext";
-import type { Block, FunnelStage } from "@/types/editor";
-import React, { createContext, ReactNode, useContext } from "react";
+import { useEditor as useEditorContext } from '@/context/EditorContext';
+import type { Block, FunnelStage } from '@/types/editor';
+import React, { createContext, ReactNode, useContext } from 'react';
 
 /**
  * 🏗️ COMPOUND COMPONENTS PATTERN - EditorFixed
@@ -14,9 +14,9 @@ import React, { createContext, ReactNode, useContext } from "react";
 // =============================================
 
 export interface EditorFixedConfig {
-  theme?: "light" | "dark" | "auto";
-  layout?: "four-column" | "three-column" | "responsive";
-  viewport?: "sm" | "md" | "lg" | "xl";
+  theme?: 'light' | 'dark' | 'auto';
+  layout?: 'four-column' | 'three-column' | 'responsive';
+  viewport?: 'sm' | 'md' | 'lg' | 'xl';
   features?: {
     dragDrop?: boolean;
     properties?: boolean;
@@ -39,7 +39,7 @@ const EditorFixedContext = createContext<EditorFixedContextValue | null>(null);
 export const useEditorFixed = () => {
   const context = useContext(EditorFixedContext);
   if (!context) {
-    throw new Error("useEditorFixed must be used within EditorFixed.Provider");
+    throw new Error('useEditorFixed must be used within EditorFixed.Provider');
   }
   return context;
 };
@@ -56,13 +56,13 @@ export interface EditorRootProps {
 
 const EditorRoot: React.FC<EditorRootProps> = ({
   children,
-  className = "",
+  className = '',
   config: initialConfig = {},
 }) => {
   const [config, setConfig] = React.useState<EditorFixedConfig>({
-    theme: "light",
-    layout: "four-column",
-    viewport: "xl",
+    theme: 'light',
+    layout: 'four-column',
+    viewport: 'xl',
     features: {
       dragDrop: true,
       properties: true,
@@ -92,8 +92,8 @@ const EditorRoot: React.FC<EditorRootProps> = ({
   );
 
   const rootClassName = React.useMemo(() => {
-    const baseClasses = "editor-fixed-root min-h-screen bg-background";
-    const themeClasses = config.theme === "dark" ? "dark" : "";
+    const baseClasses = 'editor-fixed-root min-h-screen bg-background';
+    const themeClasses = config.theme === 'dark' ? 'dark' : '';
     const layoutClasses = `layout-${config.layout}`;
 
     return `${baseClasses} ${themeClasses} ${layoutClasses} ${className}`.trim();
@@ -117,7 +117,7 @@ export interface EditorCanvasProps {
   children?: ReactNode | ((canvas: any) => ReactNode);
 }
 
-const EditorCanvas: React.FC<EditorCanvasProps> = ({ className = "", children }) => {
+const EditorCanvas: React.FC<EditorCanvasProps> = ({ className = '', children }) => {
   const { config } = useEditorFixed();
   const editor = useEditorContext();
 
@@ -139,7 +139,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({ className = "", children })
   );
 
   const canvasClassName = React.useMemo(() => {
-    const baseClasses = "editor-canvas flex-1 relative";
+    const baseClasses = 'editor-canvas flex-1 relative';
     const viewportClasses = `viewport-${config.viewport}`;
 
     return `${baseClasses} ${viewportClasses} ${className}`.trim();
@@ -147,7 +147,7 @@ const EditorCanvas: React.FC<EditorCanvasProps> = ({ className = "", children })
 
   return (
     <div className={canvasClassName}>
-      {typeof children === "function" ? children(canvasAPI) : children}
+      {typeof children === 'function' ? children(canvasAPI) : children}
     </div>
   );
 };
@@ -161,7 +161,7 @@ export interface EditorPropertiesProps {
   children?: ReactNode | ((properties: any) => ReactNode);
 }
 
-const EditorProperties: React.FC<EditorPropertiesProps> = ({ className = "", children }) => {
+const EditorProperties: React.FC<EditorPropertiesProps> = ({ className = '', children }) => {
   const { config } = useEditorFixed();
   const editor = useEditorContext();
 
@@ -179,8 +179,8 @@ const EditorProperties: React.FC<EditorPropertiesProps> = ({ className = "", chi
   );
 
   const propertiesClassName = React.useMemo(() => {
-    const baseClasses = "editor-properties w-80 bg-card border-l";
-    const hiddenClasses = !config.features?.properties ? "hidden" : "";
+    const baseClasses = 'editor-properties w-80 bg-card border-l';
+    const hiddenClasses = !config.features?.properties ? 'hidden' : '';
 
     return `${baseClasses} ${hiddenClasses} ${className}`.trim();
   }, [config.features?.properties, className]);
@@ -189,7 +189,7 @@ const EditorProperties: React.FC<EditorPropertiesProps> = ({ className = "", chi
 
   return (
     <div className={propertiesClassName}>
-      {typeof children === "function" ? children(propertiesAPI) : children}
+      {typeof children === 'function' ? children(propertiesAPI) : children}
     </div>
   );
 };
@@ -203,15 +203,15 @@ export interface EditorSidebarProps {
   children?: ReactNode | ((sidebar: any) => ReactNode);
 }
 
-const EditorSidebar: React.FC<EditorSidebarProps> = ({ className = "", children }) => {
+const EditorSidebar: React.FC<EditorSidebarProps> = ({ className = '', children }) => {
   const editor = useEditorContext();
 
   // Sidebar-specific logic - Create mock stages since they don't exist in computed
   const mockStages: FunnelStage[] = React.useMemo(
     () => [
-      { id: "stage-1", name: "Intro", order: 1, type: "intro" },
-      { id: "stage-2", name: "Questions", order: 2, type: "question" },
-      { id: "stage-3", name: "Result", order: 3, type: "result" },
+      { id: 'stage-1', name: 'Intro', order: 1, type: 'intro' },
+      { id: 'stage-2', name: 'Questions', order: 2, type: 'question' },
+      { id: 'stage-3', name: 'Result', order: 3, type: 'result' },
     ],
     []
   );
@@ -230,14 +230,14 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ className = "", children 
   );
 
   const sidebarClassName = React.useMemo(() => {
-    const baseClasses = "editor-sidebar w-64 bg-card border-r";
+    const baseClasses = 'editor-sidebar w-64 bg-card border-r';
 
     return `${baseClasses} ${className}`.trim();
   }, [className]);
 
   return (
     <div className={sidebarClassName}>
-      {typeof children === "function" ? children(sidebarAPI) : children}
+      {typeof children === 'function' ? children(sidebarAPI) : children}
     </div>
   );
 };
@@ -251,7 +251,7 @@ export interface EditorToolbarProps {
   children?: ReactNode | ((toolbar: any) => ReactNode);
 }
 
-const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = "", children }) => {
+const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = '', children }) => {
   const { config, updateConfig } = useEditorFixed();
   const editor = useEditorContext();
 
@@ -262,17 +262,17 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = "", children 
       viewport: config.viewport,
       actions: {
         togglePreview: () => editor.uiState.setIsPreviewing(!editor.uiState.isPreviewing),
-        setViewport: (viewport: EditorFixedConfig["viewport"]) => updateConfig({ viewport }),
-        save: () => console.log("💾 Saving..."),
-        export: () => console.log("📤 Exporting..."),
+        setViewport: (viewport: EditorFixedConfig['viewport']) => updateConfig({ viewport }),
+        save: () => console.log('💾 Saving...'),
+        export: () => console.log('📤 Exporting...'),
       },
     }),
     [editor, config, updateConfig]
   );
 
   const toolbarClassName = React.useMemo(() => {
-    const baseClasses = "editor-toolbar h-14 bg-card border-b flex items-center";
-    const hiddenClasses = !config.features?.toolbar ? "hidden" : "";
+    const baseClasses = 'editor-toolbar h-14 bg-card border-b flex items-center';
+    const hiddenClasses = !config.features?.toolbar ? 'hidden' : '';
 
     return `${baseClasses} ${hiddenClasses} ${className}`.trim();
   }, [config.features?.toolbar, className]);
@@ -281,7 +281,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ className = "", children 
 
   return (
     <div className={toolbarClassName}>
-      {typeof children === "function" ? children(toolbarAPI) : children}
+      {typeof children === 'function' ? children(toolbarAPI) : children}
     </div>
   );
 };
@@ -323,10 +323,10 @@ export const DefaultEditorFixed: React.FC<DefaultEditorFixedProps> = ({ config, 
                 <button
                   onClick={actions.togglePreview}
                   className={`px-3 py-1 rounded text-sm ${
-                    isPreviewing ? "bg-primary text-primary-foreground" : "bg-secondary"
+                    isPreviewing ? 'bg-primary text-primary-foreground' : 'bg-secondary'
                   }`}
                 >
-                  {isPreviewing ? "Edit" : "Preview"}
+                  {isPreviewing ? 'Edit' : 'Preview'}
                 </button>
                 <button
                   onClick={actions.save}
@@ -353,8 +353,8 @@ export const DefaultEditorFixed: React.FC<DefaultEditorFixedProps> = ({ config, 
                       onClick={() => actions.selectStage(stage.id)}
                       className={`w-full text-left p-2 rounded text-sm ${
                         stage.id === activeStageId
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-secondary"
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-secondary'
                       }`}
                     >
                       {stage.name}
@@ -371,13 +371,13 @@ export const DefaultEditorFixed: React.FC<DefaultEditorFixedProps> = ({ config, 
               <div className="flex-1 p-4">
                 <div
                   className={`mx-auto bg-white shadow-lg rounded-lg ${
-                    viewport === "sm"
-                      ? "max-w-sm"
-                      : viewport === "md"
-                        ? "max-w-md"
-                        : viewport === "lg"
-                          ? "max-w-4xl"
-                          : "max-w-6xl"
+                    viewport === 'sm'
+                      ? 'max-w-sm'
+                      : viewport === 'md'
+                        ? 'max-w-md'
+                        : viewport === 'lg'
+                          ? 'max-w-4xl'
+                          : 'max-w-6xl'
                   } min-h-[600px] p-6`}
                 >
                   {blocks.length === 0 ? (
@@ -391,8 +391,8 @@ export const DefaultEditorFixed: React.FC<DefaultEditorFixedProps> = ({ config, 
                         onClick={() => actions.selectBlock(block.id)}
                         className={`mb-4 p-3 border rounded cursor-pointer ${
                           selectedBlock?.id === block.id
-                            ? "border-primary bg-primary/5"
-                            : "border-border hover:border-primary/50"
+                            ? 'border-primary bg-primary/5'
+                            : 'border-border hover:border-primary/50'
                         }`}
                       >
                         Block: {block.type} ({block.id})

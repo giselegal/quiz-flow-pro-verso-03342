@@ -1,12 +1,13 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2 } from "lucide-react";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { GripVertical, Trash2 } from 'lucide-react';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -19,13 +20,13 @@ interface SortableBlockWrapperProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: number | string,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -76,7 +77,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     block.properties
   );
 
-  console.log("🔧 SortableBlockWrapper - processedProperties:", {
+  console.log('🔧 SortableBlockWrapper - processedProperties:', {
     blockId: block.id,
     blockType: block.type,
     originalProperties: block.properties,
@@ -90,7 +91,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     marginBottom = 0,
     marginLeft = 0,
     marginRight = 0,
-    containerBackgroundColor = "transparent",
+    containerBackgroundColor = 'transparent',
   } = block.properties || {};
 
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
@@ -99,7 +100,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
-      type: "canvas-block", // TIPO CRUCIAL que o DndProvider espera
+      type: 'canvas-block', // TIPO CRUCIAL que o DndProvider espera
       blockId: block.id,
       block: block,
     },
@@ -107,14 +108,14 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
 
   // Debug: verificar se o sortable está sendo configurado
   React.useEffect(() => {
-    console.log("🔧 SortableBlockWrapper configurado:", {
+    console.log('🔧 SortableBlockWrapper configurado:', {
       id: block.id,
       blockType: block.type,
       isDragging,
       containerClasses, // Agora integrado diretamente
       processedProperties,
       data: {
-        type: "canvas-block",
+        type: 'canvas-block',
         blockId: block.id,
       },
     });
@@ -124,7 +125,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 50 : "auto", // Z-index maior durante drag
+    zIndex: isDragging ? 50 : 'auto', // Z-index maior durante drag
     // 🎯 NÃO aplicar scale aqui para não afetar margens
   };
 
@@ -142,8 +143,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
     return (
       <div ref={setNodeRef} style={style} className="my-1">
         {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) */}
-        <Card style={{ borderColor: "#B89B7A" }}>
-          <div style={{ color: "#432818" }}>
+        <Card style={{ borderColor: '#B89B7A' }}>
+          <div style={{ color: '#432818' }}>
             <p>Componente não encontrado: {block.type}</p>
             <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
           </div>
@@ -157,24 +158,24 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
       {/* 🎯 Espaçamento FIXO de 4px (my-1 = 0.25rem = 4px) - SEMPRE IGUAL independente da escala */}
       <Card
         className={cn(
-          "relative group transition-all duration-200", // 🎯 Transição suave
+          'relative group transition-all duration-200', // 🎯 Transição suave
           // 🎯 Aplicar classes de container diretamente no Card
           containerClasses,
           // 🎯 Destaque visual quando selecionado
           isSelected &&
-            "ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg",
-          !isSelected && "border-stone-200 hover:border-stone-300",
+            'ring-2 ring-blue-500 ring-offset-1 border-blue-300 bg-blue-50/30 shadow-lg',
+          !isSelected && 'border-stone-200 hover:border-stone-300',
           // Margens universais com controles deslizantes
-          getMarginClass(marginTop, "top"),
-          getMarginClass(marginBottom, "bottom"),
-          getMarginClass(marginLeft, "left"),
-          getMarginClass(marginRight, "right")
+          getMarginClass(marginTop, 'top'),
+          getMarginClass(marginBottom, 'bottom'),
+          getMarginClass(marginLeft, 'left'),
+          getMarginClass(marginRight, 'right')
         )}
         style={{
           ...contentStyles, // 🎯 Aplicar estilos inline (scale) apenas no Card, não nas margens
           backgroundColor:
-            containerBackgroundColor === "transparent" ? "transparent" : containerBackgroundColor,
-          borderColor: isSelected ? "#3b82f6" : "#E5DDD5",
+            containerBackgroundColor === 'transparent' ? 'transparent' : containerBackgroundColor,
+          borderColor: isSelected ? '#3b82f6' : '#E5DDD5',
         }}
       >
         {/* Drag handle and controls - only show on hover */}
@@ -183,7 +184,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             variant="secondary"
             size="sm"
             className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
-            style={{ touchAction: "none" }} // Importante para dispositivos touch
+            style={{ touchAction: 'none' }} // Importante para dispositivos touch
             {...attributes}
             {...listeners}
           >
@@ -192,7 +193,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           <Button
             variant="secondary"
             size="sm"
-            style={{ color: "#432818" }}
+            style={{ color: '#432818' }}
             onClick={e => {
               e.stopPropagation();
               onDelete();

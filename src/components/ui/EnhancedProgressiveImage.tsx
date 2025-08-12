@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from "@/utils/imageUtils";
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { optimizeCloudinaryUrl, normalizeCloudinaryUrl } from '@/utils/imageUtils';
 
 interface EnhancedProgressiveImageProps {
   src: string;
@@ -9,8 +9,8 @@ interface EnhancedProgressiveImageProps {
   width?: number;
   height?: number;
   onLoad?: () => void;
-  loading?: "lazy" | "eager";
-  fetchpriority?: "high" | "low" | "auto";
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
   style?: React.CSSProperties;
   fallbackSrc?: string;
 }
@@ -18,12 +18,12 @@ interface EnhancedProgressiveImageProps {
 const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   src,
   alt,
-  className = "",
+  className = '',
   width,
   height,
   onLoad,
-  loading = "lazy",
-  fetchpriority = "auto",
+  loading = 'lazy',
+  fetchpriority = 'auto',
   style,
   fallbackSrc,
 }) => {
@@ -37,12 +37,12 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
   const normalizedSrc = normalizeCloudinaryUrl(src);
   const optimizedSrc = optimizeCloudinaryUrl(normalizedSrc, {
     quality: 85,
-    format: "auto",
+    format: 'auto',
   });
   const placeholderSrc = optimizeCloudinaryUrl(normalizedSrc, {
     quality: 25,
     width: 40,
-    format: "auto",
+    format: 'auto',
   });
 
   const handleLoad = () => {
@@ -103,7 +103,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
             src={placeholderSrc}
             alt=""
             className="w-full h-full object-cover blur-sm scale-110 transition-opacity duration-300"
-            style={{ filter: "blur(8px)" }}
+            style={{ filter: 'blur(8px)' }}
             aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-gray-100/50 to-gray-200/50 animate-pulse"></div>
@@ -125,7 +125,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
             onError={handleError}
             initial={{ opacity: 0 }}
             animate={{ opacity: loaded ? 1 : 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="w-full h-full object-cover"
           />
         ) : fallbackSrc ? (
@@ -159,7 +159,7 @@ const EnhancedProgressiveImage: React.FC<EnhancedProgressiveImageProps> = ({
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span style={{ color: "#8B7355" }}>Imagem não disponível</span>
+            <span style={{ color: '#8B7355' }}>Imagem não disponível</span>
             <span className="text-xs text-gray-400 mt-1">
               Tentativas: {retryCount}/{maxRetries}
             </span>

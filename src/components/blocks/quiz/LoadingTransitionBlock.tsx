@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Loader2, CheckCircle, Sparkles } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Loader2, CheckCircle, Sparkles } from 'lucide-react';
 
 /**
  * LoadingTransitionBlock - Componente de transição com loading (Etapa 19)
@@ -45,7 +45,7 @@ export interface LoadingTransitionBlockProps {
 
   // Visual
   showProgress?: boolean;
-  animationType?: "spinner" | "dots" | "pulse" | "sparkles";
+  animationType?: 'spinner' | 'dots' | 'pulse' | 'sparkles';
   backgroundColor?: string;
   textColor?: string;
   accentColor?: string;
@@ -56,31 +56,31 @@ export interface LoadingTransitionBlockProps {
   onProgress?: (progress: number) => void;
 }
 
-import { getMarginClass } from "@/utils/marginUtils";
-import { optimizedSetInterval, optimizedSetTimeout } from "@/utils/performanceOptimizations";
+import { getMarginClass } from '@/utils/marginUtils';
+import { optimizedSetInterval, optimizedSetTimeout } from '@/utils/performanceOptimizations';
 
 const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
-  blockId = "loading-transition-block",
-  className = "",
+  blockId = 'loading-transition-block',
+  className = '',
   style = {},
 
-  title = "Preparando seu resultado personalizado...",
+  title = 'Preparando seu resultado personalizado...',
   messages = [
-    "Analisando suas preferências de estilo...",
-    "Calculando compatibilidade com estilos...",
-    "Processando suas respostas...",
-    "Finalizando análise personalizada...",
+    'Analisando suas preferências de estilo...',
+    'Calculando compatibilidade com estilos...',
+    'Processando suas respostas...',
+    'Finalizando análise personalizada...',
   ],
-  completedMessage = "Análise concluída! ✨",
+  completedMessage = 'Análise concluída! ✨',
 
   duration = 3000,
   messageInterval = 800,
 
   showProgress = true,
-  animationType = "spinner",
-  backgroundColor = "#ffffff",
-  textColor = "#432818",
-  accentColor = "#B89B7A",
+  animationType = 'spinner',
+  backgroundColor = '#ffffff',
+  textColor = '#432818',
+  accentColor = '#B89B7A',
 
   autoAdvance = true,
   onComplete,
@@ -131,10 +131,10 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
 
   const renderAnimation = () => {
     switch (animationType) {
-      case "spinner":
+      case 'spinner':
         return <Loader2 className="w-12 h-12 animate-spin" style={{ color: accentColor }} />;
 
-      case "dots":
+      case 'dots':
         return (
           <div className="flex space-x-2">
             {[0, 1, 2].map(i => (
@@ -144,14 +144,14 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
                 style={{
                   backgroundColor: accentColor,
                   animationDelay: `${i * 0.2}s`,
-                  animationDuration: "1s",
+                  animationDuration: '1s',
                 }}
               />
             ))}
           </div>
         );
 
-      case "pulse":
+      case 'pulse':
         return (
           <div
             className="w-16 h-16 rounded-full animate-ping"
@@ -159,7 +159,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
           />
         );
 
-      case "sparkles":
+      case 'sparkles':
         return <Sparkles className="w-12 h-12 animate-pulse" style={{ color: accentColor }} />;
 
       default:
@@ -181,7 +181,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         {/* Ícone de sucesso quando completo */}
         {isCompleted ? (
           <div className="mb-8">
-            <CheckCircle className="w-16 h-16 mx-auto" style={{ color: "#10B981" }} />
+            <CheckCircle className="w-16 h-16 mx-auto" style={{ color: '#10B981' }} />
           </div>
         ) : (
           <div className="mb-8">{renderAnimation()}</div>
@@ -191,7 +191,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         <h2
           className="text-2xl md:text-3xl font-bold mb-6"
           style={{
-            fontFamily: "Playfair Display, serif",
+            fontFamily: 'Playfair Display, serif',
             color: textColor,
           }}
         >
@@ -200,7 +200,7 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
 
         {/* Mensagem atual */}
         {!isCompleted && messages.length > 0 && (
-          <p style={{ color: "#6B4F43" }} key={currentMessageIndex}>
+          <p style={{ color: '#6B4F43' }} key={currentMessageIndex}>
             {messages[currentMessageIndex]}
           </p>
         )}
@@ -208,23 +208,23 @@ const LoadingTransitionBlock: React.FC<LoadingTransitionBlockProps> = ({
         {/* Barra de progresso */}
         {showProgress && (
           <div className="mb-8">
-            <div style={{ backgroundColor: "#E5DDD5" }}>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
               <div
                 className="h-full rounded-full transition-all duration-100 ease-out"
                 style={{
                   backgroundColor: accentColor,
                   width: `${progress}%`,
-                  transform: `translateX(${progress < 100 ? "-2px" : "0"})`,
+                  transform: `translateX(${progress < 100 ? '-2px' : '0'})`,
                 }}
               />
             </div>
-            <p style={{ color: "#8B7355" }}>{Math.round(progress)}% concluído</p>
+            <p style={{ color: '#8B7355' }}>{Math.round(progress)}% concluído</p>
           </div>
         )}
 
         {/* Informação adicional */}
         {!isCompleted && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <p>⏱️ Isso levará apenas alguns segundos...</p>
           </div>
         )}

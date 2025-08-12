@@ -1,4 +1,4 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
 
 interface OfferHeaderProps {
   logoUrl: string;
@@ -22,13 +22,13 @@ export const OfferHeader: React.FC<OfferHeaderProps> = ({
   logoWidth,
   logoHeight,
   isSticky = true,
-  backgroundColor = "rgba(255, 255, 255, 0.9)",
+  backgroundColor = 'rgba(255, 255, 255, 0.9)',
   backdropBlur = true,
 }) => {
   const headerClasses = `
     py-4 px-6 border-b border-gray-100
-    ${isSticky ? "sticky top-0 z-50" : ""}
-    ${backdropBlur ? "backdrop-blur-sm" : ""}
+    ${isSticky ? 'sticky top-0 z-50' : ''}
+    ${backdropBlur ? 'backdrop-blur-sm' : ''}
   `.trim();
 
   const headerStyle = {

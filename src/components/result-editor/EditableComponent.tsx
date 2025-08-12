@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { StyleResult } from "@/types/quiz";
-import { Card } from "@/components/ui/card";
+import { StyleResult } from '@/types/quiz';
+import { Card } from '@/components/ui/card';
 
 interface EditableComponentProps {
   components: {
@@ -89,10 +89,10 @@ const EditableComponent: React.FC<EditableComponentProps> = ({ components, onUpd
           <Card className="p-6 bg-[#B89B7A]/10">
             <div className="text-center">
               <h2 className="text-2xl font-medium text-[#432818] mb-4">
-                {config.offer.hero.content.title || "Oferta Especial"}
+                {config.offer.hero.content.title || 'Oferta Especial'}
               </h2>
               <p className="text-lg text-[#1A1818]/80 mb-6">
-                {config.offer.hero.content.subtitle || "Descubra mais sobre seu estilo"}
+                {config.offer.hero.content.subtitle || 'Descubra mais sobre seu estilo'}
               </p>
               <button className="bg-[#B89B7A] text-white px-8 py-3 rounded-lg hover:bg-[#A38A69] transition-colors">
                 Saiba Mais

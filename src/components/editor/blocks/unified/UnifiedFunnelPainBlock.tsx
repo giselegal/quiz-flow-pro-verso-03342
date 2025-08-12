@@ -1,5 +1,5 @@
 // @ts-nocheck
-import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
+import FunnelPainSection from '@/components/funnel/base/FunnelPainSection';
 
 // Interface local para máxima independência
 interface Block {
@@ -26,11 +26,11 @@ interface BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -78,45 +78,45 @@ const UnifiedFunnelPainBlock: React.FC<BlockComponentProps> = ({
   // Pain points padrão para máxima reutilização
   const defaultPainPoints = [
     {
-      title: "Problema de Autoestima",
-      description: "Você se sente insegura e não sabe como melhorar",
-      icon: "Heart",
+      title: 'Problema de Autoestima',
+      description: 'Você se sente insegura e não sabe como melhorar',
+      icon: 'Heart',
     },
     {
-      title: "Decisões Erradas",
-      description: "Gasta dinheiro em coisas que não funcionam para você",
-      icon: "ShoppingBag",
+      title: 'Decisões Erradas',
+      description: 'Gasta dinheiro em coisas que não funcionam para você',
+      icon: 'ShoppingBag',
     },
     {
-      title: "Perda de Tempo",
-      description: "Demora horas para conseguir resultados satisfatórios",
-      icon: "Clock",
+      title: 'Perda de Tempo',
+      description: 'Demora horas para conseguir resultados satisfatórios',
+      icon: 'Clock',
     },
     {
-      title: "Falta de Direção",
-      description: "Não sabe qual caminho seguir para alcançar seus objetivos",
-      icon: "Users",
+      title: 'Falta de Direção',
+      description: 'Não sabe qual caminho seguir para alcançar seus objetivos',
+      icon: 'Users',
     },
   ];
 
   const props = {
-    title: block.properties.title || "Você Reconhece Esses Problemas?",
-    subtitle: block.properties.subtitle || "Não se preocupe, você não está sozinho(a).",
+    title: block.properties.title || 'Você Reconhece Esses Problemas?',
+    subtitle: block.properties.subtitle || 'Não se preocupe, você não está sozinho(a).',
     description: block.properties.description,
     conclusion:
       block.properties.conclusion ||
-      "A solução está em encontrar o método certo que funciona para você.",
+      'A solução está em encontrar o método certo que funciona para você.',
     painPoints: block.properties.painPoints || defaultPainPoints,
-    backgroundColor: block.properties.backgroundColor || "#ffffff",
-    textColor: block.properties.textColor || "#432818",
-    primaryColor: block.properties.primaryColor || "#B89B7A",
-    cardBorderColor: block.properties.cardBorderColor || "rgba(184, 155, 122, 0.2)",
+    backgroundColor: block.properties.backgroundColor || '#ffffff',
+    textColor: block.properties.textColor || '#432818',
+    primaryColor: block.properties.primaryColor || '#B89B7A',
+    cardBorderColor: block.properties.cardBorderColor || 'rgba(184, 155, 122, 0.2)',
     columns: (parseInt(block.properties.columns) || 4) as 1 | 2 | 3 | 4,
 
     // Props específicas do editor
     isSelected,
     onClick: () => onBlockSelect(block.id),
-    className: isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : "",
+    className: isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-2' : '',
   };
 
   return (

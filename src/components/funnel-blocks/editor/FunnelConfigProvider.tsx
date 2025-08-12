@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import type { FunnelConfig, FunnelStepConfig } from "@/types/funnel";
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import type { FunnelConfig, FunnelStepConfig } from '@/types/funnel';
 
 // Contexto para configuração do funil
 interface FunnelConfigContextType {
@@ -22,11 +22,11 @@ interface FunnelConfigContextType {
 const defaultConfig: FunnelConfig = {
   steps: [],
   theme: {
-    primaryColor: "#B89B7A",
-    secondaryColor: "#403C34",
-    backgroundColor: "#FFFFFF",
-    textColor: "#333333",
-    fontFamily: "Inter, sans-serif",
+    primaryColor: '#B89B7A',
+    secondaryColor: '#403C34',
+    backgroundColor: '#FFFFFF',
+    textColor: '#333333',
+    fontFamily: 'Inter, sans-serif',
   },
   settings: {
     showProgressBar: true,

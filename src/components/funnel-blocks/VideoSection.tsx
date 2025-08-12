@@ -1,8 +1,9 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Star, Play, Pause, Volume2, VolumeX } from "lucide-react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { DeviceView, StyleProps } from "./types";
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Star, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import { DeviceView, StyleProps } from './types';
 
 interface VideoSectionProps extends StyleProps {
   /** Título da seção */
@@ -14,7 +15,7 @@ interface VideoSectionProps extends StyleProps {
   /** URL do thumbnail/poster */
   thumbnailUrl?: string;
   /** Tipo de vídeo */
-  videoType?: "youtube" | "vimeo" | "mp4" | "embedded";
+  videoType?: 'youtube' | 'vimeo' | 'mp4' | 'embedded';
   /** Autoplay */
   autoPlay?: boolean;
   /** Controles customizados */
@@ -52,17 +53,17 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   subtitle,
   videoUrl,
   thumbnailUrl,
-  videoType = "mp4",
+  videoType = 'mp4',
   autoPlay = false,
   customControls = true,
   showDuration = true,
   duration,
   animationConfig = {},
-  deviceView = "desktop",
+  deviceView = 'desktop',
   onVideoStart,
   onVideoEnd,
   onAction,
-  actionText = "Assistir Agora",
+  actionText = 'Assistir Agora',
   showAction = true,
   className,
   style,
@@ -78,12 +79,12 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
     duration: animationDuration = 400,
     delay = 0,
   } = animationConfig;
-  const isLowPerformance = deviceView === "mobile";
+  const isLowPerformance = deviceView === 'mobile';
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handlePlayPause = () => {
@@ -110,21 +111,21 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   };
 
   const getEmbedUrl = () => {
-    if (videoType === "youtube") {
-      const videoId = videoUrl.includes("watch?v=")
-        ? videoUrl.split("watch?v=")[1]?.split("&")[0]
-        : videoUrl.split("/").pop();
+    if (videoType === 'youtube') {
+      const videoId = videoUrl.includes('watch?v=')
+        ? videoUrl.split('watch?v=')[1]?.split('&')[0]
+        : videoUrl.split('/').pop();
       return `https://www.youtube.com/embed/${videoId}?autoplay=${autoPlay ? 1 : 0}&rel=0`;
     }
-    if (videoType === "vimeo") {
-      const videoId = videoUrl.split("/").pop();
+    if (videoType === 'vimeo') {
+      const videoId = videoUrl.split('/').pop();
       return `https://player.vimeo.com/video/${videoId}?autoplay=${autoPlay ? 1 : 0}`;
     }
     return videoUrl;
   };
 
   const renderVideoPlayer = () => {
-    if (videoType === "youtube" || videoType === "vimeo" || videoType === "embedded") {
+    if (videoType === 'youtube' || videoType === 'vimeo' || videoType === 'embedded') {
       return (
         <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
           <iframe
@@ -216,7 +217,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   };
 
   return (
-    <div className={`py-12 ${className || ""}`} style={style}>
+    <div className={`py-12 ${className || ''}`} style={style}>
       {customStyles && <style dangerouslySetInnerHTML={{ __html: customStyles }} />}
 
       {/* Header */}
@@ -235,7 +236,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
       {/* Video */}
       <div className="max-w-full mx-auto">
         <AnimatedWrapper
-          animation={animationsDisabled || isLowPerformance ? "none" : "fade"}
+          animation={animationsDisabled || isLowPerformance ? 'none' : 'fade'}
           show={true}
           duration={animationDuration}
           delay={delay}

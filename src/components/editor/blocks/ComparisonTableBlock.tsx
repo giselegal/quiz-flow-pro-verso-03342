@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Check, X } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Check, X } from 'lucide-react';
 
 interface ComparisonTableBlockProps {
   title?: string;
@@ -10,11 +10,11 @@ interface ComparisonTableBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,28 +54,28 @@ const getMarginClass = (value, type) => {
 };
 
 const ComparisonTableBlock: React.FC<ComparisonTableBlockProps> = ({
-  title = "O Guia de Estilo e Imagem + Bônus Exclusivos",
+  title = 'O Guia de Estilo e Imagem + Bônus Exclusivos',
   showBenefits = true,
   className,
 }) => {
   // Dados reais da página de resultado
   const benefits = [
-    "Looks com intenção e identidade",
-    "Cores, modelagens e tecidos a seu favor",
-    "Imagem alinhada aos seus objetivos",
-    "Guarda-roupa funcional, sem compras por impulso",
+    'Looks com intenção e identidade',
+    'Cores, modelagens e tecidos a seu favor',
+    'Imagem alinhada aos seus objetivos',
+    'Guarda-roupa funcional, sem compras por impulso',
   ];
 
   return (
     <div
       className={cn(
-        "bg-gradient-to-r from-[#fff7f3] to-[#f9f4ef] p-6 rounded-lg mb-6 border border-[#B89B7A]/10 glass-panel",
+        'bg-gradient-to-r from-[#fff7f3] to-[#f9f4ef] p-6 rounded-lg mb-6 border border-[#B89B7A]/10 glass-panel',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <h3 className="text-xl font-medium text-[#aa6b5d] mb-4">{title}</h3>

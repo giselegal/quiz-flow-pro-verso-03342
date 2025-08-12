@@ -1,10 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { cn } from "@/lib/utils";
-import type { BlockData } from "@/types/blocks";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { cn } from '@/lib/utils';
+import type { BlockData } from '@/types/blocks';
 import {
   closestCenter,
   defaultDropAnimationSideEffects,
@@ -18,17 +18,17 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Copy, Eye, GripVertical, Move3D, Plus, Trash2 } from "lucide-react";
-import React, { useCallback, useState } from "react";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Copy, Eye, GripVertical, Move3D, Plus, Trash2 } from 'lucide-react';
+import React, { useCallback, useState } from 'react';
 
 interface DraggableBlockProps {
   block: BlockData;
@@ -62,7 +62,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
     data: {
-      type: "Block",
+      type: 'Block',
       block,
     },
   });
@@ -95,38 +95,38 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
   // Simular preview do bloco baseado no tipo
   const renderBlockPreview = () => {
     switch (block.type) {
-      case "text-inline":
-      case "heading-inline":
+      case 'text-inline':
+      case 'heading-inline':
         return (
           <div className="space-y-2">
             <div className="h-3 bg-gray-300 rounded w-3/4"></div>
-            <div style={{ backgroundColor: "#E5DDD5" }}></div>
+            <div style={{ backgroundColor: '#E5DDD5' }}></div>
           </div>
         );
-      case "image-display-inline":
+      case 'image-display-inline':
         return (
-          <div style={{ borderColor: "#E5DDD5" }}>
-            <span style={{ color: "#8B7355" }}>📷 Imagem</span>
+          <div style={{ borderColor: '#E5DDD5' }}>
+            <span style={{ color: '#8B7355' }}>📷 Imagem</span>
           </div>
         );
-      case "button-inline":
+      case 'button-inline':
         return (
           <div className="bg-[#B89B7A] text-white px-4 py-2 rounded text-center text-sm">
-            {block.properties?.text || "Botão"}
+            {block.properties?.text || 'Botão'}
           </div>
         );
-      case "options-grid":
+      case 'options-grid':
         return (
           <div className="grid grid-cols-2 gap-2">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} style={{ backgroundColor: "#E5DDD5" }}></div>
+              <div key={i} style={{ backgroundColor: '#E5DDD5' }}></div>
             ))}
           </div>
         );
       default:
         return (
           <div className="h-12 bg-gradient-to-r from-gray-100 to-gray-200 rounded flex items-center justify-center">
-            <span style={{ color: "#6B4F43" }}>{block.type}</span>
+            <span style={{ color: '#6B4F43' }}>{block.type}</span>
           </div>
         );
     }
@@ -137,17 +137,17 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group relative",
-        isDragging && "z-50",
-        isOverlay && "rotate-3 scale-105 shadow-2xl"
+        'group relative',
+        isDragging && 'z-50',
+        isOverlay && 'rotate-3 scale-105 shadow-2xl'
       )}
     >
       <Card
         className={cn(
-          "cursor-pointer transition-all duration-200 hover:shadow-md",
-          isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2 bg-[#B89B7A]/5" : "hover:bg-gray-50",
-          isDragging ? "shadow-lg bg-white" : "",
-          isOverlay && "shadow-2xl bg-white border-[#B89B7A]"
+          'cursor-pointer transition-all duration-200 hover:shadow-md',
+          isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-2 bg-[#B89B7A]/5' : 'hover:bg-gray-50',
+          isDragging ? 'shadow-lg bg-white' : '',
+          isOverlay && 'shadow-2xl bg-white border-[#B89B7A]'
         )}
         onClick={handleSelect}
       >
@@ -159,9 +159,9 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
                 {...attributes}
                 {...listeners}
                 className={cn(
-                  "flex items-center justify-center w-6 h-6 rounded cursor-grab active:cursor-grabbing",
-                  "hover:bg-gray-200 transition-colors",
-                  isDragging && "cursor-grabbing"
+                  'flex items-center justify-center w-6 h-6 rounded cursor-grab active:cursor-grabbing',
+                  'hover:bg-gray-200 transition-colors',
+                  isDragging && 'cursor-grabbing'
                 )}
               >
                 <GripVertical className="w-4 h-4 text-gray-400" />
@@ -171,8 +171,8 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
               <Badge
                 variant="outline"
                 className={cn(
-                  "text-xs",
-                  isSelected ? "bg-[#B89B7A] text-white border-[#B89B7A]" : ""
+                  'text-xs',
+                  isSelected ? 'bg-[#B89B7A] text-white border-[#B89B7A]' : ''
                 )}
               >
                 {block.type}
@@ -182,15 +182,15 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
               {getBlockComponent(block.type) ? (
                 <div className="w-2 h-2 bg-green-500 rounded-full" title="Componente disponível" />
               ) : (
-                <div style={{ backgroundColor: "#FAF9F7" }} title="Componente não encontrado" />
+                <div style={{ backgroundColor: '#FAF9F7' }} title="Componente não encontrado" />
               )}
             </div>
 
             {/* Actions */}
             <div
               className={cn(
-                "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity",
-                isSelected && "opacity-100"
+                'flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity',
+                isSelected && 'opacity-100'
               )}
             >
               <TooltipProvider>
@@ -215,7 +215,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
                     <Button
                       variant="ghost"
                       size="sm"
-                      style={{ color: "#432818" }}
+                      style={{ color: '#432818' }}
                       onClick={handleDelete}
                     >
                       <Trash2 className="w-3 h-3" />
@@ -234,7 +234,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
             {renderBlockPreview()}
 
             {/* Informações adicionais */}
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               <span>ID: {block.id.slice(-8)}</span>
               {block.properties && Object.keys(block.properties).length > 0 && (
                 <span>{Object.keys(block.properties).length} props</span>
@@ -299,7 +299,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
     sideEffects: defaultDropAnimationSideEffects({
       styles: {
         active: {
-          opacity: "0.5",
+          opacity: '0.5',
         },
       },
     }),
@@ -308,10 +308,10 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
   const activeBlock = activeId ? blocks.find(block => block.id === activeId) : null;
 
   return (
-    <div className={cn("h-full flex flex-col", className)}>
+    <div className={cn('h-full flex flex-col', className)}>
       <TooltipProvider>
         {/* Header */}
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="flex items-center gap-2">
             <Move3D className="w-5 h-5 text-[#B89B7A]" />
             <h3 className="text-lg font-medium text-[#432818]">Editor de Blocos</h3>
@@ -365,7 +365,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
 
           {/* Estado vazio */}
           {blocks.length === 0 && (
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               <div className="text-center">
                 <Move3D className="w-12 h-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg font-medium">Nenhum bloco adicionado</p>
@@ -380,8 +380,8 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
         </div>
 
         {/* Footer com dicas */}
-        <div style={{ borderColor: "#E5DDD5" }}>
-          <div style={{ color: "#6B4F43" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
+          <div style={{ color: '#6B4F43' }}>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <GripVertical className="w-3 h-3" />

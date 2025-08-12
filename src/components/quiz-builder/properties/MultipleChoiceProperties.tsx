@@ -1,7 +1,7 @@
-import { QuizComponentData } from "@/types/quizBuilder";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { QuizComponentData } from '@/types/quizBuilder';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface MultipleChoicePropertiesProps {
   component: QuizComponentData;
@@ -27,8 +27,8 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
         <Label htmlFor="question">Pergunta</Label>
         <Textarea
           id="question"
-          value={data.question || ""}
-          onChange={e => handleUpdate("question", e.target.value)}
+          value={data.question || ''}
+          onChange={e => handleUpdate('question', e.target.value)}
           placeholder="Digite sua pergunta"
           rows={3}
         />
@@ -38,11 +38,11 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
         <Label htmlFor="options">Opções (uma por linha)</Label>
         <Textarea
           id="options"
-          value={(data.options || []).join("\n")}
+          value={(data.options || []).join('\n')}
           onChange={e =>
             handleUpdate(
-              "options",
-              e.target.value.split("\n").filter(opt => opt.trim())
+              'options',
+              e.target.value.split('\n').filter(opt => opt.trim())
             )
           }
           placeholder="Opção 1\nOpção 2\nOpção 3"
@@ -57,7 +57,7 @@ export const MultipleChoiceProperties: React.FC<MultipleChoicePropertiesProps> =
           type="number"
           min="1"
           value={data.multiSelect || 1}
-          onChange={e => handleUpdate("multiSelect", parseInt(e.target.value) || 1)}
+          onChange={e => handleUpdate('multiSelect', parseInt(e.target.value) || 1)}
         />
       </div>
     </div>

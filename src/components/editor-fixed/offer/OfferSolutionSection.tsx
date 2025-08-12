@@ -1,7 +1,7 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import { trackButtonClick } from "@/utils/analytics";
-import { Clock, LucideIcon, ShoppingBag } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
+import { trackButtonClick } from '@/utils/analytics';
+import { Clock, LucideIcon, ShoppingBag } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface CountdownTime {
   hours: number;
@@ -55,7 +55,7 @@ const CountdownTimer: React.FC<{ initial: CountdownTime }> = ({ initial }) => {
     return () => clearInterval(interval);
   }, [initial]);
 
-  const formatNumber = (num: number) => num.toString().padStart(2, "0");
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
     <div className="flex flex-col items-center">
@@ -101,13 +101,13 @@ export const OfferSolutionSection: React.FC<OfferSolutionSectionProps> = ({
   const CtaIcon = iconMap[ctaIcon] || ShoppingBag;
 
   const handleCtaClick = () => {
-    trackButtonClick("solution_cta", ctaText, "offer_solution_section");
-    window.open(ctaUrl, "_blank");
+    trackButtonClick('solution_cta', ctaText, 'offer_solution_section');
+    window.open(ctaUrl, '_blank');
   };
 
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split("**").map((part, index) => {
+    return text.split('**').map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -121,7 +121,7 @@ export const OfferSolutionSection: React.FC<OfferSolutionSectionProps> = ({
         <div className="card-clean text-center">
           <h2
             className="text-hierarchy-2 text-[var(--text-dark)] mb-6"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
             {title}
           </h2>

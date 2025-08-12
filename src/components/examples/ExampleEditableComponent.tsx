@@ -1,8 +1,8 @@
 // @ts-nocheck
 // EXEMPLO PRÁTICO - Implementação de um novo componente seguindo o checklist
 
-import { Badge } from "@/components/ui/badge";
-import React, { useEffect, useState } from "react";
+import { Badge } from '@/components/ui/badge';
+import React, { useEffect, useState } from 'react';
 
 /**
  * Exemplo de Componente Editável para o Editor Fixed
@@ -49,8 +49,8 @@ interface ExampleEditableComponentProps {
     textColor?: string;
     borderRadius?: number;
     padding?: string;
-    textAlign?: "left" | "center" | "right";
-    size?: "small" | "medium" | "large";
+    textAlign?: 'left' | 'center' | 'right';
+    size?: 'small' | 'medium' | 'large';
 
     // Configurações avançadas
     animation?: boolean;
@@ -68,20 +68,20 @@ interface ExampleEditableComponentProps {
 // ✅ 2. IMPLEMENTAÇÃO DO COMPONENTE
 export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     // ✅ Valores padrão definidos
     enabled: true,
-    title: "Título do Exemplo",
-    subtitle: "Subtítulo opcional",
+    title: 'Título do Exemplo',
+    subtitle: 'Subtítulo opcional',
     showBadge: true,
-    backgroundColor: "#f0f9ff",
-    textColor: "#1e40af",
+    backgroundColor: '#f0f9ff',
+    textColor: '#1e40af',
     borderRadius: 8,
-    padding: "16px",
-    textAlign: "center",
-    size: "medium",
+    padding: '16px',
+    textAlign: 'center',
+    size: 'medium',
     animation: true,
     shadow: true,
   },
@@ -125,12 +125,12 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
   // ✅ 7. CALCULAR ESTILOS BASEADOS NAS PROPRIEDADES
   const getSizeStyles = () => {
     switch (properties.size) {
-      case "small":
-        return { fontSize: "14px" };
-      case "large":
-        return { fontSize: "20px" };
+      case 'small':
+        return { fontSize: '14px' };
+      case 'large':
+        return { fontSize: '20px' };
       default:
-        return { fontSize: "16px" };
+        return { fontSize: '16px' };
     }
   };
 
@@ -140,24 +140,24 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
     color: properties.textColor,
     borderRadius: `${properties.borderRadius}px`,
     padding: properties.padding,
-    textAlign: properties.textAlign as "left" | "center" | "right",
+    textAlign: properties.textAlign as 'left' | 'center' | 'right',
     ...getSizeStyles(),
 
     // Box model
-    width: "100%",
-    boxSizing: "border-box",
-    position: "relative",
+    width: '100%',
+    boxSizing: 'border-box',
+    position: 'relative',
 
     // Visual feedback
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    transition: properties.animation ? "all 0.3s ease" : "none",
-    boxShadow: properties.shadow ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)" : "none",
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    transition: properties.animation ? 'all 0.3s ease' : 'none',
+    boxShadow: properties.shadow ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none',
 
     // Estados especiais
     opacity: properties.enabled === false ? 0.5 : isHovered ? 0.9 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
-    transform: isHovered && properties.animation ? "translateY(-2px)" : "none",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
+    transform: isHovered && properties.animation ? 'translateY(-2px)' : 'none',
 
     // Aplicar estilos externos
     ...style,
@@ -171,7 +171,7 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
   return (
     <div
       id={id}
-      className={`example-editable-component ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`example-editable-component ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -179,20 +179,20 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
     >
       {/* ✅ 9. CONTEÚDO PRINCIPAL */}
       <div className="component-content">
-        <h3 style={{ margin: 0, marginBottom: properties.subtitle ? "8px" : 0 }}>
+        <h3 style={{ margin: 0, marginBottom: properties.subtitle ? '8px' : 0 }}>
           {properties.title}
         </h3>
 
         {properties.subtitle && (
-          <p style={{ margin: 0, opacity: 0.8, fontSize: "0.9em" }}>{properties.subtitle}</p>
+          <p style={{ margin: 0, opacity: 0.8, fontSize: '0.9em' }}>{properties.subtitle}</p>
         )}
 
         {properties.showBadge && (
           <Badge
             variant="secondary"
             style={{
-              marginTop: "8px",
-              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              marginTop: '8px',
+              backgroundColor: 'rgba(255, 255, 255, 0.2)',
               color: properties.textColor,
             }}
           >
@@ -206,19 +206,19 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
         <div
           className="editing-overlay"
           style={{
-            position: "absolute",
-            top: "4px",
-            right: "4px",
-            display: "flex",
-            gap: "4px",
-            alignItems: "center",
+            position: 'absolute',
+            top: '4px',
+            right: '4px',
+            display: 'flex',
+            gap: '4px',
+            alignItems: 'center',
           }}
         >
-          <Badge variant="outline" style={{ fontSize: "10px", padding: "2px 6px" }}>
+          <Badge variant="outline" style={{ fontSize: '10px', padding: '2px 6px' }}>
             {properties.size}
           </Badge>
           {!properties.enabled && (
-            <Badge variant="destructive" style={{ fontSize: "10px", padding: "2px 6px" }}>
+            <Badge variant="destructive" style={{ fontSize: '10px', padding: '2px 6px' }}>
               Desabilitado
             </Badge>
           )}
@@ -226,15 +226,15 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
       )}
 
       {/* ✅ 11. MODO DE DESENVOLVIMENTO - INFORMAÇÕES DEBUG */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div
           style={{
-            position: "absolute",
-            bottom: "4px",
-            left: "4px",
-            fontSize: "10px",
-            color: "rgba(0, 0, 0, 0.5)",
-            fontFamily: "monospace",
+            position: 'absolute',
+            bottom: '4px',
+            left: '4px',
+            fontSize: '10px',
+            color: 'rgba(0, 0, 0, 0.5)',
+            fontFamily: 'monospace',
           }}
         >
           ID: {id}

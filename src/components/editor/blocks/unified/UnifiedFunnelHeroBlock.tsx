@@ -1,5 +1,5 @@
 // @ts-nocheck
-import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
+import FunnelHeroSection from '@/components/funnel/base/FunnelHeroSection';
 
 // Interface local para máxima independência
 interface Block {
@@ -26,11 +26,11 @@ interface BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -77,30 +77,30 @@ const UnifiedFunnelHeroBlock: React.FC<BlockComponentProps> = ({
 }) => {
   // Valores padrão para máxima reutilização
   const props = {
-    title: block.properties.title || "Seu Título Persuasivo Aqui",
+    title: block.properties.title || 'Seu Título Persuasivo Aqui',
     description:
-      block.properties.description || "Descrição que conecta com seu público e gera conversão",
-    ctaText: block.properties.ctaText || "Call to Action",
+      block.properties.description || 'Descrição que conecta com seu público e gera conversão',
+    ctaText: block.properties.ctaText || 'Call to Action',
     ctaSubtext: block.properties.ctaSubtext,
     logoUrl: block.properties.logoUrl,
-    logoAlt: block.properties.logoAlt || "Logo da marca",
+    logoAlt: block.properties.logoAlt || 'Logo da marca',
     heroImageUrl: block.properties.heroImageUrl,
-    heroImageAlt: block.properties.heroImageAlt || "Imagem hero",
-    backgroundColor: block.properties.backgroundColor || "#FAF9F7",
-    textColor: block.properties.textColor || "#432818",
-    primaryColor: block.properties.primaryColor || "#B89B7A",
-    layout: block.properties.layout || "side-by-side",
-    imagePosition: block.properties.imagePosition || "right",
+    heroImageAlt: block.properties.heroImageAlt || 'Imagem hero',
+    backgroundColor: block.properties.backgroundColor || '#FAF9F7',
+    textColor: block.properties.textColor || '#432818',
+    primaryColor: block.properties.primaryColor || '#B89B7A',
+    layout: block.properties.layout || 'side-by-side',
+    imagePosition: block.properties.imagePosition || 'right',
 
     // Props específicas do editor
     isSelected,
     onClick: () => onBlockSelect(block.id),
-    className: isSelected ? "ring-2 ring-[#B89B7A] ring-offset-2" : "",
+    className: isSelected ? 'ring-2 ring-[#B89B7A] ring-offset-2' : '',
 
     // Handler para CTA (totalmente configurável)
     onCTAClick: () => {
       // Em produção, pode navegar para próxima página ou executar ação
-      console.log("CTA clicked:", block.properties.ctaText);
+      console.log('CTA clicked:', block.properties.ctaText);
       // Pode chamar onSaveInline para track de interação se necessário
     },
   };

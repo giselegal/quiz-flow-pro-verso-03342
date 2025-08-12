@@ -1,19 +1,19 @@
 // EXEMPLO PRÁTICO - Painel de Propriedades para ExampleEditableComponent
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 
 /**
  * Painel de Propriedades para ExampleEditableComponent
@@ -43,15 +43,15 @@ export const renderExampleEditableComponentProperties = (
   // ✅ 1. VALORES PADRÃO (IMPORTANTES PARA CONSISTÊNCIA)
   const defaultProperties = {
     enabled: true,
-    title: "Título do Exemplo",
-    subtitle: "Subtítulo opcional",
+    title: 'Título do Exemplo',
+    subtitle: 'Subtítulo opcional',
     showBadge: true,
-    backgroundColor: "#f0f9ff",
-    textColor: "#1e40af",
+    backgroundColor: '#f0f9ff',
+    textColor: '#1e40af',
     borderRadius: 8,
-    padding: "16px",
-    textAlign: "center",
-    size: "medium",
+    padding: '16px',
+    textAlign: 'center',
+    size: 'medium',
     animation: true,
     shadow: true,
   };
@@ -103,7 +103,7 @@ export const renderExampleEditableComponentProperties = (
             <Switch
               id={`${componentId}-enabled`}
               checked={currentProps.enabled}
-              onCheckedChange={value => handlePropertyChange("enabled", value)}
+              onCheckedChange={value => handlePropertyChange('enabled', value)}
             />
           </div>
 
@@ -112,7 +112,7 @@ export const renderExampleEditableComponentProperties = (
             <Label>Tamanho do Componente</Label>
             <Select
               value={currentProps.size}
-              onValueChange={value => handlePropertyChange("size", value)}
+              onValueChange={value => handlePropertyChange('size', value)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -139,7 +139,7 @@ export const renderExampleEditableComponentProperties = (
             <Input
               id={`${componentId}-title`}
               value={currentProps.title}
-              onChange={e => handlePropertyChange("title", e.target.value)}
+              onChange={e => handlePropertyChange('title', e.target.value)}
               placeholder="Digite o título..."
             />
           </div>
@@ -150,7 +150,7 @@ export const renderExampleEditableComponentProperties = (
             <Textarea
               id={`${componentId}-subtitle`}
               value={currentProps.subtitle}
-              onChange={e => handlePropertyChange("subtitle", e.target.value)}
+              onChange={e => handlePropertyChange('subtitle', e.target.value)}
               placeholder="Digite o subtítulo..."
               rows={2}
             />
@@ -162,7 +162,7 @@ export const renderExampleEditableComponentProperties = (
             <Switch
               id={`${componentId}-show-badge`}
               checked={currentProps.showBadge}
-              onCheckedChange={value => handlePropertyChange("showBadge", value)}
+              onCheckedChange={value => handlePropertyChange('showBadge', value)}
             />
           </div>
         </CardContent>
@@ -179,7 +179,7 @@ export const renderExampleEditableComponentProperties = (
             <Label>Alinhamento do Texto</Label>
             <Select
               value={currentProps.textAlign}
-              onValueChange={value => handlePropertyChange("textAlign", value)}
+              onValueChange={value => handlePropertyChange('textAlign', value)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -200,12 +200,12 @@ export const renderExampleEditableComponentProperties = (
                 id={`${componentId}-bg-color`}
                 type="color"
                 value={currentProps.backgroundColor}
-                onChange={e => handlePropertyChange("backgroundColor", e.target.value)}
+                onChange={e => handlePropertyChange('backgroundColor', e.target.value)}
                 className="w-16 h-10"
               />
               <Input
                 value={currentProps.backgroundColor}
-                onChange={e => handlePropertyChange("backgroundColor", e.target.value)}
+                onChange={e => handlePropertyChange('backgroundColor', e.target.value)}
                 placeholder="#f0f9ff"
                 className="flex-1"
               />
@@ -220,12 +220,12 @@ export const renderExampleEditableComponentProperties = (
                 id={`${componentId}-text-color`}
                 type="color"
                 value={currentProps.textColor}
-                onChange={e => handlePropertyChange("textColor", e.target.value)}
+                onChange={e => handlePropertyChange('textColor', e.target.value)}
                 className="w-16 h-10"
               />
               <Input
                 value={currentProps.textColor}
-                onChange={e => handlePropertyChange("textColor", e.target.value)}
+                onChange={e => handlePropertyChange('textColor', e.target.value)}
                 placeholder="#1e40af"
                 className="flex-1"
               />
@@ -238,7 +238,7 @@ export const renderExampleEditableComponentProperties = (
             <div className="px-2">
               <Slider
                 value={[currentProps.borderRadius]}
-                onValueChange={values => handlePropertyChange("borderRadius", values[0])}
+                onValueChange={values => handlePropertyChange('borderRadius', values[0])}
                 min={0}
                 max={50}
                 step={1}
@@ -258,7 +258,7 @@ export const renderExampleEditableComponentProperties = (
             <Input
               id={`${componentId}-padding`}
               value={currentProps.padding}
-              onChange={e => handlePropertyChange("padding", e.target.value)}
+              onChange={e => handlePropertyChange('padding', e.target.value)}
               placeholder="16px"
             />
           </div>
@@ -277,7 +277,7 @@ export const renderExampleEditableComponentProperties = (
             <Switch
               id={`${componentId}-animation`}
               checked={currentProps.animation}
-              onCheckedChange={value => handlePropertyChange("animation", value)}
+              onCheckedChange={value => handlePropertyChange('animation', value)}
             />
           </div>
 
@@ -287,14 +287,14 @@ export const renderExampleEditableComponentProperties = (
             <Switch
               id={`${componentId}-shadow`}
               checked={currentProps.shadow}
-              onCheckedChange={value => handlePropertyChange("shadow", value)}
+              onCheckedChange={value => handlePropertyChange('shadow', value)}
             />
           </div>
         </CardContent>
       </Card>
 
       {/* ✅ 10. INFORMAÇÕES DE DEBUG (MODO DESENVOLVIMENTO) */}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <Card className="bg-gray-50 border-dashed">
           <CardHeader>
             <CardTitle className="text-sm text-gray-600">Debug Info</CardTitle>

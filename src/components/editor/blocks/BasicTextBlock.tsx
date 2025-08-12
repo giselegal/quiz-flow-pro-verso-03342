@@ -1,14 +1,14 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -51,27 +51,27 @@ const BasicTextBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
-  const text = block.properties?.content || "Adicione seu texto aqui";
+  const text = block.properties?.content || 'Adicione seu texto aqui';
 
   return (
     <div
       className={cn(
-        "w-full p-3 rounded-lg border transition-all duration-200",
-        "border-gray-200 bg-white hover:bg-gray-50",
-        isSelected && "border-[#B89B7A] bg-[#B89B7A]/10 ring-2 ring-blue-200",
-        "cursor-pointer",
+        'w-full p-3 rounded-lg border transition-all duration-200',
+        'border-gray-200 bg-white hover:bg-gray-50',
+        isSelected && 'border-[#B89B7A] bg-[#B89B7A]/10 ring-2 ring-blue-200',
+        'cursor-pointer',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
-      <div style={{ color: "#432818" }}>{text}</div>
+      <div style={{ color: '#432818' }}>{text}</div>
     </div>
   );
 };

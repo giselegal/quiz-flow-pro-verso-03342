@@ -1,9 +1,9 @@
 /* @ts-nocheck */
 // @ts-nocheck
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   BlockComponentProps,
   ProgressConfig,
@@ -11,7 +11,7 @@ import {
   Size,
   ButtonStyle,
   InteractionCallbacks,
-} from "./types";
+} from './types';
 
 /**
  * IntroPage - Componente de página de introdução configurável
@@ -43,7 +43,7 @@ export interface IntroPageProps extends BlockComponentProps, InteractionCallback
   logoSize?: Size;
   imageUrl?: string;
   imageAlt?: string;
-  imagePosition?: "top" | "bottom" | "left" | "right" | "background";
+  imagePosition?: 'top' | 'bottom' | 'left' | 'right' | 'background';
 
   // Campo de nome
   showNameInput?: boolean;
@@ -78,29 +78,29 @@ export const IntroPage: React.FC<IntroPageProps> = ({
 
   // Imagens
   logoUrl,
-  logoAlt = "Logo",
-  logoSize = "medium",
+  logoAlt = 'Logo',
+  logoSize = 'medium',
   imageUrl,
-  imageAlt = "Imagem ilustrativa",
-  imagePosition = "top",
+  imageAlt = 'Imagem ilustrativa',
+  imagePosition = 'top',
 
   // Campo de nome
   showNameInput = true,
-  nameInputLabel = "Como você gostaria de ser chamada?",
-  nameInputPlaceholder = "Digite seu primeiro nome",
+  nameInputLabel = 'Como você gostaria de ser chamada?',
+  nameInputPlaceholder = 'Digite seu primeiro nome',
   nameRequired = true,
-  initialName = "",
+  initialName = '',
 
   // Botão
   buttonText,
-  buttonStyle = "primary",
-  buttonSize = "large",
+  buttonStyle = 'primary',
+  buttonSize = 'large',
   buttonFullWidth = true,
 
   // Layout
-  alignment = "center",
-  titleSize = "large",
-  spacing = "medium",
+  alignment = 'center',
+  titleSize = 'large',
+  spacing = 'medium',
 
   // Progresso
   progressConfig,
@@ -113,10 +113,10 @@ export const IntroPage: React.FC<IntroPageProps> = ({
   validateName,
 
   // Props base
-  deviceView = "desktop",
-  className = "",
+  deviceView = 'desktop',
+  className = '',
   style = {},
-  testId = "intro-page",
+  testId = 'intro-page',
   ...props
 }) => {
   const [name, setName] = useState(initialName);
@@ -125,39 +125,39 @@ export const IntroPage: React.FC<IntroPageProps> = ({
   // Classes de tamanho
   const sizeClasses = {
     small: {
-      title: "text-2xl md:text-3xl",
-      subtitle: "text-lg",
-      logo: "w-16 h-16",
-      spacing: "space-y-2",
+      title: 'text-2xl md:text-3xl',
+      subtitle: 'text-lg',
+      logo: 'w-16 h-16',
+      spacing: 'space-y-2',
     },
     medium: {
-      title: "text-3xl md:text-4xl",
-      subtitle: "text-xl",
-      logo: "w-20 h-20",
-      spacing: "space-y-2",
+      title: 'text-3xl md:text-4xl',
+      subtitle: 'text-xl',
+      logo: 'w-20 h-20',
+      spacing: 'space-y-2',
     },
     large: {
-      title: "text-4xl md:text-5xl",
-      subtitle: "text-2xl",
-      logo: "w-24 h-24",
-      spacing: "space-y-2",
+      title: 'text-4xl md:text-5xl',
+      subtitle: 'text-2xl',
+      logo: 'w-24 h-24',
+      spacing: 'space-y-2',
     },
   };
 
   // Classes de alinhamento
   const alignmentClasses = {
-    left: "text-left items-start",
-    center: "text-center items-center",
-    right: "text-right items-end",
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end',
   };
 
   // Classes de botão
   const buttonClasses = {
-    primary: "bg-[#B89B7A] hover:bg-[#A08766] text-white",
-    secondary: "bg-gray-600 hover:bg-gray-700 text-white",
+    primary: 'bg-[#B89B7A] hover:bg-[#A08766] text-white',
+    secondary: 'bg-gray-600 hover:bg-gray-700 text-white',
     accent:
-      "bg-gradient-to-r from-[#B89B7A] to-[#D4B896] hover:from-[#A08766] to-[#C4A886] text-white",
-    outline: "border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white",
+      'bg-gradient-to-r from-[#B89B7A] to-[#D4B896] hover:from-[#A08766] to-[#C4A886] text-white',
+    outline: 'border-2 border-[#B89B7A] text-[#B89B7A] hover:bg-[#B89B7A] hover:text-white',
   };
 
   const currentSizeClasses = sizeClasses[titleSize as keyof typeof sizeClasses];
@@ -182,7 +182,7 @@ export const IntroPage: React.FC<IntroPageProps> = ({
 
   const handleSubmit = () => {
     if (showNameInput && nameRequired && !name.trim()) {
-      const errorMsg = "Por favor, digite seu nome";
+      const errorMsg = 'Por favor, digite seu nome';
       setError(errorMsg);
       onError?.(errorMsg);
       return;
@@ -201,9 +201,9 @@ export const IntroPage: React.FC<IntroPageProps> = ({
   };
 
   const containerClasses = getOptimizedContainerClasses(
-    deviceView || "desktop",
-    "tight",
-    "full",
+    deviceView || 'desktop',
+    'tight',
+    'full',
     className
   );
 
@@ -212,14 +212,14 @@ export const IntroPage: React.FC<IntroPageProps> = ({
       {/* Barra de Progresso */}
       {progressConfig?.showProgress && (
         <div className="w-full max-w-md mx-auto mb-8">
-          <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-[#B89B7A] h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressConfig.progressValue || 0}%` }}
             />
           </div>
           {progressConfig.currentStep && progressConfig.totalSteps && (
-            <p style={{ color: "#6B4F43" }}>
+            <p style={{ color: '#6B4F43' }}>
               Etapa {progressConfig.currentStep} de {progressConfig.totalSteps}
             </p>
           )}
@@ -238,7 +238,7 @@ export const IntroPage: React.FC<IntroPageProps> = ({
       )}
 
       {/* Imagem Principal (se posição for top) */}
-      {imageUrl && imagePosition === "top" && (
+      {imageUrl && imagePosition === 'top' && (
         <div className="mb-8">
           <img
             src={imageUrl}
@@ -259,10 +259,10 @@ export const IntroPage: React.FC<IntroPageProps> = ({
         )}
 
         {/* Descrição */}
-        {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+        {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
 
         {/* Imagem (se posição for middle) */}
-        {imageUrl && imagePosition === "top" && (
+        {imageUrl && imagePosition === 'top' && (
           <div className="mb-8">
             <img
               src={imageUrl}
@@ -283,22 +283,22 @@ export const IntroPage: React.FC<IntroPageProps> = ({
               value={name}
               onChange={e => handleNameChange(e.target.value)}
               placeholder={nameInputPlaceholder}
-              className={`text-lg py-6 ${error ? "border-red-500" : ""}`}
+              className={`text-lg py-6 ${error ? 'border-red-500' : ''}`}
               data-testid="name-input"
             />
-            {error && <p style={{ color: "#432818" }}>{error}</p>}
+            {error && <p style={{ color: '#432818' }}>{error}</p>}
           </div>
         )}
 
         {/* Botão de Ação */}
         <Button
           onClick={handleSubmit}
-          size={buttonSize === "small" ? "sm" : buttonSize === "large" ? "lg" : "default"}
+          size={buttonSize === 'small' ? 'sm' : buttonSize === 'large' ? 'lg' : 'default'}
           className={`
             ${buttonClasses[buttonStyle as keyof typeof buttonClasses]}
-            ${buttonFullWidth ? "w-full" : "w-auto"}
+            ${buttonFullWidth ? 'w-full' : 'w-auto'}
             py-6 text-lg font-semibold transition-all duration-200
-            ${deviceView === "mobile" ? "text-base py-4" : ""}
+            ${deviceView === 'mobile' ? 'text-base py-4' : ''}
           `}
           data-testid="submit-button"
         >
@@ -307,7 +307,7 @@ export const IntroPage: React.FC<IntroPageProps> = ({
       </div>
 
       {/* Imagem Principal (se posição for bottom) */}
-      {imageUrl && imagePosition === "bottom" && (
+      {imageUrl && imagePosition === 'bottom' && (
         <div className="mt-8">
           <img
             src={imageUrl}

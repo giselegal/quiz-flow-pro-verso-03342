@@ -1,12 +1,12 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { cn } from "@/lib/utils";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { cn } from '@/lib/utils';
 import {
   BarChart3,
   Clock,
@@ -20,8 +20,8 @@ import {
   Star,
   Type,
   Zap,
-} from "lucide-react";
-import React, { useMemo, useState } from "react";
+} from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 
 interface ComponentsLibraryProps {
   onAddBlock?: (blockType: string) => void;
@@ -31,148 +31,148 @@ interface ComponentsLibraryProps {
 // Definição das categorias de componentes
 const COMPONENT_CATEGORIES = {
   quiz: {
-    label: "Quiz",
+    label: 'Quiz',
     icon: Grid3X3,
-    description: "Componentes específicos para quiz",
-    color: "#B89B7A",
+    description: 'Componentes específicos para quiz',
+    color: '#B89B7A',
     components: [
       {
-        type: "options-grid",
-        name: "Grade de Opções",
-        description: "Grid com opções selecionáveis",
+        type: 'options-grid',
+        name: 'Grade de Opções',
+        description: 'Grid com opções selecionáveis',
         icon: Grid3X3,
         featured: true,
-        tags: ["quiz", "seleção", "grid"],
+        tags: ['quiz', 'seleção', 'grid'],
       },
       {
-        type: "quiz-progress",
-        name: "Progresso do Quiz",
-        description: "Barra de progresso visual",
+        type: 'quiz-progress',
+        name: 'Progresso do Quiz',
+        description: 'Barra de progresso visual',
         icon: BarChart3,
         featured: true,
-        tags: ["progresso", "navegação"],
+        tags: ['progresso', 'navegação'],
       },
       {
-        type: "result-style-card",
-        name: "Card de Resultado",
-        description: "Exibe resultado calculado",
+        type: 'result-style-card',
+        name: 'Card de Resultado',
+        description: 'Exibe resultado calculado',
         icon: Star,
         featured: true,
-        tags: ["resultado", "estilo"],
+        tags: ['resultado', 'estilo'],
       },
       {
-        type: "bonus-showcase",
-        name: "Vitrine de Bônus",
-        description: "Grid de bônus e ofertas",
+        type: 'bonus-showcase',
+        name: 'Vitrine de Bônus',
+        description: 'Grid de bônus e ofertas',
         icon: Zap,
-        tags: ["bônus", "oferta", "conversão"],
+        tags: ['bônus', 'oferta', 'conversão'],
       },
       {
-        type: "loading-animation",
-        name: "Animação Loading",
-        description: "Animações de transição",
+        type: 'loading-animation',
+        name: 'Animação Loading',
+        description: 'Animações de transição',
         icon: Clock,
-        tags: ["loading", "transição"],
+        tags: ['loading', 'transição'],
       },
     ],
   },
   content: {
-    label: "Conteúdo",
+    label: 'Conteúdo',
     icon: Type,
-    description: "Textos, títulos e conteúdo",
-    color: "#432818",
+    description: 'Textos, títulos e conteúdo',
+    color: '#432818',
     components: [
       {
-        type: "text-inline",
-        name: "Texto",
-        description: "Texto formatado",
+        type: 'text-inline',
+        name: 'Texto',
+        description: 'Texto formatado',
         icon: Type,
         featured: true,
-        tags: ["texto", "conteúdo"],
+        tags: ['texto', 'conteúdo'],
       },
       {
-        type: "heading-inline",
-        name: "Título",
-        description: "Títulos e subtítulos",
+        type: 'heading-inline',
+        name: 'Título',
+        description: 'Títulos e subtítulos',
         icon: Type,
         featured: true,
-        tags: ["título", "heading"],
+        tags: ['título', 'heading'],
       },
     ],
   },
   interactive: {
-    label: "Interativo",
+    label: 'Interativo',
     icon: MousePointer,
-    description: "Botões e elementos clicáveis",
-    color: "#aa6b5d",
+    description: 'Botões e elementos clicáveis',
+    color: '#aa6b5d',
     components: [
       {
-        type: "button-inline",
-        name: "Botão",
-        description: "Botão clicável",
+        type: 'button-inline',
+        name: 'Botão',
+        description: 'Botão clicável',
         icon: MousePointer,
         featured: true,
-        tags: ["botão", "CTA", "ação"],
+        tags: ['botão', 'CTA', 'ação'],
       },
       {
-        type: "form-input",
-        name: "Campo de Formulário",
-        description: "Input para captura de dados",
+        type: 'form-input',
+        name: 'Campo de Formulário',
+        description: 'Input para captura de dados',
         icon: Settings,
-        tags: ["formulário", "input", "dados"],
+        tags: ['formulário', 'input', 'dados'],
       },
     ],
   },
   media: {
-    label: "Mídia",
+    label: 'Mídia',
     icon: Image,
-    description: "Imagens e mídia",
-    color: "#D4C2A8",
+    description: 'Imagens e mídia',
+    color: '#D4C2A8',
     components: [
       {
-        type: "image-display-inline",
-        name: "Imagem",
-        description: "Exibir imagens",
+        type: 'image-display-inline',
+        name: 'Imagem',
+        description: 'Exibir imagens',
         icon: Image,
         featured: true,
-        tags: ["imagem", "mídia"],
+        tags: ['imagem', 'mídia'],
       },
     ],
   },
   layout: {
-    label: "Layout",
+    label: 'Layout',
     icon: Settings,
-    description: "Espaçamento e estrutura",
-    color: "#6B4F43",
+    description: 'Espaçamento e estrutura',
+    color: '#6B4F43',
     components: [
       {
-        type: "spacer",
-        name: "Espaçador",
-        description: "Controla espaçamento",
+        type: 'spacer',
+        name: 'Espaçador',
+        description: 'Controla espaçamento',
         icon: Settings,
-        tags: ["espaço", "layout"],
+        tags: ['espaço', 'layout'],
       },
       {
-        type: "divider",
-        name: "Divisor",
-        description: "Linha divisória",
+        type: 'divider',
+        name: 'Divisor',
+        description: 'Linha divisória',
         icon: Settings,
-        tags: ["divisor", "separador"],
+        tags: ['divisor', 'separador'],
       },
       {
-        type: "decorative-bar-inline",
-        name: "Barra Decorativa",
-        description: "Elemento visual decorativo",
+        type: 'decorative-bar-inline',
+        name: 'Barra Decorativa',
+        description: 'Elemento visual decorativo',
         icon: Palette,
-        tags: ["decoração", "visual"],
+        tags: ['decoração', 'visual'],
       },
     ],
   },
 };
 
 const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, className }) => {
-  const [activeCategory, setActiveCategory] = useState("quiz");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState('quiz');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Filtrar componentes baseado na busca
   const filteredComponents = useMemo(() => {
@@ -210,10 +210,10 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
       <TooltipProvider key={component.type}>
         <Card
           className={cn(
-            "cursor-pointer transition-all duration-200 hover:shadow-md border-2",
+            'cursor-pointer transition-all duration-200 hover:shadow-md border-2',
             isAvailable
-              ? "hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5"
-              : "opacity-60 cursor-not-allowed border-gray-200"
+              ? 'hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5'
+              : 'opacity-60 cursor-not-allowed border-gray-200'
           )}
           onClick={() => isAvailable && handleAddBlock(component.type)}
         >
@@ -222,16 +222,16 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
               <div className="flex items-center gap-2">
                 <div
                   className={cn(
-                    "w-8 h-8 rounded-lg flex items-center justify-center",
-                    isAvailable ? "bg-[#B89B7A]/10" : "bg-gray-100"
+                    'w-8 h-8 rounded-lg flex items-center justify-center',
+                    isAvailable ? 'bg-[#B89B7A]/10' : 'bg-gray-100'
                   )}
                 >
                   <Icon
-                    className={cn("w-4 h-4", isAvailable ? "text-[#B89B7A]" : "text-gray-400")}
+                    className={cn('w-4 h-4', isAvailable ? 'text-[#B89B7A]' : 'text-gray-400')}
                   />
                 </div>
                 {component.featured && (
-                  <Badge variant="secondary" style={{ backgroundColor: "#E5DDD5" }}>
+                  <Badge variant="secondary" style={{ backgroundColor: '#E5DDD5' }}>
                     ⭐ Popular
                   </Badge>
                 )}
@@ -264,14 +264,14 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
             <div className="space-y-2">
               <h3
                 className={cn(
-                  "font-medium text-sm",
-                  isAvailable ? "text-[#432818]" : "text-gray-500"
+                  'font-medium text-sm',
+                  isAvailable ? 'text-[#432818]' : 'text-gray-500'
                 )}
               >
                 {component.name}
               </h3>
 
-              <p style={{ color: "#6B4F43" }}>{component.description}</p>
+              <p style={{ color: '#6B4F43' }}>{component.description}</p>
 
               {showCategory && (
                 <Badge variant="outline" className="text-xs">
@@ -281,7 +281,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
 
               <div className="flex flex-wrap gap-1 mt-2">
                 {component.tags.slice(0, 3).map((tag: string) => (
-                  <span key={tag} style={{ color: "#6B4F43" }}>
+                  <span key={tag} style={{ color: '#6B4F43' }}>
                     {tag}
                   </span>
                 ))}
@@ -294,7 +294,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
   };
 
   return (
-    <Card className={cn("h-full flex flex-col", className)}>
+    <Card className={cn('h-full flex flex-col', className)}>
       <CardHeader className="pb-3">
         <CardTitle className="text-lg text-[#432818] flex items-center gap-2">
           <Grid3X3 className="w-5 h-5" />
@@ -319,10 +319,10 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
           // Modo de busca
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <p style={{ color: "#6B4F43" }}>
+              <p style={{ color: '#6B4F43' }}>
                 {filteredComponents.length} componentes encontrados
               </p>
-              <Button variant="ghost" size="sm" onClick={() => setSearchTerm("")}>
+              <Button variant="ghost" size="sm" onClick={() => setSearchTerm('')}>
                 Limpar
               </Button>
             </div>
@@ -360,7 +360,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                   return (
                     <Button
                       key={key}
-                      variant={activeCategory === key ? "default" : "outline"}
+                      variant={activeCategory === key ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setActiveCategory(key)}
                       className="text-xs p-2 h-auto flex flex-col gap-1"
@@ -382,7 +382,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
                       {category.components.length}
                     </Badge>
                   </div>
-                  <p style={{ color: "#6B4F43" }}>{category.description}</p>
+                  <p style={{ color: '#6B4F43' }}>{category.description}</p>
                 </div>
 
                 <Separator className="bg-[#B89B7A]/20" />
@@ -397,12 +397,12 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
       </CardContent>
 
       {/* Rodapé com estatísticas */}
-      <div style={{ backgroundColor: "#FAF9F7" }}>
-        <div style={{ color: "#6B4F43" }}>
+      <div style={{ backgroundColor: '#FAF9F7' }}>
+        <div style={{ color: '#6B4F43' }}>
           {Object.values(COMPONENT_CATEGORIES).reduce(
             (total, cat) => total + cat.components.length,
             0
-          )}{" "}
+          )}{' '}
           componentes disponíveis
         </div>
       </div>

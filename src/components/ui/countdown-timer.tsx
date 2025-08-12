@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 interface CountdownTimerProps {
   duration?: number;
@@ -31,7 +31,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
     <div className="bg-red-600 text-white px-4 py-2 rounded-lg text-center font-bold">
       <div className="text-sm">Oferta termina em:</div>
       <div className="text-xl">
-        {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
       </div>
     </div>
   );

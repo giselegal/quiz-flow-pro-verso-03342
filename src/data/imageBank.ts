@@ -1,4 +1,4 @@
-import { BankImage, ImageBank } from "./imageBank.d";
+import { BankImage, ImageBank } from './imageBank.d';
 
 // Imagens do banco
 const images: BankImage[] = [];

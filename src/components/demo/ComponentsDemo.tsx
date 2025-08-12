@@ -5,34 +5,34 @@
  * Este arquivo mostra como usar os novos componentes criados
  */
 
-import React, { useState } from "react";
-import { ModernPropertyPanel } from "@/components/editor/ModernPropertyPanel";
-import { Block } from "@/hooks/useBlockForm";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import React, { useState } from 'react';
+import { ModernPropertyPanel } from '@/components/editor/ModernPropertyPanel';
+import { Block } from '@/hooks/useBlockForm';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 // Dados de exemplo para teste
 const sampleBlocks: Block[] = [
   {
-    id: "text-1",
-    type: "text",
+    id: 'text-1',
+    type: 'text',
     properties: {
-      content: "Este é um texto de exemplo",
+      content: 'Este é um texto de exemplo',
       fontSize: 16,
-      textColor: "#000000",
-      textAlign: "left",
+      textColor: '#000000',
+      textAlign: 'left',
     },
   },
   {
-    id: "button-1",
-    type: "button",
+    id: 'button-1',
+    type: 'button',
     properties: {
-      text: "Clique Aqui",
-      link: "https://exemplo.com",
-      backgroundColor: "#3b82f6",
-      textColor: "#ffffff",
+      text: 'Clique Aqui',
+      link: 'https://exemplo.com',
+      backgroundColor: '#3b82f6',
+      textColor: '#ffffff',
       paddingX: 16,
       paddingY: 8,
       borderRadius: 6,
@@ -40,36 +40,36 @@ const sampleBlocks: Block[] = [
     },
   },
   {
-    id: "quiz-step-1",
-    type: "quiz-step",
+    id: 'quiz-step-1',
+    type: 'quiz-step',
     properties: {
       headerEnabled: true,
-      logoUrl: "",
+      logoUrl: '',
       showProgressBar: true,
       showBackButton: true,
-      questionText: "Qual é sua cor favorita?",
-      questionTextColor: "#000000",
+      questionText: 'Qual é sua cor favorita?',
+      questionTextColor: '#000000',
       questionTextSize: 24,
-      questionTextAlign: "center",
-      layout: "2-columns",
-      direction: "vertical",
-      disposition: "image-text",
+      questionTextAlign: 'center',
+      layout: '2-columns',
+      direction: 'vertical',
+      disposition: 'image-text',
       options: [
-        { id: "1", text: "Azul", imageUrl: "", value: "blue" },
-        { id: "2", text: "Vermelho", imageUrl: "", value: "red" },
-        { id: "3", text: "Verde", imageUrl: "", value: "green" },
+        { id: '1', text: 'Azul', imageUrl: '', value: 'blue' },
+        { id: '2', text: 'Vermelho', imageUrl: '', value: 'red' },
+        { id: '3', text: 'Verde', imageUrl: '', value: 'green' },
       ],
       isMultipleChoice: false,
       isRequired: true,
       autoProceed: false,
-      borderRadius: "medium",
-      boxShadow: "medium",
-      spacing: "medium",
-      detail: "none",
-      optionStyle: "card",
-      primaryColor: "#3b82f6",
-      secondaryColor: "#ffffff",
-      borderColor: "#e5e7eb",
+      borderRadius: 'medium',
+      boxShadow: 'medium',
+      spacing: 'medium',
+      detail: 'none',
+      optionStyle: 'card',
+      primaryColor: '#3b82f6',
+      secondaryColor: '#ffffff',
+      borderColor: '#e5e7eb',
       maxWidth: 100,
     },
   },
@@ -93,11 +93,11 @@ export function ComponentsDemo() {
   return (
     <div className="h-screen flex">
       {/* Lista de Blocos */}
-      <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <div className="space-y-4">
           <div>
-            <h2 style={{ color: "#432818" }}>Demo - Sistema Modernizado</h2>
-            <p style={{ color: "#6B4F43" }}>
+            <h2 style={{ color: '#432818' }}>Demo - Sistema Modernizado</h2>
+            <p style={{ color: '#6B4F43' }}>
               Teste os novos componentes criados com Shadcn UI + React Hook Form + Zod
             </p>
           </div>
@@ -105,12 +105,12 @@ export function ComponentsDemo() {
           <Separator />
 
           <div className="space-y-2">
-            <h3 style={{ color: "#6B4F43" }}>Blocos Disponíveis</h3>
+            <h3 style={{ color: '#6B4F43' }}>Blocos Disponíveis</h3>
             {blocks.map(block => (
               <Card
                 key={block.id}
                 className={`cursor-pointer transition-all ${
-                  selectedBlock?.id === block.id ? "ring-2 ring-[#B89B7A]" : ""
+                  selectedBlock?.id === block.id ? 'ring-2 ring-[#B89B7A]' : ''
                 }`}
                 onClick={() => setSelectedBlock(block)}
               >
@@ -132,7 +132,7 @@ export function ComponentsDemo() {
           <Separator />
 
           <div className="space-y-2">
-            <h3 style={{ color: "#6B4F43" }}>Funcionalidades</h3>
+            <h3 style={{ color: '#6B4F43' }}>Funcionalidades</h3>
             <div className="text-xs space-y-1">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -161,9 +161,9 @@ export function ComponentsDemo() {
       </div>
 
       {/* Preview (opcional) */}
-      <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <div className="space-y-4">
-          <h3 style={{ color: "#432818" }}>Preview</h3>
+          <h3 style={{ color: '#432818' }}>Preview</h3>
 
           {selectedBlock && (
             <Card>
@@ -172,7 +172,7 @@ export function ComponentsDemo() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <pre style={{ backgroundColor: "#E5DDD5" }}>
+                  <pre style={{ backgroundColor: '#E5DDD5' }}>
                     {JSON.stringify(selectedBlock.properties, null, 2)}
                   </pre>
                 </div>
@@ -180,7 +180,7 @@ export function ComponentsDemo() {
             </Card>
           )}
 
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <h4 className="font-medium">Status:</h4>
             <div className="space-y-1">
               <div>✅ Schemas Zod criados</div>
@@ -198,14 +198,14 @@ export function ComponentsDemo() {
 
 function getBlockDescription(block: Block): string {
   switch (block.type) {
-    case "text":
-      return `"${(block.properties.content || "").substring(0, 30)}..."`;
-    case "button":
+    case 'text':
+      return `"${(block.properties.content || '').substring(0, 30)}..."`;
+    case 'button':
       return `Botão: "${block.properties.text}"`;
-    case "quiz-step":
-      return `Quiz: "${(block.properties.questionText || "").substring(0, 30)}..."`;
+    case 'quiz-step':
+      return `Quiz: "${(block.properties.questionText || '').substring(0, 30)}..."`;
     default:
-      return "Bloco personalizado";
+      return 'Bloco personalizado';
   }
 }
 

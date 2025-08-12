@@ -1,11 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { STEP_TEMPLATES } from "@/config/templates/templates";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Download } from "lucide-react";
-import { SortableBlockWrapper } from "./SortableBlockWrapper";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { STEP_TEMPLATES } from '@/config/templates/templates';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Download } from 'lucide-react';
+import { SortableBlockWrapper } from './SortableBlockWrapper';
 
 // Componente para drop zone entre blocos
 const InterBlockDropZone: React.FC<{
@@ -15,8 +16,8 @@ const InterBlockDropZone: React.FC<{
   const { setNodeRef, isOver } = useDroppable({
     id: `drop-zone-${position}`,
     data: {
-      type: "canvas-drop-zone",
-      accepts: ["sidebar-component", "canvas-block"], // Aceita tanto componentes da sidebar quanto blocos do canvas
+      type: 'canvas-drop-zone',
+      accepts: ['sidebar-component', 'canvas-block'], // Aceita tanto componentes da sidebar quanto blocos do canvas
       position: position,
     },
   });
@@ -25,9 +26,9 @@ const InterBlockDropZone: React.FC<{
     <div
       ref={setNodeRef}
       className={cn(
-        "h-3 transition-all duration-200 relative",
-        isOver && "h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg",
-        isActive && !isOver && "h-1 bg-brand/20 rounded-full opacity-50"
+        'h-3 transition-all duration-200 relative',
+        isOver && 'h-12 bg-brand/10 border-2 border-dashed border-brand/40 rounded-lg',
+        isActive && !isOver && 'h-1 bg-brand/20 rounded-full opacity-50'
       )}
     >
       {isOver && (
@@ -65,26 +66,26 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   className,
 }) => {
   const { setNodeRef, isOver, active } = useDroppable({
-    id: "canvas-drop-zone",
+    id: 'canvas-drop-zone',
     data: {
-      type: "canvas-drop-zone",
-      accepts: ["sidebar-component", "canvas-block"],
+      type: 'canvas-drop-zone',
+      accepts: ['sidebar-component', 'canvas-block'],
       position: blocks.length, // Posição no final
     },
   });
 
   // Verifica se qualquer item arrastável válido está ativo
   const isDraggingAnyValidComponent =
-    active?.data.current?.type === "sidebar-component" ||
-    active?.data.current?.type === "canvas-block";
+    active?.data.current?.type === 'sidebar-component' ||
+    active?.data.current?.type === 'canvas-block';
 
   // Debug do drop zone
   React.useEffect(() => {
-    console.log("🎯 CanvasDropZone: isOver =", isOver, "active =", active?.id);
-    if (active?.data.current?.type === "sidebar-component") {
-      console.log("📦 Arrastando componente da sidebar:", active?.data.current?.blockType);
-    } else if (active?.data.current?.type === "canvas-block") {
-      console.log("🔄 Reordenando bloco do canvas:", active?.id);
+    console.log('🎯 CanvasDropZone: isOver =', isOver, 'active =', active?.id);
+    if (active?.data.current?.type === 'sidebar-component') {
+      console.log('📦 Arrastando componente da sidebar:', active?.data.current?.blockType);
+    } else if (active?.data.current?.type === 'canvas-block') {
+      console.log('🔄 Reordenando bloco do canvas:', active?.id);
     }
   }, [isOver, active]);
 
@@ -92,8 +93,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     <div
       ref={setNodeRef}
       className={cn(
-        "p-3 min-h-[400px] transition-all duration-200",
-        isOver && !isPreviewing && "bg-brand/5 ring-2 ring-brand/20 ring-dashed",
+        'p-3 min-h-[400px] transition-all duration-200',
+        isOver && !isPreviewing && 'bg-brand/5 ring-2 ring-brand/20 ring-dashed',
         className
       )}
     >
@@ -104,8 +105,8 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
           </h3>
           <p className="text-stone-500 text-lg mb-2">
             {isPreviewing
-              ? "Modo Preview - Nenhum componente nesta etapa"
-              : "Arraste componentes da sidebar ou use um template para começar"}
+              ? 'Modo Preview - Nenhum componente nesta etapa'
+              : 'Arraste componentes da sidebar ou use um template para começar'}
           </p>
           <div className="space-y-4">
             <div>

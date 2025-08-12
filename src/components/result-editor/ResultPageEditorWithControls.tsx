@@ -1,13 +1,13 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { StyleResult } from "@/types/quiz";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Save, ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
-import { toast } from "@/components/ui/use-toast";
-import EditableComponent from "./EditableComponent";
-import { useQuizResultConfig } from "@/hooks/useQuizResultConfig";
-import { useAutosave } from "@/hooks/useAutosave";
+import React, { useState } from 'react';
+import { StyleResult } from '@/types/quiz';
+import { Button } from '@/components/ui/button';
+import { Eye, EyeOff, Save, ArrowLeft } from 'lucide-react';
+import { Link } from 'wouter';
+import { toast } from '@/components/ui/use-toast';
+import EditableComponent from './EditableComponent';
+import { useQuizResultConfig } from '@/hooks/useQuizResultConfig';
+import { useAutosave } from '@/hooks/useAutosave';
 
 interface QuizResultProps {
   primaryStyle: StyleResult;
@@ -118,7 +118,7 @@ export const ResultPageEditorWithControls: React.FC<ResultPageEditorWithControls
 
           <Button className="bg-[#B89B7A] hover:bg-[#A38A69]" onClick={saveNow} disabled={isSaving}>
             <Save className="w-4 h-4 mr-2" />
-            {isSaving ? "Salvando..." : "Salvar"}
+            {isSaving ? 'Salvando...' : 'Salvar'}
           </Button>
         </div>
       </div>

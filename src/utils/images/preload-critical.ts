@@ -1,4 +1,4 @@
-import { PreloadOptions, PreloadImageDefinition } from "./types";
+import { PreloadOptions, PreloadImageDefinition } from './types';
 
 /**
  * Preloads a set of critical images that should be loaded before rendering
@@ -12,7 +12,7 @@ export const preloadCriticalImages = (
 ): Promise<void> => {
   const {
     quality = 90,
-    format = "auto",
+    format = 'auto',
     timeout = 3000, // Now properly typed in PreloadOptions
     onProgress,
     onComplete,
@@ -31,10 +31,10 @@ export const preloadCriticalImages = (
 
   // Create optimized URLs for preloading
   const optimizedUrls = imageUrls.map(url => {
-    if (!url.includes("cloudinary.com")) return url;
+    if (!url.includes('cloudinary.com')) return url;
 
     // Extract base URL parts
-    const baseUrlParts = url.split("/upload/");
+    const baseUrlParts = url.split('/upload/');
     if (baseUrlParts.length !== 2) return url;
 
     // Add optimization parameters
@@ -102,18 +102,18 @@ export const preloadLCPImage = (imageUrl: string, options: PreloadOptions = {}):
   // Higher quality and priority for LCP image
   const lcpOptions: PreloadOptions = {
     quality: 95,
-    format: "auto",
+    format: 'auto',
     timeout: 2000, // Now properly defined in PreloadOptions
     ...options,
   };
 
   // Create a link preload element for highest priority
-  if (typeof document !== "undefined" && imageUrl) {
-    const linkEl = document.createElement("link");
-    linkEl.rel = "preload";
-    linkEl.as = "image";
+  if (typeof document !== 'undefined' && imageUrl) {
+    const linkEl = document.createElement('link');
+    linkEl.rel = 'preload';
+    linkEl.as = 'image';
     linkEl.href = imageUrl;
-    linkEl.setAttribute("fetchpriority", "high");
+    linkEl.setAttribute('fetchpriority', 'high');
     document.head.appendChild(linkEl);
   }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step10Template - Componente para Etapa 10 do Quiz
@@ -40,18 +40,18 @@ interface Step10TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step10Template: React.FC<Step10TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 9 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 9 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 9 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 9 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 50,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step10Template: React.FC<Step10TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step10Template: React.FC<Step10TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step10-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step10-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step10Template: React.FC<Step10TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step10Template: React.FC<Step10TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,20 +199,20 @@ export const getStep10Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: "quiz-header-step10",
-      type: "quiz-header",
+      id: 'quiz-header-step10',
+      type: 'quiz-header',
       properties: {
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 80,
         logoHeight: 80,
         progressValue: 50,
         progressMax: 100,
         showBackButton: true,
         showProgress: true,
-        stepNumber: "10 de 21",
-        spacing: "small",
+        stepNumber: '10 de 21',
+        spacing: 'small',
         marginTop: 0,
         marginBottom: 0,
       },
@@ -220,52 +220,52 @@ export const getStep10Template = () => {
 
     // 🎨 BARRA DECORATIVA
     {
-      id: "decorative-bar-step10",
-      type: "decorative-bar-inline",
+      id: 'decorative-bar-step10',
+      type: 'decorative-bar-inline',
       properties: {
-        width: "100%",
+        width: '100%',
         height: 3,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        color: '#B89B7A',
+        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
         borderRadius: 2,
         marginTop: 0,
         marginBottom: 20,
         showShadow: true,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 📝 PERGUNTA PRINCIPAL
     {
-      id: "question-text-step10",
-      type: "text-inline",
+      id: 'question-text-step10',
+      type: 'text-inline',
       properties: {
-        content: "Seu estilo de maquiagem preferido:",
-        fontSize: "text-2xl",
-        fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
-        textAlign: "text-center",
-        color: "#432818",
+        content: 'Seu estilo de maquiagem preferido:',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        fontFamily: 'Playfair Display, serif',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 24,
-        lineHeight: "1.3",
-        spacing: "small",
+        lineHeight: '1.3',
+        spacing: 'small',
         marginTop: 0,
       },
     },
 
     // 🖼️ IMAGEM DA PERGUNTA
     {
-      id: "question-image-step10",
-      type: "image-display-inline",
+      id: 'question-image-step10',
+      type: 'image-display-inline',
       properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838145/20250509_2146_Maquiagem_e_Beleza_simple_compose_01jtvt92fckdz7pz5r9n3j4q8m_bvtwpb.webp",
-        alt: "Imagem da pergunta 10",
+        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838145/20250509_2146_Maquiagem_e_Beleza_simple_compose_01jtvt92fckdz7pz5r9n3j4q8m_bvtwpb.webp',
+        alt: 'Imagem da pergunta 10',
         width: 400,
         height: 300,
-        className: "object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md",
-        textAlign: "text-center",
+        className: 'object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md',
+        textAlign: 'text-center',
         marginBottom: 24,
-        spacing: "small",
+        spacing: 'small',
         marginTop: 0,
       },
     },
@@ -273,12 +273,12 @@ export const getStep10Template = () => {
     // 🎯 OPÇÕES DE RESPOSTA
 
     {
-      id: "option-1-step10",
-      type: "quiz-option",
+      id: 'option-1-step10',
+      type: 'quiz-option',
       properties: {
-        optionId: "sofisticada-marcante",
-        label: "Sofisticada e marcante",
-        value: "sofisticada-marcante",
+        optionId: 'sofisticada-marcante',
+        label: 'Sofisticada e marcante',
+        value: 'sofisticada-marcante',
         points: {
           elegante: 3,
           casual: 1,
@@ -287,28 +287,28 @@ export const getStep10Template = () => {
           romantico: 2,
           minimalista: 1,
           boho: 1,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
     {
-      id: "option-2-step10",
-      type: "quiz-option",
+      id: 'option-2-step10',
+      type: 'quiz-option',
       properties: {
-        optionId: "natural-pratica",
-        label: "Natural e prática",
-        value: "natural-pratica",
+        optionId: 'natural-pratica',
+        label: 'Natural e prática',
+        value: 'natural-pratica',
         points: {
           elegante: 1,
           casual: 3,
@@ -317,28 +317,28 @@ export const getStep10Template = () => {
           romantico: 1,
           minimalista: 3,
           boho: 2,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
     {
-      id: "option-3-step10",
-      type: "quiz-option",
+      id: 'option-3-step10',
+      type: 'quiz-option',
       properties: {
-        optionId: "romantica-delicada",
-        label: "Romântica e delicada",
-        value: "romantica-delicada",
+        optionId: 'romantica-delicada',
+        label: 'Romântica e delicada',
+        value: 'romantica-delicada',
         points: {
           elegante: 2,
           casual: 1,
@@ -347,28 +347,28 @@ export const getStep10Template = () => {
           romantico: 3,
           minimalista: 2,
           boho: 2,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
     {
-      id: "option-4-step10",
-      type: "quiz-option",
+      id: 'option-4-step10',
+      type: 'quiz-option',
       properties: {
-        optionId: "colorida-criativa",
-        label: "Colorida e criativa",
-        value: "colorida-criativa",
+        optionId: 'colorida-criativa',
+        label: 'Colorida e criativa',
+        value: 'colorida-criativa',
         points: {
           elegante: 1,
           casual: 2,
@@ -377,42 +377,42 @@ export const getStep10Template = () => {
           romantico: 1,
           minimalista: 1,
           boho: 3,
-          spacing: "small",
+          spacing: 'small',
           marginTop: 0,
           marginBottom: 0,
         },
 
-        variant: "default",
-        size: "large",
-        textAlign: "text-left",
+        variant: 'default',
+        size: 'large',
+        textAlign: 'text-left',
         marginBottom: 12,
-        borderRadius: "rounded-lg",
-        backgroundColor: "#ffffff",
-        hoverColor: "#F8F4F1",
-        selectedColor: "#B89B7A",
+        borderRadius: 'rounded-lg',
+        backgroundColor: '#ffffff',
+        hoverColor: '#F8F4F1',
+        selectedColor: '#B89B7A',
       },
     },
 
     // 🎯 BOTÃO CONTINUAR
     {
-      id: "continue-button-step10",
-      type: "button-inline",
+      id: 'continue-button-step10',
+      type: 'button-inline',
       properties: {
-        text: "Continuar →",
-        variant: "primary",
-        size: "large",
+        text: 'Continuar →',
+        variant: 'primary',
+        size: 'large',
         fullWidth: true,
-        backgroundColor: "#B89B7A",
-        textColor: "#ffffff",
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
         requiresSelection: true,
-        textAlign: "text-center",
-        borderRadius: "rounded-full",
-        padding: "py-3 px-6",
-        fontSize: "text-base",
-        fontWeight: "font-semibold",
+        textAlign: 'text-center',
+        borderRadius: 'rounded-full',
+        padding: 'py-3 px-6',
+        fontSize: 'text-base',
+        fontWeight: 'font-semibold',
         marginTop: 24,
         disabled: true,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },

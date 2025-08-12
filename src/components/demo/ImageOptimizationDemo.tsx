@@ -1,5 +1,5 @@
 // Update the import path if the file is located elsewhere, for example:
-import EnhancedAutoFixedImages from "../ui/EnhancedAutoFixedImages";
+import EnhancedAutoFixedImages from '../ui/EnhancedAutoFixedImages';
 // Or create the file at src/components/demo/ui/EnhancedAutoFixedImages.tsx if it doesn't exist.
 
 /**
@@ -15,7 +15,7 @@ const ImageOptimizationDemo: React.FC = () => {
         {/* Seção com EnhancedAutoFixedImages */}
         <section>
           <h2 className="text-lg font-medium mb-2">Com otimização automática</h2>
-          <p style={{ color: "#6B4F43" }}>
+          <p style={{ color: '#6B4F43' }}>
             Esta seção usa o componente EnhancedAutoFixedImages para corrigir automaticamente
             imagens borradas, com detecção inteligente do LCP e escopo limitado.
           </p>
@@ -46,12 +46,12 @@ const ImageOptimizationDemo: React.FC = () => {
         {/* Seção sem EnhancedAutoFixedImages para comparação */}
         <section>
           <h2 className="text-lg font-medium mb-2">Sem otimização automática</h2>
-          <p style={{ color: "#6B4F43" }}>
+          <p style={{ color: '#6B4F43' }}>
             Esta seção não usa o componente de correção, mostrando as imagens como seriam
             naturalmente carregadas sem otimização automática.
           </p>
 
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <h3 className="text-sm font-medium mb-2">Imagem do Cloudinary</h3>
@@ -75,9 +75,9 @@ const ImageOptimizationDemo: React.FC = () => {
         </section>
       </div>
 
-      <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <h2 className="text-lg font-medium mb-2">Como funciona</h2>
-        <p style={{ color: "#6B4F43" }}>
+        <p style={{ color: '#6B4F43' }}>
           O componente EnhancedAutoFixedImages detecta precisamente quando o LCP ocorre, e otimiza
           as imagens de forma adaptativa às características do dispositivo, como densidade de pixels
           e capacidade de processamento. Isso resulta em imagens mais nítidas, sem sobrecarregar

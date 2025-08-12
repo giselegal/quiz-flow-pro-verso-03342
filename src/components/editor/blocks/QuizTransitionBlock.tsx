@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface QuizTransitionBlockProps {
   block: {
@@ -24,11 +24,11 @@ interface QuizTransitionBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -77,33 +77,33 @@ const QuizTransitionBlock: React.FC<QuizTransitionBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
 
   const {
-    title = "Transição",
-    description = "Vamos continuar para a próxima etapa",
-    buttonText = "Continuar",
-    icon = "🎯",
-    backgroundColor = "#ffffff",
-    textColor = "#432818",
+    title = 'Transição',
+    description = 'Vamos continuar para a próxima etapa',
+    buttonText = 'Continuar',
+    icon = '🎯',
+    backgroundColor = '#ffffff',
+    textColor = '#432818',
   } = block?.properties || {};
 
   return (
     <div
       className={cn(
-        "relative w-full min-h-[350px] p-8 rounded-lg border-2 border-dashed",
-        isSelected ? "border-[#B89B7A] bg-[#B89B7A]/10" : "border-gray-300 bg-white",
-        "cursor-pointer hover:border-gray-400 transition-colors",
+        'relative w-full min-h-[350px] p-8 rounded-lg border-2 border-dashed',
+        isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-300 bg-white',
+        'cursor-pointer hover:border-gray-400 transition-colors',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor }}

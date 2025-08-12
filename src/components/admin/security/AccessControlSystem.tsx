@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from 'react';
 
 interface Permission {
   id: string;
@@ -48,7 +48,7 @@ export const PermissionsProvider: React.FC<{ children: React.ReactNode }> = ({ c
 export const usePermissions = () => {
   const context = useContext(PermissionsContext);
   if (!context) {
-    throw new Error("usePermissions must be used within a PermissionsProvider");
+    throw new Error('usePermissions must be used within a PermissionsProvider');
   }
   return context;
 };
@@ -57,7 +57,7 @@ const AccessControlSystem: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-lg font-semibold mb-4">Sistema de Controle de Acesso</h2>
-      <p style={{ color: "#6B4F43" }}>Sistema de controle de acesso em desenvolvimento...</p>
+      <p style={{ color: '#6B4F43' }}>Sistema de controle de acesso em desenvolvimento...</p>
     </div>
   );
 };

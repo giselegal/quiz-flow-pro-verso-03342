@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import type { BlockComponentProps, BlockData } from "@/types/blocks";
+import { cn } from '@/lib/utils';
+import type { BlockComponentProps, BlockData } from '@/types/blocks';
 
 interface Props extends BlockComponentProps {
   block: BlockData;
@@ -13,11 +13,11 @@ interface Props extends BlockComponentProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value: string | number, type: string): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -65,9 +65,9 @@ const LoadingAnimationBlock: React.FC<Props> = ({
 }) => {
   const properties = block.properties || {};
   const {
-    type = "spinner",
-    size = "medium",
-    color = "#432818",
+    type = 'spinner',
+    size = 'medium',
+    color = '#432818',
     duration = 3000,
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
@@ -82,25 +82,25 @@ const LoadingAnimationBlock: React.FC<Props> = ({
 
   const getSizeClass = (size: string) => {
     switch (size) {
-      case "small":
-        return "w-6 h-6";
-      case "large":
-        return "w-12 h-12";
+      case 'small':
+        return 'w-6 h-6';
+      case 'large':
+        return 'w-12 h-12';
       default:
-        return "w-8 h-8";
+        return 'w-8 h-8';
     }
   };
 
   const renderSpinner = () => (
     <div
       className={cn(
-        "animate-spin rounded-full border-2 border-gray-300",
+        'animate-spin rounded-full border-2 border-gray-300',
         getSizeClass(size),
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       style={{
         borderTopColor: color,
@@ -115,8 +115,8 @@ const LoadingAnimationBlock: React.FC<Props> = ({
         <div
           key={i}
           className={cn(
-            "rounded-full animate-pulse",
-            size === "small" ? "w-2 h-2" : size === "large" ? "w-4 h-4" : "w-3 h-3"
+            'rounded-full animate-pulse',
+            size === 'small' ? 'w-2 h-2' : size === 'large' ? 'w-4 h-4' : 'w-3 h-3'
           )}
           style={{
             backgroundColor: color,
@@ -130,7 +130,7 @@ const LoadingAnimationBlock: React.FC<Props> = ({
 
   const renderPulse = () => (
     <div
-      className={cn("rounded-full animate-pulse", getSizeClass(size))}
+      className={cn('rounded-full animate-pulse', getSizeClass(size))}
       style={{
         backgroundColor: color,
         animationDuration: `${duration / 1000}s`,
@@ -140,9 +140,9 @@ const LoadingAnimationBlock: React.FC<Props> = ({
 
   const renderAnimation = () => {
     switch (type) {
-      case "dots":
+      case 'dots':
         return renderDots();
-      case "pulse":
+      case 'pulse':
         return renderPulse();
       default:
         return renderSpinner();
@@ -152,9 +152,9 @@ const LoadingAnimationBlock: React.FC<Props> = ({
   return (
     <div
       className={cn(
-        "loading-animation w-full flex items-center justify-center py-8",
-        "transition-all duration-200",
-        isSelected && "ring-2 ring-[#432818] bg-[#432818]/10",
+        'loading-animation w-full flex items-center justify-center py-8',
+        'transition-all duration-200',
+        isSelected && 'ring-2 ring-[#432818] bg-[#432818]/10',
         className
       )}
       onClick={handleClick}

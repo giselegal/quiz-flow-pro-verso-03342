@@ -1,5 +1,5 @@
-import { StyleResult } from "@/types/quiz";
-import { motion } from "framer-motion";
+import { StyleResult } from '@/types/quiz';
+import { motion } from 'framer-motion';
 
 interface SecondaryStylesSectionProps {
   secondaryStyles: StyleResult[];
@@ -36,7 +36,7 @@ const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({ seconda
         >
           <motion.span
             initial={{ width: 0 }}
-            animate={{ width: "100%" }}
+            animate={{ width: '100%' }}
             transition={{ delay: 0.8, duration: 0.8 }}
             className="absolute -bottom-1 left-0 h-[2px] bg-gradient-to-r from-[#B89B7A] to-transparent rounded-full"
           />
@@ -52,7 +52,7 @@ const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({ seconda
             variants={itemVariants}
             whileHover={{
               y: -2,
-              boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             }}
           >
             <div className="flex-1">
@@ -79,7 +79,7 @@ const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({ seconda
                   transition={{
                     delay: 0.8 + index * 0.2,
                     duration: 1,
-                    ease: "easeOut",
+                    ease: 'easeOut',
                   }}
                 >
                   <motion.div
@@ -90,7 +90,7 @@ const SecondaryStylesSection: React.FC<SecondaryStylesSectionProps> = ({ seconda
                     transition={{
                       duration: 2,
                       repeat: Infinity,
-                      repeatType: "loop",
+                      repeatType: 'loop',
                     }}
                   />
                 </motion.div>

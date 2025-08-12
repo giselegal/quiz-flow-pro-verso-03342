@@ -1,8 +1,8 @@
 /* @ts-nocheck */
 // @ts-nocheck
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React, { useEffect, useState } from "react";
-import { BlockComponentProps, LoadingType, Alignment, InteractionCallbacks } from "./types";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import React, { useEffect, useState } from 'react';
+import { BlockComponentProps, LoadingType, Alignment, InteractionCallbacks } from './types';
 
 /**
  * LoadingTransition - Componente de transição com animação de carregamento
@@ -50,26 +50,26 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
   loadingTexts = [],
 
   // Configuração
-  animationType = "elegant",
+  animationType = 'elegant',
   duration = 4000,
   autoAdvance = true,
 
   // Layout
-  alignment = "center",
+  alignment = 'center',
   showProgress = true,
-  progressColor = "#B89B7A",
-  backgroundColor = "#ffffff",
-  textColor = "#432818",
+  progressColor = '#B89B7A',
+  backgroundColor = '#ffffff',
+  textColor = '#432818',
 
   // Callbacks
   onComplete,
   onProgress,
 
   // Props base
-  deviceView = "desktop",
-  className = "",
+  deviceView = 'desktop',
+  className = '',
   style = {},
-  testId = "loading-transition",
+  testId = 'loading-transition',
   ..._rest
 }) => {
   const [progress, setProgress] = useState(0);
@@ -78,9 +78,9 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
 
   // Classes de alinhamento
   const _alignmentClasses = {
-    left: "text-left items-start",
-    center: "text-center items-center",
-    right: "text-right items-end",
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end',
   };
 
   // Efeito para progresso e texto rotativo
@@ -119,17 +119,17 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
 
   // Renderizar animação baseada no tipo
   const renderAnimation = () => {
-    const baseClasses = "mx-auto mb-8";
+    const baseClasses = 'mx-auto mb-8';
 
     switch (animationType) {
-      case "spinning":
+      case 'spinning':
         return (
           <div className={`${baseClasses} w-16 h-16`}>
-            <div style={{ borderColor: "#E5DDD5", borderTopColor: progressColor }} />
+            <div style={{ borderColor: '#E5DDD5', borderTopColor: progressColor }} />
           </div>
         );
 
-      case "elegant":
+      case 'elegant':
         return (
           <div className={`${baseClasses} w-20 h-20`}>
             <div className="relative w-full h-full">
@@ -152,7 +152,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
           </div>
         );
 
-      case "dots":
+      case 'dots':
         return (
           <div className={`${baseClasses} flex space-x-2`}>
             {[...Array(3)].map((_, i) => (
@@ -169,7 +169,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
           </div>
         );
 
-      case "bars":
+      case 'bars':
         return (
           <div className={`${baseClasses} flex space-x-1 h-8`}>
             {[...Array(5)].map((_, i) => (
@@ -192,9 +192,9 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
   };
 
   const containerClasses = getOptimizedContainerClasses(
-    deviceView || "desktop",
-    "tight",
-    "full",
+    deviceView || 'desktop',
+    'tight',
+    'full',
     className
   );
 
@@ -213,15 +213,15 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
       <h2 className="text-2xl md:text-3xl font-bold mb-4 max-w-2xl">{message}</h2>
 
       {/* Submensagem */}
-      {submessage && <p style={{ color: "#6B4F43" }}>{submessage}</p>}
+      {submessage && <p style={{ color: '#6B4F43' }}>{submessage}</p>}
 
       {/* Texto Rotativo */}
-      {currentLoadingText && <p style={{ color: "#8B7355" }}>{currentLoadingText}</p>}
+      {currentLoadingText && <p style={{ color: '#8B7355' }}>{currentLoadingText}</p>}
 
       {/* Barra de Progresso */}
       {showProgress && (
         <div className="w-full max-w-md">
-          <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="h-full transition-all duration-300 ease-out rounded-full"
               style={{
@@ -230,7 +230,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
               }}
             />
           </div>
-          <p style={{ color: "#8B7355" }}>{Math.round(progress)}%</p>
+          <p style={{ color: '#8B7355' }}>{Math.round(progress)}%</p>
         </div>
       )}
 
@@ -241,7 +241,7 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
           className="mt-8 px-8 py-3 rounded-lg font-semibold transition-all duration-200 hover:scale-105"
           style={{
             backgroundColor: progressColor,
-            color: backgroundColor === "#ffffff" ? "#ffffff" : textColor,
+            color: backgroundColor === '#ffffff' ? '#ffffff' : textColor,
           }}
           data-testid="continue-button"
         >

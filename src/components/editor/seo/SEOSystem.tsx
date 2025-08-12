@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 export const CustomURLEditor: React.FC = () => {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState('');
 
   return (
     <Card>
@@ -28,9 +28,9 @@ export const CustomURLEditor: React.FC = () => {
 };
 
 export const SEOEditor: React.FC = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [keywords, setKeywords] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [keywords, setKeywords] = useState('');
 
   return (
     <Card>

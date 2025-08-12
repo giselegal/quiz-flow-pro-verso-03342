@@ -1,5 +1,5 @@
-import { QuizQuestion } from "./quiz";
-import { ResultPageConfig } from "./resultPageConfig";
+import { QuizQuestion } from './quiz';
+import { ResultPageConfig } from './resultPageConfig';
 
 export interface QuizTemplate {
   id: string;
@@ -23,5 +23,5 @@ export interface QuizTemplate {
 
 export type TemplateListItem = Pick<
   QuizTemplate,
-  "id" | "name" | "description" | "isPublished" | "updatedAt"
+  'id' | 'name' | 'description' | 'isPublished' | 'updatedAt'
 >;

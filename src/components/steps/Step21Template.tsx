@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step21Template - Componente para Etapa 21 do Quiz
@@ -40,18 +40,18 @@ interface Step21TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step21Template: React.FC<Step21TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 20 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 20 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 20 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 20 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 105,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step21Template: React.FC<Step21TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step21Template: React.FC<Step21TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step21-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step21-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step21Template: React.FC<Step21TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step21Template: React.FC<Step21TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,20 +199,20 @@ export const getStep21Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: "progress-header-step21",
-      type: "quiz-header",
+      id: 'progress-header-step21',
+      type: 'quiz-header',
       properties: {
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 80,
         logoHeight: 80,
         progressValue: 100,
         progressMax: 100,
         showBackButton: false,
         showProgress: true,
-        stepNumber: "21 de 21",
-        spacing: "small",
+        stepNumber: '21 de 21',
+        spacing: 'small',
         marginTop: 0,
         marginBottom: 0,
       },
@@ -220,69 +220,69 @@ export const getStep21Template = () => {
 
     // 🎨 BARRA DECORATIVA
     {
-      id: "decorative-bar-step21",
-      type: "decorative-bar-inline",
+      id: 'decorative-bar-step21',
+      type: 'decorative-bar-inline',
       properties: {
-        width: "100%",
+        width: '100%',
         height: 4,
-        color: "#B89B7A",
-        gradientColors: ["#B89B7A", "#D4C2A8", "#B89B7A"],
+        color: '#B89B7A',
+        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
         borderRadius: 3,
         marginTop: 0,
         marginBottom: 32,
         showShadow: true,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 📱 TÍTULO DA TRANSIÇÃO
     {
-      id: "transition-title-step21",
-      type: "text-inline",
+      id: 'transition-title-step21',
+      type: 'text-inline',
       properties: {
-        content: "Transforme seu Guarda-Roupa Agora!",
-        fontSize: "text-3xl",
-        fontWeight: "font-bold",
-        fontFamily: "Playfair Display, serif",
-        textAlign: "text-center",
-        color: "#432818",
+        content: 'Transforme seu Guarda-Roupa Agora!',
+        fontSize: 'text-3xl',
+        fontWeight: 'font-bold',
+        fontFamily: 'Playfair Display, serif',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 24,
-        lineHeight: "1.2",
-        spacing: "small",
+        lineHeight: '1.2',
+        spacing: 'small',
         marginTop: 0,
       },
     },
 
     // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
     {
-      id: "transition-image-step21",
-      type: "image-display-inline",
+      id: 'transition-image-step21',
+      type: 'image-display-inline',
       properties: {
-        src: "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838178/20250509_2157_Oferta_Especial_simple_compose_01jtvtkoxf9n4q6r7bnz5z4mvd_pnqrsm.webp",
-        alt: "Transforme seu Guarda-Roupa Agora!",
+        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838178/20250509_2157_Oferta_Especial_simple_compose_01jtvtkoxf9n4q6r7bnz5z4mvd_pnqrsm.webp',
+        alt: 'Transforme seu Guarda-Roupa Agora!',
         width: 500,
         height: 350,
-        className: "object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg",
-        textAlign: "text-center",
+        className: 'object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg',
+        textAlign: 'text-center',
         marginBottom: 32,
-        spacing: "small",
+        spacing: 'small',
         marginTop: 0,
       },
     },
 
     // 💭 TEXTO DESCRITIVO
     {
-      id: "transition-description-step21",
-      type: "text-inline",
+      id: 'transition-description-step21',
+      type: 'text-inline',
       properties: {
         content:
-          "Com base no seu estilo, temos uma oferta especial para você começar sua transformação hoje mesmo.",
-        fontSize: "text-lg",
-        textAlign: "text-center",
-        color: "#432818",
+          'Com base no seu estilo, temos uma oferta especial para você começar sua transformação hoje mesmo.',
+        fontSize: 'text-lg',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 40,
-        lineHeight: "1.6",
-        spacing: "small",
+        lineHeight: '1.6',
+        spacing: 'small',
         marginTop: 0,
       },
     },

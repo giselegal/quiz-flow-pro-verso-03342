@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,25 +8,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { styleQuizTemplate } from "@/services/templates/styleQuizTemplate";
-import { styleQuizTemplate2 } from "@/services/templates/styleQuizTemplate2";
-import { QuizBuilderState } from "@/types/quizBuilder";
-import { QuizTemplate } from "@/types/quizTemplate";
-import { createBuilderStateFromQuiz } from "@/services/quizBuilderService";
-import caktoquizQuestions from "@/data/caktoquizQuestions";
-import { QuizQuestion } from "@/types/quiz";
-import { toast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { styleQuizTemplate } from '@/services/templates/styleQuizTemplate';
+import { styleQuizTemplate2 } from '@/services/templates/styleQuizTemplate2';
+import { QuizBuilderState } from '@/types/quizBuilder';
+import { QuizTemplate } from '@/types/quizTemplate';
+import { createBuilderStateFromQuiz } from '@/services/quizBuilderService';
+import caktoquizQuestions from '@/data/caktoquizQuestions';
+import { QuizQuestion } from '@/types/quiz';
+import { toast } from '@/components/ui/use-toast';
+import { Loader2 } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface QuizTemplateImporterProps {
   isOpen: boolean;
@@ -40,7 +40,7 @@ interface TemplateItem {
   description: string;
   image: string;
   template: QuizTemplate | QuizBuilderState;
-  type: "quizTemplate" | "builderState";
+  type: 'quizTemplate' | 'builderState';
 }
 
 interface ImportSourceOption {
@@ -55,23 +55,23 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
   onClose,
   onImportTemplate,
 }) => {
-  const [activeTab, setActiveTab] = useState<string>("templates");
+  const [activeTab, setActiveTab] = useState<string>('templates');
   const [isImporting, setIsImporting] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
 
   const templates: TemplateItem[] = [
     {
-      id: "style-quiz-1",
-      title: "Quiz de Estilo Pessoal",
-      description: "Template padrão com perguntas sobre preferências de estilo e personalidade.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+      id: 'style-quiz-1',
+      title: 'Quiz de Estilo Pessoal',
+      description: 'Template padrão com perguntas sobre preferências de estilo e personalidade.',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
       template: {
-        id: "style-quiz-1",
-        name: "Quiz de Estilo Pessoal",
-        description: "Template padrão com perguntas sobre preferências de estilo e personalidade.",
+        id: 'style-quiz-1',
+        name: 'Quiz de Estilo Pessoal',
+        description: 'Template padrão com perguntas sobre preferências de estilo e personalidade.',
         questions: [],
         resultPageSettings: {
-          styleType: "classic",
+          styleType: 'classic',
           blocks: [],
           headerConfig: {},
           mainContentConfig: {},
@@ -81,34 +81,34 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
-      type: "quizTemplate",
+      type: 'quizTemplate',
     },
     {
-      id: "style-quiz-2",
-      title: "Quiz de Estilo Avançado",
+      id: 'style-quiz-2',
+      title: 'Quiz de Estilo Avançado',
       description:
-        "Template com questões de múltipla escolha e imagens para análise de estilo detalhada.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+        'Template com questões de múltipla escolha e imagens para análise de estilo detalhada.',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp',
       template: styleQuizTemplate2,
-      type: "builderState",
+      type: 'builderState',
     },
   ];
 
   const importSources: ImportSourceOption[] = [
     {
-      id: "current-quiz",
-      name: "Quiz Atual",
+      id: 'current-quiz',
+      name: 'Quiz Atual',
       description:
-        "Importar o quiz em execução no site atual com todas as perguntas e configurações.",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+        'Importar o quiz em execução no site atual com todas as perguntas e configurações.',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
     },
     {
-      id: "result-page",
-      name: "Página de Resultados",
+      id: 'result-page',
+      name: 'Página de Resultados',
       description:
-        "Importar configurações da página de resultados atual, incluindo layout e componentes.",
+        'Importar configurações da página de resultados atual, incluindo layout e componentes.',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp',
     },
   ];
 
@@ -118,7 +118,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       setSelectedTemplateId(templateItem.id);
       let builderState: QuizBuilderState;
 
-      if (templateItem.type === "quizTemplate") {
+      if (templateItem.type === 'quizTemplate') {
         // Convert QuizTemplate to QuizBuilderState
         const quizTemplate = templateItem.template as QuizTemplate;
         builderState = createBuilderStateFromQuiz(
@@ -137,16 +137,16 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
       onImportTemplate(builderState);
       toast({
-        title: "Template importado com sucesso",
+        title: 'Template importado com sucesso',
         description: `O template "${templateItem.title}" foi aplicado ao seu quiz.`,
       });
       onClose();
     } catch (error) {
-      console.error("Erro ao importar template:", error);
+      console.error('Erro ao importar template:', error);
       toast({
-        title: "Erro ao importar template",
-        description: "Não foi possível importar o template selecionado.",
-        variant: "destructive",
+        title: 'Erro ao importar template',
+        description: 'Não foi possível importar o template selecionado.',
+        variant: 'destructive',
       });
     } finally {
       setIsImporting(false);
@@ -160,13 +160,13 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       setSelectedTemplateId(sourceId);
       let builderState: QuizBuilderState;
 
-      if (sourceId === "current-quiz") {
+      if (sourceId === 'current-quiz') {
         // Import from the current live quiz
         builderState = createBuilderStateFromQuiz(
           caktoquizQuestions,
-          "Quiz de Estilo Pessoal",
-          "Descubra seu estilo predominante respondendo às perguntas a seguir",
-          "Seu Resultado de Estilo Pessoal"
+          'Quiz de Estilo Pessoal',
+          'Descubra seu estilo predominante respondendo às perguntas a seguir',
+          'Seu Resultado de Estilo Pessoal'
         );
 
         // Adiciona um pequeno atraso para simular um processo e dar feedback visual ao usuário
@@ -174,13 +174,13 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
         // Try to load existing results from localStorage
         try {
-          const savedResultConfig = localStorage.getItem("quiz_result_config_Elegante");
+          const savedResultConfig = localStorage.getItem('quiz_result_config_Elegante');
           if (savedResultConfig) {
-            console.log("Found existing result configuration, integrating with builder state");
+            console.log('Found existing result configuration, integrating with builder state');
             // In a real implementation, we would merge the result config with the builder state
           }
         } catch (error) {
-          console.error("Error loading saved result config:", error);
+          console.error('Error loading saved result config:', error);
         }
       } else {
         // Import from result page
@@ -191,19 +191,19 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
       onImportTemplate(builderState);
       toast({
-        title: "Conteúdo importado com sucesso",
+        title: 'Conteúdo importado com sucesso',
         description:
-          sourceId === "current-quiz"
-            ? "O quiz atual foi importado para o editor."
-            : "A página de resultados foi importada para o editor.",
+          sourceId === 'current-quiz'
+            ? 'O quiz atual foi importado para o editor.'
+            : 'A página de resultados foi importada para o editor.',
       });
       onClose();
     } catch (error) {
-      console.error("Erro ao importar conteúdo:", error);
+      console.error('Erro ao importar conteúdo:', error);
       toast({
-        title: "Erro ao importar",
-        description: "Não foi possível importar o conteúdo selecionado.",
-        variant: "destructive",
+        title: 'Erro ao importar',
+        description: 'Não foi possível importar o conteúdo selecionado.',
+        variant: 'destructive',
       });
     } finally {
       setIsImporting(false);
@@ -222,27 +222,27 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
       stages: [
         {
           id: stageId,
-          title: "Resultado",
+          title: 'Resultado',
           order: 0,
-          type: "result",
+          type: 'result',
         },
       ],
       components: [
         {
           id: componentId,
-          type: "stageResult",
+          type: 'stageResult',
           order: 0,
           stageId: stageId,
           data: {
-            stageTitle: "Resultado do Quiz",
-            resultLayout: "classic",
-            primaryStyleTitle: "Seu Estilo Predominante",
-            secondaryStylesTitle: "Estilos Complementares",
+            stageTitle: 'Resultado do Quiz',
+            resultLayout: 'classic',
+            primaryStyleTitle: 'Seu Estilo Predominante',
+            secondaryStylesTitle: 'Estilos Complementares',
             showPercentages: true,
             showDescriptions: true,
-            callToActionText: "Conhecer o Guia Completo",
-            callToActionUrl: "#",
-            accentColor: "#B89B7A",
+            callToActionText: 'Conhecer o Guia Completo',
+            callToActionUrl: '#',
+            accentColor: '#B89B7A',
           },
         },
       ],
@@ -282,10 +282,10 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                 <Card
                   key={template.id}
                   className={cn(
-                    "overflow-hidden border hover:border-[#B89B7A] transition-all cursor-pointer",
+                    'overflow-hidden border hover:border-[#B89B7A] transition-all cursor-pointer',
                     isImporting && selectedTemplateId === template.id
-                      ? "border-[#B89B7A] shadow-md"
-                      : "border-[#B89B7A]/30"
+                      ? 'border-[#B89B7A] shadow-md'
+                      : 'border-[#B89B7A]/30'
                   )}
                 >
                   <div className="w-full h-48 overflow-hidden">
@@ -313,7 +313,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                           Importando...
                         </>
                       ) : (
-                        "Selecionar Template"
+                        'Selecionar Template'
                       )}
                     </Button>
                   </CardFooter>
@@ -328,10 +328,10 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
                 <Card
                   key={source.id}
                   className={cn(
-                    "overflow-hidden border hover:border-[#B89B7A] transition-all cursor-pointer",
+                    'overflow-hidden border hover:border-[#B89B7A] transition-all cursor-pointer',
                     isImporting && selectedTemplateId === source.id
-                      ? "border-[#B89B7A] shadow-md"
-                      : "border-[#B89B7A]/30"
+                      ? 'border-[#B89B7A] shadow-md'
+                      : 'border-[#B89B7A]/30'
                   )}
                 >
                   <div className="w-full h-48 overflow-hidden">
@@ -375,7 +375,7 @@ const QuizTemplateImporter: React.FC<QuizTemplateImporterProps> = ({
 
 // Add the missing cn utility function import
 function cn(...inputs: (string | undefined)[]) {
-  return inputs.filter(Boolean).join(" ");
+  return inputs.filter(Boolean).join(' ');
 }
 
 export default QuizTemplateImporter;

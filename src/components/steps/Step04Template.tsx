@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step04Template - Componente para Etapa 4 do Quiz
@@ -40,18 +40,18 @@ interface Step04TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step04Template: React.FC<Step04TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 3 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 3 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 3 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 3 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 20,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step04-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step04-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,137 +199,137 @@ export const getStep04Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
-      id: "step04-header",
-      type: "quiz-intro-header",
+      id: 'step04-header',
+      type: 'quiz-intro-header',
       properties: {
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 20,
         progressMax: 100,
         showBackButton: true,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-question-title",
-      type: "text-inline",
+      id: 'step04-question-title',
+      type: 'text-inline',
       properties: {
-        content: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
-        level: "h2",
-        fontSize: "text-2xl",
-        fontWeight: "font-bold",
-        textAlign: "text-center",
-        color: "#432818",
+        content: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
+        level: 'h2',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 0,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-question-counter",
-      type: "text-inline",
+      id: 'step04-question-counter',
+      type: 'text-inline',
       properties: {
-        content: "Questão 3 de 10",
-        fontSize: "text-sm",
-        textAlign: "text-center",
-        color: "#6B7280",
+        content: 'Questão 3 de 10',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#6B7280',
         marginBottom: 24,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step04-visual-options",
-      type: "options-grid",
+      id: 'step04-visual-options',
+      type: 'options-grid',
       properties: {
-        questionId: "q3",
+        questionId: 'q3',
         options: [
           {
-            id: "3a",
-            text: "Visual leve, despojado e natural",
-            value: "3a",
-            category: "Natural",
-            styleCategory: "Natural",
+            id: '3a',
+            text: 'Visual leve, despojado e natural',
+            value: '3a',
+            category: 'Natural',
+            styleCategory: 'Natural',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
             marginTop: 0,
-            spacing: "small",
+            spacing: 'small',
             marginBottom: 0,
           },
           {
-            id: "3b",
-            text: "Visual clássico e tradicional",
-            value: "3b",
-            category: "Clássico",
-            styleCategory: "Clássico",
+            id: '3b',
+            text: 'Visual clássico e tradicional',
+            value: '3b',
+            category: 'Clássico',
+            styleCategory: 'Clássico',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp',
           },
           {
-            id: "3c",
-            text: "Visual casual com toque atual",
-            value: "3c",
-            category: "Contemporâneo",
-            styleCategory: "Contemporâneo",
+            id: '3c',
+            text: 'Visual casual com toque atual',
+            value: '3c',
+            category: 'Contemporâneo',
+            styleCategory: 'Contemporâneo',
             points: 1,
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
           },
           {
-            id: "3d",
-            text: "Visual refinado e imponente",
-            value: "3d",
-            category: "Elegante",
-            styleCategory: "Elegante",
+            id: '3d',
+            text: 'Visual refinado e imponente',
+            value: '3d',
+            category: 'Elegante',
+            styleCategory: 'Elegante',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp',
           },
           {
-            id: "3e",
-            text: "Visual romântico, feminino e delicado",
-            value: "3e",
-            category: "Romântico",
-            styleCategory: "Romântico",
+            id: '3e',
+            text: 'Visual romântico, feminino e delicado',
+            value: '3e',
+            category: 'Romântico',
+            styleCategory: 'Romântico',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp',
           },
           {
-            id: "3f",
-            text: "Visual sensual, com saia justa e decote",
-            value: "3f",
-            category: "Sexy",
-            styleCategory: "Sexy",
+            id: '3f',
+            text: 'Visual sensual, com saia justa e decote',
+            value: '3f',
+            category: 'Sexy',
+            styleCategory: 'Sexy',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp',
           },
           {
-            id: "3g",
-            text: "Visual marcante e urbano (jeans + jaqueta)",
-            value: "3g",
-            category: "Dramático",
-            styleCategory: "Dramático",
+            id: '3g',
+            text: 'Visual marcante e urbano (jeans + jaqueta)',
+            value: '3g',
+            category: 'Dramático',
+            styleCategory: 'Dramático',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp',
           },
           {
-            id: "3h",
-            text: "Visual criativo, colorido e ousado",
-            value: "3h",
-            category: "Criativo",
-            styleCategory: "Criativo",
+            id: '3h',
+            text: 'Visual criativo, colorido e ousado',
+            value: '3h',
+            category: 'Criativo',
+            styleCategory: 'Criativo',
             points: 1,
-            imageUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp',
           },
         ],
         columns: 2,
@@ -337,7 +337,7 @@ export const getStep04Template = () => {
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
-        validationMessage: "Selecione até 3 opções",
+        validationMessage: 'Selecione até 3 opções',
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
@@ -350,19 +350,19 @@ export const getStep04Template = () => {
     },
     // 🔘 BOTÃO DE NAVEGAÇÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step04-continue-button",
-      type: "button-inline",
+      id: 'step04-continue-button',
+      type: 'button-inline',
       properties: {
-        text: "Continuar",
-        variant: "primary",
-        size: "large",
+        text: 'Continuar',
+        variant: 'primary',
+        size: 'large',
         fullWidth: true,
-        backgroundColor: "#B89B7A",
-        textColor: "#ffffff",
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
         disabled: true,
         requiresValidSelection: true,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },

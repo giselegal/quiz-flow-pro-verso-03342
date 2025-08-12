@@ -8,10 +8,10 @@
  */
 
 // ❌ DEPRECADO: Use EnhancedUniversalPropertiesPanel de /src/components/universal/
-export { BasicPropertiesPanel as DeprecatedBasicPropertiesPanel } from "./EnhancedUniversalPropertiesPanel";
+export { BasicPropertiesPanel as DeprecatedBasicPropertiesPanel } from './EnhancedUniversalPropertiesPanel';
 
 // Exportação padrão também é depreciada
-export { default as DeprecatedPropertiesPanel } from "./EnhancedUniversalPropertiesPanel";
+export { default as DeprecatedPropertiesPanel } from './EnhancedUniversalPropertiesPanel';
 
 /**
  * 🎯 COMPONENTES RECOMENDADOS:

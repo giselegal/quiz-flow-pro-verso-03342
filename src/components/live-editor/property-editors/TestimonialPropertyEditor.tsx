@@ -1,13 +1,13 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 interface TestimonialPropertyEditorProps {
   properties: Record<string, any>;
@@ -19,12 +19,12 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
   onPropertyChange,
 }) => {
   const {
-    name = "Maria Silva",
-    testimonial = "Transformou completamente minha forma de me vestir!",
-    avatar = "https://via.placeholder.com/60x60",
+    name = 'Maria Silva',
+    testimonial = 'Transformou completamente minha forma de me vestir!',
+    avatar = 'https://via.placeholder.com/60x60',
     rating = 5,
-    location = "São Paulo, SP",
-    cardSize = "medium",
+    location = 'São Paulo, SP',
+    cardSize = 'medium',
   } = properties;
 
   return (
@@ -34,7 +34,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Input
           id="name"
           value={name}
-          onChange={e => onPropertyChange("name", e.target.value)}
+          onChange={e => onPropertyChange('name', e.target.value)}
           placeholder="Nome do cliente"
         />
       </div>
@@ -44,7 +44,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Textarea
           id="testimonial"
           value={testimonial}
-          onChange={e => onPropertyChange("testimonial", e.target.value)}
+          onChange={e => onPropertyChange('testimonial', e.target.value)}
           placeholder="Texto do depoimento"
           rows={3}
         />
@@ -55,7 +55,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Input
           id="location"
           value={location}
-          onChange={e => onPropertyChange("location", e.target.value)}
+          onChange={e => onPropertyChange('location', e.target.value)}
           placeholder="Cidade, Estado"
         />
       </div>
@@ -65,7 +65,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Input
           id="avatar"
           value={avatar}
-          onChange={e => onPropertyChange("avatar", e.target.value)}
+          onChange={e => onPropertyChange('avatar', e.target.value)}
           placeholder="https://exemplo.com/avatar.jpg"
         />
       </div>
@@ -74,7 +74,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
         <Label htmlFor="rating">Avaliação (1-5 estrelas)</Label>
         <Select
           value={rating.toString()}
-          onValueChange={value => onPropertyChange("rating", parseInt(value))}
+          onValueChange={value => onPropertyChange('rating', parseInt(value))}
         >
           <SelectTrigger>
             <SelectValue />
@@ -91,7 +91,7 @@ const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
 
       <div>
         <Label htmlFor="cardSize">Tamanho do Card</Label>
-        <Select value={cardSize} onValueChange={value => onPropertyChange("cardSize", value)}>
+        <Select value={cardSize} onValueChange={value => onPropertyChange('cardSize', value)}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>

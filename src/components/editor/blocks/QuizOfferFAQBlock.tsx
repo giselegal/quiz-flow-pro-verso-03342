@@ -1,16 +1,16 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,26 +55,26 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Perguntas Frequentes",
-    textColor = "#432818",
-    backgroundColor = "#ffffff",
+    title = 'Perguntas Frequentes',
+    textColor = '#432818',
+    backgroundColor = '#ffffff',
     faqItems = [
       {
-        question: "Como funciona o quiz?",
+        question: 'Como funciona o quiz?',
         answer:
-          "O quiz é baseado em metodologia científica de análise de estilo. Você responde perguntas sobre suas preferências e recebe um resultado personalizado.",
+          'O quiz é baseado em metodologia científica de análise de estilo. Você responde perguntas sobre suas preferências e recebe um resultado personalizado.',
       },
       {
-        question: "O que está incluso no guia?",
+        question: 'O que está incluso no guia?',
         answer:
-          "Você recebe um guia completo com seu estilo predominante, dicas de combinações, paleta de cores ideal e muito mais.",
+          'Você recebe um guia completo com seu estilo predominante, dicas de combinações, paleta de cores ideal e muito mais.',
       },
       {
-        question: "Posso usar em qualquer idade?",
-        answer: "Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.",
+        question: 'Posso usar em qualquer idade?',
+        answer: 'Sim! Nosso método funciona para mulheres de todas as idades e estilos de vida.',
       },
     ],
   } = block?.properties || {};
@@ -95,7 +95,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-16 px-4 transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -116,7 +116,7 @@ const QuizOfferFAQBlock: React.FC<BlockComponentProps> = ({
                   <h4 className="text-xl font-semibold mb-3" style={{ color: textColor }}>
                     {item.question}
                   </h4>
-                  <p style={{ color: "#6B4F43" }}>{item.answer}</p>
+                  <p style={{ color: '#6B4F43' }}>{item.answer}</p>
                 </CardContent>
               </Card>
             ))}

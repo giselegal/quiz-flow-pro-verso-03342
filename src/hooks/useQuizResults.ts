@@ -1,4 +1,4 @@
-import { QuestionOption } from "@/components/funnel-blocks/types";
+import { QuestionOption } from '@/components/funnel-blocks/types';
 
 export interface CategoryScore {
   category: string;
@@ -18,9 +18,9 @@ export interface QuizResult {
 }
 
 export interface CalculationMethod {
-  type: "sum" | "average" | "highest" | "majority";
+  type: 'sum' | 'average' | 'highest' | 'majority';
   primaryCategory?: string;
-  tiebreaker?: "highest_score" | "first_category";
+  tiebreaker?: 'highest_score' | 'first_category';
 }
 
 export interface QuizResultsConfig {
@@ -70,11 +70,11 @@ export const useQuizResults = () => {
     if (categoryScores.length === 0) return null;
 
     switch (method.type) {
-      case "sum":
+      case 'sum':
         // Retorna a categoria com maior soma de pontos
         return categoryScores.reduce((max, current) => (max.score > current.score ? max : current));
 
-      case "average":
+      case 'average':
         // Calcula a média para cada categoria e retorna a maior
         const withAverages = categoryScores.map(cs => ({
           ...cs,
@@ -84,7 +84,7 @@ export const useQuizResults = () => {
           max.averageScore > current.averageScore ? max : current
         );
 
-      case "highest":
+      case 'highest':
         // Retorna a categoria com a pontuação individual mais alta
         if (method.primaryCategory) {
           // Se tiver categoria primária definida, priorizar ela
@@ -95,7 +95,7 @@ export const useQuizResults = () => {
         }
         return categoryScores.reduce((max, current) => (max.score > current.score ? max : current));
 
-      case "majority":
+      case 'majority':
         // Retorna a categoria com mais ocorrências
         return categoryScores.reduce((max, current) => (max.count > current.count ? max : current));
 

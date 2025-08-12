@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { EditableContent } from "@/types/editor";
-import QuizQuestionBlock from "../quiz/QuizQuestionBlock";
+import { EditableContent } from '@/types/editor';
+import QuizQuestionBlock from '../quiz/QuizQuestionBlock';
 
 interface CaktoQuizQuestionProps {
   content?: EditableContent;

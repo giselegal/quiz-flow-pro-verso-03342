@@ -1,8 +1,8 @@
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
-import { Block } from "@/types/editor";
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertTriangle } from 'lucide-react';
+import { Block } from '@/types/editor';
 
 interface CustomCodeBlockEditorProps {
   block: Block;
@@ -27,7 +27,7 @@ export const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({
         <Label htmlFor={`${block.id}-code`}>Código HTML/CSS/JS</Label>
         <Textarea
           id={`${block.id}-code`}
-          value={block.content.code || ""}
+          value={block.content.code || ''}
           onChange={e => onUpdate({ ...block.content, code: e.target.value })}
           placeholder="Cole seu código personalizado aqui..."
           className="mt-1 font-mono text-sm"
@@ -39,7 +39,7 @@ export const CustomCodeBlockEditor: React.FC<CustomCodeBlockEditorProps> = ({
         <Label htmlFor={`${block.id}-description`}>Descrição (opcional)</Label>
         <Textarea
           id={`${block.id}-description`}
-          value={block.content.description || ""}
+          value={block.content.description || ''}
           onChange={e => onUpdate({ ...block.content, description: e.target.value })}
           placeholder="Descreva o que este código faz..."
           className="mt-1"

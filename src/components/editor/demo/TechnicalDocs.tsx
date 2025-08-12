@@ -2,11 +2,11 @@
 // components/editor/demo/TechnicalDocs.tsx - Documentação técnica
 // =====================================================================
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
-import { Button } from "../../ui/button";
-import { Badge } from "../../ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs';
 import {
   Code2,
   FileText,
@@ -18,74 +18,74 @@ import {
   ArrowRight,
   Download,
   ExternalLink,
-} from "lucide-react";
+} from 'lucide-react';
 
 export const TechnicalDocs: React.FC = () => {
-  const [activeSection, setActiveSection] = useState("overview");
+  const [activeSection, setActiveSection] = useState('overview');
 
   const architectureFeatures = [
     {
-      title: "Editor Multi-Panel Responsivo",
+      title: 'Editor Multi-Panel Responsivo',
       description:
-        "Sistema de painéis redimensionáveis com layouts específicos para desktop e mobile",
-      tech: ["ResizablePanelGroup", "Responsive Design", "Mobile Detection"],
-      status: "✅ Implementado",
+        'Sistema de painéis redimensionáveis com layouts específicos para desktop e mobile',
+      tech: ['ResizablePanelGroup', 'Responsive Design', 'Mobile Detection'],
+      status: '✅ Implementado',
     },
     {
-      title: "Painel de Propriedades Avançado",
-      description: "Sistema completo de configuração com histórico de alterações e validação",
-      tech: ["React Context", "TypeScript", "Real-time Updates"],
-      status: "✅ Implementado",
+      title: 'Painel de Propriedades Avançado',
+      description: 'Sistema completo de configuração com histórico de alterações e validação',
+      tech: ['React Context', 'TypeScript', 'Real-time Updates'],
+      status: '✅ Implementado',
     },
     {
-      title: "Gerenciamento de Etapas",
-      description: "CRUD completo para etapas com drag & drop e edição inline",
-      tech: ["DnD Kit", "Optimistic Updates", "State Management"],
-      status: "✅ Implementado",
+      title: 'Gerenciamento de Etapas',
+      description: 'CRUD completo para etapas com drag & drop e edição inline',
+      tech: ['DnD Kit', 'Optimistic Updates', 'State Management'],
+      status: '✅ Implementado',
     },
     {
-      title: "Biblioteca de Componentes",
-      description: "Catálogo categorizado com busca e preview em tempo real",
-      tech: ["Dynamic Imports", "Search & Filter", "Category System"],
-      status: "✅ Implementado",
+      title: 'Biblioteca de Componentes',
+      description: 'Catálogo categorizado com busca e preview em tempo real',
+      tech: ['Dynamic Imports', 'Search & Filter', 'Category System'],
+      status: '✅ Implementado',
     },
     {
-      title: "Sistema de Blocks Universal",
-      description: "Renderização dinâmica de blocos com suporte completo a tipos",
-      tech: ["UniversalBlockRenderer", "Type Safety", "Props Validation"],
-      status: "✅ Implementado",
+      title: 'Sistema de Blocks Universal',
+      description: 'Renderização dinâmica de blocos com suporte completo a tipos',
+      tech: ['UniversalBlockRenderer', 'Type Safety', 'Props Validation'],
+      status: '✅ Implementado',
     },
   ];
 
   const technicalSpecs = [
     {
-      category: "Frontend",
+      category: 'Frontend',
       items: [
-        "React 18 + TypeScript",
-        "Tailwind CSS para estilização",
-        "Radix UI para componentes base",
-        "Lucide React para ícones",
-        "Zustand para estado global",
+        'React 18 + TypeScript',
+        'Tailwind CSS para estilização',
+        'Radix UI para componentes base',
+        'Lucide React para ícones',
+        'Zustand para estado global',
       ],
     },
     {
-      category: "Arquitetura",
+      category: 'Arquitetura',
       items: [
-        "Component-based architecture",
-        "Custom hooks para lógica",
-        "Context API para estado compartilhado",
-        "TypeScript strict mode",
-        "ESLint + Prettier",
+        'Component-based architecture',
+        'Custom hooks para lógica',
+        'Context API para estado compartilhado',
+        'TypeScript strict mode',
+        'ESLint + Prettier',
       ],
     },
     {
-      category: "Responsividade",
+      category: 'Responsividade',
       items: [
-        "Mobile-first design",
-        "Breakpoints otimizados",
-        "Touch-friendly interfaces",
-        "Adaptive layouts",
-        "Progressive enhancement",
+        'Mobile-first design',
+        'Breakpoints otimizados',
+        'Touch-friendly interfaces',
+        'Adaptive layouts',
+        'Progressive enhancement',
       ],
     },
   ];
@@ -93,8 +93,8 @@ export const TechnicalDocs: React.FC = () => {
   const implementationGuide = [
     {
       step: 1,
-      title: "Configuração Inicial",
-      description: "Estrutura base do projeto e dependências",
+      title: 'Configuração Inicial',
+      description: 'Estrutura base do projeto e dependências',
       code: `// Configuração do editor responsivo
 const SchemaDrivenEditorResponsive = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -111,8 +111,8 @@ const SchemaDrivenEditorResponsive = () => {
     },
     {
       step: 2,
-      title: "Sistema de Painéis",
-      description: "Implementação dos painéis redimensionáveis",
+      title: 'Sistema de Painéis',
+      description: 'Implementação dos painéis redimensionáveis',
       code: `// Sistema de painéis com ResizablePanelGroup
 <ResizablePanelGroup direction="horizontal">
   <ResizablePanel defaultSize={20} minSize={15}>
@@ -130,8 +130,8 @@ const SchemaDrivenEditorResponsive = () => {
     },
     {
       step: 3,
-      title: "Gerenciamento de Estado",
-      description: "Hook personalizado para editor",
+      title: 'Gerenciamento de Estado',
+      description: 'Hook personalizado para editor',
       code: `// Hook useEditor para gerenciar estado
 const useEditor = () => {
   const [blocks, setBlocks] = useState<BlockData[]>([]);
@@ -150,7 +150,7 @@ const useEditor = () => {
   ];
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -159,8 +159,8 @@ const useEditor = () => {
               <Code2 className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 style={{ color: "#432818" }}>Documentação Técnica</h1>
-              <p style={{ color: "#6B4F43" }}>Arquitetura e implementação do Editor Visual</p>
+              <h1 style={{ color: '#432818' }}>Documentação Técnica</h1>
+              <p style={{ color: '#6B4F43' }}>Arquitetura e implementação do Editor Visual</p>
             </div>
           </div>
         </div>
@@ -188,11 +188,11 @@ const useEditor = () => {
                     <div key={index} className="border rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-semibold">{feature.title}</h4>
-                        <Badge variant="outline" style={{ color: "#6B4F43" }}>
+                        <Badge variant="outline" style={{ color: '#6B4F43' }}>
                           {feature.status}
                         </Badge>
                       </div>
-                      <p style={{ color: "#6B4F43" }}>{feature.description}</p>
+                      <p style={{ color: '#6B4F43' }}>{feature.description}</p>
                       <div className="flex flex-wrap gap-1">
                         {feature.tech.map((tech, i) => (
                           <Badge key={i} variant="outline" className="text-xs">
@@ -220,16 +220,16 @@ const useEditor = () => {
                       </div>
                       <div>
                         <p className="font-medium">Desktop (1200px+)</p>
-                        <p style={{ color: "#6B4F43" }}>Layout horizontal com 3 painéis</p>
+                        <p style={{ color: '#6B4F43' }}>Layout horizontal com 3 painéis</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <div style={{ backgroundColor: "#E5DDD5" }}>
+                      <div style={{ backgroundColor: '#E5DDD5' }}>
                         <Monitor className="w-4 h-4 text-green-600" />
                       </div>
                       <div>
                         <p className="font-medium">Tablet (768px)</p>
-                        <p style={{ color: "#6B4F43" }}>Layout adaptado com painéis colapsáveis</p>
+                        <p style={{ color: '#6B4F43' }}>Layout adaptado com painéis colapsáveis</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -238,7 +238,7 @@ const useEditor = () => {
                       </div>
                       <div>
                         <p className="font-medium">Mobile (375px)</p>
-                        <p style={{ color: "#6B4F43" }}>Stack vertical com navegação por abas</p>
+                        <p style={{ color: '#6B4F43' }}>Stack vertical com navegação por abas</p>
                       </div>
                     </div>
                   </div>
@@ -284,11 +284,11 @@ const useEditor = () => {
                   <div className="flex items-center justify-center">
                     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
                       {[
-                        "User Action",
-                        "Hook useEditor",
-                        "State Update",
-                        "Component Re-render",
-                        "UI Update",
+                        'User Action',
+                        'Hook useEditor',
+                        'State Update',
+                        'Component Re-render',
+                        'UI Update',
                       ].map((step, index, array) => (
                         <React.Fragment key={index}>
                           <div className="text-center">
@@ -321,7 +321,7 @@ const useEditor = () => {
                       </div>
                       <span>{guide.title}</span>
                     </CardTitle>
-                    <p style={{ color: "#6B4F43" }}>{guide.description}</p>
+                    <p style={{ color: '#6B4F43' }}>{guide.description}</p>
                   </CardHeader>
                   <CardContent>
                     <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">

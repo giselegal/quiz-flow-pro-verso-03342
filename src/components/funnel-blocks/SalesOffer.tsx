@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { getOptimizedContainerClasses } from '@/config/containerConfig';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   BlockComponentProps,
   PriceConfig,
   Alignment,
   InteractionCallbacks,
   Feature,
-} from "./types";
+} from './types';
 
 /**
  * SalesOffer - Componente de oferta de vendas configurável
@@ -61,7 +61,7 @@ export interface SalesOfferProps extends BlockComponentProps, InteractionCallbac
   buttonSubtext?: string;
 
   // Layout e estilos
-  cardStyle?: "elegant" | "bold" | "minimal";
+  cardStyle?: 'elegant' | 'bold' | 'minimal';
   highlightDiscount?: boolean;
 
   // Callbacks
@@ -89,47 +89,47 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
     showFeatures = true,
 
     // Garantia
-    guaranteeText = "Garantia de 30 dias",
-    guaranteePeriod = "30 dias",
+    guaranteeText = 'Garantia de 30 dias',
+    guaranteePeriod = '30 dias',
     showGuarantee = true,
 
     // Botão
     buttonText,
-    buttonSubtext = "Pagamento 100% seguro",
+    buttonSubtext = 'Pagamento 100% seguro',
 
     // Layout
-    alignment = "center",
-    cardStyle = "elegant",
+    alignment = 'center',
+    cardStyle = 'elegant',
     highlightDiscount = true,
 
     // Callbacks
     onPurchase,
 
     // Props base
-    deviceView = "desktop",
-    className = "",
+    deviceView = 'desktop',
+    className = '',
     style = {},
-    testId = "sales-offer",
+    testId = 'sales-offer',
   } = props;
 
   // Classes de alinhamento
   const alignmentClasses: Record<Alignment, string> = {
-    left: "text-left items-start",
-    center: "text-center items-center",
-    right: "text-right items-end",
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end',
   };
 
   // Classes de estilo do card
   const cardStyleClasses = {
-    elegant: "bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-xl",
-    bold: "bg-gradient-to-br from-[#432818] to-[#5D3A26] text-white shadow-2xl",
-    minimal: "bg-white border border-gray-100 shadow-lg",
+    elegant: 'bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-xl',
+    bold: 'bg-gradient-to-br from-[#432818] to-[#5D3A26] text-white shadow-2xl',
+    minimal: 'bg-white border border-gray-100 shadow-lg',
   };
 
   const containerClasses = getOptimizedContainerClasses(
-    deviceView || "desktop",
-    "tight",
-    "full",
+    deviceView || 'desktop',
+    'tight',
+    'full',
     className
   );
 
@@ -137,8 +137,8 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
   const calculateDiscountPercent = () => {
     if (!priceConfig.originalPrice || !priceConfig.currentPrice) return 0;
 
-    const original = parseFloat(priceConfig.originalPrice.replace(/[^\d,]/g, "").replace(",", "."));
-    const current = parseFloat(priceConfig.currentPrice.replace(/[^\d,]/g, "").replace(",", "."));
+    const original = parseFloat(priceConfig.originalPrice.replace(/[^\d,]/g, '').replace(',', '.'));
+    const current = parseFloat(priceConfig.currentPrice.replace(/[^\d,]/g, '').replace(',', '.'));
 
     return Math.round(((original - current) / original) * 100);
   };
@@ -152,9 +152,9 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
         <div className="mb-8 text-center">
           <h1 className="text-3xl md:text-5xl font-bold text-[#432818] mb-4">{title}</h1>
 
-          {subtitle && <h2 style={{ color: "#6B4F43" }}>{subtitle}</h2>}
+          {subtitle && <h2 style={{ color: '#6B4F43' }}>{subtitle}</h2>}
 
-          {description && <p style={{ color: "#6B4F43" }}>{description}</p>}
+          {description && <p style={{ color: '#6B4F43' }}>{description}</p>}
         </div>
 
         {/* Card Principal da Oferta */}
@@ -163,7 +163,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
             {/* Badge de Desconto */}
             {highlightDiscount && priceConfig.discount && (
               <div className="text-center mb-6">
-                <Badge style={{ backgroundColor: "#FAF9F7" }}>{priceConfig.discount}</Badge>
+                <Badge style={{ backgroundColor: '#FAF9F7' }}>{priceConfig.discount}</Badge>
               </div>
             )}
 
@@ -172,7 +172,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
               {/* Preço Original */}
               {priceConfig.originalPrice && (
                 <div className="mb-2">
-                  <span style={{ color: "#8B7355" }}>De: {priceConfig.originalPrice}</span>
+                  <span style={{ color: '#8B7355' }}>De: {priceConfig.originalPrice}</span>
                 </div>
               )}
 
@@ -185,7 +185,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
                 {/* Parcelamento */}
                 {priceConfig.installments && (
                   <div className="mt-2">
-                    <span style={{ color: "#6B4F43" }}>
+                    <span style={{ color: '#6B4F43' }}>
                       ou {priceConfig.installments.quantity}x de {priceConfig.installments.value}
                     </span>
                   </div>
@@ -223,7 +223,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
                             </svg>
                           </div>
                         ) : (
-                          <div style={{ backgroundColor: "#FAF9F7" }}>
+                          <div style={{ backgroundColor: '#FAF9F7' }}>
                             <svg
                               className="w-4 h-4 text-white"
                               fill="currentColor"
@@ -255,14 +255,14 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
                   hover:from-[#A08766] hover:to-[#C4A886]
                   text-white shadow-lg hover:shadow-xl
                   transform hover:scale-105 transition-all duration-200
-                  ${deviceView === "mobile" ? "text-lg py-4" : ""}
+                  ${deviceView === 'mobile' ? 'text-lg py-4' : ''}
                 `}
                 data-testid="purchase-button"
               >
                 {buttonText}
               </Button>
 
-              {buttonSubtext && <p style={{ color: "#8B7355" }}>{buttonSubtext}</p>}
+              {buttonSubtext && <p style={{ color: '#8B7355' }}>{buttonSubtext}</p>}
             </div>
 
             {/* Garantia */}
@@ -286,7 +286,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
         {/* Urgência */}
         {urgencyText && (
           <div className="mt-8 text-center">
-            <div style={{ backgroundColor: "#FAF9F7" }}>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
               <p className="font-semibold text-lg">⏰ {urgencyText}</p>
             </div>
           </div>
@@ -295,7 +295,7 @@ export const SalesOffer: React.FC<SalesOfferProps> = props => {
         {/* Escassez */}
         {scarcityText && (
           <div className="mt-4 text-center">
-            <p style={{ color: "#6B4F43" }}>{scarcityText}</p>
+            <p style={{ color: '#6B4F43' }}>{scarcityText}</p>
           </div>
         )}
       </div>

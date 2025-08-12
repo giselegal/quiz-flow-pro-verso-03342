@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React, { useMemo } from "react";
-import { cn } from "@/lib/utils";
-import { Progress } from "@/components/ui/progress";
-import { Card } from "@/components/ui/card";
-import { Award, Star, CheckCircle, ArrowRight } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useMemo } from 'react';
+import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
+import { Card } from '@/components/ui/card';
+import { Award, Star, CheckCircle, ArrowRight } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * ModernResultPageBlock - Componente de página de resultado moderna (Etapa 20)
@@ -14,11 +14,11 @@ import type { BlockComponentProps } from "@/types/blocks";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -61,50 +61,50 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Parabéns! Descobrimos seu estilo",
-    subtitle = "Aqui está seu resultado personalizado",
-    resultStyle = "Elegante",
-    description = "Você tem um estilo único que combina elegância com modernidade...",
-    imageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-    guideImageUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
+    title = 'Parabéns! Descobrimos seu estilo',
+    subtitle = 'Aqui está seu resultado personalizado',
+    resultStyle = 'Elegante',
+    description = 'Você tem um estilo único que combina elegância com modernidade...',
+    imageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
+    guideImageUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
     percentage = 85,
     showSecondaryStyles = true,
-    backgroundColor = "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
-    padding = "large",
+    backgroundColor = 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
+    padding = 'large',
   } = block?.properties || {};
 
   // Get username from context (placeholder)
-  const username = "Usuário";
+  const username = 'Usuário';
 
   // Classes de padding
   const paddingClasses = {
-    none: "p-0",
-    small: "p-4 sm:p-6",
-    medium: "p-6 sm:p-8 lg:p-12",
-    large: "p-8 sm:p-12 lg:p-16",
+    none: 'p-0',
+    small: 'p-4 sm:p-6',
+    medium: 'p-6 sm:p-8 lg:p-12',
+    large: 'p-8 sm:p-12 lg:p-16',
   };
 
   return (
     <div
       className={cn(
         // Layout responsivo base
-        "w-full h-full min-h-screen flex flex-col",
+        'w-full h-full min-h-screen flex flex-col',
         // Background
-        backgroundColor || "bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]",
+        backgroundColor || 'bg-gradient-to-br from-[#fffaf7] to-[#f9f4ef]',
         // Padding responsivo
         paddingClasses[padding as keyof typeof paddingClasses] || paddingClasses.large,
         // Estados visuais
-        "transition-all duration-200",
-        isSelected && "ring-2 ring-[#B89B7A]",
+        'transition-all duration-200',
+        isSelected && 'ring-2 ring-[#B89B7A]',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
@@ -158,10 +158,10 @@ const ModernResultPageBlock: React.FC<BlockComponentProps> = ({
                   <Star
                     key={star}
                     className={cn(
-                      "w-6 h-6",
+                      'w-6 h-6',
                       star <= Math.floor(percentage / 20)
-                        ? "text-yellow-400 fill-current"
-                        : "text-gray-300"
+                        ? 'text-yellow-400 fill-current'
+                        : 'text-gray-300'
                     )}
                   />
                 ))}

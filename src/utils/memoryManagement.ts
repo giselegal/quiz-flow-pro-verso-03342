@@ -1,5 +1,5 @@
-import { PerformanceOptimizer } from "./performanceOptimizer";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { PerformanceOptimizer } from './performanceOptimizer';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Gerenciador de memory leaks
 class MemoryManager {
@@ -133,7 +133,7 @@ export const useMemoryMonitor = (threshold = 50) => {
   const [isHighUsage, setIsHighUsage] = useState(false);
 
   useEffect(() => {
-    if (!("memory" in performance)) return;
+    if (!('memory' in performance)) return;
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
@@ -159,7 +159,7 @@ export const useMemoryMonitor = (threshold = 50) => {
 
 // Garbage collection forçado (se disponível)
 export const forceGarbageCollection = () => {
-  if ("gc" in window && typeof (window as any).gc === "function") {
+  if ('gc' in window && typeof (window as any).gc === 'function') {
     (window as any).gc();
   }
 };
@@ -173,7 +173,7 @@ export const useHeavyCleanup = (cleanupFn: () => void) => {
     return () => {
       cleanupRef.current();
       // Force cleanup on unmount
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         setTimeout(() => {
           forceGarbageCollection();
         }, 100);
@@ -185,18 +185,18 @@ export const useHeavyCleanup = (cleanupFn: () => void) => {
 // Performance observer para detectar memory leaks
 export const useMemoryLeakDetector = () => {
   useEffect(() => {
-    if (!("PerformanceObserver" in window)) return;
+    if (!('PerformanceObserver' in window)) return;
 
     const observer = new PerformanceObserver(list => {
       const entries = list.getEntries();
       entries.forEach(entry => {
-        if (entry.entryType === "measure" && entry.name.includes("memory")) {
-          console.log("Memory measurement:", entry);
+        if (entry.entryType === 'measure' && entry.name.includes('memory')) {
+          console.log('Memory measurement:', entry);
         }
       });
     });
 
-    observer.observe({ entryTypes: ["measure"] });
+    observer.observe({ entryTypes: ['measure'] });
 
     return () => observer.disconnect();
   }, []);

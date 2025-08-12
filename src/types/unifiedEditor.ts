@@ -1,8 +1,8 @@
-import { QuizComponentData } from "./quizBuilder";
-import { Block } from "./editor";
+import { QuizComponentData } from './quizBuilder';
+import { Block } from './editor';
 
 export interface UnifiedEditorState {
-  activeTab: "quiz" | "result" | "sales";
+  activeTab: 'quiz' | 'result' | 'sales';
   isPreviewing: boolean;
   quizEditorState: {
     components: QuizComponentData[];

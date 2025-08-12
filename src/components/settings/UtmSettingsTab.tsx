@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,37 +6,37 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/components/ui/use-toast";
-import { useUtmParameters } from "@/hooks/useUtmParameters";
-import { ArrowRightIcon, CheckCircleIcon, CopyIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
+import { useUtmParameters } from '@/hooks/useUtmParameters';
+import { ArrowRightIcon, CheckCircleIcon, CopyIcon } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 export const UtmSettingsTab: React.FC = () => {
   const { setBaseDomain, generateUtmLink } = useUtmParameters();
   const { toast } = useToast();
-  const [domainValue, setDomainValue] = useState("");
+  const [domainValue, setDomainValue] = useState('');
   const [exampleLinks, setExampleLinks] = useState({
-    facebook: "",
-    instagram: "",
-    email: "",
-    resultado: "",
+    facebook: '',
+    instagram: '',
+    email: '',
+    resultado: '',
   });
 
   const updateExampleLinks = (domain: string) => {
     const newLinks = {
-      facebook: generateUtmLink(`https://${domain}/`, "facebook", "social", "brand", "cta_button"),
-      instagram: generateUtmLink(`https://${domain}/`, "instagram", "social", "feed", "story"),
-      email: generateUtmLink(`https://${domain}/`, "email", "newsletter", "weekly", "footer"),
+      facebook: generateUtmLink(`https://${domain}/`, 'facebook', 'social', 'brand', 'cta_button'),
+      instagram: generateUtmLink(`https://${domain}/`, 'instagram', 'social', 'feed', 'story'),
+      email: generateUtmLink(`https://${domain}/`, 'email', 'newsletter', 'weekly', 'footer'),
       resultado: generateUtmLink(
         `https://${domain}/resultado`,
-        "facebook",
-        "social",
-        "retargeting",
-        "ad_1"
+        'facebook',
+        'social',
+        'retargeting',
+        'ad_1'
       ),
     };
 
@@ -44,14 +44,14 @@ export const UtmSettingsTab: React.FC = () => {
   };
 
   useEffect(() => {
-    updateExampleLinks(domainValue || "giselegalvao.com.br");
+    updateExampleLinks(domainValue || 'giselegalvao.com.br');
   }, [domainValue, generateUtmLink]);
 
   const handleSaveDomain = () => {
     if (domainValue) {
       setBaseDomain(domainValue);
       toast({
-        title: "Domínio salvo",
+        title: 'Domínio salvo',
         description: `O domínio base para UTMs foi atualizado para ${domainValue}.`,
       });
       updateExampleLinks(domainValue);
@@ -61,8 +61,8 @@ export const UtmSettingsTab: React.FC = () => {
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link);
     toast({
-      title: "Link copiado",
-      description: "O link UTM foi copiado para a área de transferência.",
+      title: 'Link copiado',
+      description: 'O link UTM foi copiado para a área de transferência.',
     });
   };
 
@@ -180,7 +180,7 @@ export const UtmSettingsTab: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => window.open("/admin?tab=analytics", "_self")}
+            onClick={() => window.open('/admin?tab=analytics', '_self')}
           >
             Ver Analytics <ArrowRightIcon className="ml-1 h-4 w-4" />
           </Button>

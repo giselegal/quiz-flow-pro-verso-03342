@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import React, { useState } from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import React, { useState } from 'react';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface OptionItem {
   id: string;
@@ -24,7 +24,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   // Destructuring das propriedades do bloco
   const {
@@ -35,15 +35,15 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     minSelections = 1,
     maxSelections = 3,
     showImages = true,
-    borderColor = "#E5E7EB",
-    selectedBorderColor = "#B89B7A",
-    hoverColor = "#F3E8D3",
+    borderColor = '#E5E7EB',
+    selectedBorderColor = '#B89B7A',
+    hoverColor = '#F3E8D3',
   } = block.properties || {};
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
   // 🔍 DEBUG
-  console.log("🎯 OptionsGridInlineBlock DEBUG:", {
+  console.log('🎯 OptionsGridInlineBlock DEBUG:', {
     blockId: block.id,
     optionsCount: options.length,
     firstOption: options[0],
@@ -59,7 +59,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
         // Notificar mudança
         if (onPropertyChange) {
-          onPropertyChange("selectedOptions", newSelected);
+          onPropertyChange('selectedOptions', newSelected);
         }
 
         return newSelected;
@@ -69,7 +69,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       setSelectedOptions(newSelected);
 
       if (onPropertyChange) {
-        onPropertyChange("selectedOptions", newSelected);
+        onPropertyChange('selectedOptions', newSelected);
       }
     }
   };
@@ -79,20 +79,20 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
   return (
     <div
       className={cn(
-        "options-grid-inline-block w-full",
+        'options-grid-inline-block w-full',
         className,
-        isSelected && "ring-2 ring-blue-500 ring-opacity-50"
+        isSelected && 'ring-2 ring-blue-500 ring-opacity-50'
       )}
       onClick={onClick}
     >
       {/* Grid de opções */}
       <div
         className={cn(
-          "grid gap-4",
-          columns === 1 && "grid-cols-1",
-          columns === 2 && "grid-cols-1 md:grid-cols-2",
-          columns === 3 && "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-          columns === 4 && "grid-cols-2 md:grid-cols-4"
+          'grid gap-4',
+          columns === 1 && 'grid-cols-1',
+          columns === 2 && 'grid-cols-1 md:grid-cols-2',
+          columns === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+          columns === 4 && 'grid-cols-2 md:grid-cols-4'
         )}
       >
         {options.map((option: OptionItem) => {
@@ -102,8 +102,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
             <div
               key={option.id}
               className={cn(
-                "option-card p-4 rounded-lg border-2 cursor-pointer transition-all duration-200",
-                "hover:shadow-lg transform hover:-translate-y-1",
+                'option-card p-4 rounded-lg border-2 cursor-pointer transition-all duration-200',
+                'hover:shadow-lg transform hover:-translate-y-1',
                 isSelectedOption
                   ? `border-[${selectedBorderColor}] bg-[${selectedBorderColor}]/10 shadow-lg`
                   : `border-[${borderColor}] hover:border-[${selectedBorderColor}] hover:bg-[${hoverColor}]`
@@ -127,8 +127,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                     style={{
                       width: `${imageSize}px`,
                       height: `${imageSize}px`,
-                      maxWidth: "100%",
-                      aspectRatio: "1/1",
+                      maxWidth: '100%',
+                      aspectRatio: '1/1',
                     }}
                     loading="lazy"
                   />
@@ -139,8 +139,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="option-text">
                 <p
                   className={cn(
-                    "text-sm font-medium leading-relaxed",
-                    isSelectedOption ? `text-[${selectedBorderColor}]` : "text-gray-800"
+                    'text-sm font-medium leading-relaxed',
+                    isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-800'
                   )}
                 >
                   {option.text}
@@ -165,12 +165,12 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Feedback de seleção */}
       <div className="selection-feedback mt-4 text-center">
-        <p style={{ color: "#6B4F43" }}>
+        <p style={{ color: '#6B4F43' }}>
           {multipleSelection
-            ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ""}`
+            ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ''}`
             : selectedOptions.length > 0
-              ? "Opção selecionada"
-              : "Selecione uma opção"}
+              ? 'Opção selecionada'
+              : 'Selecione uma opção'}
         </p>
       </div>
     </div>

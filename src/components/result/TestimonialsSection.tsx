@@ -1,4 +1,4 @@
-import { Quote } from "lucide-react";
+import { Quote } from 'lucide-react';
 
 interface Testimonial {
   text: string;

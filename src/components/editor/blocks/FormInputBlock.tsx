@@ -1,7 +1,7 @@
-import { TextCursorInput } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { userResponseService } from "../../../services/userResponseService";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { TextCursorInput } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { userResponseService } from '../../../services/userResponseService';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
@@ -11,13 +11,13 @@ interface FormInputBlockProps extends BlockComponentProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -61,35 +61,35 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  className = "",
-  funnelId: _funnelId = "default-quiz-funnel-21-steps",
+  className = '',
+  funnelId: _funnelId = 'default-quiz-funnel-21-steps',
   onValueChange,
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
       </div>
     );
   }
 
   const {
-    label = "Campo de Input",
-    placeholder = "Digite aqui...",
-    inputType = "text",
+    label = 'Campo de Input',
+    placeholder = 'Digite aqui...',
+    inputType = 'text',
     required = false,
     fullWidth = true,
-    name = "input",
+    name = 'input',
     // Configurações de estilo
-    backgroundColor = "#FFFFFF",
-    borderColor = "#B89B7A",
-    textColor = "#432818",
-    labelColor = "#432818",
-    fontSize = "16",
-    fontFamily = "inherit",
-    fontWeight = "400",
-    borderRadius = "8",
+    backgroundColor = '#FFFFFF',
+    borderColor = '#B89B7A',
+    textColor = '#432818',
+    labelColor = '#432818',
+    fontSize = '16',
+    fontFamily = 'inherit',
+    fontWeight = '400',
+    borderRadius = '8',
     // Sistema de margens
     marginTop = 8,
     marginBottom = 8,
@@ -97,12 +97,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
 
   // Carregar valor salvo se existir
   useEffect(() => {
-    const savedValue = userResponseService.getResponse(block?.id || "");
+    const savedValue = userResponseService.getResponse(block?.id || '');
     if (savedValue) {
       setValue(savedValue);
       setIsValid(true);
@@ -116,13 +116,13 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
     // ✅ Usar onPropertyChange para edição no painel de propriedades
     if (onPropertyChange) {
-      onPropertyChange("value", newValue);
+      onPropertyChange('value', newValue);
     }
 
     // Disparar evento customizado para outros componentes sempre
     window.dispatchEvent(
-      new CustomEvent("quiz-input-change", {
-        detail: { blockId: block?.id || "", value: newValue.trim(), valid },
+      new CustomEvent('quiz-input-change', {
+        detail: { blockId: block?.id || '', value: newValue.trim(), valid },
       })
     );
 
@@ -130,12 +130,12 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     if (valid && newValue.trim()) {
       try {
         // Salvar resposta específica
-        userResponseService.saveStepResponse(block?.id || "", newValue.trim());
+        userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
         // Se for o campo de nome, salvar também como nome do usuário
-        if (name === "userName" || block?.id === "intro-name-input") {
-          userResponseService.saveUserName("userId", newValue.trim());
-          console.log("✅ Nome do usuário salvo:", newValue.trim());
+        if (name === 'userName' || block?.id === 'intro-name-input') {
+          userResponseService.saveUserName('userId', newValue.trim());
+          console.log('✅ Nome do usuário salvo:', newValue.trim());
         }
 
         // Notificar componente pai
@@ -143,7 +143,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
           onValueChange(newValue.trim());
         }
       } catch (error) {
-        console.error("❌ Erro ao salvar resposta:", error);
+        console.error('❌ Erro ao salvar resposta:', error);
       }
     }
   };
@@ -154,20 +154,20 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         p-4 rounded-lg transition-all duration-200
         ${
           isSelected
-            ? "border-2 border-[#B89B7A] bg-[#B89B7A]/10 cursor-pointer"
-            : "border-2 border-transparent hover:bg-[#FAF9F7]"
+            ? 'border-2 border-[#B89B7A] bg-[#B89B7A]/10 cursor-pointer'
+            : 'border-2 border-transparent hover:bg-[#FAF9F7]'
         }
         ${className}
-        ${getMarginClass(marginTop, "top")}
-        ${getMarginClass(marginBottom, "bottom")}
-        ${getMarginClass(marginLeft, "left")}
-        ${getMarginClass(marginRight, "right")}
+        ${getMarginClass(marginTop, 'top')}
+        ${getMarginClass(marginBottom, 'bottom')}
+        ${getMarginClass(marginLeft, 'left')}
+        ${getMarginClass(marginRight, 'right')}
       `}
       onClick={onClick}
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <div className={`space-y-3 ${fullWidth ? "w-full" : "w-auto"}`}>
+      <div className={`space-y-3 ${fullWidth ? 'w-full' : 'w-auto'}`}>
         <div className="flex items-center gap-2">
           <TextCursorInput className="w-4 h-4" style={{ color: borderColor }} />
           <label
@@ -207,10 +207,10 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
             transition-all outline-none placeholder-opacity-70
             ${
               isValid
-                ? "ring-2 ring-opacity-20"
+                ? 'ring-2 ring-opacity-20'
                 : value && !isValid
-                  ? "border-opacity-50"
-                  : "hover:border-opacity-80"
+                  ? 'border-opacity-50'
+                  : 'hover:border-opacity-80'
             }
           `}
         />

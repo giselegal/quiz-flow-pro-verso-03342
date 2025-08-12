@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import ColorPicker from "@/components/visual-controls/ColorPicker";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import ColorPicker from '@/components/visual-controls/ColorPicker';
 
 interface TransitionStepPropertiesProps {
   properties: Record<string, any>;
@@ -19,17 +19,17 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
   onUpdate,
 }) => {
   const {
-    title = "Processando suas respostas...",
-    description = "Aguarde enquanto analisamos seu perfil",
-    backgroundImage = "",
-    textColor = "#432818",
-    backgroundColor = "#FAF9F7",
+    title = 'Processando suas respostas...',
+    description = 'Aguarde enquanto analisamos seu perfil',
+    backgroundImage = '',
+    textColor = '#432818',
+    backgroundColor = '#FAF9F7',
     showProgress = false,
     progressValue = 75,
     delay = 3000,
-    animationType = "pulse",
+    animationType = 'pulse',
     showLoadingSpinner = true,
-    customMessage = "",
+    customMessage = '',
   } = properties;
 
   return (
@@ -45,7 +45,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Input
               id="title"
               value={title}
-              onChange={e => onUpdate("title", e.target.value)}
+              onChange={e => onUpdate('title', e.target.value)}
               placeholder="Título da tela de transição"
             />
           </div>
@@ -55,7 +55,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Input
               id="description"
               value={description}
-              onChange={e => onUpdate("description", e.target.value)}
+              onChange={e => onUpdate('description', e.target.value)}
               placeholder="Descrição do que está acontecendo"
             />
           </div>
@@ -65,7 +65,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Input
               id="customMessage"
               value={customMessage}
-              onChange={e => onUpdate("customMessage", e.target.value)}
+              onChange={e => onUpdate('customMessage', e.target.value)}
               placeholder="Mensagem adicional específica"
             />
           </div>
@@ -83,7 +83,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Input
               id="backgroundImage"
               value={backgroundImage}
-              onChange={e => onUpdate("backgroundImage", e.target.value)}
+              onChange={e => onUpdate('backgroundImage', e.target.value)}
               placeholder="URL da imagem de fundo"
             />
           </div>
@@ -92,13 +92,13 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Label htmlFor="backgroundColor">Cor de Fundo</Label>
             <ColorPicker
               value={backgroundColor}
-              onChange={color => onUpdate("backgroundColor", color)}
+              onChange={color => onUpdate('backgroundColor', color)}
             />
           </div>
 
           <div>
             <Label htmlFor="textColor">Cor do Texto</Label>
-            <ColorPicker value={textColor} onChange={color => onUpdate("textColor", color)} />
+            <ColorPicker value={textColor} onChange={color => onUpdate('textColor', color)} />
           </div>
         </CardContent>
       </Card>
@@ -114,7 +114,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <div className="mt-2">
               <Slider
                 value={[delay]}
-                onValueChange={value => onUpdate("delay", value[0])}
+                onValueChange={value => onUpdate('delay', value[0])}
                 max={10000}
                 min={1000}
                 step={500}
@@ -132,7 +132,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Switch
               id="showLoadingSpinner"
               checked={showLoadingSpinner}
-              onCheckedChange={checked => onUpdate("showLoadingSpinner", checked)}
+              onCheckedChange={checked => onUpdate('showLoadingSpinner', checked)}
             />
             <Label htmlFor="showLoadingSpinner">Mostrar Spinner de Carregamento</Label>
           </div>
@@ -142,7 +142,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <select
               id="animationType"
               value={animationType}
-              onChange={e => onUpdate("animationType", e.target.value)}
+              onChange={e => onUpdate('animationType', e.target.value)}
               className="w-full p-2 border border-gray-300 rounded-md"
             >
               <option value="pulse">Pulse</option>
@@ -167,7 +167,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
             <Switch
               id="showProgress"
               checked={showProgress}
-              onCheckedChange={checked => onUpdate("showProgress", checked)}
+              onCheckedChange={checked => onUpdate('showProgress', checked)}
             />
             <Label htmlFor="showProgress">Mostrar Barra de Progresso</Label>
           </div>
@@ -178,7 +178,7 @@ export const TransitionStepProperties: React.FC<TransitionStepPropertiesProps> =
               <div className="mt-2">
                 <Slider
                   value={[progressValue]}
-                  onValueChange={value => onUpdate("progressValue", value[0])}
+                  onValueChange={value => onUpdate('progressValue', value[0])}
                   max={100}
                   min={0}
                   step={5}

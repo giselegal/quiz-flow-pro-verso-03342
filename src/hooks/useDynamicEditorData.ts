@@ -1,5 +1,5 @@
-import { Block, BlockType } from "@/types/editor";
-import { useCallback, useState } from "react";
+import { Block, BlockType } from '@/types/editor';
+import { useCallback, useState } from 'react';
 
 interface DynamicEditorDataReturn {
   blocks: Block[];
@@ -73,15 +73,15 @@ export const useDynamicEditorData = (): DynamicEditorDataReturn => {
 
 function getDefaultContent(type: string): Record<string, any> {
   switch (type) {
-    case "text":
-      return { text: "Digite seu texto aqui..." };
-    case "heading":
-      return { text: "Novo título", level: "h2" };
-    case "image":
-      return { imageUrl: "", alt: "Imagem" };
-    case "button":
-      return { text: "Clique aqui", url: "#" };
-    case "spacer":
+    case 'text':
+      return { text: 'Digite seu texto aqui...' };
+    case 'heading':
+      return { text: 'Novo título', level: 'h2' };
+    case 'image':
+      return { imageUrl: '', alt: 'Imagem' };
+    case 'button':
+      return { text: 'Clique aqui', url: '#' };
+    case 'spacer':
       return { height: 40 };
     default:
       return {};

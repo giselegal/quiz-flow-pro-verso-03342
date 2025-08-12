@@ -5,7 +5,7 @@
  * SEM quebrar compatibilidade
  */
 
-import { JsonBlock, JsonTemplate } from "./JsonTemplateEngine";
+import { JsonBlock, JsonTemplate } from './JsonTemplateEngine';
 
 // =============================================
 // TIPOS DOS TEMPLATES EXISTENTES
@@ -21,8 +21,8 @@ interface ExistingTemplateBlock {
 interface ExistingTemplate {
   templateVersion: string;
   layout: {
-    containerWidth: "full" | "contained" | "narrow";
-    spacing: "none" | "small" | "medium" | "large";
+    containerWidth: 'full' | 'contained' | 'narrow';
+    spacing: 'none' | 'small' | 'medium' | 'large';
     backgroundColor: string;
     responsive: boolean;
   };
@@ -86,7 +86,7 @@ export class TemplateAdapter {
       id: existingTemplate.metadata.id,
       name: existingTemplate.metadata.name,
       description: existingTemplate.metadata.description,
-      version: existingTemplate.templateVersion || "1.0",
+      version: existingTemplate.templateVersion || '1.0',
       category: category,
 
       layout: {
@@ -117,17 +117,17 @@ export class TemplateAdapter {
 
     // Mapeamento de propriedades comuns para CSS
     const styleMapping = {
-      backgroundColor: "backgroundColor",
-      textColor: "color",
-      fontSize: "fontSize",
-      fontWeight: "fontWeight",
-      textAlign: "textAlign",
-      marginTop: "marginTop",
-      marginBottom: "marginBottom",
-      padding: "padding",
-      borderRadius: "borderRadius",
-      width: "width",
-      height: "height",
+      backgroundColor: 'backgroundColor',
+      textColor: 'color',
+      fontSize: 'fontSize',
+      fontWeight: 'fontWeight',
+      textAlign: 'textAlign',
+      marginTop: 'marginTop',
+      marginBottom: 'marginBottom',
+      padding: 'padding',
+      borderRadius: 'borderRadius',
+      width: 'width',
+      height: 'height',
     };
 
     Object.entries(styleMapping).forEach(([propKey, cssKey]) => {
@@ -137,15 +137,15 @@ export class TemplateAdapter {
     });
 
     // Tratar propriedades especiais do Tailwind
-    if (properties.fontSize && typeof properties.fontSize === "string") {
+    if (properties.fontSize && typeof properties.fontSize === 'string') {
       styles.fontSize = TemplateAdapter.convertTailwindFontSize(properties.fontSize);
     }
 
-    if (properties.textAlign && typeof properties.textAlign === "string") {
+    if (properties.textAlign && typeof properties.textAlign === 'string') {
       styles.textAlign = TemplateAdapter.convertTailwindTextAlign(properties.textAlign);
     }
 
-    if (properties.fontWeight && typeof properties.fontWeight === "string") {
+    if (properties.fontWeight && typeof properties.fontWeight === 'string') {
       styles.fontWeight = TemplateAdapter.convertTailwindFontWeight(properties.fontWeight);
     }
 
@@ -159,62 +159,62 @@ export class TemplateAdapter {
     category?: string;
     tags?: string[];
     name?: string;
-  }): JsonTemplate["category"] {
+  }): JsonTemplate['category'] {
     // Usar categoria explícita se disponível
     if (metadata.category) {
       switch (metadata.category.toLowerCase()) {
-        case "intro":
-        case "introduction":
-          return "intro";
-        case "question":
-        case "quiz":
-          return "question";
-        case "result":
-        case "results":
-          return "result";
-        case "transition":
-          return "transition";
+        case 'intro':
+        case 'introduction':
+          return 'intro';
+        case 'question':
+        case 'quiz':
+          return 'question';
+        case 'result':
+        case 'results':
+          return 'result';
+        case 'transition':
+          return 'transition';
         default:
-          return "custom";
+          return 'custom';
       }
     }
 
     // Inferir das tags
     if (metadata.tags) {
-      if (metadata.tags.includes("intro")) return "intro";
-      if (metadata.tags.includes("question") || metadata.tags.includes("quiz")) return "question";
-      if (metadata.tags.includes("result")) return "result";
-      if (metadata.tags.includes("transition")) return "transition";
+      if (metadata.tags.includes('intro')) return 'intro';
+      if (metadata.tags.includes('question') || metadata.tags.includes('quiz')) return 'question';
+      if (metadata.tags.includes('result')) return 'result';
+      if (metadata.tags.includes('transition')) return 'transition';
     }
 
     // Inferir do nome
     if (metadata.name) {
       const name = metadata.name.toLowerCase();
-      if (name.includes("intro") || name.includes("começar")) return "intro";
-      if (name.includes("pergunta") || name.includes("questão")) return "question";
-      if (name.includes("resultado") || name.includes("final")) return "result";
-      if (name.includes("transição")) return "transition";
+      if (name.includes('intro') || name.includes('começar')) return 'intro';
+      if (name.includes('pergunta') || name.includes('questão')) return 'question';
+      if (name.includes('resultado') || name.includes('final')) return 'result';
+      if (name.includes('transição')) return 'transition';
     }
 
-    return "custom";
+    return 'custom';
   }
 
   /**
    * ⚙️ Converte validação para configuração de etapa
    */
-  private static convertValidationToStepConfig(validation?: ExistingTemplate["validation"]) {
+  private static convertValidationToStepConfig(validation?: ExistingTemplate['validation']) {
     if (!validation) return undefined;
 
     return {
       stepNumber: 1, // Será ajustado quando usado
       isRequired: validation.required || false,
       nextStepCondition: (validation.minAnswers && validation.minAnswers > 0
-        ? "on_validation"
-        : "always") as "on_validation" | "always" | "on_selection",
+        ? 'on_validation'
+        : 'always') as 'on_validation' | 'always' | 'on_selection',
       validationRules: {
         minSelections: validation.minAnswers,
         maxSelections: validation.maxAnswers,
-        requiredFields: validation.required ? ["answer"] : undefined,
+        requiredFields: validation.required ? ['answer'] : undefined,
       },
     };
   }
@@ -245,41 +245,41 @@ export class TemplateAdapter {
 
   private static convertTailwindFontSize(tailwindClass: string): string {
     const mapping: Record<string, string> = {
-      "text-xs": "0.75rem",
-      "text-sm": "0.875rem",
-      "text-base": "1rem",
-      "text-lg": "1.125rem",
-      "text-xl": "1.25rem",
-      "text-2xl": "1.5rem",
-      "text-3xl": "1.875rem",
-      "text-4xl": "2.25rem",
-      "text-5xl": "3rem",
-      "text-6xl": "3.75rem",
+      'text-xs': '0.75rem',
+      'text-sm': '0.875rem',
+      'text-base': '1rem',
+      'text-lg': '1.125rem',
+      'text-xl': '1.25rem',
+      'text-2xl': '1.5rem',
+      'text-3xl': '1.875rem',
+      'text-4xl': '2.25rem',
+      'text-5xl': '3rem',
+      'text-6xl': '3.75rem',
     };
     return mapping[tailwindClass] || tailwindClass;
   }
 
   private static convertTailwindTextAlign(tailwindClass: string): string {
     const mapping: Record<string, string> = {
-      "text-left": "left",
-      "text-center": "center",
-      "text-right": "right",
-      "text-justify": "justify",
+      'text-left': 'left',
+      'text-center': 'center',
+      'text-right': 'right',
+      'text-justify': 'justify',
     };
     return mapping[tailwindClass] || tailwindClass;
   }
 
   private static convertTailwindFontWeight(tailwindClass: string): string {
     const mapping: Record<string, string> = {
-      "font-thin": "100",
-      "font-extralight": "200",
-      "font-light": "300",
-      "font-normal": "400",
-      "font-medium": "500",
-      "font-semibold": "600",
-      "font-bold": "700",
-      "font-extrabold": "800",
-      "font-black": "900",
+      'font-thin': '100',
+      'font-extralight': '200',
+      'font-light': '300',
+      'font-normal': '400',
+      'font-medium': '500',
+      'font-semibold': '600',
+      'font-bold': '700',
+      'font-extrabold': '800',
+      'font-black': '900',
     };
     return mapping[tailwindClass] || tailwindClass;
   }
@@ -313,11 +313,11 @@ export class TemplateAdapter {
    */
   static async loadStepTemplate(stepNumber: number): Promise<JsonTemplate | null> {
     if (stepNumber < 1 || stepNumber > 21) {
-      console.error("❌ Número da etapa deve estar entre 1 e 21");
+      console.error('❌ Número da etapa deve estar entre 1 e 21');
       return null;
     }
 
-    const stepId = stepNumber.toString().padStart(2, "0");
+    const stepId = stepNumber.toString().padStart(2, '0');
     const templatePath = `/templates/step-${stepId}-template.json`;
 
     const template = await TemplateAdapter.loadAndConvertTemplate(templatePath);
@@ -339,11 +339,11 @@ export class TemplateAdapter {
     const templates = [];
 
     for (let step = 1; step <= 21; step++) {
-      const stepId = step.toString().padStart(2, "0");
+      const stepId = step.toString().padStart(2, '0');
       const path = `/templates/step-${stepId}-template.json`;
 
       try {
-        const response = await fetch(path, { method: "HEAD" });
+        const response = await fetch(path, { method: 'HEAD' });
         templates.push({
           step,
           path,
@@ -374,7 +374,7 @@ export class TemplateAdapter {
     const errors: string[] = [];
 
     try {
-      const stepId = stepNumber.toString().padStart(2, "0");
+      const stepId = stepNumber.toString().padStart(2, '0');
       const templatePath = `/templates/step-${stepId}-template.json`;
 
       // Carregar template original

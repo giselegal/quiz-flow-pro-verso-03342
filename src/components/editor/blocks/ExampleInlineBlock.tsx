@@ -1,9 +1,9 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import InlineBaseWrapper from "./base/InlineBaseWrapper";
-import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import InlineBaseWrapper from './base/InlineBaseWrapper';
+import InlineEditableText from './base/InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 import {
   getPersonalizedText,
   trackComponentView,
@@ -11,9 +11,9 @@ import {
   trackComponentConversion,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
-import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from "@/utils/brandDesignSystem";
-import { Star, TrendingUp, Users, Award, ChevronRight } from "lucide-react";
+} from '@/utils/inlineComponentUtils';
+import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from '@/utils/brandDesignSystem';
+import { Star, TrendingUp, Users, Award, ChevronRight } from 'lucide-react';
 
 /**
  * ExampleInlineBlock - Demonstração completa dos 10 princípios fundamentais
@@ -33,11 +33,11 @@ import { Star, TrendingUp, Users, Award, ChevronRight } from "lucide-react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -80,27 +80,27 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   // 1. REUTILIZÁVEL: Props bem definidas com defaults inteligentes
   const {
-    title = "Componente Exemplo",
-    description = "Demonstração de todos os princípios implementados",
-    layout = "horizontal",
-    style = "brand",
-    size = "medium",
-    alignment = "center",
+    title = 'Componente Exemplo',
+    description = 'Demonstração de todos os princípios implementados',
+    layout = 'horizontal',
+    style = 'brand',
+    size = 'medium',
+    alignment = 'center',
     showIcon = true,
     showStats = true,
-    iconType = "star",
-    animation = "fadeIn",
+    iconType = 'star',
+    animation = 'fadeIn',
     useUsername = false,
-    usernamePattern = "Olá {{username}}!",
+    usernamePattern = 'Olá {{username}}!',
     trackingEnabled = true,
-    backgroundColor = "#f8fafc",
-    textColor = "#1e293b",
-    borderRadius = "lg",
-    spacing = "normal",
+    backgroundColor = '#f8fafc',
+    textColor = '#1e293b',
+    borderRadius = 'lg',
+    spacing = 'normal',
     responsiveLayout = true,
   } = block?.properties || {};
 
@@ -111,12 +111,12 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   // Mock user data (normally from context)
-  const username = "Maria";
+  const username = 'Maria';
 
   // 5. TRACKING GRANULAR: Analytics automáticos
   useEffect(() => {
     if (trackingEnabled) {
-      trackComponentView(block.id, "example-inline");
+      trackComponentView(block.id, 'example-inline');
     }
   }, [trackingEnabled, block.id]);
 
@@ -134,7 +134,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
 
     // 5. TRACKING: Event tracking
     if (trackingEnabled) {
-      trackComponentClick(block.id, "example-inline", "component_click");
+      trackComponentClick(block.id, 'example-inline', 'component_click');
     }
   };
 
@@ -145,35 +145,35 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
     setTimeout(() => {
       setIsLoading(false);
       if (trackingEnabled) {
-        trackComponentConversion(block.id, "example-inline", 1);
+        trackComponentConversion(block.id, 'example-inline', 1);
       }
     }, 1000);
   };
 
   // 1. REUTILIZÁVEL: Sistema de classes dinâmicas
   const sizeClasses = {
-    small: "text-sm p-3",
-    medium: "text-base p-4",
-    large: "text-lg p-6",
+    small: 'text-sm p-3',
+    medium: 'text-base p-4',
+    large: 'text-lg p-6',
   };
 
   const styleClasses = {
-    brand: "bg-gradient-to-r from-blue-500 to-purple-600 text-white",
-    minimal: "bg-white border border-gray-200 text-gray-800",
-    bold: "bg-black text-white",
-    soft: "bg-gray-50 text-gray-700",
+    brand: 'bg-gradient-to-r from-blue-500 to-purple-600 text-white',
+    minimal: 'bg-white border border-gray-200 text-gray-800',
+    bold: 'bg-black text-white',
+    soft: 'bg-gray-50 text-gray-700',
   };
 
   const getIcon = () => {
-    const iconProps = { className: "w-5 h-5" };
+    const iconProps = { className: 'w-5 h-5' };
     switch (iconType) {
-      case "star":
+      case 'star':
         return <Star {...iconProps} />;
-      case "trending":
+      case 'trending':
         return <TrendingUp {...iconProps} />;
-      case "users":
+      case 'users':
         return <Users {...iconProps} />;
-      case "award":
+      case 'award':
         return <Award {...iconProps} />;
       default:
         return <Star {...iconProps} />;
@@ -183,7 +183,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
   // Text personalization
   const personalizedTitle = getPersonalizedText(
     title,
-    usernamePattern.replace("{{username}}", username),
+    usernamePattern.replace('{{username}}', username),
     username,
     useUsername
   );
@@ -197,40 +197,40 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
         className,
         INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       // 1. REUTILIZÁVEL: Props flexíveis de layout
-      gap={spacing === "tight" ? "sm" : spacing === "loose" ? "lg" : "md"}
-      justify={alignment === "left" ? "start" : alignment === "right" ? "end" : "center"}
+      gap={spacing === 'tight' ? 'sm' : spacing === 'loose' ? 'lg' : 'md'}
+      justify={alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'center'}
       align="center"
-      direction={layout === "vertical" ? "col" : "row"}
+      direction={layout === 'vertical' ? 'col' : 'row'}
       wrap={responsiveLayout}
       // 3. RESPONSIVO: Configuração adaptativa
       responsive={{
         mobile: {
-          direction: "col",
-          gap: "sm",
-          justify: "center",
+          direction: 'col',
+          gap: 'sm',
+          justify: 'center',
         },
         tablet: {
-          direction: layout === "vertical" ? "col" : "row",
-          gap: "md",
+          direction: layout === 'vertical' ? 'col' : 'row',
+          gap: 'md',
         },
         desktop: {
-          direction: layout === "vertical" ? "col" : "row",
-          gap: spacing === "tight" ? "sm" : "lg",
+          direction: layout === 'vertical' ? 'col' : 'row',
+          gap: spacing === 'tight' ? 'sm' : 'lg',
         },
       }}
       // 4. INLINE: Dimensões otimizadas
       minHeight="4rem"
-      maxWidth={size === "small" ? "20rem" : size === "large" ? "40rem" : "30rem"}
+      maxWidth={size === 'small' ? '20rem' : size === 'large' ? '40rem' : '30rem'}
       // 5. TRACKING: Dados de analytics
       trackingData={{
-        componentName: "ExampleInlineBlock",
-        category: "demonstration",
+        componentName: 'ExampleInlineBlock',
+        category: 'demonstration',
         metadata: {
           layout,
           style,
@@ -244,19 +244,19 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
       showControls={true}
       isDraggable={true}
       // Handlers de controle
-      onEdit={() => console.log("Edit triggered")}
-      onDuplicate={() => console.log("Duplicate triggered")}
-      onDelete={() => console.log("Delete triggered")}
-      onMove={direction => console.log("Move triggered:", direction)}
+      onEdit={() => console.log('Edit triggered')}
+      onDuplicate={() => console.log('Duplicate triggered')}
+      onDelete={() => console.log('Delete triggered')}
+      onMove={direction => console.log('Move triggered:', direction)}
     >
       <div
         className={cn(
-          "w-full flex items-center cursor-pointer transition-all duration-200",
+          'w-full flex items-center cursor-pointer transition-all duration-200',
           sizeClasses[size as keyof typeof sizeClasses],
           styleClasses[style as keyof typeof styleClasses],
           `rounded-${borderRadius}`,
-          isHovered && "scale-105 shadow-lg",
-          "hover:shadow-xl"
+          isHovered && 'scale-105 shadow-lg',
+          'hover:shadow-xl'
         )}
         style={{ backgroundColor, color: textColor }}
         onClick={handleClick}
@@ -265,22 +265,22 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
       >
         {/* Icon */}
         {showIcon && (
-          <div className={cn("flex-shrink-0 mr-3", layout === "vertical" && "mb-2 mr-0")}>
+          <div className={cn('flex-shrink-0 mr-3', layout === 'vertical' && 'mb-2 mr-0')}>
             {getIcon()}
           </div>
         )}
 
         {/* Content */}
-        <div className={cn("flex-1", layout === "vertical" ? "text-center" : "text-left")}>
+        <div className={cn('flex-1', layout === 'vertical' ? 'text-center' : 'text-left')}>
           {/* Title */}
           <div className="font-semibold mb-1">
             <InlineEditableText
               value={personalizedTitle}
-              onChange={value => handlePropertyChange("title", value)}
+              onChange={value => handlePropertyChange('title', value)}
               placeholder="Título do componente..."
-              fontSize={size === "large" ? "lg" : size === "small" ? "sm" : "base"}
+              fontSize={size === 'large' ? 'lg' : size === 'small' ? 'sm' : 'base'}
               fontWeight="semibold"
-              textAlign={layout === "vertical" ? "center" : "left"}
+              textAlign={layout === 'vertical' ? 'center' : 'left'}
               className="bg-transparent outline-none"
             />
           </div>
@@ -289,10 +289,10 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
           <div className="opacity-90">
             <InlineEditableText
               value={description}
-              onChange={value => handlePropertyChange("description", value)}
+              onChange={value => handlePropertyChange('description', value)}
               placeholder="Descrição do componente..."
               fontSize="sm"
-              textAlign={layout === "vertical" ? "center" : "left"}
+              textAlign={layout === 'vertical' ? 'center' : 'left'}
               multiline={true}
               maxLines={2}
               className="bg-transparent outline-none"
@@ -304,7 +304,7 @@ const ExampleInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="mt-2 flex items-center text-xs opacity-75">
               <span>Cliques: {clickCount}</span>
               <span className="mx-2">•</span>
-              <span>Última interação: {lastInteraction > 0 ? "agora" : "nunca"}</span>
+              <span>Última interação: {lastInteraction > 0 ? 'agora' : 'nunca'}</span>
             </div>
           )}
         </div>

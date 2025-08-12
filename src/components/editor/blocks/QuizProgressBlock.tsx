@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { ChevronRight } from 'lucide-react';
 
 interface QuizProgressBlockProps {
   currentStep?: number;
@@ -12,11 +12,11 @@ interface QuizProgressBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -58,7 +58,7 @@ const getMarginClass = (value, type) => {
 const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
   currentStep = 3,
   totalSteps = 10,
-  stepTitle = "Descobrindo seu estilo...",
+  stepTitle = 'Descobrindo seu estilo...',
   showStepNumbers = true,
   className,
 }) => {
@@ -67,13 +67,13 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
   return (
     <div
       className={cn(
-        "py-4",
+        'py-4',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
     >
       <div className="max-w-4xl mx-auto px-4">
@@ -98,7 +98,7 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         {/* Progress Bar */}
         <div className="relative">
           {/* Background */}
-          <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             {/* Progress Fill */}
             <div
               className="h-full bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full transition-all duration-700 ease-out"
@@ -117,9 +117,9 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
                 <div
                   key={stepNumber}
                   className={cn(
-                    "w-3 h-3 rounded-full border-2 transform -translate-y-0.5 transition-all duration-300",
-                    isCompleted ? "bg-[#B89B7A] border-[#B89B7A]" : "bg-white border-gray-300",
-                    isCurrent && "scale-125 shadow-lg"
+                    'w-3 h-3 rounded-full border-2 transform -translate-y-0.5 transition-all duration-300',
+                    isCompleted ? 'bg-[#B89B7A] border-[#B89B7A]' : 'bg-white border-gray-300',
+                    isCurrent && 'scale-125 shadow-lg'
                   )}
                 />
               );
@@ -130,7 +130,7 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
         {/* Progress Text */}
         <div className="text-center mt-3">
           <p className="text-sm text-[#8F7A6A]">
-            <span className="font-medium text-[#B89B7A]">{Math.round(progressPercentage)}%</span>{" "}
+            <span className="font-medium text-[#B89B7A]">{Math.round(progressPercentage)}%</span>{' '}
             completo - Continue para descobrir mais sobre seu estilo único
           </p>
         </div>

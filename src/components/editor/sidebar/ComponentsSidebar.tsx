@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 interface ComponentsSidebarProps {
   onComponentSelect: (type: string) => void;
@@ -7,11 +7,11 @@ interface ComponentsSidebarProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 export const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -52,22 +52,22 @@ export const getMarginClass = (value, type) => {
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
-    { type: "header", label: "Header" },
-    { type: "text", label: "Text" },
-    { type: "image", label: "Image" },
-    { type: "cta", label: "Call to Action" },
-    { type: "question", label: "Question" },
-    { type: "choice-single", label: "Single Choice" },
-    { type: "choice-multiple", label: "Multiple Choice" },
-    { type: "input-text", label: "Text Input" },
-    { type: "input-email", label: "Email Input" },
-    { type: "input-phone", label: "Phone Input" },
-    { type: "progress-bar", label: "Progress Bar" },
-    { type: "navigation", label: "Navigation" },
+    { type: 'header', label: 'Header' },
+    { type: 'text', label: 'Text' },
+    { type: 'image', label: 'Image' },
+    { type: 'cta', label: 'Call to Action' },
+    { type: 'question', label: 'Question' },
+    { type: 'choice-single', label: 'Single Choice' },
+    { type: 'choice-multiple', label: 'Multiple Choice' },
+    { type: 'input-text', label: 'Text Input' },
+    { type: 'input-email', label: 'Email Input' },
+    { type: 'input-phone', label: 'Phone Input' },
+    { type: 'progress-bar', label: 'Progress Bar' },
+    { type: 'navigation', label: 'Navigation' },
   ];
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7" }}>
+    <div style={{ backgroundColor: '#FAF9F7' }}>
       <h3 className="text-lg font-semibold mb-4">Components</h3>
       <div className="space-y-2">
         {components.map(component => (

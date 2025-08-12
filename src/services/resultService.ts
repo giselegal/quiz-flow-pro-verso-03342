@@ -1,20 +1,20 @@
-import type { Database } from "@/integrations/supabase/types";
-import { supabase } from "@/lib/supabase";
+import type { Database } from '@/integrations/supabase/types';
+import { supabase } from '@/lib/supabase';
 
-export type QuizResult = Database["public"]["Tables"]["quiz_results"]["Row"];
+export type QuizResult = Database['public']['Tables']['quiz_results']['Row'];
 
 /**
  * Busca um resultado específico pelo ID
  */
 export async function getQuizResultById(resultId: string): Promise<QuizResult | null> {
   const { data, error } = await supabase
-    .from("quiz_results")
-    .select("*")
-    .eq("id", resultId)
+    .from('quiz_results')
+    .select('*')
+    .eq('id', resultId)
     .single();
 
   if (error) {
-    console.error("Erro ao buscar resultado:", error);
+    console.error('Erro ao buscar resultado:', error);
     return null;
   }
 
@@ -26,13 +26,13 @@ export async function getQuizResultById(resultId: string): Promise<QuizResult | 
  */
 export async function getUserBySessionId(sessionId: string) {
   const { data, error } = await supabase
-    .from("quiz_users")
-    .select("*")
-    .eq("session_id", sessionId)
+    .from('quiz_users')
+    .select('*')
+    .eq('session_id', sessionId)
     .single();
 
   if (error) {
-    console.error("Erro ao buscar usuário:", error);
+    console.error('Erro ao buscar usuário:', error);
     return null;
   }
 
@@ -44,13 +44,13 @@ export async function getUserBySessionId(sessionId: string) {
  */
 export async function getQuizSessionById(sessionId: string) {
   const { data, error } = await supabase
-    .from("quiz_sessions")
-    .select("*")
-    .eq("id", sessionId)
+    .from('quiz_sessions')
+    .select('*')
+    .eq('id', sessionId)
     .single();
 
   if (error) {
-    console.error("Erro ao buscar sessão:", error);
+    console.error('Erro ao buscar sessão:', error);
     return null;
   }
 
@@ -62,13 +62,13 @@ export async function getQuizSessionById(sessionId: string) {
  */
 export async function getStepResponses(sessionId: string) {
   const { data, error } = await supabase
-    .from("quiz_step_responses")
-    .select("*")
-    .eq("session_id", sessionId)
-    .order("step_number", { ascending: true });
+    .from('quiz_step_responses')
+    .select('*')
+    .eq('session_id', sessionId)
+    .order('step_number', { ascending: true });
 
   if (error) {
-    console.error("Erro ao buscar respostas:", error);
+    console.error('Erro ao buscar respostas:', error);
     return [];
   }
 

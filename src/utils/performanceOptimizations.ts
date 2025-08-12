@@ -49,7 +49,7 @@ export const optimizedRequestIdle = (
   callback: () => void,
   options?: { timeout?: number }
 ): number => {
-  if ("requestIdleCallback" in window) {
+  if ('requestIdleCallback' in window) {
     return (window as any).requestIdleCallback(callback, options);
   }
 
@@ -154,10 +154,10 @@ export const createPerformanceMonitor = () => {
       if (!isRunning) return;
 
       // Verificações leves de performance
-      if ("memory" in performance) {
+      if ('memory' in performance) {
         const memory = (performance as any).memory;
         if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.9) {
-          console.warn("🚨 High memory usage detected");
+          console.warn('🚨 High memory usage detected');
         }
       }
 
@@ -186,11 +186,11 @@ export const createPerformanceMonitor = () => {
 };
 
 // Auto-cleanup quando a página é descarregada
-if (typeof window !== "undefined") {
-  window.addEventListener("beforeunload", cleanupAllTimers);
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', cleanupAllTimers);
 
   // Cleanup no Visibility API
-  document.addEventListener("visibilitychange", () => {
+  document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       cleanupAllTimers();
     }

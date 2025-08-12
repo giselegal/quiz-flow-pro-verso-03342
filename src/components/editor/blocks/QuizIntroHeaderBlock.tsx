@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import { ArrowLeft } from 'lucide-react';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 interface QuizIntroHeaderBlockProps extends BlockComponentProps {
   disabled?: boolean;
@@ -9,13 +9,13 @@ interface QuizIntroHeaderBlockProps extends BlockComponentProps {
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (
   value: string | number,
-  type: "top" | "bottom" | "left" | "right"
+  type: 'top' | 'bottom' | 'left' | 'right'
 ): string => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -64,18 +64,18 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   // Verificação de segurança para evitar erro de undefined
   if (!block || !block.properties) {
     return (
-      <div style={{ borderColor: "#B89B7A" }}>
-        <p style={{ color: "#432818" }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado ou propriedades indefinidas</p>
       </div>
     );
   }
 
   // Debug das propriedades recebidas
-  console.log("🔍 [QuizIntroHeaderBlock] Propriedades recebidas:", block.properties);
+  console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
 
   const {
-    logoUrl = "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png",
-    logoAlt = "Logo",
+    logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
+    logoAlt = 'Logo',
     progressValue = 0,
     progressMax = 100,
     showBackButton = true,
@@ -91,14 +91,14 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full p-4 rounded-lg", // 🎯 Sem bordas próprias - seleção via Container 1 apenas
-        "cursor-pointer hover:bg-gray-50 transition-colors", // 🎯 Hover sutil sem borda
+        'relative w-full p-4 rounded-lg', // 🎯 Sem bordas próprias - seleção via Container 1 apenas
+        'cursor-pointer hover:bg-gray-50 transition-colors', // 🎯 Hover sutil sem borda
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
     >
@@ -106,8 +106,8 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       <div className="relative w-full min-h-[120px] flex items-center justify-center">
         {/* Back Button - Absolute positioned to not affect centering */}
         {showBackButton && (
-          <button style={{ backgroundColor: "#E5DDD5" }}>
-            <ArrowLeft style={{ color: "#6B4F43" }} />
+          <button style={{ backgroundColor: '#E5DDD5' }}>
+            <ArrowLeft style={{ color: '#6B4F43' }} />
           </button>
         )}
 
@@ -122,7 +122,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
             }}
             className="object-contain"
             onError={e => {
-              e.currentTarget.src = "https://via.placeholder.com/96x96?text=Logo";
+              e.currentTarget.src = 'https://via.placeholder.com/96x96?text=Logo';
             }}
           />
           {/* Edição inline removida - apenas no painel de propriedades */}
@@ -132,7 +132,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Progress Bar - Só mostra se showProgress for true */}
       {showProgress && (
         <>
-          <div style={{ backgroundColor: "#E5DDD5" }}>
+          <div style={{ backgroundColor: '#E5DDD5' }}>
             <div
               className="bg-gradient-to-r from-[#B89B7A] to-[#8a7766] h-2 rounded-full transition-all duration-300"
               style={{ width: `${Math.min(progressValue, progressMax)}%` }}

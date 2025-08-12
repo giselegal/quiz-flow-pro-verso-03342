@@ -1,4 +1,4 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
 
 interface OfferProblemSectionProps {
   title: string;
@@ -8,7 +8,7 @@ interface OfferProblemSectionProps {
   imageAlt: string;
   imageWidth: number;
   imageHeight: number;
-  layout: "side-by-side" | "centered";
+  layout: 'side-by-side' | 'centered';
 }
 
 /**
@@ -25,11 +25,11 @@ export const OfferProblemSection: React.FC<OfferProblemSectionProps> = ({
   imageAlt,
   imageWidth,
   imageHeight,
-  layout = "side-by-side",
+  layout = 'side-by-side',
 }) => {
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split("**").map((part, index) => {
+    return text.split('**').map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -43,13 +43,13 @@ export const OfferProblemSection: React.FC<OfferProblemSectionProps> = ({
         <div className="card-clean">
           <div
             className={
-              layout === "side-by-side" ? "grid md:grid-cols-2 gap-8 items-center" : "text-center"
+              layout === 'side-by-side' ? 'grid md:grid-cols-2 gap-8 items-center' : 'text-center'
             }
           >
             <div>
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 {title}
               </h2>

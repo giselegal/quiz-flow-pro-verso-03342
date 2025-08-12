@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 // Importar componentes
-import { EditorNotification } from "@/components/editor/EditorNotification";
-import { ComponentSpecificPropertiesPanel } from "@/components/editor/properties/ComponentSpecificPropertiesPanel";
-import ComponentTestingPanel from "@/components/editor/testing/ComponentTestingPanel";
+import { EditorNotification } from '@/components/editor/EditorNotification';
+import { ComponentSpecificPropertiesPanel } from '@/components/editor/properties/ComponentSpecificPropertiesPanel';
+import ComponentTestingPanel from '@/components/editor/testing/ComponentTestingPanel';
 
 /**
  * Página de Teste de Componentes
@@ -33,8 +33,8 @@ export default function ComponentTestingPage() {
 
   const handleUpdateComponent = (componentId: string, updates: Record<string, any>) => {
     // Debug para quiz-intro-header
-    if (componentId === "quiz-intro-header-test-1") {
-      console.log("handleUpdateComponent for quiz-intro-header:", updates);
+    if (componentId === 'quiz-intro-header-test-1') {
+      console.log('handleUpdateComponent for quiz-intro-header:', updates);
     }
 
     // Salvar atualizações do componente
@@ -100,7 +100,7 @@ export default function ComponentTestingPage() {
                 onUpdate={handleUpdateComponent}
                 onClose={() => setSelectedComponent(null)}
                 onPreview={() => {
-                  console.log("Preview component:", selectedComponent);
+                  console.log('Preview component:', selectedComponent);
                 }}
               />
             ) : (
@@ -142,7 +142,7 @@ export default function ComponentTestingPage() {
         message={
           selectedComponent
             ? `Componente ${selectedComponent.type} selecionado`
-            : "Ambiente de teste carregado"
+            : 'Ambiente de teste carregado'
         }
       />
 

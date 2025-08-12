@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 export interface FunnelHeroSectionProps {
   // Content props
@@ -19,8 +19,8 @@ export interface FunnelHeroSectionProps {
   primaryColor?: string;
 
   // Layout props
-  layout?: "side-by-side" | "stacked" | "hero-centered";
-  imagePosition?: "left" | "right" | "background";
+  layout?: 'side-by-side' | 'stacked' | 'hero-centered';
+  imagePosition?: 'left' | 'right' | 'background';
 
   // Behavior props
   onCTAClick?: () => void;
@@ -46,22 +46,22 @@ export interface FunnelHeroSectionProps {
  */
 const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
   logoUrl,
-  logoAlt = "Logo da Marca",
+  logoAlt = 'Logo da Marca',
   title,
   description,
   ctaText,
   ctaSubtext,
   heroImageUrl,
-  heroImageAlt = "Imagem Hero",
-  backgroundColor = "#FAF9F7",
-  textColor = "#432818",
-  primaryColor = "#B89B7A",
-  layout = "side-by-side",
-  imagePosition = "right",
+  heroImageAlt = 'Imagem Hero',
+  backgroundColor = '#FAF9F7',
+  textColor = '#432818',
+  primaryColor = '#B89B7A',
+  layout = 'side-by-side',
+  imagePosition = 'right',
   onCTAClick,
   isSelected = false,
   onClick,
-  className = "",
+  className = '',
 }) => {
   const handleCTAClick = () => {
     if (onCTAClick) {
@@ -71,42 +71,42 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
 
   const getLayoutClasses = () => {
     switch (layout) {
-      case "stacked":
-        return "flex flex-col space-y-8";
-      case "hero-centered":
-        return "flex flex-col items-center text-center space-y-8";
-      case "side-by-side":
+      case 'stacked':
+        return 'flex flex-col space-y-8';
+      case 'hero-centered':
+        return 'flex flex-col items-center text-center space-y-8';
+      case 'side-by-side':
       default:
-        return "grid md:grid-cols-2 gap-8 items-center";
+        return 'grid md:grid-cols-2 gap-8 items-center';
     }
   };
 
   const getTextOrder = () => {
-    if (layout !== "side-by-side") return "";
-    return imagePosition === "right" ? "order-1 md:order-1" : "order-1 md:order-2";
+    if (layout !== 'side-by-side') return '';
+    return imagePosition === 'right' ? 'order-1 md:order-1' : 'order-1 md:order-2';
   };
 
   const getImageOrder = () => {
-    if (layout !== "side-by-side") return "";
-    return imagePosition === "right" ? "order-2 md:order-2" : "order-2 md:order-1";
+    if (layout !== 'side-by-side') return '';
+    return imagePosition === 'right' ? 'order-2 md:order-2' : 'order-2 md:order-1';
   };
 
   return (
     <section
       className={cn(
-        "py-8 md:py-16 px-4 md:px-8 transition-all duration-200",
-        isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
+        'py-8 md:py-16 px-4 md:px-8 transition-all duration-200',
+        isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
         className
       )}
       style={{
         backgroundColor,
         color: textColor,
-        ...(imagePosition === "background" &&
+        ...(imagePosition === 'background' &&
           heroImageUrl && {
             backgroundImage: `url(${heroImageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }),
       }}
       onClick={onClick}
@@ -116,25 +116,25 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
           {/* Text Content */}
           <div
             className={cn(
-              "space-y-6",
+              'space-y-6',
               getTextOrder(),
-              layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+              layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
             )}
           >
             {/* Logo */}
             {logoUrl && (
               <div
                 className={cn(
-                  "mb-6",
-                  layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                  'mb-6',
+                  layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
                 )}
               >
                 <img
                   src={logoUrl}
                   alt={logoAlt}
                   className={cn(
-                    "h-12 md:h-16 mb-4",
-                    layout === "hero-centered" ? "mx-auto" : "mx-auto md:mx-0"
+                    'h-12 md:h-16 mb-4',
+                    layout === 'hero-centered' ? 'mx-auto' : 'mx-auto md:mx-0'
                   )}
                 />
               </div>
@@ -143,8 +143,8 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             {/* Title */}
             <h1
               className={cn(
-                "text-3xl md:text-4xl lg:text-5xl font-playfair leading-tight",
-                layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                'text-3xl md:text-4xl lg:text-5xl font-playfair leading-tight',
+                layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
               )}
             >
               {title}
@@ -153,8 +153,8 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             {/* Description */}
             <p
               className={cn(
-                "text-lg md:text-xl opacity-80",
-                layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                'text-lg md:text-xl opacity-80',
+                layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
               )}
             >
               {description}
@@ -163,8 +163,8 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             {/* CTA Button */}
             <div
               className={cn(
-                "flex",
-                layout === "hero-centered" ? "justify-center" : "justify-center md:justify-start"
+                'flex',
+                layout === 'hero-centered' ? 'justify-center' : 'justify-center md:justify-start'
               )}
             >
               <Button
@@ -173,7 +173,7 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
                 className="px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 style={{
                   backgroundColor: primaryColor,
-                  color: "white",
+                  color: 'white',
                 }}
               >
                 {ctaText}
@@ -185,8 +185,8 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
             {ctaSubtext && (
               <p
                 className={cn(
-                  "text-sm opacity-70",
-                  layout === "hero-centered" ? "text-center" : "text-center md:text-left"
+                  'text-sm opacity-70',
+                  layout === 'hero-centered' ? 'text-center' : 'text-center md:text-left'
                 )}
               >
                 {ctaSubtext}
@@ -195,8 +195,8 @@ const FunnelHeroSection: React.FC<FunnelHeroSectionProps> = ({
           </div>
 
           {/* Hero Image */}
-          {heroImageUrl && imagePosition !== "background" && (
-            <div className={cn("relative", getImageOrder())}>
+          {heroImageUrl && imagePosition !== 'background' && (
+            <div className={cn('relative', getImageOrder())}>
               <div className="relative rounded-lg overflow-hidden shadow-2xl">
                 <img src={heroImageUrl} alt={heroImageAlt} className="w-full h-auto object-cover" />
               </div>

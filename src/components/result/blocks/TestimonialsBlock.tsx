@@ -1,4 +1,4 @@
-import { Star } from "lucide-react";
+import { Star } from 'lucide-react';
 
 const TestimonialsBlock = () => (
   <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-12">

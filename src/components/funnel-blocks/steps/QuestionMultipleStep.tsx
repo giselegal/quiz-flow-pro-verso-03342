@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { FunnelStepProps } from "@/types/funnel";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { FunnelStepProps } from '@/types/funnel';
 
 interface QuizOptionProps {
   text: string;
@@ -26,9 +26,9 @@ const QuizOption: React.FC<QuizOptionProps> = ({
       disabled={disabled}
       className={`p-4 border-2 rounded-lg transition-all ${
         isSelected
-          ? "border-[#B89B7A] bg-[#B89B7A]/10"
-          : "border-gray-200 hover:border-[#B89B7A]/50"
-      } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+          ? 'border-[#B89B7A] bg-[#B89B7A]/10'
+          : 'border-gray-200 hover:border-[#B89B7A]/50'
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       {imageUrl && (
         <img src={imageUrl} alt={text} className="w-full h-32 object-cover rounded mb-2" />
@@ -59,7 +59,7 @@ const QuestionMultipleStep: React.FC<QuestionMultipleStepProps> = ({
   data = {},
 }) => {
   const {
-    question = "Selecione suas opções preferidas",
+    question = 'Selecione suas opções preferidas',
     options = [],
     multiSelect = false,
     minAnswers = 1,

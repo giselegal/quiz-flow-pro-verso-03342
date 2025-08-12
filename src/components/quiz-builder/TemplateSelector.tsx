@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { quizTemplates, QuizTemplate } from "@/data/quizTemplates";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import React, { useState } from 'react';
+import { quizTemplates, QuizTemplate } from '@/data/quizTemplates';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -9,9 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Check, Plus } from "lucide-react";
+} from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Check, Plus } from 'lucide-react';
 
 interface TemplateSelectorProps {
   onSelectTemplate: (template: QuizTemplate) => void;
@@ -54,7 +54,7 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({ onSelectTemplate })
             {quizTemplates.map(template => (
               <Card
                 key={template.id}
-                className={`p-4 cursor-pointer transition-all hover:shadow-md ${selectedTemplateId === template.id ? "ring-2 ring-primary" : ""}`}
+                className={`p-4 cursor-pointer transition-all hover:shadow-md ${selectedTemplateId === template.id ? 'ring-2 ring-primary' : ''}`}
                 onClick={() => handleSelectTemplate(template)}
               >
                 <div className="relative">

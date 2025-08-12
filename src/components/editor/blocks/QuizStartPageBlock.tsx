@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Badge } from "../../../components/ui/badge";
-import { Button } from "../../../components/ui/button";
+import { cn } from '@/lib/utils';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
 
 interface QuizStartPageBlockProps {
   block: {
@@ -31,11 +31,11 @@ interface QuizStartPageBlockProps {
 // @ts-nocheck
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -86,21 +86,21 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
   // Safe destructuring with fallback defaults
   const properties = block.properties || {};
   const {
-    title = "Etapa 1: Descubra Seu Estilo Pessoal Único",
+    title = 'Etapa 1: Descubra Seu Estilo Pessoal Único',
     subtitle = 'Chega de guarda-roupa lotado e sensação de "não tenho nada para vestir"',
-    description = "Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.",
-    buttonText = "Começar Meu Quiz de Estilo",
+    description = 'Um quiz personalizado que vai te ajudar a descobrir seu estilo predominante e como aplicá-lo no dia a dia com confiança.',
+    buttonText = 'Começar Meu Quiz de Estilo',
     benefits = [
-      "✓ Descubra seu estilo predominante em apenas 5 minutos",
-      "✓ Receba dicas personalizadas para seu perfil único",
-      "✓ Aprenda a criar looks que combinam 100% com você",
-      "✓ Ganhe confiança para se vestir todos os dias",
+      '✓ Descubra seu estilo predominante em apenas 5 minutos',
+      '✓ Receba dicas personalizadas para seu perfil único',
+      '✓ Aprenda a criar looks que combinam 100% com você',
+      '✓ Ganhe confiança para se vestir todos os dias',
     ],
-    nameInputPlaceholder = "Digite seu primeiro nome aqui...",
+    nameInputPlaceholder = 'Digite seu primeiro nome aqui...',
     showNameInput = true,
     imageUrl,
-    backgroundColor = "#fffaf7",
-    textColor = "#432818",
+    backgroundColor = '#fffaf7',
+    textColor = '#432818',
     // Sistema completo de margens com controles deslizantes
     marginTop = 8,
     marginBottom = 8,
@@ -117,17 +117,17 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
   return (
     <div
       className={cn(
-        "relative w-full h-full flex flex-col bg-white rounded-lg border border-gray-200",
+        'relative w-full h-full flex flex-col bg-white rounded-lg border border-gray-200',
         // LAYOUT HORIZONTAL RESPONSIVO - LARGURA 100% - MÁXIMO 2 COLUNAS INTERNAS
-        "p-4 md:p-6 min-h-[300px] max-w-full",
-        isSelected ? "ring-2 ring-[#B89B7A] bg-[#B89B7A]/10" : "",
-        "cursor-pointer hover:shadow-md transition-all duration-200",
+        'p-4 md:p-6 min-h-[300px] max-w-full',
+        isSelected ? 'ring-2 ring-[#B89B7A] bg-[#B89B7A]/10' : '',
+        'cursor-pointer hover:shadow-md transition-all duration-200',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={onClick}
       style={{ backgroundColor, color: textColor, ...style }}
@@ -141,8 +141,8 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         {/* Title */}
         <h1
           className={cn(
-            "text-lg md:text-xl font-bold mb-2 leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-            isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
+            'text-lg md:text-xl font-bold mb-2 leading-tight cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+            isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
           )}
           onClick={onClick}
         >
@@ -152,8 +152,8 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
         {/* Subtitle */}
         <p
           className={cn(
-            "text-sm mb-3 opacity-80 leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-            isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
+            'text-sm mb-3 opacity-80 leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+            isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
           )}
           onClick={onClick}
         >
@@ -164,8 +164,8 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
       {/* Description */}
       <p
         className={cn(
-          "text-xs md:text-sm mb-4 opacity-75 text-center leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40",
-          isSelected && "ring-2 ring-[#B89B7A] ring-opacity-50"
+          'text-xs md:text-sm mb-4 opacity-75 text-center leading-relaxed cursor-pointer p-2 rounded border-2 border-transparent hover:border-[#B89B7A]/40',
+          isSelected && 'ring-2 ring-[#B89B7A] ring-opacity-50'
         )}
         onClick={onClick}
       >
@@ -192,7 +192,7 @@ const QuizStartPageBlock: React.FC<QuizStartPageBlockProps> = ({
           <input
             type="text"
             placeholder={nameInputPlaceholder}
-            style={{ borderColor: "#E5DDD5" }}
+            style={{ borderColor: '#E5DDD5' }}
             disabled={disabled}
           />
         </div>

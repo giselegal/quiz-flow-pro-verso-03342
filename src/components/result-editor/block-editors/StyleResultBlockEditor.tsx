@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Block } from '@/types/editor';
 
 interface StyleResultBlockEditorProps {
   block: Block;
@@ -18,7 +18,7 @@ const StyleResultBlockEditor: React.FC<StyleResultBlockEditorProps> = ({ block, 
         <Textarea
           id="description"
           rows={4}
-          value={content.description || ""}
+          value={content.description || ''}
           onChange={e => onUpdate({ description: e.target.value })}
           placeholder="Descrição personalizada para o estilo principal..."
         />
@@ -28,12 +28,12 @@ const StyleResultBlockEditor: React.FC<StyleResultBlockEditorProps> = ({ block, 
         <Label htmlFor="customImage">Imagem Personalizada (URL)</Label>
         <Input
           id="customImage"
-          value={content.customImage || ""}
+          value={content.customImage || ''}
           onChange={e => onUpdate({ customImage: e.target.value })}
           placeholder="URL da imagem personalizada"
         />
         {content.customImage && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.customImage}
               alt="Imagem personalizada"
@@ -43,7 +43,7 @@ const StyleResultBlockEditor: React.FC<StyleResultBlockEditorProps> = ({ block, 
         )}
       </div>
 
-      <div style={{ backgroundColor: "#FAF9F7" }}>
+      <div style={{ backgroundColor: '#FAF9F7' }}>
         <p className="text-sm text-[#8F7A6A]">
           <strong>Nota:</strong> Este componente exibirá automaticamente o estilo predominante do
           usuário. Você pode personalizar a descrição e a imagem aqui.

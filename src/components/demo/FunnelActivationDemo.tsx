@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useFunnelStageActivation } from "@/utils/FunnelStageActivator";
-import { ArrowRight, CheckCircle, ShoppingBag, User } from "lucide-react";
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useFunnelStageActivation } from '@/utils/FunnelStageActivator';
+import { ArrowRight, CheckCircle, ShoppingBag, User } from 'lucide-react';
 
 /**
  * Componente de Demonstração do Sistema de Ativação de Etapas
@@ -19,14 +20,14 @@ export function FunnelActivationDemo() {
     reset,
   } = useFunnelStageActivation();
 
-  const [userName, setUserName] = React.useState("");
+  const [userName, setUserName] = React.useState('');
   const [answers, setAnswers] = React.useState<Record<string, string[]>>({});
   const [currentStep, setCurrentStep] = React.useState(1);
 
   const handleNameChange = (value: string) => {
     setUserName(value);
     if (value.trim().length >= 2) {
-      registerFieldFilled("userName", value);
+      registerFieldFilled('userName', value);
     }
   };
 
@@ -48,12 +49,12 @@ export function FunnelActivationDemo() {
 
   const questionData = {
     2: {
-      title: "Q1: Que tipo de roupa você prefere?",
-      options: ["Casual", "Formal", "Esportiva", "Boho", "Clássica", "Moderna"],
+      title: 'Q1: Que tipo de roupa você prefere?',
+      options: ['Casual', 'Formal', 'Esportiva', 'Boho', 'Clássica', 'Moderna'],
     },
     3: {
-      title: "Q2: Qual seu estilo preferido?",
-      options: ["Elegante", "Confortável", "Arrojado", "Minimalista", "Romântico", "Urbano"],
+      title: 'Q2: Qual seu estilo preferido?',
+      options: ['Elegante', 'Confortável', 'Arrojado', 'Minimalista', 'Romântico', 'Urbano'],
     },
   };
 
@@ -144,7 +145,7 @@ export function FunnelActivationDemo() {
           <Button size="sm" variant="outline" onClick={reset}>
             Reset
           </Button>
-          <div className="text-xs text-gray-500 ml-auto">Ativas: {activatedStages.join(", ")}</div>
+          <div className="text-xs text-gray-500 ml-auto">Ativas: {activatedStages.join(', ')}</div>
         </CardContent>
       </Card>
     </div>

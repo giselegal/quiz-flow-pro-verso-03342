@@ -1,8 +1,8 @@
-import { QuizTemplate, TemplateListItem } from "@/types/quizTemplate";
-import { styleQuizTemplate } from "./styleQuizTemplate";
+import { QuizTemplate, TemplateListItem } from '@/types/quizTemplate';
+import { styleQuizTemplate } from './styleQuizTemplate';
 
 // Chave para armazenamento local
-const TEMPLATES_STORAGE_KEY = "quiz_templates";
+const TEMPLATES_STORAGE_KEY = 'quiz_templates';
 
 // Carregar templates do armazenamento local
 const loadTemplates = (): QuizTemplate[] => {
@@ -14,12 +14,12 @@ const loadTemplates = (): QuizTemplate[] => {
     // Se não existir, inicializa com template padrão vazio
     const defaultTemplates: QuizTemplate[] = [
       {
-        id: "default",
-        name: "Template Padrão",
-        description: "Template básico",
+        id: 'default',
+        name: 'Template Padrão',
+        description: 'Template básico',
         questions: [],
         resultPageSettings: {
-          styleType: "classic",
+          styleType: 'classic',
           blocks: [],
           headerConfig: {},
           mainContentConfig: {},
@@ -33,15 +33,15 @@ const loadTemplates = (): QuizTemplate[] => {
     localStorage.setItem(TEMPLATES_STORAGE_KEY, JSON.stringify(defaultTemplates));
     return defaultTemplates;
   } catch (error) {
-    console.error("Erro ao carregar templates:", error);
+    console.error('Erro ao carregar templates:', error);
     return [
       {
-        id: "default",
-        name: "Template Padrão",
-        description: "Template básico",
+        id: 'default',
+        name: 'Template Padrão',
+        description: 'Template básico',
         questions: [],
         resultPageSettings: {
-          styleType: "classic",
+          styleType: 'classic',
           blocks: [],
           headerConfig: {},
           mainContentConfig: {},
@@ -60,7 +60,7 @@ const saveTemplates = (templates: QuizTemplate[]): void => {
   try {
     localStorage.setItem(TEMPLATES_STORAGE_KEY, JSON.stringify(templates));
   } catch (error) {
-    console.error("Erro ao salvar templates:", error);
+    console.error('Erro ao salvar templates:', error);
   }
 };
 
@@ -84,7 +84,7 @@ export const getTemplateById = (id: string): QuizTemplate | null => {
 
 // Criar novo template
 export const createTemplate = (
-  template: Omit<QuizTemplate, "id" | "createdAt" | "updatedAt">
+  template: Omit<QuizTemplate, 'id' | 'createdAt' | 'updatedAt'>
 ): string => {
   const templates = loadTemplates();
   const now = new Date().toISOString();

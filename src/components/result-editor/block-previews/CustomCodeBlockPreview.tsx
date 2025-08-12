@@ -6,7 +6,7 @@ interface CustomCodeBlockPreviewProps {
 }
 
 const CustomCodeBlockPreview: React.FC<CustomCodeBlockPreviewProps> = ({ content }) => {
-  const { code = "", style = {} } = content;
+  const { code = '', style = {} } = content;
 
   if (!code.trim()) {
     return (

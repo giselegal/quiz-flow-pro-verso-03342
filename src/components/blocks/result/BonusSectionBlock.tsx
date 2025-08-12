@@ -1,5 +1,5 @@
 // @ts-nocheck
-import BonusSection from "@/components/result/BonusSection";
+import BonusSection from '@/components/result/BonusSection';
 
 /**
  * BLOCO EDITÁVEL: Seção de Bônus
@@ -37,17 +37,17 @@ export interface BonusSectionBlockProps {
   bonuses?: BonusItem[];
   showPricing?: boolean;
   backgroundColor?: string;
-  cardStyle?: "default" | "premium" | "minimal";
+  cardStyle?: 'default' | 'premium' | 'minimal';
   className?: string;
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -87,29 +87,29 @@ const getMarginClass = (value, type) => {
 };
 
 const BonusSectionBlock: React.FC<BonusSectionBlockProps> = ({
-  blockId = "bonus-section",
-  title = "Bônus Exclusivos",
+  blockId = 'bonus-section',
+  title = 'Bônus Exclusivos',
   bonuses = [
     {
-      name: "Guia Completo de Cores",
-      value: "R$ 97,00",
-      description: "Descubra quais cores realçam sua beleza natural",
+      name: 'Guia Completo de Cores',
+      value: 'R$ 97,00',
+      description: 'Descubra quais cores realçam sua beleza natural',
     },
     {
-      name: "Checklist de Compras",
-      value: "R$ 47,00",
-      description: "Lista definitiva para montar seu guarda-roupa perfeito",
+      name: 'Checklist de Compras',
+      value: 'R$ 47,00',
+      description: 'Lista definitiva para montar seu guarda-roupa perfeito',
     },
     {
-      name: "Templates de Looks",
-      value: "R$ 127,00",
-      description: "Combinações prontas para diferentes ocasiões",
+      name: 'Templates de Looks',
+      value: 'R$ 127,00',
+      description: 'Combinações prontas para diferentes ocasiões',
     },
   ],
   showPricing = true,
-  backgroundColor = "#ffffff",
-  cardStyle = "default",
-  className = "",
+  backgroundColor = '#ffffff',
+  cardStyle = 'default',
+  className = '',
 }) => {
   return (
     <div

@@ -3,9 +3,9 @@
  * Componente para mostrar indicações visuais quando propriedades são alteradas
  */
 
-import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2 } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, Loader2 } from 'lucide-react';
 
 interface PropertyChangeIndicatorProps {
   isChanging?: boolean;
@@ -38,7 +38,7 @@ export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = (
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            style={{ backgroundColor: "#FAF9F7" }}
+            style={{ backgroundColor: '#FAF9F7' }}
           >
             <Loader2 className="w-3 h-3 text-white animate-spin" />
           </motion.div>

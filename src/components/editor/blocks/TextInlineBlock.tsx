@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { BlockComponentProps } from "../../../types/blocks";
+import { cn } from '@/lib/utils';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { BlockComponentProps } from '../../../types/blocks';
 
 /**
  * TextInlineBlock - Componente modular inline horizontal
@@ -13,96 +13,96 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange, // 🎯 Adicionando suporte a edição de propriedades
-  className = "",
+  className = '',
 }) => {
   // ES7+ Destructuring com default values e optional chaining
   const {
-    content = "Texto exemplo",
-    fontSize = "medium",
-    fontWeight = "normal",
-    fontFamily = "inherit",
-    textAlign = "left",
-    color = "#374151",
-    backgroundColor = "transparent",
-    maxWidth = "auto",
+    content = 'Texto exemplo',
+    fontSize = 'medium',
+    fontWeight = 'normal',
+    fontFamily = 'inherit',
+    textAlign = 'left',
+    color = '#374151',
+    backgroundColor = 'transparent',
+    maxWidth = 'auto',
     useUsername = false,
-    usernamePattern = "{userName}",
+    usernamePattern = '{userName}',
     // Propriedades do grid system
-    gridColumns = "auto", // 'auto', 'half', 'full'
-    spacing = "normal",
+    gridColumns = 'auto', // 'auto', 'half', 'full'
+    spacing = 'normal',
     // Propriedades de espaçamento
     marginTop = 8,
     marginBottom = 8,
     marginLeft = 0,
     marginRight = 0,
-    lineHeight = "leading-normal",
+    lineHeight = 'leading-normal',
   } = block?.properties ?? {};
 
   // ES7+ Object property shorthand e computed property names
   const fontSizeClasses = {
-    xs: "text-xs",
-    sm: "text-sm",
-    medium: "text-base",
-    lg: "text-lg",
-    xl: "text-xl",
-    "2xl": "text-2xl",
-    "3xl": "text-3xl",
+    xs: 'text-xs',
+    sm: 'text-sm',
+    medium: 'text-base',
+    lg: 'text-lg',
+    xl: 'text-xl',
+    '2xl': 'text-2xl',
+    '3xl': 'text-3xl',
     // Suporte direto para classes Tailwind vindas do template
-    "text-xs": "text-xs",
-    "text-sm": "text-sm",
-    "text-base": "text-base",
-    "text-lg": "text-lg",
-    "text-xl": "text-xl",
-    "text-2xl": "text-2xl",
-    "text-3xl": "text-3xl",
+    'text-xs': 'text-xs',
+    'text-sm': 'text-sm',
+    'text-base': 'text-base',
+    'text-lg': 'text-lg',
+    'text-xl': 'text-xl',
+    'text-2xl': 'text-2xl',
+    'text-3xl': 'text-3xl',
   } as const;
 
   // ES7+ Object spread com type assertion
   const fontWeightClasses = {
-    light: "font-light",
-    normal: "font-normal",
-    medium: "font-medium",
-    semibold: "font-semibold",
-    bold: "font-bold",
+    light: 'font-light',
+    normal: 'font-normal',
+    medium: 'font-medium',
+    semibold: 'font-semibold',
+    bold: 'font-bold',
     // Suporte direto para classes Tailwind vindas do template
-    "font-light": "font-light",
-    "font-normal": "font-normal",
-    "font-medium": "font-medium",
-    "font-semibold": "font-semibold",
-    "font-bold": "font-bold",
+    'font-light': 'font-light',
+    'font-normal': 'font-normal',
+    'font-medium': 'font-medium',
+    'font-semibold': 'font-semibold',
+    'font-bold': 'font-bold',
   } as const;
 
   // ES7+ Template literals implícitos nas keys
   const textAlignClasses = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
-    justify: "text-justify",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+    justify: 'text-justify',
     // Suporte direto para classes Tailwind vindas do template
-    "text-left": "text-left",
-    "text-center": "text-center",
-    "text-right": "text-right",
-    "text-justify": "text-justify",
+    'text-left': 'text-left',
+    'text-center': 'text-center',
+    'text-right': 'text-right',
+    'text-justify': 'text-justify',
   } as const;
 
   // ES7+ Arrow functions e object shorthand
   const gridClasses = {
-    auto: "w-full md:w-[calc(50%-0.5rem)]", // Máximo 2 colunas em MD+
-    half: "w-full md:w-[calc(50%-0.5rem)]", // Força 2 colunas
-    full: "w-full", // Largura total
+    auto: 'w-full md:w-[calc(50%-0.5rem)]', // Máximo 2 colunas em MD+
+    half: 'w-full md:w-[calc(50%-0.5rem)]', // Força 2 colunas
+    full: 'w-full', // Largura total
   } as const;
 
   const spacingClasses = {
-    tight: "py-0", // 🎯 Zero padding vertical
-    normal: "py-0", // 🎯 Zero padding vertical
-    loose: "py-0", // 🎯 Zero padding vertical
+    tight: 'py-0', // 🎯 Zero padding vertical
+    normal: 'py-0', // 🎯 Zero padding vertical
+    loose: 'py-0', // 🎯 Zero padding vertical
   } as const;
 
   // Função para converter valores numéricos de margem em classes Tailwind
-  const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
-    if (typeof value === "number" && value !== 0) {
+  const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 'left' | 'right') => {
+    if (typeof value === 'number' && value !== 0) {
       const prefix =
-        type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+        type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
       if (value < 0) {
         // Margens negativas - agora suportadas para todas as direções
@@ -133,14 +133,14 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
         return `${prefix}-28`; // Para valores acima de 96px
       }
     }
-    return "";
+    return '';
   };
 
   // ES7+ useMemo para otimização de performance
   const personalizedContent = useMemo(() => {
     // ES7+ Optional chaining e nullish coalescing
     if (useUsername && usernamePattern) {
-      return content?.replace?.(usernamePattern, "Usuário") ?? content;
+      return content?.replace?.(usernamePattern, 'Usuário') ?? content;
     }
     return content;
   }, [content, useUsername, usernamePattern]);
@@ -243,21 +243,21 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
 
   // 🎯 Função para detectar se tem marcações de cor ou formatação
   const hasColorMarkings = useMemo(() => {
-    return personalizedContent?.includes("[") && personalizedContent?.includes("[/");
+    return personalizedContent?.includes('[') && personalizedContent?.includes('[/');
   }, [personalizedContent]);
 
   // 🎯 Função para detectar formatação simples (sem cores)
   const hasSimpleFormatting = useMemo(() => {
-    return !hasColorMarkings && personalizedContent?.includes("**");
+    return !hasColorMarkings && personalizedContent?.includes('**');
   }, [personalizedContent, hasColorMarkings]);
 
   // Verificar se o conteúdo contém HTML
   const isHtmlContent = useMemo(() => {
-    const hasHtml = personalizedContent?.includes("<") && personalizedContent?.includes(">");
-    const hasSpanTag = personalizedContent?.includes("<span");
-    const hasStrongTag = personalizedContent?.includes("<strong");
+    const hasHtml = personalizedContent?.includes('<') && personalizedContent?.includes('>');
+    const hasSpanTag = personalizedContent?.includes('<span');
+    const hasStrongTag = personalizedContent?.includes('<strong');
 
-    console.log("� TextInlineBlock DEBUG COMPLETO:", {
+    console.log('� TextInlineBlock DEBUG COMPLETO:', {
       blockId: block?.id,
       rawContent: personalizedContent,
       contentLength: personalizedContent?.length,
@@ -265,7 +265,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       hasSpanTag,
       hasStrongTag,
       willRenderAsHTML: hasHtml || hasSpanTag || hasStrongTag,
-      contentPreview: personalizedContent?.substring(0, 200) + "...",
+      contentPreview: personalizedContent?.substring(0, 200) + '...',
     });
 
     return hasHtml || hasSpanTag || hasStrongTag;
@@ -297,7 +297,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   // Handler para salvar mudanças
   const handleSave = useCallback(() => {
     if (onPropertyChange && editContent !== personalizedContent) {
-      onPropertyChange("content", editContent);
+      onPropertyChange('content', editContent);
     }
     setIsEditing(false);
   }, [onPropertyChange, editContent, personalizedContent]);
@@ -311,10 +311,10 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   // Handler para teclas durante edição
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         handleSave();
-      } else if (e.key === "Escape") {
+      } else if (e.key === 'Escape') {
         e.preventDefault();
         handleCancel();
       }
@@ -333,8 +333,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
   // Auto-resize textarea
   const autoResizeTextarea = useCallback(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, []);
 
@@ -348,26 +348,26 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     <div
       className={cn(
         // CANVAS GRID SYSTEM: Compatível com flex-wrap do canvas
-        "flex-shrink-0 flex-grow-0",
+        'flex-shrink-0 flex-grow-0',
         // ES7+ Computed property access com nullish coalescing
         gridClasses[gridColumns as keyof typeof gridClasses] ?? gridClasses.auto,
 
         // VISUAL STYLING: Modular e independente
-        "rounded-lg transition-all duration-200",
+        'rounded-lg transition-all duration-200',
 
         // EDITOR STATES: Seleção e interação - ES7+ logical AND
-        isSelected && "ring-2 ring-brand ring-offset-2",
-        "cursor-pointer",
+        isSelected && 'ring-2 ring-brand ring-offset-2',
+        'cursor-pointer',
 
         // Estados de edição
-        isEditing && "ring-2 ring-blue-500 ring-offset-2",
+        isEditing && 'ring-2 ring-blue-500 ring-offset-2',
 
         // SPACING - ES7+ Computed property com fallback
         spacingClasses[spacing as keyof typeof spacingClasses] ?? spacingClasses.normal,
 
         // MARGIN SPACING - Apenas margens verticais no container
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
 
         className
       )}
@@ -375,8 +375,8 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       // ES7+ Object spread para data attributes
-      {...(block?.id && { "data-block-id": block.id })}
-      {...(block?.type && { "data-block-type": block.type })}
+      {...(block?.id && { 'data-block-id': block.id })}
+      {...(block?.type && { 'data-block-type': block.type })}
     >
       {isEditing ? (
         // 🎯 MODO EDIÇÃO: Textarea para editar conteúdo
@@ -391,26 +391,26 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             onKeyDown={handleKeyDown}
             onBlur={handleSave}
             className={cn(
-              "w-full bg-transparent border-none resize-none outline-none",
+              'w-full bg-transparent border-none resize-none outline-none',
               fontSizeClasses[fontSize as keyof typeof fontSizeClasses] ?? fontSizeClasses.medium,
               fontWeightClasses[fontWeight as keyof typeof fontWeightClasses] ??
                 fontWeightClasses.normal,
               textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
-              "break-words whitespace-pre-wrap",
-              lineHeight || "leading-normal",
+              'break-words whitespace-pre-wrap',
+              lineHeight || 'leading-normal',
               // 🎯 MARGENS LATERAIS aplicadas no textarea de edição
-              getMarginClass(marginLeft, "left"),
-              getMarginClass(marginRight, "right")
+              getMarginClass(marginLeft, 'left'),
+              getMarginClass(marginRight, 'right')
             )}
             style={{
               color,
-              ...(fontFamily !== "inherit" && { fontFamily }),
-              ...(maxWidth !== "auto" && { maxWidth }),
-              minHeight: "1.5em",
+              ...(fontFamily !== 'inherit' && { fontFamily }),
+              ...(maxWidth !== 'auto' && { maxWidth }),
+              minHeight: '1.5em',
             }}
             placeholder="Digite seu texto..."
           />
-          <div style={{ color: "#8B7355" }}>Cmd/Ctrl + Enter para salvar • Esc para cancelar</div>
+          <div style={{ color: '#8B7355' }}>Cmd/Ctrl + Enter para salvar • Esc para cancelar</div>
         </div>
       ) : (
         // 🎯 MODO VISUALIZAÇÃO: Texto renderizado
@@ -423,24 +423,24 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             textAlignClasses[textAlign as keyof typeof textAlignClasses] ?? textAlignClasses.left,
 
             // Responsividade e quebra de texto
-            "break-words whitespace-pre-wrap",
+            'break-words whitespace-pre-wrap',
 
             // Line height
-            lineHeight || "leading-normal",
+            lineHeight || 'leading-normal',
 
             // Hover para indicar que é editável (sem padding lateral para não interferir com margens)
-            onPropertyChange && "hover:bg-gray-50 hover:bg-opacity-50 rounded py-0.5",
+            onPropertyChange && 'hover:bg-gray-50 hover:bg-opacity-50 rounded py-0.5',
 
             // 🎯 MARGENS LATERAIS aplicadas no conteúdo interno
-            getMarginClass(marginLeft, "left"),
-            getMarginClass(marginRight, "right")
+            getMarginClass(marginLeft, 'left'),
+            getMarginClass(marginRight, 'right')
           )}
           style={{
             color,
-            ...(fontFamily !== "inherit" && { fontFamily }),
-            ...(maxWidth !== "auto" && { maxWidth }),
+            ...(fontFamily !== 'inherit' && { fontFamily }),
+            ...(maxWidth !== 'auto' && { maxWidth }),
           }}
-          title={onPropertyChange ? "Duplo clique para editar" : undefined}
+          title={onPropertyChange ? 'Duplo clique para editar' : undefined}
         >
           {hasColorMarkings ? (
             // 🎯 Renderiza texto com múltiplas cores e formatação usando marcação [cor]**texto**[/cor]
@@ -452,7 +452,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
             // Renderiza como HTML se detectar qualquer tag HTML
             <div
               dangerouslySetInnerHTML={{ __html: personalizedContent }}
-              style={{ display: "contents" }}
+              style={{ display: 'contents' }}
             />
           ) : (
             personalizedContent
@@ -470,9 +470,9 @@ export default TextInlineBlock;
 export type { BlockComponentProps };
 
 // ES7+ Const assertion para readonly arrays/objects
-export const TEXT_SIZES = ["xs", "sm", "medium", "lg", "xl", "2xl", "3xl"] as const;
-export const TEXT_WEIGHTS = ["light", "normal", "medium", "semibold", "bold"] as const;
-export const TEXT_ALIGNS = ["left", "center", "right", "justify"] as const;
+export const TEXT_SIZES = ['xs', 'sm', 'medium', 'lg', 'xl', '2xl', '3xl'] as const;
+export const TEXT_WEIGHTS = ['light', 'normal', 'medium', 'semibold', 'bold'] as const;
+export const TEXT_ALIGNS = ['left', 'center', 'right', 'justify'] as const;
 
 // ES7+ Template literal types (para uso futuro)
 export type TemplatePattern = `{${string}}`;
@@ -487,7 +487,7 @@ export const createTextBlock = (
   }> = {}
 ) => ({
   id: crypto.randomUUID?.() ?? Math.random().toString(36),
-  type: "text-inline",
+  type: 'text-inline',
   properties: {
     content,
     ...options,

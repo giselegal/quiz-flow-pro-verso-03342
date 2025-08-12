@@ -171,7 +171,7 @@ export const offerPageStyles = `
  * Função para injetar os estilos na página
  */
 export const injectOfferPageStyles = (): (() => void) => {
-  const styleElement = document.createElement("style");
+  const styleElement = document.createElement('style');
   styleElement.textContent = offerPageStyles;
   document.head.appendChild(styleElement);
 

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { ComponentProps } from "@/interfaces/quiz";
-import styles from "@/styles/quiz.module.css";
+import React, { useState, useEffect } from 'react';
+import { ComponentProps } from '@/interfaces/quiz';
+import styles from '@/styles/quiz.module.css';
 
 interface QuizCountdownProps extends ComponentProps {
   title?: string;
@@ -12,7 +12,7 @@ interface QuizCountdownProps extends ComponentProps {
 }
 
 const QuizCountdown: React.FC<QuizCountdownProps> = ({
-  title = "Oferta por tempo limitado!",
+  title = 'Oferta por tempo limitado!',
   endTime = Date.now() + 24 * 60 * 60 * 1000, // 24 horas por padrão
   showDays = true,
   showHours = true,
@@ -53,7 +53,7 @@ const QuizCountdown: React.FC<QuizCountdownProps> = ({
 
   return (
     <div
-      className={`${styles.quizComponent} ${styles.countdown} ${isSelected ? styles.selected : ""}`}
+      className={`${styles.quizComponent} ${styles.countdown} ${isSelected ? styles.selected : ''}`}
       onClick={handleClick}
     >
       <div className={styles.countdownCard}>
@@ -62,28 +62,28 @@ const QuizCountdown: React.FC<QuizCountdownProps> = ({
         <div className={styles.countdownTimer}>
           {showDays && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{days.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>{days.toString().padStart(2, '0')}</div>
               <div className={styles.timeLabel}>Dias</div>
             </div>
           )}
 
           {showHours && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{hours.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>{hours.toString().padStart(2, '0')}</div>
               <div className={styles.timeLabel}>Horas</div>
             </div>
           )}
 
           {showMinutes && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{minutes.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>{minutes.toString().padStart(2, '0')}</div>
               <div className={styles.timeLabel}>Min</div>
             </div>
           )}
 
           {showSeconds && (
             <div className={styles.timeUnit}>
-              <div className={styles.timeValue}>{seconds.toString().padStart(2, "0")}</div>
+              <div className={styles.timeValue}>{seconds.toString().padStart(2, '0')}</div>
               <div className={styles.timeLabel}>Seg</div>
             </div>
           )}

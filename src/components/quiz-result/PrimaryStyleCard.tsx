@@ -1,4 +1,4 @@
-import { StyleResult } from "@/types/quiz";
+import { StyleResult } from '@/types/quiz';
 
 export interface PrimaryStyleCardProps {
   primaryStyle: StyleResult;
@@ -14,7 +14,7 @@ export const PrimaryStyleCard: React.FC<PrimaryStyleCardProps> = ({
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm">
       <h3 className="text-xl font-semibold mb-2">{primaryStyle.category}</h3>
-      <p style={{ color: "#6B4F43" }}>
+      <p style={{ color: '#6B4F43' }}>
         {customDescription || `Seu estilo predominante é ${primaryStyle.category}`}
       </p>
       {customImage && (

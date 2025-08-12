@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
-import { useContainerProperties } from "@/hooks/useContainerProperties";
-import { cn } from "@/lib/utils";
-import { Block } from "@/types/editor";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { useContainerProperties } from '@/hooks/useContainerProperties';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface SortableBlockItemProps {
   block: Block;
@@ -15,11 +15,11 @@ interface SortableBlockItemProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -82,7 +82,7 @@ const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
   if (!Component) {
     return (
       <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <p>Componente não encontrado: {block.type}</p>
         </div>
       </div>
@@ -94,22 +94,22 @@ const SortableBlockItem: React.FC<SortableBlockItemProps> = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "transition-all duration-200 border-transparent rounded", // 🎯 Container 1: Borda transparente por padrão
+        'transition-all duration-200 border-transparent rounded', // 🎯 Container 1: Borda transparente por padrão
         containerClasses,
         // 🎯 Apenas borda tracejada discreta quando selecionado
-        isSelected && "border-dashed border-[#B89B7A]/60 border-2",
+        isSelected && 'border-dashed border-[#B89B7A]/60 border-2',
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       {...attributes}
       {...listeners}
     >
       {/* 🎯 Container 2: Componente Individual com padding mínimo para máximo aproveitamento */}
       <div className="p-1">
-        {" "}
+        {' '}
         {/* 🎯 Padding mínimo (4px) em vez de p-2 (8px) */}
         <Component
           block={block}

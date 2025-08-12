@@ -1,4 +1,4 @@
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * AccessibilitySkipLinkBlock
@@ -11,11 +11,11 @@ const AccessibilitySkipLinkBlock: React.FC<BlockComponentProps> = ({ block }) =>
     className?: string;
   };
 
-  const target = props.target || "#main";
-  const text = props.text || "Pular para o conteúdo";
+  const target = props.target || '#main';
+  const text = props.text || 'Pular para o conteúdo';
   const className =
     props.className ||
-    "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-3 py-2 rounded-md";
+    'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 px-3 py-2 rounded-md';
 
   return (
     <a href={target} className={className} aria-label={text}>

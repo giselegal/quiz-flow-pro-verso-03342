@@ -1,15 +1,15 @@
 // @ts-nocheck
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BlockEditorProps } from "./types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { BlockEditorProps } from './types';
 
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -55,7 +55,7 @@ const ImageBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Label htmlFor={`${block.id}-imageUrl`}>URL da Imagem</Label>
         <Input
           id={`${block.id}-imageUrl`}
-          value={block.content.imageUrl || ""}
+          value={block.content.imageUrl || ''}
           onChange={e => onUpdate({ imageUrl: e.target.value })}
           className="mt-1"
         />
@@ -65,7 +65,7 @@ const ImageBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
         <Label htmlFor={`${block.id}-imageAlt`}>Texto Alternativo</Label>
         <Input
           id={`${block.id}-imageAlt`}
-          value={block.content.imageAlt || ""}
+          value={block.content.imageAlt || ''}
           onChange={e => onUpdate({ imageAlt: e.target.value })}
           className="mt-1"
         />
@@ -76,7 +76,7 @@ const ImageBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdate }) => {
           <p className="text-sm text-[#8F7A6A] mb-2">Pré-visualização:</p>
           <img
             src={block.content.imageUrl}
-            alt={block.content.imageAlt || ""}
+            alt={block.content.imageAlt || ''}
             className="max-w-full h-auto max-h-40 rounded-lg"
           />
         </div>

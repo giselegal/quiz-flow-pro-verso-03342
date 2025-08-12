@@ -3,13 +3,13 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Section } from "@/types/resultPageConfig";
+} from '@/components/ui/accordion';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Section } from '@/types/resultPageConfig';
 
 interface SectionEditorProps {
   section: Section;
@@ -58,15 +58,15 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, sectio
                 <div className="space-y-4">
                   {Object.entries(section.content).map(([key, value]) => {
                     // Skip rendering arrays and objects directly
-                    if (Array.isArray(value) || typeof value === "object") {
+                    if (Array.isArray(value) || typeof value === 'object') {
                       return null;
                     }
 
-                    if (typeof value === "string" && value.length > 100) {
+                    if (typeof value === 'string' && value.length > 100) {
                       return (
                         <div key={key} className="space-y-2">
                           <Label htmlFor={key} className="text-xs capitalize">
-                            {key.replace(/([A-Z])/g, " $1").trim()}
+                            {key.replace(/([A-Z])/g, ' $1').trim()}
                           </Label>
                           <Textarea
                             id={key}
@@ -81,7 +81,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, sectio
                     return (
                       <div key={key} className="space-y-2">
                         <Label htmlFor={key} className="text-xs capitalize">
-                          {key.replace(/([A-Z])/g, " $1").trim()}
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
                         </Label>
                         <Input
                           id={key}
@@ -101,11 +101,11 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, sectio
                 <div className="space-y-4">
                   {section.appearance &&
                     Object.entries(section.appearance).map(([key, value]) => {
-                      if (typeof value === "boolean") {
+                      if (typeof value === 'boolean') {
                         return (
                           <div key={key} className="flex items-center justify-between">
                             <Label htmlFor={`${key}-appearance`} className="text-xs capitalize">
-                              {key.replace(/([A-Z])/g, " $1").trim()}
+                              {key.replace(/([A-Z])/g, ' $1').trim()}
                             </Label>
                             <Switch
                               id={`${key}-appearance`}
@@ -127,7 +127,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({ section, onUpdate, sectio
                       return (
                         <div key={key} className="space-y-2">
                           <Label htmlFor={`${key}-appearance`} className="text-xs capitalize">
-                            {key.replace(/([A-Z])/g, " $1").trim()}
+                            {key.replace(/([A-Z])/g, ' $1').trim()}
                           </Label>
                           <Input
                             id={`${key}-appearance`}

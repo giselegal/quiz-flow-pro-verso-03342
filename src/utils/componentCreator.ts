@@ -1,5 +1,5 @@
-import { QuizComponentData, QuizComponentType } from "@/types/quizBuilder";
-import { generateId } from "./idGenerator";
+import { QuizComponentData, QuizComponentType } from '@/types/quizBuilder';
+import { generateId } from './idGenerator';
 
 export interface ComponentTemplate {
   type: QuizComponentType;
@@ -19,10 +19,10 @@ export const createComponent = (
     stageId,
     data: template.data,
     style: template.style || {
-      paddingY: "16",
-      paddingX: "16",
-      backgroundColor: "",
-      textColor: "",
+      paddingY: '16',
+      paddingX: '16',
+      backgroundColor: '',
+      textColor: '',
       borderRadius: 0,
     },
   };

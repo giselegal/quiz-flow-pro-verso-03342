@@ -1,18 +1,18 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { MetricCard } from "@/components/analytics/MetricCard";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { MetricCard } from '@/components/analytics/MetricCard';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   BarChart,
   Bar,
@@ -26,7 +26,7 @@ import {
   PieChart,
   Pie,
   Cell,
-} from "recharts";
+} from 'recharts';
 import {
   TrendingUp,
   TrendingDown,
@@ -43,15 +43,15 @@ import {
   CheckCircle,
   Zap,
   Award,
-} from "lucide-react";
-import { LANDING_PAGE_AB_TEST } from "@/utils/abtest";
-import { FUNNEL_CONFIGS } from "@/services/pixelManager";
-import { toast } from "@/components/ui/use-toast";
-import { getAnalyticsEvents } from "@/utils/analytics";
-import ABTestAlerts from "./ABTestAlerts";
+} from 'lucide-react';
+import { LANDING_PAGE_AB_TEST } from '@/utils/abtest';
+import { FUNNEL_CONFIGS } from '@/services/pixelManager';
+import { toast } from '@/components/ui/use-toast';
+import { getAnalyticsEvents } from '@/utils/analytics';
+import ABTestAlerts from './ABTestAlerts';
 
 interface ABTestMetrics {
-  variant: "A" | "B";
+  variant: 'A' | 'B';
   route: string;
   description: string;
   pixelId: string;
@@ -67,20 +67,20 @@ interface ABTestMetrics {
 }
 
 interface ABTestComparisonProps {
-  timeRange?: "24h" | "7d" | "30d" | "all";
+  timeRange?: '24h' | '7d' | '30d' | 'all';
 }
 
-const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" }) => {
+const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = '7d' }) => {
   const [metrics, setMetrics] = useState<{
     A: ABTestMetrics;
     B: ABTestMetrics;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedMetric, setSelectedMetric] = useState<"conversion" | "engagement" | "revenue">(
-    "conversion"
+  const [selectedMetric, setSelectedMetric] = useState<'conversion' | 'engagement' | 'revenue'>(
+    'conversion'
   );
   const [confidenceLevel, setConfidenceLevel] = useState<number>(0);
-  const [winner, setWinner] = useState<"A" | "B" | "tie" | null>(null);
+  const [winner, setWinner] = useState<'A' | 'B' | 'tie' | null>(null);
   const [significance, setSignificance] = useState<boolean>(false);
 
   useEffect(() => {
@@ -99,11 +99,11 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
         const diffDays = Math.floor((now.getTime() - eventDate.getTime()) / (1000 * 3600 * 24));
 
         switch (timeRange) {
-          case "24h":
+          case '24h':
             return diffDays === 0;
-          case "7d":
+          case '7d':
             return diffDays <= 7;
-          case "30d":
+          case '30d':
             return diffDays <= 30;
           default:
             return true;
@@ -111,8 +111,8 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
       });
 
       // Calcular métricas para cada variante
-      const variantAMetrics = calculateVariantMetrics("A", filteredEvents);
-      const variantBMetrics = calculateVariantMetrics("B", filteredEvents);
+      const variantAMetrics = calculateVariantMetrics('A', filteredEvents);
+      const variantBMetrics = calculateVariantMetrics('B', filteredEvents);
 
       setMetrics({ A: variantAMetrics, B: variantBMetrics });
 
@@ -126,28 +126,28 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
       setSignificance(isSignificant);
       setWinner(winningVariant);
     } catch (error) {
-      console.error("Erro ao carregar dados do teste A/B:", error);
+      console.error('Erro ao carregar dados do teste A/B:', error);
       toast({
-        title: "Erro",
-        description: "Não foi possível carregar os dados do teste A/B",
-        variant: "destructive",
+        title: 'Erro',
+        description: 'Não foi possível carregar os dados do teste A/B',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const calculateVariantMetrics = (variant: "A" | "B", events: any[]): ABTestMetrics => {
+  const calculateVariantMetrics = (variant: 'A' | 'B', events: any[]): ABTestMetrics => {
     const route =
-      variant === "A" ? LANDING_PAGE_AB_TEST.variantA.route : LANDING_PAGE_AB_TEST.variantB.route;
+      variant === 'A' ? LANDING_PAGE_AB_TEST.variantA.route : LANDING_PAGE_AB_TEST.variantB.route;
     const description =
-      variant === "A"
+      variant === 'A'
         ? LANDING_PAGE_AB_TEST.variantA.description
         : LANDING_PAGE_AB_TEST.variantB.description;
     const pixelId =
-      variant === "A"
+      variant === 'A'
         ? FUNNEL_CONFIGS.default.pixelId
-        : FUNNEL_CONFIGS["quiz-descubra-seu-estilo"].pixelId;
+        : FUNNEL_CONFIGS['quiz-descubra-seu-estilo'].pixelId;
 
     // Filtrar eventos por variante (usando pixel ID ou rota)
     const variantEvents = events.filter(event => {
@@ -160,11 +160,11 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
       return event.eventName.includes(`variant_${variant}`);
     });
 
-    const pageViews = variantEvents.filter(e => e.eventName === "PageView").length;
-    const quizStarts = variantEvents.filter(e => e.eventName === "QuizStart").length;
-    const quizCompletions = variantEvents.filter(e => e.eventName === "QuizComplete").length;
-    const leads = variantEvents.filter(e => e.eventName === "Lead").length;
-    const sales = variantEvents.filter(e => e.eventName === "Purchase").length;
+    const pageViews = variantEvents.filter(e => e.eventName === 'PageView').length;
+    const quizStarts = variantEvents.filter(e => e.eventName === 'QuizStart').length;
+    const quizCompletions = variantEvents.filter(e => e.eventName === 'QuizComplete').length;
+    const leads = variantEvents.filter(e => e.eventName === 'Lead').length;
+    const sales = variantEvents.filter(e => e.eventName === 'Purchase').length;
 
     // Calcular sessões únicas baseado em session_id
     const uniqueSessions = new Set(variantEvents.map(e => e.customData?.session_id).filter(Boolean))
@@ -203,7 +203,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
   ): {
     confidence: number;
     isSignificant: boolean;
-    winningVariant: "A" | "B" | "tie";
+    winningVariant: 'A' | 'B' | 'tie';
   } => {
     // Cálculo simplificado de significância estatística
     const totalA = variantA.visitors;
@@ -212,7 +212,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     const conversionsB = variantB.leads;
 
     if (totalA < 30 || totalB < 30) {
-      return { confidence: 0, isSignificant: false, winningVariant: "tie" };
+      return { confidence: 0, isSignificant: false, winningVariant: 'tie' };
     }
 
     const rateA = conversionsA / totalA;
@@ -231,7 +231,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     else confidence = Math.min(zScore * 40, 75);
 
     const isSignificant = confidence >= 95;
-    const winningVariant = rateA > rateB ? "A" : rateB > rateA ? "B" : "tie";
+    const winningVariant = rateA > rateB ? 'A' : rateB > rateA ? 'B' : 'tie';
 
     return { confidence, isSignificant, winningVariant };
   };
@@ -240,7 +240,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     if (variantA > variantB) {
       return <TrendingUp className="h-4 w-4 text-green-600" />;
     } else if (variantB > variantA) {
-      return <TrendingDown style={{ color: "#432818" }} />;
+      return <TrendingDown style={{ color: '#432818' }} />;
     }
     return <div className="h-4 w-4" />;
   };
@@ -248,18 +248,18 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
   const getMetricComparison = (
     metricA: number,
     metricB: number,
-    format: "percentage" | "number" | "currency" = "number"
+    format: 'percentage' | 'number' | 'currency' = 'number'
   ) => {
     const diff = ((metricB - metricA) / metricA) * 100;
     const isPositive = diff > 0;
 
     let formattedA, formattedB;
     switch (format) {
-      case "percentage":
+      case 'percentage':
         formattedA = `${metricA.toFixed(1)}%`;
         formattedB = `${metricB.toFixed(1)}%`;
         break;
-      case "currency":
+      case 'currency':
         formattedA = `R$ ${metricA.toFixed(2)}`;
         formattedB = `R$ ${metricB.toFixed(2)}`;
         break;
@@ -271,7 +271,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     return {
       valueA: formattedA,
       valueB: formattedB,
-      difference: `${isPositive ? "+" : ""}${diff.toFixed(1)}%`,
+      difference: `${isPositive ? '+' : ''}${diff.toFixed(1)}%`,
       isPositive,
       icon: getComparisonIcon(metricA, metricB),
     };
@@ -290,9 +290,9 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     for (let i = 6; i >= 0; i--) {
       const dayStart = now - oneDay * i;
       const dayEnd = dayStart + oneDay;
-      const dayName = new Date(dayStart).toLocaleDateString("pt-BR", {
-        month: "short",
-        day: "numeric",
+      const dayName = new Date(dayStart).toLocaleDateString('pt-BR', {
+        month: 'short',
+        day: 'numeric',
       });
 
       // Eventos da versão A
@@ -300,7 +300,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
         e =>
           e.timestamp >= dayStart &&
           e.timestamp < dayEnd &&
-          e.customData?.pixel_id === "1311550759901086"
+          e.customData?.pixel_id === '1311550759901086'
       );
 
       // Eventos da versão B
@@ -308,28 +308,28 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
         e =>
           e.timestamp >= dayStart &&
           e.timestamp < dayEnd &&
-          e.customData?.pixel_id === "1038647624890676"
+          e.customData?.pixel_id === '1038647624890676'
       );
 
       const visitorsA = new Set(
-        eventsA.filter(e => e.eventName === "PageView").map(e => e.customData?.session_id)
+        eventsA.filter(e => e.eventName === 'PageView').map(e => e.customData?.session_id)
       ).size;
       const visitorsB = new Set(
-        eventsB.filter(e => e.eventName === "PageView").map(e => e.customData?.session_id)
+        eventsB.filter(e => e.eventName === 'PageView').map(e => e.customData?.session_id)
       ).size;
-      const leadsA = eventsA.filter(e => e.eventName === "Lead").length;
-      const leadsB = eventsB.filter(e => e.eventName === "Lead").length;
+      const leadsA = eventsA.filter(e => e.eventName === 'Lead').length;
+      const leadsB = eventsB.filter(e => e.eventName === 'Lead').length;
       const conversionA = visitorsA > 0 ? (leadsA / visitorsA) * 100 : 0;
       const conversionB = visitorsB > 0 ? (leadsB / visitorsB) * 100 : 0;
 
       dailyData.push({
         day: dayName,
-        "Visitantes A": visitorsA,
-        "Visitantes B": visitorsB,
-        "Conversão A": conversionA,
-        "Conversão B": conversionB,
-        "Leads A": leadsA,
-        "Leads B": leadsB,
+        'Visitantes A': visitorsA,
+        'Visitantes B': visitorsB,
+        'Conversão A': conversionA,
+        'Conversão B': conversionB,
+        'Leads A': leadsA,
+        'Leads B': leadsB,
       });
     }
 
@@ -349,14 +349,14 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
                 dataKey="Visitantes A"
                 stroke="#3b82f6"
                 strokeWidth={2}
-                dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
               />
               <Line
                 type="monotone"
                 dataKey="Visitantes B"
                 stroke="#10b981"
                 strokeWidth={2}
-                dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+                dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -370,20 +370,20 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="day" />
               <YAxis />
-              <Tooltip formatter={value => [`${Number(value).toFixed(1)}%`, ""]} />
+              <Tooltip formatter={value => [`${Number(value).toFixed(1)}%`, '']} />
               <Line
                 type="monotone"
                 dataKey="Conversão A"
                 stroke="#ef4444"
                 strokeWidth={2}
-                dot={{ fill: "#ef4444", strokeWidth: 2, r: 4 }}
+                dot={{ fill: '#ef4444', strokeWidth: 2, r: 4 }}
               />
               <Line
                 type="monotone"
                 dataKey="Conversão B"
                 stroke="#22c55e"
                 strokeWidth={2}
-                dot={{ fill: "#22c55e", strokeWidth: 2, r: 4 }}
+                dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -413,21 +413,21 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#B89B7A]">
-                  {dailyData.reduce((sum, day) => sum + day["Visitantes A"], 0)}
+                  {dailyData.reduce((sum, day) => sum + day['Visitantes A'], 0)}
                 </div>
                 <div className="text-sm text-muted-foreground">Total Visitantes A</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  {dailyData.reduce((sum, day) => sum + day["Visitantes B"], 0)}
+                  {dailyData.reduce((sum, day) => sum + day['Visitantes B'], 0)}
                 </div>
                 <div className="text-sm text-muted-foreground">Total Visitantes B</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-[#B89B7A]">
                   {(
-                    dailyData.reduce((sum, day) => sum + day["Conversão B"], 0) / 7 -
-                    dailyData.reduce((sum, day) => sum + day["Conversão A"], 0) / 7
+                    dailyData.reduce((sum, day) => sum + day['Conversão B'], 0) / 7 -
+                    dailyData.reduce((sum, day) => sum + day['Conversão A'], 0) / 7
                   ).toFixed(1)}
                   %
                 </div>
@@ -457,20 +457,20 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json",
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `ab-test-report-${timeRange}-${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `ab-test-report-${timeRange}-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
     toast({
-      title: "Relatório Exportado",
-      description: "Os dados do teste A/B foram exportados com sucesso",
+      title: 'Relatório Exportado',
+      description: 'Os dados do teste A/B foram exportados com sucesso',
     });
   };
 
@@ -503,29 +503,29 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
 
   const chartData = [
     {
-      name: "Visitantes",
-      "Versão A": metrics.A.visitors,
-      "Versão B": metrics.B.visitors,
+      name: 'Visitantes',
+      'Versão A': metrics.A.visitors,
+      'Versão B': metrics.B.visitors,
     },
     {
-      name: "Quiz Iniciados",
-      "Versão A": metrics.A.quizStarts,
-      "Versão B": metrics.B.quizStarts,
+      name: 'Quiz Iniciados',
+      'Versão A': metrics.A.quizStarts,
+      'Versão B': metrics.B.quizStarts,
     },
     {
-      name: "Quiz Completos",
-      "Versão A": metrics.A.quizCompletions,
-      "Versão B": metrics.B.quizCompletions,
+      name: 'Quiz Completos',
+      'Versão A': metrics.A.quizCompletions,
+      'Versão B': metrics.B.quizCompletions,
     },
     {
-      name: "Leads",
-      "Versão A": metrics.A.leads,
-      "Versão B": metrics.B.leads,
+      name: 'Leads',
+      'Versão A': metrics.A.leads,
+      'Versão B': metrics.B.leads,
     },
     {
-      name: "Vendas",
-      "Versão A": metrics.A.sales,
-      "Versão B": metrics.B.sales,
+      name: 'Vendas',
+      'Versão A': metrics.A.sales,
+      'Versão B': metrics.B.sales,
     },
   ];
 
@@ -541,13 +541,13 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
                 Teste A/B: Landing Pages
               </CardTitle>
               <CardDescription>
-                Comparação entre {LANDING_PAGE_AB_TEST.variantA.description} vs{" "}
+                Comparação entre {LANDING_PAGE_AB_TEST.variantA.description} vs{' '}
                 {LANDING_PAGE_AB_TEST.variantB.description}
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant={significance ? "default" : "secondary"}>
-                {significance ? "Estatisticamente Significativo" : "Dados Insuficientes"}
+              <Badge variant={significance ? 'default' : 'secondary'}>
+                {significance ? 'Estatisticamente Significativo' : 'Dados Insuficientes'}
               </Badge>
               <Button variant="outline" size="sm" onClick={exportData}>
                 <Download className="h-4 w-4 mr-2" />
@@ -568,10 +568,10 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold">
-                {winner === "tie" ? "🤝" : winner === "A" ? "🅰️" : "🅱️"}
+                {winner === 'tie' ? '🤝' : winner === 'A' ? '🅰️' : '🅱️'}
               </div>
               <div className="text-sm text-muted-foreground">
-                {winner === "tie" ? "Empate" : `Versão ${winner} Vencendo`}
+                {winner === 'tie' ? 'Empate' : `Versão ${winner} Vencendo`}
               </div>
             </div>
             <div className="text-center">
@@ -612,9 +612,9 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
                 getMetricComparison(
                   metrics.A.conversionRate,
                   metrics.B.conversionRate,
-                  "percentage"
+                  'percentage'
                 ).difference
-              }{" "}
+              }{' '}
               vs Versão A
             </div>
           </CardContent>
@@ -696,7 +696,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
               <ShoppingCart className="h-8 w-8 text-[#B89B7A]" />
             </div>
             <div className="mt-2 text-xs text-muted-foreground">
-              {getMetricComparison(metrics.A.revenue, metrics.B.revenue, "currency").difference} vs
+              {getMetricComparison(metrics.A.revenue, metrics.B.revenue, 'currency').difference} vs
               Versão A
             </div>
           </CardContent>
@@ -871,8 +871,8 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
                 </h4>
                 <p className="text-sm text-muted-foreground mt-1">
                   {metrics.A.visitors + metrics.B.visitors < 100
-                    ? "⚠️ Amostra pequena - recomenda-se aguardar mais dados para conclusões definitivas"
-                    : "✅ Amostra adequada para análise estatística"}
+                    ? '⚠️ Amostra pequena - recomenda-se aguardar mais dados para conclusões definitivas'
+                    : '✅ Amostra adequada para análise estatística'}
                 </p>
               </div>
 
@@ -884,8 +884,8 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({ timeRange = "7d" })
                 </h4>
                 <p className="text-sm text-muted-foreground mt-1">
                   {significance
-                    ? `📊 Implementar a ${winner === "A" ? "Versão A" : "Versão B"} como padrão com base nos resultados significativos`
-                    : "⏳ Continuar o teste por mais tempo para obter resultados conclusivos"}
+                    ? `📊 Implementar a ${winner === 'A' ? 'Versão A' : 'Versão B'} como padrão com base nos resultados significativos`
+                    : '⏳ Continuar o teste por mais tempo para obter resultados conclusivos'}
                 </p>
               </div>
             </CardContent>

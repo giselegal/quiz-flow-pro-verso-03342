@@ -1,15 +1,15 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { GalleryHorizontalEnd } from "lucide-react";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { GalleryHorizontalEnd } from 'lucide-react';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,7 +54,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const { images = [], autoplay = true, interval = 5000 } = block?.properties || {};
 
@@ -75,7 +75,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
       <div
         className={`
           bg-gray-100 p-8 rounded-lg text-gray-500 flex flex-col items-center justify-center min-h-[200px] cursor-pointer transition-all duration-200
-          ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+          ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
           ${className}
         `}
         onClick={onClick}
@@ -94,7 +94,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         relative w-full overflow-hidden rounded-lg shadow-md cursor-pointer transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-lg"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-lg'}
         ${className}
       `}
       onClick={onClick}
@@ -106,7 +106,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
         alt={currentImage.alt}
         className="w-full h-auto object-cover aspect-video"
         onError={e =>
-          (e.currentTarget.src = "https://placehold.co/600x400/cccccc/333333?text=Erro+Imagem")
+          (e.currentTarget.src = 'https://placehold.co/600x400/cccccc/333333?text=Erro+Imagem')
         }
       />
       {images.length > 1 && (
@@ -114,7 +114,7 @@ const CarouselBlock: React.FC<BlockComponentProps> = ({
           {images.map((_: any, idx: number) => (
             <span
               key={idx}
-              className={`block w-2 h-2 rounded-full ${currentIndex === idx ? "bg-white" : "bg-gray-400 opacity-75"}`}
+              className={`block w-2 h-2 rounded-full ${currentIndex === idx ? 'bg-white' : 'bg-gray-400 opacity-75'}`}
             ></span>
           ))}
         </div>

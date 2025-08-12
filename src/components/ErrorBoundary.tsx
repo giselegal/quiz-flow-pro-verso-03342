@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -25,7 +25,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error to console for debugging
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
 
     this.setState({
       error,
@@ -41,12 +41,12 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div style={{ backgroundColor: "#FAF9F7" }}>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
             <div className="text-center">
               <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
                 <svg
-                  style={{ color: "#432818" }}
+                  style={{ color: '#432818' }}
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -60,9 +60,9 @@ class ErrorBoundary extends Component<Props, State> {
                 </svg>
               </div>
 
-              <h3 style={{ color: "#432818" }}>Ops! Algo deu errado</h3>
+              <h3 style={{ color: '#432818' }}>Ops! Algo deu errado</h3>
 
-              <p style={{ color: "#8B7355" }}>
+              <p style={{ color: '#8B7355' }}>
                 Ocorreu um erro inesperado. Por favor, recarregue a página ou tente novamente.
               </p>
 
@@ -82,16 +82,16 @@ class ErrorBoundary extends Component<Props, State> {
                       errorInfo: undefined,
                     })
                   }
-                  style={{ borderColor: "#E5DDD5" }}
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   Tentar Novamente
                 </button>
               </div>
 
-              {process.env.NODE_ENV === "development" && this.state.error && (
+              {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-4 text-left">
-                  <summary style={{ color: "#6B4F43" }}>Detalhes do Erro (Desenvolvimento)</summary>
-                  <div style={{ color: "#432818" }}>
+                  <summary style={{ color: '#6B4F43' }}>Detalhes do Erro (Desenvolvimento)</summary>
+                  <div style={{ color: '#432818' }}>
                     <pre>{this.state.error.toString()}</pre>
                     {this.state.errorInfo && (
                       <pre className="mt-2">{this.state.errorInfo.componentStack}</pre>

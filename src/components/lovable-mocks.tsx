@@ -5,7 +5,7 @@ export const LovableComponent: React.FC<{ children: React.ReactNode }> = ({ chil
 
 export const MockEditor: React.FC = () => {
   return (
-    <div style={{ borderColor: "#E5DDD5" }}>
+    <div style={{ borderColor: '#E5DDD5' }}>
       <h3>Mock Editor Component</h3>
       <p>This is a placeholder for Lovable editor functionality.</p>
     </div>

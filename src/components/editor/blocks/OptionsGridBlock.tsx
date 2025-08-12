@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface Option {
   id: string;
@@ -21,11 +21,11 @@ interface OptionsGridBlockProps extends BlockComponentProps {
     selectedOption?: string;
     // 🎯 CONTROLES DE IMAGEM
     showImages?: boolean;
-    imageSize?: "small" | "medium" | "large" | "custom" | string; // Permite strings também
+    imageSize?: 'small' | 'medium' | 'large' | 'custom' | string; // Permite strings também
     imageWidth?: number;
     imageHeight?: number;
-    imagePosition?: "top" | "left" | "right" | "bottom";
-    imageLayout?: "vertical" | "horizontal";
+    imagePosition?: 'top' | 'left' | 'right' | 'bottom';
+    imageLayout?: 'vertical' | 'horizontal';
     // 🎯 CONTROLES DE LAYOUT
     multipleSelection?: boolean;
     maxSelections?: number;
@@ -55,11 +55,11 @@ interface OptionsGridBlockProps extends BlockComponentProps {
 // @ts-nocheck
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -104,7 +104,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
     question,
@@ -114,11 +114,11 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     selectedOption,
     // 🎯 PROPRIEDADES DE IMAGEM
     showImages = true,
-    imageSize = "medium",
+    imageSize = 'medium',
     imageWidth,
     imageHeight,
-    imagePosition = "top",
-    imageLayout = "vertical",
+    imagePosition = 'top',
+    imageLayout = 'vertical',
     // 🎯 PROPRIEDADES DE LAYOUT
     gridGap = 16,
     responsiveColumns = true,
@@ -127,14 +127,14 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     minSelections = 1,
     requiredSelections = 1,
     // 🎯 PROPRIEDADES DE ESTILO
-    selectionStyle = "border",
-    selectedColor = "#B89B7A",
-    hoverColor = "#D4C2A8",
+    selectionStyle = 'border',
+    selectedColor = '#B89B7A',
+    hoverColor = '#D4C2A8',
     // 🎯 PROPRIEDADES DE COMPORTAMENTO
     allowDeselection = true,
     showSelectionCount = true,
-    validationMessage = "Selecione uma opção",
-    progressMessage = "{selected} de {maxSelections} selecionados",
+    validationMessage = 'Selecione uma opção',
+    progressMessage = '{selected} de {maxSelections} selecionados',
     enableButtonOnlyWhenValid = true,
     showValidationFeedback = true,
     autoAdvanceOnComplete = false,
@@ -149,7 +149,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   // Helpers
   const toPxNumber = (val?: number | string): number | undefined => {
     if (val == null) return undefined;
-    if (typeof val === "number") return val;
+    if (typeof val === 'number') return val;
     const n = parseInt(String(val), 10);
     return isNaN(n) ? undefined : n;
   };
@@ -163,18 +163,18 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     } as const;
 
     // Se for uma string com "px", extrair o número
-    if (typeof imageSize === "string" && imageSize.includes("px")) {
-      const size = parseInt(imageSize.replace("px", ""), 10);
+    if (typeof imageSize === 'string' && imageSize.includes('px')) {
+      const size = parseInt(imageSize.replace('px', ''), 10);
       return { width: size, height: size };
     }
 
     // Se for um número como string
-    if (typeof imageSize === "string" && !isNaN(parseInt(imageSize, 10))) {
+    if (typeof imageSize === 'string' && !isNaN(parseInt(imageSize, 10))) {
       const size = parseInt(imageSize, 10);
       return { width: size, height: size };
     }
 
-    if (imageSize === "custom") {
+    if (imageSize === 'custom') {
       const w = toPxNumber(imageWidth) ?? 150;
       const h = toPxNumber(imageHeight) ?? w;
       return { width: w, height: h };
@@ -187,44 +187,44 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   const { width: imgW, height: imgH } = getImageSize();
 
   const cardLayoutClass =
-    imageLayout === "horizontal" && (imagePosition === "left" || imagePosition === "right")
-      ? "flex items-center"
-      : "flex flex-col";
+    imageLayout === 'horizontal' && (imagePosition === 'left' || imagePosition === 'right')
+      ? 'flex items-center'
+      : 'flex flex-col';
 
   const gridColsClass = (() => {
-    const colNum = typeof columns === "string" ? parseInt(columns, 10) : columns;
-    if (colNum === 1) return "grid-cols-1";
-    if (colNum === 2) return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
+    const colNum = typeof columns === 'string' ? parseInt(columns, 10) : columns;
+    if (colNum === 1) return 'grid-cols-1';
+    if (colNum === 2) return responsiveColumns ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2';
     if (colNum === 3)
-      return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-3";
+      return responsiveColumns ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-3';
     if (colNum === 4)
-      return responsiveColumns ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4" : "grid-cols-4";
-    return responsiveColumns ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2";
+      return responsiveColumns ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4' : 'grid-cols-4';
+    return responsiveColumns ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2';
   })();
 
   const imageOrderClass = (() => {
     switch (imagePosition) {
-      case "bottom":
-        return "order-last mt-3";
-      case "left":
-        return "mr-3";
-      case "right":
-        return "ml-3";
-      case "top":
+      case 'bottom':
+        return 'order-last mt-3';
+      case 'left':
+        return 'mr-3';
+      case 'right':
+        return 'ml-3';
+      case 'top':
       default:
-        return "mb-3";
+        return 'mb-3';
     }
   })();
 
   const handleOptionSelect = (optionId: string) => {
     if (onPropertyChange) {
-      onPropertyChange("selectedOption", optionId);
+      onPropertyChange('selectedOption', optionId);
     }
   };
 
   return (
     <div
-      className={`${isSelected ? "ring-2 ring-amber-500/60 ring-offset-1" : ""} ${className}`}
+      className={`${isSelected ? 'ring-2 ring-amber-500/60 ring-offset-1' : ''} ${className}`}
       onClick={onClick}
       data-block-id={block.id}
       data-block-type={block.type}
@@ -235,7 +235,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
       )}
 
       <div
-        className={`grid ${gridColsClass} ${blockClassName || ""}`}
+        className={`grid ${gridColsClass} ${blockClassName || ''}`}
         style={{ gap: `${gridGap}px` }}
       >
         {(options || []).map((opt: any) => (
@@ -247,7 +247,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
             {opt.imageUrl && showImages && (
               <img
                 src={opt.imageUrl}
-                alt={opt.text || "opção"}
+                alt={opt.text || 'opção'}
                 className={`object-cover rounded-md flex-shrink-0 ${imageOrderClass}`}
                 width={imgW}
                 height={imgH}
@@ -256,7 +256,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
                 decoding="async"
               />
             )}
-            <p className={`${imageLayout === "horizontal" ? "flex-1" : "text-center"} font-medium`}>
+            <p className={`${imageLayout === 'horizontal' ? 'flex-1' : 'text-center'} font-medium`}>
               {opt.text}
             </p>
           </div>

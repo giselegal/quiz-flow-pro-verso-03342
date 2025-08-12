@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { dynamicIconImport } from "@/utils/dynamicIconImport";
+import { cn } from '@/lib/utils';
+import { dynamicIconImport } from '@/utils/dynamicIconImport';
 
 interface IconBlockPreviewProps {
   content: {
@@ -7,18 +7,18 @@ interface IconBlockPreviewProps {
     size?: string;
     color?: string;
     title?: string;
-    position?: "top" | "right" | "bottom" | "left";
+    position?: 'top' | 'right' | 'bottom' | 'left';
     style?: any;
   };
 }
 
 const IconBlockPreview: React.FC<IconBlockPreviewProps> = ({ content }) => {
   const {
-    icon = "star",
-    size = "32px",
-    color = "#B89B7A",
-    title = "",
-    position = "top",
+    icon = 'star',
+    size = '32px',
+    color = '#B89B7A',
+    title = '',
+    position = 'top',
     style = {},
   } = content;
 
@@ -27,18 +27,18 @@ const IconBlockPreview: React.FC<IconBlockPreviewProps> = ({ content }) => {
 
   const containerStyle = {
     ...style,
-    display: "flex",
+    display: 'flex',
     flexDirection:
-      position === "right"
-        ? "row-reverse"
-        : position === "bottom"
-          ? "column-reverse"
-          : position === "left"
-            ? "row"
-            : "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.5rem",
+      position === 'right'
+        ? 'row-reverse'
+        : position === 'bottom'
+          ? 'column-reverse'
+          : position === 'left'
+            ? 'row'
+            : 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
   };
 
   const sizeInPixels = parseInt(size) || 24;
@@ -51,7 +51,7 @@ const IconBlockPreview: React.FC<IconBlockPreviewProps> = ({ content }) => {
 
       {title && (
         <div
-          className={cn("text-center", (position === "left" || position === "right") && "flex-1")}
+          className={cn('text-center', (position === 'left' || position === 'right') && 'flex-1')}
         >
           {title}
         </div>

@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { StyleResult } from "@/types/quiz";
-import { useQuizHooks } from "@/hooks/useQuizHooks";
+import { StyleResult } from '@/types/quiz';
+import { useQuizHooks } from '@/hooks/useQuizHooks';
 
 interface QuizResultsProps {
   primaryStyle: StyleResult;

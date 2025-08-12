@@ -1,6 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Block } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Block } from '@/types/editor';
 
 interface ImageBlockEditorProps {
   block: Block;
@@ -16,12 +16,12 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="imageUrl">URL da Imagem</Label>
         <Input
           id="imageUrl"
-          value={content.imageUrl || ""}
+          value={content.imageUrl || ''}
           onChange={e => onUpdate({ imageUrl: e.target.value })}
           placeholder="https://exemplo.com/imagem.jpg"
         />
         {content.imageUrl && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <img
               src={content.imageUrl}
               alt="Pré-visualização"
@@ -35,7 +35,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="imageAlt">Texto Alternativo</Label>
         <Input
           id="imageAlt"
-          value={content.imageAlt || ""}
+          value={content.imageAlt || ''}
           onChange={e => onUpdate({ imageAlt: e.target.value })}
           placeholder="Descrição da imagem"
         />
@@ -45,7 +45,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="width">Largura</Label>
         <Input
           id="width"
-          value={content.width || ""}
+          value={content.width || ''}
           onChange={e => onUpdate({ width: e.target.value })}
           placeholder="100%"
         />
@@ -56,7 +56,7 @@ const ImageBlockEditor: React.FC<ImageBlockEditorProps> = ({ block, onUpdate }) 
         <Label htmlFor="borderRadius">Arredondamento de Bordas</Label>
         <Input
           id="borderRadius"
-          value={content.borderRadius || ""}
+          value={content.borderRadius || ''}
           onChange={e => onUpdate({ borderRadius: e.target.value })}
           placeholder="8px"
         />

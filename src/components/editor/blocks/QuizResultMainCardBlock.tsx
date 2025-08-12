@@ -1,17 +1,17 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Crown, Star, Award, CheckCircle } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { Crown, Star, Award, CheckCircle } from 'lucide-react';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -56,14 +56,14 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    primaryStyle = "elegante",
+    primaryStyle = 'elegante',
     showStyleImage = true,
     showCharacteristics = true,
-    accentColor = "#B89B7A",
-    textColor = "#432818",
+    accentColor = '#B89B7A',
+    textColor = '#432818',
   } = block?.properties || {};
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -81,41 +81,41 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
   // Configuração dos estilos
   const styleConfig = {
     elegante: {
-      name: "Elegante",
+      name: 'Elegante',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp",
-      description: "Seu estilo reflete sofisticação e refinamento em cada detalhe.",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp',
+      description: 'Seu estilo reflete sofisticação e refinamento em cada detalhe.',
       characteristics: [
-        "Peças estruturadas e bem cortadas",
-        "Cores neutras e sóbrias",
-        "Acessórios refinados",
-        "Tecidos nobres e de qualidade",
+        'Peças estruturadas e bem cortadas',
+        'Cores neutras e sóbrias',
+        'Acessórios refinados',
+        'Tecidos nobres e de qualidade',
       ],
       icon: Crown,
     },
     natural: {
-      name: "Natural",
+      name: 'Natural',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911575/NATURAL_PREDOMINANTE_baqkts.webp",
-      description: "Você valoriza o conforto e a autenticidade acima de tudo.",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911575/NATURAL_PREDOMINANTE_baqkts.webp',
+      description: 'Você valoriza o conforto e a autenticidade acima de tudo.',
       characteristics: [
-        "Conforto em primeiro lugar",
-        "Tecidos naturais e respiráveis",
-        "Cores terrosas e suaves",
-        "Silhuetas relaxadas",
+        'Conforto em primeiro lugar',
+        'Tecidos naturais e respiráveis',
+        'Cores terrosas e suaves',
+        'Silhuetas relaxadas',
       ],
       icon: Star,
     },
     contemporaneo: {
-      name: "Contemporâneo",
+      name: 'Contemporâneo',
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911573/CONTEMPORANEO_PREDOMINANTE_xllhxm.webp",
-      description: "Você está sempre em sintonia com as tendências atuais.",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911573/CONTEMPORANEO_PREDOMINANTE_xllhxm.webp',
+      description: 'Você está sempre em sintonia com as tendências atuais.',
       characteristics: [
-        "Tendências da moda atual",
-        "Mix de texturas modernas",
-        "Cores em alta",
-        "Peças statement",
+        'Tendências da moda atual',
+        'Mix de texturas modernas',
+        'Cores em alta',
+        'Peças statement',
       ],
       icon: Award,
     },
@@ -129,7 +129,7 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-8 px-4 transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       onClick={onClick}
@@ -149,7 +149,7 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
                   Estilo {currentStyle.name}
                 </h2>
               </div>
-              <p style={{ color: "#6B4F43" }}>{currentStyle.description}</p>
+              <p style={{ color: '#6B4F43' }}>{currentStyle.description}</p>
             </CardHeader>
 
             <CardContent className="p-8">
@@ -176,7 +176,7 @@ const QuizResultMainCardBlock: React.FC<BlockComponentProps> = ({
                             className="w-6 h-6 mt-0.5 flex-shrink-0"
                             style={{ color: accentColor }}
                           />
-                          <span style={{ color: "#6B4F43" }}>{characteristic}</span>
+                          <span style={{ color: '#6B4F43' }}>{characteristic}</span>
                         </div>
                       ))}
                     </div>

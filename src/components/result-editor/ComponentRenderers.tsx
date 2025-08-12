@@ -1,5 +1,5 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Play,
   Pause,
@@ -8,7 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface ComponentProps {
   props: Record<string, any>;
@@ -42,7 +42,7 @@ export const VideoComponent: React.FC<ComponentProps> = ({ props, isSelected, on
 
   return (
     <div
-      className={`relative ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+      className={`relative ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
       onClick={onSelect}
       style={{ marginBottom: props.marginBottom }}
     >
@@ -93,12 +93,12 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
       const updateTime = () => setCurrentTime(audio.currentTime);
       const updateDuration = () => setDuration(audio.duration);
 
-      audio.addEventListener("timeupdate", updateTime);
-      audio.addEventListener("loadedmetadata", updateDuration);
+      audio.addEventListener('timeupdate', updateTime);
+      audio.addEventListener('loadedmetadata', updateDuration);
 
       return () => {
-        audio.removeEventListener("timeupdate", updateTime);
-        audio.removeEventListener("loadedmetadata", updateDuration);
+        audio.removeEventListener('timeupdate', updateTime);
+        audio.removeEventListener('loadedmetadata', updateDuration);
       };
     }
   }, []);
@@ -117,12 +117,12 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
     <div
-      className={`p-4 rounded-lg ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+      className={`p-4 rounded-lg ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
       onClick={onSelect}
       style={{
         backgroundColor: props.backgroundColor,
@@ -135,18 +135,18 @@ export const AudioComponent: React.FC<ComponentProps> = ({ props, isSelected, on
         <button
           onClick={togglePlay}
           className="p-3 rounded-full"
-          style={{ backgroundColor: props.accentColor, color: "white" }}
+          style={{ backgroundColor: props.accentColor, color: 'white' }}
         >
           {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </button>
 
         <div className="flex-1">
           <h4 className="font-semibold text-sm">{props.title}</h4>
-          <p style={{ color: "#6B4F43" }}>{props.description}</p>
+          <p style={{ color: '#6B4F43' }}>{props.description}</p>
 
           <div className="flex items-center gap-2 mt-2">
             <span className="text-xs">{formatTime(currentTime)}</span>
-            <div style={{ backgroundColor: "#E5DDD5" }}>
+            <div style={{ backgroundColor: '#E5DDD5' }}>
               <div
                 className="h-1 rounded-full"
                 style={{
@@ -195,7 +195,7 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({
 
   return (
     <div
-      className={`relative ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+      className={`relative ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
       onClick={onSelect}
       style={{ marginBottom: props.marginBottom }}
       onMouseEnter={() => setIsAutoPlaying(false)}
@@ -248,7 +248,7 @@ export const ImageCarouselComponent: React.FC<ComponentProps> = ({
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? "bg-white" : "bg-white bg-opacity-50"
+                  index === currentIndex ? 'bg-white' : 'bg-white bg-opacity-50'
                 }`}
               />
             ))}
@@ -267,7 +267,7 @@ export const BenefitsListComponent: React.FC<ComponentProps> = ({
 }) => {
   return (
     <div
-      className={`p-6 rounded-lg ${isSelected ? "ring-2 ring-[#B89B7A]" : ""}`}
+      className={`p-6 rounded-lg ${isSelected ? 'ring-2 ring-[#B89B7A]' : ''}`}
       onClick={onSelect}
       style={{
         backgroundColor: props.backgroundColor,
@@ -292,6 +292,6 @@ export const BenefitsListComponent: React.FC<ComponentProps> = ({
 export const ComponentRenderers = {
   video: VideoComponent,
   audio: AudioComponent,
-  "image-carousel": ImageCarouselComponent,
-  "benefits-list": BenefitsListComponent,
+  'image-carousel': ImageCarouselComponent,
+  'benefits-list': BenefitsListComponent,
 };

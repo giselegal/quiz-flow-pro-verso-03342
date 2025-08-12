@@ -22,8 +22,8 @@ export class QuizDataAdapter {
   static createSchemaFunnelFromRealData(): SchemaDrivenFunnelData {
     return {
       id: `real-quiz-funnel-${Date.now()}`,
-      name: "Quiz CaktoQuiz - Estilo Pessoal (Dados Reais)",
-      description: "Funil completo com 21 etapas reais convertidas para schema-driven",
+      name: 'Quiz CaktoQuiz - Estilo Pessoal (Dados Reais)',
+      description: 'Funil completo com 21 etapas reais convertidas para schema-driven',
       pages: [],
     };
   }
@@ -41,7 +41,7 @@ export class QuizDataAdapter {
       return funnel;
     }
 
-    console.warn("⚠️ Funnel structure invalid, creating new one from real data");
+    console.warn('⚠️ Funnel structure invalid, creating new one from real data');
     return this.createSchemaFunnelFromRealData();
   }
 }

@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
-import { useEditor } from "@/context/EditorContext";
-import { useCallback, useEffect, useState } from "react";
+import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import { useEditor } from '@/context/EditorContext';
+import { useCallback, useEffect, useState } from 'react';
 
 // ============================================================================
 // HOOK INTEGRADO: useEditorReusableComponents (Versão Simplificada)
@@ -51,7 +51,7 @@ export const useEditorReusableComponents = () => {
     reorderComponents,
     loadStepComponents,
     loadAllQuizComponents,
-  } = useReusableComponents("editor-quiz");
+  } = useReusableComponents('editor-quiz');
 
   const [availableComponents, setAvailableComponents] = useState<EditorComponentType[]>([]);
 
@@ -107,20 +107,20 @@ export const useEditorReusableComponents = () => {
 
   const formatTypeKeyToDisplayName = (typeKey: string): string => {
     return typeKey
-      .split("-")
+      .split('-')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .join(' ');
   };
 
   const getCategoryFromTypeKey = (typeKey: string): string => {
-    if (typeKey.includes("text") || typeKey.includes("heading")) return "content";
-    if (typeKey.includes("button") || typeKey.includes("options")) return "interactive";
-    if (typeKey.includes("image")) return "media";
-    if (typeKey.includes("header") || typeKey.includes("quiz")) return "headers";
-    if (typeKey.includes("form") || typeKey.includes("input")) return "forms";
-    if (typeKey.includes("decorative") || typeKey.includes("divider")) return "visual";
-    if (typeKey.includes("legal")) return "legal";
-    return "other";
+    if (typeKey.includes('text') || typeKey.includes('heading')) return 'content';
+    if (typeKey.includes('button') || typeKey.includes('options')) return 'interactive';
+    if (typeKey.includes('image')) return 'media';
+    if (typeKey.includes('header') || typeKey.includes('quiz')) return 'headers';
+    if (typeKey.includes('form') || typeKey.includes('input')) return 'forms';
+    if (typeKey.includes('decorative') || typeKey.includes('divider')) return 'visual';
+    if (typeKey.includes('legal')) return 'legal';
+    return 'other';
   };
 
   // ============================================================================
@@ -143,7 +143,7 @@ export const useEditorReusableComponents = () => {
       properties: component.properties,
       customStyling: component.custom_styling,
       order: component.order_index,
-      stageId: activeStageId || "stage-1",
+      stageId: activeStageId || 'stage-1',
     };
   };
 
@@ -174,7 +174,7 @@ export const useEditorReusableComponents = () => {
           id: dbComponent.id,
           instance_key: dbComponent.instance_key,
           component_type: componentTypeKey,
-          quiz_id: "editor-quiz",
+          quiz_id: 'editor-quiz',
           step_number: stepNumber,
           order_index: dbComponent.order_index,
           properties: dbComponent.properties,
@@ -187,7 +187,7 @@ export const useEditorReusableComponents = () => {
         addBlock(editorBlock);
         return dbComponent;
       } catch (error) {
-        console.error("Erro ao adicionar componente reutilizável ao editor:", error);
+        console.error('Erro ao adicionar componente reutilizável ao editor:', error);
         throw error;
       }
     },
@@ -209,7 +209,7 @@ export const useEditorReusableComponents = () => {
 
         return updatedComponent;
       } catch (error) {
-        console.error("Erro ao atualizar componente reutilizável:", error);
+        console.error('Erro ao atualizar componente reutilizável:', error);
         throw error;
       }
     },
@@ -225,7 +225,7 @@ export const useEditorReusableComponents = () => {
         // Deletar do editor
         deleteBlock(instanceId);
       } catch (error) {
-        console.error("Erro ao deletar componente reutilizável:", error);
+        console.error('Erro ao deletar componente reutilizável:', error);
         throw error;
       }
     },
@@ -239,21 +239,21 @@ export const useEditorReusableComponents = () => {
   const applyComponentTemplate = useCallback(
     async (templateKey: string, stepNumber: number) => {
       const templates: Record<string, any[]> = {
-        "gisele-step-header": [
-          { type: "gisele-header", properties: { progressValue: (stepNumber / 21) * 100 } },
-          { type: "style-question", properties: { content: `Questão ${stepNumber} de 21` } },
+        'gisele-step-header': [
+          { type: 'gisele-header', properties: { progressValue: (stepNumber / 21) * 100 } },
+          { type: 'style-question', properties: { content: `Questão ${stepNumber} de 21` } },
         ],
-        "gisele-question-step": [
-          { type: "gisele-header", properties: { progressValue: (stepNumber / 21) * 100 } },
-          { type: "style-question", properties: { content: "SUA PERGUNTA AQUI" } },
-          { type: "style-options-grid", properties: { options: [] } },
-          { type: "gisele-button", properties: { text: "Continuar" } },
+        'gisele-question-step': [
+          { type: 'gisele-header', properties: { progressValue: (stepNumber / 21) * 100 } },
+          { type: 'style-question', properties: { content: 'SUA PERGUNTA AQUI' } },
+          { type: 'style-options-grid', properties: { options: [] } },
+          { type: 'gisele-button', properties: { text: 'Continuar' } },
         ],
-        "gisele-input-step": [
-          { type: "gisele-header", properties: { progressValue: (stepNumber / 21) * 100 } },
-          { type: "style-question", properties: { content: "COMO VOCÊ GOSTARIA DE SER CHAMADA?" } },
-          { type: "form-input", properties: { placeholder: "Digite seu nome aqui..." } },
-          { type: "gisele-button", properties: { text: "Continuar" } },
+        'gisele-input-step': [
+          { type: 'gisele-header', properties: { progressValue: (stepNumber / 21) * 100 } },
+          { type: 'style-question', properties: { content: 'COMO VOCÊ GOSTARIA DE SER CHAMADA?' } },
+          { type: 'form-input', properties: { placeholder: 'Digite seu nome aqui...' } },
+          { type: 'gisele-button', properties: { text: 'Continuar' } },
         ],
       };
 

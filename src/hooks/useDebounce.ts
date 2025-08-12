@@ -2,8 +2,8 @@
 // hooks/useDebounce.ts - Hook para debouncing de valores
 // =====================================================================
 
-import { useEffect, useState } from "react";
-import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
+import { useEffect, useState } from 'react';
+import { PerformanceOptimizer } from '@/utils/performanceOptimizer';
 
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -20,7 +20,7 @@ export function useDebounce<T>(value: T, delay: number): T {
     );
 
     return () => {
-      if (strategy === "timeout") {
+      if (strategy === 'timeout') {
         clearTimeout(timerId);
       }
     };
@@ -52,7 +52,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
       strategy
     );
 
-    if (strategy === "timeout") {
+    if (strategy === 'timeout') {
       setTimeoutId(newTimeoutId);
     }
   }) as T;

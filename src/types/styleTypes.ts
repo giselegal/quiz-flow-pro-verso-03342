@@ -1,1 +1,1 @@
-export type BorderRadiusType = "none" | "sm" | "md" | "lg" | "xl" | "full";
+export type BorderRadiusType = 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';

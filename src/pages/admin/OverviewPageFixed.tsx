@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -20,7 +20,7 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from "lucide-react";
+} from 'lucide-react';
 
 const OverviewPage: React.FC = () => {
   return (
@@ -35,7 +35,7 @@ const OverviewPage: React.FC = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-indigo-800 bg-clip-text text-transparent">
               QuizFlow Dashboard
             </h1>
-            <Badge variant="secondary" style={{ color: "#6B4F43" }}>
+            <Badge variant="secondary" style={{ color: '#6B4F43' }}>
               <Crown className="h-3 w-3 mr-1" />
               Pro
             </Badge>
@@ -162,9 +162,9 @@ const OverviewPage: React.FC = () => {
         <Card className="border-0 shadow-lg overflow-hidden">
           <CardHeader className="bg-gradient-to-r from-slate-50 to-indigo-50 border-b border-slate-200">
             <CardTitle className="flex items-center gap-2 text-slate-800">
-              <BarChart3 style={{ color: "#B89B7A" }} />
+              <BarChart3 style={{ color: '#B89B7A' }} />
               Performance por Categoria
-              <Badge style={{ color: "#6B4F43" }}>Tempo Real</Badge>
+              <Badge style={{ color: '#6B4F43' }}>Tempo Real</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
@@ -205,7 +205,7 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Estilo Criativo */}
-            <div style={{ borderColor: "#E5DDD5" }}>
+            <div style={{ borderColor: '#E5DDD5' }}>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-gradient-to-r from-purple-400 to-violet-500 rounded-full"></div>
                 <div>
@@ -215,7 +215,7 @@ const OverviewPage: React.FC = () => {
               </div>
               <div className="text-right">
                 <div className="font-bold text-slate-800">19.4%</div>
-                <div style={{ color: "#432818" }}>
+                <div style={{ color: '#432818' }}>
                   <ArrowDownRight className="h-3 w-3 mr-1" />
                   -1.2%
                 </div>
@@ -223,7 +223,7 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Outros estilos */}
-            <div style={{ borderColor: "#E5DDD5" }}>
+            <div style={{ borderColor: '#E5DDD5' }}>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"></div>
                 <div>
@@ -246,9 +246,9 @@ const OverviewPage: React.FC = () => {
         <Card className="border-0 shadow-lg overflow-hidden">
           <CardHeader className="bg-gradient-to-r from-slate-50 to-purple-50 border-b border-slate-200">
             <CardTitle className="flex items-center gap-2 text-slate-800">
-              <Sparkles style={{ color: "#B89B7A" }} />
+              <Sparkles style={{ color: '#B89B7A' }} />
               Top Funis da Semana
-              <Badge style={{ color: "#6B4F43" }}>Hot</Badge>
+              <Badge style={{ color: '#6B4F43' }}>Hot</Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 p-6">
@@ -272,7 +272,7 @@ const OverviewPage: React.FC = () => {
             <div className="group p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex items-center justify-between mb-2">
                 <div className="font-semibold text-slate-800">Descubra sua Personalidade</div>
-                <Badge style={{ backgroundColor: "#E5DDD5" }}>
+                <Badge style={{ backgroundColor: '#E5DDD5' }}>
                   <TrendingUp className="h-3 w-3 mr-1" />
                   Hot
                 </Badge>
@@ -285,10 +285,10 @@ const OverviewPage: React.FC = () => {
             </div>
 
             {/* Funil 3 */}
-            <div style={{ borderColor: "#E5DDD5" }}>
+            <div style={{ borderColor: '#E5DDD5' }}>
               <div className="flex items-center justify-between mb-2">
                 <div className="font-semibold text-slate-800">Quiz Profissional</div>
-                <Badge style={{ color: "#6B4F43" }}>
+                <Badge style={{ color: '#6B4F43' }}>
                   <MousePointer className="h-3 w-3 mr-1" />
                   Rising
                 </Badge>
@@ -301,7 +301,7 @@ const OverviewPage: React.FC = () => {
             </div>
 
             <div className="pt-2">
-              <Button variant="outline" style={{ backgroundColor: "#FAF9F7" }}>
+              <Button variant="outline" style={{ backgroundColor: '#FAF9F7' }}>
                 <Eye className="h-4 w-4 mr-2" />
                 Ver Todos os Funis
               </Button>
@@ -340,7 +340,7 @@ const OverviewPage: React.FC = () => {
 
               <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl">
                 <div className="flex items-start gap-3">
-                  <div style={{ backgroundColor: "#FAF9F7" }}>
+                  <div style={{ backgroundColor: '#FAF9F7' }}>
                     <Users className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -355,9 +355,9 @@ const OverviewPage: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ borderColor: "#E5DDD5" }}>
+              <div style={{ borderColor: '#E5DDD5' }}>
                 <div className="flex items-start gap-3">
-                  <div style={{ backgroundColor: "#FAF9F7" }}>
+                  <div style={{ backgroundColor: '#FAF9F7' }}>
                     <Target className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -396,12 +396,12 @@ const OverviewPage: React.FC = () => {
                 Relatório Detalhado
               </Button>
 
-              <Button variant="outline" style={{ backgroundColor: "#FAF9F7" }}>
+              <Button variant="outline" style={{ backgroundColor: '#FAF9F7' }}>
                 <Share className="h-4 w-4 mr-2" />
                 Compartilhar Dashboard
               </Button>
 
-              <Button variant="outline" style={{ backgroundColor: "#FAF9F7" }}>
+              <Button variant="outline" style={{ backgroundColor: '#FAF9F7' }}>
                 <Calendar className="h-4 w-4 mr-2" />
                 Agendar Análise
               </Button>

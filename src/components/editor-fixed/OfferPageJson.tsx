@@ -1,7 +1,7 @@
-import { ENHANCED_BLOCK_REGISTRY } from "@/config/enhancedBlockRegistry";
-import React, { useEffect } from "react";
-import { injectOfferPageStyles } from "./offer/offerStyles";
-import { useEditorWithJson } from "./useEditorWithJson";
+import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import React, { useEffect } from 'react';
+import { injectOfferPageStyles } from './offer/offerStyles';
+import { useEditorWithJson } from './useEditorWithJson';
 
 interface OfferPageJsonProps {
   stepNumber?: number;
@@ -19,7 +19,7 @@ interface OfferPageJsonProps {
  */
 export const OfferPageJson: React.FC<OfferPageJsonProps> = ({
   stepNumber = 21,
-  templateName = "step-21-template",
+  templateName = 'step-21-template',
 }) => {
   const [blocks, setBlocks] = React.useState<any[]>([]);
 
@@ -43,14 +43,14 @@ export const OfferPageJson: React.FC<OfferPageJsonProps> = ({
         loadStepTemplate(stepNumber);
 
         // Performance tracking
-        if (typeof window !== "undefined" && "performance" in window) {
-          window.performance.mark("offer-page-json-mounted");
+        if (typeof window !== 'undefined' && 'performance' in window) {
+          window.performance.mark('offer-page-json-mounted');
         }
 
         return cleanupStyles;
       } catch (err) {
-        setError("Erro inesperado ao carregar template");
-        console.error("Erro ao carregar template:", err);
+        setError('Erro inesperado ao carregar template');
+        console.error('Erro ao carregar template:', err);
       } finally {
         setIsLoading(false);
       }
@@ -65,7 +65,7 @@ export const OfferPageJson: React.FC<OfferPageJsonProps> = ({
 
     return blocks.map((block, index) => {
       const BlockComponent =
-        ENHANCED_BLOCK_REGISTRY[block.type] || ENHANCED_BLOCK_REGISTRY["text-inline"];
+        ENHANCED_BLOCK_REGISTRY[block.type] || ENHANCED_BLOCK_REGISTRY['text-inline'];
 
       if (!BlockComponent) {
         console.warn(`Componente não encontrado para tipo: ${block.type}`);
@@ -106,8 +106,8 @@ export const OfferPageJson: React.FC<OfferPageJsonProps> = ({
     <div
       className="min-h-screen"
       style={{
-        fontFamily: "Inter, sans-serif",
-        backgroundColor: "#FFFBF7",
+        fontFamily: 'Inter, sans-serif',
+        backgroundColor: '#FFFBF7',
       }}
     >
       {/* Renderizar blocos do template */}

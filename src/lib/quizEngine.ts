@@ -1,4 +1,4 @@
-import { QuizAnswer, QuizQuestion, QuizResult } from "@/types/quiz";
+import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
 
 export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuestion[]): QuizResult {
   // Simple scoring algorithm
@@ -17,7 +17,7 @@ export function calculateQuizResult(answers: QuizAnswer[], questions: QuizQuesti
 
   // Find predominant style
   const sortedStyles = Object.entries(styleScores).sort(([, a], [, b]) => b - a);
-  const predominantStyle = sortedStyles[0]?.[0] || "natural";
+  const predominantStyle = sortedStyles[0]?.[0] || 'natural';
   const complementaryStyles = sortedStyles.slice(1, 4).map(([style]) => style);
 
   return {

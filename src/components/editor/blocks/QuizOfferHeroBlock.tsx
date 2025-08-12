@@ -1,15 +1,15 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect } from 'react';
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -54,17 +54,17 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
   isEditing = false,
   onClick,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   const {
-    logoUrl = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-    logoAlt = "Logo Gisele Galvão",
-    logoHeight = "60px",
-    title = "Descubra Seu Estilo Predominante",
-    subtitle = "Tenha finalmente um guarda-roupa que funciona 100%",
-    heroImage = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp",
-    backgroundColor = "#FFFBF7",
-    textColor = "#432818",
+    logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    logoAlt = 'Logo Gisele Galvão',
+    logoHeight = '60px',
+    title = 'Descubra Seu Estilo Predominante',
+    subtitle = 'Tenha finalmente um guarda-roupa que funciona 100%',
+    heroImage = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911574/ELEGANTE_PREDOMINANTE_awmgit.webp',
+    backgroundColor = '#FFFBF7',
+    textColor = '#432818',
     showLogo = true,
     showImage = true,
   } = block?.properties || {};
@@ -85,7 +85,7 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
     <div
       className={`
         w-full py-8 px-4 transition-all duration-200
-        ${isSelected ? "ring-1 ring-gray-400/40 bg-gray-50/30" : "hover:shadow-sm"}
+        ${isSelected ? 'ring-1 ring-gray-400/40 bg-gray-50/30' : 'hover:shadow-sm'}
         ${className}
       `}
       style={{ backgroundColor }}
@@ -108,7 +108,7 @@ const QuizOfferHeroBlock: React.FC<BlockComponentProps> = ({
           </h1>
 
           {/* Subtitle */}
-          <p style={{ color: "#6B4F43" }}>{subtitle}</p>
+          <p style={{ color: '#6B4F43' }}>{subtitle}</p>
 
           {/* Hero Image */}
           {showImage && (

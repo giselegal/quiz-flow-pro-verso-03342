@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const StyleCharacteristicsInlineBlock = ({
   block,
@@ -8,27 +8,27 @@ const StyleCharacteristicsInlineBlock = ({
   onClick = () => {},
   onPropertyChange = () => {},
   disabled = false,
-  className = "",
+  className = '',
 }) => {
   const {
-    title = "Características do Seu Estilo",
-    description = "Veja o que define o seu perfil único",
+    title = 'Características do Seu Estilo',
+    description = 'Veja o que define o seu perfil único',
     characteristics = [],
     showDescription = true,
-    backgroundColor = "bg-background",
-    titleColor = "text-foreground",
-    descriptionColor = "text-muted-foreground",
-    borderRadius = "rounded-lg",
-    padding = "p-6",
-    spacing = "space-y-4",
-    badgeVariant = "secondary",
+    backgroundColor = 'bg-background',
+    titleColor = 'text-foreground',
+    descriptionColor = 'text-muted-foreground',
+    borderRadius = 'rounded-lg',
+    padding = 'p-6',
+    spacing = 'space-y-4',
+    badgeVariant = 'secondary',
   } = block?.properties || {};
 
   const defaultCharacteristics = [
-    { label: "Elegante", score: 85 },
-    { label: "Sofisticado", score: 78 },
-    { label: "Moderno", score: 92 },
-    { label: "Minimalista", score: 67 },
+    { label: 'Elegante', score: 85 },
+    { label: 'Sofisticado', score: 78 },
+    { label: 'Moderno', score: 92 },
+    { label: 'Minimalista', score: 67 },
   ];
 
   const displayCharacteristics =
@@ -36,7 +36,7 @@ const StyleCharacteristicsInlineBlock = ({
 
   return (
     <div
-      className={`${className} ${backgroundColor} ${borderRadius} ${padding} ${isSelected ? "ring-2 ring-primary" : ""}`}
+      className={`${className} ${backgroundColor} ${borderRadius} ${padding} ${isSelected ? 'ring-2 ring-primary' : ''}`}
       onClick={onClick}
     >
       <Card className="border-0 shadow-none bg-transparent">

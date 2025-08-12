@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Users, Target, Eye, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { TrendingUp, Users, Target, Eye, Clock } from 'lucide-react';
 
 const AnalyticsPage: React.FC = () => {
   return (
@@ -9,7 +9,7 @@ const AnalyticsPage: React.FC = () => {
       <div>
         <h1
           className="text-3xl font-bold text-[#432818]"
-          style={{ fontFamily: "Playfair Display, serif" }}
+          style={{ fontFamily: 'Playfair Display, serif' }}
         >
           Analytics & Métricas
         </h1>
@@ -60,7 +60,7 @@ const AnalyticsPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[#432818]">4:23</div>
-            <p style={{ color: "#432818" }}>-0:12 vs mês anterior</p>
+            <p style={{ color: '#432818' }}>-0:12 vs mês anterior</p>
           </CardContent>
         </Card>
 
@@ -88,7 +88,7 @@ const AnalyticsPage: React.FC = () => {
                 <h3 className="font-semibold text-[#432818]">Funil de Descoberta de Estilo</h3>
                 <div className="flex items-center gap-4 mt-2 text-sm">
                   <span className="text-[#8F7A6A]">2,847 visitantes</span>
-                  <Badge style={{ backgroundColor: "#E5DDD5" }}>87.2% conversão</Badge>
+                  <Badge style={{ backgroundColor: '#E5DDD5' }}>87.2% conversão</Badge>
                   <span className="text-[#8F7A6A]">R$ 18,745 receita</span>
                 </div>
               </div>

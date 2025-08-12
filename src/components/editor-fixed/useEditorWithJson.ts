@@ -5,10 +5,10 @@
  * Funciona como um "addon" ao editor existente.
  */
 
-import { Block } from "@/types/editor";
-import { useCallback, useEffect, useState } from "react";
-import { JsonTemplate, useJsonTemplate } from "./JsonTemplateEngine";
-import { TemplateAdapter } from "./TemplateAdapter";
+import { Block } from '@/types/editor';
+import { useCallback, useEffect, useState } from 'react';
+import { JsonTemplate, useJsonTemplate } from './JsonTemplateEngine';
+import { TemplateAdapter } from './TemplateAdapter';
 
 // =============================================
 // HOOK PRINCIPAL PARA O EDITOR
@@ -63,7 +63,7 @@ export const useEditorWithJson = (
   const loadStepTemplate = useCallback(
     async (stepNumber: number): Promise<boolean> => {
       if (stepNumber < 1 || stepNumber > 21) {
-        setTemplateError("Número da etapa deve estar entre 1 e 21");
+        setTemplateError('Número da etapa deve estar entre 1 e 21');
         return false;
       }
 
@@ -91,7 +91,7 @@ export const useEditorWithJson = (
       } catch (error) {
         const errorMsg = `Erro ao carregar etapa ${stepNumber}: ${error}`;
         setTemplateError(errorMsg);
-        console.error("❌", errorMsg);
+        console.error('❌', errorMsg);
         return false;
       } finally {
         setIsLoadingTemplate(false);
@@ -130,7 +130,7 @@ export const useEditorWithJson = (
       } catch (error) {
         const errorMsg = `Erro ao carregar template: ${error}`;
         setTemplateError(errorMsg);
-        console.error("❌", errorMsg);
+        console.error('❌', errorMsg);
         return false;
       } finally {
         setIsLoadingTemplate(false);
@@ -159,10 +159,10 @@ export const useEditorWithJson = (
     const content = JSON.stringify(template, null, 2);
 
     // Criar blob e download
-    const blob = new Blob([content], { type: "application/json" });
+    const blob = new Blob([content], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
     link.download = finalFilename;
     document.body.appendChild(link);
@@ -227,7 +227,7 @@ export const useEditorWithJson = (
     const blocksCount = template.blocks.length;
     const blockTypes = [...new Set(template.blocks.map(b => b.type))];
 
-    return `${template.name} (${blocksCount} blocos: ${blockTypes.slice(0, 3).join(", ")}${blockTypes.length > 3 ? "..." : ""})`;
+    return `${template.name} (${blocksCount} blocos: ${blockTypes.slice(0, 3).join(', ')}${blockTypes.length > 3 ? '...' : ''})`;
   }, []);
 
   // =============================================
@@ -238,7 +238,7 @@ export const useEditorWithJson = (
     if (!currentTemplate) {
       return {
         isValid: false,
-        errors: ["Nenhum template carregado"],
+        errors: ['Nenhum template carregado'],
         warnings: [],
       };
     }
@@ -256,7 +256,7 @@ export const useEditorWithJson = (
 
       // Templates das 21 etapas
       for (let i = 1; i <= 21; i++) {
-        const stepId = i.toString().padStart(2, "0");
+        const stepId = i.toString().padStart(2, '0');
         templates.push(`step-${stepId}`);
       }
 

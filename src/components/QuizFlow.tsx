@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useLocation } from "wouter";
+import { useState } from 'react';
+import { useLocation } from 'wouter';
 
 type QuestionOption = {
   id: string;
@@ -18,30 +18,30 @@ type Question = {
 // Dados simulados para o quiz
 const quizQuestions: Question[] = [
   {
-    id: "q1",
-    text: "Qual é o seu principal objetivo?",
+    id: 'q1',
+    text: 'Qual é o seu principal objetivo?',
     options: [
-      { id: "q1_a", text: "Aumentar vendas", value: 10 },
-      { id: "q1_b", text: "Melhorar engajamento", value: 5 },
-      { id: "q1_c", text: "Construir autoridade", value: 8 },
+      { id: 'q1_a', text: 'Aumentar vendas', value: 10 },
+      { id: 'q1_b', text: 'Melhorar engajamento', value: 5 },
+      { id: 'q1_c', text: 'Construir autoridade', value: 8 },
     ],
   },
   {
-    id: "q2",
-    text: "Qual é o seu maior desafio atualmente?",
+    id: 'q2',
+    text: 'Qual é o seu maior desafio atualmente?',
     options: [
-      { id: "q2_a", text: "Atrair clientes", value: 8 },
-      { id: "q2_b", text: "Converter leads", value: 10 },
-      { id: "q2_c", text: "Fidelizar clientes", value: 5 },
+      { id: 'q2_a', text: 'Atrair clientes', value: 8 },
+      { id: 'q2_b', text: 'Converter leads', value: 10 },
+      { id: 'q2_c', text: 'Fidelizar clientes', value: 5 },
     ],
   },
   {
-    id: "q3",
-    text: "Quanto tempo você dedica ao seu negócio por semana?",
+    id: 'q3',
+    text: 'Quanto tempo você dedica ao seu negócio por semana?',
     options: [
-      { id: "q3_a", text: "Menos de 20 horas", value: 3 },
-      { id: "q3_b", text: "20 a 40 horas", value: 7 },
-      { id: "q3_c", text: "Mais de 40 horas", value: 10 },
+      { id: 'q3_a', text: 'Menos de 20 horas', value: 3 },
+      { id: 'q3_b', text: '20 a 40 horas', value: 7 },
+      { id: 'q3_c', text: 'Mais de 40 horas', value: 10 },
     ],
   },
 ];

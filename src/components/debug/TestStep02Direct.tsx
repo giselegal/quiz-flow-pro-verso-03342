@@ -1,10 +1,10 @@
-import { getStep02Template } from "@/components/steps/Step02Template";
+import { getStep02Template } from '@/components/steps/Step02Template';
 
 const TestStep02Direct: React.FC = () => {
   const step02Template = getStep02Template();
-  const optionsBlock = step02Template.find(block => block.type === "options-grid");
+  const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
-  console.log("🧪 TestStep02Direct:", {
+  console.log('🧪 TestStep02Direct:', {
     totalBlocks: step02Template.length,
     optionsBlock: optionsBlock,
     optionsBlockProperties: optionsBlock?.properties,
@@ -17,10 +17,10 @@ const TestStep02Direct: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">Teste Direto Step02</h1>
 
       <div className="space-y-4">
-        <div style={{ backgroundColor: "#FAF9F7" }}>
+        <div style={{ backgroundColor: '#FAF9F7' }}>
           <h2 className="font-bold">Template Data:</h2>
           <p>Total blocos: {step02Template.length}</p>
-          <p>Options block encontrado: {optionsBlock ? "✅ Sim" : "❌ Não"}</p>
+          <p>Options block encontrado: {optionsBlock ? '✅ Sim' : '❌ Não'}</p>
         </div>
 
         {optionsBlock && (
@@ -40,7 +40,7 @@ const TestStep02Direct: React.FC = () => {
         )}
 
         {optionsBlock?.properties?.options && (
-          <div style={{ backgroundColor: "#FAF9F7" }}>
+          <div style={{ backgroundColor: '#FAF9F7' }}>
             <h2 className="font-bold">Todas as Opções:</h2>
             <div className="grid grid-cols-2 gap-2 mt-2">
               {optionsBlock.properties.options.map((option: any, index: number) => (
@@ -52,7 +52,7 @@ const TestStep02Direct: React.FC = () => {
                     <strong>Text:</strong> {option.text?.substring(0, 30)}...
                   </p>
                   <p>
-                    <strong>Image:</strong> {option.imageUrl ? "✅" : "❌"}
+                    <strong>Image:</strong> {option.imageUrl ? '✅' : '❌'}
                   </p>
                 </div>
               ))}

@@ -1,20 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { CalculationMethod, QuizResult, QuizResultsConfig } from "@/hooks/useQuizResults";
-import { MoveDown, MoveUp, Plus, Trash } from "lucide-react";
-import React, { useState } from "react";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { CalculationMethod, QuizResult, QuizResultsConfig } from '@/hooks/useQuizResults';
+import { MoveDown, MoveUp, Plus, Trash } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface QuizResultsEditorProps {
   config: Partial<QuizResultsConfig>;
@@ -22,11 +22,11 @@ interface QuizResultsEditorProps {
 }
 
 const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange }) => {
-  const [activeTab, setActiveTab] = useState("calculation");
+  const [activeTab, setActiveTab] = useState('calculation');
 
   // Valores padrão para config
   const {
-    calculationMethod = { type: "sum" },
+    calculationMethod = { type: 'sum' },
     results = [],
     showAllResults = false,
     showScores = true,
@@ -47,9 +47,9 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
   const addResult = () => {
     const newResult: QuizResult = {
       id: `result-${Date.now()}`,
-      title: "Novo Resultado",
-      description: "Descrição do resultado",
-      category: "",
+      title: 'Novo Resultado',
+      description: 'Descrição do resultado',
+      category: '',
       minScore: 0,
       maxScore: 100,
       displayOrder: results.length + 1,
@@ -148,7 +148,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                 <Select
                   value={calculationMethod.type}
                   onValueChange={value =>
-                    updateCalculationMethod({ type: value as CalculationMethod["type"] })
+                    updateCalculationMethod({ type: value as CalculationMethod['type'] })
                   }
                 >
                   <SelectTrigger>
@@ -163,16 +163,16 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                 </Select>
               </div>
 
-              {(calculationMethod.type === "highest" || calculationMethod.type === "majority") && (
+              {(calculationMethod.type === 'highest' || calculationMethod.type === 'majority') && (
                 <div>
                   <Label htmlFor="primary-category">Categoria Prioritária (opcional)</Label>
                   <Input
                     id="primary-category"
-                    value={calculationMethod.primaryCategory || ""}
+                    value={calculationMethod.primaryCategory || ''}
                     onChange={e => updateCalculationMethod({ primaryCategory: e.target.value })}
                     placeholder="Ex: Elegante, Clássico, etc."
                   />
-                  <p style={{ color: "#8B7355" }}>
+                  <p style={{ color: '#8B7355' }}>
                     Em caso de empate, esta categoria terá prioridade
                   </p>
                 </div>
@@ -181,10 +181,10 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
               <div>
                 <Label htmlFor="tiebreaker">Critério de Desempate</Label>
                 <Select
-                  value={calculationMethod.tiebreaker || "highest_score"}
+                  value={calculationMethod.tiebreaker || 'highest_score'}
                   onValueChange={value =>
                     updateCalculationMethod({
-                      tiebreaker: value as CalculationMethod["tiebreaker"],
+                      tiebreaker: value as CalculationMethod['tiebreaker'],
                     })
                   }
                 >
@@ -211,8 +211,8 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
           </div>
 
           {results.length === 0 && (
-            <div style={{ backgroundColor: "#FAF9F7" }}>
-              <p style={{ color: "#8B7355" }}>Nenhum resultado configurado</p>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <p style={{ color: '#8B7355' }}>Nenhum resultado configurado</p>
               <Button onClick={addResult} variant="outline" size="sm" className="mt-2">
                 <Plus className="w-4 h-4 mr-2" />
                 Adicionar Resultado
@@ -245,7 +245,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     <Button
                       variant="ghost"
                       size="sm"
-                      style={{ color: "#432818" }}
+                      style={{ color: '#432818' }}
                       onClick={() => removeResult(index)}
                     >
                       <Trash className="w-4 h-4" />
@@ -285,7 +285,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                     <Label htmlFor={`result-${index}-image`}>URL da Imagem</Label>
                     <Input
                       id={`result-${index}-image`}
-                      value={result.imageUrl || ""}
+                      value={result.imageUrl || ''}
                       onChange={e => updateResult(index, { imageUrl: e.target.value })}
                       placeholder="https://exemplo.com/imagem.jpg"
                     />
@@ -330,7 +330,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                   onCheckedChange={checked => onChange({ ...config, showAllResults: checked })}
                 />
               </div>
-              <p style={{ color: "#8B7355" }}>
+              <p style={{ color: '#8B7355' }}>
                 Se ativado, mostra todos os resultados possíveis, não apenas o principal
               </p>
 
@@ -342,7 +342,7 @@ const QuizResultsEditor: React.FC<QuizResultsEditorProps> = ({ config, onChange 
                   onCheckedChange={checked => onChange({ ...config, showScores: checked })}
                 />
               </div>
-              <p style={{ color: "#8B7355" }}>
+              <p style={{ color: '#8B7355' }}>
                 Se ativado, mostra as pontuações do usuário em cada categoria
               </p>
             </CardContent>

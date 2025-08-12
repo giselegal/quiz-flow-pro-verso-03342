@@ -1,5 +1,5 @@
-import { QuizComponentType } from "@/types/quizBuilder";
-import { Card } from "@/components/ui/card";
+import { QuizComponentType } from '@/types/quizBuilder';
+import { Card } from '@/components/ui/card';
 
 export interface ComponentsSidebarProps {
   onComponentSelect: (type: QuizComponentType) => void;
@@ -10,20 +10,20 @@ const componentTypes: {
   label: string;
   icon: string;
 }[] = [
-  { type: "header", label: "Cabeçalho", icon: "📝" },
-  { type: "headline", label: "Título", icon: "🏷️" },
-  { type: "text", label: "Texto", icon: "📄" },
-  { type: "image", label: "Imagem", icon: "🖼️" },
-  { type: "multipleChoice", label: "Múltipla Escolha", icon: "☑️" },
-  { type: "singleChoice", label: "Escolha Única", icon: "⚪" },
-  { type: "scale", label: "Escala", icon: "📊" },
-  { type: "openEnded", label: "Resposta Aberta", icon: "💬" },
-  { type: "date", label: "Data", icon: "📅" },
-  { type: "button", label: "Botão", icon: "🔘" },
-  { type: "divider", label: "Divisor", icon: "➖" },
-  { type: "spacer", label: "Espaçador", icon: "⬜" },
-  { type: "video", label: "Vídeo", icon: "📹" },
-  { type: "cta", label: "Call to Action", icon: "📢" },
+  { type: 'header', label: 'Cabeçalho', icon: '📝' },
+  { type: 'headline', label: 'Título', icon: '🏷️' },
+  { type: 'text', label: 'Texto', icon: '📄' },
+  { type: 'image', label: 'Imagem', icon: '🖼️' },
+  { type: 'multipleChoice', label: 'Múltipla Escolha', icon: '☑️' },
+  { type: 'singleChoice', label: 'Escolha Única', icon: '⚪' },
+  { type: 'scale', label: 'Escala', icon: '📊' },
+  { type: 'openEnded', label: 'Resposta Aberta', icon: '💬' },
+  { type: 'date', label: 'Data', icon: '📅' },
+  { type: 'button', label: 'Botão', icon: '🔘' },
+  { type: 'divider', label: 'Divisor', icon: '➖' },
+  { type: 'spacer', label: 'Espaçador', icon: '⬜' },
+  { type: 'video', label: 'Vídeo', icon: '📹' },
+  { type: 'cta', label: 'Call to Action', icon: '📢' },
 ];
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {

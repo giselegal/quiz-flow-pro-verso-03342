@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
-import { Gift, Edit3 } from "lucide-react";
+import { cn } from '@/lib/utils';
+import { Gift, Edit3 } from 'lucide-react';
 
 interface BonusInlineBlockProps {
   title?: string;
@@ -15,11 +15,11 @@ interface BonusInlineBlockProps {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -59,9 +59,9 @@ const getMarginClass = (value, type) => {
 };
 
 const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
-  title = "Bônus Exclusivo",
-  value = "R$ 97,00",
-  description = "Material adicional incluso gratuitamente",
+  title = 'Bônus Exclusivo',
+  value = 'R$ 97,00',
+  description = 'Material adicional incluso gratuitamente',
   showIcon = true,
   onClick,
   className,
@@ -71,16 +71,16 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-l-4 border-green-500",
-        "transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer",
-        "w-full",
-        disabled && "opacity-75 cursor-not-allowed",
+        'inline-flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-l-4 border-green-500',
+        'transition-all duration-200 hover:shadow-md hover:scale-105 cursor-pointer',
+        'w-full',
+        disabled && 'opacity-75 cursor-not-allowed',
         className,
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       onClick={!disabled ? onClick : undefined}
     >
@@ -99,8 +99,8 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newTitle = prompt("Novo título do bônus:", title);
-                if (newTitle !== null) onPropertyChange("title", newTitle);
+                const newTitle = prompt('Novo título do bônus:', title);
+                if (newTitle !== null) onPropertyChange('title', newTitle);
               }
             }}
           >
@@ -111,8 +111,8 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
             onClick={e => {
               e.stopPropagation();
               if (onPropertyChange && !disabled) {
-                const newValue = prompt("Novo valor:", value);
-                if (newValue !== null) onPropertyChange("value", newValue);
+                const newValue = prompt('Novo valor:', value);
+                if (newValue !== null) onPropertyChange('value', newValue);
               }
             }}
           >
@@ -121,12 +121,12 @@ const BonusInlineBlock: React.FC<BonusInlineBlockProps> = ({
         </div>
 
         <p
-          style={{ color: "#6B4F43" }}
+          style={{ color: '#6B4F43' }}
           onClick={e => {
             e.stopPropagation();
             if (onPropertyChange && !disabled) {
-              const newDescription = prompt("Nova descrição:", description);
-              if (newDescription !== null) onPropertyChange("description", newDescription);
+              const newDescription = prompt('Nova descrição:', description);
+              if (newDescription !== null) onPropertyChange('description', newDescription);
             }
           }}
         >

@@ -1,6 +1,6 @@
-import { Card } from "@/components/ui/card";
-import { useAuth } from "@/context/AuthContext";
-import { StyleResult } from "@/types/quiz";
+import { Card } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
+import { StyleResult } from '@/types/quiz';
 
 interface HeaderProps {
   primaryStyle?: StyleResult;
@@ -16,10 +16,10 @@ export const Header: React.FC<HeaderProps> = ({
   primaryStyle: _primaryStyle,
   logoHeight = 50,
   logo,
-  logoAlt = "Logo",
+  logoAlt = 'Logo',
   userName,
   isScrolled: _isScrolled,
-  className = "",
+  className = '',
 }) => {
   const { user } = useAuth();
   const displayName =
@@ -27,7 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
     (user as any)?.userName ||
     (user as any)?.user_metadata?.full_name ||
     (user as any)?.email ||
-    "Visitante";
+    'Visitante';
 
   return (
     <Card className={`bg-white shadow-sm p-6 mb-4 md:mb-6 border-0 ${className}`}>
@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
             src={logo}
             alt={logoAlt}
             className="h-auto mx-auto"
-            style={{ height: `${logoHeight}px`, maxWidth: "100%" }}
+            style={{ height: `${logoHeight}px`, maxWidth: '100%' }}
           />
         </div>
 

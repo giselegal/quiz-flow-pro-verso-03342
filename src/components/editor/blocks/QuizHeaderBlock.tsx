@@ -8,7 +8,7 @@ interface QuizHeaderBlockProps {
   config?: {
     currentStep?: number;
     totalSteps?: number;
-    quizType?: "clothing" | "personality" | "strategic";
+    quizType?: 'clothing' | 'personality' | 'strategic';
   };
 }
 
@@ -17,7 +17,7 @@ interface QuizHeaderBlockProps {
  * Renderiza título, subtítulo e barra de progresso configuráveis via JSON
  */
 const QuizHeaderBlock: React.FC<QuizHeaderBlockProps> = ({ properties, config }) => {
-  const title = properties.title || "Quiz de Estilo";
+  const title = properties.title || 'Quiz de Estilo';
   const subtitle = properties.subtitle;
   const description = properties.description;
   const showProgress = properties.showProgress ?? true;

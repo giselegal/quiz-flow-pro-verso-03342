@@ -1,9 +1,9 @@
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Trash2 } from "lucide-react";
-import { EditableContent } from "@/types/editor";
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Plus, Trash2 } from 'lucide-react';
+import { EditableContent } from '@/types/editor';
 
 interface FAQItem {
   id: string;
@@ -19,8 +19,8 @@ interface FAQBlockEditorProps {
 export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdate }) => {
   // Ensure faqItems is properly typed and has a default
   const faqItems: FAQItem[] = content.faqItems || [
-    { id: "1", question: "Pergunta 1", answer: "Resposta 1" },
-    { id: "2", question: "Pergunta 2", answer: "Resposta 2" },
+    { id: '1', question: 'Pergunta 1', answer: 'Resposta 1' },
+    { id: '2', question: 'Pergunta 2', answer: 'Resposta 2' },
   ];
 
   const updateFAQItems = (newItems: FAQItem[]) => {
@@ -33,8 +33,8 @@ export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdat
   const addFAQItem = () => {
     const newItem: FAQItem = {
       id: Date.now().toString(),
-      question: "Nova pergunta",
-      answer: "Nova resposta",
+      question: 'Nova pergunta',
+      answer: 'Nova resposta',
     };
     updateFAQItems([...faqItems, newItem]);
   };
@@ -55,13 +55,13 @@ export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdat
     <div className="faq-block-editor space-y-4">
       <div className="header space-y-2">
         <Input
-          value={content.title || ""}
+          value={content.title || ''}
           onChange={e => onUpdate({ ...content, title: e.target.value })}
           placeholder="Título da seção FAQ"
           className="text-lg font-medium"
         />
         <Textarea
-          value={content.description || ""}
+          value={content.description || ''}
           onChange={e => onUpdate({ ...content, description: e.target.value })}
           placeholder="Descrição opcional"
           rows={2}
@@ -73,12 +73,12 @@ export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdat
           <Card key={item.id} className="p-4">
             <CardContent className="space-y-3 p-0">
               <div className="flex items-start justify-between">
-                <span style={{ color: "#8B7355" }}>Item {index + 1}</span>
+                <span style={{ color: '#8B7355' }}>Item {index + 1}</span>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => deleteFAQItem(item.id)}
-                  style={{ color: "#432818" }}
+                  style={{ color: '#432818' }}
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -86,14 +86,14 @@ export const FAQBlockEditor: React.FC<FAQBlockEditorProps> = ({ content, onUpdat
 
               <Input
                 value={item.question}
-                onChange={e => updateFAQItem(item.id, "question", e.target.value)}
+                onChange={e => updateFAQItem(item.id, 'question', e.target.value)}
                 placeholder="Pergunta"
                 className="font-medium"
               />
 
               <Textarea
                 value={item.answer}
-                onChange={e => updateFAQItem(item.id, "answer", e.target.value)}
+                onChange={e => updateFAQItem(item.id, 'answer', e.target.value)}
                 placeholder="Resposta"
                 rows={3}
               />

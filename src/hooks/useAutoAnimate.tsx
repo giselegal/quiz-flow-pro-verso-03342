@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import autoAnimate from "@formkit/auto-animate";
+import React, { useRef, useEffect } from 'react';
+import autoAnimate from '@formkit/auto-animate';
 
 // Hook personalizado para auto-animate
 export const useAutoAnimate = () => {
@@ -24,8 +24,8 @@ export const AnimatedOptionsEditor: React.FC<{
   const addOption = () => {
     const newOption = {
       id: `option-${Date.now()}`,
-      text: "Nova opção",
-      imageUrl: "https://via.placeholder.com/150",
+      text: 'Nova opção',
+      imageUrl: 'https://via.placeholder.com/150',
     };
     onOptionsChange([...options, newOption]);
   };
@@ -49,7 +49,7 @@ export const AnimatedOptionsEditor: React.FC<{
           <div key={option.id} className="p-4 bg-card border border-border rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
               <span className="font-medium">{option.text}</span>
-              <button onClick={() => removeOption(index)} style={{ color: "#432818" }}>
+              <button onClick={() => removeOption(index)} style={{ color: '#432818' }}>
                 🗑️ Remover
               </button>
             </div>

@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 // Editor Components
-import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
-import { DndProvider } from "@/components/editor/dnd/DndProvider";
-import { EditorNotification } from "@/components/editor/EditorNotification";
-import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
-import { FunnelStagesPanel } from "@/components/editor/funnel/FunnelStagesPanel";
-import { FourColumnLayout } from "@/components/editor/layout/FourColumnLayout";
-import { ComponentSpecificPropertiesPanel } from "@/components/editor/properties/ComponentSpecificPropertiesPanel";
-import { EditorToolbar } from "@/components/enhanced-editor/toolbar/EditorToolbar";
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
+import { DndProvider } from '@/components/editor/dnd/DndProvider';
+import { EditorNotification } from '@/components/editor/EditorNotification';
+import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
+import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
+import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
+import { ComponentSpecificPropertiesPanel } from '@/components/editor/properties/ComponentSpecificPropertiesPanel';
+import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
 // Context & Hooks
-import { useEditor } from "@/context/EditorContext";
-import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { usePropertyHistory } from "@/hooks/usePropertyHistory";
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
-import { Settings } from "lucide-react";
+import { useEditor } from '@/context/EditorContext';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { usePropertyHistory } from '@/hooks/usePropertyHistory';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { Settings } from 'lucide-react';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -31,7 +31,7 @@ import { Settings } from "lucide-react";
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
-  const { scrollRef } = useSyncedScroll({ source: "canvas" });
+  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
 
   // Estado local
@@ -56,7 +56,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Mostrar notificação quando carregar a etapa 1
   useEffect(() => {
-    if (activeStageId === "step-1" || activeStageId === "step-01") {
+    if (activeStageId === 'step-1' || activeStageId === 'step-01') {
       setShowNotification(true);
     }
   }, [activeStageId]);
@@ -64,15 +64,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Configuração de viewport responsivo
   const getCanvasClassName = () => {
     const baseClasses =
-      "transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20";
+      'transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20';
 
     switch (viewportSize) {
-      case "sm":
+      case 'sm':
         return `${baseClasses} w-[375px] min-h-[600px]`;
-      case "md":
+      case 'md':
         return `${baseClasses} w-[768px] min-h-[800px]`;
-      case "lg":
-      case "xl":
+      case 'lg':
+      case 'xl':
       default:
         return `${baseClasses} w-full max-w-4xl min-h-[900px]`;
     }
@@ -80,11 +80,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Handlers de eventos
   const handleSave = () => {
-    console.log("💾 Salvando editor...");
+    console.log('💾 Salvando editor...');
   };
 
   const handleDeleteBlock = (blockId: string) => {
-    if (window.confirm("Tem certeza que deseja deletar este bloco?")) {
+    if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
       deleteBlock(blockId);
       setSelectedBlockId(null);
     }
@@ -122,7 +122,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         const oldBlockIds = (currentBlocks || []).map(b => b.id);
 
         if (oldBlockIds.length !== newBlockIds.length) {
-          console.warn("⚠️ Reordenação abortada: quantidade de blocos não confere");
+          console.warn('⚠️ Reordenação abortada: quantidade de blocos não confere');
           return;
         }
 
@@ -168,15 +168,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           />
 
           {/* Top Bar - Otimizado */}
-          <div style={{ borderColor: "#E5DDD5" }}>
+          <div style={{ borderColor: '#E5DDD5' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <h1 className="text-lg font-semibold text-stone-700">
                   Editor de Funil - Etapa {activeStageId}
                 </h1>
                 <div className="text-sm text-stone-500">
-                  {totalBlocks} componente{totalBlocks !== 1 ? "s" : ""} • {stageCount} etapa
-                  {stageCount !== 1 ? "s" : ""}
+                  {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
+                  {stageCount !== 1 ? 's' : ''}
                 </div>
               </div>
             </div>
@@ -257,7 +257,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         {/* Painel de Configurações do Funil */}
         {showFunnelSettings && (
           <FunnelSettingsPanel
-            funnelId={activeStageId || "default"}
+            funnelId={activeStageId || 'default'}
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />

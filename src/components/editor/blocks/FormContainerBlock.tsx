@@ -1,5 +1,5 @@
-import type { BlockComponentProps, BlockData } from "@/types/blocks";
-import { getBlockComponent } from "@/config/enhancedBlockRegistry";
+import type { BlockComponentProps, BlockData } from '@/types/blocks';
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
 
 /**
  * FormContainerBlock

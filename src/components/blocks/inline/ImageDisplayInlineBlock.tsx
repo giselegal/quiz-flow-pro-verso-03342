@@ -1,7 +1,7 @@
 // @ts-nocheck
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 // Update the import path below to the correct location of BlockComponentProps
-import type { BlockComponentProps } from "@/types/blocks";
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * ImageDisplayInlineBlock - Componente modular inline horizontal
@@ -13,26 +13,26 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange, // ✅ Adicionando suporte a edição de propriedades
-  className = "",
+  className = '',
 }) => {
   // Safely extract properties with fallbacks
   const properties = block?.properties || {};
 
   const {
-    src = "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-    alt = "Imagem",
-    aspectRatio = "square", // square, portrait, landscape, auto
-    size = "medium",
+    src = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
+    alt = 'Imagem',
+    aspectRatio = 'square', // square, portrait, landscape, auto
+    size = 'medium',
     showBadge = false,
-    badgeText = "Destaque",
-    objectFit = "cover",
-    borderRadius = "lg",
+    badgeText = 'Destaque',
+    objectFit = 'cover',
+    borderRadius = 'lg',
     // Propriedades específicas do template
     width,
     height,
-    className: customClassName = "",
-    textAlign = "center",
-    alignment = "center",
+    className: customClassName = '',
+    textAlign = 'center',
+    alignment = 'center',
     // Sistema completo de margens (positivas e negativas)
     marginTop = 0,
     marginBottom = 0,
@@ -42,54 +42,54 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Tamanhos modulares responsivos
   const sizeClasses = {
-    small: "w-full sm:w-48 md:w-56",
-    medium: "w-full max-w-md mx-auto",
-    large: "w-full sm:w-80 md:w-96 lg:w-[28rem]",
+    small: 'w-full sm:w-48 md:w-56',
+    medium: 'w-full max-w-md mx-auto',
+    large: 'w-full sm:w-80 md:w-96 lg:w-[28rem]',
   };
 
   // Aspect ratios
   const aspectRatioClasses = {
-    square: "aspect-square",
-    portrait: "aspect-[3/4]",
-    landscape: "aspect-[4/3]",
-    auto: "h-auto",
+    square: 'aspect-square',
+    portrait: 'aspect-[3/4]',
+    landscape: 'aspect-[4/3]',
+    auto: 'h-auto',
   };
 
   // Object fit
   const objectFitClasses = {
-    cover: "object-cover",
-    contain: "object-contain",
-    fill: "object-fill",
-    none: "object-none",
+    cover: 'object-cover',
+    contain: 'object-contain',
+    fill: 'object-fill',
+    none: 'object-none',
   };
 
   // Border radius
   const borderRadiusClasses = {
-    none: "rounded-none",
-    sm: "rounded-sm",
-    md: "rounded-md",
-    lg: "rounded-lg",
-    xl: "rounded-xl",
-    "2xl": "rounded-2xl",
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    xl: 'rounded-xl',
+    '2xl': 'rounded-2xl',
   };
 
   // Text align classes
   const textAlignClasses = {
-    left: "text-left",
-    center: "text-center",
-    right: "text-right",
-    "text-left": "text-left",
-    "text-center": "text-center",
-    "text-right": "text-right",
+    left: 'text-left',
+    center: 'text-center',
+    right: 'text-right',
+    'text-left': 'text-left',
+    'text-center': 'text-center',
+    'text-right': 'text-right',
   };
 
   // Função para converter valores de margem em classes Tailwind (alinhada com useContainerProperties)
-  const getMarginClass = (value: number | string, type: "top" | "bottom" | "left" | "right") => {
-    const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const getMarginClass = (value: number | string, type: 'top' | 'bottom' | 'left' | 'right') => {
+    const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-    if (isNaN(numValue) || numValue === 0) return "";
+    if (isNaN(numValue) || numValue === 0) return '';
 
-    const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+    const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
     // Margens negativas
     if (numValue < 0) {
@@ -131,25 +131,25 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
   // Usar className customizada se fornecida, senão usar classes padrão
   const containerClasses = cn(
     // INLINE HORIZONTAL: Flexível e quebra linha automaticamente
-    "flex-shrink-0 flex-grow-0 relative",
+    'flex-shrink-0 flex-grow-0 relative',
     // Centralização baseada no alignment ou textAlign
-    alignment === "center" || textAlign === "center" || textAlign === "text-center"
-      ? "mx-auto flex justify-center"
-      : alignment === "left"
-        ? "justify-start"
-        : alignment === "right"
-          ? "justify-end ml-auto"
-          : "",
+    alignment === 'center' || textAlign === 'center' || textAlign === 'text-center'
+      ? 'mx-auto flex justify-center'
+      : alignment === 'left'
+        ? 'justify-start'
+        : alignment === 'right'
+          ? 'justify-end ml-auto'
+          : '',
     // Usar classes customizadas ou responsivo modular
     customClassName || sizeClasses[size as keyof typeof sizeClasses],
     // Estados do editor
-    isSelected && "ring-2 ring-[#B89B7A] ring-offset-2",
-    "cursor-pointer transition-all duration-200",
+    isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
+    'cursor-pointer transition-all duration-200',
     // Sistema completo de margens
-    getMarginClass(marginTop, "top"),
-    getMarginClass(marginBottom, "bottom"),
-    getMarginClass(marginLeft, "left"),
-    getMarginClass(marginRight, "right"),
+    getMarginClass(marginTop, 'top'),
+    getMarginClass(marginBottom, 'bottom'),
+    getMarginClass(marginLeft, 'left'),
+    getMarginClass(marginRight, 'right'),
     className
   );
 
@@ -157,7 +157,7 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
     <div className={containerClasses} onClick={onClick}>
       <div
         className={cn(
-          "relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300",
+          'relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300',
           aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
           borderRadiusClasses[borderRadius as keyof typeof borderRadiusClasses]
         )}
@@ -167,16 +167,16 @@ const ImageDisplayInlineBlock: React.FC<BlockComponentProps> = ({
           alt={alt}
           style={{
             ...(width && {
-              width: typeof width === "number" ? `${width}px` : width,
+              width: typeof width === 'number' ? `${width}px` : width,
             }),
             ...(height && {
-              height: typeof height === "number" ? `${height}px` : height,
+              height: typeof height === 'number' ? `${height}px` : height,
             }),
           }}
           className={cn(
-            "w-full h-full transition-transform duration-500 hover:scale-105",
+            'w-full h-full transition-transform duration-500 hover:scale-105',
             objectFitClasses[objectFit as keyof typeof objectFitClasses],
-            customClassName && "w-auto h-auto" // Se tem className customizada, não forçar w-full h-full
+            customClassName && 'w-auto h-auto' // Se tem className customizada, não forçar w-full h-full
           )}
         />
 

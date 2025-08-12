@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 /**
  * Step03Template - Componente para Etapa 3 do Quiz
@@ -40,18 +40,18 @@ interface Step03TemplateProps {
 // ✅ COMPONENTE PRINCIPAL
 export const Step03Template: React.FC<Step03TemplateProps> = ({
   id,
-  className = "",
+  className = '',
   style = {},
   properties = {
     enabled: true,
-    title: "QUESTÃO 2 - CONFIGURAR NO PAINEL",
-    subtitle: "",
-    questionCounter: "Questão 2 de 10",
-    backgroundColor: "#FEFEFE",
-    textColor: "#432818",
+    title: 'QUESTÃO 2 - CONFIGURAR NO PAINEL',
+    subtitle: '',
+    questionCounter: 'Questão 2 de 10',
+    backgroundColor: '#FEFEFE',
+    textColor: '#432818',
     showProgress: true,
     progressValue: 15,
-    buttonText: "Próxima Questão →",
+    buttonText: 'Próxima Questão →',
     multipleSelection: true,
     minSelections: 1,
     maxSelections: 3,
@@ -89,17 +89,17 @@ export const Step03Template: React.FC<Step03TemplateProps> = ({
   const containerStyles: React.CSSProperties = {
     backgroundColor: properties.backgroundColor,
     color: properties.textColor,
-    width: "100%",
-    minHeight: "500px",
-    padding: "24px",
-    boxSizing: "border-box",
-    position: "relative",
-    cursor: isEditing ? "pointer" : "default",
-    border: isSelected ? "2px dashed #B89B7A" : "1px solid #e5e7eb",
-    borderRadius: "8px",
-    transition: "all 0.3s ease",
+    width: '100%',
+    minHeight: '500px',
+    padding: '24px',
+    boxSizing: 'border-box',
+    position: 'relative',
+    cursor: isEditing ? 'pointer' : 'default',
+    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? "none" : "auto",
+    pointerEvents: properties.enabled === false ? 'none' : 'auto',
     ...style,
   };
 
@@ -111,7 +111,7 @@ export const Step03Template: React.FC<Step03TemplateProps> = ({
   return (
     <div
       id={id}
-      className={`step03-template ${className} ${isEditing ? "editing-mode" : ""}`}
+      className={`step03-template ${className} ${isEditing ? 'editing-mode' : ''}`}
       style={containerStyles}
       onClick={handleClick}
     >
@@ -136,7 +136,7 @@ export const Step03Template: React.FC<Step03TemplateProps> = ({
 
         {/* Contador da Questão */}
         {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: "#6B7280" }}>
+          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
             {properties.questionCounter}
           </p>
         )}
@@ -187,7 +187,7 @@ export const Step03Template: React.FC<Step03TemplateProps> = ({
       )}
 
       {/* Debug Info */}
-      {process.env.NODE_ENV === "development" && isEditing && (
+      {process.env.NODE_ENV === 'development' && isEditing && (
         <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
       )}
     </div>
@@ -199,127 +199,127 @@ export const getStep03Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
-      id: "step03-header",
-      type: "quiz-intro-header",
+      id: 'step03-header',
+      type: 'quiz-intro-header',
       properties: {
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 15,
         progressMax: 100,
         showBackButton: true,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },
 
     // 🎯 TÍTULO DA QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step03-question-title",
-      type: "text-inline",
+      id: 'step03-question-title',
+      type: 'text-inline',
       properties: {
-        content: "RESUMA A SUA PERSONALIDADE:",
-        level: "h2",
-        fontSize: "text-2xl",
-        fontWeight: "font-bold",
-        textAlign: "text-center",
-        color: "#432818",
+        content: 'RESUMA A SUA PERSONALIDADE:',
+        level: 'h2',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
         marginBottom: 0,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 📊 CONTADOR DE QUESTÃO (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step03-question-counter",
-      type: "text-inline",
+      id: 'step03-question-counter',
+      type: 'text-inline',
       properties: {
-        content: "Questão 2 de 10",
-        fontSize: "text-sm",
-        textAlign: "text-center",
-        color: "#6B7280",
+        content: 'Questão 2 de 10',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#6B7280',
         marginBottom: 24,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
       },
     },
 
     // 🎯 AGRUPAMENTO DE OPÇÕES (EDITÁVEL COMO BLOCO ÚNICO)
     {
-      id: "step03-personality-options",
-      type: "options-grid",
+      id: 'step03-personality-options',
+      type: 'options-grid',
       properties: {
-        questionId: "q2",
+        questionId: 'q2',
         options: [
           {
-            id: "2a",
-            text: "Informal, espontânea, alegre, essencialista",
-            value: "2a",
-            category: "Natural",
-            styleCategory: "Natural",
+            id: '2a',
+            text: 'Informal, espontânea, alegre, essencialista',
+            value: '2a',
+            category: 'Natural',
+            styleCategory: 'Natural',
             points: 1,
             marginTop: 0,
-            spacing: "small",
+            spacing: 'small',
             marginBottom: 0,
           },
           {
-            id: "2b",
-            text: "Conservadora, séria, organizada",
-            value: "2b",
-            category: "Clássico",
-            styleCategory: "Clássico",
+            id: '2b',
+            text: 'Conservadora, séria, organizada',
+            value: '2b',
+            category: 'Clássico',
+            styleCategory: 'Clássico',
             points: 1,
           },
           {
-            id: "2c",
-            text: "Informada, ativa, prática",
-            value: "2c",
-            category: "Contemporâneo",
-            styleCategory: "Contemporâneo",
+            id: '2c',
+            text: 'Informada, ativa, prática',
+            value: '2c',
+            category: 'Contemporâneo',
+            styleCategory: 'Contemporâneo',
             points: 1,
           },
           {
-            id: "2d",
-            text: "Exigente, sofisticada, seletiva",
-            value: "2d",
-            category: "Elegante",
-            styleCategory: "Elegante",
+            id: '2d',
+            text: 'Exigente, sofisticada, seletiva',
+            value: '2d',
+            category: 'Elegante',
+            styleCategory: 'Elegante',
             points: 1,
           },
           {
-            id: "2e",
-            text: "Feminina, meiga, delicada, sensível",
-            value: "2e",
-            category: "Romântico",
-            styleCategory: "Romântico",
+            id: '2e',
+            text: 'Feminina, meiga, delicada, sensível',
+            value: '2e',
+            category: 'Romântico',
+            styleCategory: 'Romântico',
             points: 1,
           },
           {
-            id: "2f",
-            text: "Glamorosa, vaidosa, sensual",
-            value: "2f",
-            category: "Sexy",
-            styleCategory: "Sexy",
+            id: '2f',
+            text: 'Glamorosa, vaidosa, sensual',
+            value: '2f',
+            category: 'Sexy',
+            styleCategory: 'Sexy',
             points: 1,
           },
           {
-            id: "2g",
-            text: "Cosmopolita, moderna e audaciosa",
-            value: "2g",
-            category: "Dramático",
-            styleCategory: "Dramático",
+            id: '2g',
+            text: 'Cosmopolita, moderna e audaciosa',
+            value: '2g',
+            category: 'Dramático',
+            styleCategory: 'Dramático',
             points: 1,
           },
           {
-            id: "2h",
-            text: "Exótica, aventureira, livre",
-            value: "2h",
-            category: "Criativo",
-            styleCategory: "Criativo",
+            id: '2h',
+            text: 'Exótica, aventureira, livre',
+            value: '2h',
+            category: 'Criativo',
+            styleCategory: 'Criativo',
             points: 1,
           },
         ],
@@ -329,7 +329,7 @@ export const getStep03Template = () => {
         multipleSelection: true,
         maxSelections: 3,
         minSelections: 1,
-        validationMessage: "Selecione até 3 opções",
+        validationMessage: 'Selecione até 3 opções',
         gridGap: 12, // Menor gap para texto
         responsiveColumns: false, // Sempre 1 coluna
 
@@ -348,21 +348,21 @@ export const getStep03Template = () => {
 
     // 🔘 BOTÃO COM ATIVAÇÃO INSTANTÂNEA (EDITÁVEL SEPARADAMENTE)
     {
-      id: "step03-continue-button",
-      type: "button-inline",
+      id: 'step03-continue-button',
+      type: 'button-inline',
       properties: {
         // 📝 TEXTO DINÂMICO
-        text: "Continuar →",
-        textWhenDisabled: "Selecione 3 características",
-        textWhenComplete: "Continuar →",
+        text: 'Continuar →',
+        textWhenDisabled: 'Selecione 3 características',
+        textWhenComplete: 'Continuar →',
 
         // 🎨 ESTILO
-        variant: "primary",
-        size: "large",
-        backgroundColor: "#B89B7A",
-        textColor: "#ffffff",
-        disabledBackgroundColor: "#E5E7EB",
-        disabledTextColor: "#9CA3AF",
+        variant: 'primary',
+        size: 'large',
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
+        disabledBackgroundColor: '#E5E7EB',
+        disabledTextColor: '#9CA3AF',
 
         // ⚡ ATIVAÇÃO INSTANTÂNEA - SEM DELAYS
         disabled: true,
@@ -379,7 +379,7 @@ export const getStep03Template = () => {
         showPulseWhenEnabled: false, // Sem pulse para não atrasar
         quickFeedback: true, // Feedback rápido apenas,
         marginTop: 0,
-        spacing: "small",
+        spacing: 'small',
         marginBottom: 0,
       },
     },

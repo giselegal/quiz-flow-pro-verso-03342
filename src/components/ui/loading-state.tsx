@@ -1,11 +1,10 @@
-
 interface LoadingStateProps {
   message?: string;
   showLogo?: boolean;
 }
 
 export const LoadingState: React.FC<LoadingStateProps> = ({
-  message = "Carregando...",
+  message = 'Carregando...',
   showLogo = true,
 }) => {
   return (

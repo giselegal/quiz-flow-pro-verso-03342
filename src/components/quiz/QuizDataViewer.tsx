@@ -1,12 +1,12 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useQuizData } from "@/services/quizDataService";
-import { useQuizSessionStats } from "@/hooks/useQuizTracking";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { useQuizData } from '@/services/quizDataService';
+import { useQuizSessionStats } from '@/hooks/useQuizTracking';
 import {
   User,
   Clock,
@@ -17,7 +17,7 @@ import {
   RefreshCw,
   Eye,
   Target,
-} from "lucide-react";
+} from 'lucide-react';
 
 export const QuizDataViewer: React.FC = () => {
   const { getCurrentSession, exportSessionData, clearAllData } = useQuizData();
@@ -38,9 +38,9 @@ export const QuizDataViewer: React.FC = () => {
 
   const handleExportData = () => {
     const data = exportSessionData();
-    const blob = new Blob([data], { type: "application/json" });
+    const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `quiz_session_${Date.now()}.json`;
     a.click();
@@ -48,7 +48,7 @@ export const QuizDataViewer: React.FC = () => {
   };
 
   const handleClearData = () => {
-    if (confirm("Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.")) {
+    if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
       clearAllData();
       setRefreshKey(prev => prev + 1);
     }
@@ -57,11 +57,11 @@ export const QuizDataViewer: React.FC = () => {
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const formatTime = (date: string | Date) => {
-    return new Date(date).toLocaleTimeString("pt-BR");
+    return new Date(date).toLocaleTimeString('pt-BR');
   };
 
   if (!session) {
@@ -75,7 +75,7 @@ export const QuizDataViewer: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p style={{ color: "#8B7355" }}>Nenhuma sessão de quiz ativa.</p>
+            <p style={{ color: '#8B7355' }}>Nenhuma sessão de quiz ativa.</p>
             <p className="text-sm text-gray-400 mt-2">
               Inicie um quiz para ver os dados em tempo real.
             </p>
@@ -124,7 +124,7 @@ export const QuizDataViewer: React.FC = () => {
                   <User className="w-4 h-4 text-[#B89B7A]" />
                   <span className="text-sm font-medium">Usuário</span>
                 </div>
-                <p className="text-lg font-bold">{currentStats.userName || "Anônimo"}</p>
+                <p className="text-lg font-bold">{currentStats.userName || 'Anônimo'}</p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
@@ -135,7 +135,7 @@ export const QuizDataViewer: React.FC = () => {
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <Target style={{ color: "#B89B7A" }} />
+                  <Target style={{ color: '#B89B7A' }} />
                   <span className="text-sm font-medium">Questões</span>
                 </div>
                 <p className="text-lg font-bold">{currentStats.questionsAnswered}</p>
@@ -178,13 +178,13 @@ export const QuizDataViewer: React.FC = () => {
                         </h4>
                         <Badge variant="outline">{(answer.responseTime / 1000).toFixed(1)}s</Badge>
                       </div>
-                      <div style={{ color: "#6B4F43" }}>
-                        <strong>Respostas:</strong> {answer.optionTexts.join(", ")}
+                      <div style={{ color: '#6B4F43' }}>
+                        <strong>Respostas:</strong> {answer.optionTexts.join(', ')}
                       </div>
-                      <div style={{ color: "#8B7355" }}>
+                      <div style={{ color: '#8B7355' }}>
                         <strong>Pontos de Estilo:</strong> {JSON.stringify(answer.stylePoints)}
                       </div>
-                      <div style={{ color: "#8B7355" }}>
+                      <div style={{ color: '#8B7355' }}>
                         <strong>Timestamp:</strong> {formatTime(answer.timestamp)}
                       </div>
                     </div>
@@ -208,16 +208,16 @@ export const QuizDataViewer: React.FC = () => {
                     .slice(-50)
                     .reverse()
                     .map((click: any, index: number) => (
-                      <div key={index} style={{ backgroundColor: "#FAF9F7" }}>
+                      <div key={index} style={{ backgroundColor: '#FAF9F7' }}>
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">
                             {click.elementType}
                           </Badge>
                           <span className="text-sm">
-                            {click.elementText || click.elementId || "Elemento sem texto"}
+                            {click.elementText || click.elementId || 'Elemento sem texto'}
                           </span>
                         </div>
-                        <div style={{ color: "#8B7355" }}>{formatTime(click.timestamp)}</div>
+                        <div style={{ color: '#8B7355' }}>{formatTime(click.timestamp)}</div>
                       </div>
                     ))}
                 </div>
@@ -248,10 +248,10 @@ export const QuizDataViewer: React.FC = () => {
                       <span>Dispositivo:</span>
                       <Badge>
                         {currentStats.device?.isMobile
-                          ? "Mobile"
+                          ? 'Mobile'
                           : currentStats.device?.isTablet
-                            ? "Tablet"
-                            : "Desktop"}
+                            ? 'Tablet'
+                            : 'Desktop'}
                       </Badge>
                     </div>
                     <div className="flex justify-between">
@@ -282,12 +282,12 @@ export const QuizDataViewer: React.FC = () => {
                 </div>
                 <div className="flex justify-between">
                   <span>Referrer:</span>
-                  <Badge className="max-w-32 truncate">{session.referrer || "Direto"}</Badge>
+                  <Badge className="max-w-32 truncate">{session.referrer || 'Direto'}</Badge>
                 </div>
                 <div className="flex justify-between">
                   <span>User Agent:</span>
                   <Badge className="max-w-32 truncate">
-                    {session.userAgent?.split(" ")[0] || "Desconhecido"}
+                    {session.userAgent?.split(' ')[0] || 'Desconhecido'}
                   </Badge>
                 </div>
               </CardContent>
@@ -303,7 +303,7 @@ export const QuizDataViewer: React.FC = () => {
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-96">
-                <pre style={{ backgroundColor: "#E5DDD5" }}>{JSON.stringify(session, null, 2)}</pre>
+                <pre style={{ backgroundColor: '#E5DDD5' }}>{JSON.stringify(session, null, 2)}</pre>
               </ScrollArea>
             </CardContent>
           </Card>

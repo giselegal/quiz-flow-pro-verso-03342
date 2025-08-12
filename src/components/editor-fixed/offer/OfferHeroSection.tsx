@@ -1,6 +1,6 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import { trackButtonClick } from "@/utils/analytics";
-import { ArrowRight, Award, Lock, LucideIcon, Shield } from "lucide-react";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
+import { trackButtonClick } from '@/utils/analytics';
+import { ArrowRight, Award, Lock, LucideIcon, Shield } from 'lucide-react';
 
 interface TrustElement {
   icon: string;
@@ -58,13 +58,13 @@ export const OfferHeroSection: React.FC<OfferHeroSectionProps> = ({
   const CtaIcon = iconMap[ctaIcon] || ArrowRight;
 
   const handleCtaClick = () => {
-    trackButtonClick("hero_cta", ctaText, "offer_hero_section");
-    window.open(ctaUrl, "_blank");
+    trackButtonClick('hero_cta', ctaText, 'offer_hero_section');
+    window.open(ctaUrl, '_blank');
   };
 
   // Renderizar texto com markdown básico (negrito)
   const renderText = (text: string) => {
-    return text.split("**").map((part, index) => {
+    return text.split('**').map((part, index) => {
       if (index % 2 === 1) {
         return <strong key={index}>{part}</strong>;
       }
@@ -79,13 +79,13 @@ export const OfferHeroSection: React.FC<OfferHeroSectionProps> = ({
           {/* Badge de credibilidade */}
           <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
             <BadgeIcon size={18} className="text-green-600" />
-            <span style={{ color: "#6B4F43" }}>{badgeText}</span>
+            <span style={{ color: '#6B4F43' }}>{badgeText}</span>
           </div>
 
           {/* Título principal */}
           <h1
             className="text-hierarchy-1 text-[var(--text-dark)] mb-6"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
             {title} <span className="text-[var(--primary)]">{titleHighlight}</span>
             <br />

@@ -1,17 +1,17 @@
 // @ts-nocheck
-import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import InlineBaseWrapper from "./base/InlineBaseWrapper";
-import InlineEditableText from "./base/InlineEditableText";
-import type { BlockComponentProps } from "@/types/blocks";
+import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import InlineBaseWrapper from './base/InlineBaseWrapper';
+import InlineEditableText from './base/InlineEditableText';
+import type { BlockComponentProps } from '@/types/blocks';
 import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
   RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
-} from "@/utils/inlineComponentUtils";
-import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from "@/utils/brandDesignSystem";
+} from '@/utils/inlineComponentUtils';
+import { BRAND_COLORS, TYPOGRAPHY, SPACING, ANIMATIONS, EFFECTS } from '@/utils/brandDesignSystem';
 import {
   Play,
   Pause,
@@ -23,7 +23,7 @@ import {
   Upload,
   Link,
   Youtube,
-} from "lucide-react";
+} from 'lucide-react';
 
 /**
  * VideoPlayerInlineBlock - Player de vídeo inline responsivo e horizontal
@@ -43,11 +43,11 @@ import {
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {
-  const numValue = typeof value === "string" ? parseInt(value, 10) : value;
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
-  if (isNaN(numValue) || numValue === 0) return "";
+  if (isNaN(numValue) || numValue === 0) return '';
 
-  const prefix = type === "top" ? "mt" : type === "bottom" ? "mb" : type === "left" ? "ml" : "mr";
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
 
   // Margens negativas
   if (numValue < 0) {
@@ -90,27 +90,27 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onPropertyChange,
-  className = "",
+  className = '',
 }) => {
   // 1. REUTILIZÁVEL: Props bem definidas com defaults
   const {
-    title = "Vídeo Demonstrativo",
-    description = "Assista e entenda como funciona",
-    videoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    videoType = "youtube", // youtube, vimeo, upload, url
-    thumbnailUrl = "https://via.placeholder.com/640x360?text=Video+Thumbnail",
+    title = 'Vídeo Demonstrativo',
+    description = 'Assista e entenda como funciona',
+    videoUrl = 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    videoType = 'youtube', // youtube, vimeo, upload, url
+    thumbnailUrl = 'https://via.placeholder.com/640x360?text=Video+Thumbnail',
     autoplay = false,
     showControls = true,
     showTitle = true,
     showDescription = true,
-    aspectRatio = "16:9", // 16:9, 4:3, 1:1
-    layout = "standard",
-    style = "modern",
-    animation = "fadeIn",
+    aspectRatio = '16:9', // 16:9, 4:3, 1:1
+    layout = 'standard',
+    style = 'modern',
+    animation = 'fadeIn',
     useUsername = false,
     trackingEnabled = true,
-    overlayColor = "rgba(0,0,0,0.3)",
-    spacing = "normal",
+    overlayColor = 'rgba(0,0,0,0.3)',
+    spacing = 'normal',
   } = block?.properties || {};
 
   // 2. INDEPENDENTE: Estado próprio do componente
@@ -122,12 +122,12 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Mock user data
-  const username = "Usuário";
+  const username = 'Usuário';
 
   // 5. TRACKING GRANULAR: Analytics automáticos
   useEffect(() => {
     if (trackingEnabled) {
-      trackComponentView(block.id, "video-player-inline");
+      trackComponentView(block.id, 'video-player-inline');
     }
   }, [trackingEnabled, block.id]);
 
@@ -144,7 +144,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
     // 5. TRACKING: Video play event
     if (trackingEnabled) {
-      trackComponentClick(block.id, "video-player-inline", "video_play");
+      trackComponentClick(block.id, 'video-player-inline', 'video_play');
     }
   };
 
@@ -167,9 +167,9 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   const handleVideoUrlChange = () => {
-    const newUrl = prompt("Nova URL do vídeo:", videoUrl);
+    const newUrl = prompt('Nova URL do vídeo:', videoUrl);
     if (newUrl !== null) {
-      handlePropertyChange("videoUrl", newUrl);
+      handlePropertyChange('videoUrl', newUrl);
       setShowPreview(true);
       setIsPlaying(false);
     }
@@ -177,22 +177,22 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
   // 1. REUTILIZÁVEL: Sistema de classes dinâmicas
   const aspectRatioClasses = {
-    "16:9": "aspect-video",
-    "4:3": "aspect-[4/3]",
-    "1:1": "aspect-square",
+    '16:9': 'aspect-video',
+    '4:3': 'aspect-[4/3]',
+    '1:1': 'aspect-square',
   };
 
   const styleClasses = {
-    modern: "rounded-xl shadow-lg overflow-hidden",
-    minimal: "rounded-lg border border-gray-200 overflow-hidden",
-    card: "rounded-lg shadow-md border border-gray-100 overflow-hidden",
-    none: "overflow-hidden",
+    modern: 'rounded-xl shadow-lg overflow-hidden',
+    minimal: 'rounded-lg border border-gray-200 overflow-hidden',
+    card: 'rounded-lg shadow-md border border-gray-100 overflow-hidden',
+    none: 'overflow-hidden',
   };
 
   const layoutClasses = {
-    standard: "flex-col",
-    horizontal: "flex-row",
-    compact: "flex-col",
+    standard: 'flex-col',
+    horizontal: 'flex-row',
+    compact: 'flex-col',
   };
 
   // Text personalization
@@ -200,7 +200,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Extract video ID for YouTube/Vimeo
   const getVideoEmbedUrl = () => {
-    if (videoType === "youtube") {
+    if (videoType === 'youtube') {
       const videoId = videoUrl.match(
         /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
       );
@@ -208,7 +208,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
         ? `https://www.youtube.com/embed/${videoId[1]}?autoplay=${autoplay ? 1 : 0}`
         : videoUrl;
     }
-    if (videoType === "vimeo") {
+    if (videoType === 'vimeo') {
       const videoId = videoUrl.match(/vimeo\.com\/([0-9]+)/);
       return videoId
         ? `https://player.vimeo.com/video/${videoId[1]}?autoplay=${autoplay ? 1 : 0}`
@@ -226,30 +226,30 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
         className,
         INLINE_ANIMATIONS[animation as keyof typeof INLINE_ANIMATIONS],
         // Margens universais com controles deslizantes
-        getMarginClass(marginTop, "top"),
-        getMarginClass(marginBottom, "bottom"),
-        getMarginClass(marginLeft, "left"),
-        getMarginClass(marginRight, "right")
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
       )}
       // 1. REUTILIZÁVEL: Props flexíveis de layout
-      gap={spacing === "tight" ? "sm" : spacing === "loose" ? "lg" : "md"}
+      gap={spacing === 'tight' ? 'sm' : spacing === 'loose' ? 'lg' : 'md'}
       justify="start"
       align="stretch"
-      direction={layout === "horizontal" ? "row" : "col"}
+      direction={layout === 'horizontal' ? 'row' : 'col'}
       wrap={true}
       // 3. RESPONSIVO: Configuração adaptativa
       responsive={{
         mobile: {
-          direction: "col",
-          gap: "sm",
+          direction: 'col',
+          gap: 'sm',
         },
         tablet: {
-          direction: layout === "horizontal" ? "row" : "col",
-          gap: "md",
+          direction: layout === 'horizontal' ? 'row' : 'col',
+          gap: 'md',
         },
         desktop: {
-          direction: layout === "horizontal" ? "row" : "col",
-          gap: spacing === "tight" ? "sm" : "lg",
+          direction: layout === 'horizontal' ? 'row' : 'col',
+          gap: spacing === 'tight' ? 'sm' : 'lg',
         },
       }}
       // 4. INLINE: Dimensões otimizadas
@@ -257,8 +257,8 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
       maxWidth="100%"
       // 5. TRACKING: Dados de analytics
       trackingData={{
-        componentName: "VideoPlayerInlineBlock",
-        category: "media",
+        componentName: 'VideoPlayerInlineBlock',
+        category: 'media',
         metadata: {
           videoType,
           layout,
@@ -273,16 +273,16 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
     >
       <div
         className={cn(
-          "w-full",
+          'w-full',
           layoutClasses[layout as keyof typeof layoutClasses],
-          layout === "horizontal" ? "lg:flex-row gap-6" : "gap-4"
+          layout === 'horizontal' ? 'lg:flex-row gap-6' : 'gap-4'
         )}
       >
         {/* Video Player */}
         <div
           className={cn(
-            "relative group",
-            layout === "horizontal" ? "lg:w-2/3" : "w-full",
+            'relative group',
+            layout === 'horizontal' ? 'lg:w-2/3' : 'w-full',
             aspectRatioClasses[aspectRatio as keyof typeof aspectRatioClasses],
             styleClasses[style as keyof typeof styleClasses]
           )}
@@ -325,8 +325,8 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   <button
                     onClick={e => {
                       e.stopPropagation();
-                      const newThumbnail = prompt("Nova URL da thumbnail:", thumbnailUrl);
-                      if (newThumbnail !== null) handlePropertyChange("thumbnailUrl", newThumbnail);
+                      const newThumbnail = prompt('Nova URL da thumbnail:', thumbnailUrl);
+                      if (newThumbnail !== null) handlePropertyChange('thumbnailUrl', newThumbnail);
                     }}
                     className="p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
                     title="Alterar thumbnail"
@@ -339,7 +339,7 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
           ) : (
             // Embedded Video
             <div className="w-full h-full">
-              {videoType === "youtube" || videoType === "vimeo" ? (
+              {videoType === 'youtube' || videoType === 'vimeo' ? (
                 <iframe
                   src={getVideoEmbedUrl()}
                   className="w-full h-full"
@@ -367,27 +367,27 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Video Type Indicator */}
           <div className="absolute top-2 left-2">
             <div className="flex items-center gap-1 px-2 py-1 bg-black/50 text-white rounded-full text-xs">
-              {videoType === "youtube" && <Youtube className="w-3 h-3" />}
-              {videoType === "vimeo" && <PlayCircle className="w-3 h-3" />}
-              {videoType === "upload" && <Upload className="w-3 h-3" />}
-              {videoType === "url" && <Link className="w-3 h-3" />}
+              {videoType === 'youtube' && <Youtube className="w-3 h-3" />}
+              {videoType === 'vimeo' && <PlayCircle className="w-3 h-3" />}
+              {videoType === 'upload' && <Upload className="w-3 h-3" />}
+              {videoType === 'url' && <Link className="w-3 h-3" />}
               <span className="capitalize">{videoType}</span>
             </div>
           </div>
         </div>
 
         {/* Video Info */}
-        <div className={cn("flex flex-col", layout === "horizontal" ? "lg:w-1/3" : "w-full")}>
+        <div className={cn('flex flex-col', layout === 'horizontal' ? 'lg:w-1/3' : 'w-full')}>
           {/* Title */}
           {showTitle && (
             <div className="mb-2">
               <InlineEditableText
                 value={personalizedTitle}
-                onChange={value => handlePropertyChange("title", value)}
+                onChange={value => handlePropertyChange('title', value)}
                 placeholder="Título do vídeo..."
                 fontSize="lg"
                 fontWeight="bold"
-                style={{ color: "#432818" }}
+                style={{ color: '#432818' }}
               />
             </div>
           )}
@@ -397,10 +397,10 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="mb-4">
               <InlineEditableText
                 value={description}
-                onChange={value => handlePropertyChange("description", value)}
+                onChange={value => handlePropertyChange('description', value)}
                 placeholder="Descrição do vídeo..."
                 fontSize="sm"
-                style={{ color: "#6B4F43" }}
+                style={{ color: '#6B4F43' }}
                 multiline={true}
                 maxLines={4}
               />
@@ -409,16 +409,16 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Video Settings */}
           {isEditing && (
-            <div style={{ backgroundColor: "#FAF9F7" }}>
-              <h4 style={{ color: "#6B4F43" }}>Configurações</h4>
+            <div style={{ backgroundColor: '#FAF9F7' }}>
+              <h4 style={{ color: '#6B4F43' }}>Configurações</h4>
 
               {/* Video Type */}
               <div>
-                <label style={{ color: "#6B4F43" }}>Tipo de Vídeo</label>
+                <label style={{ color: '#6B4F43' }}>Tipo de Vídeo</label>
                 <select
                   value={videoType}
-                  onChange={e => handlePropertyChange("videoType", e.target.value)}
-                  style={{ borderColor: "#E5DDD5" }}
+                  onChange={e => handlePropertyChange('videoType', e.target.value)}
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="youtube">YouTube</option>
                   <option value="vimeo">Vimeo</option>
@@ -429,11 +429,11 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
               {/* Aspect Ratio */}
               <div>
-                <label style={{ color: "#6B4F43" }}>Proporção</label>
+                <label style={{ color: '#6B4F43' }}>Proporção</label>
                 <select
                   value={aspectRatio}
-                  onChange={e => handlePropertyChange("aspectRatio", e.target.value)}
-                  style={{ borderColor: "#E5DDD5" }}
+                  onChange={e => handlePropertyChange('aspectRatio', e.target.value)}
+                  style={{ borderColor: '#E5DDD5' }}
                 >
                   <option value="16:9">16:9 (Widescreen)</option>
                   <option value="4:3">4:3 (Standard)</option>
@@ -447,10 +447,10 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
                   type="checkbox"
                   id="autoplay"
                   checked={autoplay}
-                  onChange={e => handlePropertyChange("autoplay", e.target.checked)}
+                  onChange={e => handlePropertyChange('autoplay', e.target.checked)}
                   className="text-xs"
                 />
-                <label htmlFor="autoplay" style={{ color: "#6B4F43" }}>
+                <label htmlFor="autoplay" style={{ color: '#6B4F43' }}>
                   Reprodução automática
                 </label>
               </div>
@@ -459,10 +459,10 @@ const VideoPlayerInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Video Stats */}
           <div className="mt-auto pt-3 border-t border-gray-100">
-            <div style={{ color: "#8B7355" }}>
+            <div style={{ color: '#8B7355' }}>
               <div>Formato: {aspectRatio}</div>
               <div>Tipo: {videoType}</div>
-              <div>Status: {isPlaying ? "Reproduzindo" : "Pausado"}</div>
+              <div>Status: {isPlaying ? 'Reproduzindo' : 'Pausado'}</div>
             </div>
           </div>
         </div>

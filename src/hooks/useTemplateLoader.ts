@@ -1,7 +1,7 @@
-import { STEP_TEMPLATES } from "@/config/templates/templates";
-import { useEditor } from "@/context/EditorContext";
-import { Block, StageTemplate } from "@/types/editor";
-import { useCallback, useEffect, useState } from "react";
+import { STEP_TEMPLATES } from '@/config/templates/templates';
+import { useEditor } from '@/context/EditorContext';
+import { Block, StageTemplate } from '@/types/editor';
+import { useCallback, useEffect, useState } from 'react';
 
 interface TemplateMetadata {
   id: string;
@@ -46,8 +46,8 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
             id: stage.id,
             name: template.metadata?.name || `Template ${stage.order}`,
             description: template.metadata?.description,
-            type: template.metadata?.type || "default",
-            version: template.metadata?.version || "1.0.0",
+            type: template.metadata?.type || 'default',
+            version: template.metadata?.version || '1.0.0',
             blocksCount: template.blocks?.length || 0,
           };
         }

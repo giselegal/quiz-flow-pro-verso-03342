@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "@/components/ui/use-toast";
-import { Link } from "wouter";
-import { BarChartHorizontal } from "lucide-react";
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { toast } from '@/components/ui/use-toast';
+import { Link } from 'wouter';
+import { BarChartHorizontal } from 'lucide-react';
 
 export const AnalyticsTab: React.FC = () => {
   const [pixelId, setPixelId] = useState(() => {
     try {
       // Try to extract the Pixel ID from an inline script in index.html
-      const scriptContent = document.querySelector("script:not([src])")?.textContent || "";
+      const scriptContent = document.querySelector('script:not([src])')?.textContent || '';
       const match = scriptContent.match(/fbq\('init', ['"]([^'"]+)['"]\)/);
-      return match?.[1] || "123456789012345";
+      return match?.[1] || '123456789012345';
     } catch (error) {
-      console.error("Error extracting Pixel ID:", error);
-      return "123456789012345";
+      console.error('Error extracting Pixel ID:', error);
+      return '123456789012345';
     }
   });
   const [trackingEnabled, setTrackingEnabled] = useState(true);
@@ -25,12 +25,12 @@ export const AnalyticsTab: React.FC = () => {
   const handleSavePixelSettings = () => {
     // In a real application, this would save to a backend
     // Here we're just simulating with localStorage
-    localStorage.setItem("fb_pixel_id", pixelId);
-    localStorage.setItem("tracking_enabled", String(trackingEnabled));
+    localStorage.setItem('fb_pixel_id', pixelId);
+    localStorage.setItem('tracking_enabled', String(trackingEnabled));
 
     toast({
-      title: "Settings saved",
-      description: "Pixel settings have been updated successfully.",
+      title: 'Settings saved',
+      description: 'Pixel settings have been updated successfully.',
     });
   };
 
