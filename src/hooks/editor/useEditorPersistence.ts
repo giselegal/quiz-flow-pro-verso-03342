@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { schemaDrivenFunnelService } from "../../services/schemaDrivenFunnelService";
-import type { SchemaDrivenFunnelData } from "../../services/schemaDrivenFunnelService";
+import { useCallback, useState } from "react";
 import { useToast } from "../../components/ui/use-toast";
+import type { SchemaDrivenFunnelData } from "../../services/schemaDrivenFunnelService";
+import { schemaDrivenFunnelService } from "../../services/schemaDrivenFunnelService";
 
 // Interface para compatibilidade com o editor existente
 export interface FunnelData {

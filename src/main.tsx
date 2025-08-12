@@ -13,8 +13,10 @@ interface ImportMetaEnv {
   [key: string]: any;
 }
 
-interface ImportMeta {
-  env: ImportMetaEnv;
+declare global {
+  interface ImportMeta {
+    env: ImportMetaEnv;
+  }
 }
 
 // 🧹 Inicializar limpeza de avisos do console em desenvolvimento
