@@ -183,7 +183,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
 
             {/* Botão de continuar */}
             <div className="pt-2">
-              <Button}
+              <Button
                 disabled={!isValid || !userName}
                 className="w-full p-3 text-base font-medium transition-all duration-200"
                 style={{

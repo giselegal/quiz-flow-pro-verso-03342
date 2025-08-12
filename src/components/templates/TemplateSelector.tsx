@@ -137,7 +137,15 @@ interface TemplateCardProps {
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
-  const [isSelected,}
+  const [isSelected, setIsSelected] = useState(false);
+
+  return (
+    <Card
+      className="cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={() => {
+        setIsSelected(true);
+        onSelect(template);
+      }}
     >
       <CardHeader>
         <CardTitle className="text-sm font-medium">{template.name}</CardTitle>
