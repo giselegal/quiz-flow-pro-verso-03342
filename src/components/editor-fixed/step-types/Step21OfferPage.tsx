@@ -1,51 +1,21 @@
+import type { BaseProperty } from '@/components/editor/properties/core/types';
+import { withPropertyControls } from '@/components/editor/properties/core/withPropertyControls';
+import { PropertyCategory, PropertyType } from '@/hooks/useUnifiedProperties';
 import React from 'react';
 import {
+  OfferFaqSection,
+  OfferGuaranteeSection,
   OfferHeader,
   OfferHeroSection,
   OfferProblemSection,
-  OfferSolutionSection,
   OfferProductShowcase,
-  OfferGuaranteeSection,
-  OfferFaqSec        <OfferProductShowcase 
-          title={products.title}
-          subtitle={products.description || ''}
-          products={products.items}
-          pricing={{
-            installments: {
-              quantity: 12,
-              amount: '97,00'
-            },
-            fullPrice: '997,00',
-            discount: '50%',
-            savings: '997,00',
-            limitedOffer: true
-          }}
-          finalCtaText="Garantir Minha Vaga"
-          finalCtaIcon="ShoppingCart" 
-          finalCtaUrl="#comprar"
-        />/offer';
-import { withPropertyControls } from '@/components/editor/properties/core/withPropertyControls';
-import type { BaseProperty } from '@/components/editor/properties/core/types';
-import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties';
-import { PropertyType, PropertyCategory } from '@/hooks/useUnifiedProperties'; from 'react';
-import {
-  OfferHeader,
-  OfferHeroSection,
-  OfferProblemSection,
   OfferSolutionSection,
-  OfferProductShowcase,
-  OfferGuaranteeSection,
-  OfferFaqSection
 } from '../offer';
-import { withPropertyControls } from '@/components/editor/properties/core/withPropertyControls';
-import type { BaseProperty, PropertyType, WithPropertyControlsProps } from '@/components/editor/properties/core/types';
 
 interface Step21OfferPageProps {
   properties: BaseProperty[];
   onUpdate: (key: string, value: any) => void;
 }
-
-
 
 const Step21OfferPage: React.FC<Step21OfferPageProps> = ({ properties }) => {
   // Helper para obter valores de propriedades
@@ -66,7 +36,7 @@ const Step21OfferPage: React.FC<Step21OfferPageProps> = ({ properties }) => {
     <div className="offer-page">
       {header && <OfferHeader {...header} />}
       {hero && (
-        <OfferHeroSection 
+        <OfferHeroSection
           title={hero.title}
           subtitle={hero.subtitle}
           heroImageUrl={hero.imageUrl}
@@ -85,7 +55,7 @@ const Step21OfferPage: React.FC<Step21OfferPageProps> = ({ properties }) => {
       )}
       {problem && <OfferProblemSection {...problem} />}
       {solution && (
-        <OfferSolutionSection 
+        <OfferSolutionSection
           title={solution.title}
           description={solution.description}
           benefits={solution.benefits}
@@ -101,19 +71,19 @@ const Step21OfferPage: React.FC<Step21OfferPageProps> = ({ properties }) => {
         />
       )}
       {products && (
-        <OfferProductShowcase 
+        <OfferProductShowcase
           title={products.title}
           subtitle={products.description || ''}
           products={products.items}
           pricing={{
             installments: {
               quantity: 12,
-              amount: '97,00'
+              amount: '97,00',
             },
             fullPrice: '997,00',
             discount: '50%',
             savings: '997,00',
-            limitedOffer: true
+            limitedOffer: true,
           }}
           finalCtaText="Garantir Minha Vaga"
           finalCtaIcon="ShoppingCart"
@@ -130,7 +100,7 @@ export default withPropertyControls(Step21OfferPage, {
   middlewares: {
     beforeUpdate: [],
     validation: [],
-    afterUpdate: []
+    afterUpdate: [],
   },
   properties: [
     {
@@ -144,8 +114,8 @@ export default withPropertyControls(Step21OfferPage, {
         logoWidth: 96,
         logoHeight: 96,
         isSticky: true,
-        backgroundColor: '#FFFFFF'
-      }
+        backgroundColor: '#FFFFFF',
+      },
     },
     {
       key: 'hero',
@@ -160,8 +130,8 @@ export default withPropertyControls(Step21OfferPage, {
         imageWidth: 800,
         imageHeight: 600,
         ctaText: 'Começar',
-        ctaUrl: '#'
-      }
+        ctaUrl: '#',
+      },
     },
     {
       key: 'problem',
@@ -176,8 +146,8 @@ export default withPropertyControls(Step21OfferPage, {
         imageAlt: '',
         imageWidth: 800,
         imageHeight: 600,
-        layout: 'side-by-side'
-      }
+        layout: 'side-by-side',
+      },
     },
     {
       key: 'solution',
@@ -195,9 +165,9 @@ export default withPropertyControls(Step21OfferPage, {
         countdown: {
           hours: 48,
           minutes: 0,
-          seconds: 0
-        }
-      }
+          seconds: 0,
+        },
+      },
     },
     {
       key: 'products',
@@ -207,8 +177,8 @@ export default withPropertyControls(Step21OfferPage, {
       value: {
         title: '',
         description: '',
-        items: []
-      }
+        items: [],
+      },
     },
     {
       key: 'guarantee',
@@ -222,8 +192,8 @@ export default withPropertyControls(Step21OfferPage, {
         imageAlt: '',
         imageWidth: 800,
         imageHeight: 600,
-        layout: 'centered'
-      }
+        layout: 'centered',
+      },
     },
     {
       key: 'faq',
@@ -232,8 +202,8 @@ export default withPropertyControls(Step21OfferPage, {
       category: PropertyCategory.CONTENT,
       value: {
         title: '',
-        questions: []
-      }
-    }
-  ]
+        questions: [],
+      },
+    },
+  ],
 });
