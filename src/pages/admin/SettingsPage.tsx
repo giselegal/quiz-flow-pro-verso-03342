@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { AppearanceTab } from "@/components/settings/AppearanceTab";
@@ -11,7 +11,7 @@ import { UtmSettingsTab } from "@/components/settings/UtmSettingsTab";
 import { useLocation } from "wouter";
 
 const SettingsPage = () => {
-  const [location, setLocation] = useLocation();
+  const [_location, setLocation] = useLocation();
 
   // Extrair query params manualmente da URL
   const searchParams = new URLSearchParams(window.location.search);

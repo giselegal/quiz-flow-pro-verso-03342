@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Route, Switch, useLocation } from "wouter";
+import { Route, Switch } from "wouter";
 import { AdminSidebar } from "../../components/admin/AdminSidebar";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
