@@ -1,5 +1,5 @@
-import React from 'react';
 import { CLEAN_21_STEPS } from '@/config/clean21Steps';
+import React from 'react';
 
 const TestSteps: React.FC = () => {
   React.useEffect(() => {

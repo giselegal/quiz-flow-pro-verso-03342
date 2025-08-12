@@ -7,7 +7,6 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { CLEAN_21_STEPS } from '../config/clean21Steps';
 import { useTemplateManager } from '../hooks/useTemplateManager';
 import type { Block } from '../types/editor';
 import { EditorBlock, FunnelStage } from '../types/editor';
@@ -162,38 +161,75 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [currentQuizId, setCurrentQuizId] = useState('quiz-demo-id');
 
   // ═══════════════════════════════════════════════
-  // 🏗️ ESTADO PRINCIPAL CENTRALIZADO
+  // 🏗️ ESTADO PRINCIPAL CENTRALIZADO - FIXO PARA 21 ETAPAS
   // ═══════════════════════════════════════════════
   const [stages, setStages] = useState<FunnelStage[]>(() => {
-    console.log('🚀 EditorProvider: Inicializando com 21 etapas limpas (sem duplicação)');
+    console.log('🚀 EditorProvider: Inicializando diretamente 21 etapas');
 
-    // ✅ USAR CONFIG LIMPA DAS 21 ETAPAS
-    console.log('📋 EditorProvider: CLEAN_21_STEPS:', CLEAN_21_STEPS.length);
-    console.log('📋 EditorProvider: CLEAN_21_STEPS completo:', CLEAN_21_STEPS);
+    // ✅ DEFINIÇÃO DIRETA DAS 21 ETAPAS (EVITAR PROBLEMAS DE IMPORT)
+    const directStages: FunnelStage[] = [];
+    
+    for (let i = 1; i <= 21; i++) {
+      const stepId = `step-${String(i).padStart(2, '0')}`;
+      let name = '';
+      let type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' = 'question';
+      let description = '';
 
-    const initialStages = CLEAN_21_STEPS.map(stepConfig => ({
-      id: stepConfig.id,
-      name: stepConfig.name,
-      order: stepConfig.stepNumber,
-      type: stepConfig.type,
-      description: stepConfig.description,
-      isActive: stepConfig.stepNumber === 1,
-      metadata: {
-        blocksCount: 0,
-        lastModified: new Date(),
-        isCustom: false,
-        templateBlocks: [], // ✅ INICIALIZAR VAZIO PARA CARREGAR ASSÍNCRONAMENTE
-      },
-    }));
+      // Definir nomes e tipos das etapas
+      if (i === 1) {
+        name = 'Introdução';
+        type = 'intro';
+        description = 'Página inicial do quiz';
+      } else if (i >= 2 && i <= 14) {
+        name = `Q${i-1} - Pergunta ${i-1}`;
+        type = 'question';
+        description = `Pergunta ${i-1} do quiz`;
+      } else if (i === 15) {
+        name = 'Nome';
+        type = 'lead';
+        description = 'Coleta de nome do usuário';
+      } else if (i === 16) {
+        name = 'Processamento';
+        type = 'processing';
+        description = 'Calculando resultado...';
+      } else if (i === 17) {
+        name = 'Resultado';
+        type = 'result';
+        description = 'Exibição do resultado';
+      } else if (i >= 18 && i <= 20) {
+        name = `Transição ${i-17}`;
+        type = 'transition';
+        description = `Transição para oferta ${i-17}`;
+      } else if (i === 21) {
+        name = 'Oferta Final';
+        type = 'offer';
+        description = 'Página de oferta e conversão';
+      }
 
-    console.log('✅ EditorProvider: 21 etapas criadas sem duplicação:', initialStages.length);
-    console.log('✅ EditorProvider: Primeira etapa:', initialStages[0]);
-    console.log('✅ EditorProvider: Última etapa:', initialStages[initialStages.length - 1]);
+      directStages.push({
+        id: stepId,
+        name,
+        order: i,
+        type,
+        description,
+        isActive: i === 1,
+        metadata: {
+          blocksCount: 0,
+          lastModified: new Date(),
+          isCustom: false,
+          templateBlocks: [],
+        },
+      });
+    }
+
+    console.log('✅ EditorProvider: 21 etapas criadas diretamente:', directStages.length);
+    console.log('✅ EditorProvider: Primeira etapa:', directStages[0]);
+    console.log('✅ EditorProvider: Última etapa:', directStages[directStages.length - 1]);
     console.log(
-      '✅ EditorProvider: Etapas:',
-      initialStages.map(s => `${s.order}: ${s.name}`)
+      '✅ EditorProvider: Lista das etapas:',
+      directStages.map(s => `${s.order}: ${s.name}`)
     );
-    return initialStages;
+    return directStages;
   });
 
   const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
