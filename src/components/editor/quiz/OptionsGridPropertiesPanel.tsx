@@ -12,7 +12,11 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { OptionsGridProperties, optionsGridUtils, optionsGridPresets } from '@/config/optionsGridPropertiesMapping';
+import {
+  optionsGridPresets,
+  OptionsGridProperties,
+  optionsGridUtils,
+} from '@/config/optionsGridPropertiesMapping';
 import { useCallback, useEffect, useMemo } from 'react';
 
 type ColorValue = string;
@@ -28,31 +32,40 @@ export const OptionsGridPropertiesPanel = ({
   properties,
   onPropertyChange,
   onValidationError,
-  onPresetSelect
+  onPresetSelect,
 }: OptionsGridPropertiesPanelProps) => {
   // Validação de propriedades
-  const validatePropertyUpdate = useCallback((property: keyof OptionsGridProperties, value: any) => {
-    const updatedProps = { ...properties, [property]: value };
-    const validation = optionsGridUtils.validateProperties(updatedProps);
-    
-    if (!validation.isValid) {
-      onValidationError?.(validation.errors);
-      return false;
-    }
-    return true;
-  }, [properties, onValidationError]);
+  const validatePropertyUpdate = useCallback(
+    (property: keyof OptionsGridProperties, value: any) => {
+      const updatedProps = { ...properties, [property]: value };
+      const validation = optionsGridUtils.validateProperties(updatedProps);
+
+      if (!validation.isValid) {
+        onValidationError?.(validation.errors);
+        return false;
+      }
+      return true;
+    },
+    [properties, onValidationError]
+  );
 
   // Handler para atualização de propriedades
-  const handlePropertyUpdate = useCallback((property: keyof OptionsGridProperties, value: any) => {
-    if (validatePropertyUpdate(property, value)) {
-      onPropertyChange(property, value);
-    }
-  }, [validatePropertyUpdate, onPropertyChange]);
+  const handlePropertyUpdate = useCallback(
+    (property: keyof OptionsGridProperties, value: any) => {
+      if (validatePropertyUpdate(property, value)) {
+        onPropertyChange(property, value);
+      }
+    },
+    [validatePropertyUpdate, onPropertyChange]
+  );
 
   // Handler para cores
-  const handleColorChange = useCallback((property: 'backgroundColor' | 'selectedColor' | 'hoverColor', color: ColorValue) => {
-    handlePropertyUpdate(property, color);
-  }, [handlePropertyUpdate]);
+  const handleColorChange = useCallback(
+    (property: 'backgroundColor' | 'selectedColor' | 'hoverColor', color: ColorValue) => {
+      handlePropertyUpdate(property, color);
+    },
+    [handlePropertyUpdate]
+  );
 
   // Validação inicial
   useEffect(() => {
@@ -64,7 +77,10 @@ export const OptionsGridPropertiesPanel = ({
 
   // Memoriza os valores derivados
   const imageControlsEnabled = useMemo(() => properties.showImages, [properties.showImages]);
-  const multipleSelectionEnabled = useMemo(() => properties.multipleSelection, [properties.multipleSelection]);
+  const multipleSelectionEnabled = useMemo(
+    () => properties.multipleSelection,
+    [properties.multipleSelection]
+  );
 
   return (
     <Tabs defaultValue="layout" className="w-full">
@@ -363,7 +379,9 @@ export const OptionsGridPropertiesPanel = ({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Select onValueChange={(preset) => onPresetSelect?.(preset as keyof typeof optionsGridPresets)}>
+            <Select
+              onValueChange={preset => onPresetSelect?.(preset as keyof typeof optionsGridPresets)}
+            >
               <SelectTrigger className="text-xs h-8">
                 <SelectValue placeholder="Selecionar Preset" />
               </SelectTrigger>

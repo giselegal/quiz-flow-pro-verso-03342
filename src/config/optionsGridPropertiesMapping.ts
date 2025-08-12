@@ -3,7 +3,7 @@ export interface OptionsGridProperties {
   // Layout
   columns: number;
   gridGap: number;
-  
+
   // Imagens
   showImages: boolean;
   imageSize: 'small' | 'medium' | 'large';
@@ -42,7 +42,7 @@ export const defaultOptionsGridProperties: OptionsGridProperties = {
   // Layout
   columns: 2,
   gridGap: 16,
-  
+
   // Imagens
   showImages: true,
   imageSize: 'medium',
@@ -50,8 +50,8 @@ export const defaultOptionsGridProperties: OptionsGridProperties = {
   imageHeight: 256,
   imagePosition: 'top',
   imageLayout: 'vertical',
-  
-  // Comportamento 
+
+  // Comportamento
   multipleSelection: false,
   maxSelections: 1,
   minSelections: 1,
@@ -65,9 +65,9 @@ export const defaultOptionsGridProperties: OptionsGridProperties = {
   hoverColor: '#D4C2A8',
   borderRadius: 8,
   padding: 16,
-  
+
   // Opções
-  options: []
+  options: [],
 };
 
 // Presets para diferentes casos de uso
@@ -80,9 +80,9 @@ export const optionsGridPresets = {
     multipleSelection: false,
     maxSelections: 1,
     minSelections: 1,
-    requiredSelections: 1
+    requiredSelections: 1,
   },
-  
+
   multipleChoice: {
     ...defaultOptionsGridProperties,
     columns: 1,
@@ -90,9 +90,9 @@ export const optionsGridPresets = {
     multipleSelection: true,
     maxSelections: 3,
     minSelections: 1,
-    requiredSelections: 1
+    requiredSelections: 1,
   },
-  
+
   productGrid: {
     ...defaultOptionsGridProperties,
     columns: 3,
@@ -102,8 +102,8 @@ export const optionsGridPresets = {
     maxSelections: 5,
     minSelections: 1,
     requiredSelections: 1,
-    gridGap: 24
-  }
+    gridGap: 24,
+  },
 };
 
 // Utilitários
@@ -126,7 +126,7 @@ export const optionsGridUtils = {
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   },
 
@@ -139,7 +139,7 @@ export const optionsGridUtils = {
     return {
       ...preset,
       ...customProps,
-      options: customProps.options || preset.options
+      options: customProps.options || preset.options,
     };
   },
 
@@ -154,12 +154,12 @@ export const optionsGridUtils = {
           ...props,
           columns: Math.min(props.columns, 2),
           imageSize: props.imageSize === 'large' ? 'medium' : props.imageSize,
-          gridGap: Math.max(8, props.gridGap - 4)
+          gridGap: Math.max(8, props.gridGap - 4),
         };
       case 'tablet':
         return {
           ...props,
-          columns: Math.min(props.columns, 3)
+          columns: Math.min(props.columns, 3),
         };
       default:
         return props;
@@ -171,8 +171,8 @@ export const optionsGridUtils = {
     const sizes = {
       small: { width: 200, height: 200 },
       medium: { width: 256, height: 256 },
-      large: { width: 300, height: 300 }
+      large: { width: 300, height: 300 },
     };
     return sizes[size];
-  }
+  },
 };
