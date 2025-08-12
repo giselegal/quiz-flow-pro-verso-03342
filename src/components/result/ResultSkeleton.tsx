@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui/card';
-import { StyleResult } from '@/types/quiz';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { StyleResult } from '@/types/quiz';
 
 interface ResultSkeletonProps {
   primaryStyle?: StyleResult;

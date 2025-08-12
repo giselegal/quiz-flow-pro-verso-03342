@@ -1,11 +1,6 @@
-import { useState, useCallback } from 'react';
-import { QuizQuestion, QuizAnswer, QuizResult, StyleResult } from '@/types/quiz';
-import { getStyleColor } from '@/utils/styleUtils';
 import caktoquizQuestions from '@/data/caktoquizQuestions';
-
-interface UseQuizLogicProps {
-  questions: QuizQuestion[];
-}
+import { QuizAnswer, QuizQuestion, QuizResult, StyleResult } from '@/types/quiz';
+import { useCallback, useState } from 'react';
 
 export const useQuizLogic = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

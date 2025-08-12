@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
 } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
+import React, { useEffect, useState } from 'react';
 
 interface CarouselBlockPreviewProps {
   content: {

@@ -1,8 +1,6 @@
-import { StyleResult, QuizResult } from '@/types/quiz';
-import { useState, useEffect, useCallback } from 'react'; // Adicionado useCallback
 import { toast } from '@/components/ui/use-toast';
-import { useLocation } from 'wouter';
-import { useQuizLogic } from './useQuizLogic'; // Importar o hook de lógica principal
+import { useCallback, useEffect, useState } from 'react';
+import { useQuizLogic } from './useQuizLogic';
 
 export const useQuiz = () => {
   const quizLogic = useQuizLogic();
@@ -13,7 +11,6 @@ export const useQuiz = () => {
   } = quizLogic;
 
   const [isSubmittingResults, setIsSubmittingResults] = useState(false);
-  const [location, setLocation] = useLocation();
 
   // Os estados primaryStyle e secondaryStyles agora são derivados de quizResult de useQuizLogic
   const primaryStyle = quizResult?.primaryStyle || null;
@@ -86,8 +83,8 @@ export const useQuiz = () => {
         setIsSubmittingResults(false);
       }
     },
-    [setLocation]
-  ); // Removed calculateResults dependency
+    [quizResult]
+  ); // Removed dependency
 
   // A função de reset pode chamar a função de reset do useQuizLogic
   const resetQuiz = useCallback(() => {
