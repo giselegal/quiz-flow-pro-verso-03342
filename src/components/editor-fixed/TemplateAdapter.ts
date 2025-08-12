@@ -54,23 +54,53 @@ interface ExistingTemplate {
 
 export class TemplateAdapter {
   /**
+   * 🎯 MAPEAMENTO DE COMPONENTES: Fallbacks para tipos não encontrados
+   */
+  private static readonly COMPONENT_FALLBACKS: Record<string, string> = {
+    // Componentes específicos → Genéricos
+    'quiz-intro-header': 'header-inline',
+    'options-grid': 'grid-inline', 
+    'result-card': 'card-inline',
+    'loading-animation': 'text-inline',
+    'progress-bar': 'spacer-inline',
+    'lead-form': 'form-inline',
+    'offer-header': 'header-inline',
+    'offer-hero-section': 'hero-inline',
+    'offer-product-showcase': 'grid-inline',
+    'offer-problem-section': 'text-block',
+    'offer-solution-section': 'text-block',
+    'offer-guarantee-section': 'card-inline',
+    'offer-faq-section': 'accordion-inline',
+    
+    // Fallback final
+    'unknown': 'text-inline'
+  };
+
+  /**
    * 🔄 Converte template existente para formato do sistema
    */
   static convertExistingTemplate(existingTemplate: ExistingTemplate): JsonTemplate {
     // Converter blocos
     const convertedBlocks: JsonBlock[] = existingTemplate.blocks.map(block => {
+      // Verificar se o tipo existe, caso contrário usar fallback
+      const originalType = block.type;
+      const mappedType = TemplateAdapter.mapComponentType(originalType);
+      
+      // Log se houve mapeamento
+      if (mappedType !== originalType) {
+        console.log(`🔄 Mapeando '${originalType}' → '${mappedType}'`);
+      }
+
       return {
         id: block.id,
-        type: block.type,
+        type: mappedType,
         order: block.position,
         properties: {
-          // Manter todas as propriedades existentes
-          ...block.properties,
-
-          // Mapear propriedades específicas comuns
-          text: block.properties.content || block.properties.text,
-          title: block.properties.title,
-          description: block.properties.description,
+          // Aplicar mapeamento de propriedades avançado
+          ...TemplateAdapter.mapProperties(block.properties, originalType, mappedType),
+          
+          // Preservar tipo original para referência
+          _originalType: originalType,
         },
 
         // Extrair estilos das propriedades se existirem
@@ -107,6 +137,110 @@ export class TemplateAdapter {
     };
 
     return convertedTemplate;
+  }
+
+  /**
+   * 🎯 MAPEAR TIPO DE COMPONENTE: Aplicar fallbacks
+   */
+  private static mapComponentType(originalType: string): string {
+    // Primeiro verificar se existe no registry
+    const { ENHANCED_BLOCK_REGISTRY } = require('@/config/enhancedBlockRegistry');
+    
+    if (ENHANCED_BLOCK_REGISTRY && originalType in ENHANCED_BLOCK_REGISTRY) {
+      return originalType; // Tipo existe, manter original
+    }
+
+    // Aplicar fallback
+    if (originalType in TemplateAdapter.COMPONENT_FALLBACKS) {
+      return TemplateAdapter.COMPONENT_FALLBACKS[originalType];
+    }
+
+    // Fallback final baseado no nome
+    if (originalType.includes('header')) return 'header-inline';
+    if (originalType.includes('button')) return 'button-inline';  
+    if (originalType.includes('text')) return 'text-inline';
+    if (originalType.includes('image')) return 'image-inline';
+    if (originalType.includes('grid') || originalType.includes('options')) return 'grid-inline';
+    if (originalType.includes('card')) return 'card-inline';
+    if (originalType.includes('form')) return 'form-inline';
+
+    // Último recurso
+    return 'text-inline';
+  }
+
+  /**
+   * 🔄 MAPEAR PROPRIEDADES: Converter propriedades específicas para formato genérico
+   */
+  private static mapProperties(
+    originalProps: Record<string, any>, 
+    originalType: string, 
+    mappedType: string
+  ): Record<string, any> {
+    const mappedProps = { ...originalProps };
+
+    // Mapeamento baseado no tipo original
+    switch (originalType) {
+      case 'quiz-intro-header':
+        mappedProps.title = originalProps.logoAlt || 'Header';
+        mappedProps.showProgress = originalProps.showProgress || false;
+        mappedProps.progressValue = originalProps.progressValue || 0;
+        break;
+
+      case 'options-grid':
+        mappedProps.columns = originalProps.columns || 2;
+        mappedProps.gap = originalProps.spacing || 'medium';
+        mappedProps.items = originalProps.options || [];
+        break;
+
+      case 'result-card':
+        mappedProps.title = originalProps.resultTitle || originalProps.title;
+        mappedProps.description = originalProps.resultDescription || originalProps.description;
+        mappedProps.image = originalProps.resultImage || originalProps.imageUrl;
+        break;
+
+      case 'loading-animation':
+        mappedProps.text = originalProps.loadingText || 'Carregando...';
+        mappedProps.duration = originalProps.duration || 3000;
+        break;
+
+      case 'progress-bar':
+        mappedProps.value = originalProps.progressValue || 0;
+        mappedProps.max = originalProps.progressTotal || 100;
+        mappedProps.showLabel = originalProps.showProgress || true;
+        break;
+
+      case 'lead-form':
+        mappedProps.fields = originalProps.formFields || [
+          { type: 'email', label: 'Email', required: true }
+        ];
+        mappedProps.submitText = originalProps.buttonText || 'Enviar';
+        break;
+
+      case 'offer-header':
+      case 'offer-hero-section':
+        mappedProps.title = originalProps.offerTitle || originalProps.title;
+        mappedProps.subtitle = originalProps.offerSubtitle || originalProps.subtitle;
+        mappedProps.image = originalProps.heroImage || originalProps.imageUrl;
+        break;
+    }
+
+    // Mapeamentos genéricos sempre aplicados
+    mappedProps.text = mappedProps.text || mappedProps.content || '';
+    mappedProps.title = mappedProps.title || '';
+    mappedProps.description = mappedProps.description || '';
+
+    // Mapear estilos CSS
+    if (originalProps.fontSize) {
+      mappedProps.fontSize = TemplateAdapter.convertTailwindFontSize(originalProps.fontSize);
+    }
+    if (originalProps.textAlign) {
+      mappedProps.textAlign = TemplateAdapter.convertTailwindTextAlign(originalProps.textAlign);
+    }
+    if (originalProps.fontWeight) {
+      mappedProps.fontWeight = TemplateAdapter.convertTailwindFontWeight(originalProps.fontWeight);
+    }
+
+    return mappedProps;
   }
 
   /**
