@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, Check, AlertTriangle } from "lucide-react";

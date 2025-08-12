@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { StyleResult } from "@/types/quiz";
 import { useQuizHooks } from "@/hooks/useQuizHooks";

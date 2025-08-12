@@ -89,6 +89,10 @@ const SpacerInlineBlock: React.FC<BlockComponentProps> = ({
     backgroundColor = "transparent",
     borderStyle = "none",
     animation = "fadeIn",
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   const [isHovered, setIsHovered] = useState(false);

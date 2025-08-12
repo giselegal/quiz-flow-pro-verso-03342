@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleResult } from "@/types/quiz";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ interface OfferCardProps {
   config?: OfferContent;
 }
 
-const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle, config = {} }) => {
+const OfferCard: React.FC<OfferCardProps> = ({ primaryStyle: _primaryStyle, config = {} }) => {
   const defaultConfig = {
     title: "VOCÊ DESCOBRIU SEU ESTILO",
     subtitle: "Agora é hora de aplicar com clareza — e se vestir de você",

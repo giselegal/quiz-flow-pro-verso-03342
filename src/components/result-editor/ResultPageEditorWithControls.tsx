@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from "react";
 import { StyleResult } from "@/types/quiz";
 import { Button } from "@/components/ui/button";

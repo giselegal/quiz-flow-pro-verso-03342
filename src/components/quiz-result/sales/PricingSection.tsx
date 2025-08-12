@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import SecurePurchaseElement from "@/components/result/SecurePurchaseElement";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, ShoppingCart, Clock } from "lucide-react";
 
 interface PricingSectionProps {
   price?: string;

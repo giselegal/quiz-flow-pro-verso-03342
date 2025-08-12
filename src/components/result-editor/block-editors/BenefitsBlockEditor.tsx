@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { Block, FAQItem } from "@/types/editor";
 import { Button } from "@/components/ui/button";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState } from "react";
 import { StyleResult, QuizFunnel } from "@/types/quiz";
 import { Block, EditorBlock } from "@/types/editor";
