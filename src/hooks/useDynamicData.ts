@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useQuizResult } from "./useQuizResult";
+import { useState, useEffect } from 'react';
+import { useQuizResult } from './useQuizResult';
 
 // Interface para dados do usuário
 export interface UserData {
@@ -87,12 +87,12 @@ export const useDynamicData = (): DynamicContextData => {
   useEffect(() => {
     // Carregar dados do usuário do localStorage ou API
     try {
-      const savedUserData = localStorage.getItem("userData");
+      const savedUserData = localStorage.getItem('userData');
       if (savedUserData) {
         setUserData(JSON.parse(savedUserData));
       }
     } catch (error) {
-      console.error("Error loading user data:", error);
+      console.error('Error loading user data:', error);
     }
   }, []);
 
@@ -135,41 +135,41 @@ export const useDynamicData = (): DynamicContextData => {
 function generateProductRecommendations(primaryStyle: any): Product[] {
   const baseProducts = [
     {
-      id: "guide-romantic",
-      name: `Guia ${primaryStyle?.name || "Personalizado"}`,
+      id: 'guide-romantic',
+      name: `Guia ${primaryStyle?.name || 'Personalizado'}`,
       price: 197,
       originalPrice: 297,
       discount: 33,
       image: `https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/product-guide-${primaryStyle?.name?.toLowerCase()}.webp`,
-      category: "Guias Digitais",
+      category: 'Guias Digitais',
       rating: 4.9,
       reviews: Math.floor(Math.random() * 200) + 100,
       features: [
-        `120+ looks ${primaryStyle?.name?.toLowerCase() || "personalizados"}`,
-        "Paleta de cores personalizada",
-        "Dicas de styling exclusivas",
+        `120+ looks ${primaryStyle?.name?.toLowerCase() || 'personalizados'}`,
+        'Paleta de cores personalizada',
+        'Dicas de styling exclusivas',
       ],
       isBestseller: true,
-      ctaText: "Quero Descobrir",
+      ctaText: 'Quero Descobrir',
     },
     {
-      id: "consultation",
-      name: "Consultoria de Estilo Personalizada",
+      id: 'consultation',
+      name: 'Consultoria de Estilo Personalizada',
       price: 497,
       originalPrice: 697,
       discount: 29,
       image:
-        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/product-consultation.webp",
-      category: "Serviços",
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/product-consultation.webp',
+      category: 'Serviços',
       rating: 5.0,
       reviews: Math.floor(Math.random() * 100) + 50,
       features: [
-        "Análise completa do guarda-roupa",
-        "2h de consultoria online",
-        "Plano de ação personalizado",
+        'Análise completa do guarda-roupa',
+        '2h de consultoria online',
+        'Plano de ação personalizado',
       ],
       isNew: true,
-      ctaText: "Agendar Agora",
+      ctaText: 'Agendar Agora',
     },
   ];
 
@@ -182,18 +182,18 @@ function generateStyleRecommendations(
 ): StyleRecommendation[] {
   return [
     {
-      id: "primary",
-      name: primaryStyle?.name || "Estilo Principal",
-      description: primaryStyle?.description || "Seu estilo principal identificado",
+      id: 'primary',
+      name: primaryStyle?.name || 'Estilo Principal',
+      description: primaryStyle?.description || 'Seu estilo principal identificado',
       percentage: 85,
-      color: primaryStyle?.color || "#B89B7A",
+      color: primaryStyle?.color || '#B89B7A',
     },
     ...secondaryStyles.map((style, index) => ({
       id: `secondary-${index}`,
       name: style?.name || `Estilo Secundário ${index + 1}`,
-      description: style?.description || "Estilo complementar",
+      description: style?.description || 'Estilo complementar',
       percentage: Math.floor(Math.random() * 30) + 15,
-      color: style?.color || "#8F7A6A",
+      color: style?.color || '#8F7A6A',
     })),
   ];
 }
@@ -201,18 +201,18 @@ function generateStyleRecommendations(
 function generateContentRecommendations(primaryStyle: any): ContentRecommendation[] {
   return [
     {
-      id: "content-1",
-      title: `Como usar ${primaryStyle?.name || "seu estilo"} no dia a dia`,
-      type: "article",
-      url: "#",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-daily.webp",
+      id: 'content-1',
+      title: `Como usar ${primaryStyle?.name || 'seu estilo'} no dia a dia`,
+      type: 'article',
+      url: '#',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-daily.webp',
     },
     {
-      id: "content-2",
-      title: "Cores que combinam com você",
-      type: "guide",
-      url: "#",
-      image: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-colors.webp",
+      id: 'content-2',
+      title: 'Cores que combinam com você',
+      type: 'guide',
+      url: '#',
+      image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/content-colors.webp',
     },
   ];
 }

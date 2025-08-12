@@ -209,7 +209,8 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           onClick={onSelect}
         >
           {(() => {
-            const { gridColumns: _omitGridColumns, ...safeProcessedProps } = processedProperties || {};
+            const { gridColumns: _omitGridColumns, ...safeProcessedProps } =
+              processedProperties || {};
             return (
               <Component
                 block={{

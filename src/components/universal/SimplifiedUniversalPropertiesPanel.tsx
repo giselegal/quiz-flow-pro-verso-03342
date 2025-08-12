@@ -1,7 +1,7 @@
 // Este é um componente simplificado para resolver problemas de compilação
-import { useSyncedScroll } from "@/hooks/useSyncedScroll";
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 const UniversalPropertiesPanel = ({ selectedBlock, onUpdate, onDelete, onClose }: any) => {
-  const { scrollRef } = useSyncedScroll({ source: "properties" });
+  const { scrollRef } = useSyncedScroll({ source: 'properties' });
 
   const handleScaleChange = (value: number) => {
     if (!selectedBlock || !onUpdate) return;

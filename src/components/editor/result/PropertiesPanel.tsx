@@ -1,10 +1,10 @@
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { EditableContent } from "@/types/editor";
-import { Trash2 } from "lucide-react";
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { EditableContent } from '@/types/editor';
+import { Trash2 } from 'lucide-react';
 
 interface PropertiesPanelProps {
   selectedComponentId: string | null;
@@ -31,7 +31,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     <div className="h-full p-4 space-y-4 bg-white">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-medium text-[#432818]">Propriedades</h3>
-        <Button variant="ghost" size="sm" style={{ color: "#432818" }} onClick={onDelete}>
+        <Button variant="ghost" size="sm" style={{ color: '#432818' }} onClick={onDelete}>
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>

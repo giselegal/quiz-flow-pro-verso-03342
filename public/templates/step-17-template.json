@@ -9,11 +9,16 @@
   "validation": {
     "required": true,
     "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
+    "maxAnswers": 1,
+    "validationMessage": "Selecione uma opção para continuar"
   },
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
     "trackingId": "step-17-result"
   },
   "metadata": {
@@ -21,7 +26,11 @@
     "name": "Resultado 1",
     "description": "Primeira tela de resultado",
     "category": "result",
-    "tags": ["quiz", "style", "result"],
+    "tags": [
+      "quiz",
+      "style",
+      "result"
+    ],
     "createdAt": "2025-08-11T01:02:19.344Z",
     "updatedAt": "2025-08-11T01:02:19.344Z"
   },
@@ -73,7 +82,7 @@
       "type": "button-inline",
       "position": 3,
       "properties": {
-        "text": "Ver Mais →",
+        "text": "Continuar →",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -81,7 +90,10 @@
         "textColor": "#ffffff",
         "containerWidth": "full",
         "spacing": "small",
-        "marginTop": 24
+        "marginTop": 24,
+        "enableOnSelection": true,
+        "requiresValidSelection": true,
+        "textWhenDisabled": "Selecione uma opção para continuar"
       }
     }
   ]

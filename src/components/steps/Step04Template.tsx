@@ -53,7 +53,8 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
     progressValue: 30,
     buttonText: 'Continuar',
     multipleSelection: true,
-    minSelections: 1,
+    minSelections: 3,
+        autoAdvance: true,
     maxSelections: 3,
     columns: 2,
     imageSize: 256,
@@ -157,56 +158,56 @@ export const Step04Template: React.FC<Step04TemplateProps> = ({
             {[
               {
                 id: '3a',
-                text: 'Visual leve, despojado e natural',
+                text: 'Próxima Questão →',
                 category: 'Natural',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
               },
               {
                 id: '3b',
-                text: 'Visual clássico e tradicional',
+                text: 'Próxima Questão →',
                 category: 'Clássico',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp',
               },
               {
                 id: '3c',
-                text: 'Visual casual com toque atual',
+                text: 'Próxima Questão →',
                 category: 'Contemporâneo',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
               },
               {
                 id: '3d',
-                text: 'Visual refinado e imponente',
+                text: 'Próxima Questão →',
                 category: 'Elegante',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp',
               },
               {
                 id: '3e',
-                text: 'Visual romântico, feminino e delicado',
+                text: 'Próxima Questão →',
                 category: 'Romântico',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp',
               },
               {
                 id: '3f',
-                text: 'Visual sensual, com saia justa e decote',
+                text: 'Próxima Questão →',
                 category: 'Sexy',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp',
               },
               {
                 id: '3g',
-                text: 'Visual marcante e urbano (jeans + jaqueta)',
+                text: 'Próxima Questão →',
                 category: 'Dramático',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp',
               },
               {
                 id: '3h',
-                text: 'Visual criativo, colorido e ousado',
+                text: 'Próxima Questão →',
                 category: 'Criativo',
                 imageUrl:
                   'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp',
@@ -331,7 +332,7 @@ export const getStep04Template = () => {
         options: [
           {
             id: '3a',
-            text: 'Visual leve, despojado e natural',
+            text: 'Próxima Questão →',
             value: '3a',
             category: 'Natural',
             styleCategory: 'Natural',
@@ -343,7 +344,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3b',
-            text: 'Visual clássico e tradicional',
+            text: 'Próxima Questão →',
             value: '3b',
             category: 'Clássico',
             styleCategory: 'Clássico',
@@ -352,7 +353,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3c',
-            text: 'Visual casual com toque atual',
+            text: 'Próxima Questão →',
             value: '3c',
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
@@ -362,7 +363,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3d',
-            text: 'Visual refinado e imponente',
+            text: 'Próxima Questão →',
             value: '3d',
             category: 'Elegante',
             styleCategory: 'Elegante',
@@ -371,7 +372,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3e',
-            text: 'Visual romântico, feminino e delicado',
+            text: 'Próxima Questão →',
             value: '3e',
             category: 'Romântico',
             styleCategory: 'Romântico',
@@ -380,7 +381,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3f',
-            text: 'Visual sensual, com saia justa e decote',
+            text: 'Próxima Questão →',
             value: '3f',
             category: 'Sexy',
             styleCategory: 'Sexy',
@@ -389,7 +390,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3g',
-            text: 'Visual marcante e urbano (jeans + jaqueta)',
+            text: 'Próxima Questão →',
             value: '3g',
             category: 'Dramático',
             styleCategory: 'Dramático',
@@ -398,7 +399,7 @@ export const getStep04Template = () => {
           },
           {
             id: '3h',
-            text: 'Visual criativo, colorido e ousado',
+            text: 'Próxima Questão →',
             value: '3h',
             category: 'Criativo',
             styleCategory: 'Criativo',
@@ -410,12 +411,13 @@ export const getStep04Template = () => {
         showImages: true,
         multipleSelection: true,
         maxSelections: 3,
-        minSelections: 1,
+        minSelections: 3,
+        autoAdvance: true,
         validationMessage: 'Selecione até 3 opções',
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 0,
+        autoAdvanceDelay: 1500,
         requiredSelections: 3,
         enableButtonOnlyWhenValid: false,
         instantActivation: true,
@@ -427,7 +429,7 @@ export const getStep04Template = () => {
       id: 'step04-continue-button',
       type: 'button-inline',
       properties: {
-        text: 'Continuar',
+        text: 'Próxima Questão →',
         variant: 'primary',
         size: 'large',
         fullWidth: true,

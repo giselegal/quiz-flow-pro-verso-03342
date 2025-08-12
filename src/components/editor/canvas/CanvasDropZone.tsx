@@ -121,7 +121,10 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
             {/* Botão de Carregar Template */}
             {hasTemplate && (
               <div>
-                <Button variant="outline" onClick={() => templateActions.loadTemplateByStep(stepNumber)}>
+                <Button
+                  variant="outline"
+                  onClick={() => templateActions.loadTemplateByStep(stepNumber)}
+                >
                   <Download className="w-4 h-4 mr-2" />
                   Carregar Template da Etapa {stepNumber}
                 </Button>

@@ -53,7 +53,8 @@ export const Step05Template: React.FC<Step05TemplateProps> = ({
     progressValue: 25,
     buttonText: 'Próxima Questão →',
     multipleSelection: true,
-    minSelections: 1,
+    minSelections: 3,
+        autoAdvance: true,
     maxSelections: 3,
     columns: 2,
     imageSize: 256,
@@ -257,7 +258,7 @@ export const getStep05Template = () => {
         options: [
           {
             id: '5a',
-            text: 'Estampas clean, com poucas informações',
+            text: 'Próxima Questão →',
             value: '5a',
             category: 'Natural',
             styleCategory: 'Natural',
@@ -270,7 +271,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5b',
-            text: 'Estampas clássicas e atemporais',
+            text: 'Próxima Questão →',
             value: '5b',
             category: 'Clássico',
             styleCategory: 'Clássico',
@@ -280,7 +281,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5c',
-            text: 'Atemporais, mas que tenham uma pegada de atual e moderna',
+            text: 'Próxima Questão →',
             value: '5c',
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
@@ -290,7 +291,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5d',
-            text: 'Estampas clássicas e atemporais, mas sofisticadas',
+            text: 'Próxima Questão →',
             value: '5d',
             category: 'Elegante',
             styleCategory: 'Elegante',
@@ -300,7 +301,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5e',
-            text: 'Estampas florais e/ou delicadas como bolinhas, borboletas e corações',
+            text: 'Próxima Questão →',
             value: '5e',
             category: 'Romântico',
             styleCategory: 'Romântico',
@@ -310,7 +311,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5f',
-            text: 'Estampas de animal print, como onça, zebra e cobra',
+            text: 'Próxima Questão →',
             value: '5f',
             category: 'Sexy',
             styleCategory: 'Sexy',
@@ -320,7 +321,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5g',
-            text: 'Estampas geométricas, abstratas e exageradas como grandes poás',
+            text: 'Próxima Questão →',
             value: '5g',
             category: 'Dramático',
             styleCategory: 'Dramático',
@@ -330,7 +331,7 @@ export const getStep05Template = () => {
           },
           {
             id: '5h',
-            text: 'Estampas diferentes do usual, como africanas, xadrez grandes',
+            text: 'Próxima Questão →',
             value: '5h',
             category: 'Criativo',
             styleCategory: 'Criativo',
@@ -343,12 +344,13 @@ export const getStep05Template = () => {
         showImages: true,
         multipleSelection: true,
         maxSelections: 3,
-        minSelections: 1,
+        minSelections: 3,
+        autoAdvance: true,
         validationMessage: 'Selecione até 3 opções',
         gridGap: 16,
         responsiveColumns: true,
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 0,
+        autoAdvanceDelay: 1500,
         requiredSelections: 3,
         enableButtonOnlyWhenValid: false,
         instantActivation: true,
@@ -361,7 +363,7 @@ export const getStep05Template = () => {
       id: 'step05-continue-button',
       type: 'button-inline',
       properties: {
-        text: 'Continuar',
+        text: 'Próxima Questão →',
         variant: 'primary',
         size: 'large',
         fullWidth: true,

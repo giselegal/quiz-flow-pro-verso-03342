@@ -1,6 +1,6 @@
-import { Link } from "wouter";
-import { Button } from "./button";
-import { Edit } from "lucide-react";
+import { Link } from 'wouter';
+import { Button } from './button';
+import { Edit } from 'lucide-react';
 
 const EditorButton: React.FC = () => {
   return (

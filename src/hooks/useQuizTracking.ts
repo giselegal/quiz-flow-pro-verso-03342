@@ -1,6 +1,6 @@
-import { useEffect, useCallback, useRef } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { quizDataService, useQuizData } from "@/services/quizDataService";
+import { useEffect, useCallback, useRef } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { quizDataService, useQuizData } from '@/services/quizDataService';
 
 // Hook para auto-tracking de cliques em elementos do quiz com integração completa
 export const useQuizTracking = (questionIndex?: number) => {
@@ -38,7 +38,7 @@ export const useQuizTracking = (questionIndex?: number) => {
       questionId: string,
       elementPosition?: { x: number; y: number }
     ) => {
-      trackClick("quiz_option", optionId, optionText, elementPosition, questionIndex, {
+      trackClick('quiz_option', optionId, optionText, elementPosition, questionIndex, {
         questionId,
         selectionOrder: Date.now(),
       });
@@ -66,8 +66,8 @@ export const useQuizTracking = (questionIndex?: number) => {
 
       // Track evento de submissão
       trackClick(
-        "answer_submit",
-        "submit_" + questionId,
+        'answer_submit',
+        'submit_' + questionId,
         `Submitted ${selectedOptions.length} options`,
         undefined,
         questionIndex,
@@ -83,9 +83,9 @@ export const useQuizTracking = (questionIndex?: number) => {
 
   // Função para rastrear navegação
   const trackNavigation = useCallback(
-    (direction: "next" | "back" | "skip", fromQuestion: number, toQuestion?: number) => {
+    (direction: 'next' | 'back' | 'skip', fromQuestion: number, toQuestion?: number) => {
       trackClick(
-        "navigation_button",
+        'navigation_button',
         `nav_${direction}`,
         `Navigate ${direction}`,
         undefined,
@@ -107,10 +107,10 @@ export const useQuizTracking = (questionIndex?: number) => {
       quizDataService.trackCTAClick(ctaType, ctaText, targetUrl);
 
       // Track como clique regular também
-      trackClick("cta_button", `cta_${ctaType}`, ctaText, undefined, questionIndex, {
+      trackClick('cta_button', `cta_${ctaType}`, ctaText, undefined, questionIndex, {
         ctaType,
         targetUrl,
-        timing: "during_quiz",
+        timing: 'during_quiz',
       });
     },
     [trackClick, questionIndex]
@@ -145,9 +145,9 @@ export const useQuizTracking = (questionIndex?: number) => {
 
   // Função para rastrear loading/transições
   const trackLoadingState = useCallback(
-    (loadingType: "question_load" | "result_load" | "transition", duration?: number) => {
+    (loadingType: 'question_load' | 'result_load' | 'transition', duration?: number) => {
       trackClick(
-        "loading_state",
+        'loading_state',
         `loading_${loadingType}`,
         `Loading: ${loadingType}`,
         undefined,
@@ -186,21 +186,21 @@ export const useAutoClickTracking = (enabled: boolean = true) => {
       const target = event.target as HTMLElement;
       const elementType = target.tagName.toLowerCase();
       const elementId = target.id;
-      const elementText = target.textContent?.slice(0, 50) || "";
+      const elementText = target.textContent?.slice(0, 50) || '';
       const position = { x: event.clientX, y: event.clientY };
 
       // Determinar tipo de elemento mais específico
       let specificType = elementType;
-      if (target.closest("button")) specificType = "button";
-      if (target.closest("[data-quiz-option]")) specificType = "quiz_option";
-      if (target.closest("[data-cta]")) specificType = "cta_element";
-      if (target.closest(".navigation")) specificType = "navigation";
+      if (target.closest('button')) specificType = 'button';
+      if (target.closest('[data-quiz-option]')) specificType = 'quiz_option';
+      if (target.closest('[data-cta]')) specificType = 'cta_element';
+      if (target.closest('.navigation')) specificType = 'navigation';
 
       trackClick(specificType, elementId, elementText, position, undefined, {
         className: target.className,
-        href: target.getAttribute("href"),
+        href: target.getAttribute('href'),
         dataAttributes: Array.from(target.attributes)
-          .filter(attr => attr.name.startsWith("data-"))
+          .filter(attr => attr.name.startsWith('data-'))
           .reduce(
             (acc, attr) => ({
               ...acc,
@@ -211,8 +211,8 @@ export const useAutoClickTracking = (enabled: boolean = true) => {
       });
     };
 
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
   }, [enabled, trackClick]);
 };
 

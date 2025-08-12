@@ -56,25 +56,25 @@ export const getStep16Template = () => {
         options: [
           {
             id: 'strategic-16-a',
-            text: 'Lojas físicas',
+            text: 'Continuar →',
             category: 'physical',
             strategicType: 'shopping',
           },
           {
             id: 'strategic-16-b',
-            text: 'Sites online',
+            text: 'Continuar →',
             category: 'online',
             strategicType: 'shopping',
           },
           {
             id: 'strategic-16-c',
-            text: 'Marketplaces',
+            text: 'Continuar →',
             category: 'marketplace',
             strategicType: 'shopping',
           },
           {
             id: 'strategic-16-d',
-            text: 'Redes sociais',
+            text: 'Continuar →',
             category: 'social',
             strategicType: 'shopping',
           },
@@ -96,7 +96,7 @@ export const getStep16Template = () => {
       id: 'navigation-button-step16',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',

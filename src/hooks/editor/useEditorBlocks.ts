@@ -1,15 +1,15 @@
-import { useCallback } from "react";
-import { EditorBlock, EditorConfig, EditableContent } from "@/types/editor";
-import { EditorActions } from "@/types/editorActions";
-import { getDefaultContentForType } from "@/utils/editorDefaults";
-import { generateId } from "@/utils/idGenerator";
+import { useCallback } from 'react';
+import { EditorBlock, EditorConfig, EditableContent } from '@/types/editor';
+import { EditorActions } from '@/types/editorActions';
+import { getDefaultContentForType } from '@/utils/editorDefaults';
+import { generateId } from '@/utils/idGenerator';
 
 export const useEditorBlocks = (
   config: EditorConfig,
   setConfig: (config: EditorConfig) => void
 ): EditorActions => {
   const addBlock = useCallback(
-    (type: EditorBlock["type"]) => {
+    (type: EditorBlock['type']) => {
       const blocksLength = config.blocks.length;
       const newBlock: EditorBlock = {
         id: generateId(),

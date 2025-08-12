@@ -1,5 +1,5 @@
-import { QuizResult } from "@/hooks/useQuizResults";
-import { styleConfig } from "./styleConfig";
+import { QuizResult } from '@/hooks/useQuizResults';
+import { styleConfig } from './styleConfig';
 
 /**
  * Mapeia os estilos do styleConfig para o formato de resultados do quiz
@@ -25,8 +25,8 @@ export const styleToQuizResults = (): QuizResult[] => {
  */
 export const initialStyleQuizConfig = {
   calculationMethod: {
-    type: "highest" as const,
-    tiebreaker: "highest_score" as const,
+    type: 'highest' as const,
+    tiebreaker: 'highest_score' as const,
   },
   results: styleToQuizResults(),
   showAllResults: false,

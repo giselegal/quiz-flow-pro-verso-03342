@@ -9,11 +9,16 @@
   "validation": {
     "required": true,
     "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
+    "maxAnswers": 1,
+    "validationMessage": "Selecione uma opção para continuar"
   },
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
     "trackingId": "step-16-processing"
   },
   "metadata": {
@@ -21,7 +26,11 @@
     "name": "Processamento",
     "description": "Página de carregamento do resultado",
     "category": "processing",
-    "tags": ["quiz", "style", "processing"],
+    "tags": [
+      "quiz",
+      "style",
+      "processing"
+    ],
     "createdAt": "2025-08-11T01:02:19.344Z",
     "updatedAt": "2025-08-11T01:02:19.344Z"
   },

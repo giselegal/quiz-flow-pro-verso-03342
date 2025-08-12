@@ -1,7 +1,7 @@
-import { useCallback } from "react";
-import { EditorBlock, EditableContent } from "@/types/editor";
-import { useToast } from "@/components/ui/use-toast";
-import { getDefaultContentForType } from "@/utils/editorDefaults";
+import { useCallback } from 'react';
+import { EditorBlock, EditableContent } from '@/types/editor';
+import { useToast } from '@/components/ui/use-toast';
+import { getDefaultContentForType } from '@/utils/editorDefaults';
 
 export const useEditorActions = (
   blocks: EditorBlock[],
@@ -11,7 +11,7 @@ export const useEditorActions = (
   const { toast } = useToast();
 
   const handleAddBlock = useCallback(
-    (type: EditorBlock["type"]) => {
+    (type: EditorBlock['type']) => {
       const newBlocks = [
         ...blocks,
         {
@@ -54,8 +54,8 @@ export const useEditorActions = (
 
   const handleSave = useCallback(() => {
     toast({
-      title: "Alterações salvas",
-      description: "Suas alterações foram salvas com sucesso.",
+      title: 'Alterações salvas',
+      description: 'Suas alterações foram salvas com sucesso.',
     });
   }, [toast]);
 

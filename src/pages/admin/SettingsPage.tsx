@@ -1,21 +1,21 @@
-import AdminLayout from "@/components/admin/AdminLayout";
-import { AdvancedTab } from "@/components/settings/AdvancedTab";
-import { AnalyticsTab } from "@/components/settings/AnalyticsTab";
-import { ApiIntegrationsTab } from "@/components/settings/ApiIntegrationsTab";
-import { AppearanceTab } from "@/components/settings/AppearanceTab";
-import { FacebookAdsTab } from "@/components/settings/FacebookAdsTab";
-import { MarketingTab } from "@/components/settings/MarketingTab";
-import { UtmSettingsTab } from "@/components/settings/UtmSettingsTab";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
-import { useLocation } from "wouter";
+import AdminLayout from '@/components/admin/AdminLayout';
+import { AdvancedTab } from '@/components/settings/AdvancedTab';
+import { AnalyticsTab } from '@/components/settings/AnalyticsTab';
+import { ApiIntegrationsTab } from '@/components/settings/ApiIntegrationsTab';
+import { AppearanceTab } from '@/components/settings/AppearanceTab';
+import { FacebookAdsTab } from '@/components/settings/FacebookAdsTab';
+import { MarketingTab } from '@/components/settings/MarketingTab';
+import { UtmSettingsTab } from '@/components/settings/UtmSettingsTab';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
+import { useLocation } from 'wouter';
 
 const SettingsPage = () => {
   const [_location, setLocation] = useLocation();
 
   // Extrair query params manualmente da URL
   const searchParams = new URLSearchParams(window.location.search);
-  const defaultTab = searchParams.get("tab") || "appearance";
+  const defaultTab = searchParams.get('tab') || 'appearance';
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   const handleTabChange = (value: string) => {

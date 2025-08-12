@@ -56,25 +56,25 @@ export const getStep15Template = () => {
         options: [
           {
             id: 'strategic-15-a',
-            text: 'Falta de organização',
+            text: 'Continuar →',
             category: 'organization',
             strategicType: 'usage',
           },
           {
             id: 'strategic-15-b',
-            text: 'Roupas que não combina',
+            text: 'Continuar →',
             category: 'mismatch',
             strategicType: 'usage',
           },
           {
             id: 'strategic-15-c',
-            text: 'Peças sem uso',
+            text: 'Continuar →',
             category: 'unused',
             strategicType: 'usage',
           },
           {
             id: 'strategic-15-d',
-            text: 'Falta de variedade',
+            text: 'Continuar →',
             category: 'variety',
             strategicType: 'usage',
           },
@@ -96,7 +96,7 @@ export const getStep15Template = () => {
       id: 'navigation-button-step15',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',

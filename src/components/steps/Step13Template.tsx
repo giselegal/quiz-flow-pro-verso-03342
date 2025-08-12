@@ -56,25 +56,25 @@ export const getStep13Template = () => {
         options: [
           {
             id: 'strategic-13-a',
-            text: 'Trabalho/profissional',
+            text: 'Continuar →',
             category: 'work',
             strategicType: 'usage',
           },
           {
             id: 'strategic-13-b',
-            text: 'Eventos sociais',
+            text: 'Continuar →',
             category: 'social',
             strategicType: 'usage',
           },
           {
             id: 'strategic-13-c',
-            text: 'Dia a dia casual',
+            text: 'Continuar →',
             category: 'casual',
             strategicType: 'usage',
           },
           {
             id: 'strategic-13-d',
-            text: 'Ocasiões especiais',
+            text: 'Continuar →',
             category: 'special',
             strategicType: 'usage',
           },
@@ -96,7 +96,7 @@ export const getStep13Template = () => {
       id: 'navigation-button-step13',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',

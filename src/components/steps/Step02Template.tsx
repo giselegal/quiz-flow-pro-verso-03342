@@ -60,7 +60,7 @@ export const getStep02Template = () => {
         options: [
           {
             id: '1a',
-            text: 'Conforto, leveza e praticidade no vestir.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp',
             value: '1a',
@@ -69,7 +69,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1b',
-            text: 'Discrição, caimento clássico e sobriedade.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
             value: '1b',
@@ -78,7 +78,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1c',
-            text: 'Praticidade com um toque de estilo atual.',
+            text: 'Próxima Questão →',
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp',
             value: '1c',
             category: 'Contemporâneo',
@@ -86,7 +86,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1d',
-            text: 'Elegância refinada, moderna e sem exageros.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp',
             value: '1d',
@@ -95,7 +95,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1e',
-            text: 'Delicadeza em tecidos suaves e fluidos.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp',
             value: '1e',
@@ -104,7 +104,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1f',
-            text: 'Sensualidade com destaque para o corpo.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp',
             value: '1f',
@@ -113,7 +113,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1g',
-            text: 'Impacto visual com peças estruturadas e assimétricas.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp',
             value: '1g',
@@ -122,7 +122,7 @@ export const getStep02Template = () => {
           },
           {
             id: '1h',
-            text: 'Mix criativo com formas ousadas e originais.',
+            text: 'Próxima Questão →',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp',
             value: '1h',
@@ -138,7 +138,9 @@ export const getStep02Template = () => {
 
         // 🎯 VALIDAÇÃO
         multipleSelection: true,
-        minSelections: 1,
+        autoAdvanceOnComplete: true,
+        minSelections: 3,
+        autoAdvance: true,
         maxSelections: 3,
 
         // 🎨 CORES
@@ -160,7 +162,7 @@ export const getStep02Template = () => {
       properties: {
         // 📝 TEXTO DINÂMICO
         text: 'Próxima Questão →',
-        textWhenDisabled: 'Selecione pelo menos 1 opção',
+        textWhenDisabled: 'Selecione 3 opções para continuar',
         textWhenComplete: 'Continuar',
 
         // 🎨 ESTILO AVANÇADO
@@ -192,7 +194,7 @@ export const getStep02Template = () => {
 
         // 🚀 AUTO-ADVANCE
         autoAdvanceAfterActivation: false,
-        autoAdvanceDelay: 0,
+        autoAdvanceDelay: 1500,
 
         // 📊 FEEDBACK
         showSuccessAnimation: false,

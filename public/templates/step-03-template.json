@@ -8,12 +8,17 @@
   },
   "validation": {
     "required": true,
-    "minAnswers": 1,
+    "minAnswers": 3,
     "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
+    "validationMessage": "Selecione 3 opções para continuar"
   },
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
     "trackingId": "step-03-quiz-question"
   },
   "metadata": {
@@ -21,7 +26,11 @@
     "name": "Q2 - Nome Pessoal",
     "description": "Coleta do nome do usuário",
     "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question"
+    ],
     "createdAt": "2025-08-11T01:02:19.340Z",
     "updatedAt": "2025-08-11T01:02:19.340Z"
   },
@@ -113,14 +122,18 @@
         "imageSize": 256,
         "showImages": true,
         "multipleSelection": true,
-        "minSelections": 1,
+        "minSelections": 3,
         "maxSelections": 3,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
         "containerWidth": "full",
         "spacing": "small",
-        "marginBottom": 16
+        "marginBottom": 16,
+        "validationMessage": "Selecione 3 opções para continuar",
+        "autoAdvance": true,
+        "autoAdvanceOnComplete": true,
+        "autoAdvanceDelay": 1500
       }
     },
     {
@@ -129,7 +142,7 @@
       "position": 4,
       "properties": {
         "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
+        "textWhenDisabled": "Selecione 3 opções para continuar",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -138,7 +151,8 @@
         "enableOnSelection": true,
         "containerWidth": "full",
         "spacing": "small",
-        "marginTop": 24
+        "marginTop": 24,
+        "requiresValidSelection": true
       }
     }
   ]

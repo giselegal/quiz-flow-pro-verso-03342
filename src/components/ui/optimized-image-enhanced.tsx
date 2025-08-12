@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps {
   src: string;
@@ -39,7 +39,7 @@ export const OptimizedImageEnhanced: React.FC<OptimizedImageProps> = ({
           observer.disconnect();
         }
       },
-      { rootMargin: "50px" }
+      { rootMargin: '50px' }
     );
 
     observer.observe(imgRef.current);
@@ -47,20 +47,20 @@ export const OptimizedImageEnhanced: React.FC<OptimizedImageProps> = ({
   }, [priority]);
 
   const getOptimizedSrc = (size?: number) => {
-    if (src.includes("cloudinary")) {
-      const params = [`q_${quality}`, "f_auto"];
+    if (src.includes('cloudinary')) {
+      const params = [`q_${quality}`, 'f_auto'];
       if (size) params.push(`w_${size}`);
-      return src.replace("/upload/", `/upload/${params.join(",")}/`);
+      return src.replace('/upload/', `/upload/${params.join(',')}/`);
     }
     return src;
   };
 
   const srcSet = [320, 640, 768, 1024, 1280]
     .map(size => `${getOptimizedSrc(size)} ${size}w`)
-    .join(", ");
+    .join(', ');
 
   return (
-    <div className={cn("relative overflow-hidden", className)}>
+    <div className={cn('relative overflow-hidden', className)}>
       {!isLoaded && (
         <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse" />
       )}
@@ -72,15 +72,15 @@ export const OptimizedImageEnhanced: React.FC<OptimizedImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        loading={priority ? "eager" : "lazy"}
+        loading={priority ? 'eager' : 'lazy'}
         decoding="async"
         onLoad={() => {
           setIsLoaded(true);
           onLoad?.();
         }}
         className={cn(
-          "transition-opacity duration-300",
-          isLoaded ? "opacity-100" : "opacity-0",
+          'transition-opacity duration-300',
+          isLoaded ? 'opacity-100' : 'opacity-0',
           className
         )}
       />

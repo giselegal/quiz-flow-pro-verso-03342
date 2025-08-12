@@ -1,9 +1,9 @@
 // Hook de integração com Supabase para o Quiz
-import { useToast } from "@/components/ui/use-toast";
-import { calculateQuizResult } from "@/lib/quizEngine";
-import { quizSupabaseService } from "@/services/quizSupabaseService";
-import { QuizAnswer, QuizQuestion, QuizResult } from "@/types/quiz";
-import { useCallback, useEffect, useState } from "react";
+import { useToast } from '@/components/ui/use-toast';
+import { calculateQuizResult } from '@/lib/quizEngine';
+import { quizSupabaseService } from '@/services/quizSupabaseService';
+import { QuizAnswer, QuizQuestion, QuizResult } from '@/types/quiz';
+import { useCallback, useEffect, useState } from 'react';
 
 // Interface para a sessão mantida em memória
 interface QuizSessionState {
@@ -26,13 +26,13 @@ interface UtmParameters {
 
 // Função utilitária para obter parâmetros UTM da URL
 const getUtmParameters = (): UtmParameters => {
-  if (typeof window === "undefined") return {};
+  if (typeof window === 'undefined') return {};
 
   const urlParams = new URLSearchParams(window.location.search);
   return {
-    source: urlParams.get("utm_source") || undefined,
-    medium: urlParams.get("utm_medium") || undefined,
-    campaign: urlParams.get("utm_campaign") || undefined,
+    source: urlParams.get('utm_source') || undefined,
+    medium: urlParams.get('utm_medium') || undefined,
+    campaign: urlParams.get('utm_campaign') || undefined,
   };
 };
 
@@ -102,7 +102,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         // Rastrear evento de início
         await quizSupabaseService.trackEvent({
           funnelId: userData.quizId,
-          eventType: "quiz_started",
+          eventType: 'quiz_started',
           sessionId: quizSession.id,
           userId: user.id,
         });
@@ -113,13 +113,13 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           userId: user.id,
         };
       } catch (error) {
-        console.error("Erro ao iniciar o quiz:", error);
-        setError("Não foi possível iniciar o quiz. Tente novamente.");
+        console.error('Erro ao iniciar o quiz:', error);
+        setError('Não foi possível iniciar o quiz. Tente novamente.');
 
         toast({
-          title: "Erro ao iniciar o quiz",
-          description: "Por favor, tente novamente.",
-          variant: "destructive",
+          title: 'Erro ao iniciar o quiz',
+          description: 'Por favor, tente novamente.',
+          variant: 'destructive',
         });
 
         return { success: false };
@@ -134,7 +134,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
   const saveAnswer = useCallback(
     async (questionId: string, optionId: string) => {
       if (!session.id) {
-        setError("Sessão do quiz não iniciada");
+        setError('Sessão do quiz não iniciada');
         return false;
       }
 
@@ -146,7 +146,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         const option = question?.options.find(o => o.id === optionId);
 
         if (!question || !option) {
-          throw new Error("Pergunta ou opção não encontrada");
+          throw new Error('Pergunta ou opção não encontrada');
         }
 
         // Salvar resposta no Supabase
@@ -164,7 +164,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         // Atualizar sessão
         await quizSupabaseService.updateQuizSession(session.id, {
           currentStep: session.currentStep + 1,
-          status: "in_progress",
+          status: 'in_progress',
         });
 
         // Atualizar estado local
@@ -179,13 +179,13 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
         return true;
       } catch (error) {
-        console.error("Erro ao salvar resposta:", error);
-        setError("Erro ao salvar resposta. Tente novamente.");
+        console.error('Erro ao salvar resposta:', error);
+        setError('Erro ao salvar resposta. Tente novamente.');
 
         toast({
-          title: "Erro ao salvar resposta",
-          description: "Por favor, tente novamente.",
-          variant: "destructive",
+          title: 'Erro ao salvar resposta',
+          description: 'Por favor, tente novamente.',
+          variant: 'destructive',
         });
 
         return false;
@@ -199,7 +199,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
   // Calcular e salvar resultado final
   const completeQuiz = useCallback(async () => {
     if (!session.id || session.responses.length === 0) {
-      setError("Não há respostas para calcular o resultado");
+      setError('Não há respostas para calcular o resultado');
       return null;
     }
 
@@ -211,7 +211,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
 
       // Atualizar sessão no Supabase
       await quizSupabaseService.updateQuizSession(session.id, {
-        status: "completed",
+        status: 'completed',
         score: result.primaryStyle.score,
         completedAt: new Date(),
       });
@@ -238,7 +238,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
       });
 
       // Salvar no localStorage para referência futura
-      localStorage.setItem("quizResult", JSON.stringify(result));
+      localStorage.setItem('quizResult', JSON.stringify(result));
 
       return {
         success: true,
@@ -246,13 +246,13 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
         result,
       };
     } catch (error) {
-      console.error("Erro ao completar o quiz:", error);
-      setError("Erro ao calcular resultado. Tente novamente.");
+      console.error('Erro ao completar o quiz:', error);
+      setError('Erro ao calcular resultado. Tente novamente.');
 
       toast({
-        title: "Erro ao completar o quiz",
-        description: "Por favor, tente novamente.",
-        variant: "destructive",
+        title: 'Erro ao completar o quiz',
+        description: 'Por favor, tente novamente.',
+        variant: 'destructive',
       });
 
       return { success: false };
@@ -270,23 +270,23 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
       currency?: string;
     }) => {
       if (!session.id) {
-        setError("Sessão do quiz não iniciada");
+        setError('Sessão do quiz não iniciada');
         return false;
       }
 
       try {
         await quizSupabaseService.recordConversion({
           sessionId: session.id,
-          conversionType: "purchase",
+          conversionType: 'purchase',
           conversionValue: conversionData.value,
-          currency: conversionData.currency || "BRL",
+          currency: conversionData.currency || 'BRL',
           productId: conversionData.productId,
           productName: conversionData.productName,
         });
 
         return true;
       } catch (error) {
-        console.error("Erro ao registrar conversão:", error);
+        console.error('Erro ao registrar conversão:', error);
         return false;
       }
     },
@@ -324,7 +324,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
   useEffect(() => {
     const loadSavedResult = () => {
       try {
-        const savedResult = localStorage.getItem("quizResult");
+        const savedResult = localStorage.getItem('quizResult');
         if (savedResult) {
           const parsedResult = JSON.parse(savedResult);
 
@@ -338,7 +338,7 @@ export const useSupabaseQuiz = (questions: QuizQuestion[] = []) => {
           }
         }
       } catch (error) {
-        console.error("Erro ao carregar resultado salvo:", error);
+        console.error('Erro ao carregar resultado salvo:', error);
       }
     };
 

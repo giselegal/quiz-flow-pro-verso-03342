@@ -4,71 +4,71 @@
 export const UTM_CONFIG = {
   // Configuração base da campanha
   campaign: {
-    source: "facebook",
-    medium: "cpc",
-    campaign: "quiz_style_abtest_2025",
-    trackingVersion: "v2.0",
+    source: 'facebook',
+    medium: 'cpc',
+    campaign: 'quiz_style_abtest_2025',
+    trackingVersion: 'v2.0',
   },
 
   // 6 Criativos numerados com características específicas
   creatives: {
-    "criativo-1": {
-      id: "criativo-1",
-      name: "Elegante Mulher Vestido",
-      utm_content: "criativo-1",
-      utm_term: "estilo_elegante",
-      description: "Mulher elegante com vestido sofisticado",
-      target_audience: "mulheres_25_45_classe_ab",
+    'criativo-1': {
+      id: 'criativo-1',
+      name: 'Elegante Mulher Vestido',
+      utm_content: 'criativo-1',
+      utm_term: 'estilo_elegante',
+      description: 'Mulher elegante com vestido sofisticado',
+      target_audience: 'mulheres_25_45_classe_ab',
       expected_ctr: 2.1,
       expected_conversion: 1.8,
     },
-    "criativo-2": {
-      id: "criativo-2",
-      name: "Casual Jovem Jeans",
-      utm_content: "criativo-2",
-      utm_term: "estilo_casual",
-      description: "Jovem com look casual e jeans",
-      target_audience: "mulheres_18_35_casual",
+    'criativo-2': {
+      id: 'criativo-2',
+      name: 'Casual Jovem Jeans',
+      utm_content: 'criativo-2',
+      utm_term: 'estilo_casual',
+      description: 'Jovem com look casual e jeans',
+      target_audience: 'mulheres_18_35_casual',
       expected_ctr: 1.9,
       expected_conversion: 1.5,
     },
-    "criativo-3": {
-      id: "criativo-3",
-      name: "Profissional Executiva",
-      utm_content: "criativo-3",
-      utm_term: "estilo_profissional",
-      description: "Executiva com roupa de trabalho",
-      target_audience: "mulheres_28_50_profissionais",
+    'criativo-3': {
+      id: 'criativo-3',
+      name: 'Profissional Executiva',
+      utm_content: 'criativo-3',
+      utm_term: 'estilo_profissional',
+      description: 'Executiva com roupa de trabalho',
+      target_audience: 'mulheres_28_50_profissionais',
       expected_ctr: 1.7,
       expected_conversion: 2.2,
     },
-    "criativo-4": {
-      id: "criativo-4",
-      name: "Romântico Floral",
-      utm_content: "criativo-4",
-      utm_term: "estilo_romantico",
-      description: "Look romântico com estampa floral",
-      target_audience: "mulheres_20_40_romanticas",
+    'criativo-4': {
+      id: 'criativo-4',
+      name: 'Romântico Floral',
+      utm_content: 'criativo-4',
+      utm_term: 'estilo_romantico',
+      description: 'Look romântico com estampa floral',
+      target_audience: 'mulheres_20_40_romanticas',
       expected_ctr: 2.3,
       expected_conversion: 1.6,
     },
-    "criativo-5": {
-      id: "criativo-5",
-      name: "Moderno Minimalista",
-      utm_content: "criativo-5",
-      utm_term: "estilo_moderno",
-      description: "Estilo moderno e minimalista",
-      target_audience: "mulheres_22_38_urbanas",
+    'criativo-5': {
+      id: 'criativo-5',
+      name: 'Moderno Minimalista',
+      utm_content: 'criativo-5',
+      utm_term: 'estilo_moderno',
+      description: 'Estilo moderno e minimalista',
+      target_audience: 'mulheres_22_38_urbanas',
       expected_ctr: 1.8,
       expected_conversion: 1.9,
     },
-    "criativo-6": {
-      id: "criativo-6",
-      name: "Clássico Atemporal",
-      utm_content: "criativo-6",
-      utm_term: "estilo_classico",
-      description: "Look clássico e atemporal",
-      target_audience: "mulheres_30_55_conservadoras",
+    'criativo-6': {
+      id: 'criativo-6',
+      name: 'Clássico Atemporal',
+      utm_content: 'criativo-6',
+      utm_term: 'estilo_classico',
+      description: 'Look clássico e atemporal',
+      target_audience: 'mulheres_30_55_conservadoras',
       expected_ctr: 1.6,
       expected_conversion: 2.0,
     },
@@ -77,17 +77,17 @@ export const UTM_CONFIG = {
   // Páginas do teste A/B
   pages: {
     pageA: {
-      path: "/",
-      name: "Quiz como Isca",
-      description: "Página com quiz interativo + resultado + oferta",
-      funnel_type: "quiz_isca",
+      path: '/',
+      name: 'Quiz como Isca',
+      description: 'Página com quiz interativo + resultado + oferta',
+      funnel_type: 'quiz_isca',
       expected_conversion_boost: 1.2, // 20% maior conversão esperada
     },
     pageB: {
-      path: "/quiz-descubra-seu-estilo",
-      name: "Oferta Direta",
-      description: "Landing page de oferta direta",
-      funnel_type: "oferta_direta",
+      path: '/quiz-descubra-seu-estilo',
+      name: 'Oferta Direta',
+      description: 'Landing page de oferta direta',
+      funnel_type: 'oferta_direta',
       expected_conversion_boost: 0.8, // 20% menor conversão esperada
     },
   },
@@ -96,8 +96,8 @@ export const UTM_CONFIG = {
 // Função para gerar URLs completas dos criativos
 export const generateCreativeUrls = () => {
   const baseUrls = {
-    pageA: "https://quiz-sell-genius.com",
-    pageB: "https://quiz-sell-genius.com/quiz-descubra-seu-estilo",
+    pageA: 'https://quiz-sell-genius.com',
+    pageB: 'https://quiz-sell-genius.com/quiz-descubra-seu-estilo',
   };
 
   const urls = {
@@ -191,26 +191,26 @@ export const analyzeCreativePerformance = creativeData => {
     const conversionRate = parseFloat(data.conversion_rate);
     const cpa = parseFloat(data.cost_per_lead);
 
-    let status = "regular";
-    let recommendation = "Continuar monitorando";
-    let action = "monitor";
+    let status = 'regular';
+    let recommendation = 'Continuar monitorando';
+    let action = 'monitor';
 
     if (conversionRate >= PERFORMANCE_ALERTS.excellent.conversion_rate_min) {
-      status = "excellent";
-      recommendation = "ESCALAR: Aumentar budget e criar variações";
-      action = "scale";
+      status = 'excellent';
+      recommendation = 'ESCALAR: Aumentar budget e criar variações';
+      action = 'scale';
     } else if (conversionRate <= PERFORMANCE_ALERTS.critical.conversion_rate_min) {
-      status = "critical";
-      recommendation = "PAUSAR: Performance muito baixa";
-      action = "pause";
+      status = 'critical';
+      recommendation = 'PAUSAR: Performance muito baixa';
+      action = 'pause';
     } else if (conversionRate <= PERFORMANCE_ALERTS.warning.conversion_rate_min) {
-      status = "warning";
-      recommendation = "OTIMIZAR: Testar variações ou ajustar público";
-      action = "optimize";
+      status = 'warning';
+      recommendation = 'OTIMIZAR: Testar variações ou ajustar público';
+      action = 'optimize';
     } else {
-      status = "good";
-      recommendation = "BOM: Manter e acompanhar de perto";
-      action = "maintain";
+      status = 'good';
+      recommendation = 'BOM: Manter e acompanhar de perto';
+      action = 'maintain';
     }
 
     analysis[creativeId] = {

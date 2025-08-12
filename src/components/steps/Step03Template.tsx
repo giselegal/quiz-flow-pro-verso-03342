@@ -53,7 +53,8 @@ export const Step03Template: React.FC<Step03TemplateProps> = ({
     progressValue: 15,
     buttonText: 'Próxima Questão →',
     multipleSelection: true,
-    minSelections: 1,
+    minSelections: 3,
+        autoAdvance: true,
     maxSelections: 3,
     columns: 2,
     imageSize: 256,
@@ -257,7 +258,7 @@ export const getStep03Template = () => {
         options: [
           {
             id: '2a',
-            text: 'Informal, espontânea, alegre, essencialista',
+            text: 'Próxima Questão →',
             value: '2a',
             category: 'Natural',
             styleCategory: 'Natural',
@@ -268,7 +269,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2b',
-            text: 'Conservadora, séria, organizada',
+            text: 'Próxima Questão →',
             value: '2b',
             category: 'Clássico',
             styleCategory: 'Clássico',
@@ -276,7 +277,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2c',
-            text: 'Informada, ativa, prática',
+            text: 'Próxima Questão →',
             value: '2c',
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
@@ -284,7 +285,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2d',
-            text: 'Exigente, sofisticada, seletiva',
+            text: 'Próxima Questão →',
             value: '2d',
             category: 'Elegante',
             styleCategory: 'Elegante',
@@ -292,7 +293,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2e',
-            text: 'Feminina, meiga, delicada, sensível',
+            text: 'Próxima Questão →',
             value: '2e',
             category: 'Romântico',
             styleCategory: 'Romântico',
@@ -300,7 +301,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2f',
-            text: 'Glamorosa, vaidosa, sensual',
+            text: 'Próxima Questão →',
             value: '2f',
             category: 'Sexy',
             styleCategory: 'Sexy',
@@ -308,7 +309,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2g',
-            text: 'Cosmopolita, moderna e audaciosa',
+            text: 'Próxima Questão →',
             value: '2g',
             category: 'Dramático',
             styleCategory: 'Dramático',
@@ -316,7 +317,7 @@ export const getStep03Template = () => {
           },
           {
             id: '2h',
-            text: 'Exótica, aventureira, livre',
+            text: 'Próxima Questão →',
             value: '2h',
             category: 'Criativo',
             styleCategory: 'Criativo',
@@ -328,14 +329,15 @@ export const getStep03Template = () => {
         showImages: false, // SEM IMAGENS = 1 COLUNA
         multipleSelection: true,
         maxSelections: 3,
-        minSelections: 1,
+        minSelections: 3,
+        autoAdvance: true,
         validationMessage: 'Selecione até 3 opções',
         gridGap: 12, // Menor gap para texto
         responsiveColumns: false, // Sempre 1 coluna
 
         // 🚀 AUTOAVANÇO INSTANTÂNEO APÓS COMPLETAR
         autoAdvanceOnComplete: true,
-        autoAdvanceDelay: 0, // INSTANTÂNEO após última seleção
+        autoAdvanceDelay: 1500, // INSTANTÂNEO após última seleção
         instantActivation: true, // Botão ativa na hora
         requiredSelections: 3,
 
@@ -352,8 +354,8 @@ export const getStep03Template = () => {
       type: 'button-inline',
       properties: {
         // 📝 TEXTO DINÂMICO
-        text: 'Continuar →',
-        textWhenDisabled: 'Selecione 3 características',
+        text: 'Próxima Questão →',
+        textWhenDisabled: 'Selecione 3 opções para continuar',
         textWhenComplete: 'Continuar →',
 
         // 🎨 ESTILO
@@ -371,8 +373,8 @@ export const getStep03Template = () => {
         noDelay: true, // Sem atraso para ativar
 
         // 🚀 AUTOAVANÇO IMEDIATO
-        autoAdvanceAfterActivation: true, // Avança logo após ativar
-        autoAdvanceDelay: 0, // Instantâneo
+        autoAdvanceAfterActivation: false, // Avança logo após ativar
+        autoAdvanceDelay: 1500, // Instantâneo
 
         // 📊 FEEDBACK MÍNIMO (RÁPIDO)
         showSuccessAnimation: false, // Sem animação para não atrasar

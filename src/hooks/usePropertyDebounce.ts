@@ -3,7 +3,7 @@
  * Gerencia atualizações de propriedades com debounce inteligente
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UsePropertyDebounceOptions {
   debounceMs?: number;

@@ -1,7 +1,7 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   Activity,
   ArrowUpRight,
@@ -26,7 +26,7 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from "lucide-react";
+} from 'lucide-react';
 
 const OverviewPage: React.FC = () => {
   return (
@@ -97,7 +97,7 @@ const OverviewPage: React.FC = () => {
 
         <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-purple-50/30 cursor-pointer"
-          onClick={() => window.open("/step/21", "_blank")}
+          onClick={() => window.open('/step/21', '_blank')}
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -296,7 +296,7 @@ const OverviewPage: React.FC = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => window.open("/step/21", "_blank")}
+                    onClick={() => window.open('/step/21', '_blank')}
                   >
                     <PlayCircle className="h-4 w-4 mr-1" />
                     Testar
@@ -497,7 +497,7 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white/10"
-                onClick={() => window.open("/step/21", "_blank")}
+                onClick={() => window.open('/step/21', '_blank')}
               >
                 <PlayCircle className="h-5 w-5 mr-2" />
                 Testar Etapa 21

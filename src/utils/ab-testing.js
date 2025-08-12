@@ -1,5 +1,5 @@
 // Utilitários para testes A/B
-import { setCookie, getCookie } from "./cookies";
+import { setCookie, getCookie } from './cookies';
 
 /**
  * Marca o usuário como parte de um grupo de teste específico
@@ -12,9 +12,9 @@ export const markTestVariant = (testId, variant, expireDays = 30) => {
   setCookie(`test_${testId}`, variant, expireDays);
 
   // Registra a variante no dataLayer para o Google Analytics
-  if (typeof window !== "undefined" && window.dataLayer) {
+  if (typeof window !== 'undefined' && window.dataLayer) {
     window.dataLayer.push({
-      event: "ab_test_assignment",
+      event: 'ab_test_assignment',
       testId,
       variant,
     });
@@ -31,7 +31,7 @@ export const markTestVariant = (testId, variant, expireDays = 30) => {
  * @param {string} defaultVariant - Variante padrão se o usuário não estiver marcado
  * @returns {string} - A variante do teste ('A', 'B', etc)
  */
-export const getTestVariant = (testId, defaultVariant = "A") => {
+export const getTestVariant = (testId, defaultVariant = 'A') => {
   const variant = getCookie(`test_${testId}`);
   return variant || defaultVariant;
 };
@@ -55,9 +55,9 @@ export const isInTestVariant = (testId, variant) => {
 export const trackTestConversion = (testId, conversionType, extraData = {}) => {
   const variant = getTestVariant(testId);
 
-  if (typeof window !== "undefined" && window.dataLayer) {
+  if (typeof window !== 'undefined' && window.dataLayer) {
     window.dataLayer.push({
-      event: "ab_test_conversion",
+      event: 'ab_test_conversion',
       testId,
       variant,
       conversionType,

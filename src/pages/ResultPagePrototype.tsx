@@ -1,15 +1,14 @@
-import { StyleResult } from "@/types/quiz";
-import { useEffect } from "react";
+import { StyleResult } from '@/types/quiz';
+import { useEffect } from 'react';
 
 export default function ResultPagePrototype() {
-
   useEffect(() => {
     // Prevent any navigation issues
-    console.log("ResultPagePrototype loaded");
+    console.log('ResultPagePrototype loaded');
   }, []);
 
-  const mockPrimaryStyle = "Elegante";
-  const mockSecondaryStyles = ["Clássico", "Contemporâneo", "Natural"];
+  const mockPrimaryStyle = 'Elegante';
+  const mockSecondaryStyles = ['Clássico', 'Contemporâneo', 'Natural'];
 
   // Mock data for prototype - variables intentionally unused for now
   const _primaryStyle: StyleResult = mockPrimaryStyle
@@ -22,10 +21,10 @@ export default function ResultPagePrototype() {
         rank: 1,
       }
     : {
-        category: "Natural",
+        category: 'Natural',
         score: 100,
         percentage: 85,
-        style: "natural",
+        style: 'natural',
         points: 100,
         rank: 1,
       };
@@ -55,4 +54,4 @@ export default function ResultPagePrototype() {
       />
     </div>
   );
-};
+}

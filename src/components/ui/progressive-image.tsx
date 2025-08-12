@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getLowQualityPlaceholder } from "@/utils/imageUtils";
+import React, { useState, useEffect } from 'react';
+import { getLowQualityPlaceholder } from '@/utils/imageUtils';
 
 interface ProgressiveImageProps {
   src: string;
@@ -9,26 +9,26 @@ interface ProgressiveImageProps {
   width?: number;
   height?: number;
   onLoad?: () => void;
-  loading?: "lazy" | "eager";
-  fetchpriority?: "high" | "low" | "auto";
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
   sizes?: string;
   style?: React.CSSProperties;
-  fit?: "cover" | "contain" | "fill";
+  fit?: 'cover' | 'contain' | 'fill';
 }
 
 const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
   src,
   lowQualitySrc,
   alt,
-  className = "",
+  className = '',
   width,
   height,
   onLoad,
-  loading = "lazy",
-  fetchpriority = "auto",
+  loading = 'lazy',
+  fetchpriority = 'auto',
   sizes,
   style,
-  fit = "cover",
+  fit = 'cover',
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -104,11 +104,11 @@ const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
           sizes={sizes}
           onLoad={handleLoad}
           onError={handleError}
-          className={`w-full h-full transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+          className={`w-full h-full transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           style={{ objectFit: fit }}
         />
       ) : (
-        <div style={{ backgroundColor: "#E5DDD5" }}>Não foi possível carregar a imagem</div>
+        <div style={{ backgroundColor: '#E5DDD5' }}>Não foi possível carregar a imagem</div>
       )}
     </div>
   );

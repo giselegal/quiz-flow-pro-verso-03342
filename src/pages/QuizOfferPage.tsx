@@ -1,7 +1,7 @@
-import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import { usePageConfig } from "@/hooks/usePageConfig";
-import { trackButtonClick } from "@/utils/analytics";
-import { preloadCriticalImages } from "@/utils/images/preloading";
+import FixedIntroImage from '@/components/ui/FixedIntroImage';
+import { usePageConfig } from '@/hooks/usePageConfig';
+import { trackButtonClick } from '@/utils/analytics';
+import { preloadCriticalImages } from '@/utils/images/preloading';
 import {
   ArrowRight,
   Award,
@@ -11,8 +11,8 @@ import {
   Shield,
   ShoppingBag,
   ShoppingCart,
-} from "lucide-react";
-import React, { useEffect, useState } from "react";
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 // CSS simplificado e otimizado
 const customStyles = `
@@ -78,27 +78,27 @@ const customStyles = `
 
 // Constantes para otimização de imagens - URLs atualizadas
 const HERO_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp';
 const HERO_COMPLEMENTARY_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp';
 const PROBLEM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745193445/4fb35a75-02dd-40b9-adae-854e90228675_ibkrmt.webp';
 const SOLUTION_QUIZ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1746650306/oie_1_gcozz9.webp';
 const GUIDES_BENEFITS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071347/MOCKUP_TABLETE_-_GUIA_DE_IMAGEM_E_ESTILO_ncctzi.webp';
 const BONUS_1_KEY_PIECES_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911687/C%C3%B3pia_de_MOCKUPS_12_w8fwrn.webp';
 const BONUS_2_VISAGISM_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp';
 const MENTOR_GISELE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911667/WhatsApp_Image_2025-04-02_at_09.40.53_cv8p5y.webp';
 const TESTIMONIALS_RESULTS_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744916217/Mockups_p%C3%A1gina_de_venda_Guia_de_Estilo_1_vostj4.webp';
 const GUARANTEE_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744916216/C%C3%B3pia_de_01._P%C3%A1gina_-_Produto_de_Entrada_2_hamaox.webp';
 const FAQ_IMAGE_URL =
-  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp";
+  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515862/Sem_nome_1000_x_1000_px_1280_x_720_px_vmqk3j.webp';
 
 // Componente de estrelas para avaliações (comentado pois não está em uso)
 // const RatingStars = ({ rating }: { rating: number }) => {
@@ -141,7 +141,7 @@ const CountdownTimer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const formatNumber = (num: number) => num.toString().padStart(2, "0");
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
     <div className="flex flex-col items-center">
@@ -172,44 +172,44 @@ const FaqSectionNew = () => {
 
   const faqItems = [
     {
-      question: "Quanto tempo leva para fazer o quiz?",
+      question: 'Quanto tempo leva para fazer o quiz?',
       answer:
-        "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.",
+        'O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida.',
     },
     {
-      question: "Como recebo os materiais após a compra?",
+      question: 'Como recebo os materiais após a compra?',
       answer:
-        "Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais.",
+        'Imediatamente após a confirmação do pagamento, você receberá um e-mail com as instruções de acesso a todos os materiais.',
     },
     {
-      question: "Os guias servem para qualquer tipo físico?",
+      question: 'Os guias servem para qualquer tipo físico?',
       answer:
-        "Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único.",
+        'Sim! Os guias foram desenvolvidos considerando a diversidade de tipos físicos. O mais importante é o seu estilo predominante, e as orientações são adaptáveis para valorizar seu corpo único.',
     },
     {
-      question: "Preciso ter conhecimento prévio sobre moda?",
+      question: 'Preciso ter conhecimento prévio sobre moda?',
       answer:
-        "Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática.",
+        'Não! Os guias foram criados justamente para quem quer aprender do zero ou aprimorar seus conhecimentos sobre estilo pessoal. Tudo é explicado de forma clara e didática.',
     },
     {
-      question: "Posso acessar os materiais pelo celular?",
+      question: 'Posso acessar os materiais pelo celular?',
       answer:
-        "Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone.",
+        'Sim! Todos os materiais são digitais e podem ser acessados por qualquer dispositivo: computador, tablet ou smartphone.',
     },
     {
-      question: "E se eu não gostar do conteúdo?",
+      question: 'E se eu não gostar do conteúdo?',
       answer:
-        "Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento.",
+        'Você tem 7 dias de garantia incondicional. Se não ficar satisfeita, basta solicitar o reembolso e devolveremos 100% do seu investimento.',
     },
     {
-      question: "Quanto tempo terei acesso aos materiais?",
+      question: 'Quanto tempo terei acesso aos materiais?',
       answer:
-        "O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração.",
+        'O acesso é vitalício! Você poderá consultar os guias sempre que precisar, sem prazo de expiração.',
     },
     {
-      question: "Os guias funcionam para qualquer idade?",
+      question: 'Os guias funcionam para qualquer idade?',
       answer:
-        "Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida.",
+        'Absolutamente! Os princípios de estilo pessoal são atemporais e adaptáveis para mulheres de todas as idades. O importante é expressar sua essência, independente da sua fase de vida.',
     },
   ];
 
@@ -229,15 +229,15 @@ const FaqSectionNew = () => {
             key={index}
             className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-[#B89B7A]"
           >
-            <button onClick={() => toggleItem(index)} style={{ backgroundColor: "#FAF9F7" }}>
+            <button onClick={() => toggleItem(index)} style={{ backgroundColor: '#FAF9F7' }}>
               <span className="font-medium text-[#432818] text-lg">{item.question}</span>
               <ChevronRight
                 size={24}
-                className={`text-[#B89B7A] transition-transform duration-300 ${openItem === index ? "transform rotate-90" : ""}`}
+                className={`text-[#B89B7A] transition-transform duration-300 ${openItem === index ? 'transform rotate-90' : ''}`}
               />
             </button>
 
-            {openItem === index && <div style={{ color: "#6B4F43" }}>{item.answer}</div>}
+            {openItem === index && <div style={{ color: '#6B4F43' }}>{item.answer}</div>}
           </div>
         ))}
       </div>
@@ -283,7 +283,7 @@ const FaqSectionNew = () => {
 
 const QuizOfferPage: React.FC = () => {
   // Integração com o editor visual
-  const { config: pageConfig, loading: configLoading } = usePageConfig("quiz-offer-page");
+  const { config: pageConfig, loading: configLoading } = usePageConfig('quiz-offer-page');
 
   // Testimonials comentados (não utilizados atualmente)
   // const testimonials = [
@@ -314,7 +314,7 @@ const QuizOfferPage: React.FC = () => {
 
   useEffect(() => {
     // Inject custom styles
-    const styleElement = document.createElement("style");
+    const styleElement = document.createElement('style');
     styleElement.textContent = customStyles;
     document.head.appendChild(styleElement);
 
@@ -335,8 +335,8 @@ const QuizOfferPage: React.FC = () => {
       { quality: 95 }
     );
 
-    if (typeof window !== "undefined" && "performance" in window) {
-      window.performance.mark("offer-page-mounted");
+    if (typeof window !== 'undefined' && 'performance' in window) {
+      window.performance.mark('offer-page-mounted');
     }
 
     return () => {
@@ -345,8 +345,8 @@ const QuizOfferPage: React.FC = () => {
     };
   }, []);
 
-  const handleCtaClick = (buttonId: string, action: string = "Comprar Agora") => {
-    trackButtonClick(buttonId, action, "quiz_offer_page");
+  const handleCtaClick = (buttonId: string, action: string = 'Comprar Agora') => {
+    trackButtonClick(buttonId, action, 'quiz_offer_page');
   };
 
   /**
@@ -370,14 +370,14 @@ const QuizOfferPage: React.FC = () => {
   useEffect(() => {
     if (pageConfig && !configLoading) {
       // Apply editor styles if available
-      console.log("Page config loaded:", pageConfig);
+      console.log('Page config loaded:', pageConfig);
     }
   }, [pageConfig, configLoading]);
 
   return (
     <div
       className="min-h-screen bg-[var(--background)]"
-      style={{ fontFamily: "Inter, sans-serif" }}
+      style={{ fontFamily: 'Inter, sans-serif' }}
     >
       {/* Header limpo */}
       <header className="py-4 px-6 sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
@@ -400,13 +400,13 @@ const QuizOfferPage: React.FC = () => {
               {/* Badge credibilidade */}
               <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full border border-green-200 mb-6">
                 <Award size={18} className="text-green-600" />
-                <span style={{ color: "#6B4F43" }}>3000+ mulheres transformadas</span>
+                <span style={{ color: '#6B4F43' }}>3000+ mulheres transformadas</span>
               </div>
 
               {/* Headline simplificada - DADOS REAIS ETAPA 21 */}
               <h1
                 className="text-hierarchy-1 text-[var(--text-dark)] mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Etapa 21: <span className="text-[var(--primary)]">Oferta Exclusiva</span>
                 <br />
@@ -415,7 +415,7 @@ const QuizOfferPage: React.FC = () => {
 
               {/* Subheadline focada - BASEADA NO RESULTADO DO QUIZ */}
               <p className="text-body text-[var(--text-medium)] mb-8 max-w-2xl mx-auto">
-                Leve sua transformação de estilo para o próximo nível com nosso{" "}
+                Leve sua transformação de estilo para o próximo nível com nosso{' '}
                 <strong>Guia Completo personalizado</strong> para seu resultado
               </p>
 
@@ -433,10 +433,10 @@ const QuizOfferPage: React.FC = () => {
               {/* CTA principal único - TEXTO REAL DA ETAPA 21 */}
               <button
                 onClick={() => {
-                  handleCtaClick("hero_cta", "Sim! Quero Garantir Meu Acesso");
+                  handleCtaClick('hero_cta', 'Sim! Quero Garantir Meu Acesso');
                   window.open(
-                    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                    "_blank"
+                    'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+                    '_blank'
                   );
                 }}
                 className="btn-primary-clean mb-6"
@@ -468,7 +468,7 @@ const QuizOfferPage: React.FC = () => {
                 <div>
                   <h2
                     className="text-hierarchy-2 text-[var(--text-dark)] mb-6"
-                    style={{ fontFamily: "Playfair Display, serif" }}
+                    style={{ fontFamily: 'Playfair Display, serif' }}
                   >
                     Você se identifica com isso?
                   </h2>
@@ -485,7 +485,7 @@ const QuizOfferPage: React.FC = () => {
                   </div>
                   <div className="bg-[#B89B7A]/10 p-4 rounded-lg border-l-4 border-orange-400 mt-6">
                     <p className="text-[var(--text-dark)] font-semibold">
-                      Isso acontece porque você ainda não descobriu seu{" "}
+                      Isso acontece porque você ainda não descobriu seu{' '}
                       <strong>estilo predominante</strong>.
                     </p>
                   </div>
@@ -510,7 +510,7 @@ const QuizOfferPage: React.FC = () => {
             <div className="card-clean text-center">
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] mb-6"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 A Solução: Quiz de Estilo
               </h2>
@@ -526,16 +526,16 @@ const QuizOfferPage: React.FC = () => {
               </div>
 
               <p className="text-body text-[var(--text-medium)] mb-8 max-w-2xl mx-auto">
-                Método preciso para identificar seu estilo entre os{" "}
+                Método preciso para identificar seu estilo entre os{' '}
                 <strong>7 estilos universais</strong> + guia personalizado completo.
               </p>
 
               <button
                 onClick={() => {
-                  handleCtaClick("solution_cta", "Fazer Quiz");
+                  handleCtaClick('solution_cta', 'Fazer Quiz');
                   window.open(
-                    "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                    "_blank"
+                    'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+                    '_blank'
                   );
                 }}
                 className="btn-primary-clean mb-6"
@@ -556,7 +556,7 @@ const QuizOfferPage: React.FC = () => {
               <div className="text-center mb-8">
                 <h2
                   className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-                  style={{ fontFamily: "Playfair Display, serif" }}
+                  style={{ fontFamily: 'Playfair Display, serif' }}
                 >
                   Transformação Completa
                 </h2>
@@ -631,10 +631,10 @@ const QuizOfferPage: React.FC = () => {
               <div className="text-center">
                 <button
                   onClick={() => {
-                    handleCtaClick("final_cta", "Garantir Transformação");
+                    handleCtaClick('final_cta', 'Garantir Transformação');
                     window.open(
-                      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-                      "_blank"
+                      'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
+                      '_blank'
                     );
                   }}
                   className="btn-primary-clean"
@@ -660,7 +660,7 @@ const QuizOfferPage: React.FC = () => {
               />
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] mb-4"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 7 Dias de Garantia
               </h2>
@@ -678,7 +678,7 @@ const QuizOfferPage: React.FC = () => {
             <div className="card-clean">
               <h2
                 className="text-hierarchy-2 text-[var(--text-dark)] text-center mb-8"
-                style={{ fontFamily: "Playfair Display, serif" }}
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 Perguntas Frequentes
               </h2>

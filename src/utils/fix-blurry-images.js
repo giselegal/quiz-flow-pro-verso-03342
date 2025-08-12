@@ -17,50 +17,50 @@ function getHighQualityUrl(url) {
 
   try {
     // Se não for uma URL do Cloudinary, retornar sem alterações
-    if (!url.includes("cloudinary.com") && !url.includes("res.cloudinary.com")) {
+    if (!url.includes('cloudinary.com') && !url.includes('res.cloudinary.com')) {
       return url;
     }
 
     let newUrl = url;
 
     // 1. Remover parâmetros de blur
-    if (newUrl.includes("e_blur")) {
-      newUrl = newUrl.replace(/[,/]e_blur:[0-9]+/g, "");
+    if (newUrl.includes('e_blur')) {
+      newUrl = newUrl.replace(/[,/]e_blur:[0-9]+/g, '');
     }
 
     // 2. Substituir qualidade baixa por alta qualidade
-    if (newUrl.includes("q_")) {
+    if (newUrl.includes('q_')) {
       newUrl = newUrl.replace(/q_[0-9]+/g, `q_${IMAGE_QUALITY}`);
-    } else if (newUrl.includes("/upload/")) {
+    } else if (newUrl.includes('/upload/')) {
       // Adicionar parâmetro de qualidade se não existir
-      newUrl = newUrl.replace("/upload/", `/upload/q_${IMAGE_QUALITY},`);
+      newUrl = newUrl.replace('/upload/', `/upload/q_${IMAGE_QUALITY},`);
     }
 
     // 3. Garantir formato automático para melhor qualidade
-    if (!newUrl.includes("f_auto")) {
-      newUrl = newUrl.replace("/upload/", "/upload/f_auto,");
+    if (!newUrl.includes('f_auto')) {
+      newUrl = newUrl.replace('/upload/', '/upload/f_auto,');
     }
 
     // 4. Se a largura for muito pequena (placeholder), aumentar
     const widthMatch = newUrl.match(/w_[0-9]+/);
-    if (widthMatch && parseInt(widthMatch[0].replace("w_", ""), 10) < 100) {
+    if (widthMatch && parseInt(widthMatch[0].replace('w_', ''), 10) < 100) {
       newUrl = newUrl.replace(/w_[0-9]+/, `w_${MIN_IMAGE_WIDTH}`);
     }
 
     // 5. Adicionar nitidez para melhorar a qualidade percebida
-    if (!newUrl.includes("e_sharpen")) {
-      newUrl = newUrl.replace("/upload/", "/upload/e_sharpen:60,");
+    if (!newUrl.includes('e_sharpen')) {
+      newUrl = newUrl.replace('/upload/', '/upload/e_sharpen:60,');
     }
 
     // 6. Adicionar DPR automático para telas de alta densidade
-    if (!newUrl.includes("dpr_")) {
-      newUrl = newUrl.replace("/upload/", "/upload/dpr_auto,");
+    if (!newUrl.includes('dpr_')) {
+      newUrl = newUrl.replace('/upload/', '/upload/dpr_auto,');
     }
 
     return newUrl;
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error("Erro ao processar URL de imagem:", error);
+      console.error('Erro ao processar URL de imagem:', error);
     }
     return url; // Em caso de erro, retornar a URL original
   }
@@ -71,7 +71,7 @@ function getHighQualityUrl(url) {
  */
 function fixBlurryImage(img) {
   // Ignorar imagens que não têm src ou que estão em um SVG
-  if (!img.src || img.closest("svg")) {
+  if (!img.src || img.closest('svg')) {
     return false;
   }
 
@@ -80,7 +80,7 @@ function fixBlurryImage(img) {
     const originalSrc = img.src;
 
     // Verificar se a imagem já tem um atributo de alta qualidade
-    if (img.getAttribute("data-high-quality-fixed") === "true") {
+    if (img.getAttribute('data-high-quality-fixed') === 'true') {
       return false;
     }
 
@@ -93,26 +93,26 @@ function fixBlurryImage(img) {
       img.src = highQualitySrc;
 
       // Marcar a imagem como já corrigida
-      img.setAttribute("data-high-quality-fixed", "true");
+      img.setAttribute('data-high-quality-fixed', 'true');
 
       // Remover classes e estilos de embaçamento
-      img.style.filter = "none";
-      img.classList.remove("blur", "placeholder", "blur-up", "lazy-load", "loading");
+      img.style.filter = 'none';
+      img.classList.remove('blur', 'placeholder', 'blur-up', 'lazy-load', 'loading');
 
       // Desativar lazy loading para imagens críticas visíveis
-      if (img.loading === "lazy" && isInViewport(img)) {
-        img.loading = "eager";
-        if ("fetchpriority" in img) {
-          img.fetchpriority = "high";
+      if (img.loading === 'lazy' && isInViewport(img)) {
+        img.loading = 'eager';
+        if ('fetchpriority' in img) {
+          img.fetchpriority = 'high';
         }
       }
 
       // Remover também de elementos pais que podem ter blur
       if (img.parentElement) {
-        if (img.parentElement.classList.contains("blur-wrapper")) {
-          img.parentElement.classList.remove("blur-wrapper");
+        if (img.parentElement.classList.contains('blur-wrapper')) {
+          img.parentElement.classList.remove('blur-wrapper');
         }
-        img.parentElement.style.filter = "none";
+        img.parentElement.style.filter = 'none';
       }
 
       // Retornar que a imagem foi corrigida
@@ -123,7 +123,7 @@ function fixBlurryImage(img) {
     return false;
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error("Erro ao corrigir imagem:", error);
+      console.error('Erro ao corrigir imagem:', error);
     }
     return false;
   }
@@ -146,7 +146,7 @@ function isInViewport(element) {
  * Corrige todas as imagens na página
  */
 function fixAllBlurryImages() {
-  const images = document.querySelectorAll("img");
+  const images = document.querySelectorAll('img');
   let fixedCount = 0;
 
   images.forEach(img => {
@@ -158,9 +158,9 @@ function fixAllBlurryImages() {
     }
 
     // Adicionar handler de erro para imagens que falham posteriormente
-    if (!img.hasAttribute("data-error-handled")) {
-      img.setAttribute("data-error-handled", "true");
-      img.addEventListener("error", function () {
+    if (!img.hasAttribute('data-error-handled')) {
+      img.setAttribute('data-error-handled', 'true');
+      img.addEventListener('error', function () {
         handleImageError(this);
       });
     }
@@ -174,10 +174,10 @@ function fixAllBlurryImages() {
  */
 function handleImageError(img) {
   // Não processar novamente imagens já tratadas para erro
-  if (img.hasAttribute("data-error-fixed")) return;
+  if (img.hasAttribute('data-error-fixed')) return;
 
   // Marcar como tratada
-  img.setAttribute("data-error-fixed", "true");
+  img.setAttribute('data-error-fixed', 'true');
 
   const src = img.src;
   if (DEBUG_MODE) {
@@ -185,7 +185,7 @@ function handleImageError(img) {
   }
 
   // Tentar corrigir a URL (remover parâmetros de transformação que podem estar causando o erro)
-  if (src && src.includes("cloudinary.com")) {
+  if (src && src.includes('cloudinary.com')) {
     try {
       // Versão simplificada da URL
       const simplifiedUrl = getSimplifiedCloudinaryUrl(src);
@@ -195,12 +195,12 @@ function handleImageError(img) {
       }
 
       // Se não conseguimos simplificar, tentar versão de fallback
-      if (img.hasAttribute("data-fallback-src")) {
-        img.src = img.getAttribute("data-fallback-src");
+      if (img.hasAttribute('data-fallback-src')) {
+        img.src = img.getAttribute('data-fallback-src');
       }
     } catch (error) {
       if (DEBUG_MODE) {
-        console.error("Erro ao tentar corrigir imagem com erro:", error);
+        console.error('Erro ao tentar corrigir imagem com erro:', error);
       }
     }
   }
@@ -210,34 +210,34 @@ function handleImageError(img) {
  * Simplifica a URL do Cloudinary removendo transformações que podem causar problemas
  */
 function getSimplifiedCloudinaryUrl(url) {
-  if (!url || !url.includes("cloudinary.com")) return url;
+  if (!url || !url.includes('cloudinary.com')) return url;
 
   try {
     // Extrai as partes básicas da URL
-    const urlParts = url.split("/upload/");
+    const urlParts = url.split('/upload/');
     if (urlParts.length !== 2) return url;
 
-    const baseUrl = urlParts[0] + "/upload/";
+    const baseUrl = urlParts[0] + '/upload/';
     let path = urlParts[1];
 
     // Extrai a versão, se existir
     const versionMatch = path.match(/^(v\d+)\//);
-    let version = "";
+    let version = '';
     let finalPath = path;
 
     if (versionMatch) {
-      version = versionMatch[1] + "/";
+      version = versionMatch[1] + '/';
       finalPath = path.substring(version.length);
     }
 
     // Remove transformações problemáticas mas mantém formato e qualidade básicos
-    const basicTransforms = "f_auto,q_auto/";
+    const basicTransforms = 'f_auto,q_auto/';
 
     // Constrói URL simplificada
-    return `${baseUrl}${version}${basicTransforms}${finalPath.split("/").pop()}`;
+    return `${baseUrl}${version}${basicTransforms}${finalPath.split('/').pop()}`;
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error("Erro ao simplificar URL do Cloudinary:", error);
+      console.error('Erro ao simplificar URL do Cloudinary:', error);
     }
     return url;
   }
@@ -252,12 +252,12 @@ function setupImageObserver() {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         // Se for uma imagem
-        if (node.nodeName === "IMG") {
+        if (node.nodeName === 'IMG') {
           fixBlurryImage(node);
         }
         // Se contiver imagens
         else if (node.querySelectorAll) {
-          node.querySelectorAll("img").forEach(img => {
+          node.querySelectorAll('img').forEach(img => {
             fixBlurryImage(img);
           });
         }
@@ -280,10 +280,10 @@ function setupImageObserver() {
 function preventBlurryPlaceholders() {
   try {
     // Interceptar o método Image.prototype.src
-    const originalSet = Object.getOwnPropertyDescriptor(Image.prototype, "src").set;
+    const originalSet = Object.getOwnPropertyDescriptor(Image.prototype, 'src').set;
 
     // Substituir pelo nosso método que melhora as URLs
-    Object.defineProperty(Image.prototype, "src", {
+    Object.defineProperty(Image.prototype, 'src', {
       set: function (url) {
         // Aplicar a URL melhorada
         originalSet.call(this, getHighQualityUrl(url));
@@ -293,20 +293,20 @@ function preventBlurryPlaceholders() {
     // Interceptar também o atributo srcset para imagens responsivas
     const originalSrcsetSet = Object.getOwnPropertyDescriptor(
       HTMLImageElement.prototype,
-      "srcset"
+      'srcset'
     )?.set;
     if (originalSrcsetSet) {
-      Object.defineProperty(HTMLImageElement.prototype, "srcset", {
+      Object.defineProperty(HTMLImageElement.prototype, 'srcset', {
         set: function (srcset) {
-          if (srcset && typeof srcset === "string") {
+          if (srcset && typeof srcset === 'string') {
             // Melhorar cada URL no srcset
             const newSrcset = srcset
-              .split(",")
+              .split(',')
               .map(src => {
                 const [url, descriptor] = src.trim().split(/\s+/);
-                return `${getHighQualityUrl(url)} ${descriptor || ""}`.trim();
+                return `${getHighQualityUrl(url)} ${descriptor || ''}`.trim();
               })
-              .join(", ");
+              .join(', ');
 
             originalSrcsetSet.call(this, newSrcset);
           } else {
@@ -319,7 +319,7 @@ function preventBlurryPlaceholders() {
     return true;
   } catch (error) {
     if (DEBUG_MODE) {
-      console.error("Erro ao configurar prevenção de placeholders:", error);
+      console.error('Erro ao configurar prevenção de placeholders:', error);
     }
     return false;
   }
@@ -337,14 +337,14 @@ function preventBlurryPlaceholders() {
     // 2. Observar novas imagens
     const observer = setupImageObserver();
     if (DEBUG_MODE) {
-      console.log("👀 Monitorando novas imagens para correção automática");
+      console.log('👀 Monitorando novas imagens para correção automática');
     }
 
     // 3. Evitar placeholders embaçados
     const preventionActive = preventBlurryPlaceholders();
     if (DEBUG_MODE) {
       console.log(
-        `🛡️ Prevenção de placeholders embaçados ${preventionActive ? "ativada" : "falhou"}`
+        `🛡️ Prevenção de placeholders embaçados ${preventionActive ? 'ativada' : 'falhou'}`
       );
     }
 
@@ -357,7 +357,7 @@ function preventBlurryPlaceholders() {
     }, 1500);
 
     // 5. Corrigir na mudança de foco da janela (para quando o usuário retorna à aba)
-    window.addEventListener("focus", () => {
+    window.addEventListener('focus', () => {
       setTimeout(() => {
         const focusFixed = fixAllBlurryImages();
         if (DEBUG_MODE && focusFixed > 0) {
@@ -367,7 +367,7 @@ function preventBlurryPlaceholders() {
     });
 
     // 6. Corrigir após carregamento completo da página
-    window.addEventListener("load", () => {
+    window.addEventListener('load', () => {
       setTimeout(() => {
         const loadFixed = fixAllBlurryImages();
         if (DEBUG_MODE && loadFixed > 0) {
@@ -376,7 +376,7 @@ function preventBlurryPlaceholders() {
       }, 300);
     });
   } catch (error) {
-    console.error("Erro ao inicializar correção de imagens:", error);
+    console.error('Erro ao inicializar correção de imagens:', error);
   }
 })();
 

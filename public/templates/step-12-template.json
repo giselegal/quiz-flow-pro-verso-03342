@@ -7,13 +7,15 @@
     "responsive": true
   },
   "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
+    "required": true
   },
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
     "trackingId": "step-12-quiz-question"
   },
   "metadata": {
@@ -21,7 +23,11 @@
     "name": "Q11 - Tendências",
     "description": "Questão sobre seguir tendências",
     "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question"
+    ],
     "createdAt": "2025-08-11T01:02:19.343Z",
     "updatedAt": "2025-08-11T01:02:19.343Z"
   },

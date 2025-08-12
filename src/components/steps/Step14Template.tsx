@@ -87,25 +87,25 @@ export const getStep14Template = () => {
         options: [
           {
             id: 'strategic-14-a',
-            text: 'Não sei o que combina comigo',
+            text: 'Continuar →',
             category: 'knowledge',
             strategicType: 'challenge',
           },
           {
             id: 'strategic-14-b',
-            text: 'Tenho pouca variedade no guarda-roupa',
+            text: 'Continuar →',
             category: 'variety',
             strategicType: 'challenge',
           },
           {
             id: 'strategic-14-c',
-            text: 'Não tenho tempo para pensar em looks',
+            text: 'Continuar →',
             category: 'time',
             strategicType: 'challenge',
           },
           {
             id: 'strategic-14-d',
-            text: 'Não me sinto confiante com minhas escolhas',
+            text: 'Continuar →',
             category: 'confidence',
             strategicType: 'challenge',
           },
@@ -129,7 +129,7 @@ export const getStep14Template = () => {
       id: 'navigation-button-step14',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',

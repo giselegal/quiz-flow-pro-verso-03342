@@ -5,21 +5,21 @@
  * Mantém apenas componentes validados e funcionais
  */
 
-import { ComponentType } from "react";
+import { ComponentType } from 'react';
 import {
   getBlockComponent as getEnhancedComponent,
   getBlockDefinition,
   getAllBlockTypes,
-} from "./enhancedBlockRegistry";
+} from './enhancedBlockRegistry';
 
 // Blocos básicos consolidados (mais completos)
-import HeaderBlock from "../components/editor/blocks/HeaderBlock";
-import TextBlock from "../components/editor/blocks/TextBlock";
-import ImageBlock from "../components/editor/blocks/ImageBlock";
-import RichTextBlock from "../components/editor/blocks/RichTextBlock";
+import HeaderBlock from '../components/editor/blocks/HeaderBlock';
+import TextBlock from '../components/editor/blocks/TextBlock';
+import ImageBlock from '../components/editor/blocks/ImageBlock';
+import RichTextBlock from '../components/editor/blocks/RichTextBlock';
 
 // Blocos de quiz (validados)
-import QuizResultCalculatedBlock from "../components/editor/blocks/QuizResultCalculatedBlock";
+import QuizResultCalculatedBlock from '../components/editor/blocks/QuizResultCalculatedBlock';
 
 // SISTEMA UNIFICADO - Prioriza EnhancedBlockRegistry + Fallbacks validados
 export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
@@ -28,10 +28,10 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   heading: HeaderBlock,
   text: TextBlock,
   image: ImageBlock,
-  "rich-text": RichTextBlock,
+  'rich-text': RichTextBlock,
 
   // Blocos de quiz e resultado (funcionais)
-  "quiz-result-calculated": QuizResultCalculatedBlock,
+  'quiz-result-calculated': QuizResultCalculatedBlock,
   QuizResultCalculatedBlock: QuizResultCalculatedBlock,
 };
 

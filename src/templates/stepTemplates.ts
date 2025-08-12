@@ -20,15 +20,16 @@ export const introTemplate = [
   {
     type: 'quiz-intro-header',
     properties: {
-      logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-      logoAlt: "Logo Gisele Galvão",
+      logoUrl:
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
       progressValue: 0,
       progressMax: 100,
       showBackButton: false,
-      showProgress: false
-    }
+      showProgress: false,
+    },
   },
   {
     type: 'decorative-bar-inline',
@@ -38,19 +39,20 @@ export const introTemplate = [
       color: '#B89B7A',
       backgroundColor: '#B89B7A',
       marginTop: 0,
-      marginBottom: 24
-    }
+      marginBottom: 24,
+    },
   },
   {
     type: 'text-inline',
     properties: {
-      content: '<span style="color: #B89B7A">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style="color: #B89B7A">Você</span>.',
+      content:
+        '<span style="color: #B89B7A">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style="color: #B89B7A">Você</span>.',
       fontSize: 'text-2xl',
       fontWeight: 'font-bold',
       textAlign: 'text-center',
       color: '#432818',
-      marginBottom: 16
-    }
+      marginBottom: 16,
+    },
   },
   {
     type: 'image-display-inline',
@@ -60,8 +62,8 @@ export const introTemplate = [
       width: 300,
       height: 204,
       containerPosition: 'center',
-      marginBottom: 16
-    }
+      marginBottom: 16,
+    },
   },
   {
     type: 'text-inline',
@@ -71,8 +73,8 @@ export const introTemplate = [
       fontWeight: 'font-medium',
       textAlign: 'text-center',
       color: '#432818',
-      marginBottom: 24
-    }
+      marginBottom: 24,
+    },
   },
   {
     type: 'form-container',
@@ -99,7 +101,7 @@ export const introTemplate = [
           backgroundColor: '#ffffff',
           borderColor: '#B89B7A',
           marginBottom: 16,
-        }
+        },
       },
       {
         id: 'intro-cta-button',
@@ -118,10 +120,10 @@ export const introTemplate = [
           disabledText: 'Digite seu nome para continuar',
           showDisabledState: true,
           disabledOpacity: 0.6,
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  },
 ];
 
 // Template de coleta de nome com sistema inteligente (para outras etapas se necessário)
@@ -133,7 +135,7 @@ export const nameInputTemplate = [
       fontSize: 'text-lg',
       fontWeight: 'font-medium',
       textAlign: 'center',
-      marginBottom: 16
+      marginBottom: 16,
     },
   },
   {
@@ -154,7 +156,7 @@ export const nameInputTemplate = [
           required: true,
           name: 'userName',
           inputType: 'text',
-        }
+        },
       },
       {
         id: 'continue-button',
@@ -168,9 +170,9 @@ export const nameInputTemplate = [
           watchInputId: 'name-input',
           disabledText: 'Digite seu nome para continuar',
           showDisabledState: true,
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
 ];
 

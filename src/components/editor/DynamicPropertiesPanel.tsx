@@ -1,18 +1,18 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Textarea } from "@/components/ui/textarea";
-import { BlockDefinition, EditableContent, PropertySchema } from "@/types/editor";
-import { GripVertical, Plus, Trash2, Upload, X } from "lucide-react";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
+import { BlockDefinition, EditableContent, PropertySchema } from '@/types/editor';
+import { GripVertical, Plus, Trash2, Upload, X } from 'lucide-react';
 
 // ✅ Componente para editar arrays (especialmente opções de quiz)
 interface ArrayEditorProps {
@@ -28,16 +28,16 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
     const itemNumber = currentItems.length + 1;
 
     const newItem =
-      property.label.includes("opções") || property.label.includes("options")
+      property.label.includes('opções') || property.label.includes('options')
         ? {
             id: `option-${itemNumber}`,
-            text: "Nova opção",
-            imageUrl: "https://via.placeholder.com/150x150",
+            text: 'Nova opção',
+            imageUrl: 'https://via.placeholder.com/150x150',
             value: `value-option-${itemNumber}`,
-            category: "Geral",
+            category: 'Geral',
             points: 1,
           }
-        : property.default || "";
+        : property.default || '';
 
     onChange([...value, newItem]);
   };
@@ -49,12 +49,12 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
   const handleUpdateItem = (index: number, updates: any) => {
     const newValue = [...value];
     newValue[index] =
-      typeof newValue[index] === "object" ? { ...newValue[index], ...updates } : updates;
+      typeof newValue[index] === 'object' ? { ...newValue[index], ...updates } : updates;
     onChange(newValue);
   };
 
-  const handleMoveItem = (index: number, direction: "up" | "down") => {
-    const newIndex = direction === "up" ? index - 1 : index + 1;
+  const handleMoveItem = (index: number, direction: 'up' | 'down') => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex >= 0 && newIndex < value.length) {
       const newValue = [...value];
       [newValue[index], newValue[newIndex]] = [newValue[newIndex], newValue[index]];
@@ -66,7 +66,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">
-          {property.label} ({value.length} {value.length === 1 ? "item" : "itens"})
+          {property.label} ({value.length} {value.length === 1 ? 'item' : 'itens'})
         </span>
         <Button size="sm" onClick={handleAddItem} className="text-xs">
           <Plus className="h-3 w-3 mr-1" />
@@ -88,7 +88,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => handleMoveItem(index, "up")}
+                    onClick={() => handleMoveItem(index, 'up')}
                     disabled={index === 0}
                     className="h-6 w-6 p-0"
                   >
@@ -97,7 +97,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => handleMoveItem(index, "down")}
+                    onClick={() => handleMoveItem(index, 'down')}
                     disabled={index === value.length - 1}
                     className="h-6 w-6 p-0"
                   >
@@ -107,7 +107,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     size="sm"
                     variant="ghost"
                     onClick={() => handleRemoveItem(index)}
-                    style={{ color: "#432818" }}
+                    style={{ color: '#432818' }}
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
@@ -115,12 +115,12 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
               </div>
 
               {/* Edição do Item - Se for objeto (opção de quiz) */}
-              {typeof item === "object" && item !== null ? (
+              {typeof item === 'object' && item !== null ? (
                 <div className="space-y-2">
                   <div>
                     <Label className="text-xs">Texto</Label>
                     <Textarea
-                      value={item.text || ""}
+                      value={item.text || ''}
                       onChange={e => handleUpdateItem(index, { text: e.target.value })}
                       placeholder="Texto da opção..."
                       rows={2}
@@ -132,7 +132,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     <div>
                       <Label className="text-xs">Valor</Label>
                       <Input
-                        value={item.value || ""}
+                        value={item.value || ''}
                         onChange={e => handleUpdateItem(index, { value: e.target.value })}
                         placeholder="valor"
                         className="text-sm"
@@ -141,7 +141,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     <div>
                       <Label className="text-xs">Categoria</Label>
                       <Input
-                        value={item.category || ""}
+                        value={item.category || ''}
                         onChange={e => handleUpdateItem(index, { category: e.target.value })}
                         placeholder="categoria"
                         className="text-sm"
@@ -153,7 +153,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
                     <Label className="text-xs">URL da Imagem</Label>
                     <div className="flex gap-2">
                       <Input
-                        value={item.imageUrl || ""}
+                        value={item.imageUrl || ''}
                         onChange={e => handleUpdateItem(index, { imageUrl: e.target.value })}
                         placeholder="https://..."
                         className="text-sm"
@@ -190,7 +190,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
               ) : (
                 /* Edição Simples - Se for string ou primitivo */
                 <Input
-                  value={item || ""}
+                  value={item || ''}
                   onChange={e => handleUpdateItem(index, e.target.value)}
                   placeholder="Digite o valor..."
                   className="text-sm"
@@ -202,7 +202,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
       </div>
 
       {value.length === 0 && (
-        <div style={{ borderColor: "#E5DDD5" }}>
+        <div style={{ borderColor: '#E5DDD5' }}>
           <div className="text-2xl mb-2">📝</div>
           <p className="text-sm">Nenhum item adicionado</p>
           <Button size="sm" onClick={handleAddItem} className="mt-2">
@@ -244,31 +244,31 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
     const currentValue = (block.content as any)[key] || property.default;
 
     switch (property.type) {
-      case "string":
+      case 'string':
         return (
           <Input
-            value={currentValue || ""}
+            value={currentValue || ''}
             onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.label}
           />
         );
-      case "textarea":
+      case 'textarea':
         return (
           <Textarea
-            value={currentValue || ""}
+            value={currentValue || ''}
             onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.label}
             rows={3}
           />
         );
-      case "boolean":
+      case 'boolean':
         return (
           <Switch
             checked={currentValue || false}
             onCheckedChange={checked => handlePropertyChange(key, checked)}
           />
         );
-      case "select":
+      case 'select':
         return (
           <Select
             value={currentValue || property.default}
@@ -286,16 +286,16 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
             </SelectContent>
           </Select>
         );
-      case "number":
+      case 'number':
         return (
           <Input
             type="number"
-            value={currentValue || ""}
+            value={currentValue || ''}
             onChange={e => handlePropertyChange(key, parseFloat(e.target.value) || 0)}
             placeholder={property.label}
           />
         );
-      case "array":
+      case 'array':
         return (
           <ArrayEditor
             value={currentValue || []}
@@ -306,7 +306,7 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
       default:
         return (
           <Input
-            value={currentValue || ""}
+            value={currentValue || ''}
             onChange={e => handlePropertyChange(key, e.target.value)}
             placeholder={property.label}
           />
@@ -336,14 +336,14 @@ const DynamicPropertiesPanel: React.FC<DynamicPropertiesPanelProps> = ({
       <div className="flex-1 p-4 space-y-4 overflow-auto">
         {Object.entries(blockDefinition.properties).map(([key, property]) => (
           <div key={key} className="space-y-2">
-            <Label style={{ color: "#6B4F43" }}>{property.label}</Label>
+            <Label style={{ color: '#6B4F43' }}>{property.label}</Label>
             {renderPropertyInput(key, property)}
-            {property.description && <p style={{ color: "#8B7355" }}>{property.description}</p>}
+            {property.description && <p style={{ color: '#8B7355' }}>{property.description}</p>}
           </div>
         ))}
 
         {Object.keys(blockDefinition.properties).length === 0 && (
-          <div style={{ color: "#8B7355" }}>
+          <div style={{ color: '#8B7355' }}>
             <div className="text-4xl mb-2">⚙️</div>
             <p className="text-sm">Nenhuma propriedade disponível</p>
           </div>

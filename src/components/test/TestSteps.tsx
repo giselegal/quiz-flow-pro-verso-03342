@@ -6,7 +6,7 @@ const TestSteps: React.FC = () => {
     console.log('🔍 Teste CLEAN_21_STEPS:');
     console.log('- Quantidade:', CLEAN_21_STEPS.length);
     console.log('- Dados completos:', CLEAN_21_STEPS);
-    
+
     if (CLEAN_21_STEPS.length > 0) {
       console.log('- Primeira etapa:', CLEAN_21_STEPS[0]);
       console.log('- Última etapa:', CLEAN_21_STEPS[CLEAN_21_STEPS.length - 1]);

@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import LiveQuizEditor from "@/components/live-editor/LiveQuizEditor";
-import { useLiveEditor } from "@/hooks/useLiveEditor";
+import React, { useEffect } from 'react';
+import { useLocation } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import LiveQuizEditor from '@/components/live-editor/LiveQuizEditor';
+import { useLiveEditor } from '@/hooks/useLiveEditor';
 
 const LiveEditorPage: React.FC = () => {
   const [, setLocation] = useLocation();
@@ -16,9 +16,9 @@ const LiveEditorPage: React.FC = () => {
     // Se não houver etapas, criar uma introdução padrão
     if (stages.length === 0) {
       addStage({
-        id: "intro-1",
-        name: "Introdução do Quiz",
-        type: "intro",
+        id: 'intro-1',
+        name: 'Introdução do Quiz',
+        type: 'intro',
         order: 0,
         components: [],
         settings: {},
@@ -29,12 +29,12 @@ const LiveEditorPage: React.FC = () => {
   return (
     <div className="h-screen flex flex-col">
       {/* Header com navegação */}
-      <div style={{ borderColor: "#E5DDD5" }}>
+      <div style={{ borderColor: '#E5DDD5' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              onClick={() => setLocation("/admin")}
+              onClick={() => setLocation('/admin')}
               className="text-[#432818] hover:text-[#B89B7A]"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

@@ -1,4 +1,4 @@
-import { OptimizedImage } from "./optimized-image-v2";
+import { OptimizedImage } from './optimized-image-v2';
 
 interface FixedTransformationImageProps {
   src: string;
@@ -18,7 +18,7 @@ export const FixedTransformationImage: React.FC<FixedTransformationImageProps> =
   alt,
   width,
   height,
-  className = "",
+  className = '',
   priority = false,
 }) => {
   return (

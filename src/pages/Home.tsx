@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 import {
   ArrowRight,
   Eye,
@@ -13,8 +13,8 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
   const { user, logout } = useAuth();
@@ -30,7 +30,7 @@ const Home = () => {
 
   // SEO básico
   useEffect(() => {
-    document.title = "CaktoQuiz – Quizzes elegantes que convertem";
+    document.title = 'CaktoQuiz – Quizzes elegantes que convertem';
     const ensureTag = <T extends HTMLElement>(selector: string, create: () => T): T => {
       const found = document.querySelector(selector) as T | null;
       if (found) return found;
@@ -39,18 +39,16 @@ const Home = () => {
       return el;
     };
 
-    const metaDesc = ensureTag<HTMLMetaElement>(
-      'meta[name="description"]',
-      () => Object.assign(document.createElement('meta'), { name: 'description' })
+    const metaDesc = ensureTag<HTMLMetaElement>('meta[name="description"]', () =>
+      Object.assign(document.createElement('meta'), { name: 'description' })
     );
     metaDesc.setAttribute(
       'content',
       'CaktoQuiz: quizzes interativos com design elegante e moderno para captar leads e aumentar conversões.'
     );
 
-    const linkCanonical = ensureTag<HTMLLinkElement>(
-      'link[rel="canonical"]',
-      () => Object.assign(document.createElement('link'), { rel: 'canonical' })
+    const linkCanonical = ensureTag<HTMLLinkElement>('link[rel="canonical"]', () =>
+      Object.assign(document.createElement('link'), { rel: 'canonical' })
     );
     linkCanonical.setAttribute('href', `${window.location.origin}/`);
   }, []);
@@ -98,7 +96,7 @@ const Home = () => {
                     </span>
                   </div>
                   <Button
-                    onClick={() => navigate("/admin")}
+                    onClick={() => navigate('/admin')}
                     className="bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-dark hover:to-brand-primary text-white shadow-lg"
                   >
                     Dashboard
@@ -114,14 +112,14 @@ const Home = () => {
               ) : (
                 <div className="flex items-center space-x-3">
                   <Button
-                    onClick={() => navigate("/auth")}
+                    onClick={() => navigate('/auth')}
                     variant="outline"
                     className="border-brand-light text-brand-text hover:bg-brand-light/10"
                   >
                     Entrar
                   </Button>
                   <Button
-                    onClick={() => navigate("/auth")}
+                    onClick={() => navigate('/auth')}
                     className="bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-dark hover:to-brand-primary text-white shadow-lg"
                   >
                     Começar Grátis
@@ -158,12 +156,12 @@ const Home = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                 <Button
-                  onClick={() => navigate(user ? "/admin" : "/auth")}
+                  onClick={() => navigate(user ? '/admin' : '/auth')}
                   size="lg"
                   className="bg-gradient-to-r from-brand-primary to-brand-dark hover:from-brand-dark hover:to-brand-primary text-white shadow-xl px-8 py-4 text-lg"
                 >
                   <Play className="h-5 w-5 mr-2" />
-                  {user ? "Ir para Dashboard" : "Começar Agora"}
+                  {user ? 'Ir para Dashboard' : 'Começar Agora'}
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
                 <Button
@@ -231,12 +229,13 @@ const Home = () => {
               <h3 className="text-3xl lg:text-4xl font-bold text-brand-text mb-4">
                 Tudo que você precisa para
                 <span className="bg-gradient-to-r from-brand-primary to-brand-dark bg-clip-text text-transparent">
-                  {" "}
+                  {' '}
                   converter mais
                 </span>
               </h3>
               <p className="text-xl text-brand-text/80 max-w-2xl mx-auto">
-                Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão amar
+                Ferramentas poderosas e intuitivas para criar experiências que seus clientes vão
+                amar
               </p>
             </div>
 
@@ -258,7 +257,9 @@ const Home = () => {
                 <div className="w-12 h-12 bg-gradient-to-r from-brand-light to-brand-primary rounded-xl flex items-center justify-center mb-6">
                   <Target className="h-6 w-6 text-white" />
                 </div>
-                <h4 className="text-xl font-semibold text-brand-text mb-3">Segmentação Inteligente</h4>
+                <h4 className="text-xl font-semibold text-brand-text mb-3">
+                  Segmentação Inteligente
+                </h4>
                 <p className="text-brand-text/80 leading-relaxed">
                   Qualifique leads automaticamente e direcione ofertas personalizadas baseadas nas
                   respostas.
@@ -286,15 +287,16 @@ const Home = () => {
               Pronto para transformar seu marketing?
             </h4>
             <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-              Junte-se a milhares de empresas que já aumentaram suas conversões com nossa plataforma.
+              Junte-se a milhares de empresas que já aumentaram suas conversões com nossa
+              plataforma.
             </p>
             <Button
-              onClick={() => navigate(user ? "/admin" : "/auth")}
+              onClick={() => navigate(user ? '/admin' : '/auth')}
               size="lg"
               className="bg-white text-brand-text hover:bg-brand-light/20 shadow-xl px-8 py-4 text-lg font-semibold"
             >
               <Rocket className="h-5 w-5 mr-2" />
-              {user ? "Acessar Dashboard" : "Começar Gratuitamente"}
+              {user ? 'Acessar Dashboard' : 'Começar Gratuitamente'}
               <ArrowRight className="h-5 w-5 ml-2" />
             </Button>
           </div>

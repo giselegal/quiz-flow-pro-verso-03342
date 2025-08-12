@@ -7,13 +7,13 @@
  * @param {number} days - Dias para expirar o cookie
  */
 export const setCookie = (name, value, days = 30) => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
   const date = new Date();
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  const expires = "; expires=" + date.toUTCString();
+  const expires = '; expires=' + date.toUTCString();
 
-  document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/";
+  document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
 };
 
 /**
@@ -22,14 +22,14 @@ export const setCookie = (name, value, days = 30) => {
  * @returns {string|null} - Valor do cookie ou null se não existir
  */
 export const getCookie = name => {
-  if (typeof window === "undefined") return null;
+  if (typeof window === 'undefined') return null;
 
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(";");
+  const nameEQ = name + '=';
+  const ca = document.cookie.split(';');
 
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) === " ") c = c.substring(1, c.length);
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
     if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
   }
 
@@ -41,7 +41,7 @@ export const getCookie = name => {
  * @param {string} name - Nome do cookie a ser removido
  */
 export const deleteCookie = name => {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return;
 
-  document.cookie = name + "=; Max-Age=-99999999; path=/";
+  document.cookie = name + '=; Max-Age=-99999999; path=/';
 };

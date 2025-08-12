@@ -1,8 +1,8 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { BarChart3, Eye, Pause, Plus, Target } from "lucide-react";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { BarChart3, Eye, Pause, Plus, Target } from 'lucide-react';
 
 const ABTestPage: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const ABTestPage: React.FC = () => {
         <div>
           <h1
             className="text-3xl font-bold text-[#432818]"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
             Testes A/B
           </h1>
@@ -94,7 +94,7 @@ const ABTestPage: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant="default" style={{ backgroundColor: "#E5DDD5" }}>
+                  <Badge variant="default" style={{ backgroundColor: '#E5DDD5' }}>
                     Ativo
                   </Badge>
                   <Button variant="outline" size="sm">

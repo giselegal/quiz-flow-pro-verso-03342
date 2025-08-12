@@ -100,7 +100,7 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
   const buttonStyle: React.CSSProperties = {
     backgroundColor: isButtonEnabled ? backgroundColor : '#9CA3AF',
     color: isButtonEnabled ? textColor : '#6B7280',
-    opacity: isButtonEnabled ? 1 : (showDisabledState ? disabledOpacity : 1),
+    opacity: isButtonEnabled ? 1 : showDisabledState ? disabledOpacity : 1,
     cursor: isButtonEnabled ? 'pointer' : 'not-allowed',
   };
 

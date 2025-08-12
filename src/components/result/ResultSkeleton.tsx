@@ -7,7 +7,6 @@ interface ResultSkeletonProps {
 }
 
 const ResultSkeleton: React.FC<ResultSkeletonProps> = () => {
-
   return (
     <div className="min-h-screen bg-[#fffaf7] p-4 md:p-6" aria-busy="true" role="status">
       <div className="container mx-auto max-w-4xl">

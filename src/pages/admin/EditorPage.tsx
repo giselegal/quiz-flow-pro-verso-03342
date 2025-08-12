@@ -1,4 +1,4 @@
-import EditorFixedPageWithDragDrop from "../editor-fixed-dragdrop";
+import EditorFixedPageWithDragDrop from '../editor-fixed-dragdrop';
 
 const EditorPage: React.FC = () => {
   return <EditorFixedPageWithDragDrop />;

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { getAllImages } from "@/data/imageBank";
-import { preloadCriticalImages } from "@/utils/imageManager";
+import { useState, useEffect } from 'react';
+import { getAllImages } from '@/data/imageBank';
+import { preloadCriticalImages } from '@/utils/imageManager';
 
 export const useImageBank = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -14,15 +14,15 @@ export const useImageBank = () => {
         setImages(imageData);
 
         // Preload critical images without onComplete callback
-        await preloadCriticalImages("strategic", {
+        await preloadCriticalImages('strategic', {
           quality: 75,
           batchSize: 3,
-          format: "webp",
+          format: 'webp',
         });
 
         setPreloadProgress(100);
       } catch (error) {
-        console.error("Error loading images:", error);
+        console.error('Error loading images:', error);
       } finally {
         setIsLoading(false);
       }
@@ -36,7 +36,7 @@ export const useImageBank = () => {
       await preloadCriticalImages(category as any, {
         quality: 80,
         batchSize: 5,
-        format: "webp",
+        format: 'webp',
       });
     } catch (error) {
       console.error(`Error preloading images for category ${category}:`, error);

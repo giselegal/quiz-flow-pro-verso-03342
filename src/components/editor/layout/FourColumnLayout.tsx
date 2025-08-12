@@ -23,14 +23,18 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
         <ResizablePanelGroup direction="horizontal" className="h-full">
           {/* Coluna 1: Etapas do Funil */}
           <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[200px]">
-            <div className="h-full flex flex-col border-r border-border/50 bg-card/50">{stagesPanel}</div>
+            <div className="h-full flex flex-col border-r border-border/50 bg-card/50">
+              {stagesPanel}
+            </div>
           </ResizablePanel>
 
           <ResizableHandle withHandle />
 
           {/* Coluna 2: Componentes */}
           <ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="min-w-[250px]">
-            <div className="h-full flex flex-col border-r border-border/50 bg-card/30">{componentsPanel}</div>
+            <div className="h-full flex flex-col border-r border-border/50 bg-card/30">
+              {componentsPanel}
+            </div>
           </ResizablePanel>
 
           <ResizableHandle withHandle />
@@ -44,7 +48,9 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
 
           {/* Coluna 4: Painel de Propriedades */}
           <ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="min-w-[300px]">
-            <div className="h-full flex flex-col border-l border-border/50 bg-card/30">{propertiesPanel}</div>
+            <div className="h-full flex flex-col border-l border-border/50 bg-card/30">
+              {propertiesPanel}
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>

@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus, Eye, Edit, BarChart3 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Plus, Eye, Edit, BarChart3 } from 'lucide-react';
 
 const FunnelPanelPage: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const FunnelPanelPage: React.FC = () => {
         <div>
           <h1
             className="text-3xl font-bold text-[#432818]"
-            style={{ fontFamily: "Playfair Display, serif" }}
+            style={{ fontFamily: 'Playfair Display, serif' }}
           >
             Gerenciamento de Funis
           </h1>

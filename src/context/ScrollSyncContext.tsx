@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useRef, useCallback, useState } from "react";
+import React, { createContext, useContext, useRef, useCallback, useState } from 'react';
 
 interface ScrollSyncContextType {
   canvasScrollRef: React.RefObject<HTMLDivElement>;
   componentsScrollRef: React.RefObject<HTMLDivElement>;
   propertiesScrollRef: React.RefObject<HTMLDivElement>;
-  syncScroll: (source: "canvas" | "components" | "properties", scrollTop: number) => void;
+  syncScroll: (source: 'canvas' | 'components' | 'properties', scrollTop: number) => void;
   isScrolling: boolean;
 }
 
@@ -13,7 +13,7 @@ const ScrollSyncContext = createContext<ScrollSyncContextType | undefined>(undef
 export const useScrollSync = () => {
   const context = useContext(ScrollSyncContext);
   if (!context) {
-    throw new Error("useScrollSync must be used within a ScrollSyncProvider");
+    throw new Error('useScrollSync must be used within a ScrollSyncProvider');
   }
   return context;
 };
@@ -31,7 +31,7 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
   const rafRef = useRef<number | null>(null);
 
   const syncScroll = useCallback(
-    (source: "canvas" | "components" | "properties", scrollTop: number) => {
+    (source: 'canvas' | 'components' | 'properties', scrollTop: number) => {
       if (isSyncingRef.current) return;
       isSyncingRef.current = true;
       setIsScrolling(true);
@@ -41,15 +41,13 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
       }
 
       rafRef.current = requestAnimationFrame(() => {
-        const getElement = (
-          s: "canvas" | "components" | "properties"
-        ): HTMLDivElement | null => {
+        const getElement = (s: 'canvas' | 'components' | 'properties'): HTMLDivElement | null => {
           switch (s) {
-            case "canvas":
+            case 'canvas':
               return canvasScrollRef.current;
-            case "components":
+            case 'components':
               return componentsScrollRef.current;
-            case "properties":
+            case 'properties':
               return propertiesScrollRef.current;
             default:
               return null;
@@ -66,7 +64,7 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
         const sourceMaxScroll = Math.max(0, sourceEl.scrollHeight - sourceEl.clientHeight);
         const ratio = sourceMaxScroll > 0 ? scrollTop / sourceMaxScroll : 0;
 
-        const applyProportional = (target: "canvas" | "components" | "properties") => {
+        const applyProportional = (target: 'canvas' | 'components' | 'properties') => {
           if (target === source) return;
           const el = getElement(target);
           if (!el) return;
@@ -77,9 +75,9 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
           }
         };
 
-        applyProportional("canvas");
-        applyProportional("components");
-        applyProportional("properties");
+        applyProportional('canvas');
+        applyProportional('components');
+        applyProportional('properties');
 
         isSyncingRef.current = false;
         setIsScrolling(false);

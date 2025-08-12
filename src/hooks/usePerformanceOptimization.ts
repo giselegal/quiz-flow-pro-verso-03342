@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from 'react';
 
 interface PerformanceMetrics {
   componentRenderTime: number;
@@ -42,7 +42,7 @@ export const usePerformanceOptimization = () => {
       }
 
       observerRef.current = new IntersectionObserver(callback, {
-        rootMargin: "50px",
+        rootMargin: '50px',
         threshold: 0.1,
         ...options,
       });

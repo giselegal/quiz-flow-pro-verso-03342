@@ -56,25 +56,25 @@ export const getStep17Template = () => {
         options: [
           {
             id: 'strategic-17-a',
-            text: 'Sim, presencial',
+            text: 'Continuar →',
             category: 'physical-experience',
             strategicType: 'experience',
           },
           {
             id: 'strategic-17-b',
-            text: 'Sim, online',
+            text: 'Continuar →',
             category: 'online-experience',
             strategicType: 'experience',
           },
           {
             id: 'strategic-17-c',
-            text: 'Não, mas tenho interesse',
+            text: 'Continuar →',
             category: 'interested',
             strategicType: 'experience',
           },
           {
             id: 'strategic-17-d',
-            text: 'Não, nunca pensei nisso',
+            text: 'Continuar →',
             category: 'no-experience',
             strategicType: 'experience',
           },
@@ -96,7 +96,7 @@ export const getStep17Template = () => {
       id: 'navigation-button-step17',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',

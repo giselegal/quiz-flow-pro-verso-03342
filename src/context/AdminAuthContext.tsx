@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface AdminUser {
   email: string;
@@ -24,7 +24,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
     // Automaticamente autenticar como admin (acesso livre)
     const autoLogin = () => {
       const user: AdminUser = {
-        email: "admin@local.dev",
+        email: 'admin@local.dev',
         authenticated: true,
         loginTime: new Date(),
       };
@@ -37,7 +37,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
   const adminLogin = async (email: string, _password: string): Promise<boolean> => {
     // Sempre retorna sucesso (acesso livre)
     const user: AdminUser = {
-      email: email || "admin@local.dev",
+      email: email || 'admin@local.dev',
       authenticated: true,
       loginTime: new Date(),
     };
@@ -47,7 +47,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const adminLogout = () => {
     // Não faz logout real, apenas simula
-    console.log("Logout simulado - acesso continua livre");
+    console.log('Logout simulado - acesso continua livre');
   };
 
   const isAdminAuthenticated = true; // Sempre autenticado
@@ -70,7 +70,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
 export const useAdminAuth = () => {
   const context = useContext(AdminAuthContext);
   if (context === undefined) {
-    throw new Error("useAdminAuth must be used within an AdminAuthProvider");
+    throw new Error('useAdminAuth must be used within an AdminAuthProvider');
   }
   return context;
 };

@@ -3,7 +3,7 @@
  * Implementa atalhos Ctrl+Z, Ctrl+Y, Delete para melhor UX
  */
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 interface UseKeyboardShortcutsOptions {
   onUndo?: () => void;
@@ -33,9 +33,9 @@ export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
       // Ignore if user is typing in an input/textarea
       const target = event.target as HTMLElement;
       if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.contentEditable === "true"
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.contentEditable === 'true'
       ) {
         return;
       }
@@ -43,7 +43,7 @@ export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
       const isCtrl = event.ctrlKey || event.metaKey;
 
       // Ctrl+Z - Undo
-      if (isCtrl && event.key === "z" && !event.shiftKey) {
+      if (isCtrl && event.key === 'z' && !event.shiftKey) {
         event.preventDefault();
         if (canUndo && onUndo) {
           onUndo();
@@ -52,7 +52,7 @@ export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
       }
 
       // Ctrl+Y ou Ctrl+Shift+Z - Redo
-      if ((isCtrl && event.key === "y") || (isCtrl && event.shiftKey && event.key === "z")) {
+      if ((isCtrl && event.key === 'y') || (isCtrl && event.shiftKey && event.key === 'z')) {
         event.preventDefault();
         if (canRedo && onRedo) {
           onRedo();
@@ -61,7 +61,7 @@ export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
       }
 
       // Delete - Delete selected block
-      if (event.key === "Delete" || event.key === "Backspace") {
+      if (event.key === 'Delete' || event.key === 'Backspace') {
         if (hasSelectedBlock && onDelete) {
           event.preventDefault();
           onDelete();
@@ -70,18 +70,18 @@ export const useKeyboardShortcuts = (options: UseKeyboardShortcutsOptions) => {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [onUndo, onRedo, onDelete, canUndo, canRedo, hasSelectedBlock, disabled]);
 
   return {
     shortcuts: {
-      undo: canUndo ? "Ctrl+Z" : null,
-      redo: canRedo ? "Ctrl+Y" : null,
-      delete: hasSelectedBlock ? "Delete" : null,
+      undo: canUndo ? 'Ctrl+Z' : null,
+      redo: canRedo ? 'Ctrl+Y' : null,
+      delete: hasSelectedBlock ? 'Delete' : null,
     },
   };
 };

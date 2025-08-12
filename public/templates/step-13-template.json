@@ -9,11 +9,16 @@
   "validation": {
     "required": true,
     "minAnswers": 1,
-    "maxAnswers": 3,
-    "validationMessage": "Selecione pelo menos uma opção!"
+    "maxAnswers": 1,
+    "validationMessage": "Selecione uma opção para continuar"
   },
   "analytics": {
-    "events": ["page_view", "option_selected", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "option_selected",
+      "validation_error",
+      "completion"
+    ],
     "trackingId": "step-13-quiz-question"
   },
   "metadata": {
@@ -21,7 +26,11 @@
     "name": "Q12 - Investimento",
     "description": "Questão sobre investimento em roupas",
     "category": "quiz-question",
-    "tags": ["quiz", "style", "quiz-question"],
+    "tags": [
+      "quiz",
+      "style",
+      "quiz-question"
+    ],
     "createdAt": "2025-08-11T01:02:19.343Z",
     "updatedAt": "2025-08-11T01:02:19.343Z"
   },
@@ -112,15 +121,19 @@
         "columns": 2,
         "imageSize": 256,
         "showImages": true,
-        "multipleSelection": true,
+        "multipleSelection": false,
         "minSelections": 1,
-        "maxSelections": 3,
+        "maxSelections": 1,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",
         "containerWidth": "full",
         "spacing": "small",
-        "marginBottom": 16
+        "marginBottom": 16,
+        "validationMessage": "Selecione uma opção para continuar",
+        "autoAdvance": false,
+        "autoAdvanceOnComplete": false,
+        "autoAdvanceDelay": 0
       }
     },
     {
@@ -128,8 +141,8 @@
       "type": "button-inline",
       "position": 4,
       "properties": {
-        "text": "Próxima Questão →",
-        "textWhenDisabled": "Selecione pelo menos 1 opção",
+        "text": "Continuar →",
+        "textWhenDisabled": "Selecione uma opção para continuar",
         "variant": "primary",
         "size": "large",
         "fullWidth": true,
@@ -138,7 +151,8 @@
         "enableOnSelection": true,
         "containerWidth": "full",
         "spacing": "small",
-        "marginTop": 24
+        "marginTop": 24,
+        "requiresValidSelection": true
       }
     }
   ]
