@@ -11,7 +11,6 @@ interface PropertiesPanelProps {
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   selectedComponent,
   selectedBlock,
-  onUpdate,
   onDelete,
   onClose,
 }) => {

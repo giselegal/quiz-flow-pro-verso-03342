@@ -279,7 +279,7 @@ export const TemplateGallery: React.FC<TemplateGalleryProps> = ({
 
   // Estados para criação/edição de templates
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
+  
   const [newTemplate, setNewTemplate] = useState({
     name: "",
     description: "",

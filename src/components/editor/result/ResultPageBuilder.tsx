@@ -11,7 +11,7 @@ interface ResultPageBuilderProps {
 }
 
 export const ResultPageBuilder: React.FC<ResultPageBuilderProps> = ({ primaryStyle }) => {
-  const { config, addBlock, updateBlock, deleteBlock } = useEditor();
+  const { addBlock, updateBlock, deleteBlock } = useEditor();
   const [selectedComponent, setSelectedComponent] = React.useState<string | null>(null);
 
   return (

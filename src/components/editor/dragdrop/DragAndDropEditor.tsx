@@ -94,7 +94,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
 
   // Simular preview do bloco baseado no tipo
   const renderBlockPreview = () => {
-    const component = getBlockComponent(block.type);
+    
 
     switch (block.type) {
       case "text-inline":

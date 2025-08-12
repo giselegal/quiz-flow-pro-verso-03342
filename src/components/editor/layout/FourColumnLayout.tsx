@@ -18,11 +18,6 @@ export const FourColumnLayout: React.FC<FourColumnLayoutProps> = ({
   propertiesPanel,
   className,
 }) => {
-  const [collapsedPanels, setCollapsedPanels] = useState({
-    stages: false,
-    components: false,
-    properties: false,
-  });
 
   return (
     <ScrollSyncProvider>

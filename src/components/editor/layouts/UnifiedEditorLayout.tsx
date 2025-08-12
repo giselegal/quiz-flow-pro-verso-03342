@@ -14,9 +14,9 @@ interface UnifiedEditorLayoutProps {
 export const UnifiedEditorLayout: React.FC<UnifiedEditorLayoutProps> = ({ className = "" }) => {
   const [activeTab, setActiveTab] = useState<"quiz" | "result" | "sales">("result");
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [isPreviewing, setIsPreviewing] = useState(false);
+  const [isPreviewing] = useState(false);
 
-  const { resultPageConfig, updateSection } = useResultPageConfig("Natural");
+  const { resultPageConfig } = useResultPageConfig("Natural");
 
   const handleComponentSelect = (type: string) => {
     console.log("Component selected:", type);

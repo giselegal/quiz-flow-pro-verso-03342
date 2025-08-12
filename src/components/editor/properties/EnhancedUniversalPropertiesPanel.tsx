@@ -23,18 +23,10 @@ interface EnhancedUniversalPropertiesPanelProps {
   className?: string;
 }
 
-// 🎯 Suporte otimizado para componentes inline
-const getComponentProperties = useCallback((block: any) => {
-  if (block.type?.includes("inline") || ["form-input"].includes(block.type)) {
-    return getInlineComponentProperties(block.type, block.properties);
-  }
-  return block.properties || {};
-}, []);
 
 export const BasicPropertiesPanel: React.FC<EnhancedUniversalPropertiesPanelProps> = ({
   selectedBlock,
   onUpdateBlock,
-  className = "",
 }) => {
   if (!selectedBlock) {
     return (

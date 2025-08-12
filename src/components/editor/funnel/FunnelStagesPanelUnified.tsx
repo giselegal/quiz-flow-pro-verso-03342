@@ -20,7 +20,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   const {
     stages,
     activeStageId,
-    stageActions: { setActiveStage, addStage, removeStage, updateStage },
+    stageActions: { setActiveStage, addStage, removeStage },
     computed: { stageCount },
   } = useEditor();
 
@@ -151,7 +151,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full">
           <div className="space-y-2 p-4">
-            {stages.map((stage, index) => {
+            {stages.map(stage => {
               console.log("🚨 RENDERIZANDO STAGE:", stage.id, stage.name);
               return (
                 <div

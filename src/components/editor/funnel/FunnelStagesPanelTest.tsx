@@ -8,7 +8,6 @@ interface FunnelStagesPanelProps {
 
 export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   className,
-  onStageSelect,
 }) => {
   return (
     <Card className={className}>

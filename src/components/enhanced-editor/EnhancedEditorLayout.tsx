@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useUnifiedProperties } from "@/hooks/useUnifiedProperties";
+
 import { BlockType, EditorBlock } from "@/types/editor";
 
 interface EnhancedEditorLayoutProps {

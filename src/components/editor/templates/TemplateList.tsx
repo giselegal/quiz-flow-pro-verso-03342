@@ -10,7 +10,7 @@ interface TemplateListProps {
 }
 
 export const TemplateList: React.FC<TemplateListProps> = ({ onSelectTemplate }) => {
-  const { resultPageConfig, updateSection } = useResultPageConfig("Natural");
+  const { updateSection } = useResultPageConfig("Natural");
 
   const handleSelectTemplate = (template: any) => {
     try {

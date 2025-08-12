@@ -5,7 +5,7 @@ import { Eye, Palette, Settings, Type } from "lucide-react";
 import React, { useState } from "react";
 
 // Importar todos os componentes inline
-import { ButtonInline } from "@/components/blocks/inline/ButtonInline";
+import ButtonInline from "@/components/blocks/inline/ButtonInline";
 import ImageDisplayInline from "@/components/blocks/inline/ImageDisplayInline";
 import { TextInline } from "@/components/blocks/inline/TextInline";
 import { QuizIntroHeaderBlock } from "@/components/editor/quiz/QuizIntroHeaderBlock";

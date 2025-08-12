@@ -7,7 +7,6 @@ interface BlockPreviewRendererProps {
   isSelected?: boolean;
   isPreviewing?: boolean;
   onSelect?: () => void;
-  primaryStyle?: StyleResult;
 }
 
 export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
@@ -15,7 +14,6 @@ export const BlockPreviewRenderer: React.FC<BlockPreviewRendererProps> = ({
   isSelected = false,
   isPreviewing = false,
   onSelect,
-  primaryStyle,
 }) => {
   // Safely handle style properties
   const style = block.content?.style || {};

@@ -18,7 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QUIZ_CONFIGURATION } from "@/config/quizConfiguration";
 import { useEditor } from "@/context/EditorContext";
-import { Settings, Image, Grid, Eye, Palette } from "lucide-react";
+import { Settings, Grid, Eye, Palette } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
 interface QuizConfigurationPanelProps {
@@ -30,7 +30,7 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
   selectedBlock,
   onUpdate,
 }) => {
-  const { activeStageId, blockActions } = useEditor();
+  const { activeStageId } = useEditor();
   const [selectedStep, setSelectedStep] = useState<any>(null);
   const [editingQuestion, setEditingQuestion] = useState<any>(null);
 
@@ -55,25 +55,6 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
     }
   };
 
-  // Função para adicionar nova opção
-  const handleAddOption = () => {
-    if (editingQuestion) {
-      const newOption = {
-        id: `option-${Date.now()}`,
-        text: "Nova opção",
-        styleCategory: "Natural",
-      };
-
-      const updatedOptions = [...(editingQuestion.options || []), newOption];
-      setEditingQuestion({ ...editingQuestion, options: updatedOptions });
-
-      handleQuestionUpdate({
-        questions: selectedStep?.questions?.map((q: any) =>
-          q.id === editingQuestion.id ? { ...q, options: updatedOptions } : q
-        ),
-      });
-    }
-  };
 
   // Renderizar configurações específicas para cada tipo de step
   const renderStepConfiguration = () => {
@@ -298,7 +279,7 @@ export const QuizConfigurationPanel: React.FC<QuizConfigurationPanelProps> = ({
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                {selectedStep.styles?.slice(0, 4).map((style: any, index: number) => (
+                {selectedStep.styles?.slice(0, 4).map((style: any) => (
                   <Card key={style.name} className="border" style={{ borderColor: "#E5DDD5" }}>
                     <CardContent className="p-2">
                       <div className="text-xs font-medium" style={{ color: "#432818" }}>

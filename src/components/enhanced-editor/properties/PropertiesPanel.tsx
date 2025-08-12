@@ -19,7 +19,6 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   onClose,
   onUpdate,
   onDelete,
-  isMobile = false,
 }) => {
   if (!selectedBlock) {
     return (

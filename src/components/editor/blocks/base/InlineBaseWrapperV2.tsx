@@ -108,8 +108,8 @@ const InlineBaseWrapper: React.FC<InlineBaseWrapperProps> = ({
 }) => {
   // 2. INDEPENDENTE: Estado próprio do componente
   const [isHovered, setIsHovered] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [lastInteraction, setLastInteraction] = useState<number>(0);
+  const [, setIsEditing] = useState(false);
+  const [, setLastInteraction] = useState<number>(0);
 
   // 1. REUTILIZÁVEL: Sistema de classes CSS dinâmicas
   const gapClasses = {

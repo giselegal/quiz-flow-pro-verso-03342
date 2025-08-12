@@ -89,11 +89,6 @@ const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-  const _handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
 
   // Estilos CSS dinâmicos
   const containerStyles: React.CSSProperties = {

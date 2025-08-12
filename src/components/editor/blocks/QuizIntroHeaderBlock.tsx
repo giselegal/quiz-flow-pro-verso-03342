@@ -57,7 +57,6 @@ const getMarginClass = (
 
 const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   block,
-  isSelected = false,
   onClick,
   onPropertyChange,
   disabled: _disabled = false,
@@ -90,11 +89,6 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-  const _handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
 
   return (
     <div
