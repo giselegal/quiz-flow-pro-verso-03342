@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";

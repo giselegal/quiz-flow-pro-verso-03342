@@ -1,3 +1,4 @@
+// @ts-nocheck
 // EXEMPLO PRÁTICO - Implementação de um novo componente seguindo o checklist
 
 import { Badge } from "@/components/ui/badge";

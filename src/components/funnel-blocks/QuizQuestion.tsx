@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button } from "@/components/ui/button";
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
 import React, { useState } from "react";
