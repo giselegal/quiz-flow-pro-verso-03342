@@ -1,7 +1,9 @@
 import { STEP_TEMPLATES } from '@/config/templates/templates';
 import { useEditor } from '@/context/EditorContext';
-import { Block, StageTemplate } from '@/types/editor';
+import { Block } from '@/types/editor';
 import { useCallback, useEffect, useState } from 'react';
+
+type StageTemplate = any;
 
 interface TemplateMetadata {
   id: string;
@@ -40,15 +42,15 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
       const metadata: Record<string, TemplateMetadata> = {};
 
       for (const stage of stages) {
-        const template = STEP_TEMPLATES[stage.order];
+        const template = (STEP_TEMPLATES as any)[stage.order];
         if (template) {
           metadata[stage.id] = {
             id: stage.id,
-            name: template.metadata?.name || `Template ${stage.order}`,
-            description: template.metadata?.description,
-            type: template.metadata?.type || 'default',
-            version: template.metadata?.version || '1.0.0',
-            blocksCount: template.blocks?.length || 0,
+            name: (template as any).metadata?.name || `Template ${stage.order}`,
+            description: (template as any).metadata?.description,
+            type: (template as any).metadata?.type || 'default',
+            version: (template as any).metadata?.version || '1.0.0',
+            blocksCount: (template as any).blocks?.length || 0,
           };
         }
       }
@@ -75,7 +77,7 @@ export function useTemplateLoader(): UseTemplateLoaderResult {
         const stage = stages.find(s => s.id === stageId);
         if (!stage) throw new Error(`Stage ${stageId} not found`);
 
-        const template = STEP_TEMPLATES[stage.order];
+        const template = (STEP_TEMPLATES as any)[stage.order];
         if (!template) throw new Error(`Template for stage ${stageId} not found`);
 
         // Atualizar cache

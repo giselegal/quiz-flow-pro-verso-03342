@@ -84,7 +84,7 @@ export const STEP_TEMPLATES: StepTemplate[] = [
   },
   {
     stepNumber: 8,
-    templateFunction: () => ({ blocks: [], metadata: {}, stage: { id: '8', name: 'Pergunta 7', type: 'question' } }),
+    templateFunction: () => [],
     name: 'Pergunta 7',
     description: 'Perguntas adicionais',
   },

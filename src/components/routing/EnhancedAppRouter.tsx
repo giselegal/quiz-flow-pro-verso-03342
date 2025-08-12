@@ -44,66 +44,20 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 };
 
 // Lazy loading dos componentes (com fallbacks seguros)
-const EnhancedEditor = lazy(() =>
-  import('../../components/editor/EnhancedEditor').catch(() => ({
-    default: () => (
-      <div className="p-8 text-center">
-        <p style={{ color: '#432818' }}>Erro ao carregar o Editor Melhorado</p>
-        <p style={{ color: '#6B4F43' }}>
-          Verifique se o arquivo está no local correto: /src/components/editor/EnhancedEditor.tsx
-        </p>
-      </div>
-    ),
-  }))
-);
+const EnhancedEditor = lazy(() => import('../../components/editor/EnhancedEditor'));
 
-const SystemIntegrationTest = lazy(() =>
-  import('../../components/testing/SystemIntegrationTest').catch(() => ({
-    default: () => (
-      <div className="p-8 text-center">
-        <p style={{ color: '#432818' }}>Erro ao carregar Testes de Integração</p>
-        <p style={{ color: '#6B4F43' }}>
-          Verifique se o arquivo está no local correto:
-          /src/components/testing/SystemIntegrationTest.tsx
-        </p>
-      </div>
-    ),
-  }))
-);
+const SystemIntegrationTest = lazy(() => import('../../components/testing/SystemIntegrationTest'));
 
 const FunnelManagementPage = lazy(() =>
-  import('../../pages/examples/EnhancedEditorIntegration')
-    .then(module => ({
-      default: module.FunnelManagementPage,
-    }))
-    .catch(() => ({
-      default: () => (
-        <div className="p-8 text-center">
-          <p style={{ color: '#432818' }}>Erro ao carregar Gestão de Funis</p>
-          <p style={{ color: '#6B4F43' }}>
-            Verifique se o arquivo está no local correto:
-            /src/pages/examples/EnhancedEditorIntegration.tsx
-          </p>
-        </div>
-      ),
-    }))
+  import('../../pages/examples/EnhancedEditorIntegration').then(module => ({
+    default: module.FunnelManagementPage,
+  }))
 );
 
 const EditorPage = lazy(() =>
   import('../../pages/examples/EnhancedEditorIntegration')
     .then(module => ({
       default: module.default,
-    }))
-    .catch(() => ({
-      default: () => (
-        <div className="p-8 text-center">
-          <p style={{ color: '#432818' }}>Erro ao carregar Página do Editor</p>
-          <p style={{ color: '#6B4F43' }}>
-            Verifique se o arquivo está no local correto:
-            /src/pages/examples/EnhancedEditorIntegration.tsx
-          </p>
-        </div>
-      ),
     }))
 );
 
@@ -211,7 +165,9 @@ export const EnhancedAppRouter: React.FC = () => {
               <Route path="/enhanced-editor/:funnelId">
                 {({ funnelId }) => (
                   <Suspense fallback={<PageLoader />}>
-                    <EnhancedEditor funnelId={funnelId} />
+                    {(EnhancedEditor as unknown as React.ComponentType<any>) && (
+                      <EnhancedEditor funnelId={funnelId} />
+                    )}
                   </Suspense>
                 )}
               </Route>

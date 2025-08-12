@@ -1,6 +1,11 @@
 export type EditorTab = 'quiz' | 'result' | 'sales';
 
-interface UnifiedVisualEditorProps {}
+import { StyleResult } from '@/types/quiz';
+
+interface UnifiedVisualEditorProps {
+  primaryStyle?: StyleResult;
+  initialActiveTab?: EditorTab;
+}
 
 export const UnifiedVisualEditor: React.FC<UnifiedVisualEditorProps> = ({
   primaryStyle,

@@ -83,7 +83,7 @@
       "id": "step06-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "content": "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -112,60 +112,60 @@
       "properties": {
         "options": [
           {
-            "id": "3a",
-            "text": "Visual leve, despojado e natural.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
+            "id": "5a",
+            "text": "Estampas clean, com poucas informações",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
             "styleCategory": "Natural",
             "points": 1
           },
           {
-            "id": "3b",
-            "text": "Visual clássico e tradicional.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
+            "id": "5b",
+            "text": "Estampas clássicas e atemporais",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
             "styleCategory": "Clássico",
-            "points": 2
+            "points": 1
           },
           {
-            "id": "3c",
-            "text": "Visual casual com toque atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
+            "id": "5c",
+            "text": "Atemporais, mas que tenham uma pegada de atual e moderna",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
             "styleCategory": "Contemporâneo",
-            "points": 2
+            "points": 1
           },
           {
-            "id": "3d",
-            "text": "Visual refinado e imponente.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
+            "id": "5d",
+            "text": "Estampas clássicas e atemporais, mas sofisticadas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
             "styleCategory": "Elegante",
-            "points": 3
+            "points": 1
           },
           {
-            "id": "3e",
-            "text": "Visual romântico, feminino e delicado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
+            "id": "5e",
+            "text": "Estampas florais e/ou delicadas como bolinhas, borboletas e corações",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
             "styleCategory": "Romântico",
-            "points": 2
+            "points": 1
           },
           {
-            "id": "3f",
-            "text": "Visual sensual, com saia justa e decote.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
+            "id": "5f",
+            "text": "Estampas de animal print, como onça, zebra e cobra",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
             "styleCategory": "Sexy",
-            "points": 3
+            "points": 1
           },
           {
-            "id": "3g",
-            "text": "Visual marcante e urbano (jeans + jaqueta).",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
+            "id": "5g",
+            "text": "Estampas geométricas, abstratas e exageradas como grandes poás",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
             "styleCategory": "Dramático",
-            "points": 3
+            "points": 1
           },
           {
-            "id": "3h",
-            "text": "Visual criativo, colorido e ousado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
+            "id": "5h",
+            "text": "Estampas diferentes do usual, como africanas, xadrez grandes",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
             "styleCategory": "Criativo",
-            "points": 4
+            "points": 1
           }
         ],
         "columns": 2,
