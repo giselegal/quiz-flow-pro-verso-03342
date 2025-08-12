@@ -93,5 +93,5 @@ export const step21BlockDefinition: BlockDefinition = {
       ],
     },
   },
-  properties: {}
+  properties: {},
 };
