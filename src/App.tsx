@@ -35,6 +35,7 @@ const TestOptionsRendering = lazy(() => import("./components/debug/TestOptionsRe
 const TestStep02Direct = lazy(() => import("./components/debug/TestStep02Direct"));
 const TestStep21 = lazy(() => import("./components/editor-fixed/OfferPageJson"));
 const EditorFixedPageWithDragDrop = lazy(() => import("./pages/editor-fixed-dragdrop"));
+const EditorFixedMinimalPage = lazy(() => import("./pages/editor-fixed-minimal"));
 const ComponentTestingPage = lazy(() => import("./pages/component-testing"));
 
 // Loading component
@@ -80,7 +81,31 @@ function App() {
                       <ErrorBoundary>
                         <EditorProvider>
                           <ScrollSyncProvider>
-                            <EditorFixedPageWithDragDrop />
+                            <div className="relative">
+                              <a
+                                href="/editor-fixed-minimal"
+                                className="fixed right-4 top-4 z-50 inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-medium shadow-sm hover:bg-muted bg-background"
+                                aria-label="Abrir versão mínima"
+                              >
+                                Versão mínima
+                              </a>
+                              <EditorFixedPageWithDragDrop />
+                            </div>
+                          </ScrollSyncProvider>
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
+
+                {/* Editor Fixed Minimal Route */}
+                <Route path="/editor-fixed-minimal">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <ScrollSyncProvider>
+                            <EditorFixedMinimalPage />
                           </ScrollSyncProvider>
                         </EditorProvider>
                       </ErrorBoundary>
