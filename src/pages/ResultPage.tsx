@@ -1,7 +1,7 @@
 import { useRoute } from "wouter";
 
-const ResultPage: React.FC = () => {
-  const [match, params] = useRoute("/resultado/:resultId");
+function ResultPage() {
+  const [_match, params] = useRoute("/resultado/:resultId");
   const resultId = params?.resultId;
 
   return (
