@@ -17,6 +17,7 @@ export interface BlockDefinition {
   icon: any;
   defaultProps: Record<string, any>;
   properties: Record<string, any>;
+  subBlocks?: string[]; // Lista de tipos de blocos que podem ser usados como subcomponentes
 }
 
 export interface BlockComponentProps {
