@@ -74,7 +74,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
     }
   };
 
-  const
+  const handleContinue = () => {
     if (isValid) {
       console.log("✅ Usuário válido:", userName);
       // Aqui seria implementada a lógica de navegação
@@ -183,6 +183,7 @@ export const IntroBlock: React.FC<BlockComponentProps> = ({
             {/* Botão de continuar */}
             <div className="pt-2">
               <Button
+                onClick={handleContinue}
                 disabled={!isValid || !userName}
                 className="w-full p-3 text-base font-medium transition-all duration-200"
                 style={{
