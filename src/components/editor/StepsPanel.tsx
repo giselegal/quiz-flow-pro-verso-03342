@@ -89,8 +89,8 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
   onStepUpdate,
   onStepDelete,
   onStepDuplicate,
-  onStepReorder,
-  onAddBlocksToStep,
+  onStepReorder: _onStepReorder,
+  onAddBlocksToStep: _onAddBlocksToStep,
   onPopulateStep,
   className = "",
 }) => {
@@ -196,7 +196,7 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-full px-4">
           <div className="space-y-2 pb-4">
-            {steps.map((step, index) => (
+            {steps.map((step, _index) => (
               <div
                 key={step.id}
                 className={cn(

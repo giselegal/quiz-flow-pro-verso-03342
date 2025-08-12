@@ -6,7 +6,7 @@ import React, { useState, useCallback } from "react";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { Palette, Pipette } from "lucide-react";
+import { Palette } from "lucide-react";
 
 interface ColorPickerProps {
   value: string;

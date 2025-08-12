@@ -52,7 +52,6 @@ const getMarginClass = (
 const LegalNoticeInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
-  isEditing = false,
   onClick,
   onPropertyChange,
   className = "",

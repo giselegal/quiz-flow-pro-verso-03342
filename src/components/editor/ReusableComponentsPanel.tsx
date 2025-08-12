@@ -21,7 +21,6 @@ export const ReusableComponentsPanel: React.FC<ReusableComponentsPanelProps> = (
   onComponentAdd,
 }) => {
   const {
-    availableComponents,
     stepComponents,
     loading,
     getComponentsByCategory,

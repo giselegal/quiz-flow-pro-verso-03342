@@ -37,8 +37,6 @@ export const StepsPanel: React.FC<StepsPanelProps> = ({ className = "", onPopula
     updateStep,
     deleteStep,
     duplicateStep,
-    reorderStep,
-    populateStep,
   } = useSteps();
 
   const [editingStepId, setEditingStepId] = useState<string | null>(null);

@@ -21,18 +21,18 @@ interface InlineEditTextProps {
 
 export const InlineEditText: React.FC<InlineEditTextProps> = ({
   value,
-  onSave,
+  onSave: _onSave,
   placeholder = "Clique para selecionar...",
   multiline = false,
   disabled = false,
   className = "",
   as = "p",
   style,
-  autoSelect = true,
+  autoSelect: _autoSelect = true,
   preventDefault = true,
   stopPropagation = true,
-  saveOnBlur = true,
-  validateOnSave,
+  saveOnBlur: _saveOnBlur = true,
+  validateOnSave: _validateOnSave,
   onClick,
   isSelected = false,
 }) => {

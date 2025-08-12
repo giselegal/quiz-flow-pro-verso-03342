@@ -11,14 +11,14 @@ interface SchemaDrivenEditorResponsiveProps {
 }
 
 const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> = ({
-  funnelId,
+  funnelId: _funnelId,
   className = "",
 }) => {
   const {
     computed: { currentBlocks, selectedBlock },
     selectedBlockId,
     blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
-    uiState: { isPreviewing, setIsPreviewing },
+    uiState: { isPreviewing },
   } = useEditor();
 
   const handleComponentSelect = (type: string) => {

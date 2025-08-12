@@ -28,7 +28,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
   onBackgroundColorChange,
   className = "",
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  
   const [viewportMode, setViewportMode] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
   const viewportSizes = {
@@ -144,7 +144,7 @@ const CanvasSettings: React.FC<CanvasSettingsProps> = ({
           <div className="space-y-3">
             <Label className="text-sm font-medium">Preview</Label>
             <div style={{ borderColor: "#E5DDD5" }}>
-              <div style={{ borderColor: "#E5DDD5" }} style={{ backgroundColor: backgroundColor }}>
+              <div style={{ borderColor: "#E5DDD5", backgroundColor }}>
                 {backgroundColor === "transparent" && (
                   <div
                     className="absolute inset-0"
