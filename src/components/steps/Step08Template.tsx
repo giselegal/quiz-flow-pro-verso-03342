@@ -207,7 +207,7 @@ export const Step08Template: React.FC<Step08TemplateProps> = ({
 };
 
 // ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
-export const getStep08Template = () => {export const getStep08Template = () => {
+export const getStep08Template = () => {
   return [
     // 🎯 CABEÇALHO COM PROGRESSO
     {
@@ -430,3 +430,5 @@ export const getStep08Template = () => {export const getStep08Template = () => {
     },
   ];
 };
+
+export default getStep08Template;

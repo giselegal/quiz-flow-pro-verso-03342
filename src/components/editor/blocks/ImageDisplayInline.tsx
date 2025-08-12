@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 interface ImageDisplayInlineProps {
@@ -32,7 +31,7 @@ const ImageDisplayInline: React.FC<ImageDisplayInlineProps> = ({
 
   return (
     <div className={`relative ${className}`} onClick={onClick}>
-      <Image
+      <img
         src={src}
         alt={alt}
         width={width}

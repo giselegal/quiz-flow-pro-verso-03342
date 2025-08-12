@@ -207,7 +207,7 @@ export const Step03Template: React.FC<Step03TemplateProps> = ({
 };
 
 // ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
-export const getStep03Template = () => {export const getStep03Template = () => {
+export const getStep03Template = () => {
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {

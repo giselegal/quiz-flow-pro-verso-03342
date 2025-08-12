@@ -66,10 +66,10 @@ export const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     backgroundOpacity: 100,
   },
   isEditing = false,
-  isSelected = false,
+  isSelected: _isSelected = false,
   onUpdate,
-  onClick,
-  onPropertyChange,
+  onClick: _onClick,
+  onPropertyChange: _onPropertyChange,
 }) => {
   // Função para notificar mudanças ao componente pai
   const handleUpdate = (updates: any) => {

@@ -14,16 +14,16 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  primaryStyle, 
+  primaryStyle: _primaryStyle, 
   logoHeight = 50,
   logo,
   logoAlt = "Logo",
   userName,
-  isScrolled,
+  isScrolled: _isScrolled,
   className = ''
 }) => {
   const { user } = useAuth();
-  const displayName = userName || user?.userName || 'Visitante';
+  const displayName = userName || (user as any)?.userName || (user as any)?.user_metadata?.full_name || (user as any)?.email || 'Visitante';
 
   return (
     <Card className={`bg-white shadow-sm p-6 mb-4 md:mb-6 border-0 ${className}`}>

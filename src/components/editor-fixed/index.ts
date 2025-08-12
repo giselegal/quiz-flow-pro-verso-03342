@@ -167,7 +167,7 @@ export const validateEditorConfig = (config: any): boolean => {
 /**
  * QUICK START: Função helper para começar rapidamente com JSON
  */
-export const quickStartJson = (blocks: any[], setBlocks: (blocks: any[]) => void) => {
+export const quickStartJson = (_blocks: any[], _setBlocks: (blocks: any[]) => void) => {
   // Note: Esta função deve ser usada dentro de um componente React
   // devido ao hook useEditorWithJson
   return {

@@ -105,7 +105,7 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
   }, [properties, id]);
 
   // ✅ 5. FUNÇÃO DE ATUALIZAÇÃO
-  const handleUpdate = (updates: any) => {
+  const _handleUpdate = (updates: any) => {
     onUpdate?.(id, updates);
     console.log(`ExampleComponent ${id} updated:`, updates);
   };
@@ -125,11 +125,11 @@ export const ExampleEditableComponent: React.FC<ExampleEditableComponentProps> =
   const getSizeStyles = () => {
     switch (properties.size) {
       case "small":
-        return { fontSize: "14px", padding: "8px" };
+        return { fontSize: "14px" };
       case "large":
-        return { fontSize: "20px", padding: "24px" };
+        return { fontSize: "20px" };
       default:
-        return { fontSize: "16px", padding: "16px" };
+        return { fontSize: "16px" };
     }
   };
 

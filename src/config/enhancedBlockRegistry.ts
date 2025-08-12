@@ -72,6 +72,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   "quiz-header": QuizIntroHeaderBlock, // Alias
   "step01-intro": IntroBlock,
   "form-input": FormInputBlock,
+  "lead-form": FormInputBlock,
 
   // Interactive Elements
   "button-inline": ButtonInlineFixed,
@@ -154,6 +155,7 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
     "quiz-header": "quiz-intro-header",
     intro: "step01-intro",
     form: "form-input",
+    "lead-form": "form-input",
     options: "options-grid",
 
     // Tipos estruturais → componentes visuais

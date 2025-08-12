@@ -68,14 +68,14 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
   className = "",
   style = {},
   testId = "loading-transition",
-  ...props
+  ..._rest
 }) => {
   const [progress, setProgress] = useState(0);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
   // Classes de alinhamento
-  const alignmentClasses = {
+  const _alignmentClasses = {
     left: "text-left items-start",
     center: "text-center items-center",
     right: "text-right items-end",
@@ -122,9 +122,9 @@ export const LoadingTransition: React.FC<LoadingTransitionProps> = ({
     switch (animationType) {
       case "spinning":
         return (
-          <div className={`${baseClasses} w-16 h-16`}>
-            <div style={{ borderColor: "#E5DDD5" }} style={{ borderTopColor: progressColor }} />
-          </div>
+            <div className={`${baseClasses} w-16 h-16`}>
+              <div style={{ borderColor: "#E5DDD5", borderTopColor: progressColor }} />
+            </div>
         );
 
       case "elegant":
