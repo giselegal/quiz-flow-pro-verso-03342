@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { ArrowLeft } from 'lucide-react';
+import React from 'react';
 import type { BlockComponentProps } from '../../../types/blocks';
 
 interface QuizIntroHeaderBlockProps extends BlockComponentProps {
@@ -72,6 +73,20 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
 
   // Debug das propriedades recebidas
   console.log('🔍 [QuizIntroHeaderBlock] Propriedades recebidas:', block.properties);
+  console.log('🔍 [QuizIntroHeaderBlock] Block ID:', block.id);
+
+  // ✅ USAR useEffect para detectar mudanças nas propriedades
+  React.useEffect(() => {
+    console.log('🔄 [QuizIntroHeaderBlock] Propriedades atualizadas:', {
+      blockId: block.id,
+      logoUrl: block.properties.logoUrl,
+      logoWidth: block.properties.logoWidth,
+      logoHeight: block.properties.logoHeight,
+      progressValue: block.properties.progressValue,
+      showProgress: block.properties.showProgress,
+      showBackButton: block.properties.showBackButton
+    });
+  }, [block.properties, block.id]);
 
   const {
     logoUrl = 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
