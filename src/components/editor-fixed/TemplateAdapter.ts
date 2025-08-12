@@ -59,7 +59,7 @@ export class TemplateAdapter {
   private static readonly COMPONENT_FALLBACKS: Record<string, string> = {
     // Componentes específicos → Genéricos
     'quiz-intro-header': 'header-inline',
-    'options-grid': 'grid-inline', 
+    'options-grid': 'grid-inline',
     'result-card': 'card-inline',
     'loading-animation': 'text-inline',
     'progress-bar': 'spacer-inline',
@@ -71,9 +71,9 @@ export class TemplateAdapter {
     'offer-solution-section': 'text-block',
     'offer-guarantee-section': 'card-inline',
     'offer-faq-section': 'accordion-inline',
-    
+
     // Fallback final
-    'unknown': 'text-inline'
+    unknown: 'text-inline',
   };
 
   /**
@@ -85,7 +85,7 @@ export class TemplateAdapter {
       // Verificar se o tipo existe, caso contrário usar fallback
       const originalType = block.type;
       const mappedType = TemplateAdapter.mapComponentType(originalType);
-      
+
       // Log se houve mapeamento
       if (mappedType !== originalType) {
         console.log(`🔄 Mapeando '${originalType}' → '${mappedType}'`);
@@ -98,7 +98,7 @@ export class TemplateAdapter {
         properties: {
           // Aplicar mapeamento de propriedades avançado
           ...TemplateAdapter.mapProperties(block.properties, originalType, mappedType),
-          
+
           // Preservar tipo original para referência
           _originalType: originalType,
         },
@@ -145,7 +145,7 @@ export class TemplateAdapter {
   private static mapComponentType(originalType: string): string {
     // Primeiro verificar se existe no registry
     const { ENHANCED_BLOCK_REGISTRY } = require('@/config/enhancedBlockRegistry');
-    
+
     if (ENHANCED_BLOCK_REGISTRY && originalType in ENHANCED_BLOCK_REGISTRY) {
       return originalType; // Tipo existe, manter original
     }
@@ -157,7 +157,7 @@ export class TemplateAdapter {
 
     // Fallback final baseado no nome
     if (originalType.includes('header')) return 'header-inline';
-    if (originalType.includes('button')) return 'button-inline';  
+    if (originalType.includes('button')) return 'button-inline';
     if (originalType.includes('text')) return 'text-inline';
     if (originalType.includes('image')) return 'image-inline';
     if (originalType.includes('grid') || originalType.includes('options')) return 'grid-inline';
@@ -172,8 +172,8 @@ export class TemplateAdapter {
    * 🔄 MAPEAR PROPRIEDADES: Converter propriedades específicas para formato genérico
    */
   private static mapProperties(
-    originalProps: Record<string, any>, 
-    originalType: string, 
+    originalProps: Record<string, any>,
+    originalType: string,
     mappedType: string
   ): Record<string, any> {
     const mappedProps = { ...originalProps };
@@ -211,7 +211,7 @@ export class TemplateAdapter {
 
       case 'lead-form':
         mappedProps.fields = originalProps.formFields || [
-          { type: 'email', label: 'Email', required: true }
+          { type: 'email', label: 'Email', required: true },
         ];
         mappedProps.submitText = originalProps.buttonText || 'Enviar';
         break;

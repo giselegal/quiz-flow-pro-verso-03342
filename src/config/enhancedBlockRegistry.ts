@@ -100,6 +100,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   'final-step': FinalStepEditor,
 
   // ✅ NOVOS COMPONENTES ESPECÍFICOS DO QUIZ
+  'result-card': PricingCardInlineBlock, // Fallback para result-card → pricing card
   'result-style-card': ResultStyleCardBlock, // step-21
   'bonus-showcase': BonusShowcaseBlock, // ofertas especiais
   'loading-animation': LoadingAnimationBlock, // transições

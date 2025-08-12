@@ -5,7 +5,7 @@ export const getStep01Template = () => {
   return [
     {
       id: 'step01-header',
-      type: 'quiz-header',
+      type: 'quiz-intro-header',
       properties: {
         logoUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
