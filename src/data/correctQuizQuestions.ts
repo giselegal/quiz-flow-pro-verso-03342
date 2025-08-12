@@ -9,7 +9,6 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   // ETAPA 0: COLETA DE NOME (NÃO PONTUA)
   {
     id: "q0",
-    text: "Como posso te chamar?",
     text: "VAMOS NOS CONHECER?",
     title: "VAMOS NOS CONHECER?",
     order: 0,
@@ -22,7 +21,6 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   // QUESTÃO 1: QUAL O SEU TIPO DE ROUPA FAVORITA?
   {
     id: "q1",
-    text: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
     text: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
     title: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
     order: 1,
@@ -92,7 +90,6 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
   // QUESTÃO 2: RESUMA A SUA PERSONALIDADE
   {
     id: "q2",
-    text: "RESUMA A SUA PERSONALIDADE:",
     text: "RESUMA A SUA PERSONALIDADE:",
     title: "RESUMA A SUA PERSONALIDADE:",
     order: 2,
@@ -676,3 +673,78 @@ export const STYLE_CATEGORIES = [
 ] as const;
 
 export type StyleCategory = (typeof STYLE_CATEGORIES)[number];
+
+// ✅ FUNÇÃO DE CÁLCULO DE PONTUAÇÃO DO QUIZ
+export interface QuizScoreResult {
+  profile: string;
+  percentage: number;
+  scores: Record<string, number>;
+  totalAnswers: number;
+  recommendedStyle: string;
+}
+
+export const calculateQuizScore = (userAnswers: Record<string, string>): QuizScoreResult => {
+  const styleScores: Record<string, number> = {};
+  let totalAnswers = 0;
+
+  // Inicializar contadores para todas as categorias
+  STYLE_CATEGORIES.forEach(category => {
+    styleScores[category] = 0;
+  });
+
+  // Calcular pontuação baseada nas respostas
+  Object.entries(userAnswers).forEach(([questionId, answerId]) => {
+    // Encontrar a questão
+    const question = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === questionId);
+    if (!question) return;
+
+    // Só contar questões que pontuam (q1-q10 = etapas 2-11)
+    const scorableQuestions = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"];
+    if (!scorableQuestions.includes(questionId)) return;
+
+    // Encontrar a opção selecionada
+    const option = question.options.find(opt => opt.id === answerId);
+    if (!option) return;
+
+    totalAnswers++;
+
+    // Adicionar pontuação baseada no style da opção
+    if (option.style) {
+      const styleKey = option.style.charAt(0).toUpperCase() + option.style.slice(1).toLowerCase();
+      if (styleScores.hasOwnProperty(styleKey)) {
+        styleScores[styleKey] += (option.weight || 1);
+      }
+    }
+
+    // Também considerar styleCategory se disponível
+    if (option.styleCategory) {
+      const categoryKey = option.styleCategory;
+      if (styleScores.hasOwnProperty(categoryKey)) {
+        styleScores[categoryKey] += (option.weight || 1);
+      }
+    }
+  });
+
+  // Encontrar o estilo com maior pontuação
+  let maxScore = 0;
+  let dominantStyle = "Natural";
+  
+  Object.entries(styleScores).forEach(([style, score]) => {
+    if (score > maxScore) {
+      maxScore = score;
+      dominantStyle = style;
+    }
+  });
+
+  // Calcular porcentagem
+  const maxPossibleScore = totalAnswers * 3; // Assumindo peso máximo de 3
+  const percentage = maxPossibleScore > 0 ? Math.round((maxScore / maxPossibleScore) * 100) : 0;
+
+  return {
+    profile: dominantStyle,
+    percentage: Math.max(percentage, 25), // Mínimo de 25% para melhor UX
+    scores: styleScores,
+    totalAnswers,
+    recommendedStyle: dominantStyle,
+  };
+};

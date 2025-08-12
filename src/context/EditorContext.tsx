@@ -318,6 +318,38 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
+  // ═══════════════════════════════════════════════
+  // 🎯 QUIZ STATE
+  // ═══════════════════════════════════════════════
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+  const [currentScore, setCurrentScore] = useState<ReturnType<typeof calculateQuizScore> | null>(
+    null
+  );
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+
+  const setAnswer = useCallback((questionId: string, answer: string) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [questionId]: answer,
+    }));
+  }, []);
+
+  const calculateCurrentScore = useCallback(() => {
+    try {
+      const score = calculateQuizScore(userAnswers);
+      setCurrentScore(score);
+    } catch (error) {
+      console.error('Erro ao calcular score:', error);
+      setCurrentScore(null);
+    }
+  }, [userAnswers]);
+
+  const resetQuiz = useCallback(() => {
+    setUserAnswers({});
+    setCurrentScore(null);
+    setIsQuizCompleted(false);
+  }, []);
+
   // ✅ DEBUG LOGGING
   console.log('📊 EditorProvider: Estado atual:', {
     stagesCount: stages.length,
