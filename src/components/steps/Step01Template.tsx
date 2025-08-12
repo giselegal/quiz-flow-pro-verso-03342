@@ -4,18 +4,19 @@
 export const getStep01Template = () => {
   return [
     {
-      id: 'quiz-intro-header',
-      type: 'quiz-intro-header',
+      id: 'step01-header',
+      type: 'quiz-header',
       properties: {
-        logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
-        logoAlt: "Logo Gisele Galvão",
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
         progressValue: 0,
         progressMax: 100,
         showBackButton: false,
-        showProgress: false
-      }
+        showProgress: false,
+      },
     },
     {
       id: 'intro-decorative-bar',
@@ -26,20 +27,21 @@ export const getStep01Template = () => {
         color: '#B89B7A',
         backgroundColor: '#B89B7A',
         marginTop: 0,
-        marginBottom: 24
-      }
+        marginBottom: 24,
+      },
     },
     {
       id: 'intro-main-title',
       type: 'text-inline',
       properties: {
-        content: '<span style="color: #B89B7A">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style="color: #B89B7A">Você</span>.',
+        content:
+          '<span style="color: #B89B7A">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style="color: #B89B7A">Você</span>.',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     {
       id: 'intro-image',
@@ -50,8 +52,8 @@ export const getStep01Template = () => {
         width: 300,
         height: 204,
         containerPosition: 'center',
-        marginBottom: 16
-      }
+        marginBottom: 16,
+      },
     },
     {
       id: 'intro-subtitle',
@@ -62,8 +64,8 @@ export const getStep01Template = () => {
         fontWeight: 'font-medium',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 24
-      }
+        marginBottom: 24,
+      },
     },
     // ✅ NOVO: Form Container com input e botão integrados
     {
@@ -92,7 +94,7 @@ export const getStep01Template = () => {
             backgroundColor: '#ffffff',
             borderColor: '#B89B7A',
             marginBottom: 16,
-          }
+          },
         },
         {
           id: 'intro-cta-button',
@@ -112,9 +114,9 @@ export const getStep01Template = () => {
             disabledText: 'Digite seu nome para continuar',
             showDisabledState: true,
             disabledOpacity: 0.6,
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   ];
 };

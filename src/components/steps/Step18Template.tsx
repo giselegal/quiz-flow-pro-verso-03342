@@ -1,203 +1,10 @@
-import React, { useEffect } from 'react';
-
 /**
- * Step18Template - Componente para Etapa 18 do Quiz
- *
- * Template para questão 17: Configurável via painel de propriedades
- * Integração com sistema de quiz e editor de propriedades
+ * Step18Template - Template Modular para Etapa 18 do Quiz
+ * ✅ QUESTÃO ESTRATÉGICA 6 (FINAL) - NÃO pontua, apenas métricas
  */
 
-// ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step18TemplateProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
-
-  properties?: {
-    enabled?: boolean;
-    title?: string;
-    subtitle?: string;
-    questionCounter?: string;
-    backgroundColor?: string;
-    textColor?: string;
-    showProgress?: boolean;
-    progressValue?: number;
-    buttonText?: string;
-    multipleSelection?: boolean;
-    minSelections?: number;
-    maxSelections?: number;
-    columns?: number;
-    imageSize?: number;
-  };
-
-  isEditing?: boolean;
-  isSelected?: boolean;
-  onUpdate?: (id: string, updates: any) => void;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-}
-
-// ✅ COMPONENTE PRINCIPAL
-export const Step18Template: React.FC<Step18TemplateProps> = ({
-  id,
-  className = '',
-  style = {},
-  properties = {
-    enabled: true,
-    title: 'QUESTÃO 17 - CONFIGURAR NO PAINEL',
-    subtitle: '',
-    questionCounter: 'Questão 17 de 10',
-    backgroundColor: '#FEFEFE',
-    textColor: '#432818',
-    showProgress: true,
-    progressValue: 90,
-    buttonText: 'Próxima Questão →',
-    multipleSelection: true,
-    minSelections: 1,
-    maxSelections: 3,
-    columns: 2,
-    imageSize: 256,
-  },
-  isEditing = false,
-  isSelected = false,
-  onUpdate,
-  onClick,
-}) => {
-  // ✅ DEBUG E MONITORAMENTO
-  useEffect(() => {
-    if (isEditing) {
-      console.log(`Step18Template ${id} entered editing mode`);
-    }
-  }, [isEditing, id]);
-
-  useEffect(() => {
-    console.log(`Step18Template ${id} properties updated:`, properties);
-  }, [properties, id]);
-
-  // ✅ FUNÇÃO DE CLIQUE
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClick?.();
-
-    if (isEditing) {
-      console.log(`Step18Template ${id} clicked in editing mode`);
-      onUpdate?.(id, { lastClicked: new Date().toISOString() });
-    }
-  };
-
-  // ✅ ESTILOS DINÂMICOS
-  const containerStyles: React.CSSProperties = {
-    backgroundColor: properties.backgroundColor,
-    color: properties.textColor,
-    width: '100%',
-    minHeight: '500px',
-    padding: '24px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    cursor: isEditing ? 'pointer' : 'default',
-    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
-    borderRadius: '8px',
-    transition: 'all 0.3s ease',
-    opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? 'none' : 'auto',
-    ...style,
-  };
-
-  // ✅ RENDERIZAÇÃO CONDICIONAL QUANDO DESABILITADO
-  if (!properties.enabled && !isEditing) {
-    return null;
-  }
-
-  return (
-    <div
-      id={id}
-      className={`step18-template ${className} ${isEditing ? 'editing-mode' : ''}`}
-      style={containerStyles}
-      onClick={handleClick}
-    >
-      {/* Header com Progresso */}
-      {properties.showProgress && (
-        <div className="step-header mb-6">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div
-              className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${properties.progressValue}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Conteúdo da Questão */}
-      <div className="step-content text-center">
-        {/* Título da Questão */}
-        <h1 className="text-2xl font-bold mb-2" style={{ color: properties.textColor }}>
-          {properties.title}
-        </h1>
-
-        {/* Contador da Questão */}
-        {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
-            {properties.questionCounter}
-          </p>
-        )}
-
-        {/* Área de Conteúdo Configurável */}
-        <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-          <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 18 - Configure no painel de propriedades
-          </p>
-
-          {/* Placeholder para opções */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="p-4 bg-white rounded border border-gray-200">
-                <div className="w-full h-20 bg-gray-100 rounded mb-2"></div>
-                <p className="text-xs text-gray-400">Opção {i}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Botão de Continuar */}
-        <div className="button-section">
-          <button
-            className="w-full max-w-md py-3 px-6 bg-[#B89B7A] text-white font-semibold rounded-md hover:bg-[#A1835D] transition-all duration-300"
-            disabled={isEditing}
-          >
-            {properties.buttonText}
-          </button>
-        </div>
-
-        {/* Info sobre Seleção */}
-        {properties.multipleSelection && (
-          <p className="text-xs text-gray-500 mt-4">
-            Selecione entre {properties.minSelections} e {properties.maxSelections} opções
-          </p>
-        )}
-      </div>
-
-      {/* Indicadores de Estado no Modo de Edição */}
-      {isEditing && (
-        <div className="absolute top-2 right-2 flex gap-2 items-center">
-          {!properties.enabled && (
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Desabilitado</span>
-          )}
-          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">Step 18</span>
-        </div>
-      )}
-
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && isEditing && (
-        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
-      )}
-    </div>
-  );
-};
-
-// ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
 export const getStep18Template = () => {
   return [
-    // 🎯 CABEÇALHO COM PROGRESSO
     {
       id: 'progress-header-step18',
       type: 'quiz-header',
@@ -213,77 +20,114 @@ export const getStep18Template = () => {
         showProgress: true,
         stepNumber: '18 de 21',
         spacing: 'small',
-        marginTop: 0,
-        marginBottom: 0,
       },
     },
-
-    // 🎨 BARRA DECORATIVA
     {
-      id: 'decorative-bar-step18',
-      type: 'decorative-bar-inline',
-      properties: {
-        width: '100%',
-        height: 4,
-        color: '#B89B7A',
-        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
-        borderRadius: 3,
-        marginTop: 0,
-        marginBottom: 32,
-        showShadow: true,
-        spacing: 'small',
-      },
-    },
-
-    // 📱 TÍTULO DA TRANSIÇÃO
-    {
-      id: 'transition-title-step18',
+      id: 'question-title-step18',
       type: 'text-inline',
       properties: {
-        content: 'Calculando seu Resultado...',
-        fontSize: 'text-3xl',
+        content: 'QUESTÃO ESTRATÉGICA 6',
+        fontSize: 'text-2xl md:text-3xl',
         fontWeight: 'font-bold',
-        fontFamily: 'Playfair Display, serif',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 24,
-        lineHeight: '1.2',
-        spacing: 'small',
-        marginTop: 0,
+        marginBottom: 16,
+        spacing: 'medium',
       },
     },
-
-    // 🖼️ IMAGEM DE LOADING/TRANSIÇÃO
     {
-      id: 'transition-image-step18',
-      type: 'image-display-inline',
-      properties: {
-        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838169/20250509_2154_C%C3%A1lculo_Final_simple_compose_01jtvthhq8wcbj2q6r9f8g3jrm_dqbdpt.webp',
-        alt: 'Calculando seu Resultado...',
-        width: 500,
-        height: 350,
-        className: 'object-cover w-full max-w-lg h-72 rounded-xl mx-auto shadow-lg',
-        textAlign: 'text-center',
-        marginBottom: 32,
-        spacing: 'small',
-        marginTop: 0,
-      },
-    },
-
-    // 💭 TEXTO DESCRITIVO
-    {
-      id: 'transition-description-step18',
+      id: 'strategic-question-step18',
       type: 'text-inline',
       properties: {
-        content: 'Seus dados estão sendo processados por nosso algoritmo de estilo. Aguarde...',
-        fontSize: 'text-lg',
+        content: 'O que mais te motiva a investir em você?',
+        fontSize: 'text-xl md:text-2xl',
+        fontWeight: 'font-semibold',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 40,
-        lineHeight: '1.6',
+        marginBottom: 32,
+        maxWidth: '720px',
+        spacing: 'medium',
+      },
+    },
+    {
+      id: 'strategic-options-step18',
+      type: 'options-grid',
+      properties: {
+        options: [
+          {
+            id: 'strategic-18-a',
+            text: 'Crescimento profissional',
+            category: 'professional',
+            strategicType: 'motivation-final',
+          },
+          {
+            id: 'strategic-18-b',
+            text: 'Bem-estar pessoal',
+            category: 'personal',
+            strategicType: 'motivation-final',
+          },
+          {
+            id: 'strategic-18-c',
+            text: 'Relacionamentos',
+            category: 'relationships',
+            strategicType: 'motivation-final',
+          },
+          {
+            id: 'strategic-18-d',
+            text: 'Autoestima e confiança',
+            category: 'confidence',
+            strategicType: 'motivation-final',
+          },
+        ],
+        multiSelect: false,
+        columns: 2,
+        backgroundColor: '#FFFFFF',
+        borderColor: '#E5DDD5',
+        hoverBackgroundColor: '#F3E8E6',
+        selectedBackgroundColor: '#B89B7A',
+        selectedTextColor: '#FFFFFF',
+        borderRadius: 12,
+        padding: 16,
+        spacing: 'medium',
+        trackingEnabled: true,
+      },
+    },
+    {
+      id: 'navigation-button-step18',
+      type: 'button-inline',
+      properties: {
+        text: 'Finalizar Questões →',
+        variant: 'primary',
+        size: 'large',
+        backgroundColor: '#B89B7A',
+        textColor: '#FFFFFF',
+        hoverBackgroundColor: '#A1835D',
+        borderRadius: 12,
+        padding: '16px 32px',
+        fontSize: 'text-lg',
+        fontWeight: 'font-semibold',
+        marginTop: 32,
+        marginBottom: 16,
+        showShadow: true,
+        spacing: 'medium',
+        disabled: true,
+        requiresSelection: true,
+      },
+    },
+    {
+      id: 'strategic-progress-step18',
+      type: 'text-inline',
+      properties: {
+        content: 'Última Questão Estratégica • Não afeta sua pontuação',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#432818',
+        opacity: 0.6,
+        marginTop: 16,
         spacing: 'small',
-        marginTop: 0,
       },
     },
   ];
 };
+
+export default getStep18Template;
