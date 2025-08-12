@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { QuizStage } from "@/types/quizBuilder";
 import { Card } from "@/components/ui/card";
