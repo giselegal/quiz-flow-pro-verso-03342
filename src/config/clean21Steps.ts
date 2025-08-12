@@ -1,157 +1,79 @@
-export interface Clean21Step {
+// ✅ CONFIGURAÇÃO LIMPA DAS 21 ETAPAS SEM DUPLICAÇÃO
+// Arquivo criado para resolver problemas de etapas repetidas no editor
+// Integração com configuração completa e avançada + templates JSON
+
+import {
+  ADVANCED_21_STEPS,
+  COMPLETE_21_STEPS_CONFIG,
+  getStepConfig,
+  getStepsStatistics,
+  type AdvancedStepConfig
+} from './complete21StepsConfig';
+
+// 🎯 INTEGRAÇÃO COM TEMPLATES JSON
+import { getTemplateByStep } from './stepTemplatesMapping';
+
+export interface CleanStepConfig {
+  stepNumber: number;
   id: string;
   name: string;
-  stepNumber: number;
-  type: string;
   description: string;
+  type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer';
+  category: 'start' | 'questions' | 'strategic' | 'results' | 'conversion';
+  // 🎯 NOVOS CAMPOS PARA JSON INTEGRATION
+  hasJsonTemplate?: boolean;
+  templateFunction?: () => any[];
+  components?: string[];
 }
 
-export const CLEAN_21_STEPS: Clean21Step[] = [
-  {
-    id: "step-1",
-    name: "Início",
-    stepNumber: 1,
-    type: "cover",
-    description: "Página de apresentação inicial",
-  },
-  {
-    id: "step-2",
-    name: "Pergunta 1",
-    stepNumber: 2,
-    type: "question",
-    description: "Primeira pergunta do quiz",
-  },
-  {
-    id: "step-3",
-    name: "Pergunta 2",
-    stepNumber: 3,
-    type: "question",
-    description: "Segunda pergunta do quiz",
-  },
-  {
-    id: "step-4",
-    name: "Pergunta 3",
-    stepNumber: 4,
-    type: "question",
-    description: "Terceira pergunta do quiz",
-  },
-  {
-    id: "step-5",
-    name: "Pergunta 4",
-    stepNumber: 5,
-    type: "question",
-    description: "Quarta pergunta do quiz",
-  },
-  {
-    id: "step-6",
-    name: "Pergunta 5",
-    stepNumber: 6,
-    type: "question",
-    description: "Quinta pergunta do quiz",
-  },
-  {
-    id: "step-7",
-    name: "Pergunta 6",
-    stepNumber: 7,
-    type: "question",
-    description: "Sexta pergunta do quiz",
-  },
-  {
-    id: "step-8",
-    name: "Pergunta 7",
-    stepNumber: 8,
-    type: "question",
-    description: "Sétima pergunta do quiz",
-  },
-  {
-    id: "step-9",
-    name: "Pergunta 8",
-    stepNumber: 9,
-    type: "question",
-    description: "Oitava pergunta do quiz",
-  },
-  {
-    id: "step-10",
-    name: "Pergunta 9",
-    stepNumber: 10,
-    type: "question",
-    description: "Nona pergunta do quiz",
-  },
-  {
-    id: "step-11",
-    name: "Pergunta 10",
-    stepNumber: 11,
-    type: "question",
-    description: "Décima pergunta do quiz",
-  },
-  {
-    id: "step-12",
-    name: "Pergunta 11",
-    stepNumber: 12,
-    type: "question",
-    description: "Décima primeira pergunta do quiz",
-  },
-  {
-    id: "step-13",
-    name: "Pergunta 12",
-    stepNumber: 13,
-    type: "question",
-    description: "Décima segunda pergunta do quiz",
-  },
-  {
-    id: "step-14",
-    name: "Pergunta 13",
-    stepNumber: 14,
-    type: "question",
-    description: "Décima terceira pergunta do quiz",
-  },
-  {
-    id: "step-15",
-    name: "Pergunta 14",
-    stepNumber: 15,
-    type: "question",
-    description: "Décima quarta pergunta do quiz",
-  },
-  {
-    id: "step-16",
-    name: "Pergunta 15",
-    stepNumber: 16,
-    type: "question",
-    description: "Décima quinta pergunta do quiz",
-  },
-  {
-    id: "step-17",
-    name: "Pergunta 16",
-    stepNumber: 17,
-    type: "question",
-    description: "Décima sexta pergunta do quiz",
-  },
-  {
-    id: "step-18",
-    name: "Pergunta 17",
-    stepNumber: 18,
-    type: "question",
-    description: "Décima sétima pergunta do quiz",
-  },
-  {
-    id: "step-19",
-    name: "Pergunta 18",
-    stepNumber: 19,
-    type: "question",
-    description: "Décima oitava pergunta do quiz",
-  },
-  {
-    id: "step-20",
-    name: "Pergunta 19",
-    stepNumber: 20,
-    type: "question",
-    description: "Décima nona pergunta do quiz",
-  },
-  {
-    id: "step-21",
-    name: "Resultado",
-    stepNumber: 21,
-    type: "result",
-    description: "Página de resultado final",
-  },
-];
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS ÚNICAS COM TEMPLATES JSON
+// Baseada na configuração avançada + mapeamento de templates JSON
+export const CLEAN_21_STEPS: CleanStepConfig[] = ADVANCED_21_STEPS.map(step => {
+  const template = getTemplateByStep(step.stepNumber);
+  
+  return {
+    stepNumber: step.stepNumber,
+    id: step.id,
+    name: step.name,
+    description: step.description,
+    type: step.type,
+    category: step.category,
+    // 🎯 INTEGRAÇÃO JSON
+    hasJsonTemplate: !!template,
+    templateFunction: template?.templateFunction,
+    components: template ? [`${step.id}-template`] : undefined
+  };
+});
+
+// 🔄 EXPORTAÇÃO DAS CONFIGURAÇÕES AVANÇADAS PARA COMPATIBILIDADE
+export {
+  ADVANCED_21_STEPS, COMPLETE_21_STEPS_CONFIG, getStepConfig,
+  getStepsStatistics,
+  type AdvancedStepConfig
+};
+
+// 📊 UTILITÁRIOS PARA ANÁLISE DAS ETAPAS (MANTIDOS PARA COMPATIBILIDADE)
+export const getStepsByCategory = (category: string) => {
+  return CLEAN_21_STEPS.filter(step => step.category === category);
+};
+
+export const getStepById = (id: string) => {
+  return CLEAN_21_STEPS.find(step => step.id === id);
+};
+
+export const getStepByNumber = (stepNumber: number) => {
+  return CLEAN_21_STEPS.find(step => step.stepNumber === stepNumber);
+};
+
+export const validateSteps = () => {
+  const allSteps = CLEAN_21_STEPS;
+  const stepNumbers = allSteps.map(s => s.stepNumber).sort((a, b) => a - b);
+  const expectedNumbers = Array.from({ length: 21 }, (_, i) => i + 1);
+  
+  return {
+    totalSteps: allSteps.length,
+    isComplete: allSteps.length === 21,
+    hasAllNumbers: JSON.stringify(stepNumbers) === JSON.stringify(expectedNumbers),
+    statistics: getStepsStatistics()
+  };
+};
