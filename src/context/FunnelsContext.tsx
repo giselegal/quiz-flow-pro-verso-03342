@@ -417,7 +417,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     [currentFunnelId]
   );
 
-  const addStepBlock = useCallback((stepId: string, blockData: any) => {
+  const addStepBlock = useCallback((stepId: string, _blockData: any) => {
     setSteps(currentSteps => {
       return currentSteps.map((step: any) => {
         if (step.id === stepId) {
