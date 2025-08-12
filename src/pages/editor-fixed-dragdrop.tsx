@@ -163,23 +163,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         />
       )}
 
-      <div className="h-screen overflow-y-auto">
-        <div className="min-h-screen bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40">
-          {/* Overlay sutil para mais elegância */}
-          <div className="fixed inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
-
-          <div className="relative z-10">
-            <div className="sticky top-0 bg-white z-20">
-            <EditorToolbar
-              isPreviewing={isPreviewing}
-              onTogglePreview={() => setIsPreviewing(!isPreviewing)}
-              onSave={handleSave}
-              viewportSize={viewportSize}
-              onViewportSizeChange={setViewportSize}
-              onShowFunnelSettings={() => setShowFunnelSettings(true)}
-            />
-
-            {/* Top Bar - Otimizado */}
+      <div className="flex flex-col h-screen">
+        <div className="flex-none">
+          <div className="sticky top-0 bg-white z-20">
+            <EditorToolbar            {/* Top Bar - Otimizado */}
             <div style={{ borderColor: "#E5DDD5" }} className="border-b bg-white">
               <div className="flex items-center justify-between p-2">
                 <div className="flex items-center space-x-4">
@@ -195,8 +182,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             </div>
           </div>
 
-          <div className="h-[calc(100vh-100px)]">
-            <FourColumnLayout
+          <div className="flex-1 overflow-hidden">
+            <FourColumnLayout 
+              className="h-full"
               stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
               componentsPanel={
                 <CombinedComponentsPanel
