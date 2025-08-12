@@ -153,30 +153,32 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         />
       )}
 
-      <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
+      <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative overflow-hidden">
         {/* Overlay sutil para mais elegância */}
         <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
 
-        <div className="relative z-10">
-          <EditorToolbar
-            isPreviewing={isPreviewing}
-            onTogglePreview={() => setIsPreviewing(!isPreviewing)}
-            onSave={handleSave}
-            viewportSize={viewportSize}
-            onViewportSizeChange={setViewportSize}
-            onShowFunnelSettings={() => setShowFunnelSettings(true)}
-          />
+        <div className="flex flex-col flex-1 relative z-10 overflow-hidden">
+          <div className="flex-shrink-0">
+            <EditorToolbar
+              isPreviewing={isPreviewing}
+              onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+              onSave={handleSave}
+              viewportSize={viewportSize}
+              onViewportSizeChange={setViewportSize}
+              onShowFunnelSettings={() => setShowFunnelSettings(true)}
+            />
 
-          {/* Top Bar - Otimizado */}
-          <div style={{ borderColor: "#E5DDD5" }}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <h1 className="text-lg font-semibold text-stone-700">
-                  Editor de Funil - Etapa {activeStageId}
-                </h1>
-                <div className="text-sm text-stone-500">
-                  {totalBlocks} componente{totalBlocks !== 1 ? "s" : ""} • {stageCount} etapa
-                  {stageCount !== 1 ? "s" : ""}
+            {/* Top Bar - Otimizado */}
+            <div style={{ borderColor: "#E5DDD5" }} className="border-b">
+              <div className="flex items-center justify-between p-2">
+                <div className="flex items-center space-x-4">
+                  <h1 className="text-lg font-semibold text-stone-700">
+                    Editor de Funil - Etapa {activeStageId}
+                  </h1>
+                  <div className="text-sm text-stone-500">
+                    {totalBlocks} componente{totalBlocks !== 1 ? "s" : ""} • {stageCount} etapa
+                    {stageCount !== 1 ? "s" : ""}
+                  </div>
                 </div>
               </div>
             </div>
