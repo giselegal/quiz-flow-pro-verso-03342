@@ -3,9 +3,8 @@
  * Demonstra como usar o QuizQuestionBlockConfigurable no editor
  */
 
-import React, { useState } from "react";
-import { BlockData } from "@/types/blocks";
 import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 
 // Exemplo de estrutura de dados para uma questão configurada
 const exemploQuestaoConfigurada = {
@@ -62,7 +61,7 @@ const ExemploEditorQuestao: React.FC = () => {
   const [showProperties, setShowProperties] = useState(false);
 
   // Handler para mudanças nas propriedades
-  const handlePropertyChange = (key: string, value: any) => {
+  const _handlePropertyChange = (key: string, value: any) => {
     setBlock(prevBlock => ({
       ...prevBlock,
       props: {
@@ -238,4 +237,5 @@ const templatesQuestoes = {
 };
 
 export default ExemploEditorQuestao;
-export { exemploQuestaoConfigurada, exemploQuestaoAvancada, templatesQuestoes };
+export { exemploQuestaoAvancada, exemploQuestaoConfigurada, templatesQuestoes };
+

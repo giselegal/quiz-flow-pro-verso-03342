@@ -59,7 +59,7 @@ export const imageBank: ImageBank = {
   getAllImages,
   getImageById,
   getImagesByCategory,
-  preloadCategory: async (category: string) => {
+  preloadCategory: async (_category: string) => {
     // Implementação simples de preload
     return Promise.resolve(true);
   },
