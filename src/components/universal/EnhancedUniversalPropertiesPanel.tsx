@@ -31,6 +31,8 @@ import {
   useUnifiedProperties,
 } from '@/hooks/useUnifiedProperties';
 import { BlockDefinition } from '@/types/editor'; // Mantido para compatibilidade da interface
+// ✅ Importa hook de sincronização de scroll
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import {
   EyeOff,
   Layout,
@@ -65,6 +67,9 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // As props `block`, `onUpdateBlock` são agora redundantes
   // pois o `selectedBlock` e `onUpdate` são as fontes de verdade para o hook.
 }) => {
+  // ✅ Hook de sincronização de scroll conectado ao painel de propriedades
+  const { scrollRef } = useSyncedScroll({ source: 'properties' });
+
   // ✅ Normaliza `selectedBlock` para ser a única fonte de verdade para o hook.
   const actualBlock = selectedBlock;
 
@@ -107,8 +112,8 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Se nenhum bloco estiver selecionado, exibe uma mensagem
   if (!actualBlock) {
     return (
-      <Card className="w-80 h-fit border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
-        <CardContent className="p-6">
+      <Card className="h-full flex flex-col border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
+        <CardContent className="flex-1 p-6 flex items-center justify-center">
           <div className="text-center text-[#B89B7A]">
             <Layout className="w-12 h-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">Selecione um componente para editar suas propriedades</p>
@@ -459,7 +464,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Se for um bloco de introdução, mostrar o painel específico
   if (isIntroBlock) {
     return (
-      <div className="w-80 h-fit">
+      <div className="h-full flex flex-col">
         <IntroPropertiesPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
       </div>
     );
@@ -468,7 +473,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Se for um cabeçalho do quiz, mostrar o painel específico do cabeçalho
   if (isQuizHeader) {
     return (
-      <div className="w-80 h-fit">
+      <div className="h-full flex flex-col">
         <QuizHeaderPropertiesPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
       </div>
     );
@@ -477,15 +482,15 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   // Se for um bloco de quiz, mostrar o painel específico do quiz
   if (isQuizBlock) {
     return (
-      <div className="w-80 h-fit">
+      <div className="h-full flex flex-col">
         <QuizConfigurationPanel selectedBlock={actualBlock} onUpdate={onUpdate} />
       </div>
     );
   }
 
   return (
-    <Card className="w-80 h-fit border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
-      <CardHeader className="pb-3 border-b border-[#B89B7A]/20">
+    <Card className="h-full flex flex-col border-[#B89B7A]/30 bg-white/95 backdrop-blur-sm">
+      <CardHeader className="pb-3 border-b border-[#B89B7A]/20 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-lg font-semibold text-[#432818]">Propriedades</CardTitle>
@@ -506,7 +511,10 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 space-y-6 max-h-[70vh] overflow-y-auto">
+      <CardContent 
+        ref={scrollRef}
+        className="flex-1 p-4 space-y-6 overflow-y-auto [scrollbar-gutter:stable]"
+      >
         {/* Seções organizadas por categoria */}
         {categoryOrder.map(categoryKey => {
           // ✅ Usando `getPropertiesByCategory` do hook

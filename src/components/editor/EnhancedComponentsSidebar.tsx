@@ -178,7 +178,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       </CardHeader>
 
       <CardContent className="flex-1 overflow-hidden">
-        <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden">
+        <div ref={scrollRef} className="h-full overflow-y-auto [scrollbar-gutter:stable] overflow-x-hidden">
           <div className="space-y-1 p-0">
             {orderedCategories.map(category => (
               <div key={category} className="space-y-1">

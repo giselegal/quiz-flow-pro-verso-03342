@@ -192,7 +192,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             canvas={
               <div
                 ref={scrollRef}
-                className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
+                className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
               >
                 <div className={getCanvasClassName()}>
                   <CanvasDropZone

@@ -1,7 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEditor } from '@/context/EditorContext';
 import { cn } from '@/lib/utils';
 import { Copy, Eye, GripVertical, Plus, Settings, Trash2 } from 'lucide-react';
@@ -86,7 +85,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       </CardHeader>
 
       <CardContent className="flex-1 p-0 overflow-hidden">
-        <ScrollArea className="h-full">
+        <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">
           <div className="space-y-2 p-4">
             {stages.map(stage => (
               <div
@@ -170,7 +169,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
               Adicionar Etapa
             </Button>
           </div>
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );
