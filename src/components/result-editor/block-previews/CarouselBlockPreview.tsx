@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
   Carousel,
   CarouselContent,
@@ -33,10 +34,10 @@ const CarouselBlockPreview: React.FC<CarouselBlockPreviewProps> = ({ content }) 
   } = content;
 
   // Referência para o API do carrossel para autoplay
-  const [api, setApi] = React.useState<any>(null);
+  const [api, setApi] = useState<any>(null);
 
   // Configurar autoplay
-  React.useEffect(() => {
+  useEffect(() => {
     if (!api || !autoPlay) return;
 
     // Função para avançar para o próximo slide

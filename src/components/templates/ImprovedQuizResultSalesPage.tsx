@@ -77,7 +77,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
   userName = 'Visitante',
 }) => {
   const { toast } = useToast();
-  const [setCriticalImagesLoaded] = useState(false);
+  const [criticalImagesLoaded, setCriticalImagesLoaded] = useState(false);
   const [activePaymentTab, setActivePaymentTab] = useState<'parcelado' | 'avista'>('parcelado');
 
   // Pré-carregar imagens críticas

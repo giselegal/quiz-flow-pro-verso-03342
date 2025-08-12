@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+
 interface AnimatedWrapperProps {
   animation?: 'fade' | 'scale' | 'none';
   show: boolean;
@@ -15,9 +17,9 @@ export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
   className = '',
   children,
 }) => {
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (show) {
       const timer = setTimeout(() => setMounted(true), delay);
       return () => clearTimeout(timer);

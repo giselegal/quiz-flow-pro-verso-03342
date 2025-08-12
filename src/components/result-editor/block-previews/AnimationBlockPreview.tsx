@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 interface AnimationBlockPreviewProps {
@@ -28,11 +29,11 @@ const AnimationBlockPreview: React.FC<AnimationBlockPreviewProps> = ({ content }
     style = {},
   } = content;
 
-  const [isVisible, setIsVisible] = React.useState(animationTrigger !== 'onScroll');
-  const [isHovered, setIsHovered] = React.useState(false);
-  const ref = React.useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(animationTrigger !== 'onScroll');
+  const [isHovered, setIsHovered] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (animationTrigger !== 'onScroll') return;
 
     const observer = new IntersectionObserver(

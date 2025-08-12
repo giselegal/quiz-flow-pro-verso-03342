@@ -16,6 +16,7 @@ interface PropertyGroupProps {
   children: React.ReactNode;
   defaultExpanded?: boolean;
   collapsible?: boolean;
+  className?: string;
 }
 
 export function PropertyGroup({
