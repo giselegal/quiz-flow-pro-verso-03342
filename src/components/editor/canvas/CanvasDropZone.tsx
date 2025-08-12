@@ -1,11 +1,9 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { useEditor } from '@/context/EditorContext';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { Download } from 'lucide-react';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
 
 // Componente para drop zone entre blocos
@@ -74,10 +72,6 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     },
   });
 
-  const { templateActions } = useEditor();
-  const stepNumber = parseInt(activeStageId.replace('step-', ''));
-  const hasTemplate = !Number.isNaN(stepNumber) && stepNumber >= 1 && stepNumber <= 21;
-
   // Verifica se qualquer item arrastável válido está ativo
   const isDraggingAnyValidComponent =
     active?.data.current?.type === 'sidebar-component' ||
@@ -104,33 +98,11 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
     >
       {blocks.length === 0 ? (
         <div className="text-center py-12">
-          <h3 className="text-2xl font-semibold text-stone-700 mb-3 font-serif">
-            Etapa {activeStageId}
-          </h3>
           <p className="text-stone-500 text-lg mb-2">
             {isPreviewing
               ? 'Modo Preview - Nenhum componente nesta etapa'
-              : 'Arraste componentes da sidebar ou use um template para começar'}
+              : 'Canvas vazio - Arraste componentes da sidebar para começar'}
           </p>
-          <div className="space-y-4">
-            <div>
-              <p className="text-xs text-stone-400 bg-stone-100/50 px-3 py-1 rounded-full inline-block mb-4">
-                Sistema integrado com {stageCount} etapas • Drag & Drop ativo
-              </p>
-            </div>
-            {/* Botão de Carregar Template */}
-            {hasTemplate && (
-              <div>
-                <Button
-                  variant="outline"
-                  onClick={() => templateActions.loadTemplateByStep(stepNumber)}
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Carregar Template da Etapa {stepNumber}
-                </Button>
-              </div>
-            )}
-          </div>
           {isOver && !isPreviewing && (
             <div className="mt-4 p-4 border-2 border-dashed border-brand/30 rounded-lg bg-brand/5">
               <p className="text-brand font-medium">Solte o componente aqui</p>

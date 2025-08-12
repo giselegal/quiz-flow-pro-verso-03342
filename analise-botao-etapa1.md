@@ -14,6 +14,7 @@
 **Arquivo:** `public/templates/step-01-template.json`
 
 ### Propriedades do Botão:
+
 ```json
 {
   "id": "intro-cta-button",
@@ -25,15 +26,15 @@
     "fullWidth": true,
     "backgroundColor": "#B89B7A",
     "textColor": "#ffffff",
-    
+
     // ✅ CONFIGURAÇÕES DE VALIDAÇÃO
     "requiresValidInput": true,
     "watchInputId": "intro-form-input",
-    
+
     // ✅ CONFIGURAÇÕES DE NAVEGAÇÃO
     "nextStepUrl": "/quiz/step-2",
     "nextStepId": "step-2",
-    
+
     // ✅ CONFIGURAÇÕES DE ESTADO DESABILITADO
     "disabledText": "Digite seu nome para continuar",
     "showDisabledState": true,
@@ -43,6 +44,7 @@
 ```
 
 ### Configurações de Controle Condicional:
+
 ```json
 {
   // Input de nome que o botão monitora
@@ -65,6 +67,7 @@
 **Arquivo:** `src/components/steps/Step01Template.tsx`
 
 ### Propriedades do Botão (idênticas ao JSON):
+
 ```tsx
 {
   id: 'intro-cta-button',
@@ -76,7 +79,7 @@
     fullWidth: true,
     backgroundColor: '#B89B7A',
     textColor: '#ffffff',
-    
+
     // ✅ Configurações de controle condicional
     requiresValidInput: true,
     watchInputId: 'intro-form-input',
@@ -94,11 +97,13 @@
 ## ⚙️ IMPLEMENTAÇÃO TÉCNICA
 
 ### 1. Sistema de Validação
+
 - **Hook:** `useStep01Validation.tsx`
 - **Evento:** `quiz-input-change`
 - **Validação:** Nome com mínimo 2 caracteres
 
 ### 2. Componente Principal
+
 - **Arquivo:** `ButtonInline.tsx`
 - **Props relevantes:**
   - `requiresValidInput`: Controla se botão precisa de validação
@@ -107,6 +112,7 @@
   - `disabledText`: Texto quando desabilitado
 
 ### 3. Lógica de Estado
+
 ```tsx
 // Estado interno do botão
 const [isButtonEnabled, setIsButtonEnabled] = useState(!requiresValidInput);
@@ -115,12 +121,12 @@ const [isButtonEnabled, setIsButtonEnabled] = useState(!requiresValidInput);
 useEffect(() => {
   const handleInputChange = (e: Event) => {
     const { blockId, value, valid } = (e as CustomEvent).detail;
-    
+
     if (blockId === watchInputId) {
       setIsButtonEnabled(valid && value.trim().length > 0);
     }
   };
-  
+
   window.addEventListener('quiz-input-change', handleInputChange);
 }, [requiresValidInput, watchInputId]);
 ```
@@ -132,6 +138,7 @@ useEffect(() => {
 ### Estados Visuais:
 
 #### ✅ **ESTADO HABILITADO**
+
 - **Texto:** "Quero Descobrir meu Estilo Agora!"
 - **Cor de fundo:** #B89B7A (bege dourado)
 - **Cor do texto:** #ffffff (branco)
@@ -140,6 +147,7 @@ useEffect(() => {
 - **Efeitos:** hover, scale, shadow
 
 #### ❌ **ESTADO DESABILITADO**
+
 - **Texto:** "Digite seu nome para continuar"
 - **Cor de fundo:** #B89B7A
 - **Cor do texto:** #ffffff
@@ -148,6 +156,7 @@ useEffect(() => {
 - **Efeitos:** Nenhum
 
 ### Dimensões:
+
 - **Tamanho:** Large (`size: "lg"`)
 - **Largura:** Full width (`fullWidth: true`)
 - **Padding:** Conforme size
@@ -158,21 +167,25 @@ useEffect(() => {
 ## 🔄 FLUXO DE INTERAÇÃO
 
 ### 1. **Carregamento Inicial**
+
 ```
 Botão carrega → requiresValidInput=true → Botão DESABILITADO
 ```
 
 ### 2. **Usuário Digita Nome**
+
 ```
 Input mudou → Evento 'quiz-input-change' → Validação (≥2 chars) → Botão HABILITADO
 ```
 
 ### 3. **Campo Limpo**
+
 ```
 Input vazio → Evento disparado → Validação falha → Botão DESABILITADO
 ```
 
 ### 4. **Clique no Botão**
+
 ```
 Botão habilitado → Click → Navegação para `/quiz/step-2`
 ```
@@ -182,12 +195,14 @@ Botão habilitado → Click → Navegação para `/quiz/step-2`
 ## 🔍 VALIDAÇÕES IMPLEMENTADAS
 
 ### Input de Nome:
+
 - **ID monitorado:** `intro-form-input`
 - **Validação mínima:** 2 caracteres
 - **Trim:** Remove espaços em branco
 - **Tempo real:** Validação a cada mudança
 
 ### Botão:
+
 - **Condicional:** Só habilita se input válido
 - **Visual:** Muda texto e opacidade
 - **Funcional:** Bloqueia navegação se desabilitado
@@ -197,6 +212,7 @@ Botão habilitado → Click → Navegação para `/quiz/step-2`
 ## 📱 EVENTOS E NAVEGAÇÃO
 
 ### Eventos Disparados:
+
 - `page_view` - Quando etapa carrega
 - `form_input` - Quando usuário digita
 - `button_click` - Quando botão é clicado
@@ -204,6 +220,7 @@ Botão habilitado → Click → Navegação para `/quiz/step-2`
 - `completion` - Quando etapa é concluída
 
 ### Navegação:
+
 - **URL de destino:** `/quiz/step-2`
 - **ID da próxima etapa:** `step-2`
 - **Método:** `window.location.href` ou evento customizado
@@ -212,13 +229,13 @@ Botão habilitado → Click → Navegação para `/quiz/step-2`
 
 ## ✅ STATUS DE COMPATIBILIDADE
 
-| Componente | JSON | TSX | Status |
-|------------|------|-----|---------|
-| Configuração básica | ✅ | ✅ | Idêntico |
-| Propriedades visuais | ✅ | ✅ | Idêntico |
-| Validação condicional | ✅ | ✅ | Idêntico |
-| Estados desabilitado | ✅ | ✅ | Idêntico |
-| Navegação | ✅ | ✅ | Idêntico |
+| Componente            | JSON | TSX | Status   |
+| --------------------- | ---- | --- | -------- |
+| Configuração básica   | ✅   | ✅  | Idêntico |
+| Propriedades visuais  | ✅   | ✅  | Idêntico |
+| Validação condicional | ✅   | ✅  | Idêntico |
+| Estados desabilitado  | ✅   | ✅  | Idêntico |
+| Navegação             | ✅   | ✅  | Idêntico |
 
 ---
 

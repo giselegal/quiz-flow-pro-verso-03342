@@ -1,195 +1,189 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🧪 Teste de Renderização - Botão Etapa 1</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #FAF9F7;
-            margin: 0;
-            padding: 20px;
-        }
-        .test-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .status-card {
-            border: 2px solid #E5DDD5;
-            border-radius: 8px;
-            padding: 20px;
-            background: #FEFEFE;
-        }
-        .status-card.success {
-            border-color: #22c55e;
-            background: #f0fdf4;
-        }
-        .status-card.error {
-            border-color: #ef4444;
-            background: #fef2f2;
-        }
-        .test-button {
-            background: #B89B7A;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin: 10px 5px;
-        }
-        .test-button:hover {
-            background: #A38A69;
-        }
-        .test-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        pre {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 6px;
-            overflow-x: auto;
-            font-size: 14px;
-        }
-        .loading {
-            text-align: center;
-            color: #666;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #faf9f7;
+        margin: 0;
+        padding: 20px;
+      }
+      .test-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+      .status-card {
+        border: 2px solid #e5ddd5;
+        border-radius: 8px;
+        padding: 20px;
+        background: #fefefe;
+      }
+      .status-card.success {
+        border-color: #22c55e;
+        background: #f0fdf4;
+      }
+      .status-card.error {
+        border-color: #ef4444;
+        background: #fef2f2;
+      }
+      .test-button {
+        background: #b89b7a;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 10px 5px;
+      }
+      .test-button:hover {
+        background: #a38a69;
+      }
+      .test-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-size: 14px;
+      }
+      .loading {
+        text-align: center;
+        color: #666;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="test-container">
-        <h1>🧪 Teste de Renderização - Botão da Etapa 1</h1>
-        
-        <div class="status-grid">
-            <div class="status-card">
-                <h3>🌐 Status do Servidor</h3>
-                <div id="server-status" class="loading">Verificando...</div>
-            </div>
-            
-            <div class="status-card">
-                <h3>🎯 Editor Fixed</h3>
-                <div id="editor-status" class="loading">Verificando...</div>
-            </div>
-            
-            <div class="status-card">
-                <h3>🔘 Botão da Etapa 1</h3>
-                <div id="button-status" class="loading">Verificando...</div>
-            </div>
-            
-            <div class="status-card">
-                <h3>📝 Input de Nome</h3>
-                <div id="input-status" class="loading">Verificando...</div>
-            </div>
+      <h1>🧪 Teste de Renderização - Botão da Etapa 1</h1>
+
+      <div class="status-grid">
+        <div class="status-card">
+          <h3>🌐 Status do Servidor</h3>
+          <div id="server-status" class="loading">Verificando...</div>
         </div>
-        
-        <div style="text-align: center; margin: 30px 0;">
-            <button class="test-button" onclick="testServerConnection()">
-                🔗 Testar Conexão
-            </button>
-            <button class="test-button" onclick="openEditor()">
-                🎯 Abrir Editor
-            </button>
-            <button class="test-button" onclick="checkElements()">
-                🔍 Verificar Elementos
-            </button>
+
+        <div class="status-card">
+          <h3>🎯 Editor Fixed</h3>
+          <div id="editor-status" class="loading">Verificando...</div>
         </div>
-        
-        <div id="results" style="margin-top: 30px;">
-            <!-- Resultados dos testes aparecerão aqui -->
+
+        <div class="status-card">
+          <h3>🔘 Botão da Etapa 1</h3>
+          <div id="button-status" class="loading">Verificando...</div>
         </div>
+
+        <div class="status-card">
+          <h3>📝 Input de Nome</h3>
+          <div id="input-status" class="loading">Verificando...</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0">
+        <button class="test-button" onclick="testServerConnection()">🔗 Testar Conexão</button>
+        <button class="test-button" onclick="openEditor()">🎯 Abrir Editor</button>
+        <button class="test-button" onclick="checkElements()">🔍 Verificar Elementos</button>
+      </div>
+
+      <div id="results" style="margin-top: 30px">
+        <!-- Resultados dos testes aparecerão aqui -->
+      </div>
     </div>
 
     <script>
-        // URLs do projeto
-        const BASE_URL = 'http://localhost:8081';
-        const EDITOR_URL = BASE_URL + '/editor-fixed';
-        
-        // Função para testar conexão com servidor
-        async function testServerConnection() {
-            const statusEl = document.getElementById('server-status');
-            statusEl.innerHTML = '⏳ Testando...';
-            
-            try {
-                const response = await fetch(BASE_URL);
-                if (response.ok) {
-                    statusEl.innerHTML = '✅ Servidor online (porta 8081)';
-                    statusEl.parentElement.className = 'status-card success';
-                    testEditorRoute();
-                } else {
-                    throw new Error(`Status ${response.status}`);
-                }
-            } catch (error) {
-                statusEl.innerHTML = `❌ Servidor offline: ${error.message}`;
-                statusEl.parentElement.className = 'status-card error';
-            }
+      // URLs do projeto
+      const BASE_URL = 'http://localhost:8081';
+      const EDITOR_URL = BASE_URL + '/editor-fixed';
+
+      // Função para testar conexão com servidor
+      async function testServerConnection() {
+        const statusEl = document.getElementById('server-status');
+        statusEl.innerHTML = '⏳ Testando...';
+
+        try {
+          const response = await fetch(BASE_URL);
+          if (response.ok) {
+            statusEl.innerHTML = '✅ Servidor online (porta 8081)';
+            statusEl.parentElement.className = 'status-card success';
+            testEditorRoute();
+          } else {
+            throw new Error(`Status ${response.status}`);
+          }
+        } catch (error) {
+          statusEl.innerHTML = `❌ Servidor offline: ${error.message}`;
+          statusEl.parentElement.className = 'status-card error';
         }
-        
-        // Função para testar rota do editor
-        async function testEditorRoute() {
-            const statusEl = document.getElementById('editor-status');
-            statusEl.innerHTML = '⏳ Verificando rota...';
-            
-            try {
-                const response = await fetch(EDITOR_URL);
-                if (response.ok) {
-                    statusEl.innerHTML = '✅ Rota /editor-fixed funcionando';
-                    statusEl.parentElement.className = 'status-card success';
-                } else {
-                    throw new Error(`Status ${response.status}`);
-                }
-            } catch (error) {
-                statusEl.innerHTML = `❌ Erro na rota: ${error.message}`;
-                statusEl.parentElement.className = 'status-card error';
-            }
+      }
+
+      // Função para testar rota do editor
+      async function testEditorRoute() {
+        const statusEl = document.getElementById('editor-status');
+        statusEl.innerHTML = '⏳ Verificando rota...';
+
+        try {
+          const response = await fetch(EDITOR_URL);
+          if (response.ok) {
+            statusEl.innerHTML = '✅ Rota /editor-fixed funcionando';
+            statusEl.parentElement.className = 'status-card success';
+          } else {
+            throw new Error(`Status ${response.status}`);
+          }
+        } catch (error) {
+          statusEl.innerHTML = `❌ Erro na rota: ${error.message}`;
+          statusEl.parentElement.className = 'status-card error';
         }
-        
-        // Função para abrir o editor
-        function openEditor() {
-            window.open(EDITOR_URL, '_blank');
-        }
-        
-        // Função para verificar elementos no DOM (simulada)
-        function checkElements() {
-            const buttonStatus = document.getElementById('button-status');
-            const inputStatus = document.getElementById('input-status');
-            
-            // Simulação dos checks que deveriam acontecer no editor
-            buttonStatus.innerHTML = `
+      }
+
+      // Função para abrir o editor
+      function openEditor() {
+        window.open(EDITOR_URL, '_blank');
+      }
+
+      // Função para verificar elementos no DOM (simulada)
+      function checkElements() {
+        const buttonStatus = document.getElementById('button-status');
+        const inputStatus = document.getElementById('input-status');
+
+        // Simulação dos checks que deveriam acontecer no editor
+        buttonStatus.innerHTML = `
                 ✅ ID: intro-cta-button<br>
                 ✅ Tipo: button-inline<br>
                 ✅ RequiresValidInput: true<br>
                 ✅ WatchInputId: intro-form-input
             `;
-            buttonStatus.parentElement.className = 'status-card success';
-            
-            inputStatus.innerHTML = `
+        buttonStatus.parentElement.className = 'status-card success';
+
+        inputStatus.innerHTML = `
                 ✅ ID: intro-form-input<br>
                 ✅ Tipo: form-input<br>
                 ✅ MinLength: 2 caracteres<br>
                 ✅ Required: true
             `;
-            inputStatus.parentElement.className = 'status-card success';
-            
-            showTestResults();
-        }
-        
-        // Função para mostrar resultados dos testes
-        function showTestResults() {
-            const resultsEl = document.getElementById('results');
-            resultsEl.innerHTML = `
+        inputStatus.parentElement.className = 'status-card success';
+
+        showTestResults();
+      }
+
+      // Função para mostrar resultados dos testes
+      function showTestResults() {
+        const resultsEl = document.getElementById('results');
+        resultsEl.innerHTML = `
                 <h3>📊 Resultado dos Testes</h3>
                 <pre>
 ✅ VERIFICAÇÕES CONCLUÍDAS:
@@ -224,10 +218,10 @@
                     O botão deve aparecer desabilitado inicialmente e habilitar quando você digitar um nome.
                 </div>
             `;
-        }
-        
-        // Auto-executar teste de conexão
-        setTimeout(testServerConnection, 1000);
+      }
+
+      // Auto-executar teste de conexão
+      setTimeout(testServerConnection, 1000);
     </script>
-</body>
+  </body>
 </html>
