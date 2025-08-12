@@ -1,4 +1,4 @@
-import { ColorPicker } from '@/components/editor/shared/ColorPicker';
+import { ColorPicker } from '@/components/ui/ColorPicker';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
