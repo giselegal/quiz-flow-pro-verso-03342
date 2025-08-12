@@ -16,74 +16,162 @@ export interface StrategicParams {
   subtitle?: string;
 }
 
-// Template de introdução
+// Template de introdução com sistema inteligente
 export const introTemplate = [
   {
-    type: 'vertical-canvas-header',
+    type: 'quiz-intro-header',
     properties: {
-      title: 'Descubra Seu Estilo Único',
-      subtitle: 'Quiz Personalizado de Descoberta de Estilo',
-      description:
-        'Descubra qual estilo combina mais com você através deste quiz personalizado baseado em anos de experiência em consultoria de imagem.',
+      logoUrl: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
+      logoAlt: "Logo Gisele Galvão",
+      logoWidth: 96,
+      logoHeight: 96,
+      progressValue: 0,
+      progressMax: 100,
       showBackButton: false,
-      showProgress: false,
-    },
+      showProgress: false
+    }
+  },
+  {
+    type: 'decorative-bar-inline',
+    properties: {
+      width: '100%',
+      height: 4,
+      color: '#B89B7A',
+      backgroundColor: '#B89B7A',
+      marginTop: 0,
+      marginBottom: 24
+    }
   },
   {
     type: 'text-inline',
     properties: {
-      content:
-        '• São apenas 21 etapas rápidas\n• Leva menos de 5 minutos\n• Resultado personalizado instantâneo\n• Baseado em dados reais de consultoria',
-      fontSize: 'medium',
-      textAlign: 'left',
-    },
+      content: '<span style="color: #B89B7A">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style="color: #B89B7A">Você</span>.',
+      fontSize: 'text-2xl',
+      fontWeight: 'font-bold',
+      textAlign: 'text-center',
+      color: '#432818',
+      marginBottom: 16
+    }
   },
   {
-    type: 'button-inline',
+    type: 'image-display-inline',
     properties: {
-      text: 'Começar Quiz Agora',
-      variant: 'primary',
-      size: 'large',
-      fullWidth: true,
-    },
+      src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
+      alt: 'Descubra seu estilo predominante',
+      width: 300,
+      height: 204,
+      containerPosition: 'center',
+      marginBottom: 16
+    }
   },
+  {
+    type: 'text-inline',
+    properties: {
+      content: 'Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!',
+      fontSize: 'text-lg',
+      fontWeight: 'font-medium',
+      textAlign: 'text-center',
+      color: '#432818',
+      marginBottom: 24
+    }
+  },
+  {
+    type: 'form-container',
+    properties: {
+      backgroundColor: 'transparent',
+      marginTop: 0,
+      marginBottom: 16,
+      paddingTop: 0,
+      paddingBottom: 0,
+      requireNameToEnableButton: true,
+      targetButtonId: 'intro-cta-button',
+      visuallyDisableButton: true,
+    },
+    children: [
+      {
+        id: 'intro-form-input',
+        type: 'form-input',
+        properties: {
+          inputType: 'text',
+          placeholder: 'Digite seu primeiro nome aqui...',
+          label: 'Como posso te chamar?',
+          required: true,
+          name: 'userName',
+          backgroundColor: '#ffffff',
+          borderColor: '#B89B7A',
+          marginBottom: 16,
+        }
+      },
+      {
+        id: 'intro-cta-button',
+        type: 'button-inline',
+        properties: {
+          text: 'Quero Descobrir meu Estilo Agora!',
+          variant: 'primary',
+          size: 'lg',
+          fullWidth: true,
+          backgroundColor: '#B89B7A',
+          textColor: '#ffffff',
+          requiresValidInput: true,
+          watchInputId: 'intro-form-input',
+          nextStepUrl: '/quiz/step-2',
+          nextStepId: 'step-2',
+          disabledText: 'Digite seu nome para continuar',
+          showDisabledState: true,
+          disabledOpacity: 0.6,
+        }
+      }
+    ]
+  }
 ];
 
-// Template de coleta de nome
+// Template de coleta de nome com sistema inteligente (para outras etapas se necessário)
 export const nameInputTemplate = [
-  {
-    type: 'heading-inline',
-    properties: {
-      text: 'Vamos personalizar sua experiência!',
-      level: 2,
-      textAlign: 'center',
-    },
-  },
   {
     type: 'text-inline',
     properties: {
       content: 'Como podemos te chamar?',
-      fontSize: 'medium',
+      fontSize: 'text-lg',
+      fontWeight: 'font-medium',
       textAlign: 'center',
+      marginBottom: 16
     },
   },
   {
-    type: 'form-input',
+    type: 'form-container',
     properties: {
-      label: 'Seu nome',
-      placeholder: 'Digite seu primeiro nome',
-      required: true,
-      type: 'text',
+      backgroundColor: 'transparent',
+      requireNameToEnableButton: true,
+      targetButtonId: 'continue-button',
+      visuallyDisableButton: true,
     },
-  },
-  {
-    type: 'button-inline',
-    properties: {
-      text: 'Continuar',
-      variant: 'primary',
-      size: 'large',
-      fullWidth: true,
-    },
+    children: [
+      {
+        id: 'name-input',
+        type: 'form-input',
+        properties: {
+          label: 'Seu nome',
+          placeholder: 'Digite seu primeiro nome',
+          required: true,
+          name: 'userName',
+          inputType: 'text',
+        }
+      },
+      {
+        id: 'continue-button',
+        type: 'button-inline',
+        properties: {
+          text: 'Continuar',
+          variant: 'primary',
+          size: 'large',
+          fullWidth: true,
+          requiresValidInput: true,
+          watchInputId: 'name-input',
+          disabledText: 'Digite seu nome para continuar',
+          showDisabledState: true,
+        }
+      }
+    ]
   },
 ];
 
