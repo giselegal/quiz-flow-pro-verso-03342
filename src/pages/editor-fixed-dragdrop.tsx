@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 
 // Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import      <div className="h-screen flex flex-col">
-        <div className="flex-1 overflow-y-auto bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40">
-          {/* Overlay sutil para mais elegância */}
-          <div className="fixed inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
-
-          <div className="relative z-10">
+import      <div className="flex flex-col h-screen">
+        <div className="flex-none"
             <div className="sticky top-0 bg-white z-20">
               <EditorToolbar
                 isPreviewing={isPreviewing}
