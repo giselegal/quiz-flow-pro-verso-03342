@@ -118,12 +118,14 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
     );
   }
 
-  // ✅ NO-CODE: Categorias visuais e amigáveis
-  const categoryOrder = ['content', 'style', 'alignment', 'behavior', 'scoring', 'advanced'];
+  // ✅ NO-CODE: Categorias visuais e amigáveis (abas)
+  const categoryOrder = ['logo', 'style', 'layout', 'content', 'alignment', 'behavior', 'scoring', 'advanced'];
 
   const categoryIcons = {
+    logo: Type,
     content: Type,
     style: Paintbrush,
+    layout: Layout,
     alignment: Layout,
     behavior: Settings,
     scoring: Palette,
@@ -131,8 +133,10 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
   };
 
   const categoryLabels = {
+    logo: '🏷️ Logo',
     content: '📝 Conteúdo',
-    style: '🎨 Aparência',
+    style: '🎨 Estilo',
+    layout: '📐 Layout',
     alignment: '📐 Alinhamento',
     behavior: '⚙️ Comportamento',
     scoring: '🏆 Pontuação',

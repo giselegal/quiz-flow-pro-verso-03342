@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import type { BlockComponentProps, BlockData } from '@/types/blocks';
 import { getBlockComponent } from '@/config/enhancedBlockRegistry';
 
@@ -20,11 +21,46 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const containerStyle: React.CSSProperties = {
     marginTop,
     marginBottom,
+    paddingTop: (properties as any)?.paddingTop,
+    paddingBottom: (properties as any)?.paddingBottom,
+    paddingLeft: (properties as any)?.paddingLeft,
+    paddingRight: (properties as any)?.paddingRight,
     // Suporta tanto backgroundColor quanto containerBackgroundColor (padrão do design system universal)
     backgroundColor: (properties as any)?.backgroundColor ?? (properties as any)?.containerBackgroundColor,
   };
 
   const combinedClassName = className ? `w-full ${className}` : 'w-full';
+
+  // 🔒 Regra: habilitar botão somente após nome válido (configurável no painel)
+  useEffect(() => {
+    if (!(properties as any)?.requireNameToEnableButton) return;
+
+    const targetButtonId = (properties as any)?.targetButtonId || 'cta-button-modular';
+
+    // Estado inicial: desabilitar visualmente se configurado
+    const applyDisabled = (disabled: boolean) => {
+      const btn = document.getElementById(targetButtonId) as HTMLButtonElement | null;
+      if (!btn) return;
+      btn.disabled = disabled;
+      if ((properties as any)?.visuallyDisableButton) {
+        btn.classList.toggle('opacity-50', disabled);
+        btn.classList.toggle('pointer-events-none', disabled);
+        btn.classList.toggle('cursor-not-allowed', disabled);
+      }
+    };
+
+    // Aplica estado inicial
+    applyDisabled(true);
+
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { buttonId: string; enabled: boolean; disabled: boolean };
+      if (!detail || detail.buttonId !== targetButtonId) return;
+      applyDisabled(!detail.enabled);
+    };
+
+    window.addEventListener('step01-button-state-change', handler as EventListener);
+    return () => window.removeEventListener('step01-button-state-change', handler as EventListener);
+  }, [properties]);
 
   return (
     <div id={elementId} className={combinedClassName} style={containerStyle}>

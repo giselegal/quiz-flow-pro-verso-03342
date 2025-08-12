@@ -128,7 +128,30 @@ const createSelectOptions = (options: Array<{ value: string; label: string }>) =
  * 🌟 Funções de propriedades universais
  */
 const getUniversalProperties = (): UnifiedProperty[] => [
-  // 1. Controles de margens (4 direções)
+  // 0. Controles principais de cabeçalho/branding
+  createProperty(
+    "enableHeader",
+    true,
+    PropertyType.SWITCH,
+    "Habilitar Cabeçalho",
+    "logo" as PropertyCategoryOrString
+  ),
+  createProperty(
+    "showLogo",
+    true,
+    PropertyType.SWITCH,
+    "Mostrar Logo",
+    "logo" as PropertyCategoryOrString
+  ),
+  createProperty(
+    "decorativeBar",
+    false,
+    PropertyType.SWITCH,
+    "Barra Decorativa",
+    "logo" as PropertyCategoryOrString
+  ),
+
+  // 1. Margens externas (4 direções)
   createProperty("marginTop", 0, PropertyType.RANGE, "Margem Superior", PropertyCategory.LAYOUT, {
     min: 0,
     max: 100,
@@ -156,32 +179,74 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     unit: "px",
   }),
 
-  // 2. Escala Bloco (controle de escala)
-  createProperty("scale", 1, PropertyType.RANGE, "Escala Bloco", PropertyCategory.LAYOUT, {
-    min: 0.5,
-    max: 2,
-    step: 0.1,
+  // 2. Margens internas (padding)
+  createProperty("paddingTop", 0, PropertyType.RANGE, "Padding Superior", PropertyCategory.LAYOUT, {
+    min: 0,
+    max: 100,
+    step: 2,
+    unit: "px",
+  }),
+  createProperty(
+    "paddingBottom",
+    0,
+    PropertyType.RANGE,
+    "Padding Inferior",
+    PropertyCategory.LAYOUT,
+    { min: 0, max: 100, step: 2, unit: "px" }
+  ),
+  createProperty("paddingLeft", 0, PropertyType.RANGE, "Padding Esquerdo", PropertyCategory.LAYOUT, {
+    min: 0,
+    max: 100,
+    step: 2,
+    unit: "px",
+  }),
+  createProperty("paddingRight", 0, PropertyType.RANGE, "Padding Direito", PropertyCategory.LAYOUT, {
+    min: 0,
+    max: 100,
+    step: 2,
+    unit: "px",
   }),
 
-  // 3. Cor de fundo do Container
+  // 3. Escala geral (tamanho)
   createProperty(
-    "containerBackgroundColor",
-    "transparent",
-    PropertyType.COLOR,
-    "Cor de Fundo Container",
-    PropertyCategory.STYLE
+    "sizeScale",
+    "100%",
+    PropertyType.SELECT,
+    "Tamanho",
+    PropertyCategory.LAYOUT,
+    {
+      options: [
+        { value: "50%", label: "50%" },
+        { value: "100%", label: "100%" },
+        { value: "110%", label: "110%" },
+      ],
+    }
   ),
 
-  // 4. Cor de fundo do Componente
+  // 4. Cores de fundo
   createProperty(
     "componentBackgroundColor",
     "transparent",
     PropertyType.COLOR,
-    "Cor de Fundo Componente",
+    "Cor de Fundo do Componente",
+    PropertyCategory.STYLE
+  ),
+  createProperty(
+    "containerBackgroundColor",
+    "transparent",
+    PropertyType.COLOR,
+    "Cor de Fundo do Container",
+    PropertyCategory.STYLE
+  ),
+  createProperty(
+    "canvasBackgroundColor",
+    "transparent",
+    PropertyType.COLOR,
+    "Cor de Fundo do Canvas",
     PropertyCategory.STYLE
   ),
 
-  // 5. Elementos centralizados no container
+  // 5. Alinhamento
   createProperty(
     "textAlign",
     "center",
@@ -197,7 +262,7 @@ const getUniversalProperties = (): UnifiedProperty[] => [
     }
   ),
 
-  // 6. Largura do texto 100%
+  // 6. Largura do texto
   createProperty(
     "textWidth",
     "100%",
@@ -842,7 +907,7 @@ export const useUnifiedProperties = (
           ...getUniversalProperties(),
           createProperty(
             "elementId",
-            currentBlock?.properties?.elementId || "",
+            currentBlock?.properties?.elementId || "quiz-form",
             PropertyType.TEXT,
             "ID do Elemento",
             PropertyCategory.ADVANCED
@@ -859,6 +924,35 @@ export const useUnifiedProperties = (
             currentBlock?.properties?.backgroundColor ?? currentBlock?.properties?.containerBackgroundColor ?? "transparent",
             PropertyType.COLOR,
             "Cor de Fundo",
+            PropertyCategory.STYLE
+          ),
+          // 🔒 Regras de ativação do botão por Nome (Step01)
+          createProperty(
+            "requireNameToEnableButton",
+            currentBlock?.properties?.requireNameToEnableButton === true,
+            PropertyType.SWITCH,
+            "Exigir nome para ativar botão",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "nameInputId",
+            currentBlock?.properties?.nameInputId || "name-input-modular",
+            PropertyType.TEXT,
+            "ID do Campo de Nome",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "targetButtonId",
+            currentBlock?.properties?.targetButtonId || "cta-button-modular",
+            PropertyType.TEXT,
+            "ID do Botão a Ativar",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "visuallyDisableButton",
+            currentBlock?.properties?.visuallyDisableButton !== false,
+            PropertyType.SWITCH,
+            "Desabilitar visualmente até validar",
             PropertyCategory.STYLE
           ),
         ];
