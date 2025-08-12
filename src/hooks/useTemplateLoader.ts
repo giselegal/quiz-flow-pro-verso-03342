@@ -30,7 +30,7 @@ interface UseTemplateLoaderResult {
 }
 
 export function useTemplateLoader(): UseTemplateLoaderResult {
-  const { activeStageId, stages } = useEditor();
+  const { stages } = useEditor();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [templatesMetadata, setTemplatesMetadata] = useState<Record<string, TemplateMetadata>>({});

@@ -50,8 +50,7 @@ const OptimizedAutoFixedImages: React.FC<AutoFixedImagesProps> = ({
     let debounceTimer: number | null = null;
     let mutationCount = 0;
 
-    // Observador de mutações mais eficiente
-    const observer = new MutationObserver(mutations => {
+    const observer = new MutationObserver(() => {
       // Incrementar contador para limitar frequência de correções
       mutationCount++;
 

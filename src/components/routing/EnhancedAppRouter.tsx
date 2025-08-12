@@ -44,7 +44,7 @@ const ErrorBoundary: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 };
 
 // Lazy loading dos componentes (com fallbacks seguros)
-const EnhancedEditor = lazy(() => import('../../components/editor/EnhancedEditor'));
+const EnhancedEditor = lazy(() => import('../../components/editor/EnhancedEditor')) as unknown as React.ComponentType<{ funnelId: string }>;
 
 const SystemIntegrationTest = lazy(() => import('../../components/testing/SystemIntegrationTest'));
 

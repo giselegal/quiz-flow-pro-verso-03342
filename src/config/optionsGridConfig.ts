@@ -296,7 +296,7 @@ export class OptionsGridUtils {
   /**
    * Retorna as classes CSS do grid baseado no conteúdo
    */
-  static getGridClasses(options: OptionItem[], columns: number = 2): string {
+  static getGridClasses(options: OptionItem[]): string {
     const hasImages = this.hasImages(options);
 
     if (hasImages) {
