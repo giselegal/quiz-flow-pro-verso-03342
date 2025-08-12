@@ -1,4 +1,3 @@
-import DynamicBlockRenderer from "@/components/DynamicBlockRenderer";
 import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import { usePageConfig } from "@/hooks/usePageConfig";
 import { trackButtonClick } from "@/utils/analytics";
@@ -300,18 +299,18 @@ const QuizOfferPage: React.FC = () => {
   //   },
   // ];
 
-
-  const _benefits = [
-    "Análise personalizada do seu biotipo",
-    "Guia completo de peças que valorizam seu corpo",
-    "Consultoria de 1 hora com nossa especialista",
-    "Acesso a materiais exclusivos",
-  ].map((benefit, index: number) => (
-    <li key={index} className="flex items-start space-x-3">
-      <span className="text-[#B89B7A] text-xl">✓</span>
-      <span>{benefit}</span>
-    </li>
-  ));
+  // Comentado: benefits array não utilizado
+  // const _benefits = [
+  //   "Análise personalizada do seu biotipo",
+  //   "Guia completo de peças que valorizam seu corpo",
+  //   "Consultoria de 1 hora com nossa especialista",
+  //   "Acesso a materiais exclusivos",
+  // ].map((benefit, index: number) => (
+  //   <li key={index} className="flex items-start space-x-3">
+  //     <span className="text-[#B89B7A] text-xl">✓</span>
+  //     <span>{benefit}</span>
+  //   </li>
+  // ));
 
   useEffect(() => {
     // Inject custom styles
@@ -354,18 +353,18 @@ const QuizOfferPage: React.FC = () => {
    * Renderiza um componente com configurações do editor se disponível,
    * caso contrário renderiza o componente original
    */
-  const _renderConfigurableComponent = (_blockId: string, originalComponent: React.ReactNode) => {
-    if (pageConfig && !configLoading) {
-      return (
-        <DynamicBlockRenderer
-          pageId="quiz-offer-page"
-          blockId={_blockId}
-          fallback={originalComponent}
-        />
-      );
-    }
-    return originalComponent;
-  };
+  // const _renderConfigurableComponent = (_blockId: string, originalComponent: React.ReactNode) => {
+  //   if (pageConfig && !configLoading) {
+  //     return (
+  //       <DynamicBlockRenderer
+  //         pageId="quiz-offer-page"
+  //         blockId={_blockId}
+  //         fallback={originalComponent}
+  //       />
+  //     );
+  //   }
+  //   return originalComponent;
+  // };
 
   // Editor integration placeholder
   useEffect(() => {

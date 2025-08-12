@@ -2,11 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
+// import { useToast } from "@/hooks/use-toast";
 import { type FunnelTemplate } from "@/services/FunnelAIAgent";
 import { Bot, Check, Eye, Play, Sparkles, Wand2 } from "lucide-react";
 import React, { useState } from "react";
-import { useRouter } from "wouter";
+// import { useRouter } from "wouter";
 
 // Template da Consultora de Estilo com IA
 const STYLE_CONSULTANT_TEMPLATE: FunnelTemplate = {
@@ -470,12 +470,12 @@ const TemplatesIA: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<"STYLE_QUIZ" | "STYLE_CONSULTANT">(
     "STYLE_QUIZ"
   );
-  const _router = useRouter(); // Não utilizado atualmente
-  const _navigate = (_path: string) => {
-    // Para wouter, usamos window.location diretamente
-    // window.location.href = path;
-  };
-  const { toast: _toast } = useToast();
+  // const _router = useRouter(); // Não utilizado atualmente
+  // const _navigate = (_path: string) => {
+  //   // Para wouter, usamos window.location diretamente
+  //   // window.location.href = path;
+  // };
+  // const { toast: _toast } = useToast();
 
   const AVAILABLE_TEMPLATES = {
     STYLE_QUIZ: STYLE_QUIZ_TEMPLATE,
