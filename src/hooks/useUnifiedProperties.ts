@@ -778,6 +778,25 @@ export const useUnifiedProperties = (
           ),
         ];
 
+      case "form-container":
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            "elementId",
+            currentBlock?.properties?.elementId || "",
+            PropertyType.TEXT,
+            "ID do Elemento",
+            PropertyCategory.ADVANCED
+          ),
+          createProperty(
+            "className",
+            currentBlock?.properties?.className || "",
+            PropertyType.TEXT,
+            "Classe CSS",
+            PropertyCategory.ADVANCED
+          ),
+        ];
+
       case "button-inline":
         return [
           ...getUniversalProperties(),

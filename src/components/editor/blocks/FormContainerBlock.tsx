@@ -7,10 +7,10 @@ import { getBlockComponent } from '@/config/enhancedBlockRegistry';
  */
 const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   const { properties = {} } = block || {};
-  const { elementId, className, marginTop, marginBottom, children = [] } = properties as any;
+  const { elementId, className, marginTop, marginBottom, backgroundColor, children = [] } = properties as any;
 
   return (
-    <div id={elementId} className={className} style={{ marginTop, marginBottom }}>
+    <div id={elementId} className={className} style={{ marginTop, marginBottom, backgroundColor }}>
       {Array.isArray(children) &&
         children.map((child: any, index: number) => {
           const Component = getBlockComponent(child.type);

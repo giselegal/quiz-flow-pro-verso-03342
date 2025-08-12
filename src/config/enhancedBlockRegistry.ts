@@ -28,6 +28,7 @@ import TextInline from "../components/blocks/inline/TextInline";
 import DecorativeBarInlineBlock from "../components/editor/blocks/DecorativeBarInlineBlock";
 import FinalStepEditor from "../components/editor/blocks/FinalStepEditor";
 import FormInputBlock from "../components/editor/blocks/FormInputBlock";
+import FormContainerBlock from "../components/editor/blocks/FormContainerBlock";
 import HeadingInlineBlock from "../components/editor/blocks/HeadingInlineBlock";
 import LegalNoticeInlineBlock from "../components/editor/blocks/LegalNoticeInlineBlock";
 import QuizIntroHeaderBlock from "../components/editor/blocks/QuizIntroHeaderBlock";
@@ -81,7 +82,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // Layout and Design
   divider: DividerInlineBlock,
   spacer: SpacerInlineBlock,
-
+  "form-container": FormContainerBlock,
   // Commerce and Pricing
   "pricing-card": PricingCardInlineBlock,
   countdown: CountdownInlineBlock,

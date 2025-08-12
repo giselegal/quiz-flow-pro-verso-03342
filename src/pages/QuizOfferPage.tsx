@@ -300,13 +300,6 @@ const QuizOfferPage: React.FC = () => {
   //   },
   // ];
 
-  // const renderStars = (num: number) => {
-    return Array.from({ length: 5 }, (_, index: number) => (
-      <span key={index} className={index < num ? "text-yellow-400" : "text-gray-300"}>
-        ★
-      </span>
-    ));
-  };
 
   const benefits = [
     "Análise personalizada do seu biotipo",
