@@ -451,23 +451,82 @@ export const useUnifiedProperties = (
       case "quiz-intro-header":
         return [
           ...getUniversalProperties(),
-          ...getTextProperties(),
+
+          // Logo
           createProperty(
-            "subtitle",
-            currentBlock?.properties?.subtitle || "",
-            PropertyType.TEXT,
-            "Subtítulo",
+            "logoUrl",
+            currentBlock?.properties?.logoUrl || "",
+            PropertyType.URL,
+            "URL da Logo",
             PropertyCategory.CONTENT
           ),
           createProperty(
-            "showIcon",
-            currentBlock?.properties?.showIcon !== false,
+            "logoAlt",
+            currentBlock?.properties?.logoAlt || "Logo",
+            PropertyType.TEXT,
+            "Texto Alternativo",
+            PropertyCategory.ACCESSIBILITY
+          ),
+          createProperty(
+            "logoWidth",
+            currentBlock?.properties?.logoWidth ?? 96,
+            PropertyType.RANGE,
+            "Largura da Logo (px)",
+            PropertyCategory.STYLE,
+            { min: 24, max: 240, step: 2 }
+          ),
+          createProperty(
+            "logoHeight",
+            currentBlock?.properties?.logoHeight ?? 96,
+            PropertyType.RANGE,
+            "Altura da Logo (px)",
+            PropertyCategory.STYLE,
+            { min: 24, max: 240, step: 2 }
+          ),
+
+          // Comportamento
+          createProperty(
+            "showBackButton",
+            currentBlock?.properties?.showBackButton ?? true,
             PropertyType.SWITCH,
-            "Mostrar Ícone",
+            "Mostrar botão Voltar",
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            "showProgress",
+            currentBlock?.properties?.showProgress ?? true,
+            PropertyType.SWITCH,
+            "Mostrar barra de progresso",
+            PropertyCategory.BEHAVIOR
+          ),
+
+          // Progresso
+          createProperty(
+            "progressValue",
+            currentBlock?.properties?.progressValue ?? 0,
+            PropertyType.RANGE,
+            "Progresso (%)",
+            PropertyCategory.BEHAVIOR,
+            { min: 0, max: 100, step: 1 }
+          ),
+          createProperty(
+            "progressMax",
+            currentBlock?.properties?.progressMax ?? 100,
+            PropertyType.NUMBER,
+            "Máximo (%)",
+            PropertyCategory.BEHAVIOR,
+            { min: 1, max: 100 }
+          ),
+
+          // Estilo
+          createProperty(
+            "backgroundColor",
+            currentBlock?.properties?.backgroundColor ?? "transparent",
+            PropertyType.COLOR,
+            "Cor de Fundo",
             PropertyCategory.STYLE
           ),
         ];
-
       case "step01-intro":
         return [
           ...getUniversalProperties(),
@@ -795,8 +854,14 @@ export const useUnifiedProperties = (
             "Classe CSS",
             PropertyCategory.ADVANCED
           ),
+          createProperty(
+            "backgroundColor",
+            currentBlock?.properties?.backgroundColor ?? currentBlock?.properties?.containerBackgroundColor ?? "transparent",
+            PropertyType.COLOR,
+            "Cor de Fundo",
+            PropertyCategory.STYLE
+          ),
         ];
-
       case "button-inline":
         return [
           ...getUniversalProperties(),
