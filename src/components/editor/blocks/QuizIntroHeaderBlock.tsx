@@ -60,7 +60,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
-  disabled = false,
+  disabled: _disabled = false,
   className,
 }) => {
   // Verificação de segurança para evitar erro de undefined
@@ -90,7 +90,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     marginRight = 0,
   } = (block?.properties as any) || {};
 
-  const handlePropertyChange = (key: string, value: any) => {
+  const _handlePropertyChange = (key: string, value: any) => {
     if (onPropertyChange) {
       onPropertyChange(key, value);
     }

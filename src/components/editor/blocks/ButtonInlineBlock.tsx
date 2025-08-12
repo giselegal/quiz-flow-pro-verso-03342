@@ -63,7 +63,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   className = "",
 }) => {
   // Verificação de segurança para evitar erro de undefined
@@ -89,7 +89,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     url = "", // Campo adicional para URL
     target = "_blank",
     disabled = false,
-    customStyles = "",
+    customStyles: _customStyles = "",
     requiresValidInput = false,
     // Configurações de cores
     backgroundColor = "#B89B7A",

@@ -8,11 +8,8 @@ import {
   Info,
   X,
   Loader2,
-  Wifi,
   WifiOff,
   Save,
-  Undo,
-  Redo,
   Clock,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";

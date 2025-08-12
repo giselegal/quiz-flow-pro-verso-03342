@@ -75,7 +75,7 @@ const BadgeInlineBlock: React.FC<BadgeInlineBlockProps> = ({
   showIcon = true,
   onClick,
   className,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   disabled = false,
   // Sistema completo de margens com controles deslizantes
   marginTop = 0,

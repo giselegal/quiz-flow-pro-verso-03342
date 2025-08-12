@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 
 interface InlineEditableTextProps {
@@ -14,10 +14,10 @@ interface InlineEditableTextProps {
 
 export const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   value,
-  onChange,
+  onChange: _onChange,
   placeholder = "Digite aqui...",
   className = "",
-  multiline = false,
+  multiline: _multiline = false,
   disabled = false,
   isSelected = false,
   onClick,

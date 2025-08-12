@@ -48,8 +48,8 @@ const InlineEditableText: React.FC<InlineEditableTextProps> = ({
   onEdit,
   minHeight,
   maxWidth,
-  responsive,
-  maxLines = 3,
+  responsive: _responsive,
+  maxLines: _maxLines = 3,
 }) => {
   // Compatibilidade: usar value se fornecido, senão text
   const displayText = value !== undefined ? value : text || "";

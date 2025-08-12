@@ -44,7 +44,7 @@ export const DraggableComponentItem: React.FC<DraggableComponentItemProps> = ({
   }, [blockType, disabled]);
 
   // Debug simples para mouse events
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (_e: React.MouseEvent) => {
     console.log("🖱️ MouseDown:", blockType, "disabled:", disabled);
   };
 

@@ -22,14 +22,14 @@ const QuizOptionBlock: React.FC<QuizOptionBlockProps> = ({ block, isSelected, on
 
   const label: string = props.label || props.text || "Opção";
   const textAlign: string = props.textAlign || "text-left";
-  const size: string = props.size || "large";
-  const variant: string = props.variant || "default";
+  const _size: string = props.size || "large";
+  const _variant: string = props.variant || "default";
   const borderRadius: string = props.borderRadius || "rounded-lg";
 
   const backgroundColor: string | undefined = props.backgroundColor;
   const textColor: string | undefined = props.textColor;
-  const hoverColor: string | undefined = props.hoverColor; // ignorado no editor
-  const selectedColor: string | undefined = props.selectedColor; // ignorado no editor
+  const _hoverColor: string | undefined = props.hoverColor; // ignorado no editor
+  const _selectedColor: string | undefined = props.selectedColor; // ignorado no editor
 
   // Dimensões e espaçamento
   const fullWidth = props.fullWidth ?? true;

@@ -23,7 +23,7 @@ export const InlineEditText: React.FC<InlineEditTextProps> = ({
   value,
   onSave: _onSave,
   placeholder = "Clique para selecionar...",
-  multiline = false,
+  multiline: _multiline = false,
   disabled = false,
   className = "",
   as = "p",

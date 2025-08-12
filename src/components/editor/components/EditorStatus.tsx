@@ -6,7 +6,7 @@ import React from "react";
 import { Badge } from "../../ui/badge";
 import { Card, CardContent } from "../../ui/card";
 import { Separator } from "../../ui/separator";
-import { Clock, Save, Eye, Layers, Palette, Target, CheckCircle, AlertCircle } from "lucide-react";
+import { Clock, Layers, CheckCircle } from "lucide-react";
 
 interface EditorStatusProps {
   selectedBlockId?: string;

@@ -13,11 +13,11 @@ interface EditorContentProps {
 
 export const EditorContent: React.FC<EditorContentProps> = ({
   blocks,
-  onDragEnd,
-  onAddBlock,
-  onUpdateBlock,
-  onDeleteBlock,
-  isPreviewing,
+  onDragEnd: _onDragEnd,
+  onAddBlock: _onAddBlock,
+  onUpdateBlock: _onUpdateBlock,
+  onDeleteBlock: _onDeleteBlock,
+  isPreviewing: _isPreviewing,
 }) => {
   const renderBlock = (block: EditorBlock) => {
     const isSelected = false;

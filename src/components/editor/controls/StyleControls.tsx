@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ColorPicker } from "@/components/result-editor/ColorPicker";
-import { Switch } from "@/components/ui/switch";
 
 interface StyleControlsProps {
   style: any;

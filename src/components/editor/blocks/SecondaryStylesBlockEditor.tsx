@@ -75,3 +75,5 @@ const SecondaryStylesBlockEditor: React.FC<BlockEditorProps> = ({ block, onUpdat
     </div>
   );
 };
+
+export default SecondaryStylesBlockEditor;

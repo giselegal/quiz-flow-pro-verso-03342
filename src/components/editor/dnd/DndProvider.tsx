@@ -38,9 +38,9 @@ export const DndProvider: React.FC<DndProviderProps> = ({
   blocks,
   onBlocksReorder,
   onBlockAdd,
-  onBlockSelect,
-  selectedBlockId,
-  onBlockUpdate,
+  onBlockSelect: _onBlockSelect,
+  selectedBlockId: _selectedBlockId,
+  onBlockUpdate: _onBlockUpdate,
 }) => {
   const [activeBlock, setActiveBlock] = React.useState<BlockData | null>(null);
 

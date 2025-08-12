@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
 import { ScrollArea } from "../../ui/scroll-area";
 import { Badge } from "../../ui/badge";
 import { Separator } from "../../ui/separator";
-import { History, Undo2, Redo2, RotateCcw, Clock, CheckCircle, Circle, Trash2 } from "lucide-react";
+import { History, Undo2, Redo2, Clock, CheckCircle, Circle, Trash2 } from "lucide-react";
 
 interface HistoryEntry {
   id: string;

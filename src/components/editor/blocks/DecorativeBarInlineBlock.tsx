@@ -60,7 +60,7 @@ const DecorativeBarInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange, // ✅ Adicionando suporte a edição de propriedades
+  onPropertyChange: _onPropertyChange, // ✅ Adicionando suporte a edição de propriedades
   className = "",
 }) => {
   const {

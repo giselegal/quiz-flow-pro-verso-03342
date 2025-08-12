@@ -51,7 +51,7 @@ const SectionDividerBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
   className = "",
 }) => {
   const {

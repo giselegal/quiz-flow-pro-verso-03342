@@ -7,7 +7,6 @@ import {
   getPersonalizedText,
   trackComponentView,
   trackComponentClick,
-  RESPONSIVE_PATTERNS,
   INLINE_ANIMATIONS,
 } from "@/utils/inlineComponentUtils";
 import { Users, TrendingUp, Heart, Clock, Star, Award, Target, Zap, BarChart3 } from "lucide-react";
@@ -66,7 +65,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
   const {
     value = "1000+",
     label = "Clientes Satisfeitas",
-    type = "users",
+    type: _type = "users",
     icon = "users",
     showIcon = true,
     animatedCounter = true,
@@ -74,7 +73,7 @@ const StatInlineBlock: React.FC<BlockComponentProps> = ({
     usernamePattern = "{{username}}, você será a próxima!",
     trackingEnabled = false,
     animation = "scaleIn",
-    theme = "primary",
+    theme: _theme = "primary",
     size = "medium",
     layout = "horizontal",
   } = block?.properties || {};

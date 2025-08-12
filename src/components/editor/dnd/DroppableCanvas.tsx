@@ -14,27 +14,10 @@ interface DroppableCanvasProps {
 const DroppableCanvas: React.FC<DroppableCanvasProps> = ({
   blocks,
   onBlocksChange,
-  selectedBlockId,
+  selectedBlockId: _selectedBlockId,
   onSelectBlock,
-  isPreviewing = false,
+  isPreviewing: _isPreviewing = false,
 }) => {
-  const handleDrop = (blockType: Block["type"]) => {
-    const newBlock: Block = {
-      id: generateSemanticId({
-        context: "canvas",
-        type: "block",
-        identifier: "block",
-        index: Math.floor(Math.random() * 1000),
-      }),
-      type: blockType,
-      content: {}, // Fixed: Add the required content property
-      properties: {},
-      order: blocks.length,
-    };
-
-    onBlocksChange([...blocks, newBlock]);
-    onSelectBlock(newBlock.id);
-  };
 
   const { setNodeRef } = useDroppable({
     id: "droppable-canvas",

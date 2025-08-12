@@ -10,8 +10,6 @@ import { Separator } from "../../ui/separator";
 import {
   Sparkles,
   Monitor,
-  Tablet,
-  Smartphone,
   History,
   Palette,
   Settings,

@@ -62,7 +62,7 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
   onClick,
   onPropertyChange,
   className = "",
-  funnelId = "default-quiz-funnel-21-steps",
+  funnelId: _funnelId = "default-quiz-funnel-21-steps",
   onValueChange,
 }) => {
   // Verificação de segurança para evitar erro de undefined
