@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEditor } from '@/context/EditorContext';
 import { cn } from '@/lib/utils';
 import { Copy, Eye, GripVertical, Plus, Settings, Trash2 } from 'lucide-react';
+import TestSteps from '@/components/test/TestSteps';
 
 interface FunnelStagesPanelProps {
   className?: string;
@@ -69,6 +70,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
             <p>stageCount: {stageCount}</p>
             <p>activeStageId: {activeStageId}</p>
           </div>
+          <TestSteps />
         </CardContent>
       </Card>
     );
