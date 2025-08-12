@@ -169,6 +169,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     // ✅ USAR CONFIG LIMPA DAS 21 ETAPAS
     console.log('📋 EditorProvider: CLEAN_21_STEPS:', CLEAN_21_STEPS.length);
+    console.log('📋 EditorProvider: CLEAN_21_STEPS completo:', CLEAN_21_STEPS);
 
     const initialStages = CLEAN_21_STEPS.map(stepConfig => ({
       id: stepConfig.id,
@@ -186,6 +187,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }));
 
     console.log('✅ EditorProvider: 21 etapas criadas sem duplicação:', initialStages.length);
+    console.log('✅ EditorProvider: Primeira etapa:', initialStages[0]);
+    console.log('✅ EditorProvider: Última etapa:', initialStages[initialStages.length - 1]);
     console.log(
       '✅ EditorProvider: Etapas:',
       initialStages.map(s => `${s.order}: ${s.name}`)

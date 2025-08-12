@@ -63,6 +63,12 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         </CardHeader>
         <CardContent>
           <p>Recarregue a página ou verifique a configuração.</p>
+          <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
+            <p className="font-bold">Debug Info:</p>
+            <p>stages: {stages ? `Array com ${stages.length} itens` : 'null/undefined'}</p>
+            <p>stageCount: {stageCount}</p>
+            <p>activeStageId: {activeStageId}</p>
+          </div>
         </CardContent>
       </Card>
     );
