@@ -28,7 +28,7 @@ const TextInlineBlock: React.FC<BlockComponentProps> = ({
     useUsername = false,
     usernamePattern = '{userName}',
     // Propriedades do grid system
-    gridColumns = 'auto', // 'auto', 'half', 'full'
+    gridColumns = 'full', // 'auto', 'half', 'full'
     spacing = 'normal',
     // Propriedades de espaçamento
     marginTop = 8,

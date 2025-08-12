@@ -273,7 +273,180 @@ export const useUnifiedProperties = (
 
     switch (blockType) {
       case "text-inline":
-        return [...getUniversalProperties(), ...getTextProperties()];
+        return [
+          // Conteúdo
+          createProperty(
+            "content",
+            currentBlock?.properties?.content ?? currentBlock?.content?.text ?? "Digite seu texto aqui...",
+            PropertyType.TEXTAREA,
+            "Conteúdo",
+            PropertyCategory.CONTENT,
+            { rows: 4 }
+          ),
+
+          // Tipografia
+          createProperty(
+            "fontSize",
+            currentBlock?.properties?.fontSize ?? "medium",
+            PropertyType.SELECT,
+            "Tamanho da Fonte",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "xs", label: "XS" },
+                { value: "sm", label: "SM" },
+                { value: "medium", label: "Médio" },
+                { value: "lg", label: "LG" },
+                { value: "xl", label: "XL" },
+                { value: "2xl", label: "2XL" },
+                { value: "3xl", label: "3XL" },
+              ],
+            }
+          ),
+          createProperty(
+            "fontWeight",
+            currentBlock?.properties?.fontWeight ?? "normal",
+            PropertyType.SELECT,
+            "Peso da Fonte",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "light", label: "Leve" },
+                { value: "normal", label: "Normal" },
+                { value: "medium", label: "Médio" },
+                { value: "semibold", label: "Semi-negrito" },
+                { value: "bold", label: "Negrito" },
+              ],
+            }
+          ),
+          createProperty(
+            "lineHeight",
+            currentBlock?.properties?.lineHeight ?? "leading-normal",
+            PropertyType.SELECT,
+            "Altura da Linha",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "leading-none", label: "Muito compacta" },
+                { value: "leading-tight", label: "Compacta" },
+                { value: "leading-snug", label: "Ajustada" },
+                { value: "leading-normal", label: "Normal" },
+                { value: "leading-relaxed", label: "Relaxada" },
+                { value: "leading-loose", label: "Solta" },
+              ],
+            }
+          ),
+
+          // Cores
+          createProperty(
+            "color",
+            currentBlock?.properties?.color ?? BRAND_COLORS.text,
+            PropertyType.COLOR,
+            "Cor do Texto",
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            "backgroundColor",
+            currentBlock?.properties?.backgroundColor ?? "transparent",
+            PropertyType.COLOR,
+            "Cor de Fundo",
+            PropertyCategory.STYLE
+          ),
+
+          // Layout
+          createProperty(
+            "textAlign",
+            currentBlock?.properties?.textAlign ?? "left",
+            PropertyType.SELECT,
+            "Alinhamento",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "left", label: "Esquerda" },
+                { value: "center", label: "Centro" },
+                { value: "right", label: "Direita" },
+                { value: "justify", label: "Justificado" },
+              ],
+            }
+          ),
+          createProperty(
+            "gridColumns",
+            currentBlock?.properties?.gridColumns ?? "full",
+            PropertyType.SELECT,
+            "Largura do Bloco",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "full", label: "100% (linha inteira)" },
+                { value: "half", label: "50% (duas colunas)" },
+                { value: "auto", label: "Automática" },
+              ],
+            }
+          ),
+          createProperty(
+            "maxWidth",
+            currentBlock?.properties?.maxWidth ?? "auto",
+            PropertyType.SELECT,
+            "Largura Máxima",
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: "auto", label: "Automática" },
+                { value: "32rem", label: "32rem (~512px)" },
+                { value: "40rem", label: "40rem (~640px)" },
+                { value: "48rem", label: "48rem (~768px)" },
+              ],
+            }
+          ),
+          createProperty(
+            "spacing",
+            currentBlock?.properties?.spacing ?? "normal",
+            PropertyType.SELECT,
+            "Espaçamento Interno",
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: "tight", label: "Apertado" },
+                { value: "normal", label: "Normal" },
+                { value: "loose", label: "Solto" },
+              ],
+            }
+          ),
+
+          // Margens
+          createProperty(
+            "marginTop",
+            currentBlock?.properties?.marginTop ?? 8,
+            PropertyType.RANGE,
+            "Margem Superior",
+            PropertyCategory.LAYOUT,
+            { min: -40, max: 100, step: 2, unit: "px" }
+          ),
+          createProperty(
+            "marginBottom",
+            currentBlock?.properties?.marginBottom ?? 8,
+            PropertyType.RANGE,
+            "Margem Inferior",
+            PropertyCategory.LAYOUT,
+            { min: -40, max: 100, step: 2, unit: "px" }
+          ),
+          createProperty(
+            "marginLeft",
+            currentBlock?.properties?.marginLeft ?? 0,
+            PropertyType.RANGE,
+            "Margem Esquerda",
+            PropertyCategory.LAYOUT,
+            { min: -40, max: 100, step: 2, unit: "px" }
+          ),
+          createProperty(
+            "marginRight",
+            currentBlock?.properties?.marginRight ?? 0,
+            PropertyType.RANGE,
+            "Margem Direita",
+            PropertyCategory.LAYOUT,
+            { min: -40, max: 100, step: 2, unit: "px" }
+          ),
+        ];
 
       case "quiz-intro-header":
         return [
