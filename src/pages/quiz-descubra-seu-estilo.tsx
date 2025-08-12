@@ -531,8 +531,8 @@ const handleCTAClick = (buttonId: string, action: string = "Comprar Agora") => {
   };
 };
 
-// Componente de Popup de Prova Social Dinâmica - não utilizado
-// const SocialProofPopup = () => {
+/* Componente de Popup de Prova Social Dinâmica - não utilizado
+const SocialProofPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
 
@@ -572,8 +572,10 @@ const handleCTAClick = (buttonId: string, action: string = "Comprar Agora") => {
     </div>
   );
 };
+*/
 
-// Componente de Avaliações com Estrelas
+// Componente de Avaliações com Estrelas - não utilizado
+/*
 const StarRating = ({ rating }: { rating: number }) => {
   return (
     <div className="flex items-center gap-1">
@@ -587,9 +589,10 @@ const StarRating = ({ rating }: { rating: number }) => {
     </div>
   );
 };
+*/
 
-// Componente de Contagem Regressiva Dramática
-const DramaticCountdown = () => {
+// Componente de Contagem Regressiva Dramática - não utilizado  
+// const DramaticCountdown = () => {
   const [time, setTime] = useState({
     hours: 2,
     minutes: 47,
