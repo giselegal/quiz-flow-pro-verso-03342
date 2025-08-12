@@ -1,8 +1,8 @@
-import { JSX } from "react";
 import CreativePerformanceDashboard from "@/components/analytics/CreativePerformanceDashboard";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Download, Settings, TestTube } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Download, RefreshCw, Settings, TestTube } from "lucide-react";
+import { JSX } from "react";
 
 const CreativeAnalyticsPage = (): JSX.Element => {
   const handleGenerateTestData = () => {
