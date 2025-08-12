@@ -6,25 +6,23 @@
  */
 
 import {
-  Type,
-  Heading1,
-  RectangleHorizontal,
-  HelpCircle,
-  StretchHorizontal,
-  LayoutGrid,,
-  Square,,
-  Palette,
-  Code,
-  Ruler,
-  Image as ImageIcon,
-  Play,
   Award,
   Gift,
-  Target,
-  Users,
-  Timer,
-  Settings,
+  Heading1,
+  HelpCircle,
+  Image as ImageIcon,
+  LayoutGrid,
   Monitor,
+  Palette,
+  Play,
+  RectangleHorizontal,
+  Settings,
+  Square,
+  StretchHorizontal,
+  Target,
+  Timer,
+  Type,
+  Users
 } from "lucide-react";
 
 // =====================================================================

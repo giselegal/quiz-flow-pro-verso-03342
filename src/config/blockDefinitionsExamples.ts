@@ -1,6 +1,6 @@
-import React from "react";
 import { BlockDefinition } from "@/types/editor";
-import { Type, Grid,,} from "lucide-react";
+import { Grid, Type } from "lucide-react";
+import React from "react";
 
 // 🎯 Exemplo de Block Definition com propriedades categorizadas para quiz
 export const enhancedOptionsGridBlockDefinition: BlockDefinition = {

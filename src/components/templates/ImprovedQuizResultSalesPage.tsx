@@ -1,10 +1,13 @@
 "use client";
 
-import React, { lazy, Suspense, useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Card } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -12,24 +15,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { useToast } from "@/components/ui/use-toast";
+import { trackButtonClick } from "@/utils/analytics";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  ShoppingCart,,
   Award,
   CheckCircle,
+  Clock,
+  Gift,
+  Shield,
+  ShoppingCart,
   Star,
   XCircle,
-  Clock,
-  Shield,
-  Gift,
   Zap,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 
 // Types
 interface StyleResult {

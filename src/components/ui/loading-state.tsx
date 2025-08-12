@@ -1,4 +1,3 @@
-import  from "./loading-spinner";
 
 interface LoadingStateProps {
   message?: string;

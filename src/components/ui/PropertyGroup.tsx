@@ -4,12 +4,11 @@
  * Usa Card do Shadcn UI com headers e descrições
  */
 
-import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import  from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
 
 interface PropertyGroupProps {
   title: string;
