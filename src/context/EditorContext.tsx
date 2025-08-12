@@ -276,15 +276,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           if (blocks && blocks.length > 0) {
             setStageBlocks(prev => ({
               ...prev,
-              [stageId]: blocks.map((block, index) => ({
-                id: block.id || `${stageId}-block-${index + 1}`,
-                type: block.type,
-                content: block.content || block.properties || {},
-                order: index + 1,
-                properties: block.properties || block.content || {},
-              })),
+              [stageId]: blocks, // ✅ Usar blocos diretamente - já convertidos pelo TemplateManager
             }));
             console.log(`✅ Template ${stageId} carregado: ${blocks.length} blocos`);
+            console.log(`📦 Tipos de blocos: ${blocks.map(b => b.type).join(', ')}`);
           } else {
             console.warn(`⚠️ Nenhum bloco encontrado para ${stageId}`);
           }
@@ -432,14 +427,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         if (blocks && blocks.length > 0) {
           setStageBlocks(prev => ({
             ...prev,
-            [stageId]: blocks.map((block, index) => ({
-              id: block.id || `${stageId}-block-${index + 1}`,
-              type: block.type as any,
-              content: block.content || block.properties || {},
-              order: index + 1,
-              properties: block.properties || block.content || {},
-            })),
+            [stageId]: blocks, // ✅ Usar blocos diretamente - já convertidos pelo TemplateManager
           }));
+
+          console.log(`✅ Template ${stageId} carregado dinamicamente: ${blocks.length} blocos`);
+          console.log(`📦 Tipos de blocos: ${blocks.map(b => b.type).join(', ')}`);
 
           // Atualizar metadados da etapa
           setStages(prev =>
