@@ -34,7 +34,7 @@ export const useContainerProperties = (properties: ContainerProperties = {}) => 
     containerWidth = "full",
     containerPosition = "center",
     spacing = "small", // 🎯 Padrão alterado para "small" (0.75rem/12px)
-    gridColumns = "auto",
+    gridColumns = "full",
     backgroundColor = "transparent",
     marginTop = 0,
     marginBottom = 0,

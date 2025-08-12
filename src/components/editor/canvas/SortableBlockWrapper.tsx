@@ -208,18 +208,23 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           className="p-1" // 🎯 Apenas padding, sem bordas
           onClick={onSelect}
         >
-          <Component
-            block={{
-              ...block,
-              properties: {
-                ...block.properties,
-                ...processedProperties, // ✅ CORREÇÃO: Passar propriedades processadas para o componente
-              },
-            }}
-            isSelected={false} // 🎯 Forçar isSelected=false para remover bordas do componente
-            onClick={onSelect}
-            onPropertyChange={handlePropertyChange}
-          />
+          {(() => {
+            const { gridColumns: _omitGridColumns, ...safeProcessedProps } = processedProperties || {};
+            return (
+              <Component
+                block={{
+                  ...block,
+                  properties: {
+                    ...block.properties,
+                    ...safeProcessedProps, // ❗ Evita sobrescrever gridColumns dos componentes
+                  },
+                }}
+                isSelected={false} // 🎯 Forçar isSelected=false para remover bordas do componente
+                onClick={onSelect}
+                onPropertyChange={handlePropertyChange}
+              />
+            );
+          })()}
         </div>
       </Card>
     </div>
