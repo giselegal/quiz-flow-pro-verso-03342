@@ -471,7 +471,7 @@ const TemplatesIA: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<"STYLE_QUIZ" | "STYLE_CONSULTANT">(
     "STYLE_QUIZ"
   );
-  const router = useRouter();
+  const _router = useRouter(); // Não utilizado atualmente
   const navigate = (path: string) => {
     // Para wouter, usamos window.location diretamente
     window.location.href = path;
@@ -485,8 +485,8 @@ const TemplatesIA: React.FC = () => {
 
   const getCurrentTemplate = () => AVAILABLE_TEMPLATES[selectedTemplate];
 
-  // Validações de seleção
-  const validateSelection = () => {
+  // Validações de seleção (comentado - não utilizado)
+  // const validateSelection = () => {
     if (!selectedTemplate) {
       toast({
         title: "⚠️ Template não selecionado",
