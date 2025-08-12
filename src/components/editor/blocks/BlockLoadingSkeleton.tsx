@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
 const getMarginClass = (value, type) => {

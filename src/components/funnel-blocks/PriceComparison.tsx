@@ -1,7 +1,6 @@
 /* @ts-nocheck */
 // @ts-nocheck
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, X, Star, Crown, Zap, ArrowRight } from "lucide-react";

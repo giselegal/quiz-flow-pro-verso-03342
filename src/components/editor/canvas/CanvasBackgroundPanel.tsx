@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Palette, RotateCcw } from "lucide-react";
-import React from "react";
 
 // Color picker integrado
 const CanvasColorPicker: React.FC<{

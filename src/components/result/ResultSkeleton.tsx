@@ -1,8 +1,6 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { StyleResult } from "@/types/quiz";
 import { styleConfig } from "@/config/styleConfig";
-import OptimizedImage from "@/components/ui/optimized-image";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface ResultSkeletonProps {
@@ -10,12 +8,10 @@ interface ResultSkeletonProps {
 }
 
 const ResultSkeleton: React.FC<ResultSkeletonProps> = ({ primaryStyle }) => {
-  const mainImageSrc = primaryStyle && styleConfig[primaryStyle.category]?.image;
 
   // Constantes para garantir proporções consistentes em todos os breakpoints
   const IMAGE_ASPECT_RATIO = 4 / 5; // Proporção altura/largura (4:5)
   const BASE_WIDTH = 256; // w-64 em pixels
-  const BASE_HEIGHT = Math.round(BASE_WIDTH / IMAGE_ASPECT_RATIO);
 
   return (
     <div className="min-h-screen bg-[#fffaf7] p-4 md:p-6" aria-busy="true" role="status">

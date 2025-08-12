@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { EditableContent } from "@/types/editor";
 
 interface SpacerBlockProps {

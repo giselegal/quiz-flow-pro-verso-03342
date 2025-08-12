@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { safeGetBlockProperties, logBlockDebug, isValidBlock } from "@/utils/blockUtils";
 
 interface QuestionBlockProps {

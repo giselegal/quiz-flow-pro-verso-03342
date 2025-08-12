@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ColorPickerProps {
   value: string;
   onChange: (color: string) => void;

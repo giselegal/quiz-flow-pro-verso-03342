@@ -1,4 +1,3 @@
-import React from "react";
 import FunnelProgressBar from "../shared/FunnelProgressBar";
 import { CountdownTimer } from "@/components/ui/countdown-timer";
 

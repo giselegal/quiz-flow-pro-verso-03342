@@ -14,7 +14,7 @@ interface PerformanceMetrics {
  * relacionadas ao carregamento da página de resultados após o quiz.
  */
 const PerformanceMonitor: React.FC = () => {
-  const [metrics, setMetrics] = useState<PerformanceMetrics>({
+  const [, setMetrics] = useState<PerformanceMetrics>({
     quizCompletionTime: null,
     resultPageLoadTime: null,
     preloadedImages: false,

@@ -1,5 +1,4 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { BlockComponentProps, Testimonial, Alignment } from "./types";
 

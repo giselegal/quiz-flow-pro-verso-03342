@@ -1,7 +1,6 @@
 /* @ts-nocheck */
 // @ts-nocheck
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
 import { cn } from "@/lib/utils";
 import { StyleResult } from "@/types/quiz";
 

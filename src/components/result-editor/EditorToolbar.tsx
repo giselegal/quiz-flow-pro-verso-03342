@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Save, Eye, RefreshCw, Palette } from "lucide-react";
 import { JsonConfigEditor } from "./JsonConfigEditor";

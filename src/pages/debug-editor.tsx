@@ -1,4 +1,3 @@
-import React from "react";
 import { useEditor } from "@/context/EditorContext";
 
 const DebugEditorContext: React.FC = () => {

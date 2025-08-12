@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";

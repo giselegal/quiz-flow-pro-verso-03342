@@ -1,5 +1,4 @@
 import type { BlockComponentProps } from "@/types/blocks";
-import React from "react";
 import QuizOptionsGridBlock from "./QuizOptionsGridBlock";
 
 /**

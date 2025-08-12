@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState,} from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -137,12 +137,7 @@ interface TemplateCardProps {
 }
 
 const TemplateCard: React.FC<TemplateCardProps> = ({ template, onSelect }) => {
-  const [isSelected, setIsSelected] = useState(false);
-
-  return (
-    <Card
-      className="cursor-pointer hover:shadow-md transition-shadow"
-      onClick={() => onSelect(template)}
+  const [isSelected,}
     >
       <CardHeader>
         <CardTitle className="text-sm font-medium">{template.name}</CardTitle>

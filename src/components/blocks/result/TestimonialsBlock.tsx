@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import Testimonials from "@/components/quiz-result/sales/Testimonials";
 
 /**

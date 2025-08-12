@@ -1,5 +1,4 @@
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { BlockComponentProps, SocialStat, Alignment } from "./types";
 

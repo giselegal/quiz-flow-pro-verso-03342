@@ -16,9 +16,9 @@ import { CopyIcon, CheckCircleIcon, ArrowRightIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 export const UtmSettingsTab: React.FC = () => {
-  const { domainBase, setBaseDomain, generateUtmLink } = useUtmParameters();
+  const { setBaseDomain, generateUtmLink } = useUtmParameters();
   const { toast } = useToast();
-  const [domain, setDomain] = useState(domainBase);
+  const [domainValue, setDomainValue] = useState("");
   const [exampleLinks, setExampleLinks] = useState({
     facebook: "",
     instagram: "",
@@ -26,36 +26,31 @@ export const UtmSettingsTab: React.FC = () => {
     resultado: "",
   });
 
-  useEffect(() => {
-    // Generate example UTM links
-    updateExampleLinks(domain);
-  }, [domain]);
-
   const updateExampleLinks = (domain: string) => {
     const newLinks = {
       facebook: generateUtmLink(
-        "https://giselegalvao.com.br/",
+        `https://${domain}/`,
         "facebook",
         "social",
         "brand",
         "cta_button"
       ),
       instagram: generateUtmLink(
-        "https://giselegalvao.com.br/",
+        `https://${domain}/`,
         "instagram",
         "social",
         "feed",
         "story"
       ),
       email: generateUtmLink(
-        "https://giselegalvao.com.br/",
+        `https://${domain}/`,
         "email",
         "newsletter",
         "weekly",
         "footer"
       ),
       resultado: generateUtmLink(
-        "https://giselegalvao.com.br/resultado",
+        `https://${domain}/resultado`,
         "facebook",
         "social",
         "retargeting",
@@ -63,17 +58,22 @@ export const UtmSettingsTab: React.FC = () => {
       ),
     };
 
-    // Set the links separately to match the type
     setExampleLinks(newLinks);
   };
 
+  useEffect(() => {
+    updateExampleLinks(domainValue || "giselegalvao.com.br");
+  }, [domainValue, generateUtmLink]);
+
   const handleSaveDomain = () => {
-    setBaseDomain(domain);
-    toast({
-      title: "Domínio atualizado",
-      description: `O domínio base para UTMs foi atualizado para ${domain}.`,
-    });
-    updateExampleLinks(domain);
+    if (domainValue) {
+      setBaseDomain(domainValue);
+      toast({
+        title: "Domínio salvo",
+        description: `O domínio base para UTMs foi atualizado para ${domainValue}.`,
+      });
+      updateExampleLinks(domainValue);
+    }
   };
 
   const handleCopyLink = (link: string) => {
@@ -100,8 +100,8 @@ export const UtmSettingsTab: React.FC = () => {
               <div className="flex gap-2">
                 <Input
                   id="domain"
-                  value={domain}
-                  onChange={e => setDomain(e.target.value)}
+                  value={domainValue}
+                  onChange={e => setDomainValue(e.target.value)}
                   placeholder="ex: giselegalvao.com.br"
                 />
                 <Button onClick={handleSaveDomain} size="sm">

@@ -6,7 +6,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import  from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,10 +16,7 @@ interface PropertyGroupProps {
   description?: string;
   children: React.ReactNode;
   defaultExpanded?: boolean;
-  collapsible?: boolean;
-  variant?: "default" | "secondary";
-  className?: string;
-}
+  collapsible?: boolean;}
 
 export function PropertyGroup({
   title,
@@ -27,7 +24,6 @@ export function PropertyGroup({
   children,
   defaultExpanded = true,
   collapsible = true,
-  variant = "default",
   className,
 }: PropertyGroupProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);

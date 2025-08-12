@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FunnelStepProps } from "@/types/funnel";

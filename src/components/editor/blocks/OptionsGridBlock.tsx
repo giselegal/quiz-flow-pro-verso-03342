@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { BlockComponentProps } from "@/types/blocks";
-import React from "react";
 
 interface Option {
   id: string;

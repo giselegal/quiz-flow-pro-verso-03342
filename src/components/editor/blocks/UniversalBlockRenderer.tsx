@@ -2,7 +2,6 @@ import { getBlockComponent } from "@/config/enhancedBlockRegistry";
 import { useContainerProperties } from "@/hooks/useContainerProperties";
 import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
-import React from "react";
 
 export interface UniversalBlockRendererProps {
   block: Block;

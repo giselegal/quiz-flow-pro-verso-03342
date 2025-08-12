@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
 
 // Interface local para máxima independência

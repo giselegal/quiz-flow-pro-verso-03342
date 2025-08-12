@@ -1,6 +1,5 @@
 import { StepTemplateIds } from "@/utils/semanticIdGenerator";
 import { motion } from "framer-motion";
-import React from "react";
 import Logo from "../ui/logo";
 
 interface ResultHeaderProps {

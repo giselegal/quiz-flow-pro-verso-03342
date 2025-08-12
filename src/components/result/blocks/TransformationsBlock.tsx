@@ -1,5 +1,3 @@
-import React from "react";
-
 const TransformationsBlock = () => (
   <div className="bg-white p-8 rounded-xl shadow-md border border-[#B89B7A]/20 mb-12">
     <h3 className="text-2xl font-medium text-[#aa6b5d] mb-8 text-center">

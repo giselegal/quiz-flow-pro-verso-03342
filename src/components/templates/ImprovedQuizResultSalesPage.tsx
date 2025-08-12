@@ -19,8 +19,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
-  ShoppingCart,
-  Heart,
+  ShoppingCart,,
   Award,
   CheckCircle,
   Star,
@@ -78,8 +77,7 @@ const ImprovedQuizResultSalesPage: React.FC<ImprovedQuizResultSalesPageProps> = 
   userName = "Visitante",
 }) => {
   const { toast } = useToast();
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [criticalImagesLoaded, setCriticalImagesLoaded] = useState(false);
+  const [ setCriticalImagesLoaded] = useState(false);
   const [activePaymentTab, setActivePaymentTab] = useState<"parcelado" | "avista">("parcelado");
 
   // Pré-carregar imagens críticas

@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { cn } from "@/lib/utils";
-import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 

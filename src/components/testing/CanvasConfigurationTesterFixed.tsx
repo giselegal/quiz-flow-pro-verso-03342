@@ -13,21 +13,12 @@ export const CanvasConfigurationTesterFixed: React.FC = () => {
     components: [],
   });
 
-  const [testResults, setTestResults] = useState<string[]>([]);
-
-  const updateConfiguration = (updates: Partial<CanvasConfiguration>) => {
-    setConfiguration(prev => ({ ...prev, ...updates }));
-  };
-
-  const addComponent = (component: any) => {
-    setConfiguration(prev => ({
+  const [testResults, setTestResults] = useState<string[]>([]);    setConfiguration(prev => ({ ...prev, ...updates }));
+  };    setConfiguration(prev => ({
       ...prev,
       components: [...prev.components, component],
     }));
-  };
-
-  const removeComponent = (index: number) => {
-    setConfiguration(prev => ({
+  };    setConfiguration(prev => ({
       ...prev,
       components: prev.components.filter((_, i) => i !== index),
     }));

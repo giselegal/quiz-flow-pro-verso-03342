@@ -1,5 +1,4 @@
 import { OfferHeader, OfferHeroSection, OfferPageJson } from "@/components/editor-fixed";
-import React from "react";
 
 /**
  * 🎯 EXEMPLO: Página de Oferta da Etapa 21

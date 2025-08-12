@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleResult } from "@/types/quiz";
 import { Monitor, Smartphone, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";

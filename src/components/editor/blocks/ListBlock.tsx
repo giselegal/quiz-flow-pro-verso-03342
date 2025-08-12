@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { InlineEditableText } from "./InlineEditableText";
 import { List } from "lucide-react";
 import type { BlockComponentProps } from "@/types/blocks";

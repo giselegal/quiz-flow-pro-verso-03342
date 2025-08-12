@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
 import { logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
 import { Gift } from "lucide-react";
-import React from "react";
 
 /**
  * BonusListInlineBlock - Lista de bônus

@@ -1,5 +1,4 @@
 // Component consolidation - Merge duplicate components and create unified system
-import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -99,27 +98,20 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{description}</p>
     )}
     {action && (
-      <Button onClick={action.onClick} className="mt-6" variant="default">
-        {action.label}
+      <Button onClick={action.onClick} className="mt-6"}
       </Button>
     )}
   </div>
 );
 
 // Unified Card Layouts
-interface UnifiedCardProps {
-  variant: "default" | "funnel" | "quiz" | "result" | "dashboard";
-  title: string;
-  description?: string;
-  status?: "draft" | "published" | "archived";
-  stats?: { label: string; value: string | number }[];
+interface UnifiedCardProps {}[];
   actions?: React.ReactNode;
   onClick?: () => void;
   className?: string;
 }
 
 export const UnifiedCard: React.FC<UnifiedCardProps> = ({
-  variant,
   title,
   description,
   status,
@@ -225,9 +217,6 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
     <h3 className="text-lg font-semibold text-foreground">{title}</h3>
     <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">{message}</p>
     {onRetry && (
-      <Button onClick={onRetry} variant="outline" className="mt-6">
-        Tentar novamente
-      </Button>
-    )}
+      <Button onClick={onRetry}}
   </div>
 );

@@ -1,7 +1,6 @@
 import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import { trackButtonClick } from "@/utils/analytics";
 import { ArrowRight, Award, Lock, LucideIcon, Shield } from "lucide-react";
-import React from "react";
 
 interface TrustElement {
   icon: string;

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { useQuestionScroll } from "@/hooks/useQuestionScroll";
 
 interface QuizQuestionProps {

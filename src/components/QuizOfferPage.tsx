@@ -1,7 +1,6 @@
 // @ts-nocheck
 // Componente migrado de src/pages_backup/QuizOfferPage.tsx para uso no roteador SPA
 
-import React from "react";
 import { QuizOfferHero } from "@/components/quiz-offer/QuizOfferHero";
 import { QuizOfferCTA } from "@/components/quiz-offer/QuizOfferCTA";
 import { useUniversalNavigation } from "../hooks/useUniversalNavigation";

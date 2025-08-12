@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Progress } from "../ui/progress";
 import { AnimatedWrapper } from "../ui/animated-wrapper";
 import caktoquizQuestions from "@/data/caktoquizQuestions";

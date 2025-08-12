@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
 import { isValidBlock, logBlockDebug, safeGetBlockProperties } from "@/utils/blockUtils";
 import { Award, TrendingUp } from "lucide-react";
-import React from "react";
 
 /**
  * ResultCardInlineBlock - Componente modular inline horizontal

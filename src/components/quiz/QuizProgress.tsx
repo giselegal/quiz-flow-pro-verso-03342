@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { useQuizHooks } from "@/hooks/useQuizHooks";
 
 interface QuizProgressProps {

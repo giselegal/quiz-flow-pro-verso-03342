@@ -1,5 +1,4 @@
 import { useEditor } from "@/context/EditorContext";
-import React from "react";
 
 interface PropertiesPanelDebugProps {
   title?: string;

@@ -1,4 +1,3 @@
-import React from "react";
 import { OptimizedImage } from "./optimized-image-v2";
 
 interface FixedTransformationImageProps {

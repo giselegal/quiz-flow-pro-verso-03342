@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 
 const CountdownInlineBlock = ({ block, isSelected, onClick }) => {
   return (

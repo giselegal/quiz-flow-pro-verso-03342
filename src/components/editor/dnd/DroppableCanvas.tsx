@@ -1,6 +1,5 @@
 import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
-import React from "react";
 
 interface DroppableCanvasProps {
   blocks: Block[];

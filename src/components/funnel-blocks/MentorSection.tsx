@@ -1,7 +1,6 @@
 /* @ts-nocheck */
 // @ts-nocheck
 import { getOptimizedContainerClasses } from "@/config/containerConfig";
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User, Award, Star, Heart, Users, TrendingUp } from "lucide-react";

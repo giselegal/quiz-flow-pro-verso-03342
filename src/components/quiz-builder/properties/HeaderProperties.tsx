@@ -1,4 +1,3 @@
-import React from "react";
 import { QuizComponentData } from "@/types/quizBuilder";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

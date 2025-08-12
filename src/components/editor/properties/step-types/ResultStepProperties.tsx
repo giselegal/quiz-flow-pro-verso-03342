@@ -7,7 +7,6 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
 import { Plus, Trash2 } from "lucide-react";
-import React from "react";
 
 interface ResultStepPropertiesProps {
   properties: Record<string, any>;

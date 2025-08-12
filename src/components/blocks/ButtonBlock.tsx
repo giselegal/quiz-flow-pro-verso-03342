@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { BlockComponentProps } from "@/types/blocks";
 import { Button } from "@/components/ui/button";
 

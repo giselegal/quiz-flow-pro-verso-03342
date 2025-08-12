@@ -1,5 +1,4 @@
 // Otimização do componente de spinner para melhorar a performance
-import React from "react";
 
 interface LoadingSpinnerProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";

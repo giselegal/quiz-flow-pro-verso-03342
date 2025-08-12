@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { Award, Check, Shield, Star } from "lucide-react";
-import React from "react";
 
 type BadgeType = "security" | "guarantee" | "rating" | "achievement";
 

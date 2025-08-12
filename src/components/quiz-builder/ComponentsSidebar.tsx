@@ -1,4 +1,3 @@
-import React from "react";
 import { QuizComponentType } from "@/types/quizBuilder";
 import { Card } from "@/components/ui/card";
 

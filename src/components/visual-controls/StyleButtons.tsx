@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Bold, Italic, Underline } from "lucide-react";
-import React from "react";
 
 interface StyleButtonsProps {
   fontWeight?: "light" | "normal" | "medium" | "semibold" | "bold";

@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleResult, QuizFunnel } from "@/types/quiz";
 import { EnhancedResultPageEditor } from "./EnhancedResultPageEditor";
 

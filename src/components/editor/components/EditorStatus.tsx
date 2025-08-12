@@ -2,7 +2,6 @@
 // components/editor/components/EditorStatus.tsx - Status do editor
 // =====================================================================
 
-import React from "react";
 import { Badge } from "../../ui/badge";
 import { Card, CardContent } from "../../ui/card";
 import { Separator } from "../../ui/separator";

@@ -2,7 +2,6 @@
 // Componente configurável de cabeçalho para o quiz
 
 import { Badge } from "@/components/ui/badge";
-import React from "react";
 
 interface QuizIntroHeaderBlockProps {
   id: string;

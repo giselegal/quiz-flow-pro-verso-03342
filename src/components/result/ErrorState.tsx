@@ -1,9 +1,8 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 
 const ErrorState: React.FC = () => {
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-[#fff9f7]">

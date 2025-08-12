@@ -41,7 +41,6 @@ import {
   Trash2,
   Type,
 } from "lucide-react";
-import React from "react";
 
 // A interface UnifiedBlock é importada do hook, garantindo consistência
 interface EnhancedUniversalPropertiesPanelProps {

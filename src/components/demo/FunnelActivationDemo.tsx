@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFunnelStageActivation } from "@/utils/FunnelStageActivator";
 import { ArrowRight, CheckCircle, ShoppingBag, User } from "lucide-react";
-import React from "react";
 
 /**
  * Componente de Demonstração do Sistema de Ativação de Etapas

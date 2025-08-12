@@ -5,17 +5,14 @@
  * Integra com os componentes existentes e adiciona novos tipos específicos para quiz
  */
 
-import React from "react";
 import {
   Type,
   Heading1,
   RectangleHorizontal,
   HelpCircle,
   StretchHorizontal,
-  LayoutGrid,
-  Radio,
-  Square,
-  SlidersHorizontal,
+  LayoutGrid,,
+  Square,,
   Palette,
   Code,
   Ruler,

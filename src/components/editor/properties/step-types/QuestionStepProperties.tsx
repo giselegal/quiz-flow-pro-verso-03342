@@ -14,7 +14,6 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
 import { Plus, Trash2 } from "lucide-react";
-import React from "react";
 
 interface QuestionStepPropertiesProps {
   properties: Record<string, any>;

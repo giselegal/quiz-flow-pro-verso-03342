@@ -1,4 +1,3 @@
-import React from "react";
 // import { MainTransition } from './MainTransition'; // Removido, não é mais usado aqui
 import QuizFinalTransition from "../QuizFinalTransition";
 // import { UserResponse } from '@/types/quiz'; // Removido

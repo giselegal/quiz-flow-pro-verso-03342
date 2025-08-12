@@ -1,4 +1,3 @@
-import React from "react";
 import type { BlockComponentProps, BlockData } from "@/types/blocks";
 import { getBlockComponent } from "@/config/enhancedBlockRegistry";
 

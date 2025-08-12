@@ -3,7 +3,6 @@
 // components/editor/blocks/FallbackBlock.tsx - Componente de fallback
 // =====================================================================
 
-import React from "react";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, Info } from "lucide-react";
 import type { BlockComponentProps } from "../../../types/blocks";

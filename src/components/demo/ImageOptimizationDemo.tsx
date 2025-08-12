@@ -1,4 +1,3 @@
-import React from "react";
 // Update the import path if the file is located elsewhere, for example:
 import EnhancedAutoFixedImages from "../ui/EnhancedAutoFixedImages";
 // Or create the file at src/components/demo/ui/EnhancedAutoFixedImages.tsx if it doesn't exist.

@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleResult } from "@/types/quiz";
 
 interface HeroSectionBlockPreviewProps {

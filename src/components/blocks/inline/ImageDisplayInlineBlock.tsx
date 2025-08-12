@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { cn } from "@/lib/utils";
-import React from "react";
 // Update the import path below to the correct location of BlockComponentProps
 import type { BlockComponentProps } from "@/types/blocks";
 

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { useLocation } from "wouter";
 import { Button } from "./ui/button";
 

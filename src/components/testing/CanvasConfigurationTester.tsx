@@ -15,7 +15,6 @@ interface CanvasConfiguration {
 export const CanvasConfigurationTester: React.FC = () => {
   const {
     configuration,
-    updateConfiguration,
     addComponent,
     removeComponent,
     validateAllSteps,

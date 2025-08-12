@@ -1,5 +1,4 @@
 import FixedIntroImage from "@/components/ui/FixedIntroImage";
-import React from "react";
 
 interface OfferHeaderProps {
   logoUrl: string;

@@ -1,4 +1,3 @@
-import React from "react";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { EditorBlock } from "@/types/editor";

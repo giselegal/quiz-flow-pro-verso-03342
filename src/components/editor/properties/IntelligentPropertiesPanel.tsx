@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Eye, RotateCcw, Settings, X } from "lucide-react";
-import React from "react";
 
 // Importar os painéis específicos por tipo de etapa
 import IntroStepProperties from "./step-types/IntroStepProperties";

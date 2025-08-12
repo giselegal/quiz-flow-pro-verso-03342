@@ -21,7 +21,6 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import React from "react";
 
 const OverviewPage: React.FC = () => {
   return (

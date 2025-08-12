@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import quizStyles from "@/styles/quiz.module.css";
 
 interface QuizButtonProps {

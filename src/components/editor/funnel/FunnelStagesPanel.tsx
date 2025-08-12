@@ -5,7 +5,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor } from "@/context/EditorContext";
 import { cn } from "@/lib/utils";
 import { Copy, Eye, GripVertical, Plus, Settings, Trash2 } from "lucide-react";
-import React from "react";
 
 interface FunnelStagesPanelProps {
   className?: string;

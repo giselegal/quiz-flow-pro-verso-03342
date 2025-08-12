@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { StyleResult } from "@/types/quiz";
 import { ResultPageConfig } from "@/types/resultPageConfig";
 import { QuizResults } from "@/components/quiz/QuizResults";

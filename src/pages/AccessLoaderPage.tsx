@@ -1,4 +1,3 @@
-import React from "react";
 import FileLoadingScreen from "@/components/loaders/FileLoadingScreen";
 
 const AccessLoaderPage: React.FC = () => {

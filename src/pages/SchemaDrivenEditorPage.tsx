@@ -1,5 +1,4 @@
 import SchemaDrivenEditorResponsive from "@/components/editor/SchemaDrivenEditorResponsive";
-import React from "react";
 import { useRoute } from "wouter";
 
 const SchemaDrivenEditorPage: React.FC = () => {

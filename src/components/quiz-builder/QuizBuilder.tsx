@@ -1,4 +1,3 @@
-import React from "react";
 
 // Placeholder para evitar erros de build enquanto o QuizBuilder é finalizado.
 const QuizBuilder: React.FC = () => {

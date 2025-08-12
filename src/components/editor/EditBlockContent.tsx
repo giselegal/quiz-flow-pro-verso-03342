@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Block } from "@/types/editor";
 import { StyleResult } from "@/types/quiz";
 

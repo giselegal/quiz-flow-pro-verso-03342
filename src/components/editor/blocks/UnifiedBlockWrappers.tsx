@@ -1,4 +1,3 @@
-import React from "react";
 import FunnelHeroSection from "@/components/funnel/base/FunnelHeroSection";
 import FunnelPainSection from "@/components/funnel/base/FunnelPainSection";
 

@@ -57,7 +57,7 @@ const ResourcePreloader: React.FC = () => {
     });
 
     // Adicionar preload de imagens críticas ao head
-    criticalImages.forEach((imgSrc, index) => {
+    criticalImages.forEach((imgSrc) => {
       const preloadLink = document.createElement("link");
       preloadLink.rel = "preload";
       preloadLink.as = "image";

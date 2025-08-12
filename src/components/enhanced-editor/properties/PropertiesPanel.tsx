@@ -1,4 +1,3 @@
-import React from "react";
 import { Block } from "@/types/editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

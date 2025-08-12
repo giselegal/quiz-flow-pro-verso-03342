@@ -10,15 +10,12 @@ import { Check, Loader2 } from "lucide-react";
 interface PropertyChangeIndicatorProps {
   isChanging?: boolean;
   hasChanged?: boolean;
-  children: React.ReactNode;
-  debounceMs?: number;
-}
+  children: React.ReactNode;}
 
 export const PropertyChangeIndicator: React.FC<PropertyChangeIndicatorProps> = ({
   isChanging = false,
   hasChanged = false,
   children,
-  debounceMs = 300,
 }) => {
   const [showSaved, setShowSaved] = useState(false);
 

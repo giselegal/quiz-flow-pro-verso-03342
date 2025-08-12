@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 
 export const COMPONENT_CATEGORIES = [
   { id: "text", name: "Texto", icon: "📝" },

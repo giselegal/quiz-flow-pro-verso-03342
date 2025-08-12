@@ -1,4 +1,3 @@
-import React from "react";
 import { useRoute } from "wouter";
 
 const ResultPage: React.FC = () => {

@@ -1,7 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 interface SizeSliderProps {
   value: number;
@@ -26,7 +25,6 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({
   showValue = true,
   className,
 }) => {
-  const percentage = ((value - min) / (max - min)) * 100;
 
   return (
     <div className={cn("space-y-2", className)}>

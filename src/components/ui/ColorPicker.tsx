@@ -28,7 +28,7 @@ export function ColorPicker({
   onChange,
   label,
   disabled = false,
-  presetColors,
+  
   showCustomInput = true,
   showPreview = true,
   className = "",

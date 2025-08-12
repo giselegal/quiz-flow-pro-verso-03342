@@ -1,4 +1,3 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { QuoteIcon } from "lucide-react";
 import { motion } from "framer-motion";

@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import { StyleResult } from "@/types/quiz";
-import React from "react";
 
 interface HeaderProps {
   primaryStyle?: StyleResult;

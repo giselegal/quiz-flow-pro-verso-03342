@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Link, useLocation } from "wouter";
 import {
   BarChart3,

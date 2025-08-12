@@ -1,4 +1,3 @@
-import React from "react";
 import { Block } from "@/types/editor";
 
 interface EditorCanvasProps {

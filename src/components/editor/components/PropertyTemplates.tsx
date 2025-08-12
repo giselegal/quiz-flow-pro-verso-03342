@@ -2,7 +2,6 @@
 // components/editor/components/PropertyTemplates.tsx - Templates de propriedades
 // =====================================================================
 
-import React from "react";
 import { Button } from "../../ui/button";
 import { Card, CardContent } from "../../ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";

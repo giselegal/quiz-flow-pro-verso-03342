@@ -7,7 +7,6 @@
  * totalmente integrado com o sistema de propriedades unificado.
  */
 
-import React from "react";
 
 interface LegalNoticeInlineProps {
   privacyText?: string;

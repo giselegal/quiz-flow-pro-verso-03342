@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { QuizQuestion } from "@/types/quiz";

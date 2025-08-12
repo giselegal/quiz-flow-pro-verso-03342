@@ -1,4 +1,3 @@
-import React from "react";
 import { QuizComponentData } from "@/types/quizBuilder";
 import ComponentRenderer from "./ComponentRenderer";
 

@@ -1,4 +1,3 @@
-import React from "react";
 
 const EditorTestPage: React.FC = () => {
   console.log("🚀 EditorTestPage: RENDERIZANDO!");

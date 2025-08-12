@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 
 const BonusShowcaseBlock = ({ block, isSelected, onClick, className = "" }) => {
   return (

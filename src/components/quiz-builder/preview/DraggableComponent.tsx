@@ -1,4 +1,3 @@
-import React from "react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { QuizComponentData } from "@/types/quizBuilder";

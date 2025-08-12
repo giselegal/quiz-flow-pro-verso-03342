@@ -1,5 +1,4 @@
-import React from "react";
-import { Shield, Lock } from "lucide-react";
+import { Shield,} from "lucide-react";
 
 export const SecurePurchaseElement = () => (
   <div className="flex items-center justify-center gap-2 mt-4 text-xs text-[#8F7A6A]">

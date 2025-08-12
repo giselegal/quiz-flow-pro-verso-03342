@@ -1,4 +1,3 @@
-import React from "react";
 
 interface LoadingFallbackProps {
   message?: string;

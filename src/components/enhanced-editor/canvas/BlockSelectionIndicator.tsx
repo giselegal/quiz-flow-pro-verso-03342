@@ -3,7 +3,6 @@
  * Melhora a experiência visual do painel de propriedades
  */
 
-import React from "react";
 import { motion } from "framer-motion";
 import { Edit3, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";

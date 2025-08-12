@@ -13,7 +13,6 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import React from "react";
 import { createPortal } from "react-dom";
 
 // Tipo local para BlockData

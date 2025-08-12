@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEditorReusableComponents } from "@/hooks/useEditorReusableComponents.simple";
 import { Copy, Edit3, Package, Plus, Trash2 } from "lucide-react";
-import React from "react";
 
 // ============================================================================
 // PAINEL DE COMPONENTES REUTILIZÁVEIS PARA O EDITOR

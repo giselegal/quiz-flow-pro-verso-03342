@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps } from "@/types/blocks";
-import React from "react";
 
 interface HeadingProperties {
   text: string;

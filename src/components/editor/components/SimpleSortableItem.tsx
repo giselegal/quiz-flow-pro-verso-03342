@@ -2,7 +2,6 @@
 // components/editor/components/SimpleSortableItem.tsx - Item ordenável simples
 // =====================================================================
 
-import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";

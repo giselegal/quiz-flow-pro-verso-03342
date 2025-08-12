@@ -1,4 +1,3 @@
-import React from "react";
 import { AddBlockButton } from "./AddBlockButton";
 import { EditorBlock } from "@/types/editor";
 

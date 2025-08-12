@@ -1,4 +1,3 @@
-import React from "react";
 import { QuizResult, StyleType } from "@/types/quiz";
 import { getStyleById } from "@/data/styles";
 

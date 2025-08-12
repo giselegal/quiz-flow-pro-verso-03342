@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 
 type GridColumns = 1 | 2 | 3 | 4 | 5 | 6;

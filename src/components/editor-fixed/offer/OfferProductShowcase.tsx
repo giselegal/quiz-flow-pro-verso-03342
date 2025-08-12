@@ -1,7 +1,6 @@
 import FixedIntroImage from "@/components/ui/FixedIntroImage";
 import { trackButtonClick } from "@/utils/analytics";
 import { LucideIcon, ShoppingCart } from "lucide-react";
-import React from "react";
 
 interface Product {
   id: string;

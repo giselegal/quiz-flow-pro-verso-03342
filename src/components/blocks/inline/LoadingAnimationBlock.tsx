@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { cn } from "@/lib/utils";
 import type { BlockComponentProps, BlockData } from "@/types/blocks";
-import React from "react";
 
 interface Props extends BlockComponentProps {
   block: BlockData;

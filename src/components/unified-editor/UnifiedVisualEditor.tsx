@@ -1,17 +1,9 @@
-import React from "react";
 
 export type EditorTab = "quiz" | "result" | "sales";
 
-interface UnifiedVisualEditorProps {
-  onSave?: (data: any) => void;
-  initialData?: any;
-  primaryStyle?: any;
-  initialActiveTab?: EditorTab;
-}
+interface UnifiedVisualEditorProps {}
 
 export const UnifiedVisualEditor: React.FC<UnifiedVisualEditorProps> = ({
-  onSave,
-  initialData,
   primaryStyle,
   initialActiveTab = "quiz",
 }) => {

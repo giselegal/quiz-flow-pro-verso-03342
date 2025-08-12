@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { Block } from "@/types/editor";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
 interface EditorCanvasProps {

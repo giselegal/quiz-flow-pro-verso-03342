@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";

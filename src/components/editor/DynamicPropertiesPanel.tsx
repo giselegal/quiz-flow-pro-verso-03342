@@ -13,7 +13,6 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { BlockDefinition, EditableContent, PropertySchema } from "@/types/editor";
 import { GripVertical, Plus, Trash2, Upload, X } from "lucide-react";
-import React from "react";
 
 // ✅ Componente para editar arrays (especialmente opções de quiz)
 interface ArrayEditorProps {

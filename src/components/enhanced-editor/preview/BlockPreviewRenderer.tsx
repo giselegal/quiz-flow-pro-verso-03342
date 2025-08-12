@@ -1,4 +1,3 @@
-import React from "react";
 import { EditorBlock } from "@/types/editor";
 import type { StyleResult } from "@/types/quiz";
 

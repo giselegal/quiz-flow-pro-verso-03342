@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import React from "react";
 import type { BlockComponentProps } from "../../../types/blocks";
 
 interface FAQItem {

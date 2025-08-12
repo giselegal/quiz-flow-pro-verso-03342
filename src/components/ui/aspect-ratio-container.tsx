@@ -1,4 +1,3 @@
-import React from "react";
 
 interface AspectRatioContainerProps {
   ratio?: string;

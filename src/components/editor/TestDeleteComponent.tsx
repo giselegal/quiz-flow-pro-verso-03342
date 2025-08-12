@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Trash2 } from "lucide-react";
 
 // Componente de teste simples para verificar se a exclusão funciona

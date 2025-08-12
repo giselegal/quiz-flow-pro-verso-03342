@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import ColorPicker from "@/components/visual-controls/ColorPicker";
-import React from "react";
 
 interface TransitionStepPropertiesProps {
   properties: Record<string, any>;

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { LoaderCircle, RotateCcw } from "lucide-react";
 import { InlineEditableText } from "./InlineEditableText";
 import type { BlockComponentProps } from "@/types/blocks";

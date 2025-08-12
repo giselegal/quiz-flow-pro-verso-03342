@@ -5,7 +5,6 @@ import { Block } from "@/types/editor";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Download } from "lucide-react";
-import React from "react";
 import { SortableBlockWrapper } from "./SortableBlockWrapper";
 
 // Componente para drop zone entre blocos

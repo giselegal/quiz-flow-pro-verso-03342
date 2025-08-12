@@ -1,6 +1,5 @@
 import { EditorProvider } from "@/context/EditorContext";
 import type { Block, FunnelStage } from "@/types/editor";
-import React from "react";
 import { DefaultEditorFixed, EditorFixed, useEditorFixed } from "./EditorFixed";
 
 /**

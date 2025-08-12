@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import * as LucideIcons from "lucide-react";

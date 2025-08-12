@@ -1,6 +1,5 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import React from "react";
 
 // Utility function for class names
 const cn = (...classes: (string | undefined | boolean)[]): string => {

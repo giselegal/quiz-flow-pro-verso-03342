@@ -13,7 +13,6 @@ import {
   useSmartDebounce,
   useTemplateActions,
 } from "@/hooks";
-import React from "react";
 
 interface OptimizedStepProps {
   stepId: number;
