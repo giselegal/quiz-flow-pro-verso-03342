@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { type FunnelTemplate } from "@/services/FunnelAIAgent";
-import { trackAIAgentStart } from "@/utils/analytics";
 import { Bot, Check, Eye, Play, Sparkles, Wand2 } from "lucide-react";
 import React, { useState } from "react";
 import { useRouter } from "wouter";
@@ -487,77 +486,77 @@ const TemplatesIA: React.FC = () => {
 
   // Validações de seleção (comentado - não utilizado)
   // const validateSelection = () => {
-    if (!selectedTemplate) {
-      toast({
-        title: "⚠️ Template não selecionado",
-        description: "Por favor, selecione um template antes de continuar.",
-        variant: "destructive",
-      });
-      return false;
-    }
+  //   if (!selectedTemplate) {
+  //     toast({
+  //       title: "⚠️ Template não selecionado",
+  //       description: "Por favor, selecione um template antes de continuar.",
+  //       variant: "destructive",
+  //     });
+  //     return false;
+  //   }
+  //
+  //   const template = getCurrentTemplate();
+  //   if (!template) {
+  //     toast({
+  //       title: "❌ Erro no Template",
+  //       description: "Template selecionado não encontrado. Tente novamente.",
+  //       variant: "destructive",
+  //     });
+  //     return false;
+  //   }
+  //
+  //   // Track analytics
+  //   trackAIAgentStart(getCurrentTemplate().meta.name);
+  //   return true;
+  // };
 
-    const template = getCurrentTemplate();
-    if (!template) {
-      toast({
-        title: "❌ Erro no Template",
-        description: "Template selecionado não encontrado. Tente novamente.",
-        variant: "destructive",
-      });
-      return false;
-    }
+  // const updateStepStatus = (stepIndex: number, status: AgentStep["status"], progress: number) => {
+  //   setSteps(prev =>
+  //     prev.map((step, index) => (index === stepIndex ? { ...step, status, progress } : step))
+  //   );
+  // };
 
-    // Track analytics
-    trackAIAgentStart(getCurrentTemplate().meta.name);
-    return true;
-  };
+  // const simulateAgentWork = async () => {
+  //   setIsGenerating(true);
+  //   setCurrentStep(0);
+  //
+  //   for (let i = 0; i < AGENT_STEPS.length; i++) {
+  //     setCurrentStep(i);
+  //     updateStepStatus(i, "processing", 0);
+  //
+  //     // Simula progresso da etapa
+  //     for (let progress = 0; progress <= 100; progress += 10) {
+  //       await new Promise(resolve => setTimeout(resolve, Math.random() * 200 + 50));
+  //       updateStepStatus(i, "processing", progress);
+  //     }
+  //
+  //     updateStepStatus(i, "completed", 100);
+  //   }
+  //
+  //   // Simula geração do ID do funil baseado no template selecionado
+  //   const templatePrefix = selectedTemplate === "STYLE_QUIZ" ? "style-quiz" : "style-consultant";
+  //   const funnelId = `${templatePrefix}-${Date.now()}`;
+  //   setGeneratedFunnelId(funnelId);
+  //   setIsGenerating(false);
+  //
+  //   const templateName = getCurrentTemplate().meta.name;
+  //   toast({
+  //     title: "✅ Funil Criado com Sucesso!",
+  //     description: `${templateName} criado dinamicamente com IA. ID: ${funnelId}`,
+  //   });
+  // };
 
-  const updateStepStatus = (stepIndex: number, status: AgentStep["status"], progress: number) => {
-    setSteps(prev =>
-      prev.map((step, index) => (index === stepIndex ? { ...step, status, progress } : step))
-    );
-  };
-
-  const simulateAgentWork = async () => {
-    setIsGenerating(true);
-    setCurrentStep(0);
-
-    for (let i = 0; i < AGENT_STEPS.length; i++) {
-      setCurrentStep(i);
-      updateStepStatus(i, "processing", 0);
-
-      // Simula progresso da etapa
-      for (let progress = 0; progress <= 100; progress += 10) {
-        await new Promise(resolve => setTimeout(resolve, Math.random() * 200 + 50));
-        updateStepStatus(i, "processing", progress);
-      }
-
-      updateStepStatus(i, "completed", 100);
-    }
-
-    // Simula geração do ID do funil baseado no template selecionado
-    const templatePrefix = selectedTemplate === "STYLE_QUIZ" ? "style-quiz" : "style-consultant";
-    const funnelId = `${templatePrefix}-${Date.now()}`;
-    setGeneratedFunnelId(funnelId);
-    setIsGenerating(false);
-
-    const templateName = getCurrentTemplate().meta.name;
-    toast({
-      title: "✅ Funil Criado com Sucesso!",
-      description: `${templateName} criado dinamicamente com IA. ID: ${funnelId}`,
-    });
-  };
-
-  const handlePreview = () => {
-    if (generatedFunnelId) {
-      navigate(`/quiz/${generatedFunnelId}`);
-    }
-  };
-
-  const handleEditInEditor = () => {
-    if (generatedFunnelId) {
-      navigate(`/editor-fixed?template=${generatedFunnelId}`);
-    }
-  };
+  // const handlePreview = () => {
+  //   if (generatedFunnelId) {
+  //     navigate(`/quiz/${generatedFunnelId}`);
+  //   }
+  // };
+  //
+  // const handleEditInEditor = () => {
+  //   if (generatedFunnelId) {
+  //     navigate(`/editor-fixed?template=${generatedFunnelId}`);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">

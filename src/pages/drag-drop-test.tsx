@@ -1,9 +1,9 @@
-import React from "react";
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { DraggableComponentItem } from "@/components/editor/dnd/DraggableComponentItem";
 import { Block, BlockType } from "@/types/editor";
 import { Image, Square, Type } from "lucide-react";
+import React from "react";
 
 // Componente de teste para validar drag and drop
 export const DragDropTestPage: React.FC = () => {

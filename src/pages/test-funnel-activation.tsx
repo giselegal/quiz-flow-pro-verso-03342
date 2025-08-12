@@ -1,6 +1,6 @@
-import React from "react";
 import FunnelDebugPanel from "@/components/debug/FunnelDebugPanel";
 import FunnelActivationDemo from "@/components/demo/FunnelActivationDemo";
+import React from "react";
 
 /**
  * Página de Teste do Sistema de Ativação das 21 Etapas
