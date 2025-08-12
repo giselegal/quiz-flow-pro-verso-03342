@@ -158,65 +158,74 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                    Habilitar Cabeçalho
+                    Barra de Progresso
                   </Label>
                   <Switch
-                    checked={properties.enabled !== false}
-                    onCheckedChange={checked => handlePropertyUpdate('enabled', checked)}
+                    checked={properties.showProgress}
+                    onCheckedChange={checked => handlePropertyUpdate('showProgress', checked)}
+                  />
+                </div>
+
+                {properties.showProgress && (
+                  <>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                          Valor do Progresso
+                        </Label>
+                        <Badge variant="outline" className="text-xs">
+                          {properties.progressValue}%
+                        </Badge>
+                      </div>
+                      <Slider
+                        value={[properties.progressValue]}
+                        onValueChange={([value]) => handlePropertyUpdate('progressValue', value)}
+                        min={0}
+                        max={properties.progressMax}
+                        step={1}
+                        className="w-full"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                          Valor Máximo
+                        </Label>
+                        <Badge variant="outline" className="text-xs">
+                          {properties.progressMax}
+                        </Badge>
+                      </div>
+                      <Slider
+                        value={[properties.progressMax]}
+                        onValueChange={([value]) => handlePropertyUpdate('progressMax', value)}
+                        min={1}
+                        max={100}
+                        step={1}
+                        className="w-full"
+                      />
+                    </div>
+                  </>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Botão Voltar
+                  </Label>
+                  <Switch
+                    checked={properties.showBackButton}
+                    onCheckedChange={checked => handlePropertyUpdate('showBackButton', checked)}
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                    Mostrar Logo
+                    Fixar no Topo
                   </Label>
                   <Switch
-                    checked={properties.showLogo !== false}
-                    onCheckedChange={checked => handlePropertyUpdate('showLogo', checked)}
+                    checked={properties.isSticky}
+                    onCheckedChange={checked => handlePropertyUpdate('isSticky', checked)}
                   />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                    Barra Decorativa
-                  </Label>
-                  <Switch
-                    checked={properties.showDecorativeBar !== false}
-                    onCheckedChange={checked => handlePropertyUpdate('showDecorativeBar', checked)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border" style={{ borderColor: '#E5DDD5' }}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm" style={{ color: '#432818' }}>
-                  Escala Geral
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                      Tamanho
-                    </Label>
-                    <Badge variant="outline" className="text-xs">
-                      {properties.scale || 100}%
-                    </Badge>
-                  </div>
-                  <Slider
-                    value={[properties.scale || 100]}
-                    onValueChange={([value]) => handlePropertyUpdate('scale', value)}
-                    min={50}
-                    max={110}
-                    step={5}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs" style={{ color: '#6B4F43' }}>
-                    <span>50%</span>
-                    <span>100%</span>
-                    <span>110%</span>
-                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -226,7 +235,7 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
             <Card className="border" style={{ borderColor: '#E5DDD5' }}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm" style={{ color: '#432818' }}>
-                  Upload da Logo
+                  Configurações da Logo
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -236,7 +245,7 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                   </Label>
                   <div className="flex gap-2 mt-1">
                     <Input
-                      value={properties.logoUrl || ''}
+                      value={properties.logoUrl}
                       onChange={e => handlePropertyUpdate('logoUrl', e.target.value)}
                       placeholder="https://..."
                       className="text-xs"
@@ -257,7 +266,7 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                     Texto Alternativo
                   </Label>
                   <Input
-                    value={properties.logoAlt || 'Logo'}
+                    value={properties.logoAlt}
                     onChange={e => handlePropertyUpdate('logoAlt', e.target.value)}
                     className="text-xs mt-1"
                     style={{ borderColor: '#E5DDD5' }}
@@ -267,17 +276,36 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                      Tamanho da Logo
+                      Largura
                     </Label>
                     <Badge variant="outline" className="text-xs">
-                      {properties.logoSize || 100}px
+                      {properties.logoWidth}px
                     </Badge>
                   </div>
                   <Slider
-                    value={[properties.logoSize || 100]}
-                    onValueChange={([value]) => handlePropertyUpdate('logoSize', value)}
+                    value={[properties.logoWidth]}
+                    onValueChange={([value]) => handlePropertyUpdate('logoWidth', value)}
                     min={50}
-                    max={200}
+                    max={400}
+                    step={10}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                      Altura
+                    </Label>
+                    <Badge variant="outline" className="text-xs">
+                      {properties.logoHeight}px
+                    </Badge>
+                  </div>
+                  <Slider
+                    value={[properties.logoHeight]}
+                    onValueChange={([value]) => handlePropertyUpdate('logoHeight', value)}
+                    min={50}
+                    max={400}
                     step={10}
                     className="w-full"
                   />
@@ -291,11 +319,11 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                     </div>
                     <img
                       src={properties.logoUrl}
-                      alt={properties.logoAlt || 'Logo'}
+                      alt={properties.logoAlt}
                       style={{
-                        height: `${Math.min((properties.logoSize || 100) * 0.5, 60)}px`,
-                        width: 'auto',
-                        maxWidth: '100%',
+                        width: `${properties.logoWidth}px`,
+                        height: `${properties.logoHeight}px`,
+                        objectFit: 'contain',
                       }}
                     />
                   </div>
@@ -308,87 +336,15 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
             <Card className="border" style={{ borderColor: '#E5DDD5' }}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm" style={{ color: '#432818' }}>
-                  Barra Decorativa
+                  Aparência
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <ColorPicker
-                  value={properties.barColor || '#B89B7A'}
-                  onChange={color => handlePropertyUpdate('barColor', color)}
-                  label="Cor da Barra"
-                />
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                      Espessura
-                    </Label>
-                    <Badge variant="outline" className="text-xs">
-                      {properties.barHeight || 4}px
-                    </Badge>
-                  </div>
-                  <Slider
-                    value={[properties.barHeight || 4]}
-                    onValueChange={([value]) => handlePropertyUpdate('barHeight', value)}
-                    min={1}
-                    max={10}
-                    step={1}
-                    className="w-full"
-                  />
-                </div>
-
-                <div>
-                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                    Posição
-                  </Label>
-                  <Select
-                    value={properties.barPosition || 'bottom'}
-                    onValueChange={value => handlePropertyUpdate('barPosition', value)}
-                  >
-                    <SelectTrigger className="text-xs h-8 mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="top">Superior</SelectItem>
-                      <SelectItem value="bottom">Inferior</SelectItem>
-                      <SelectItem value="both">Ambas</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border" style={{ borderColor: '#E5DDD5' }}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm" style={{ color: '#432818' }}>
-                  Cor de Fundo
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <ColorPicker
-                  value={properties.backgroundColor || 'transparent'}
+                  value={properties.backgroundColor}
                   onChange={color => handlePropertyUpdate('backgroundColor', color)}
                   label="Cor de Fundo"
                 />
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                      Opacidade
-                    </Label>
-                    <Badge variant="outline" className="text-xs">
-                      {properties.backgroundOpacity || 100}%
-                    </Badge>
-                  </div>
-                  <Slider
-                    value={[properties.backgroundOpacity || 100]}
-                    onValueChange={([value]) => handlePropertyUpdate('backgroundOpacity', value)}
-                    min={0}
-                    max={100}
-                    step={5}
-                    className="w-full"
-                  />
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -397,66 +353,46 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
             <Card className="border" style={{ borderColor: '#E5DDD5' }}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm" style={{ color: '#432818' }}>
-                  Alinhamento
+                  Espaçamento
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div>
-                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
-                    Posição
-                  </Label>
-                  <div className="grid grid-cols-3 gap-2 mt-2">
-                    <Button
-                      variant={properties.alignment === 'left' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handlePropertyUpdate('alignment', 'left')}
-                      className="text-xs"
-                      style={{
-                        backgroundColor:
-                          properties.alignment === 'left' ? '#B89B7A' : 'transparent',
-                        borderColor: '#B89B7A',
-                        color: properties.alignment === 'left' ? '#FEFEFE' : '#B89B7A',
-                      }}
-                    >
-                      <AlignLeft className="h-3 w-3 mr-1" />
-                      Esq.
-                    </Button>
-                    <Button
-                      variant={properties.alignment === 'center' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handlePropertyUpdate('alignment', 'center')}
-                      className="text-xs"
-                      style={{
-                        backgroundColor:
-                          properties.alignment === 'center' || !properties.alignment
-                            ? '#B89B7A'
-                            : 'transparent',
-                        borderColor: '#B89B7A',
-                        color:
-                          properties.alignment === 'center' || !properties.alignment
-                            ? '#FEFEFE'
-                            : '#B89B7A',
-                      }}
-                    >
-                      <AlignCenter className="h-3 w-3 mr-1" />
-                      Centro
-                    </Button>
-                    <Button
-                      variant={properties.alignment === 'right' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handlePropertyUpdate('alignment', 'right')}
-                      className="text-xs"
-                      style={{
-                        backgroundColor:
-                          properties.alignment === 'right' ? '#B89B7A' : 'transparent',
-                        borderColor: '#B89B7A',
-                        color: properties.alignment === 'right' ? '#FEFEFE' : '#B89B7A',
-                      }}
-                    >
-                      <AlignRight className="h-3 w-3 mr-1" />
-                      Dir.
-                    </Button>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                      Margem Superior
+                    </Label>
+                    <Badge variant="outline" className="text-xs">
+                      {properties.marginTop}px
+                    </Badge>
                   </div>
+                  <Slider
+                    value={[properties.marginTop]}
+                    onValueChange={([value]) => handlePropertyUpdate('marginTop', value)}
+                    min={0}
+                    max={100}
+                    step={4}
+                    className="w-full"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                      Margem Inferior
+                    </Label>
+                    <Badge variant="outline" className="text-xs">
+                      {properties.marginBottom}px
+                    </Badge>
+                  </div>
+                  <Slider
+                    value={[properties.marginBottom]}
+                    onValueChange={([value]) => handlePropertyUpdate('marginBottom', value)}
+                    min={0}
+                    max={100}
+                    step={4}
+                    className="w-full"
+                  />
                 </div>
               </CardContent>
             </Card>
