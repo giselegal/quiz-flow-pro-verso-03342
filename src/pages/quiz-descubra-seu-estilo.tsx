@@ -27,7 +27,7 @@ import {
   Target,
   Sparkles,
   Crown,
-  Flame,
+  // Flame,
   // Eye,
 } from "lucide-react";
 import { trackButtonClick } from "@/utils/analytics";
@@ -592,34 +592,9 @@ const StarRating = ({ rating }: { rating: number }) => {
 */
 
 // Componente de Contagem Regressiva Dramática - não utilizado  
-// const DramaticCountdown = () => {
+/* const DramaticCountdown = () => {
   const [time, setTime] = useState({
-    hours: 2,
-    minutes: 47,
-    seconds: 33,
-  });
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(prevTime => {
-        if (prevTime.seconds > 0) {
-          return { ...prevTime, seconds: prevTime.seconds - 1 };
-        } else if (prevTime.minutes > 0) {
-          return { ...prevTime, minutes: prevTime.minutes - 1, seconds: 59 };
-        } else if (prevTime.hours > 0) {
-          return { hours: prevTime.hours - 1, minutes: 59, seconds: 59 };
-        } else {
-          return { hours: 23, minutes: 59, seconds: 59 };
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatNumber = (num: number) => num.toString().padStart(2, "0");
-
-  return (
+...
     <div className="countdown-dramatic">
       <div className="flex items-center justify-center gap-2 mb-3">
         <Flame className="text-orange-400" size={24} />
@@ -643,7 +618,7 @@ const StarRating = ({ rating }: { rating: number }) => {
       <p className="mt-3 text-sm opacity-90">Não perca esta oportunidade única!</p>
     </div>
   );
-};
+}; */
 
 // Componente FAQ Aprimorado
 const FaqSectionAdvanced = () => {

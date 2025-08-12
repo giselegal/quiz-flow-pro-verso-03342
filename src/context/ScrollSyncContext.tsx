@@ -27,52 +27,65 @@ export const ScrollSyncProvider: React.FC<ScrollSyncProviderProps> = ({ children
   const componentsScrollRef = useRef<HTMLDivElement>(null);
   const propertiesScrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
+  const isSyncingRef = useRef(false);
+  const rafRef = useRef<number | null>(null);
 
   const syncScroll = useCallback(
     (source: "canvas" | "components" | "properties", scrollTop: number) => {
-      if (isScrolling) return;
-
+      if (isSyncingRef.current) return;
+      isSyncingRef.current = true;
       setIsScrolling(true);
 
-      // Calcular proporção do scroll baseado na altura do canvas
-      const canvasElement = canvasScrollRef.current;
-      if (!canvasElement) {
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      rafRef.current = requestAnimationFrame(() => {
+        const getElement = (
+          s: "canvas" | "components" | "properties"
+        ): HTMLDivElement | null => {
+          switch (s) {
+            case "canvas":
+              return canvasScrollRef.current;
+            case "components":
+              return componentsScrollRef.current;
+            case "properties":
+              return propertiesScrollRef.current;
+            default:
+              return null;
+          }
+        };
+
+        const sourceEl = getElement(source);
+        if (!sourceEl) {
+          isSyncingRef.current = false;
+          setIsScrolling(false);
+          return;
+        }
+
+        const sourceMaxScroll = Math.max(0, sourceEl.scrollHeight - sourceEl.clientHeight);
+        const ratio = sourceMaxScroll > 0 ? scrollTop / sourceMaxScroll : 0;
+
+        const applyProportional = (target: "canvas" | "components" | "properties") => {
+          if (target === source) return;
+          const el = getElement(target);
+          if (!el) return;
+          const max = Math.max(0, el.scrollHeight - el.clientHeight);
+          const next = Math.max(0, Math.min(max, ratio * max));
+          if (Math.abs(el.scrollTop - next) > 1) {
+            el.scrollTop = next;
+          }
+        };
+
+        applyProportional("canvas");
+        applyProportional("components");
+        applyProportional("properties");
+
+        isSyncingRef.current = false;
         setIsScrolling(false);
-        return;
-      }
-
-      const canvasScrollHeight = canvasElement.scrollHeight - canvasElement.clientHeight;
-      const scrollRatio = canvasScrollHeight > 0 ? scrollTop / canvasScrollHeight : 0;
-
-      // Sincronizar com as outras colunas
-      if (source !== "components" && componentsScrollRef.current) {
-        const componentsMaxScroll =
-          componentsScrollRef.current.scrollHeight - componentsScrollRef.current.clientHeight;
-        const componentsTargetScroll = Math.max(
-          0,
-          Math.min(componentsMaxScroll, scrollRatio * componentsMaxScroll)
-        );
-        componentsScrollRef.current.scrollTop = componentsTargetScroll;
-      }
-
-      if (source !== "properties" && propertiesScrollRef.current) {
-        const propertiesMaxScroll =
-          propertiesScrollRef.current.scrollHeight - propertiesScrollRef.current.clientHeight;
-        const propertiesTargetScroll = Math.max(
-          0,
-          Math.min(propertiesMaxScroll, scrollRatio * propertiesMaxScroll)
-        );
-        propertiesScrollRef.current.scrollTop = propertiesTargetScroll;
-      }
-
-      if (source !== "canvas" && canvasScrollRef.current) {
-        canvasScrollRef.current.scrollTop = scrollTop;
-      }
-
-      // Reset flag após um pequeno delay
-      setTimeout(() => setIsScrolling(false), 50);
+      });
     },
-    [isScrolling]
+    []
   );
 
   const value = {
