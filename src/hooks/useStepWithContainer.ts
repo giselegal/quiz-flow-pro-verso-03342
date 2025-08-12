@@ -34,7 +34,7 @@ export const useStepWithContainer = (props: StepWithContainerProps) => {
 
   // 🔗 Integrar hooks existentes
   const isMobile = useIsMobile();
-  const performance = usePerformanceOptimization();
+  usePerformanceOptimization();
 
   // 📱 Otimizações específicas para mobile
   const mobileOptimizations = useMemo(() => {

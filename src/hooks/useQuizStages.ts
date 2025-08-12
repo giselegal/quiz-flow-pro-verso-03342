@@ -58,7 +58,7 @@ export const useQuizStages = () => {
       });
 
       if (id === activeStageId) {
-        setActiveStageId(prev => {
+        setActiveStageId((_prev) => {
           const remainingStages = stages.filter(stage => stage.id !== id);
           return remainingStages.length > 0 ? remainingStages[0].id : null;
         });

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { QuizQuestion, UserResponse, StyleResult } from "@/types/quiz";
+import { UserResponse, StyleResult } from "@/types/quiz";
 
 export const useQuizHooks = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

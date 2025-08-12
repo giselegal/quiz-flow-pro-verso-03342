@@ -28,7 +28,7 @@ export const usePersonalizedRecommendations = (
 
       // Gerar recomendações de cores
       if (primaryConfig.colors) {
-        primaryConfig.colors.forEach((color, index) => {
+        primaryConfig.colors.forEach((color: any, index: number) => {
           recommendations.push({
             id: `color-${index}`,
             type: "color",
@@ -44,7 +44,7 @@ export const usePersonalizedRecommendations = (
 
       // Gerar recomendações de padrões
       if (primaryConfig.patterns) {
-        primaryConfig.patterns.forEach((pattern, index) => {
+        primaryConfig.patterns.forEach((pattern: any, index: number) => {
           recommendations.push({
             id: `pattern-${index}`,
             type: "pattern",
@@ -60,7 +60,7 @@ export const usePersonalizedRecommendations = (
 
       // Gerar recomendações de tecidos
       if (primaryConfig.fabrics) {
-        primaryConfig.fabrics.forEach((fabric, index) => {
+        primaryConfig.fabrics.forEach((fabric: any, index: number) => {
           recommendations.push({
             id: `fabric-${index}`,
             type: "fabric",
@@ -81,8 +81,8 @@ export const usePersonalizedRecommendations = (
         // Adicionar recomendações complementares dos estilos secundários
         if (secondaryConfig.colors) {
           secondaryConfig.colors
-            .filter(color => !recommendations.some(r => r.title === color.name))
-            .forEach((color, index) => {
+            .filter((color: any) => !recommendations.some(r => r.title === color.name))
+            .forEach((color: any, index: number) => {
               recommendations.push({
                 id: `secondary-color-${style.category}-${index}`,
                 type: "color",

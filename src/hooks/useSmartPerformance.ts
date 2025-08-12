@@ -16,7 +16,7 @@ import { usePerformanceOptimization } from "./usePerformanceOptimization";
  * 🎯 Hook composto para performance completa
  */
 export const useSmartPerformance = (
-  componentId: string,
+  _componentId: string,
   options?: {
     debounceTime?: number;
     enableLazyLoading?: boolean;
@@ -34,7 +34,7 @@ export const useSmartPerformance = (
   // 🔗 Hooks base
   const isMobile = useIsMobile();
   const isLowPerformance = useIsLowPerformanceDevice();
-  const performanceOpt = usePerformanceOptimization();
+  usePerformanceOptimization();
 
   // 📊 Estados de performance
   const [metrics, setMetrics] = useState({

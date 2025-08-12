@@ -161,7 +161,7 @@ export const useEditorPersistence = () => {
   }, [toast]);
 
   const deleteFunnel = useCallback(
-    async (id: string) => {
+    async (_id: string) => {
       try {
         // TODO: Implementar deleteFunnel no schemaDrivenFunnelService
         console.warn("deleteFunnel não implementado ainda no schemaDrivenFunnelService");
@@ -184,7 +184,7 @@ export const useEditorPersistence = () => {
   );
 
   const publishFunnel = useCallback(
-    async (id: string) => {
+    async (_id: string) => {
       try {
         // TODO: Implementar publishFunnel no schemaDrivenFunnelService
         console.warn("publishFunnel não implementado ainda no schemaDrivenFunnelService");

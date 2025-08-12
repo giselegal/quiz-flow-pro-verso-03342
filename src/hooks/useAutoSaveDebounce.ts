@@ -1,5 +1,5 @@
 import { PerformanceOptimizer } from "@/utils/performanceOptimizer";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 /**
  * Hook para debounce de auto-save com controle inteligente
@@ -10,9 +10,6 @@ export const useAutoSaveDebounce = (
   delay: number = 1000,
   maxInterval: number = 10000
 ) => {
-  const [isActive, setIsActive] = useState(true);
-  const [lastSave, setLastSave] = useState<Date | null>(null);
-  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const debounceRef = useRef<number | null>(null);
   const maxDelayRef = useRef<number | null>(null);
   const lastSaveRef = useRef<number>(0);
@@ -36,7 +33,6 @@ export const useAutoSaveDebounce = (
     }
 
     // Configurar novo timeout de debounce - OTIMIZADO
-    const strategy = PerformanceOptimizer.getSuggestedStrategy(delay, false);
     debounceRef.current = PerformanceOptimizer.schedule(async () => {
       const now = Date.now();
 
@@ -47,14 +43,10 @@ export const useAutoSaveDebounce = (
       }
 
       try {
-        setSaveStatus("saving");
         await saveFunction();
         lastSaveRef.current = now;
-        setLastSave(new Date());
-        setSaveStatus("success");
         console.log(`✅ Auto-save successful: ${new Date().toLocaleTimeString()}`);
       } catch (error) {
-        setSaveStatus("error");
         console.error("❌ Auto-save failed:", error);
 
         // Se for erro de localStorage, tentar limpeza

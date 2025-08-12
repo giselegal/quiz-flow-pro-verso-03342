@@ -32,7 +32,7 @@ export const useStyleCalculations = (primaryStyle: StyleResult, secondaryStyles:
       let compatibilityScore = 0;
 
       secondaryStyles.forEach(style => {
-        const secondaryConfig = styleConfig[style.category];
+        styleConfig[style.category]; // Reference to avoid unused variable warning
         if (primaryConfig.compatibleWith?.includes(style.category)) {
           compatibilityScore += (style.percentage / 100) * 0.5;
         }
