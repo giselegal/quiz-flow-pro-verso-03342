@@ -56,22 +56,9 @@ const exemploQuestaoConfigurada = {
 
 // Exemplo de como usar o componente no editor
 const ExemploEditorQuestao: React.FC = () => {
-  const [block, setBlock] = useState(exemploQuestaoConfigurada);
+  const [block] = useState(exemploQuestaoConfigurada);
   const [isEditing, setIsEditing] = useState(false);
   const [showProperties, setShowProperties] = useState(false);
-
-  // Handler para mudanças nas propriedades
-  const _handlePropertyChange = (key: string, value: any) => {
-    setBlock(prevBlock => ({
-      ...prevBlock,
-      props: {
-        ...prevBlock.props,
-        [key]: value,
-      },
-    }));
-
-    console.log(`Propriedade alterada: ${key}`, value);
-  };
 
   // Simular salvamento
   const handleSave = () => {
