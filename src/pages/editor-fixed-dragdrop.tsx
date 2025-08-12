@@ -2,7 +2,21 @@ import React, { useEffect, useState } from "react";
 
 // Editor Components
 import { CanvasDropZone } from "@/components/editor/canvas/CanvasDropZone";
-import CombinedComponentsPanel from "@/components/editor/CombinedComponentsPanel";
+import      <div className="h-screen flex flex-col">
+        <div className="flex-1 overflow-y-auto bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40">
+          {/* Overlay sutil para mais elegância */}
+          <div className="fixed inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
+
+          <div className="relative z-10">
+            <div className="sticky top-0 bg-white z-20">
+              <EditorToolbar
+                isPreviewing={isPreviewing}
+                onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+                onSave={handleSave}
+                viewportSize={viewportSize}
+                onViewportSizeChange={setViewportSize}
+                onShowFunnelSettings={() => setShowFunnelSettings(true)}
+              />nentsPanel from "@/components/editor/CombinedComponentsPanel";
 import { DndProvider } from "@/components/editor/dnd/DndProvider";
 import { EditorNotification } from "@/components/editor/EditorNotification";
 import { FunnelSettingsPanel } from "@/components/editor/funnel-settings/FunnelSettingsPanel";
@@ -153,12 +167,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         />
       )}
 
-      <div className="h-screen bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative overflow-auto">
-        {/* Overlay sutil para mais elegância */}
-        <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
+      <div className="h-screen overflow-y-auto">
+        <div className="min-h-screen bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40">
+          {/* Overlay sutil para mais elegância */}
+          <div className="fixed inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
 
-        <div className="relative z-10 min-h-full">
-          <div className="sticky top-0 bg-white z-20">
+          <div className="relative z-10">
+            <div className="sticky top-0 bg-white z-20">
             <EditorToolbar
               isPreviewing={isPreviewing}
               onTogglePreview={() => setIsPreviewing(!isPreviewing)}
