@@ -48,8 +48,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
             blocks={currentBlocks}
             selectedBlockId={selectedBlockId}
             isPreviewing={isPreviewing}
-            activeStageId="1"
-            stageCount={1}
             onSelectBlock={setSelectedBlockId}
             onUpdateBlock={updateBlock}
             onDeleteBlock={deleteBlock}

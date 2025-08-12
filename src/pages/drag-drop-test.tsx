@@ -155,8 +155,6 @@ export const DragDropTestPage: React.FC = () => {
                   blocks={blocks}
                   selectedBlockId={selectedBlockId || null}
                   isPreviewing={false}
-                  activeStageId="test"
-                  stageCount={1}
                   onSelectBlock={setSelectedBlockId}
                   onUpdateBlock={handleUpdateBlock}
                   onDeleteBlock={handleDeleteBlock}

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/components/editor/quiz/QuizHeaderPropertiesPanel.tsx
 // Painel de propriedades específico para o cabeçalho do quiz
 

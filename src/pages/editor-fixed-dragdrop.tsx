@@ -199,8 +199,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       blocks={currentBlocks}
                       selectedBlockId={selectedBlockId}
                       isPreviewing={isPreviewing}
-                      activeStageId={activeStageId}
-                      stageCount={stageCount}
                       onSelectBlock={setSelectedBlockId}
                       onUpdateBlock={updateBlock}
                       onDeleteBlock={handleDeleteBlock}

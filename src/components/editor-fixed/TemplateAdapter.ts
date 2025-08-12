@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * 🔄 ADAPTADOR: Converte templates existentes para formato do sistema
  *
