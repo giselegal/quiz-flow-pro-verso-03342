@@ -1,47 +1,106 @@
-// Importar templates das 21 etapas
-import step01Template from "./step-01.json";
-import step02Template from "./step-02.json";
-import step03Template from "./step-03.json";
-import step04Template from "./step-04.json";
-import step05Template from "./step-05.json";
-import step06Template from "./step-06.json";
-import step07Template from "./step-07.json";
-import step08Template from "./step-08.json";
-import step09Template from "./step-09.json";
-import step10Template from "./step-10.json";
-import step11Template from "./step-11.json";
-import step12Template from "./step-12.json";
-import step13Template from "./step-13.json";
-import step14Template from "./step-14.json";
-import step15Template from "./step-15.json";
-import step16Template from "./step-16.json";
-import step17Template from "./step-17.json";
-import step18Template from "./step-18.json";
-import step19Template from "./step-19.json";
-import step20Template from "./step-20.json";
-import step21Template from "./step-21.json";
+/**
+ * 🎯 TEMPLATES DAS 21 ETAPAS - CARREGAMENTO DINÂMICO
+ *
+ * Solução para evitar problemas de build com imports diretos de JSON
+ */
 
-// Mapear templates das 21 etapas
-export const STEP_TEMPLATES = {
-  1: step01Template,
-  2: step02Template,
-  3: step03Template,
-  4: step04Template,
-  5: step05Template,
-  6: step06Template,
-  7: step07Template,
-  8: step08Template,
-  9: step09Template,
-  10: step10Template,
-  11: step11Template,
-  12: step12Template,
-  13: step13Template,
-  14: step14Template,
-  15: step15Template,
-  16: step16Template,
-  17: step17Template,
-  18: step18Template,
-  19: step19Template,
-  20: step20Template,
-  21: step21Template,
-} as const;
+// Função para carregar template dinamicamente
+async function loadTemplate(stepNumber: number): Promise<any> {
+  const stepId = stepNumber.toString().padStart(2, '0');
+
+  try {
+    // Tentar carregar do public/templates primeiro (para sistema JSON)
+    const publicResponse = await fetch(`/templates/step-${stepId}-template.json`);
+    if (publicResponse.ok) {
+      return await publicResponse.json();
+    }
+
+    // Fallback para templates locais se necessário
+    const localPath = `./step-${stepId}.json`;
+    const localTemplate = await import(localPath);
+    return localTemplate.default || localTemplate;
+  } catch (error) {
+    console.warn(`⚠️ Erro ao carregar template ${stepNumber}:`, error);
+    return null;
+  }
+}
+
+// Cache para templates carregados
+const templateCache = new Map<number, any>();
+
+// Exportação principal - compatível com código existente
+export const STEP_TEMPLATES = new Proxy({} as Record<number, any>, {
+  get(_target, prop) {
+    const stepNumber = Number(prop);
+
+    if (isNaN(stepNumber) || stepNumber < 1 || stepNumber > 21) {
+      return undefined;
+    }
+
+    // Retornar do cache se disponível
+    if (templateCache.has(stepNumber)) {
+      return templateCache.get(stepNumber);
+    }
+
+    // Carregar dinamicamente e cachear
+    loadTemplate(stepNumber).then(template => {
+      if (template) {
+        templateCache.set(stepNumber, template);
+      }
+    });
+
+    // Retorno temporário enquanto carrega
+    return {
+      metadata: {
+        id: `quiz-step-${stepNumber.toString().padStart(2, '0')}`,
+        name: `Template Step ${stepNumber}`,
+        loading: true,
+      },
+      blocks: [],
+      __loading: true,
+    };
+  },
+});
+
+/**
+ * 🔧 FUNÇÃO HELPER: Carregar template específico
+ */
+export async function getStepTemplate(stepNumber: number): Promise<any> {
+  if (templateCache.has(stepNumber)) {
+    return templateCache.get(stepNumber);
+  }
+
+  const template = await loadTemplate(stepNumber);
+  if (template) {
+    templateCache.set(stepNumber, template);
+  }
+
+  return template;
+}
+
+/**
+ * 🔧 FUNÇÃO HELPER: Pre-carregar todos os templates
+ */
+export async function preloadAllTemplates(): Promise<void> {
+  const promises = [];
+  for (let i = 1; i <= 21; i++) {
+    promises.push(getStepTemplate(i));
+  }
+
+  await Promise.all(promises);
+  console.log('✅ Todos os templates foram pré-carregados');
+}
+
+/**
+ * 🔧 FUNÇÃO HELPER: Verificar se template está carregado
+ */
+export function isTemplateLoaded(stepNumber: number): boolean {
+  return templateCache.has(stepNumber);
+}
+
+/**
+ * 🔧 FUNÇÃO HELPER: Limpar cache (para desenvolvimento)
+ */
+export function clearTemplateCache(): void {
+  templateCache.clear();
+}
