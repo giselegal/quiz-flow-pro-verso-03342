@@ -60,7 +60,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
     marginBottom,
   } = (block?.properties as HeaderProperties) || {};
 
-    return (
+  return (
     <div
       className={cn(
         'relative w-full p-4',
@@ -78,7 +78,7 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Header Content */}
       <div className="relative w-full min-h-[120px] flex items-center justify-center">
         {showBackButton && (
-          <button 
+          <button
             className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100/50 transition-colors"
             style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}
           >
@@ -106,12 +106,15 @@ const QuizIntroHeaderBlock: React.FC<QuizIntroHeaderBlockProps> = ({
       {/* Progress Bar */}
       {showProgress && (
         <div className="mt-4">
-          <div className="h-2 rounded-full" style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}>
+          <div
+            className="h-2 rounded-full"
+            style={{ backgroundColor: backgroundColor ? `${backgroundColor}dd` : '#E5DDD5' }}
+          >
             <div
               className="h-2 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${Math.min((progressValue || 0), (progressMax || 100))}%`,
-                backgroundColor: '#B89B7A'
+              style={{
+                width: `${Math.min(progressValue || 0, progressMax || 100)}%`,
+                backgroundColor: '#B89B7A',
               }}
             />
           </div>

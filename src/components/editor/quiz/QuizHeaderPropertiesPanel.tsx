@@ -108,13 +108,13 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
 }) => {
   const [activeTab, setActiveTab] = useState('general');
 
-  const properties = selectedBlock?.properties as HeaderProperties || {};
+  const properties = (selectedBlock?.properties as HeaderProperties) || {};
 
   const handlePropertyUpdate = (key: keyof HeaderProperties, value: any) => {
     if (selectedBlock && onUpdate) {
       onUpdate(selectedBlock.id, {
         ...properties,
-        [key]: value
+        [key]: value,
       } as HeaderProperties);
     }
   };

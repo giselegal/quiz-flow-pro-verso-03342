@@ -28,7 +28,7 @@ export const defaultHeaderProperties: HeaderProperties = {
   backgroundColor: '#ffffff',
   isSticky: true,
   marginTop: 0,
-  marginBottom: 24
+  marginBottom: 24,
 };
 
 export const convertLegacyHeader = (block: Block): HeaderProperties => {
@@ -38,27 +38,29 @@ export const convertLegacyHeader = (block: Block): HeaderProperties => {
   if (block.properties.header) {
     return {
       ...defaultHeaderProperties,
-      ...block.properties.header
+      ...block.properties.header,
     };
   }
 
   // Converter propriedades diretas
   return {
     ...defaultHeaderProperties,
-    ...block.properties
+    ...block.properties,
   };
 };
 
-export const createHeaderBlock = (stageId: string): Omit<Block, 'stageId'> & { stageId: string } => {
+export const createHeaderBlock = (
+  stageId: string
+): Omit<Block, 'stageId'> & { stageId: string } => {
   return {
     id: `${stageId}-header`,
     type: 'quiz-intro-header',
     properties: defaultHeaderProperties,
     content: {
       type: 'doc',
-      content: []
+      content: [],
     } as EditableContent,
     order: 0,
-    stageId
+    stageId,
   };
 };
