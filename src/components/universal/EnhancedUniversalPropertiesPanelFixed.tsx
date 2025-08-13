@@ -58,13 +58,13 @@ const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> =
 );
 
 const OptionsListEditor: React.FC<{
-  value?: Array<{ text: string; value?: string; category?: string }>;
-  onChange: (val: Array<{ text: string; value?: string; category?: string }>) => void;
+  value?: Array<{ text: string; value?: string; category?: string; imageUrl?: string }>;
+  onChange: (val: Array<{ text: string; value?: string; category?: string; imageUrl?: string }>) => void;
 }> = ({ value = [], onChange }) => {
   return (
     <div className="space-y-2">
       {(value || []).map((opt, idx) => (
-        <div key={idx} className="grid grid-cols-3 gap-2">
+        <div key={idx} className="grid grid-cols-4 gap-2">
           <Input
             placeholder="Texto"
             value={opt.text || ''}
@@ -92,13 +92,22 @@ const OptionsListEditor: React.FC<{
               onChange(arr);
             }}
           />
+          <Input
+            placeholder="URL da imagem (opcional)"
+            value={opt.imageUrl || ''}
+            onChange={e => {
+              const arr = [...value];
+              arr[idx] = { ...arr[idx], imageUrl: e.target.value };
+              onChange(arr);
+            }}
+          />
         </div>
       ))}
       <div className="flex gap-2">
         <button
           type="button"
           className="text-sm underline"
-          onClick={() => onChange([...(value || []), { text: '', value: '', category: '' }])}
+          onClick={() => onChange([...(value || []), { text: '', value: '', category: '', imageUrl: '' }])}
         >
           + Adicionar opção
         </button>
@@ -146,6 +155,28 @@ function PropertyField({ field, value, onChange }: { field: BlockFieldSchema; va
           <Switch checked={!!value} onChange={onChange} />
         </FieldWrapper>
       );
+    case 'select': {
+      const opts = field.options || [];
+      const isNum = typeof (opts[0]?.value) === 'number';
+      const current = value ?? '';
+      return (
+        <FieldWrapper>
+          <Label>{field.label}</Label>
+          <select
+            className="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/60"
+            value={current}
+            onChange={e => onChange(isNum ? Number(e.target.value) : e.target.value)}
+          >
+            <option value="">Selecionar...</option>
+            {opts.map(opt => (
+              <option key={String(opt.value)} value={String(opt.value)}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </FieldWrapper>
+      );
+    }
     case 'color':
       return (
         <FieldWrapper>
@@ -221,15 +252,23 @@ const EnhancedUniversalPropertiesPanelFixed: React.FC<PanelProps> = ({ selectedB
         }}
         className="space-y-4"
       >
-        {schema.fields.map(field => (
-          <div key={field.key} className="space-y-1">
-            <PropertyField
-              field={field}
-              value={selectedBlock.properties?.[field.key]}
-              onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
-            />
-          </div>
-        ))}
+        {schema.fields
+          .filter(f => {
+            if ((f.key === 'minSelections' || f.key === 'maxSelections') && !selectedBlock.properties?.multipleSelection) {
+              return false;
+            }
+            return true;
+          })
+          .map(field => (
+            <div key={field.key} className="space-y-1">
+              <PropertyField
+                field={field}
+                value={selectedBlock.properties?.[field.key]}
+                onChange={val => onUpdate(selectedBlock.id, { [field.key]: val })}
+              />
+            </div>
+          ))}
+
 
         <div className="pt-2 flex gap-2">
           <button type="submit" className="px-3 py-2 rounded-md border text-sm">Fechar Painel</button>

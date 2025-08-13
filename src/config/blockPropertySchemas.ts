@@ -5,12 +5,14 @@ export type FieldType =
   | 'boolean'
   | 'color'
   | 'options-list'
+  | 'select'
   | 'json';
 
 export interface BlockFieldSchema {
   key: string;
   label: string;
   type: FieldType;
+  options?: Array<{ label: string; value: string | number }>; // para selects
 }
 
 export interface BlockSchema {
@@ -123,12 +125,34 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
     label: 'Grade de Opções',
     fields: [
       { key: 'options', label: 'Opções', type: 'options-list' },
-      { key: 'columns', label: 'Colunas', type: 'number' },
-      { key: 'imageSize', label: 'Tamanho da Imagem', type: 'number' },
+      { key: 'layout', label: 'Layout', type: 'select', options: [
+        { label: 'Grade', value: 'grid' },
+        { label: 'Lista', value: 'list' },
+      ] },
+      { key: 'columns', label: 'Colunas', type: 'select', options: [
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+      ] },
+      { key: 'gap', label: 'Espaçamento (px)', type: 'number' },
+      { key: 'imageSize', label: 'Tamanho da Imagem (px)', type: 'number' },
+      { key: 'imageAspect', label: 'Proporção da Imagem', type: 'select', options: [
+        { label: '1:1', value: '1:1' },
+        { label: '4:3', value: '4:3' },
+        { label: '16:9', value: '16:9' },
+      ] },
       { key: 'showImages', label: 'Exibir Imagens', type: 'boolean' },
       { key: 'multipleSelection', label: 'Seleção Múltipla', type: 'boolean' },
       { key: 'minSelections', label: 'Mínimo Seleções', type: 'number' },
       { key: 'maxSelections', label: 'Máximo Seleções', type: 'number' },
+      { key: 'allowDeselect', label: 'Permitir Desmarcar', type: 'boolean' },
+      { key: 'showCheckmark', label: 'Mostrar Check', type: 'boolean' },
+      { key: 'labelPosition', label: 'Posição do Rótulo', type: 'select', options: [
+        { label: 'Abaixo', value: 'bottom' },
+        { label: 'À Direita', value: 'right' },
+      ] },
+      { key: 'cardRadius', label: 'Arredondamento (px)', type: 'number' },
       { key: 'borderColor', label: 'Cor da Borda', type: 'color' },
       { key: 'selectedBorderColor', label: 'Cor da Borda Selecionada', type: 'color' },
       { key: 'hoverColor', label: 'Cor de Hover', type: 'color' },
