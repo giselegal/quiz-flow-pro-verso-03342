@@ -47,7 +47,7 @@ echo ""
 echo "🗄️  3. TESTE DE CONECTIVIDADE SUPABASE"
 echo "===================================="
 
-SUPABASE_URL="https://inabgbgrgzfxgkbdaush.supabase.co"
+SUPABASE_URL="https://pwtjuuhchtbzttrzoutw.supabase.co"
 if curl -s -I "$SUPABASE_URL" | grep -q "200\|301\|302"; then
     echo "✅ Supabase: CONECTANDO"
     

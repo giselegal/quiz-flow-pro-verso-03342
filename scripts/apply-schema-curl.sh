@@ -4,8 +4,8 @@ echo "🚀 APLICANDO SCHEMA SUPABASE VIA API (CURL)"
 echo "==========================================="
 
 # Configuração
-SUPABASE_URL="https://inabgbgrgzfxgkbdaush.supabase.co"
-ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImluYWJnYmdyZ3pmeGdrYmRhdXNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNjM1MTcsImV4cCI6MjA2NzgzOTUxN30.RftMKxnqV09nWIVAbJIWMTS-JxiVDOhPZneAXuocGfU"
+SUPABASE_URL="https://pwtjuuhchtbzttrzoutw.supabase.co"
+ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w"
 
 echo "🔗 URL: $SUPABASE_URL"
 echo ""
