@@ -6,18 +6,20 @@
 
 1. **Templates JSON existem** - ✅ Confirmado em `public/templates/`
 2. **Servidor rodando** - ✅ Porta 8084
-3. **Build sem erros TypeScript** - ✅ Confirmado  
+3. **Build sem erros TypeScript** - ✅ Confirmado
 4. **Correções implementadas** - ✅ TemplateManager + templateService
 
 ### 🔍 **PONTOS DE INVESTIGAÇÃO**
 
 #### 1. **Alinhamento JSON ↔ TSX**
+
 **JSON:** `public/templates/step-01-template.json`
+
 ```json
 {
   "blocks": [
     {
-      "id": "step01-header", 
+      "id": "step01-header",
       "type": "quiz-intro-header",
       "properties": { ... }
     }
@@ -26,10 +28,11 @@
 ```
 
 **TSX:** `src/components/steps/Step01Template.tsx`
+
 ```tsx
 {
   id: 'step01-header',
-  type: 'quiz-intro-header', 
+  type: 'quiz-intro-header',
   properties: { ... }
 }
 ```
@@ -37,9 +40,11 @@
 **STATUS:** ✅ **ALINHADOS** - IDs e types coincidem
 
 #### 2. **Tipos TypeScript**
+
 **BlockType em `editor.ts`:**
+
 - ✅ `'quiz-intro-header'` - existe
-- ✅ `'text-inline'` - existe  
+- ✅ `'text-inline'` - existe
 - ✅ `'image-display-inline'` - existe
 - ✅ `'form-input'` - existe
 - ✅ `'button-inline'` - existe
@@ -47,6 +52,7 @@
 **STATUS:** ✅ **TIPOS CORRETOS**
 
 #### 3. **Conversão templateService**
+
 ```typescript
 convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
   return templateBlocks.map((block, index) => ({
@@ -61,6 +67,7 @@ convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
 **PROBLEMA IDENTIFICADO:** Conversão pode estar perdendo `properties`
 
 #### 4. **EditorContext Dupla Conversão**
+
 ```tsx
 setStageBlocks(prev => ({
   ...prev,
@@ -79,6 +86,7 @@ setStageBlocks(prev => ({
 ### 🔧 **CORREÇÕES NECESSÁRIAS**
 
 #### 1. **Simplificar Conversão no templateService**
+
 ```typescript
 convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
   return templateBlocks.map((block, index) => ({
@@ -92,6 +100,7 @@ convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
 ```
 
 #### 2. **Remover Dupla Conversão no EditorContext**
+
 ```tsx
 // ❌ ANTES - Dupla conversão
 [stageId]: blocks.map((block, index) => ({
@@ -107,9 +116,11 @@ convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
 ```
 
 #### 3. **Verificar EnhancedBlockRegistry**
+
 Confirmar se todos os tipos estão registrados:
+
 - `quiz-intro-header`
-- `text-inline` 
+- `text-inline`
 - `image-display-inline`
 - `form-input`
 - `button-inline`
@@ -119,20 +130,22 @@ Confirmar se todos os tipos estão registrados:
 ### 🎯 **PRÓXIMOS PASSOS**
 
 1. ✅ **Corrigir conversão no templateService**
-2. ✅ **Simplificar EditorContext** 
+2. ✅ **Simplificar EditorContext**
 3. ✅ **Testar fluxo completo**
 4. ✅ **Verificar logs no console**
 
 ### 📊 **VERIFICAÇÃO FINAL**
 
 **Esperado no /editor-fixed:**
+
 - Header com logo e progress
 - Texto principal
-- Imagem 
+- Imagem
 - Form de input para nome
 - Botão "Começar"
 
 **Logs esperados:**
+
 ```
 🔄 Carregando template para etapa 1 (tentativa 1)
 ✅ Template carregado na tentativa 1: 5 blocos

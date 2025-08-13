@@ -14,7 +14,7 @@ async function diagnosticarFluxo() {
       existe: !!template,
       loading: template?.__loading,
       blocksCount: template?.blocks?.length || 0,
-      metadata: template?.metadata?.name
+      metadata: template?.metadata?.name,
     });
   } catch (error) {
     console.log('❌ Erro no getStepTemplate:', error.message);
@@ -28,7 +28,7 @@ async function diagnosticarFluxo() {
       existe: !!template,
       loading: template?.__loading,
       blocksCount: template?.blocks?.length || 0,
-      metadata: template?.metadata?.name
+      metadata: template?.metadata?.name,
     });
   } catch (error) {
     console.log('❌ Erro no templateService:', error.message);
@@ -41,7 +41,7 @@ async function diagnosticarFluxo() {
     console.log('✅ TemplateManager.loadStepBlocks("step-01"):', {
       blocksCount: blocks?.length || 0,
       blockTypes: blocks?.map(b => b.type) || [],
-      blockIds: blocks?.map(b => b.id) || []
+      blockIds: blocks?.map(b => b.id) || [],
     });
   } catch (error) {
     console.log('❌ Erro no TemplateManager:', error.message);
@@ -56,7 +56,7 @@ async function diagnosticarFluxo() {
       console.log('✅ Fetch direto do JSON:', {
         status: response.status,
         blocksCount: json?.blocks?.length || 0,
-        metadata: json?.metadata?.name
+        metadata: json?.metadata?.name,
       });
     } else {
       console.log('❌ Fetch falhou:', response.status);
