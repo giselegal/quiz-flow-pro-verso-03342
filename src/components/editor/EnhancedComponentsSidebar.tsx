@@ -13,7 +13,6 @@ import {
   Layers,
   Search,
   Settings,
-  Trophy,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
