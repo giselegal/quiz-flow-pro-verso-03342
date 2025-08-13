@@ -149,16 +149,19 @@ export const templateService = {
 
   // Nova função para converter blocos do template para blocos do editor
   convertTemplateBlocksToEditorBlocks(templateBlocks: TemplateBlock[]): Block[] {
-    return templateBlocks.map((block, index) => ({
-      id: block.id,
-      type: block.type as any,
-      content: {},
-      order: index,
-      properties: {
+    return templateBlocks.map((block, index) => {
+      const mergedProps = {
         ...(block.properties || {}),
         ...(block.children ? { children: block.children } : {}),
-      },
-    }));
+      };
+      return {
+        id: block.id,
+        type: block.type as any,
+        content: { ...mergedProps }, // compatibilidade com renderizadores legados
+        order: typeof (block as any).position === 'number' ? (block as any).position : index,
+        properties: mergedProps,
+      };
+    });
   },
 };
 
