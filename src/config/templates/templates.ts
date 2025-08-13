@@ -13,7 +13,7 @@ async function loadTemplate(stepNumber: number): Promise<any> {
     const localPath = `./step-${stepId}.json`;
     const localTemplate = await import(localPath);
     const template = localTemplate.default || localTemplate;
-    
+
     if (template && template.blocks) {
       console.log(`✅ Template ${stepNumber} carregado de src/config/templates/`);
       return template;
