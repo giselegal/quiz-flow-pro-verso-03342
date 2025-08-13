@@ -13,6 +13,8 @@ import type { Block } from '../types/editor';
 import { EditorBlock, FunnelStage } from '../types/editor';
 import { TemplateManager } from '../utils/TemplateManager';
 import { performanceAnalyzer } from '../utils/performanceAnalyzer';
+// import { useFunnelComponents } from '../hooks/useFunnelComponents'; // TODO: Implementar integração
+import { getFunnelIdFromEnvOrStorage, parseStepNumberFromStageId } from '../utils/funnelIdentity';
 
 interface EditorState {
   state: 'ready' | 'loading' | 'error';
@@ -46,6 +48,10 @@ interface EditorContextType {
   activeStageId: string; // ✅ ETAPA ATIVA ATUAL
   selectedBlockId: string | null; // ✅ BLOCO SELECIONADO
   editorState: EditorState; // ✅ ESTADO DO EDITOR
+  
+  // ✅ NOVO: Sistema de persistência Supabase
+  funnelId: string; // ✅ ID DO FUNIL ATUAL
+  isSupabaseEnabled: boolean; // ✅ PERSISTÊNCIA HABILITADA
 
   // ═══════════════════════════════════════════════
   // 🔧 ACTIONS ORGANIZADAS POR CATEGORIA
@@ -132,6 +138,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // Estado principal do editor
   const [state, dispatch] = useReducer(reducer, initialState);
+  
+  // ✅ NOVO: Sistema de persistência Supabase
+  const funnelId = getFunnelIdFromEnvOrStorage() || 'default-funnel';
+  console.log('🔍 EditorProvider: FunnelId inicializado:', funnelId);
+  
+  const [activeStageId, setActiveStageId] = useState<string>('step-01');
+  const currentStepNumber = parseStepNumberFromStageId(activeStageId);
+  
+  // Configuração de persistência
+  const isSupabaseEnabled = import.meta.env.VITE_EDITOR_SUPABASE_ENABLED === 'true';
+  
+  // Hook para gerenciar componentes no Supabase (comentado temporariamente para deploy)
+  // TODO: Implementar integração híbrida com Supabase/local
+  console.log('📊 Supabase disponível:', isSupabaseEnabled, 'StepNumber:', currentStepNumber);
 
   // 📊 PERFORMANCE MONITORING
   useEffect(() => {
@@ -329,7 +349,6 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO
 
-  const [activeStageId, setActiveStageId] = useState<string>('step-01');
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
@@ -1087,6 +1106,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     activeStageId,
     selectedBlockId,
     editorState: state,
+    
+    // ✅ NOVO: Sistema de persistência Supabase
+    funnelId,
+    isSupabaseEnabled,
 
     stageActions: {
       setActiveStage,
