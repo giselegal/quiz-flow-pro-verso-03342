@@ -113,6 +113,10 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
     effectType = 'none',
     borderRadius = 8,
     hoverOpacity = 90,
+    // Estado visual/validação
+    showDisabledState = false,
+    disabledText = '',
+    disabledOpacity = 50,
   } = (block?.properties as any) || {};
 
   const [isValidated, setIsValidated] = useState(false);
@@ -130,7 +134,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Determinar se o botão deve estar desabilitado
   const isButtonDisabled = disabled || (requiresValidInput && !isValidated);
-
   // 🚀 Função para inicializar quiz no Supabase
   const initializeQuizWithSupabase = async (userName: string) => {
     try {
@@ -346,8 +349,14 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       <button
         type="button"
         disabled={isButtonDisabled}
+        aria-disabled={isButtonDisabled}
         className={getResponsiveClasses()}
-        style={getButtonStyles()}
+        style={{
+          ...getButtonStyles(),
+          ...(isButtonDisabled && showDisabledState
+            ? { opacity: Math.max(0, Math.min(100, Number(disabledOpacity))) / 100 }
+            : {}),
+        }}
         onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
@@ -410,7 +419,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Texto do botão */}
         <span className="flex-1 text-center truncate relative z-10 font-medium">
-          {text || 'Clique aqui'}
+          {(isButtonDisabled && showDisabledState && disabledText ? disabledText : text) || 'Clique aqui'}
         </span>
 
         {/* Ícone à direita */}
