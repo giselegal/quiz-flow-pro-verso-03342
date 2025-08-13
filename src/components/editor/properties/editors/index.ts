@@ -5,3 +5,4 @@ export { NavigationPropertyEditor } from './NavigationPropertyEditor';
 export { OptionsPropertyEditor } from './OptionsPropertyEditor';
 export { QuestionPropertyEditor } from './QuestionPropertyEditor';
 export { TextPropertyEditor } from './TextPropertyEditor';
+export { default as ImagePropertyEditor } from './ImagePropertyEditor';

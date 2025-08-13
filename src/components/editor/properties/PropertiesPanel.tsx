@@ -13,6 +13,7 @@ import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
 import { TextPropertyEditor } from './editors/TextPropertyEditor';
 import { getBlockEditorConfig } from './PropertyEditorRegistry';
+import { default as ImagePropertyEditor } from './editors/ImagePropertyEditor';
 
 interface PropertiesPanelProps {
   /** Bloco atualmente selecionado */
@@ -79,8 +80,19 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     // Editores já implementados - mapeamento direto
     switch (blockType) {
       case 'header':
+      case 'quiz-intro-header':
         return (
           <HeaderPropertyEditor
+            block={selectedBlock}
+            onUpdate={handleUpdate}
+            isPreviewMode={isPreviewMode}
+          />
+        );
+
+      case 'image':
+      case 'image-display-inline':
+        return (
+          <ImagePropertyEditor
             block={selectedBlock}
             onUpdate={handleUpdate}
             isPreviewMode={isPreviewMode}
@@ -90,10 +102,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       default:
         // Mapeamento flexível para tipos relacionados a questões
         const isQuestionType =
-          blockType.includes('question') ||
-          blockType === 'quiz-question-inline' ||
-          blockType === 'step01-intro' ||
-          blockType === 'quiz-intro-header';
+          blockType.includes('question') || blockType === 'quiz-question-inline';
 
         if (isQuestionType) {
           return (
@@ -202,7 +211,6 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
         // Tipos conhecidos mas não implementados ainda
         const knownTypes = [
-          'image',
           'video',
           'spacer',
           'carousel',

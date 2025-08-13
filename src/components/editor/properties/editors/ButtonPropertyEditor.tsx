@@ -61,11 +61,9 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
   const animation = block.content?.animation || 'none';
 
   const handleContentUpdate = (field: string, value: any) => {
-    const updates = {
-      content: {
-        ...block.content,
-        [field]: value,
-      },
+    // Atualiza como propriedade de topo para sincronizar em properties e content
+    const updates: any = {
+      [field]: value,
     };
     onUpdate(updates);
   };
@@ -323,6 +321,27 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                 value={onClick}
                 onChange={e => handleContentUpdate('onClick', e.target.value)}
                 placeholder="alert('Olá!')"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="nextStepId">Ir para Etapa</Label>
+              <Input
+                id="nextStepId"
+                value={(block.properties as any)?.nextStepId || ''}
+                onChange={e => handleContentUpdate('nextStepId', e.target.value)}
+                placeholder="Ex: step-02"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="nextStepUrl">Ir para URL</Label>
+              <Input
+                id="nextStepUrl"
+                value={(block.properties as any)?.nextStepUrl || ''}
+                onChange={e => handleContentUpdate('nextStepUrl', e.target.value)}
+                placeholder="https://exemplo.com"
               />
             </div>
           </div>

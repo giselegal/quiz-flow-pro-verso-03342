@@ -43,6 +43,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const {
     activeStageId,
     selectedBlockId,
+    stageActions: { setActiveStage },
     blockActions: {
       addBlock,
       addBlockAtPosition,
@@ -61,6 +62,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       setShowNotification(true);
     }
   }, [activeStageId]);
+
+  // Listener global: navegação entre etapas disparada por botões
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { stepId?: string };
+      if (detail?.stepId) {
+        setActiveStage(detail.stepId);
+      }
+    };
+    window.addEventListener('quiz-navigate-to-step', handler as EventListener);
+    return () => window.removeEventListener('quiz-navigate-to-step', handler as EventListener);
+  }, [setActiveStage]);
 
   // Configuração de viewport responsivo
   const getCanvasClassName = () => {
