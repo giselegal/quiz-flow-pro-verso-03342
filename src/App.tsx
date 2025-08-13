@@ -12,6 +12,7 @@ import { ScrollSyncProvider } from './context/ScrollSyncContext';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
+const TestSupabaseIntegration = lazy(() => import('./pages/test-supabase-integration'));
 // Editor inline component to bypass TypeScript config issues
 const TemplatesIA = lazy(() => import('./pages/TemplatesIA'));
 const FunnelsPage = lazy(() => import('./pages/FunnelsPage'));
@@ -75,8 +76,9 @@ function App() {
                 </Route>
 
                 {/* Editor Fixed Route - Editor 4 Colunas com JSON */}
-                <Route path="/editor-fixed">
-                  {() => (
+                <ProtectedRoute
+                  path="/editor-fixed"
+                  component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
@@ -89,24 +91,26 @@ function App() {
                       </ErrorBoundary>
                     </Suspense>
                   )}
-                </Route>
+                />
 
                 {/* Editor Fixed Minimal Route */}
 
-                {/* Templates IA Route */}
-                <Route path="/templatesia">
-                  {() => (
+                {/* Templates IA Route - Protected */}
+                <ProtectedRoute
+                  path="/templatesia"
+                  component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <TemplatesIA />
                       </ErrorBoundary>
                     </Suspense>
                   )}
-                </Route>
+                />
 
-                {/* Debug Editor Route */}
-                <Route path="/debug-editor">
-                  {() => (
+                {/* Debug Editor Route - Protected */}
+                <ProtectedRoute
+                  path="/debug-editor"
+                  component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
@@ -115,7 +119,7 @@ function App() {
                       </ErrorBoundary>
                     </Suspense>
                   )}
-                </Route>
+                />
 
                 {/* Debug/Test Routes */}
                 <Route path="/debug/editor">
@@ -235,6 +239,16 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
+
+                {/* Test Supabase Integration Route */}
+                <ProtectedRoute
+                  path="/test-supabase-integration"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestSupabaseIntegration />
+                    </Suspense>
+                  )}
+                />
 
                 {/* Protected Routes */}
                 <ProtectedRoute
