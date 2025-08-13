@@ -20,7 +20,7 @@ export const useEditorBlocks = (
 
       setConfig({
         ...config,
-        blocks: [...config.blocks, newBlock],
+        blocks: ([...config.blocks, newBlock] as any),
       });
 
       return newBlock.id;
@@ -32,9 +32,9 @@ export const useEditorBlocks = (
     (id: string, content: Partial<EditableContent>) => {
       setConfig({
         ...config,
-        blocks: config.blocks.map((block: EditorBlock) =>
+        blocks: (config.blocks.map((block: EditorBlock) =>
           block.id === id ? { ...block, content: { ...block.content, ...content } } : block
-        ),
+        ) as any),
       });
     },
     [config, setConfig]
@@ -44,12 +44,12 @@ export const useEditorBlocks = (
     (id: string) => {
       setConfig({
         ...config,
-        blocks: config.blocks
+        blocks: (config.blocks
           .filter((block: EditorBlock) => block.id !== id)
           .map((block: EditorBlock, index: number) => ({
             ...block,
             order: index,
-          })),
+          })) as any),
       });
     },
     [config, setConfig]
@@ -63,10 +63,10 @@ export const useEditorBlocks = (
 
       setConfig({
         ...config,
-        blocks: newBlocks.map((block: EditorBlock, index: number) => ({
+        blocks: (newBlocks.map((block: EditorBlock, index: number) => ({
           ...block,
           order: index,
-        })),
+        })) as any),
       });
     },
     [config, setConfig]

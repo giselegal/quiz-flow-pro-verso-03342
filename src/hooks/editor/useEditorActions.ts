@@ -22,8 +22,8 @@ export const useEditorActions = (
         },
       ];
 
-      onBlocksChange(newBlocks);
-      addToHistory(newBlocks);
+      onBlocksChange(newBlocks as any);
+      addToHistory(newBlocks as any);
     },
     [blocks, onBlocksChange, addToHistory]
   );
@@ -34,8 +34,8 @@ export const useEditorActions = (
         block.id === id ? { ...block, content: { ...block.content, ...content } } : block
       );
 
-      onBlocksChange(newBlocks);
-      addToHistory(newBlocks);
+      onBlocksChange(newBlocks as any);
+      addToHistory(newBlocks as any);
     },
     [blocks, onBlocksChange, addToHistory]
   );
@@ -46,8 +46,8 @@ export const useEditorActions = (
         .filter(block => block.id !== id)
         .map((block, index) => ({ ...block, order: index }));
 
-      onBlocksChange(newBlocks);
-      addToHistory(newBlocks);
+      onBlocksChange(newBlocks as any);
+      addToHistory(newBlocks as any);
     },
     [blocks, onBlocksChange, addToHistory]
   );
