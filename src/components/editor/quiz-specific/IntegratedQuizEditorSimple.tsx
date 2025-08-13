@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
 import { QuizQuestion } from '@/types/quiz';
-import { BookOpen, Eye, Plus, Save, Settings, Target } from 'lucide-react';
+import { BookOpen, Database, Eye, Plus, Save, Settings, Target } from 'lucide-react';
 import { useState } from 'react';
 
 export default function IntegratedQuizEditor() {
@@ -90,22 +90,14 @@ export default function IntegratedQuizEditor() {
           </Button>
         </div>
         <QuizPreview
-          metadata={{
-            title: quizTitle,
-            description: quizDescription,
-            category: quizCategory,
-            difficulty: 'medium',
-            timeLimit: undefined,
-            isPublic: false,
-            settings: {
-              showProgress: true,
-              randomizeQuestions: false,
-              allowRetake: true,
-              passScore: 70,
-            },
-          }}
           questions={questions}
-          onClose={() => setIsPreviewMode(false)}
+          onComplete={results => {
+            console.log('Resultados do quiz:', results);
+            toast({
+              title: 'Quiz Finalizado!',
+              description: `Quiz completado com sucesso!`,
+            });
+          }}
         />
       </div>
     );
@@ -313,17 +305,22 @@ export default function IntegratedQuizEditor() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Recursos Integrados</CardTitle>
+                <CardTitle>Integração com 21 Etapas</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-sm text-muted-foreground">
-                  <p>✅ Editor de Quiz integrado</p>
-                  <p>✅ Preview funcional com navegação</p>
-                  <p>✅ Sistema de perguntas/respostas</p>
-                  <p>✅ Integração com componentes UI</p>
-                  <p>🚀 Hooks CRUD disponíveis (useQuizCRUD)</p>
-                  <p>🚀 Sistema 21 etapas pronto (useQuizStepsIntegration)</p>
-                </div>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Sistema de integração com as 21 etapas do editor. Esse recurso permite integrar
+                  perguntas do quiz com as etapas do editor.
+                </p>
+
+                <Button
+                  variant="outline"
+                  disabled={loading || questions.length === 0}
+                  className="w-full"
+                >
+                  <Database className="w-4 h-4 mr-2" />
+                  {loading ? 'Integrando...' : 'Integrar com 21 Etapas'}
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

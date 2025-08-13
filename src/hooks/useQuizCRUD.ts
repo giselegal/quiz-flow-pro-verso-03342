@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/context/AuthContext';
-import { QuizQuestion } from '@/types/quiz';
 import { toast } from '@/components/ui/use-toast';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
+import { QuizQuestion } from '@/types/quiz';
+import { useEffect, useState } from 'react';
 
 export interface QuizMetadata {
   title: string;
@@ -35,7 +35,7 @@ export interface SavedQuiz {
 
 /**
  * 🎯 HOOK PARA OPERAÇÕES CRUD DE QUIZ COM SUPABASE
- * 
+ *
  * Integra o Editor de Quiz com o banco Supabase:
  * - Salvar/carregar quizzes
  * - Gerenciar perguntas
@@ -58,7 +58,8 @@ export const useQuizCRUD = () => {
     try {
       const { data, error } = await supabase
         .from('quizzes')
-        .select(`
+        .select(
+          `
           id,
           title,
           description,
@@ -78,7 +79,8 @@ export const useQuizCRUD = () => {
             points,
             order_index
           )
-        `)
+        `
+        )
         .eq('author_id', user.id)
         .order('updated_at', { ascending: false });
 
@@ -96,8 +98,8 @@ export const useQuizCRUD = () => {
           options: q.options || [],
           multiSelect: q.correct_answers?.length || 1,
           order: q.order_index,
-          points: q.points || 1
-        }))
+          points: q.points || 1,
+        })),
       }));
 
       setQuizzes(formattedQuizzes);
@@ -107,7 +109,7 @@ export const useQuizCRUD = () => {
       toast({
         title: 'Erro',
         description: 'Não foi possível carregar seus quizzes',
-        variant: 'destructive'
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -116,14 +118,14 @@ export const useQuizCRUD = () => {
 
   // ===== SALVAR QUIZ COMPLETO =====
   const saveQuiz = async (
-    metadata: QuizMetadata, 
+    metadata: QuizMetadata,
     questions: QuizQuestion[]
   ): Promise<string | null> => {
     if (!user) {
       toast({
         title: 'Erro',
         description: 'Você precisa estar logado para salvar',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return null;
     }
@@ -135,17 +137,19 @@ export const useQuizCRUD = () => {
       // 1. Salvar ou atualizar quiz principal
       const { data: quizData, error: quizError } = await supabase
         .from('quizzes')
-        .insert([{
-          title: metadata.title,
-          description: metadata.description,
-          category: metadata.category,
-          difficulty: metadata.difficulty,
-          time_limit: metadata.timeLimit,
-          is_public: metadata.isPublic,
-          author_id: user.id,
-          settings: metadata.settings,
-          is_published: false
-        }])
+        .insert([
+          {
+            title: metadata.title,
+            description: metadata.description,
+            category: metadata.category,
+            difficulty: metadata.difficulty,
+            time_limit: metadata.timeLimit,
+            is_public: metadata.isPublic,
+            author_id: user.id,
+            settings: metadata.settings,
+            is_published: false,
+          },
+        ])
         .select()
         .single();
 
@@ -164,7 +168,7 @@ export const useQuizCRUD = () => {
           points: question.points || 1,
           order_index: index,
           explanation: null,
-          media_url: null
+          media_url: null,
         }));
 
         const { error: questionsError } = await supabase
@@ -189,7 +193,7 @@ export const useQuizCRUD = () => {
       toast({
         title: 'Erro',
         description: 'Não foi possível salvar o quiz',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return null;
     } finally {
@@ -205,10 +209,12 @@ export const useQuizCRUD = () => {
     try {
       const { data, error } = await supabase
         .from('quizzes')
-        .select(`
+        .select(
+          `
           *,
           questions (*)
-        `)
+        `
+        )
         .eq('id', quizId)
         .single();
 
@@ -226,8 +232,8 @@ export const useQuizCRUD = () => {
           options: q.options || [],
           multiSelect: q.correct_answers?.length || 1,
           order: q.order_index,
-          points: q.points || 1
-        }))
+          points: q.points || 1,
+        })),
       };
 
       return formattedQuiz;
@@ -246,10 +252,7 @@ export const useQuizCRUD = () => {
     setError(null);
 
     try {
-      const { error } = await supabase
-        .from('quizzes')
-        .delete()
-        .eq('id', quizId);
+      const { error } = await supabase.from('quizzes').delete().eq('id', quizId);
 
       if (error) throw error;
 
@@ -268,7 +271,7 @@ export const useQuizCRUD = () => {
       toast({
         title: 'Erro',
         description: 'Não foi possível excluir o quiz',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return false;
     } finally {
@@ -292,8 +295,8 @@ export const useQuizCRUD = () => {
         showProgress: true,
         randomizeQuestions: false,
         allowRetake: true,
-        passScore: 70
-      }
+        passScore: 70,
+      },
     };
 
     return await saveQuiz(metadata, originalQuiz.questions);
@@ -311,7 +314,7 @@ export const useQuizCRUD = () => {
     quizzes,
     loading,
     error,
-    
+
     // Operações
     saveQuiz,
     loadQuiz,
