@@ -11,12 +11,16 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
+// Quiz Editor Integration
+import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
+
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { Settings } from 'lucide-react';
+import { useSupabaseQuizEditor } from '@/hooks/useSupabaseQuizEditor';
+import { Settings, BookOpen } from 'lucide-react';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -37,6 +41,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+  const [showQuizEditor, setShowQuizEditor] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
@@ -189,6 +194,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     {stageCount !== 1 ? 's' : ''} • Novo Painel Ativo
                   </div>
                 </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setShowQuizEditor(true)}
+                    className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md flex items-center gap-2 transition-colors"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    Quiz Editor
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -272,6 +286,29 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />
+        )}
+
+        {/* Modal do Quiz Editor */}
+        {showQuizEditor && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" />
+                  Quiz Editor Integrado
+                </h2>
+                <button
+                  onClick={() => setShowQuizEditor(false)}
+                  className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 border rounded"
+                >
+                  Fechar
+                </button>
+              </div>
+              <div className="flex-1 overflow-hidden p-4">
+                <IntegratedQuizEditor />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </DndProvider>
