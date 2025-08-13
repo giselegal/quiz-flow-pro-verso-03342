@@ -24,6 +24,7 @@ import {
   Users,
   Zap,
 } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 // Import dos novos ícones temáticos
 import {
@@ -35,6 +36,7 @@ import {
 } from '@/components/dashboard/TemplateIcons';
 
 const OverviewPage: React.FC = () => {
+  const [, setLocation] = useLocation();
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
       {/* Header Moderno */}
@@ -100,7 +102,7 @@ const OverviewPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-[#FAF9F7] cursor-pointer"
-          onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
+          onClick={() => setLocation('/admin/editor')}
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -117,7 +119,7 @@ const OverviewPage: React.FC = () => {
 
         <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-[#F5F2E9] cursor-pointer"
-          onClick={() => window.open('/step/21', '_blank')}
+          onClick={() => setLocation('/step/21')}
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -297,7 +299,7 @@ const OverviewPage: React.FC = () => {
                 {/* Template 1: Página de Oferta */}
                 <div
                   className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                  onClick={() => window.open('/step/21', '_blank')}
+                  onClick={() => setLocation('/step/21')}
                 >
                   <BackgroundPattern variant="primary" />
 
@@ -472,7 +474,7 @@ const OverviewPage: React.FC = () => {
                 <Button
                   variant="outline"
                   className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
-                  onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
+                  onClick={() => setLocation('/admin/editor')}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Criar Novo Template
@@ -570,7 +572,7 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="secondary"
                 className="bg-white text-[#432818] hover:bg-[#FAF9F7]"
-                onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
+                onClick={() => setLocation('/admin/editor')}
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Editor Visual
@@ -579,7 +581,7 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white/10"
-                onClick={() => window.open('/step/21', '_blank')}
+                onClick={() => setLocation('/step/21')}
               >
                 <PlayCircle className="h-5 w-5 mr-2" />
                 Testar Etapa 21
