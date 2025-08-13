@@ -9,21 +9,38 @@ async function loadTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
 
   try {
-    // ✅ CARREGAR DOS TEMPLATES CORRETOS PRIMEIRO (src/config/templates/)
-    const localPath = `./step-${stepId}.json`;
-    const localTemplate = await import(localPath);
-    const template = localTemplate.default || localTemplate;
+    // ✅ STRATEGY 1: Tentar import estático primeiro (mais confiável)
+    let template = null;
+
+    // Import direto baseado no número do step
+    switch (stepNumber) {
+      case 1:
+        template = (await import('./step-01.json')).default;
+        break;
+      case 2:
+        template = (await import('./step-02.json')).default;
+        break;
+      case 3:
+        template = (await import('./step-03.json')).default;
+        break;
+      default:
+        // ✅ STRATEGY 2: Fallback para import dinâmico
+        const localPath = `./step-${stepId}.json`;
+        const localTemplate = await import(localPath);
+        template = localTemplate.default || localTemplate;
+        break;
+    }
 
     if (template && template.blocks) {
       console.log(`✅ Template ${stepNumber} carregado de src/config/templates/`);
       return template;
     }
 
-    // ❌ FALLBACK REMOVIDO - não usar public/templates (dados incorretos)
     console.warn(`⚠️ Template ${stepNumber} não encontrado em src/config/templates/`);
     return null;
   } catch (error) {
     console.warn(`⚠️ Erro ao carregar template ${stepNumber}:`, error);
+    console.warn(`Detalhes do erro:`, error);
     return null;
   }
 }
