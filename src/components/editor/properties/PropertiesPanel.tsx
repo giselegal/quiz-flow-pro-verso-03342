@@ -243,6 +243,8 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         const isKnownType =
           knownTypes.includes(blockType) || knownTypes.some(type => blockType.includes(type));
 
+        // Fallback final
+        console.log('❌ No specific editor found for:', blockType, '- using fallback');
         if (isKnownType) {
           return (
             <Card className="h-full">
