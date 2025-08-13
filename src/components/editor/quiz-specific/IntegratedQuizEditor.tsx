@@ -5,9 +5,9 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
-import { useSupabaseQuizEditor, QuizData, SavedQuiz } from '@/hooks/useSupabaseQuizEditor';
-import { BookOpen, Eye, Plus, Save, Settings, Database, Loader2 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { QuizData, SavedQuiz, useSupabaseQuizEditor } from '@/hooks/useSupabaseQuizEditor';
+import { BookOpen, Database, Loader2, Plus, Save, Settings } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface IntegratedQuizEditorProps {
   onSave?: () => void;
@@ -15,14 +15,14 @@ interface IntegratedQuizEditorProps {
   className?: string;
 }
 
-export default function IntegratedQuizEditor({ 
-  onSave, 
-  onPreview, 
-  className 
+export default function IntegratedQuizEditor({
+  onSave,
+  onPreview,
+  className,
 }: IntegratedQuizEditorProps = {}) {
   const [activeTab, setActiveTab] = useState('edit');
   const [savedQuizzes, setSavedQuizzes] = useState<SavedQuiz[]>([]);
-  
+
   const {
     isLoading,
     isSaving,
@@ -31,9 +31,9 @@ export default function IntegratedQuizEditor({
     saveQuiz,
     loadQuiz,
     loadAllQuizzes,
-    deleteQuiz
+    deleteQuiz,
   } = useSupabaseQuizEditor();
-  
+
   const [quiz, setQuiz] = useState<QuizData>({
     title: 'Novo Quiz',
     description: 'Descrição do quiz',
@@ -44,13 +44,13 @@ export default function IntegratedQuizEditor({
         options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
         correctAnswers: [0],
         type: 'single',
-      }
+      },
     ],
     settings: {
       timeLimit: 300,
       randomizeQuestions: false,
       showCorrectAnswers: true,
-    }
+    },
   });
 
   // Testar conexão com Supabase ao carregar
@@ -86,8 +86,8 @@ export default function IntegratedQuizEditor({
       if (loadedQuiz) {
         setQuiz(loadedQuiz);
         toast({
-          title: "Quiz carregado!",
-          description: "Quiz foi carregado com sucesso.",
+          title: 'Quiz carregado!',
+          description: 'Quiz foi carregado com sucesso.',
         });
       }
     } catch (error) {
@@ -121,9 +121,7 @@ export default function IntegratedQuizEditor({
   const updateQuestion = (index: number, field: string, value: any) => {
     setQuiz(prev => ({
       ...prev,
-      questions: prev.questions.map((q, i) => 
-        i === index ? { ...q, [field]: value } : q
-      ),
+      questions: prev.questions.map((q, i) => (i === index ? { ...q, [field]: value } : q)),
     }));
   };
 
@@ -134,7 +132,7 @@ export default function IntegratedQuizEditor({
   const updateSettings = (field: string, value: any) => {
     setQuiz(prev => ({
       ...prev,
-      settings: { ...prev.settings, [field]: value }
+      settings: { ...prev.settings, [field]: value },
     }));
   };
 
@@ -143,13 +141,15 @@ export default function IntegratedQuizEditor({
       <div className="container mx-auto px-4 py-8">
         {/* Status de Conexão */}
         <div className="mb-6 text-center">
-          <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
-            connectionStatus === 'connected' 
-              ? 'bg-green-100 text-green-800' 
-              : connectionStatus === 'error'
-              ? 'bg-red-100 text-red-800'
-              : 'bg-yellow-100 text-yellow-800'
-          }`}>
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
+              connectionStatus === 'connected'
+                ? 'bg-green-100 text-green-800'
+                : connectionStatus === 'error'
+                  ? 'bg-red-100 text-red-800'
+                  : 'bg-yellow-100 text-yellow-800'
+            }`}
+          >
             <Database className="w-4 h-4 mr-2" />
             {connectionStatus === 'connected' && 'Sistema Online'}
             {connectionStatus === 'error' && 'Sistema Offline'}
@@ -159,12 +159,8 @@ export default function IntegratedQuizEditor({
 
         {/* Título do Editor */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Editor de Quiz Integrado
-          </h1>
-          <p className="text-lg text-gray-600">
-            Sistema completo para criação e gestão de quizzes
-          </p>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">Editor de Quiz Integrado</h1>
+          <p className="text-lg text-gray-600">Sistema completo para criação e gestão de quizzes</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -200,7 +196,7 @@ export default function IntegratedQuizEditor({
                     <Input
                       id="title"
                       value={quiz.title}
-                      onChange={(e) => updateQuizInfo('title', e.target.value)}
+                      onChange={e => updateQuizInfo('title', e.target.value)}
                       placeholder="Digite o título do quiz"
                       className="mt-1"
                     />
@@ -211,7 +207,7 @@ export default function IntegratedQuizEditor({
                     <Textarea
                       id="description"
                       value={quiz.description}
-                      onChange={(e) => updateQuizInfo('description', e.target.value)}
+                      onChange={e => updateQuizInfo('description', e.target.value)}
                       placeholder="Descreva o quiz"
                       rows={3}
                       className="mt-1"
@@ -239,7 +235,7 @@ export default function IntegratedQuizEditor({
                                 onClick={() => {
                                   setQuiz(prev => ({
                                     ...prev,
-                                    questions: prev.questions.filter((_, i) => i !== index)
+                                    questions: prev.questions.filter((_, i) => i !== index),
                                   }));
                                 }}
                                 size="sm"
@@ -250,14 +246,14 @@ export default function IntegratedQuizEditor({
                               </Button>
                             )}
                           </div>
-                          
+
                           <Input
                             value={question.question}
-                            onChange={(e) => updateQuestion(index, 'question', e.target.value)}
+                            onChange={e => updateQuestion(index, 'question', e.target.value)}
                             placeholder="Digite a pergunta"
                             className="font-medium"
                           />
-                          
+
                           <div className="space-y-2">
                             <Label className="text-sm text-gray-600">
                               Opções (marque as corretas):
@@ -268,7 +264,7 @@ export default function IntegratedQuizEditor({
                                   type={question.type === 'single' ? 'radio' : 'checkbox'}
                                   name={`question-${question.id}`}
                                   checked={question.correctAnswers.includes(optionIndex)}
-                                  onChange={(e) => {
+                                  onChange={e => {
                                     let newCorrectAnswers;
                                     if (question.type === 'single') {
                                       newCorrectAnswers = e.target.checked ? [optionIndex] : [];
@@ -283,7 +279,7 @@ export default function IntegratedQuizEditor({
                                 />
                                 <Input
                                   value={option}
-                                  onChange={(e) => {
+                                  onChange={e => {
                                     const newOptions = [...question.options];
                                     newOptions[optionIndex] = e.target.value;
                                     updateQuestion(index, 'options', newOptions);
@@ -299,12 +295,7 @@ export default function IntegratedQuizEditor({
                     ))}
                   </div>
 
-                  <Button 
-                    onClick={handleSaveQuiz} 
-                    disabled={isSaving} 
-                    className="w-full"
-                    size="lg"
-                  >
+                  <Button onClick={handleSaveQuiz} disabled={isSaving} className="w-full" size="lg">
                     {isSaving ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -334,13 +325,11 @@ export default function IntegratedQuizEditor({
                     <Input
                       type="number"
                       value={quiz.settings.timeLimit}
-                      onChange={(e) => updateSettings('timeLimit', parseInt(e.target.value) || 0)}
+                      onChange={e => updateSettings('timeLimit', parseInt(e.target.value) || 0)}
                       className="mt-1"
                       min="0"
                     />
-                    <p className="text-sm text-gray-500 mt-1">
-                      0 = sem limite de tempo
-                    </p>
+                    <p className="text-sm text-gray-500 mt-1">0 = sem limite de tempo</p>
                   </div>
 
                   <div className="flex items-center space-x-2">
@@ -348,7 +337,7 @@ export default function IntegratedQuizEditor({
                       type="checkbox"
                       id="randomize"
                       checked={quiz.settings.randomizeQuestions}
-                      onChange={(e) => updateSettings('randomizeQuestions', e.target.checked)}
+                      onChange={e => updateSettings('randomizeQuestions', e.target.checked)}
                       className="text-blue-600"
                     />
                     <Label htmlFor="randomize">Embaralhar perguntas</Label>
@@ -359,7 +348,7 @@ export default function IntegratedQuizEditor({
                       type="checkbox"
                       id="showAnswers"
                       checked={quiz.settings.showCorrectAnswers}
-                      onChange={(e) => updateSettings('showCorrectAnswers', e.target.checked)}
+                      onChange={e => updateSettings('showCorrectAnswers', e.target.checked)}
                       className="text-blue-600"
                     />
                     <Label htmlFor="showAnswers">Mostrar respostas corretas ao final</Label>
@@ -368,9 +357,19 @@ export default function IntegratedQuizEditor({
                   <div className="p-4 bg-blue-50 rounded-lg">
                     <h4 className="font-medium text-blue-900 mb-2">Resumo do Quiz</h4>
                     <div className="space-y-1 text-sm text-blue-700">
-                      <p>• {quiz.questions.length} pergunta{quiz.questions.length !== 1 ? 's' : ''}</p>
-                      <p>• Tipo: {quiz.questions[0]?.type === 'single' ? 'Única escolha' : 'Múltipla escolha'}</p>
-                      <p>• Tempo: {quiz.settings.timeLimit > 0 ? `${quiz.settings.timeLimit}s` : 'Ilimitado'}</p>
+                      <p>
+                        • {quiz.questions.length} pergunta{quiz.questions.length !== 1 ? 's' : ''}
+                      </p>
+                      <p>
+                        • Tipo:{' '}
+                        {quiz.questions[0]?.type === 'single'
+                          ? 'Única escolha'
+                          : 'Múltipla escolha'}
+                      </p>
+                      <p>
+                        • Tempo:{' '}
+                        {quiz.settings.timeLimit > 0 ? `${quiz.settings.timeLimit}s` : 'Ilimitado'}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -395,14 +394,18 @@ export default function IntegratedQuizEditor({
                   </div>
                 ) : savedQuizzes.length > 0 ? (
                   <div className="space-y-3">
-                    {savedQuizzes.map((savedQuiz) => (
-                      <div key={savedQuiz.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                    {savedQuizzes.map(savedQuiz => (
+                      <div
+                        key={savedQuiz.id}
+                        className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                      >
                         <div className="flex-1">
                           <h3 className="font-medium">{savedQuiz.title}</h3>
                           <p className="text-sm text-gray-600">{savedQuiz.description}</p>
                           <p className="text-xs text-gray-400 mt-1">
-                            {savedQuiz.questions_count} pergunta{savedQuiz.questions_count !== 1 ? 's' : ''} • 
-                            Criado em {new Date(savedQuiz.created_at).toLocaleDateString()}
+                            {savedQuiz.questions_count} pergunta
+                            {savedQuiz.questions_count !== 1 ? 's' : ''} • Criado em{' '}
+                            {new Date(savedQuiz.created_at).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="flex gap-2">
@@ -450,10 +453,15 @@ export default function IntegratedQuizEditor({
                   <div className="p-4 bg-blue-50 rounded-lg">
                     <h3 className="font-medium text-blue-800 mb-2">Status da Conexão</h3>
                     <div className="flex items-center gap-2">
-                      <div className={`w-3 h-3 rounded-full ${
-                        connectionStatus === 'connected' ? 'bg-green-500' :
-                        connectionStatus === 'error' ? 'bg-red-500' : 'bg-yellow-500'
-                      }`} />
+                      <div
+                        className={`w-3 h-3 rounded-full ${
+                          connectionStatus === 'connected'
+                            ? 'bg-green-500'
+                            : connectionStatus === 'error'
+                              ? 'bg-red-500'
+                              : 'bg-yellow-500'
+                        }`}
+                      />
                       <span className="text-blue-700">
                         {connectionStatus === 'connected' && 'Sistema funcionando normalmente'}
                         {connectionStatus === 'error' && 'Usando armazenamento local'}
@@ -461,7 +469,7 @@ export default function IntegratedQuizEditor({
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 bg-gray-50 rounded-lg">
                     <h3 className="font-medium mb-3">Funcionalidades do Editor</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

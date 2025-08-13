@@ -10,11 +10,11 @@ import { Database } from "../types/supabase";
 // CONFIGURAÇÃO
 // =============================================================================
 
-const SUPABASE_URL =
-  import.meta.env.VITE_SUPABASE_URL || "https://txqljpitotmcxntprxiu.supabase.co";
-const SUPABASE_ANON_KEY =
+const supabaseUrl =
+  import.meta.env.VITE_SUPABASE_URL || "https://pwtjuuhchtbzttrzoutw.supabase.co";
+const supabaseKey =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4cWxqcGl0b3RtY3hudHByeGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjI3MzQsImV4cCI6MjA2NTQzODczNH0.rHGZV47KUnSJ0fDNXbL-OjuB50BsuzT2IeO_LL-P8ok";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dGp1dWhjaHRienR0cnpvdXR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNDQ0NjAsImV4cCI6MjA2NzkyMDQ2MH0.EP0qLHBZK8nyxcod0FEVRQln4R_yVSWEGQwuIbJfP_w";
 
 // =============================================================================
 // CLIENTE PRINCIPAL
