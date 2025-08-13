@@ -271,17 +271,52 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
         try {
           console.log(`🔄 Carregando template JSON para ${stageId}...`);
-          const blocks = await TemplateManager.loadStepBlocks(stageId);
+          const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
 
-          if (blocks && blocks.length > 0) {
+          const hasHeader = (loadedBlocks || []).some(
+            b => b.type === 'quiz-intro-header' || b.type === 'header'
+          );
+
+          const headerBlock: EditorBlock = {
+            id: `${stageId}-block-quiz-intro-header-1`,
+            type: 'quiz-intro-header' as any,
+            content: {
+              title: 'Título do Header',
+              subtitle: 'Subtítulo opcional',
+              type: 'hero',
+              alignment: 'center',
+            } as any,
+            order: 1,
+            properties: {
+              title: 'Título do Header',
+              subtitle: 'Subtítulo opcional',
+              type: 'hero',
+              alignment: 'center',
+            },
+          };
+
+          const adjustedLoaded: EditorBlock[] = (loadedBlocks || []).map((b, idx) => ({
+            ...b,
+            order: hasHeader ? b.order ?? idx + 1 : idx + 2,
+          }));
+
+          const withHeader: EditorBlock[] = hasHeader
+            ? adjustedLoaded
+            : [headerBlock, ...adjustedLoaded];
+
+          if (withHeader && withHeader.length > 0) {
             setStageBlocks(prev => ({
               ...prev,
-              [stageId]: blocks, // ✅ Usar blocos diretamente - já convertidos pelo TemplateManager
+              [stageId]: withHeader,
             }));
-            console.log(`✅ Template ${stageId} carregado: ${blocks.length} blocos`);
-            console.log(`📦 Tipos de blocos: ${blocks.map(b => b.type).join(', ')}`);
+            console.log(`✅ Template ${stageId} carregado: ${withHeader.length} blocos`);
+            console.log(`📦 Tipos de blocos: ${withHeader.map(b => b.type).join(', ')}`);
           } else {
-            console.warn(`⚠️ Nenhum bloco encontrado para ${stageId}`);
+            console.warn(`⚠️ Nenhum bloco encontrado para ${stageId}, inserindo Header padrão`);
+            setStageBlocks(prev => ({
+              ...prev,
+              [stageId]: [headerBlock],
+            }));
           }
         } catch (error) {
           console.error(`❌ Erro ao carregar ${stageId}:`, error);
@@ -422,16 +457,46 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       try {
         // Carregar blocos do template JSON e aplicar no estado
-        const blocks = await TemplateManager.loadStepBlocks(stageId);
+        const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
 
-        if (blocks && blocks.length > 0) {
+        // ✅ Garantir Header padrão no topo para todas as etapas
+        const hasHeader = (loadedBlocks || []).some(
+          b => b.type === 'quiz-intro-header' || b.type === 'header'
+        );
+
+        const headerBlock: EditorBlock = {
+          id: `${stageId}-block-quiz-intro-header-1`,
+          type: 'quiz-intro-header' as any,
+          content: {
+            title: 'Título do Header',
+            subtitle: 'Subtítulo opcional',
+            type: 'hero',
+            alignment: 'center',
+          } as any,
+          order: 1,
+          properties: {
+            title: 'Título do Header',
+            subtitle: 'Subtítulo opcional',
+            type: 'hero',
+            alignment: 'center',
+          },
+        };
+
+        const adjustedLoaded: EditorBlock[] = (loadedBlocks || []).map((b, idx) => ({
+          ...b,
+          order: hasHeader ? b.order ?? idx + 1 : idx + 2,
+        }));
+
+        const withHeader: EditorBlock[] = hasHeader ? adjustedLoaded : [headerBlock, ...adjustedLoaded];
+
+        if (withHeader && withHeader.length > 0) {
           setStageBlocks(prev => ({
             ...prev,
-            [stageId]: blocks, // ✅ Usar blocos diretamente - já convertidos pelo TemplateManager
+            [stageId]: withHeader, // ✅ Usar blocos com Header garantido
           }));
 
-          console.log(`✅ Template ${stageId} carregado dinamicamente: ${blocks.length} blocos`);
-          console.log(`📦 Tipos de blocos: ${blocks.map(b => b.type).join(', ')}`);
+          console.log(`✅ Template ${stageId} carregado dinamicamente: ${withHeader.length} blocos`);
+          console.log(`📦 Tipos de blocos: ${withHeader.map(b => b.type).join(', ')}`);
 
           // Atualizar metadados da etapa
           setStages(prev =>
@@ -441,13 +506,19 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                     ...s,
                     metadata: {
                       ...s.metadata,
-                      blocksCount: blocks.length,
+                      blocksCount: withHeader.length,
                       lastModified: new Date(),
                     },
                   }
                 : s
             )
           );
+        } else {
+          // Fallback: inserir somente header
+          setStageBlocks(prev => ({
+            ...prev,
+            [stageId]: [headerBlock],
+          }));
         }
 
         console.log(`✅ EditorContext: Template carregado para etapa ${stepNumber}`);
