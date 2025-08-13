@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Settings, X, Eye } from 'lucide-react';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
+import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
+import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
 import { getBlockEditorConfig } from './PropertyEditorRegistry';
 import { cn } from '@/lib/utils';
 
@@ -67,8 +69,10 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
 
   // Renderizar editor específico baseado no tipo
   const renderEditor = () => {
-    // Para tipos válidos do BlockType
-    switch (selectedBlock.type) {
+    const blockType = selectedBlock.type;
+    
+    // Editores já implementados
+    switch (blockType) {
       case 'header':
         return (
           <HeaderPropertyEditor
@@ -79,8 +83,47 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         );
       
       default:
-        // Para todos os outros tipos (incluindo question, options, navigation)
-        const isKnownType = ['question', 'options', 'text', 'button', 'navigation'].includes(selectedBlock.type);
+        // Mapeamento flexível para tipos relacionados a questões
+        const isQuestionType = blockType.includes('question') || 
+                              blockType === 'quiz-question-inline' ||
+                              blockType === 'step01-intro' ||
+                              blockType === 'quiz-intro-header';
+        
+        if (isQuestionType) {
+          return (
+            <QuestionPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+        
+        // Mapeamento flexível para tipos relacionados a opções
+        const isOptionsType = blockType.includes('options') || 
+                             blockType === 'options-grid' ||
+                             blockType.includes('result') ||
+                             blockType.includes('cta');
+        
+        if (isOptionsType) {
+          return (
+            <OptionsPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+        
+        // Tipos conhecidos mas não implementados
+        const knownTypes = [
+          'text', 'button', 'headline', 'image', 'spacer',
+          'text-inline', 'image-inline', 'button-inline',
+          'testimonial', 'pricing', 'faq', 'video'
+        ];
+        
+        const isKnownType = knownTypes.includes(blockType) || 
+                           knownTypes.some(type => blockType.includes(type));
         
         if (isKnownType) {
           return (
@@ -88,13 +131,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="h-5 w-5 text-[#B89B7A]" />
-                  Propriedades: {selectedBlock.type}
+                  Propriedades: {blockType}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <p className="text-sm text-yellow-800">
-                    ⚠️ Editor para <strong>{selectedBlock.type}</strong> ainda não implementado.
+                    ⚠️ Editor para <strong>{blockType}</strong> ainda não implementado.
                     <br />
                     <span className="text-xs text-yellow-600 mt-1 block">
                       Será implementado na próxima fase do desenvolvimento.
@@ -114,12 +157,12 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-sm text-red-800">
-                    ❌ Tipo de bloco <strong>"{selectedBlock.type}"</strong> não reconhecido.
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    📋 Tipo de bloco <strong>"{blockType}"</strong> detectado.
                     <br />
-                    <span className="text-xs text-red-600 mt-1 block">
-                      Verifique se o tipo está configurado no PropertyEditorRegistry.
+                    <span className="text-xs text-blue-600 mt-1 block">
+                      Editor genérico será implementado em breve. Por enquanto, use o painel clássico.
                     </span>
                   </p>
                 </div>
