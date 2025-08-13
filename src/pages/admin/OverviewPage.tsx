@@ -27,11 +27,11 @@ import {
 
 // Import dos novos ícones temáticos
 import {
-  OfferPageIcon,
-  MarketingQuizIcon,
+  BackgroundPattern,
   DigitalProductIcon,
   EcommerceIcon,
-  BackgroundPattern,
+  MarketingQuizIcon,
+  OfferPageIcon,
 } from '@/components/dashboard/TemplateIcons';
 
 const OverviewPage: React.FC = () => {
@@ -294,12 +294,13 @@ const OverviewPage: React.FC = () => {
             <CardContent className="space-y-4">
               {/* Quiz Templates Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
                 {/* Template 1: Página de Oferta */}
-                <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                     onClick={() => window.open('/step/21', '_blank')}>
+                <div
+                  className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  onClick={() => window.open('/step/21', '_blank')}
+                >
                   <BackgroundPattern variant="primary" />
-                  
+
                   <div className="relative">
                     <div className="flex items-start justify-between mb-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A] to-[#432818] rounded-xl flex items-center justify-center shadow-md">
@@ -309,14 +310,12 @@ const OverviewPage: React.FC = () => {
                         Demo
                       </Badge>
                     </div>
-                    
-                    <h3 className="font-bold text-[#432818] text-lg mb-1">
-                      Página de Oferta
-                    </h3>
+
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">Página de Oferta</h3>
                     <p className="text-sm text-[#6B4F43] mb-3">
                       Sistema modular com 21 etapas otimizadas para conversão
                     </p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
                         <span className="flex items-center">
@@ -324,11 +323,14 @@ const OverviewPage: React.FC = () => {
                           JSON
                         </span>
                         <span className="flex items-center">
-                          <Star className="h-3 w-3 mr-1" />
-                          7 Módulos
+                          <Star className="h-3 w-3 mr-1" />7 Módulos
                         </span>
                       </div>
-                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3"
+                      >
                         <PlayCircle className="h-3 w-3 mr-1" />
                         Testar
                       </Button>
@@ -339,7 +341,7 @@ const OverviewPage: React.FC = () => {
                 {/* Template 2: Quiz de Marketing */}
                 <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
                   <BackgroundPattern variant="secondary" />
-                  
+
                   <div className="relative">
                     <div className="flex items-start justify-between mb-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A] to-[#A08766] rounded-xl flex items-center justify-center shadow-md">
@@ -349,14 +351,12 @@ const OverviewPage: React.FC = () => {
                         Ativo
                       </Badge>
                     </div>
-                    
-                    <h3 className="font-bold text-[#432818] text-lg mb-1">
-                      Quiz de Personalidade
-                    </h3>
+
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">Quiz de Personalidade</h3>
                     <p className="text-sm text-[#6B4F43] mb-3">
                       Segmentação inteligente para campanhas de marketing
                     </p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
                         <span className="flex items-center">
@@ -368,7 +368,11 @@ const OverviewPage: React.FC = () => {
                           38% CVR
                         </span>
                       </div>
-                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3"
+                      >
                         <Eye className="h-3 w-3 mr-1" />
                         Ver
                       </Button>
@@ -379,7 +383,7 @@ const OverviewPage: React.FC = () => {
                 {/* Template 3: Funil de Vendas */}
                 <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
                   <BackgroundPattern variant="accent" />
-                  
+
                   <div className="relative">
                     <div className="flex items-start justify-between mb-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A] to-[#A08766] rounded-xl flex items-center justify-center shadow-md">
@@ -389,14 +393,12 @@ const OverviewPage: React.FC = () => {
                         Ativo
                       </Badge>
                     </div>
-                    
-                    <h3 className="font-bold text-[#432818] text-lg mb-1">
-                      Produto Digital
-                    </h3>
+
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">Produto Digital</h3>
                     <p className="text-sm text-[#6B4F43] mb-3">
                       Funil otimizado para vendas de infoprodutos
                     </p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
                         <span className="flex items-center">
@@ -408,7 +410,11 @@ const OverviewPage: React.FC = () => {
                           42% CVR
                         </span>
                       </div>
-                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3"
+                      >
                         <Eye className="h-3 w-3 mr-1" />
                         Ver
                       </Button>
@@ -419,7 +425,7 @@ const OverviewPage: React.FC = () => {
                 {/* Template 4: E-commerce */}
                 <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
                   <BackgroundPattern variant="primary" />
-                  
+
                   <div className="relative">
                     <div className="flex items-start justify-between mb-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A]/80 to-[#A08766] rounded-xl flex items-center justify-center shadow-md">
@@ -429,14 +435,14 @@ const OverviewPage: React.FC = () => {
                         Pausado
                       </Badge>
                     </div>
-                    
+
                     <h3 className="font-bold text-[#432818] text-lg mb-1">
                       Segmentação E-commerce
                     </h3>
                     <p className="text-sm text-[#6B4F43] mb-3">
                       Quiz para categorizar preferências de produtos
                     </p>
-                    
+
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
                         <span className="flex items-center">
@@ -448,20 +454,23 @@ const OverviewPage: React.FC = () => {
                           29% CVR
                         </span>
                       </div>
-                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3"
+                      >
                         <Eye className="h-3 w-3 mr-1" />
                         Ver
                       </Button>
                     </div>
                   </div>
                 </div>
-
               </div>
 
               {/* Quick Actions */}
               <div className="flex items-center justify-center pt-4 border-t border-[#B89B7A]/10">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
                   onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
                 >
