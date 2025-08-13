@@ -58,7 +58,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     return (
       <Card className={cn('h-full flex flex-col min-h-[400px]', className)}>
         <CardHeader>
-          <CardTitle>⚠️ Nenhuma etapa disponível</CardTitle>
+          <CardTitle>Nenhuma etapa disponível</CardTitle>
         </CardHeader>
         <CardContent>
           <p>Recarregue a página ou verifique a configuração.</p>
@@ -77,7 +77,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     <Card className={cn('h-full flex flex-col min-h-[400px]', className)}>
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          ✅ Etapas do Funil
+          Etapas do Funil
           <Badge variant="secondary" className="ml-auto">
             {stageCount}/21
           </Badge>

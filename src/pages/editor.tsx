@@ -158,7 +158,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
                 <div className="text-sm text-stone-500">
                   {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                  {stageCount !== 1 ? 's' : ''} • 🆕 Novo Painel Ativo
+                  {stageCount !== 1 ? 's' : ''} • Novo Painel Ativo
                 </div>
               </div>
             </div>
@@ -207,7 +207,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   <div className="text-center">
                     <p className="text-sm">Selecione um bloco para editar propriedades</p>
                     <p className="text-xs text-stone-400 mt-1">
-                      🆕 Novo Painel de Propriedades • Editores Específicos
+                      Novo Painel de Propriedades • Editores Específicos
                     </p>
                   </div>
                 </div>
