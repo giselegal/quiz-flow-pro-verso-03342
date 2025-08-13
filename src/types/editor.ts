@@ -159,6 +159,140 @@ export interface FAQItem {
   answer: string;
 }
 
+// ===== INTERFACES ESPECÍFICAS POR TIPO DE BLOCO =====
+
+export interface HeadlineContent extends EditableContent {
+  title: string;
+  subtitle?: string;
+  fontSize?: number;
+  fontWeight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold';
+  textAlign?: 'left' | 'center' | 'right';
+  color?: string;
+  level?: 1 | 2 | 3 | 4 | 5 | 6; // H1-H6
+  marginTop?: number;
+  marginBottom?: number;
+}
+
+export interface TextContent extends EditableContent {
+  text: string;
+  textType?: 'paragraph' | 'lead' | 'small' | 'caption';
+  fontSize?: number;
+  fontWeight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
+  color?: string;
+  backgroundColor?: string;
+  isMarkdown?: boolean;
+  maxLength?: number;
+  placeholder?: string;
+}
+
+export interface TestimonialContent extends EditableContent {
+  quote: string;
+  author: string;
+  authorTitle?: string;
+  authorImage?: string;
+  rating?: number;
+  company?: string;
+  showQuotes?: boolean;
+  layout?: 'card' | 'minimal' | 'detailed';
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+export interface PricingContent extends EditableContent {
+  title: string;
+  price: string | number;
+  currency?: string;
+  period?: 'month' | 'year' | 'one-time' | 'custom';
+  customPeriod?: string;
+  features: string[];
+  ctaText?: string;
+  ctaUrl?: string;
+  isPopular?: boolean;
+  popularLabel?: string;
+  description?: string;
+  priceColor?: string;
+  ctaColor?: string;
+}
+
+export interface VideoContent extends EditableContent {
+  videoUrl: string;
+  thumbnailUrl?: string;
+  autoplay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  aspectRatio?: '16:9' | '4:3' | '1:1' | 'custom';
+  width?: number;
+  height?: number;
+  caption?: string;
+}
+
+export interface BenefitsContent extends EditableContent {
+  title?: string;
+  benefits: Array<{
+    id: string;
+    title: string;
+    description: string;
+    icon?: string;
+  }>;
+  layout?: 'list' | 'grid' | 'cards';
+  showIcons?: boolean;
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+export interface FAQContent extends EditableContent {
+  title?: string;
+  faqs: FAQItem[];
+  allowMultipleOpen?: boolean;
+  showSearch?: boolean;
+  backgroundColor?: string;
+  borderColor?: string;
+}
+
+export interface CTAContent extends EditableContent {
+  title: string;
+  description?: string;
+  buttonText: string;
+  buttonUrl: string;
+  buttonTarget?: '_self' | '_blank' | '_parent' | '_top';
+  buttonStyle?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  backgroundColor?: string;
+  textColor?: string;
+  buttonColor?: string;
+  buttonTextColor?: string;
+  alignment?: 'left' | 'center' | 'right';
+}
+
+export interface ImageContent extends EditableContent {
+  url: string;
+  alt: string;
+  caption?: string;
+  width?: number;
+  height?: number;
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  borderRadius?: number;
+  showCaption?: boolean;
+  lightbox?: boolean;
+  link?: string;
+  linkTarget?: '_self' | '_blank';
+}
+
+// ===== UNIÃO DE TODOS OS TIPOS DE CONTENT =====
+
+export type BlockContent = 
+  | EditableContent      // Para tipos não especificados ainda
+  | HeadlineContent
+  | TextContent
+  | TestimonialContent
+  | PricingContent
+  | VideoContent
+  | BenefitsContent
+  | FAQContent
+  | CTAContent
+  | ImageContent;
+
 export interface EditableContent {
   title?: string;
 
@@ -277,6 +411,79 @@ export interface EditableContent {
   [key: string]: any;
 }
 
+// ===== INTERFACE BLOCK COM TIPAGEM CONDICIONAL =====
+
+export interface BaseBlock {
+  id: string;
+  order: number;
+  properties?: Record<string, any>;
+}
+
+// Interface Block específica por tipo
+export interface Block extends BaseBlock {
+  type: BlockType;
+  content: BlockContent;
+}
+
+// Interfaces especializadas para tipos específicos
+export interface HeadlineBlock extends BaseBlock {
+  type: 'headline';
+  content: HeadlineContent;
+}
+
+export interface TextBlock extends BaseBlock {
+  type: 'text';
+  content: TextContent;
+}
+
+export interface TestimonialBlock extends BaseBlock {
+  type: 'testimonial' | 'testimonials' | 'testimonial-card-inline' | 'testimonialsSection';
+  content: TestimonialContent;
+}
+
+export interface PricingBlock extends BaseBlock {
+  type: 'pricing' | 'pricing-card-inline';
+  content: PricingContent;
+}
+
+export interface VideoBlock extends BaseBlock {
+  type: 'video';
+  content: VideoContent;
+}
+
+export interface BenefitsBlock extends BaseBlock {
+  type: 'benefits' | 'benefitsList';
+  content: BenefitsContent;
+}
+
+export interface FAQBlock extends BaseBlock {
+  type: 'faq';
+  content: FAQContent;
+}
+
+export interface CTABlock extends BaseBlock {
+  type: 'cta' | 'offerHero' | 'quiz-offer-cta-inline';
+  content: CTAContent;
+}
+
+export interface ImageBlock extends BaseBlock {
+  type: 'image' | 'image-inline' | 'image-display-inline';
+  content: ImageContent;
+}
+
+// União de todos os tipos de blocos específicos
+export type TypedBlock = 
+  | HeadlineBlock
+  | TextBlock
+  | TestimonialBlock
+  | PricingBlock
+  | VideoBlock
+  | BenefitsBlock
+  | FAQBlock
+  | CTABlock
+  | ImageBlock
+  | Block; // Fallback para tipos não especificados
+
 export interface Block {
   id: string;
 
@@ -288,6 +495,61 @@ export interface Block {
 
   properties?: Record<string, any>;
 }
+
+export type EditorBlock = Block;
+
+// ===== UTILITÁRIOS DE TIPAGEM =====
+
+// Type Guards para verificar tipos específicos de blocos
+export const isHeadlineBlock = (block: Block): block is HeadlineBlock => {
+  return block.type === 'headline';
+};
+
+export const isTextBlock = (block: Block): block is TextBlock => {
+  return block.type === 'text';
+};
+
+export const isTestimonialBlock = (block: Block): block is TestimonialBlock => {
+  return ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(block.type);
+};
+
+export const isPricingBlock = (block: Block): block is PricingBlock => {
+  return ['pricing', 'pricing-card-inline'].includes(block.type);
+};
+
+export const isVideoBlock = (block: Block): block is VideoBlock => {
+  return block.type === 'video';
+};
+
+export const isBenefitsBlock = (block: Block): block is BenefitsBlock => {
+  return ['benefits', 'benefitsList'].includes(block.type);
+};
+
+export const isFAQBlock = (block: Block): block is FAQBlock => {
+  return block.type === 'faq';
+};
+
+export const isCTABlock = (block: Block): block is CTABlock => {
+  return ['cta', 'offerHero', 'quiz-offer-cta-inline'].includes(block.type);
+};
+
+export const isImageBlock = (block: Block): block is ImageBlock => {
+  return ['image', 'image-inline', 'image-display-inline'].includes(block.type);
+};
+
+// Função para obter o tipo de content baseado no tipo do bloco
+export const getContentType = (blockType: BlockType): string => {
+  if (blockType === 'headline') return 'HeadlineContent';
+  if (blockType === 'text') return 'TextContent';
+  if (['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(blockType)) return 'TestimonialContent';
+  if (['pricing', 'pricing-card-inline'].includes(blockType)) return 'PricingContent';
+  if (blockType === 'video') return 'VideoContent';
+  if (['benefits', 'benefitsList'].includes(blockType)) return 'BenefitsContent';
+  if (blockType === 'faq') return 'FAQContent';
+  if (['cta', 'offerHero', 'quiz-offer-cta-inline'].includes(blockType)) return 'CTAContent';
+  if (['image', 'image-inline', 'image-display-inline'].includes(blockType)) return 'ImageContent';
+  return 'EditableContent';
+};
 
 export type EditorBlock = Block;
 

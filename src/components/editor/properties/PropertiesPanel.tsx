@@ -9,6 +9,8 @@ import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
 import { TextPropertyEditor } from './editors/TextPropertyEditor';
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
 import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
+import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
+import { PricingPropertyEditor } from './editors/PricingPropertyEditor';
 import { getBlockEditorConfig } from './PropertyEditorRegistry';
 import { cn } from '@/lib/utils';
 
@@ -123,12 +125,27 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                           blockType === 'headline' ||
                           blockType.includes('text') ||
                           blockType.includes('heading') ||
-                          blockType === 'testimonial' ||
                           blockType.includes('title');
 
         if (isTextType) {
           return (
             <TextPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        // Mapeamento específico para testimonials com tipagem
+        const isTestimonialType = blockType === 'testimonial' ||
+                                 blockType === 'testimonials' ||
+                                 blockType === 'testimonial-card-inline' ||
+                                 blockType === 'testimonialsSection';
+
+        if (isTestimonialType) {
+          return (
+            <TestimonialPropertyEditor
               block={selectedBlock}
               onUpdate={handleUpdate}
               isPreviewMode={isPreviewMode}

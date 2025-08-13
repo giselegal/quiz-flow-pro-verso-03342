@@ -41,7 +41,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                                   block.content.items.length > 0 && 
                                   typeof block.content.items[0] === 'object' && 
                                   'label' in block.content.items[0]) 
-                                  ? block.content.items as NavigationItem[]
+                                  ? (block.content.items as unknown) as NavigationItem[]
                                   : [
                                       { id: '1', label: 'Home', href: '/', icon: 'home' },
                                       { id: '2', label: 'Sobre', href: '/sobre', icon: 'info' }
