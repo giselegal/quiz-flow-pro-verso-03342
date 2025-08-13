@@ -1,16 +1,20 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { DollarSign, Eye, Plus, Trash2, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { Block, PricingContent, isPricingBlock } from '@/types/editor';
-import { PropertyNumber } from '../components/PropertyNumber';
+import { DollarSign, Eye, Plus, Star, Trash2 } from 'lucide-react';
+import React from 'react';
 
 interface PricingPropertyEditorProps {
   block: Block;
@@ -21,7 +25,7 @@ interface PricingPropertyEditorProps {
 export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
   block,
   onUpdate,
-  isPreviewMode = false
+  isPreviewMode = false,
 }) => {
   // Verificar se é realmente um bloco de pricing com tipagem específica
   if (!isPricingBlock(block)) {
@@ -29,8 +33,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
       <Card className="h-full">
         <CardContent className="p-4">
           <div className="text-red-600 text-sm">
-            Erro: Este editor é específico para blocos de pricing.
-            Tipo recebido: {block.type}
+            Erro: Este editor é específico para blocos de pricing. Tipo recebido: {block.type}
           </div>
         </CardContent>
       </Card>
@@ -39,7 +42,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
 
   // Tipagem específica garantida
   const content = block.content as PricingContent;
-  
+
   const title = content.title || '';
   const price = content.price || '';
   const currency = content.currency || 'R$';
@@ -58,8 +61,8 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
     const updates = {
       content: {
         ...content,
-        [field]: value
-      }
+        [field]: value,
+      },
     };
     onUpdate(updates);
   };
@@ -68,7 +71,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
     { value: 'month', label: 'por mês', display: '/mês' },
     { value: 'year', label: 'por ano', display: '/ano' },
     { value: 'one-time', label: 'pagamento único', display: 'único' },
-    { value: 'custom', label: 'personalizado', display: customPeriod || '/período' }
+    { value: 'custom', label: 'personalizado', display: customPeriod || '/período' },
   ];
 
   const handleFeaturesUpdate = (newFeatures: string[]) => {
@@ -92,8 +95,11 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
   };
 
   const renderPreview = () => {
-    const displayPeriod = period === 'custom' ? customPeriod : periodOptions.find(p => p.value === period)?.display || '';
-    
+    const displayPeriod =
+      period === 'custom'
+        ? customPeriod
+        : periodOptions.find(p => p.value === period)?.display || '';
+
     return (
       <div className="max-w-sm mx-auto">
         <div className="border border-gray-200 rounded-lg overflow-hidden bg-white relative">
@@ -109,16 +115,10 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
 
           <div className="p-6">
             {/* Title */}
-            <h3 className="text-xl font-bold text-center mb-2">
-              {title || 'Nome do Plano'}
-            </h3>
+            <h3 className="text-xl font-bold text-center mb-2">{title || 'Nome do Plano'}</h3>
 
             {/* Description */}
-            {description && (
-              <p className="text-gray-600 text-center text-sm mb-4">
-                {description}
-              </p>
-            )}
+            {description && <p className="text-gray-600 text-center text-sm mb-4">{description}</p>}
 
             {/* Price */}
             <div className="text-center mb-6">
@@ -138,8 +138,18 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
                   {features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-2 text-sm">
                       <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                        <svg className="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        <svg
+                          className="w-3 h-3 text-green-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
                         </svg>
                       </div>
                       <span>{feature || `Recurso ${index + 1}`}</span>
@@ -194,7 +204,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
           )}
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Informações Básicas */}
         <div className="space-y-4">
@@ -203,7 +213,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
             <Input
               id="title"
               value={title}
-              onChange={(e) => handleContentUpdate('title', e.target.value)}
+              onChange={e => handleContentUpdate('title', e.target.value)}
               placeholder="Plano Básico, Premium, etc."
             />
           </div>
@@ -213,7 +223,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
             <Input
               id="description"
               value={description}
-              onChange={(e) => handleContentUpdate('description', e.target.value)}
+              onChange={e => handleContentUpdate('description', e.target.value)}
               placeholder="Breve descrição do plano"
             />
           </div>
@@ -224,11 +234,14 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
         {/* Preço */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Preço</h3>
-          
+
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="currency">Moeda</Label>
-              <Select value={currency} onValueChange={(value: string) => handleContentUpdate('currency', value)}>
+              <Select
+                value={currency}
+                onValueChange={(value: string) => handleContentUpdate('currency', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -246,7 +259,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
               <Input
                 id="price"
                 value={price}
-                onChange={(e) => handleContentUpdate('price', e.target.value)}
+                onChange={e => handleContentUpdate('price', e.target.value)}
                 placeholder="99"
                 type="text"
               />
@@ -254,7 +267,12 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="period">Período</Label>
-              <Select value={period} onValueChange={(value: 'month' | 'year' | 'one-time' | 'custom') => handleContentUpdate('period', value)}>
+              <Select
+                value={period}
+                onValueChange={(value: 'month' | 'year' | 'one-time' | 'custom') =>
+                  handleContentUpdate('period', value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -275,7 +293,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
               <Input
                 id="customPeriod"
                 value={customPeriod}
-                onChange={(e) => handleContentUpdate('customPeriod', e.target.value)}
+                onChange={e => handleContentUpdate('customPeriod', e.target.value)}
                 placeholder="/trimestre, /semestre, etc."
               />
             </div>
@@ -287,13 +305,13 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
         {/* Recursos/Features */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Recursos do Plano</h3>
-          
+
           <div className="space-y-3">
             {features.map((feature, index) => (
               <div key={index} className="flex gap-2">
                 <Input
                   value={feature}
-                  onChange={(e) => updateFeature(index, e.target.value)}
+                  onChange={e => updateFeature(index, e.target.value)}
                   placeholder={`Recurso ${index + 1}`}
                   className="flex-1"
                 />
@@ -326,14 +344,14 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
         {/* CTA */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Call to Action</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="ctaText">Texto do Botão</Label>
               <Input
                 id="ctaText"
                 value={ctaText}
-                onChange={(e) => handleContentUpdate('ctaText', e.target.value)}
+                onChange={e => handleContentUpdate('ctaText', e.target.value)}
                 placeholder="Escolher Plano"
               />
             </div>
@@ -343,7 +361,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
               <Input
                 id="ctaUrl"
                 value={ctaUrl}
-                onChange={(e) => handleContentUpdate('ctaUrl', e.target.value)}
+                onChange={e => handleContentUpdate('ctaUrl', e.target.value)}
                 placeholder="https://exemplo.com/checkout"
               />
             </div>
@@ -355,7 +373,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
         {/* Configurações */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Configurações</h3>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="isPopular">Plano Popular</Label>
@@ -364,7 +382,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
             <Switch
               id="isPopular"
               checked={isPopular}
-              onCheckedChange={(checked) => handleContentUpdate('isPopular', checked)}
+              onCheckedChange={checked => handleContentUpdate('isPopular', checked)}
             />
           </div>
 
@@ -374,7 +392,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
               <Input
                 id="popularLabel"
                 value={popularLabel}
-                onChange={(e) => handleContentUpdate('popularLabel', e.target.value)}
+                onChange={e => handleContentUpdate('popularLabel', e.target.value)}
                 placeholder="Mais Popular, Recomendado, etc."
               />
             </div>
@@ -386,7 +404,7 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
         {/* Cores */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Cores</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="priceColor">Cor do Preço</Label>
@@ -395,12 +413,12 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
                   type="color"
                   id="priceColor"
                   value={priceColor}
-                  onChange={(e) => handleContentUpdate('priceColor', e.target.value)}
+                  onChange={e => handleContentUpdate('priceColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={priceColor}
-                  onChange={(e) => handleContentUpdate('priceColor', e.target.value)}
+                  onChange={e => handleContentUpdate('priceColor', e.target.value)}
                   placeholder="#B89B7A"
                   className="flex-1"
                 />
@@ -414,12 +432,12 @@ export const PricingPropertyEditor: React.FC<PricingPropertyEditorProps> = ({
                   type="color"
                   id="ctaColor"
                   value={ctaColor}
-                  onChange={(e) => handleContentUpdate('ctaColor', e.target.value)}
+                  onChange={e => handleContentUpdate('ctaColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={ctaColor}
-                  onChange={(e) => handleContentUpdate('ctaColor', e.target.value)}
+                  onChange={e => handleContentUpdate('ctaColor', e.target.value)}
                   placeholder="#B89B7A"
                   className="flex-1"
                 />

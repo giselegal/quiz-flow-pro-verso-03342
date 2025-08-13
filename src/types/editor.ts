@@ -281,8 +281,8 @@ export interface ImageContent extends EditableContent {
 
 // ===== UNIÃO DE TODOS OS TIPOS DE CONTENT =====
 
-export type BlockContent = 
-  | EditableContent      // Para tipos não especificados ainda
+export type BlockContent =
+  | EditableContent // Para tipos não especificados ainda
   | HeadlineContent
   | TextContent
   | TestimonialContent
@@ -472,7 +472,7 @@ export interface ImageBlock extends BaseBlock {
 }
 
 // União de todos os tipos de blocos específicos
-export type TypedBlock = 
+export type TypedBlock =
   | HeadlineBlock
   | TextBlock
   | TestimonialBlock
@@ -510,7 +510,9 @@ export const isTextBlock = (block: Block): block is TextBlock => {
 };
 
 export const isTestimonialBlock = (block: Block): block is TestimonialBlock => {
-  return ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(block.type);
+  return ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(
+    block.type
+  );
 };
 
 export const isPricingBlock = (block: Block): block is PricingBlock => {
@@ -541,7 +543,12 @@ export const isImageBlock = (block: Block): block is ImageBlock => {
 export const getContentType = (blockType: BlockType): string => {
   if (blockType === 'headline') return 'HeadlineContent';
   if (blockType === 'text') return 'TextContent';
-  if (['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(blockType)) return 'TestimonialContent';
+  if (
+    ['testimonial', 'testimonials', 'testimonial-card-inline', 'testimonialsSection'].includes(
+      blockType
+    )
+  )
+    return 'TestimonialContent';
   if (['pricing', 'pricing-card-inline'].includes(blockType)) return 'PricingContent';
   if (blockType === 'video') return 'VideoContent';
   if (['benefits', 'benefitsList'].includes(blockType)) return 'BenefitsContent';

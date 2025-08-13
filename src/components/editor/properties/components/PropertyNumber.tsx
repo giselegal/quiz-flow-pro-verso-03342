@@ -1,8 +1,8 @@
-import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PropertyInputProps } from '../interfaces/PropertyEditor';
 import { cn } from '@/lib/utils';
+import React from 'react';
+import { PropertyInputProps } from '../interfaces/PropertyEditor';
 
 interface PropertyNumberProps extends PropertyInputProps {
   min?: number;
@@ -31,14 +31,16 @@ export const PropertyNumber: React.FC<PropertyNumberProps> = ({
 
   return (
     <div className="space-y-2">
-      <Label className={cn(
-        "text-sm font-medium",
-        required && "after:content-['*'] after:text-red-500 after:ml-1",
-        error && "text-red-600"
-      )}>
+      <Label
+        className={cn(
+          'text-sm font-medium',
+          required && "after:content-['*'] after:text-red-500 after:ml-1",
+          error && 'text-red-600'
+        )}
+      >
         {label}
       </Label>
-      
+
       <div className="flex items-center space-x-2">
         <Input
           type="number"
@@ -49,19 +51,14 @@ export const PropertyNumber: React.FC<PropertyNumberProps> = ({
           step={step}
           placeholder={placeholder}
           disabled={disabled}
-          className={cn(
-            error && "border-red-500 focus:border-red-500",
-            "transition-colors"
-          )}
+          className={cn(error && 'border-red-500 focus:border-red-500', 'transition-colors')}
         />
         <span className="text-xs text-gray-500">
           ({min}-{max})
         </span>
       </div>
-      
-      {error && errorMessage && (
-        <p className="text-xs text-red-600">{errorMessage}</p>
-      )}
+
+      {error && errorMessage && <p className="text-xs text-red-600">{errorMessage}</p>}
     </div>
   );
 };

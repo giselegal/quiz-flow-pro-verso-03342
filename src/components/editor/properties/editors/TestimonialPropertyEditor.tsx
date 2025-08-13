@@ -1,14 +1,20 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageCircle, Eye, Star, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { Block, TestimonialContent, isTestimonialBlock } from '@/types/editor';
+import { Eye, MessageCircle, Star, User } from 'lucide-react';
+import React from 'react';
 import { PropertyNumber } from '../components/PropertyNumber';
 
 interface TestimonialPropertyEditorProps {
@@ -20,7 +26,7 @@ interface TestimonialPropertyEditorProps {
 export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps> = ({
   block,
   onUpdate,
-  isPreviewMode = false
+  isPreviewMode = false,
 }) => {
   // Verificar se é realmente um bloco de testimonial
   if (!isTestimonialBlock(block)) {
@@ -28,8 +34,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
       <Card className="h-full">
         <CardContent className="p-4">
           <div className="text-red-600 text-sm">
-            Erro: Este editor é específico para blocos de testimonial.
-            Tipo recebido: {block.type}
+            Erro: Este editor é específico para blocos de testimonial. Tipo recebido: {block.type}
           </div>
         </CardContent>
       </Card>
@@ -38,7 +43,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
 
   // Agora temos tipagem específica garantida
   const content = block.content as TestimonialContent;
-  
+
   const quote = content.quote || '';
   const author = content.author || '';
   const authorTitle = content.authorTitle || '';
@@ -54,8 +59,8 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
     const updates = {
       content: {
         ...content,
-        [field]: value
-      }
+        [field]: value,
+      },
     };
     onUpdate(updates);
   };
@@ -63,14 +68,18 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
   const layoutOptions = [
     { value: 'card', label: 'Card', description: 'Layout em card com borda e sombra' },
     { value: 'minimal', label: 'Minimal', description: 'Layout limpo sem bordas' },
-    { value: 'detailed', label: 'Detalhado', description: 'Layout completo com todos os elementos' }
+    {
+      value: 'detailed',
+      label: 'Detalhado',
+      description: 'Layout completo com todos os elementos',
+    },
   ];
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <Star 
-        key={i} 
-        className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+      <Star
+        key={i}
+        className={`h-4 w-4 ${i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
       />
     ));
   };
@@ -82,7 +91,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
       padding: layout === 'minimal' ? '16px' : '24px',
       borderRadius: layout === 'card' ? '12px' : '6px',
       border: layout === 'card' ? '1px solid #E5E5E5' : 'none',
-      boxShadow: layout === 'card' ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none'
+      boxShadow: layout === 'card' ? '0 2px 8px rgba(0, 0, 0, 0.1)' : 'none',
     };
 
     return (
@@ -97,30 +106,24 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
         </div>
 
         {/* Rating */}
-        {rating > 0 && (
-          <div className="flex items-center mb-3">
-            {renderStars(rating)}
-          </div>
-        )}
+        {rating > 0 && <div className="flex items-center mb-3">{renderStars(rating)}</div>}
 
         {/* Author Info */}
         <div className="flex items-center gap-3">
           {authorImage && (
-            <img 
-              src={authorImage} 
-              alt={author}
-              className="w-12 h-12 rounded-full object-cover"
-            />
+            <img src={authorImage} alt={author} className="w-12 h-12 rounded-full object-cover" />
           )}
-          
+
           <div className="flex-1">
             <div className="font-medium" style={{ color: textColor }}>
               {author || 'Nome do Cliente'}
             </div>
-            
+
             {(authorTitle || company) && (
               <div className="text-sm opacity-75" style={{ color: textColor }}>
-                {authorTitle}{authorTitle && company && ', '}{company}
+                {authorTitle}
+                {authorTitle && company && ', '}
+                {company}
               </div>
             )}
           </div>
@@ -158,7 +161,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Conteúdo do Depoimento */}
         <div className="space-y-4">
@@ -167,14 +170,12 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
             <Textarea
               id="quote"
               value={quote}
-              onChange={(e) => handleContentUpdate('quote', e.target.value)}
+              onChange={e => handleContentUpdate('quote', e.target.value)}
               placeholder="Digite o depoimento do cliente aqui..."
               className="min-h-[100px] resize-none"
               maxLength={500}
             />
-            <div className="text-xs text-gray-500 text-right">
-              {quote.length}/500 caracteres
-            </div>
+            <div className="text-xs text-gray-500 text-right">{quote.length}/500 caracteres</div>
           </div>
 
           <div className="space-y-2">
@@ -201,14 +202,14 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
             <User className="h-4 w-4" />
             Informações do Autor
           </h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="author">Nome do Cliente</Label>
               <Input
                 id="author"
                 value={author}
-                onChange={(e) => handleContentUpdate('author', e.target.value)}
+                onChange={e => handleContentUpdate('author', e.target.value)}
                 placeholder="Nome do cliente"
               />
             </div>
@@ -218,7 +219,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
               <Input
                 id="authorTitle"
                 value={authorTitle}
-                onChange={(e) => handleContentUpdate('authorTitle', e.target.value)}
+                onChange={e => handleContentUpdate('authorTitle', e.target.value)}
                 placeholder="CEO, Gerente, etc."
               />
             </div>
@@ -230,7 +231,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
               <Input
                 id="company"
                 value={company}
-                onChange={(e) => handleContentUpdate('company', e.target.value)}
+                onChange={e => handleContentUpdate('company', e.target.value)}
                 placeholder="Nome da empresa"
               />
             </div>
@@ -240,7 +241,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
               <Input
                 id="authorImage"
                 value={authorImage}
-                onChange={(e) => handleContentUpdate('authorImage', e.target.value)}
+                onChange={e => handleContentUpdate('authorImage', e.target.value)}
                 placeholder="https://exemplo.com/foto.jpg"
               />
             </div>
@@ -252,10 +253,15 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
         {/* Layout */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Layout</h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="layout">Estilo do Layout</Label>
-            <Select value={layout} onValueChange={(value: 'card' | 'minimal' | 'detailed') => handleContentUpdate('layout', value)}>
+            <Select
+              value={layout}
+              onValueChange={(value: 'card' | 'minimal' | 'detailed') =>
+                handleContentUpdate('layout', value)
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -280,7 +286,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
             <Switch
               id="showQuotes"
               checked={showQuotes}
-              onCheckedChange={(checked) => handleContentUpdate('showQuotes', checked)}
+              onCheckedChange={checked => handleContentUpdate('showQuotes', checked)}
             />
           </div>
         </div>
@@ -290,7 +296,7 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
         {/* Cores */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Cores</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="backgroundColor">Cor de Fundo</Label>
@@ -299,12 +305,12 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
                   type="color"
                   id="backgroundColor"
                   value={backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   placeholder="#FFFFFF"
                   className="flex-1"
                 />
@@ -318,12 +324,12 @@ export const TestimonialPropertyEditor: React.FC<TestimonialPropertyEditorProps>
                   type="color"
                   id="textColor"
                   value={textColor}
-                  onChange={(e) => handleContentUpdate('textColor', e.target.value)}
+                  onChange={e => handleContentUpdate('textColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={textColor}
-                  onChange={(e) => handleContentUpdate('textColor', e.target.value)}
+                  onChange={e => handleContentUpdate('textColor', e.target.value)}
                   placeholder="#333333"
                   className="flex-1"
                 />

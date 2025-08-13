@@ -1,18 +1,18 @@
-import React, { useMemo } from 'react';
-import { Block } from '@/types/editor';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Settings, X, Eye } from 'lucide-react';
-import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
-import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
-import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
-import { TextPropertyEditor } from './editors/TextPropertyEditor';
-import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
-import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
-import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
-import { PricingPropertyEditor } from './editors/PricingPropertyEditor';
-import { getBlockEditorConfig } from './PropertyEditorRegistry';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { Eye, Settings, X } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
+import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
+import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
+import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
+import { PricingPropertyEditor } from './editors/PricingPropertyEditor';
+import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
+import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
+import { TextPropertyEditor } from './editors/TextPropertyEditor';
+import { getBlockEditorConfig } from './PropertyEditorRegistry';
 
 interface PropertiesPanelProps {
   /** Bloco atualmente selecionado */
@@ -75,7 +75,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   // Renderizar editor específico baseado no tipo
   const renderEditor = () => {
     const blockType = selectedBlock.type;
-    
+
     // Editores já implementados - mapeamento direto
     switch (blockType) {
       case 'header':
@@ -86,14 +86,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             isPreviewMode={isPreviewMode}
           />
         );
-      
+
       default:
         // Mapeamento flexível para tipos relacionados a questões
-        const isQuestionType = blockType.includes('question') || 
-                              blockType === 'quiz-question-inline' ||
-                              blockType === 'step01-intro' ||
-                              blockType === 'quiz-intro-header';
-        
+        const isQuestionType =
+          blockType.includes('question') ||
+          blockType === 'quiz-question-inline' ||
+          blockType === 'step01-intro' ||
+          blockType === 'quiz-intro-header';
+
         if (isQuestionType) {
           return (
             <QuestionPropertyEditor
@@ -103,13 +104,14 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             />
           );
         }
-        
+
         // Mapeamento flexível para tipos relacionados a opções
-        const isOptionsType = blockType.includes('options') || 
-                             blockType === 'options-grid' ||
-                             blockType.includes('result') ||
-                             blockType.includes('cta');
-        
+        const isOptionsType =
+          blockType.includes('options') ||
+          blockType === 'options-grid' ||
+          blockType.includes('result') ||
+          blockType.includes('cta');
+
         if (isOptionsType) {
           return (
             <OptionsPropertyEditor
@@ -121,11 +123,12 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento flexível para tipos relacionados a texto
-        const isTextType = blockType === 'text' ||
-                          blockType === 'headline' ||
-                          blockType.includes('text') ||
-                          blockType.includes('heading') ||
-                          blockType.includes('title');
+        const isTextType =
+          blockType === 'text' ||
+          blockType === 'headline' ||
+          blockType.includes('text') ||
+          blockType.includes('heading') ||
+          blockType.includes('title');
 
         if (isTextType) {
           return (
@@ -138,10 +141,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento específico para testimonials com tipagem
-        const isTestimonialType = blockType === 'testimonial' ||
-                                 blockType === 'testimonials' ||
-                                 blockType === 'testimonial-card-inline' ||
-                                 blockType === 'testimonialsSection';
+        const isTestimonialType =
+          blockType === 'testimonial' ||
+          blockType === 'testimonials' ||
+          blockType === 'testimonial-card-inline' ||
+          blockType === 'testimonialsSection';
 
         if (isTestimonialType) {
           return (
@@ -153,11 +157,25 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           );
         }
 
+        // Mapeamento específico para pricing com tipagem
+        const isPricingType = blockType === 'pricing' || blockType === 'pricing-card-inline';
+
+        if (isPricingType) {
+          return (
+            <PricingPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
         // Mapeamento flexível para tipos relacionados a botões
-        const isButtonType = blockType === 'button' ||
-                            blockType.includes('button') ||
-                            blockType === 'cta' ||
-                            blockType.includes('cta');
+        const isButtonType =
+          blockType === 'button' ||
+          blockType.includes('button') ||
+          blockType === 'cta' ||
+          blockType.includes('cta');
 
         if (isButtonType) {
           return (
@@ -170,8 +188,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         }
 
         // Mapeamento flexível para tipos relacionados a navegação
-        const isNavigationType = blockType.includes('nav') ||
-                                 blockType.includes('menu');
+        const isNavigationType = blockType.includes('nav') || blockType.includes('menu');
 
         if (isNavigationType) {
           return (
@@ -182,18 +199,29 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             />
           );
         }
-        
+
         // Tipos conhecidos mas não implementados ainda
         const knownTypes = [
-          'image', 'video', 'spacer', 'carousel',
-          'testimonials', 'pricing', 'faq', 'benefits',
-          'guarantee', 'products', 'icon', 'custom-code',
-          'form-container', 'form-input', 'input-field'
+          'image',
+          'video',
+          'spacer',
+          'carousel',
+          'testimonials',
+          'pricing',
+          'faq',
+          'benefits',
+          'guarantee',
+          'products',
+          'icon',
+          'custom-code',
+          'form-container',
+          'form-input',
+          'input-field',
         ];
-        
-        const isKnownType = knownTypes.includes(blockType) || 
-                           knownTypes.some(type => blockType.includes(type));
-        
+
+        const isKnownType =
+          knownTypes.includes(blockType) || knownTypes.some(type => blockType.includes(type));
+
         if (isKnownType) {
           return (
             <Card className="h-full">
@@ -231,15 +259,17 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     📋 Tipo de bloco <strong>"{blockType}"</strong> detectado.
                     <br />
                     <span className="text-xs text-blue-600 mt-1 block">
-                      Editor genérico será implementado em breve. Por enquanto, use o painel clássico.
+                      Editor genérico será implementado em breve. Por enquanto, use o painel
+                      clássico.
                     </span>
                   </p>
-                  
+
                   {/* Debug info */}
                   <div className="mt-3 p-2 bg-blue-100 rounded text-xs">
                     <strong>Debug:</strong> Block ID: {selectedBlock.id}
                     <br />
-                    <strong>Content keys:</strong> {Object.keys(selectedBlock.content || {}).join(', ') || 'none'}
+                    <strong>Content keys:</strong>{' '}
+                    {Object.keys(selectedBlock.content || {}).join(', ') || 'none'}
                   </div>
                 </div>
               </CardContent>
@@ -262,29 +292,21 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             </span>
           )}
         </div>
-        
+
         <div className="flex items-center gap-1">
           {onTogglePreview && (
             <Button
               variant="ghost"
               size="sm"
               onClick={onTogglePreview}
-              className={cn(
-                "h-8 w-8 p-0",
-                isPreviewMode && "bg-[#E5DDD5]"
-              )}
+              className={cn('h-8 w-8 p-0', isPreviewMode && 'bg-[#E5DDD5]')}
             >
               <Eye className="h-4 w-4" />
             </Button>
           )}
-          
+
           {onClose && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
               <X className="h-4 w-4" />
             </Button>
           )}
@@ -292,24 +314,15 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
       </div>
 
       {/* Conteúdo do editor */}
-      <div className="flex-1 overflow-auto">
-        {renderEditor()}
-      </div>
+      <div className="flex-1 overflow-auto">{renderEditor()}</div>
 
       {/* Footer com ações */}
       <div className="p-4 border-t bg-white">
         <div className="flex items-center justify-between">
-          <div className="text-xs text-[#8B7355]">
-            ID: {selectedBlock.id}
-          </div>
-          
+          <div className="text-xs text-[#8B7355]">ID: {selectedBlock.id}</div>
+
           {onDelete && (
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleDelete}
-              className="text-xs"
-            >
+            <Button variant="destructive" size="sm" onClick={handleDelete} className="text-xs">
               Excluir Bloco
             </Button>
           )}

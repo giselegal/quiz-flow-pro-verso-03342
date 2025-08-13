@@ -1,14 +1,20 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileText, Eye, Type, Palette, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { Block } from '@/types/editor';
+import { AlignCenter, AlignLeft, AlignRight, Eye, FileText, Palette, Type } from 'lucide-react';
+import React from 'react';
 import { PropertyNumber } from '../components/PropertyNumber';
 
 interface TextPropertyEditorProps {
@@ -20,7 +26,7 @@ interface TextPropertyEditorProps {
 export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
   block,
   onUpdate,
-  isPreviewMode = false
+  isPreviewMode = false,
 }) => {
   // Propriedades específicas do texto
   const text = block.content?.text || '';
@@ -38,8 +44,8 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
     const updates = {
       content: {
         ...block.content,
-        [field]: value
-      }
+        [field]: value,
+      },
     };
     onUpdate(updates);
   };
@@ -51,7 +57,7 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
     { value: 'paragraph', label: 'Parágrafo' },
     { value: 'lead', label: 'Texto Destacado' },
     { value: 'small', label: 'Texto Pequeno' },
-    { value: 'caption', label: 'Legenda' }
+    { value: 'caption', label: 'Legenda' },
   ];
 
   const fontWeightOptions = [
@@ -60,18 +66,18 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
     { value: 'medium', label: 'Médio' },
     { value: 'semibold', label: 'Semi Negrito' },
     { value: 'bold', label: 'Negrito' },
-    { value: 'extrabold', label: 'Extra Negrito' }
+    { value: 'extrabold', label: 'Extra Negrito' },
   ];
 
   const alignmentOptions = [
     { value: 'left', label: 'Esquerda', icon: AlignLeft },
     { value: 'center', label: 'Centro', icon: AlignCenter },
-    { value: 'right', label: 'Direita', icon: AlignRight }
+    { value: 'right', label: 'Direita', icon: AlignRight },
   ];
 
   const renderPreview = () => {
     const numericFontSize = typeof fontSize === 'number' ? fontSize : parseInt(fontSize) || 16;
-    
+
     const baseStyles = {
       fontSize: `${numericFontSize}px`,
       fontWeight,
@@ -80,29 +86,37 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
       backgroundColor,
       padding: backgroundColor !== 'transparent' ? '8px 12px' : '0',
       borderRadius: backgroundColor !== 'transparent' ? '4px' : '0',
-      lineHeight: '1.5'
+      lineHeight: '1.5',
     };
 
     const typeStyles = {
-      heading1: { fontSize: Math.max(numericFontSize, 32), fontWeight: 'bold', marginBottom: '16px' },
-      heading2: { fontSize: Math.max(numericFontSize, 24), fontWeight: 'bold', marginBottom: '12px' },
-      heading3: { fontSize: Math.max(numericFontSize, 20), fontWeight: 'semibold', marginBottom: '8px' },
+      heading1: {
+        fontSize: Math.max(numericFontSize, 32),
+        fontWeight: 'bold',
+        marginBottom: '16px',
+      },
+      heading2: {
+        fontSize: Math.max(numericFontSize, 24),
+        fontWeight: 'bold',
+        marginBottom: '12px',
+      },
+      heading3: {
+        fontSize: Math.max(numericFontSize, 20),
+        fontWeight: 'semibold',
+        marginBottom: '8px',
+      },
       paragraph: { fontSize: numericFontSize, lineHeight: '1.6' },
       lead: { fontSize: Math.max(numericFontSize, 18), fontWeight: 'medium' },
       small: { fontSize: Math.min(numericFontSize, 14) },
-      caption: { fontSize: Math.min(numericFontSize, 12), opacity: 0.8 }
+      caption: { fontSize: Math.min(numericFontSize, 12), opacity: 0.8 },
     };
 
     const finalStyles = {
       ...baseStyles,
-      ...typeStyles[textType as keyof typeof typeStyles]
+      ...typeStyles[textType as keyof typeof typeStyles],
     };
 
-    return (
-      <div style={finalStyles}>
-        {text || placeholder || 'Digite o texto aqui...'}
-      </div>
-    );
+    return <div style={finalStyles}>{text || placeholder || 'Digite o texto aqui...'}</div>;
   };
 
   if (isPreviewMode) {
@@ -134,7 +148,7 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Conteúdo do Texto */}
         <div className="space-y-2">
@@ -142,8 +156,8 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
           <Textarea
             id="text"
             value={text}
-            onChange={(e) => handleContentUpdate('text', e.target.value)}
-            placeholder={placeholder || "Digite o texto aqui..."}
+            onChange={e => handleContentUpdate('text', e.target.value)}
+            placeholder={placeholder || 'Digite o texto aqui...'}
             className="min-h-[120px] resize-none"
             maxLength={maxLength}
           />
@@ -153,7 +167,7 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
               <Input
                 id="placeholder"
                 value={placeholder}
-                onChange={(e) => handleContentUpdate('placeholder', e.target.value)}
+                onChange={e => handleContentUpdate('placeholder', e.target.value)}
                 placeholder="Texto mostrado quando vazio..."
               />
             </div>
@@ -168,10 +182,13 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
             <Type className="h-4 w-4" />
             Tipo e Formatação
           </h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="textType">Tipo de Texto</Label>
-            <Select value={textType} onValueChange={(value) => handleContentUpdate('textType', value)}>
+            <Select
+              value={textType}
+              onValueChange={value => handleContentUpdate('textType', value)}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -200,7 +217,10 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="fontWeight">Peso da Fonte</Label>
-              <Select value={fontWeight} onValueChange={(value) => handleContentUpdate('fontWeight', value)}>
+              <Select
+                value={fontWeight}
+                onValueChange={value => handleContentUpdate('fontWeight', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -247,7 +267,7 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
             <Palette className="h-4 w-4" />
             Cores
           </h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="color">Cor do Texto</Label>
@@ -256,12 +276,12 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
                   type="color"
                   id="color"
                   value={color}
-                  onChange={(e) => handleContentUpdate('color', e.target.value)}
+                  onChange={e => handleContentUpdate('color', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={color}
-                  onChange={(e) => handleContentUpdate('color', e.target.value)}
+                  onChange={e => handleContentUpdate('color', e.target.value)}
                   placeholder="#000000"
                   className="flex-1"
                 />
@@ -275,12 +295,12 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
                   type="color"
                   id="backgroundColor"
                   value={backgroundColor === 'transparent' ? '#ffffff' : backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   placeholder="transparent"
                   className="flex-1"
                 />
@@ -302,16 +322,18 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
         {/* Configurações Avançadas */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Configurações Avançadas</h3>
-          
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="isMarkdown">Suporte a Markdown</Label>
-              <p className="text-sm text-gray-500">Permite formatação com Markdown (negrito, itálico, etc.)</p>
+              <p className="text-sm text-gray-500">
+                Permite formatação com Markdown (negrito, itálico, etc.)
+              </p>
             </div>
             <Switch
               id="isMarkdown"
               checked={isMarkdown}
-              onCheckedChange={(checked) => handleContentUpdate('isMarkdown', checked)}
+              onCheckedChange={checked => handleContentUpdate('isMarkdown', checked)}
             />
           </div>
 

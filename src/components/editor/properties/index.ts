@@ -1,24 +1,28 @@
 // Main components
-export { PropertiesPanel } from './PropertiesPanel';
-export { default as PropertiesPanelDefault } from './PropertiesPanel';
+export { PropertiesPanel, default as PropertiesPanelDefault } from './PropertiesPanel';
 
 // Property editors
 export { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
 
 // UI components
-export { PropertyInput } from './components/PropertyInput';
-export { PropertyTextarea } from './components/PropertyTextarea';
-export { PropertySelect } from './components/PropertySelect';
 export { PropertyCheckbox } from './components/PropertyCheckbox';
+export { PropertyInput } from './components/PropertyInput';
+export { PropertySelect } from './components/PropertySelect';
+export { PropertyTextarea } from './components/PropertyTextarea';
 
 // Configuration and registry
-export { PROPERTY_EDITOR_REGISTRY, getBlockEditorConfig, getBlockTypesByPriority, getBlockTypesByCategory } from './PropertyEditorRegistry';
+export {
+  PROPERTY_EDITOR_REGISTRY,
+  getBlockEditorConfig,
+  getBlockTypesByCategory,
+  getBlockTypesByPriority,
+} from './PropertyEditorRegistry';
 
 // Types and interfaces
-export type { 
-  PropertyEditorProps, 
-  PropertyConfig, 
-  BlockEditorConfig, 
+export type {
+  BlockEditorConfig,
+  PropertyConfig,
+  PropertyEditorProps,
   PropertyEditorRegistry,
-  PropertyInputProps 
+  PropertyInputProps,
 } from './interfaces/PropertyEditor';

@@ -33,7 +33,7 @@ import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // 🆕 Flag para testar o novo painel de propriedades
   const [useNewPropertiesPanel, setUseNewPropertiesPanel] = useState(false);
-  
+
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
@@ -187,20 +187,20 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 <h1 className="text-lg font-semibold text-stone-700">
                   Editor de Funil - Etapa {activeStageId}
                 </h1>
-                
+
                 {/* 🧪 Botão de teste do novo painel */}
                 <button
                   onClick={() => setUseNewPropertiesPanel(!useNewPropertiesPanel)}
                   className={`px-3 py-1 text-xs rounded-full border transition-colors ${
-                    useNewPropertiesPanel 
-                      ? 'bg-green-100 border-green-300 text-green-700' 
+                    useNewPropertiesPanel
+                      ? 'bg-green-100 border-green-300 text-green-700'
                       : 'bg-gray-100 border-gray-300 text-gray-600'
                   }`}
                   title="Alternar entre painel antigo e novo"
                 >
                   {useNewPropertiesPanel ? '🆕 Novo Painel' : '📋 Painel Atual'}
                 </button>
-                
+
                 <div className="text-sm text-stone-500">
                   {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
                   {stageCount !== 1 ? 's' : ''}

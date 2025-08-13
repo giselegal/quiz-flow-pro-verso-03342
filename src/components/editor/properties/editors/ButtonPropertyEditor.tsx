@@ -1,17 +1,33 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  MousePointer, Eye, Palette, Link, 
-  ExternalLink, Download, Mail, Phone,
-  ArrowRight, ArrowLeft, Plus, Check, X
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { Block } from '@/types/editor';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Download,
+  ExternalLink,
+  Eye,
+  Link,
+  Mail,
+  MousePointer,
+  Palette,
+  Phone,
+  Plus,
+  X,
+} from 'lucide-react';
+import React from 'react';
 import { PropertyNumber } from '../components/PropertyNumber';
 
 interface ButtonPropertyEditorProps {
@@ -23,7 +39,7 @@ interface ButtonPropertyEditorProps {
 export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
   block,
   onUpdate,
-  isPreviewMode = false
+  isPreviewMode = false,
 }) => {
   // Propriedades específicas do botão
   const text = block.content?.text || 'Clique Aqui';
@@ -48,8 +64,8 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
     const updates = {
       content: {
         ...block.content,
-        [field]: value
-      }
+        [field]: value,
+      },
     };
     onUpdate(updates);
   };
@@ -60,7 +76,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
     { value: 'outline', label: 'Contorno', description: 'Botão com borda apenas' },
     { value: 'ghost', label: 'Fantasma', description: 'Botão transparente' },
     { value: 'link', label: 'Link', description: 'Estilo de link' },
-    { value: 'destructive', label: 'Destrutivo', description: 'Ação perigosa (excluir, etc.)' }
+    { value: 'destructive', label: 'Destrutivo', description: 'Ação perigosa (excluir, etc.)' },
   ];
 
   const sizeOptions = [
@@ -68,7 +84,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
     { value: 'sm', label: 'Pequeno' },
     { value: 'default', label: 'Padrão' },
     { value: 'lg', label: 'Grande' },
-    { value: 'xl', label: 'Extra Grande' }
+    { value: 'xl', label: 'Extra Grande' },
   ];
 
   const iconOptions = [
@@ -81,7 +97,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
     { value: 'phone', label: 'Telefone', icon: Phone },
     { value: 'plus', label: 'Adicionar', icon: Plus },
     { value: 'check', label: 'Confirmar', icon: Check },
-    { value: 'x', label: 'Fechar', icon: X }
+    { value: 'x', label: 'Fechar', icon: X },
   ];
 
   const animationOptions = [
@@ -89,7 +105,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
     { value: 'bounce', label: 'Bounce' },
     { value: 'pulse', label: 'Pulse' },
     { value: 'shake', label: 'Shake' },
-    { value: 'glow', label: 'Glow' }
+    { value: 'glow', label: 'Glow' },
   ];
 
   const getIconComponent = (iconName: string) => {
@@ -97,33 +113,50 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
       'arrow-right': ArrowRight,
       'arrow-left': ArrowLeft,
       'external-link': ExternalLink,
-      'download': Download,
-      'mail': Mail,
-      'phone': Phone,
-      'plus': Plus,
-      'check': Check,
-      'x': X
+      download: Download,
+      mail: Mail,
+      phone: Phone,
+      plus: Plus,
+      check: Check,
+      x: X,
     };
     return iconMap[iconName];
   };
 
   const renderPreview = () => {
     const IconComponent = icon ? getIconComponent(icon) : null;
-    
+
     const buttonStyles = {
-      padding: size === 'xs' ? '6px 12px' : 
-               size === 'sm' ? '8px 16px' :
-               size === 'lg' ? '12px 24px' :
-               size === 'xl' ? '16px 32px' : '10px 20px',
-      fontSize: size === 'xs' ? '12px' :
-                size === 'sm' ? '14px' :
-                size === 'lg' ? '18px' :
-                size === 'xl' ? '20px' : '16px',
+      padding:
+        size === 'xs'
+          ? '6px 12px'
+          : size === 'sm'
+            ? '8px 16px'
+            : size === 'lg'
+              ? '12px 24px'
+              : size === 'xl'
+                ? '16px 32px'
+                : '10px 20px',
+      fontSize:
+        size === 'xs'
+          ? '12px'
+          : size === 'sm'
+            ? '14px'
+            : size === 'lg'
+              ? '18px'
+              : size === 'xl'
+                ? '20px'
+                : '16px',
       borderRadius: `${borderRadius}px`,
-      backgroundColor: buttonType === 'outline' || buttonType === 'ghost' ? 'transparent' : backgroundColor,
+      backgroundColor:
+        buttonType === 'outline' || buttonType === 'ghost' ? 'transparent' : backgroundColor,
       color: buttonType === 'outline' ? backgroundColor : textColor,
-      border: buttonType === 'outline' ? `2px solid ${borderColor || backgroundColor}` : 
-              borderColor !== 'transparent' ? `1px solid ${borderColor}` : 'none',
+      border:
+        buttonType === 'outline'
+          ? `2px solid ${borderColor || backgroundColor}`
+          : borderColor !== 'transparent'
+            ? `1px solid ${borderColor}`
+            : 'none',
       width: fullWidth ? '100%' : 'auto',
       display: 'inline-flex',
       alignItems: 'center',
@@ -132,19 +165,30 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
       opacity: disabled ? 0.6 : 1,
       textDecoration: buttonType === 'link' ? 'underline' : 'none',
       position: 'relative' as const,
-      overflow: 'hidden' as const
+      overflow: 'hidden' as const,
     };
 
-    const animationStyles = animation !== 'none' ? {
-      animation: animation === 'bounce' ? 'bounce 2s infinite' :
-                animation === 'pulse' ? 'pulse 2s infinite' :
-                animation === 'shake' ? 'shake 0.5s infinite' :
-                animation === 'glow' ? 'glow 2s infinite' : 'none'
-    } : {};
+    const animationStyles =
+      animation !== 'none'
+        ? {
+            animation:
+              animation === 'bounce'
+                ? 'bounce 2s infinite'
+                : animation === 'pulse'
+                  ? 'pulse 2s infinite'
+                  : animation === 'shake'
+                    ? 'shake 0.5s infinite'
+                    : animation === 'glow'
+                      ? 'glow 2s infinite'
+                      : 'none',
+          }
+        : {};
 
     return (
       <div style={{ ...buttonStyles, ...animationStyles }}>
-        {loading && <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />}
+        {loading && (
+          <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full mr-2" />
+        )}
         {IconComponent && iconPosition === 'left' && <IconComponent className="h-4 w-4" />}
         {text}
         {IconComponent && iconPosition === 'right' && <IconComponent className="h-4 w-4" />}
@@ -181,7 +225,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Texto e Tipo */}
         <div className="space-y-4">
@@ -190,7 +234,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
             <Input
               id="text"
               value={text}
-              onChange={(e) => handleContentUpdate('text', e.target.value)}
+              onChange={e => handleContentUpdate('text', e.target.value)}
               placeholder="Texto que aparece no botão"
               maxLength={50}
             />
@@ -199,7 +243,10 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="buttonType">Tipo de Botão</Label>
-              <Select value={buttonType} onValueChange={(value) => handleContentUpdate('buttonType', value)}>
+              <Select
+                value={buttonType}
+                onValueChange={value => handleContentUpdate('buttonType', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -218,7 +265,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="size">Tamanho</Label>
-              <Select value={size} onValueChange={(value) => handleContentUpdate('size', value)}>
+              <Select value={size} onValueChange={value => handleContentUpdate('size', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -242,13 +289,13 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
             <Link className="h-4 w-4" />
             Ação do Botão
           </h3>
-          
+
           <div className="space-y-2">
             <Label htmlFor="href">URL de Destino</Label>
             <Input
               id="href"
               value={href}
-              onChange={(e) => handleContentUpdate('href', e.target.value)}
+              onChange={e => handleContentUpdate('href', e.target.value)}
               placeholder="https://exemplo.com ou #secao"
             />
           </div>
@@ -256,7 +303,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="target">Abrir Link</Label>
-              <Select value={target} onValueChange={(value) => handleContentUpdate('target', value)}>
+              <Select value={target} onValueChange={value => handleContentUpdate('target', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -274,7 +321,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
               <Input
                 id="onClick"
                 value={onClick}
-                onChange={(e) => handleContentUpdate('onClick', e.target.value)}
+                onChange={e => handleContentUpdate('onClick', e.target.value)}
                 placeholder="alert('Olá!')"
               />
             </div>
@@ -286,11 +333,11 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
         {/* Ícone */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Ícone</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="icon">Tipo de Ícone</Label>
-              <Select value={icon} onValueChange={(value) => handleContentUpdate('icon', value)}>
+              <Select value={icon} onValueChange={value => handleContentUpdate('icon', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -309,9 +356,9 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="iconPosition">Posição do Ícone</Label>
-              <Select 
-                value={iconPosition} 
-                onValueChange={(value) => handleContentUpdate('iconPosition', value)}
+              <Select
+                value={iconPosition}
+                onValueChange={value => handleContentUpdate('iconPosition', value)}
                 disabled={!icon}
               >
                 <SelectTrigger>
@@ -334,7 +381,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
             <Palette className="h-4 w-4" />
             Cores
           </h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="backgroundColor">Cor de Fundo</Label>
@@ -343,12 +390,12 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   type="color"
                   id="backgroundColor"
                   value={backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   placeholder="#B89B7A"
                   className="flex-1"
                 />
@@ -362,12 +409,12 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   type="color"
                   id="textColor"
                   value={textColor}
-                  onChange={(e) => handleContentUpdate('textColor', e.target.value)}
+                  onChange={e => handleContentUpdate('textColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={textColor}
-                  onChange={(e) => handleContentUpdate('textColor', e.target.value)}
+                  onChange={e => handleContentUpdate('textColor', e.target.value)}
                   placeholder="#FFFFFF"
                   className="flex-1"
                 />
@@ -381,12 +428,12 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   type="color"
                   id="borderColor"
                   value={borderColor === 'transparent' ? '#000000' : borderColor}
-                  onChange={(e) => handleContentUpdate('borderColor', e.target.value)}
+                  onChange={e => handleContentUpdate('borderColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={borderColor}
-                  onChange={(e) => handleContentUpdate('borderColor', e.target.value)}
+                  onChange={e => handleContentUpdate('borderColor', e.target.value)}
                   placeholder="transparent"
                   className="flex-1"
                 />
@@ -400,12 +447,12 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
                   type="color"
                   id="hoverBackgroundColor"
                   value={hoverBackgroundColor}
-                  onChange={(e) => handleContentUpdate('hoverBackgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('hoverBackgroundColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={hoverBackgroundColor}
-                  onChange={(e) => handleContentUpdate('hoverBackgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('hoverBackgroundColor', e.target.value)}
                   placeholder="#A08869"
                   className="flex-1"
                 />
@@ -419,7 +466,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
         {/* Configurações */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Configurações</h3>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -429,7 +476,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
               <Switch
                 id="fullWidth"
                 checked={fullWidth}
-                onCheckedChange={(checked) => handleContentUpdate('fullWidth', checked)}
+                onCheckedChange={checked => handleContentUpdate('fullWidth', checked)}
               />
             </div>
 
@@ -441,7 +488,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
               <Switch
                 id="disabled"
                 checked={disabled}
-                onCheckedChange={(checked) => handleContentUpdate('disabled', checked)}
+                onCheckedChange={checked => handleContentUpdate('disabled', checked)}
               />
             </div>
 
@@ -453,7 +500,7 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
               <Switch
                 id="loading"
                 checked={loading}
-                onCheckedChange={(checked) => handleContentUpdate('loading', checked)}
+                onCheckedChange={checked => handleContentUpdate('loading', checked)}
               />
             </div>
           </div>
@@ -473,7 +520,10 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
 
             <div className="space-y-2">
               <Label htmlFor="animation">Animação</Label>
-              <Select value={animation} onValueChange={(value) => handleContentUpdate('animation', value)}>
+              <Select
+                value={animation}
+                onValueChange={value => handleContentUpdate('animation', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

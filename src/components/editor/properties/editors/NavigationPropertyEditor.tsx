@@ -1,18 +1,33 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { 
-  Navigation, Eye, Plus, Trash2,
-  Home, User, Settings, Mail, Phone, Info,
-  ChevronDown, Menu
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { Block } from '@/types/editor';
+import {
+  ChevronDown,
+  Eye,
+  Home,
+  Info,
+  Mail,
+  Menu,
+  Navigation,
+  Phone,
+  Plus,
+  Settings,
+  Trash2,
+  User,
+} from 'lucide-react';
+import React from 'react';
 import { PropertyNumber } from '../components/PropertyNumber';
 
 interface NavigationItem {
@@ -34,21 +49,27 @@ interface NavigationPropertyEditorProps {
 export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> = ({
   block,
   onUpdate,
-  isPreviewMode = false
+  isPreviewMode = false,
 }) => {
   // Propriedades específicas da navegação - com cast seguro
-  const items: NavigationItem[] = (Array.isArray(block.content?.items) && 
-                                  block.content.items.length > 0 && 
-                                  typeof block.content.items[0] === 'object' && 
-                                  'label' in block.content.items[0]) 
-                                  ? (block.content.items as unknown) as NavigationItem[]
-                                  : [
-                                      { id: '1', label: 'Home', href: '/', icon: 'home' },
-                                      { id: '2', label: 'Sobre', href: '/sobre', icon: 'info' }
-                                    ];
+  const items: NavigationItem[] =
+    Array.isArray(block.content?.items) &&
+    block.content.items.length > 0 &&
+    typeof block.content.items[0] === 'object' &&
+    'label' in block.content.items[0]
+      ? (block.content.items as unknown as NavigationItem[])
+      : [
+          { id: '1', label: 'Home', href: '/', icon: 'home' },
+          { id: '2', label: 'Sobre', href: '/sobre', icon: 'info' },
+        ];
   const layout = block.content?.layout || 'horizontal';
   const alignment = block.content?.alignment || 'left';
-  const extendedAlignment = alignment as 'left' | 'center' | 'right' | 'space-between' | 'space-around';
+  const extendedAlignment = alignment as
+    | 'left'
+    | 'center'
+    | 'right'
+    | 'space-between'
+    | 'space-around';
   const showIcons = block.content?.showIcons || true;
   const showMobileMenu = block.content?.showMobileMenu || true;
   const backgroundColor = block.content?.backgroundColor || 'transparent';
@@ -67,8 +88,8 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
     const updates = {
       content: {
         ...block.content,
-        [field]: value
-      }
+        [field]: value,
+      },
     };
     onUpdate(updates);
   };
@@ -77,7 +98,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
     { value: 'horizontal', label: 'Horizontal' },
     { value: 'vertical', label: 'Vertical' },
     { value: 'dropdown', label: 'Menu Dropdown' },
-    { value: 'hamburger', label: 'Menu Hambúrguer' }
+    { value: 'hamburger', label: 'Menu Hambúrguer' },
   ];
 
   const alignmentOptions = [
@@ -85,7 +106,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
     { value: 'center', label: 'Centro' },
     { value: 'right', label: 'Direita' },
     { value: 'space-between', label: 'Espaçado' },
-    { value: 'space-around', label: 'Distribuído' }
+    { value: 'space-around', label: 'Distribuído' },
   ];
 
   const iconOptions = [
@@ -95,22 +116,22 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
     { value: 'settings', label: 'Configurações', icon: Settings },
     { value: 'mail', label: 'Email', icon: Mail },
     { value: 'phone', label: 'Telefone', icon: Phone },
-    { value: 'info', label: 'Informações', icon: Info }
+    { value: 'info', label: 'Informações', icon: Info },
   ];
 
   const dropdownStyleOptions = [
     { value: 'hover', label: 'Ao passar mouse' },
-    { value: 'click', label: 'Ao clicar' }
+    { value: 'click', label: 'Ao clicar' },
   ];
 
   const getIconComponent = (iconName: string) => {
     const iconMap: { [key: string]: React.ComponentType<any> } = {
-      'home': Home,
-      'user': User,
-      'settings': Settings,
-      'mail': Mail,
-      'phone': Phone,
-      'info': Info
+      home: Home,
+      user: User,
+      settings: Settings,
+      mail: Mail,
+      phone: Phone,
+      info: Info,
     };
     return iconMap[iconName];
   };
@@ -123,14 +144,14 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
       icon: item.icon || '',
       target: item.target || '_self',
       active: item.active || false,
-      children: item.children || []
+      children: item.children || [],
     }));
     handleContentUpdate('items', formattedItems);
   };
 
   const renderNavigationItem = (item: NavigationItem, isChild = false) => {
     const IconComponent = item.icon ? getIconComponent(item.icon) : null;
-    
+
     const itemStyles = {
       color: item.active ? activeColor : textColor,
       fontSize: `${fontSize}px`,
@@ -142,7 +163,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
       borderRadius: `${borderRadius}px`,
       transition: 'all 0.2s ease',
       cursor: 'pointer',
-      backgroundColor: item.active ? `${activeColor}15` : 'transparent'
+      backgroundColor: item.active ? `${activeColor}15` : 'transparent',
     };
 
     return (
@@ -160,20 +181,26 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
       borderRadius: `${borderRadius}px`,
       border: hasBorder ? `1px solid ${borderColor}` : 'none',
       padding: '12px',
-      position: isSticky ? 'sticky' as const : 'static' as const,
-      top: isSticky ? 0 : 'auto'
+      position: isSticky ? ('sticky' as const) : ('static' as const),
+      top: isSticky ? 0 : 'auto',
     };
 
     const navigationStyles = {
       display: 'flex',
-      flexDirection: layout === 'vertical' ? 'column' as const : 'row' as const,
+      flexDirection: layout === 'vertical' ? ('column' as const) : ('row' as const),
       alignItems: layout === 'vertical' ? 'stretch' : 'center',
-      justifyContent: extendedAlignment === 'space-between' ? 'space-between' : 
-                     extendedAlignment === 'space-around' ? 'space-around' :
-                     alignment === 'center' ? 'center' :
-                     alignment === 'right' ? 'flex-end' : 'flex-start',
+      justifyContent:
+        extendedAlignment === 'space-between'
+          ? 'space-between'
+          : extendedAlignment === 'space-around'
+            ? 'space-around'
+            : alignment === 'center'
+              ? 'center'
+              : alignment === 'right'
+                ? 'flex-end'
+                : 'flex-start',
       gap: `${spacing}px`,
-      width: '100%'
+      width: '100%',
     };
 
     if (layout === 'hamburger') {
@@ -191,7 +218,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
       return (
         <div style={containerStyles}>
           <div className="relative inline-block">
-            <button 
+            <button
               className="flex items-center gap-2 px-4 py-2 border rounded"
               style={{ borderColor, color: textColor }}
             >
@@ -204,9 +231,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
 
     return (
       <div style={containerStyles}>
-        <nav style={navigationStyles}>
-          {items.map(item => renderNavigationItem(item))}
-        </nav>
+        <nav style={navigationStyles}>{items.map(item => renderNavigationItem(item))}</nav>
       </div>
     );
   };
@@ -221,9 +246,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="border rounded-lg p-4 bg-gray-50 min-h-[100px]">
-            {renderPreview()}
-          </div>
+          <div className="border rounded-lg p-4 bg-gray-50 min-h-[100px]">{renderPreview()}</div>
         </CardContent>
       </Card>
     );
@@ -240,7 +263,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Itens de Navegação */}
         <div className="space-y-2">
@@ -254,7 +277,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                       <Label className="text-xs">Texto</Label>
                       <Input
                         value={item.label || ''}
-                        onChange={(e) => {
+                        onChange={e => {
                           const updatedItems = [...items];
                           updatedItems[index] = { ...updatedItems[index], label: e.target.value };
                           handleItemsUpdate(updatedItems);
@@ -263,12 +286,12 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                         className="h-8"
                       />
                     </div>
-                    
+
                     <div className="space-y-1">
                       <Label className="text-xs">Link</Label>
                       <Input
                         value={item.href || ''}
-                        onChange={(e) => {
+                        onChange={e => {
                           const updatedItems = [...items];
                           updatedItems[index] = { ...updatedItems[index], href: e.target.value };
                           handleItemsUpdate(updatedItems);
@@ -282,9 +305,9 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   <div className="grid grid-cols-3 gap-2">
                     <div className="space-y-1">
                       <Label className="text-xs">Ícone</Label>
-                      <Select 
-                        value={item.icon || ''} 
-                        onValueChange={(value) => {
+                      <Select
+                        value={item.icon || ''}
+                        onValueChange={value => {
                           const updatedItems = [...items];
                           updatedItems[index] = { ...updatedItems[index], icon: value };
                           handleItemsUpdate(updatedItems);
@@ -308,9 +331,9 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
 
                     <div className="space-y-1">
                       <Label className="text-xs">Abrir</Label>
-                      <Select 
-                        value={item.target || '_self'} 
-                        onValueChange={(value) => {
+                      <Select
+                        value={item.target || '_self'}
+                        onValueChange={value => {
                           const updatedItems = [...items];
                           updatedItems[index] = { ...updatedItems[index], target: value };
                           handleItemsUpdate(updatedItems);
@@ -330,7 +353,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                       <div className="flex items-center space-x-2">
                         <Switch
                           checked={item.active || false}
-                          onCheckedChange={(checked) => {
+                          onCheckedChange={checked => {
                             const updatedItems = [...items];
                             updatedItems[index] = { ...updatedItems[index], active: checked };
                             handleItemsUpdate(updatedItems);
@@ -345,7 +368,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
               </Card>
             ))}
           </div>
-          
+
           <div className="flex gap-2">
             <Button
               size="sm"
@@ -357,7 +380,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   href: '#',
                   icon: '',
                   target: '_self',
-                  active: false
+                  active: false,
                 };
                 handleItemsUpdate([...items, newItem]);
               }}
@@ -366,7 +389,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
               <Plus className="h-4 w-4 mr-2" />
               Adicionar Item
             </Button>
-            
+
             {items.length > 1 && (
               <Button
                 size="sm"
@@ -388,11 +411,11 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
         {/* Layout */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Layout</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="layout">Tipo de Layout</Label>
-              <Select value={layout} onValueChange={(value) => handleContentUpdate('layout', value)}>
+              <Select value={layout} onValueChange={value => handleContentUpdate('layout', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -408,9 +431,9 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
 
             <div className="space-y-2">
               <Label htmlFor="alignment">Alinhamento</Label>
-              <Select 
-                value={alignment} 
-                onValueChange={(value) => handleContentUpdate('alignment', value)}
+              <Select
+                value={alignment}
+                onValueChange={value => handleContentUpdate('alignment', value)}
                 disabled={layout === 'hamburger' || layout === 'dropdown'}
               >
                 <SelectTrigger>
@@ -430,7 +453,10 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
           {layout === 'dropdown' && (
             <div className="space-y-2">
               <Label htmlFor="dropdownStyle">Comportamento do Dropdown</Label>
-              <Select value={dropdownStyle} onValueChange={(value) => handleContentUpdate('dropdownStyle', value)}>
+              <Select
+                value={dropdownStyle}
+                onValueChange={value => handleContentUpdate('dropdownStyle', value)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -451,7 +477,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
         {/* Aparência */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Aparência</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <PropertyNumber
@@ -496,7 +522,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
         {/* Cores */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Cores</h3>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="backgroundColor">Cor de Fundo</Label>
@@ -505,12 +531,12 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   type="color"
                   id="backgroundColor"
                   value={backgroundColor === 'transparent' ? '#ffffff' : backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={backgroundColor}
-                  onChange={(e) => handleContentUpdate('backgroundColor', e.target.value)}
+                  onChange={e => handleContentUpdate('backgroundColor', e.target.value)}
                   placeholder="transparent"
                   className="flex-1"
                 />
@@ -524,12 +550,12 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   type="color"
                   id="textColor"
                   value={textColor}
-                  onChange={(e) => handleContentUpdate('textColor', e.target.value)}
+                  onChange={e => handleContentUpdate('textColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={textColor}
-                  onChange={(e) => handleContentUpdate('textColor', e.target.value)}
+                  onChange={e => handleContentUpdate('textColor', e.target.value)}
                   placeholder="#333333"
                   className="flex-1"
                 />
@@ -543,12 +569,12 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   type="color"
                   id="hoverColor"
                   value={hoverColor}
-                  onChange={(e) => handleContentUpdate('hoverColor', e.target.value)}
+                  onChange={e => handleContentUpdate('hoverColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={hoverColor}
-                  onChange={(e) => handleContentUpdate('hoverColor', e.target.value)}
+                  onChange={e => handleContentUpdate('hoverColor', e.target.value)}
                   placeholder="#B89B7A"
                   className="flex-1"
                 />
@@ -562,12 +588,12 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   type="color"
                   id="activeColor"
                   value={activeColor}
-                  onChange={(e) => handleContentUpdate('activeColor', e.target.value)}
+                  onChange={e => handleContentUpdate('activeColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={activeColor}
-                  onChange={(e) => handleContentUpdate('activeColor', e.target.value)}
+                  onChange={e => handleContentUpdate('activeColor', e.target.value)}
                   placeholder="#B89B7A"
                   className="flex-1"
                 />
@@ -581,7 +607,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
         {/* Configurações */}
         <div className="space-y-4">
           <h3 className="text-sm font-medium">Configurações</h3>
-          
+
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -591,7 +617,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
               <Switch
                 id="showIcons"
                 checked={showIcons}
-                onCheckedChange={(checked) => handleContentUpdate('showIcons', checked)}
+                onCheckedChange={checked => handleContentUpdate('showIcons', checked)}
               />
             </div>
 
@@ -603,7 +629,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
               <Switch
                 id="showMobileMenu"
                 checked={showMobileMenu}
-                onCheckedChange={(checked) => handleContentUpdate('showMobileMenu', checked)}
+                onCheckedChange={checked => handleContentUpdate('showMobileMenu', checked)}
               />
             </div>
 
@@ -615,7 +641,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
               <Switch
                 id="isSticky"
                 checked={isSticky}
-                onCheckedChange={(checked) => handleContentUpdate('isSticky', checked)}
+                onCheckedChange={checked => handleContentUpdate('isSticky', checked)}
               />
             </div>
 
@@ -627,7 +653,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
               <Switch
                 id="hasBorder"
                 checked={hasBorder}
-                onCheckedChange={(checked) => handleContentUpdate('hasBorder', checked)}
+                onCheckedChange={checked => handleContentUpdate('hasBorder', checked)}
               />
             </div>
           </div>
@@ -640,12 +666,12 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
                   type="color"
                   id="borderColor"
                   value={borderColor}
-                  onChange={(e) => handleContentUpdate('borderColor', e.target.value)}
+                  onChange={e => handleContentUpdate('borderColor', e.target.value)}
                   className="w-12 h-10 rounded border border-gray-300 cursor-pointer"
                 />
                 <Input
                   value={borderColor}
-                  onChange={(e) => handleContentUpdate('borderColor', e.target.value)}
+                  onChange={e => handleContentUpdate('borderColor', e.target.value)}
                   placeholder="#E5E5E5"
                   className="flex-1"
                 />
@@ -659,9 +685,7 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
         {/* Preview */}
         <div className="space-y-2">
           <Label>Preview</Label>
-          <div className="border rounded-lg p-4 bg-gray-50 min-h-[80px]">
-            {renderPreview()}
-          </div>
+          <div className="border rounded-lg p-4 bg-gray-50 min-h-[80px]">{renderPreview()}</div>
         </div>
       </CardContent>
     </Card>

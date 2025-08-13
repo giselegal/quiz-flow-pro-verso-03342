@@ -1,11 +1,11 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckSquare } from 'lucide-react';
 import React, { useCallback } from 'react';
-import { PropertyEditorProps } from '../interfaces/PropertyEditor';
 import { PropertyArrayEditor } from '../components/PropertyArrayEditor';
-import { PropertySelect } from '../components/PropertySelect';
 import { PropertyCheckbox } from '../components/PropertyCheckbox';
 import { PropertyNumber } from '../components/PropertyNumber';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { CheckSquare } from 'lucide-react';
+import { PropertySelect } from '../components/PropertySelect';
+import { PropertyEditorProps } from '../interfaces/PropertyEditor';
 
 interface OptionItem {
   id: string;
@@ -19,16 +19,20 @@ export const OptionsPropertyEditor: React.FC<PropertyEditorProps> = ({
   onValidate,
   isPreviewMode = false,
 }) => {
-  const handlePropertyChange = useCallback((propertyName: string, value: any) => {
-    onUpdate({ [propertyName]: value });
-    
-    // Validação: lista de opções é obrigatória
-    const isValid = propertyName === 'items' ? 
-                   Array.isArray(value) && value.length > 0 : 
-                   (Array.isArray(block.properties?.items) && block.properties.items.length > 0) || 
-                   propertyName !== 'items';
-    onValidate?.(isValid);
-  }, [onUpdate, onValidate, block.properties?.items]);
+  const handlePropertyChange = useCallback(
+    (propertyName: string, value: any) => {
+      onUpdate({ [propertyName]: value });
+
+      // Validação: lista de opções é obrigatória
+      const isValid =
+        propertyName === 'items'
+          ? Array.isArray(value) && value.length > 0
+          : (Array.isArray(block.properties?.items) && block.properties.items.length > 0) ||
+            propertyName !== 'items';
+      onValidate?.(isValid);
+    },
+    [onUpdate, onValidate, block.properties?.items]
+  );
 
   if (isPreviewMode) {
     return (
@@ -50,56 +54,54 @@ export const OptionsPropertyEditor: React.FC<PropertyEditorProps> = ({
           Propriedades das Opções
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         <PropertyArrayEditor
           label="Lista de Opções"
           value={currentItems}
-          onChange={(value) => handlePropertyChange('items', value)}
+          onChange={value => handlePropertyChange('items', value)}
           itemLabel="Opção"
           maxItems={8}
           required={true}
         />
-        
+
         <PropertySelect
           label="Estilo das Opções"
           value={block.properties?.type || 'radio'}
-          onChange={(value) => handlePropertyChange('type', value)}
+          onChange={value => handlePropertyChange('type', value)}
           options={['radio', 'checkbox', 'buttons', 'cards']}
           required={true}
         />
-        
+
         <PropertyCheckbox
           label="Permitir Múltiplas Seleções"
           value={allowMultiple}
-          onChange={(value) => handlePropertyChange('allowMultiple', value)}
+          onChange={value => handlePropertyChange('allowMultiple', value)}
         />
-        
+
         {allowMultiple && (
           <PropertyNumber
             label="Máximo de Seleções"
             value={maxSelections}
-            onChange={(value) => handlePropertyChange('maxSelections', value)}
+            onChange={value => handlePropertyChange('maxSelections', value)}
             min={1}
             max={currentItems.length || 8}
             step={1}
           />
         )}
-        
+
         {/* Preview section */}
         <div className="mt-6 p-4 bg-[#FAF9F7] rounded-lg border">
           <h4 className="text-sm font-medium text-[#6B4F43] mb-3">Preview:</h4>
-          
+
           <div className="space-y-3">
             <div className="text-xs text-[#8B7355] space-y-1">
               <div>• Estilo: {block.properties?.type || 'radio'}</div>
               <div>• Múltiplas seleções: {allowMultiple ? 'Sim' : 'Não'}</div>
-              {allowMultiple && (
-                <div>• Máximo: {maxSelections} opções</div>
-              )}
+              {allowMultiple && <div>• Máximo: {maxSelections} opções</div>}
               <div>• Total de opções: {currentItems.length}</div>
             </div>
-            
+
             {/* Simular as opções */}
             <div className="space-y-2">
               {currentItems.length > 0 ? (
@@ -116,14 +118,14 @@ export const OptionsPropertyEditor: React.FC<PropertyEditorProps> = ({
                   Adicione opções acima para ver o preview
                 </div>
               )}
-              
+
               {currentItems.length > 4 && (
                 <div className="text-xs text-[#8B7355]">
                   ... e mais {currentItems.length - 4} opções
                 </div>
               )}
             </div>
-            
+
             {/* Aviso de validação */}
             {currentItems.length === 0 && (
               <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
