@@ -58,63 +58,116 @@ const Switch: React.FC<{ checked: boolean; onChange: (val: boolean) => void }> =
 );
 
 const OptionsListEditor: React.FC<{
-  value?: Array<{ text: string; value?: string; category?: string; imageUrl?: string }>;
-  onChange: (val: Array<{ text: string; value?: string; category?: string; imageUrl?: string }>) => void;
+  value?: Array<{ text: string; value?: string; category?: string; imageUrl?: string; description?: string; points?: number }>;
+  onChange: (val: Array<{ text: string; value?: string; category?: string; imageUrl?: string; description?: string; points?: number }>) => void;
 }> = ({ value = [], onChange }) => {
   return (
-    <div className="space-y-2">
-      {(value || []).map((opt, idx) => (
-        <div key={idx} className="grid grid-cols-4 gap-2">
-          <Input
-            placeholder="Texto"
-            value={opt.text || ''}
-            onChange={e => {
-              const arr = [...value];
-              arr[idx] = { ...arr[idx], text: e.target.value };
-              onChange(arr);
-            }}
-          />
-          <Input
-            placeholder="Valor (opcional)"
-            value={opt.value || ''}
-            onChange={e => {
-              const arr = [...value];
-              arr[idx] = { ...arr[idx], value: e.target.value };
-              onChange(arr);
-            }}
-          />
-          <Input
-            placeholder="Categoria (opcional)"
-            value={opt.category || ''}
-            onChange={e => {
-              const arr = [...value];
-              arr[idx] = { ...arr[idx], category: e.target.value };
-              onChange(arr);
-            }}
-          />
-          <Input
-            placeholder="URL da imagem (opcional)"
-            value={opt.imageUrl || ''}
-            onChange={e => {
-              const arr = [...value];
-              arr[idx] = { ...arr[idx], imageUrl: e.target.value };
-              onChange(arr);
-            }}
-          />
+    <div className="space-y-4">
+      {/* Seção de Configuração Visual */}
+      <div className="p-3 bg-muted/50 rounded-lg border">
+        <h4 className="text-sm font-medium mb-3 text-foreground">Configuração Visual</h4>
+        <div className="grid grid-cols-3 gap-2">
+          <div>
+            <label className="block text-xs font-medium mb-1">Colunas</label>
+            <select className="w-full text-xs p-1 border rounded">
+              <option value="1">1 Coluna</option>
+              <option value="2" selected>2 Colunas</option>
+              <option value="3">3 Colunas</option>
+              <option value="4">4 Colunas</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Direção</label>
+            <select className="w-full text-xs p-1 border rounded">
+              <option value="vertical" selected>Vertical</option>
+              <option value="horizontal">Horizontal</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium mb-1">Disposição</label>
+            <select className="w-full text-xs p-1 border rounded">
+              <option value="image-text" selected>Imagem|Texto</option>
+              <option value="text-image">Texto|Imagem</option>
+              <option value="image-only">Só Imagem</option>
+              <option value="text-only">Só Texto</option>
+            </select>
+          </div>
         </div>
-      ))}
+      </div>
+
+      {/* Lista de Opções */}
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium text-foreground">Opções ({(value || []).length})</h4>
+        {(value || []).map((opt, idx) => (
+          <div key={idx} className="flex gap-2 p-2 bg-background border rounded-lg">
+            {/* Miniatura da Imagem */}
+            <div className="flex-shrink-0 w-12 h-12 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/50 cursor-pointer hover:border-primary transition-colors">
+              {opt.imageUrl ? (
+                <img src={opt.imageUrl} alt="Preview" className="w-full h-full object-cover rounded" />
+              ) : (
+                <span className="text-xs text-muted-foreground">📷</span>
+              )}
+            </div>
+            
+            {/* Texto Descritivo */}
+            <div className="flex-1">
+              <Input
+                placeholder="Título da opção"
+                value={opt.text || ''}
+                onChange={e => {
+                  const arr = [...value];
+                  arr[idx] = { ...arr[idx], text: e.target.value };
+                  onChange(arr);
+                }}
+                className="text-sm font-medium mb-1"
+              />
+              <Textarea
+                placeholder="Descrição (ex: Amo roupas confortáveis e práticas...)"
+                value={opt.description || ''}
+                onChange={e => {
+                  const arr = [...value];
+                  arr[idx] = { ...arr[idx], description: e.target.value };
+                  onChange(arr);
+                }}
+                className="text-xs resize-none"
+                rows={2}
+              />
+            </div>
+            
+            {/* Ações */}
+            <div className="flex-shrink-0 flex flex-col gap-1">
+              <button
+                type="button"
+                className="text-xs p-1 border rounded hover:bg-muted"
+                title="Editar"
+              >
+                ✏️
+              </button>
+              <button
+                type="button"
+                className="text-xs p-1 border rounded hover:bg-destructive/10 text-destructive"
+                onClick={() => onChange(value.filter((_, i) => i !== idx))}
+                title="Remover"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="flex gap-2">
         <button
           type="button"
-          className="text-sm underline"
-          onClick={() => onChange([...(value || []), { text: '', value: '', category: '', imageUrl: '' }])}
+          className="flex-1 text-sm py-2 px-3 border border-dashed rounded-lg hover:bg-muted transition-colors"
+          onClick={() => onChange([...(value || []), { text: '', value: '', category: '', imageUrl: '', description: '', points: 0 }])}
         >
           + Adicionar opção
         </button>
         {value.length > 0 && (
           <button
             type="button"
-            className="text-sm underline"
+            className="text-sm py-2 px-3 border border-destructive/50 text-destructive rounded-lg hover:bg-destructive/10 transition-colors"
             onClick={() => onChange(value.slice(0, -1))}
           >
             Remover última
