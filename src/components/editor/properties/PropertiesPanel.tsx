@@ -6,6 +6,9 @@ import { Settings, X, Eye } from 'lucide-react';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
 import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
+import { TextPropertyEditor } from './editors/TextPropertyEditor';
+import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
+import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
 import { getBlockEditorConfig } from './PropertyEditorRegistry';
 import { cn } from '@/lib/utils';
 
@@ -71,7 +74,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   const renderEditor = () => {
     const blockType = selectedBlock.type;
     
-    // Editores já implementados
+    // Editores já implementados - mapeamento direto
     switch (blockType) {
       case 'header':
         return (
@@ -114,12 +117,61 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             />
           );
         }
+
+        // Mapeamento flexível para tipos relacionados a texto
+        const isTextType = blockType === 'text' ||
+                          blockType === 'headline' ||
+                          blockType.includes('text') ||
+                          blockType.includes('heading') ||
+                          blockType === 'testimonial' ||
+                          blockType.includes('title');
+
+        if (isTextType) {
+          return (
+            <TextPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        // Mapeamento flexível para tipos relacionados a botões
+        const isButtonType = blockType === 'button' ||
+                            blockType.includes('button') ||
+                            blockType === 'cta' ||
+                            blockType.includes('cta');
+
+        if (isButtonType) {
+          return (
+            <ButtonPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        // Mapeamento flexível para tipos relacionados a navegação
+        const isNavigationType = blockType.includes('nav') ||
+                                 blockType.includes('menu');
+
+        if (isNavigationType) {
+          return (
+            <NavigationPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
         
-        // Tipos conhecidos mas não implementados
+        // Tipos conhecidos mas não implementados ainda
         const knownTypes = [
-          'text', 'button', 'headline', 'image', 'spacer',
-          'text-inline', 'image-inline', 'button-inline',
-          'testimonial', 'pricing', 'faq', 'video'
+          'image', 'video', 'spacer', 'carousel',
+          'testimonials', 'pricing', 'faq', 'benefits',
+          'guarantee', 'products', 'icon', 'custom-code',
+          'form-container', 'form-input', 'input-field'
         ];
         
         const isKnownType = knownTypes.includes(blockType) || 
@@ -140,7 +192,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     ⚠️ Editor para <strong>{blockType}</strong> ainda não implementado.
                     <br />
                     <span className="text-xs text-yellow-600 mt-1 block">
-                      Será implementado na próxima fase do desenvolvimento.
+                      Este tipo será implementado na próxima fase do desenvolvimento.
                     </span>
                   </p>
                 </div>
@@ -165,6 +217,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                       Editor genérico será implementado em breve. Por enquanto, use o painel clássico.
                     </span>
                   </p>
+                  
+                  {/* Debug info */}
+                  <div className="mt-3 p-2 bg-blue-100 rounded text-xs">
+                    <strong>Debug:</strong> Block ID: {selectedBlock.id}
+                    <br />
+                    <strong>Content keys:</strong> {Object.keys(selectedBlock.content || {}).join(', ') || 'none'}
+                  </div>
                 </div>
               </CardContent>
             </Card>

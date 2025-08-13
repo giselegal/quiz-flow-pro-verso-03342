@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FileText, Eye, Type, Palette, AlignLeft, AlignCenter, AlignRight } from 'lucide-react';
 import { Block } from '@/types/editor';
-import { PropertyNumber } from '../PropertyNumber';
+import { PropertyNumber } from '../components/PropertyNumber';
 
 interface TextPropertyEditorProps {
   block: Block;
