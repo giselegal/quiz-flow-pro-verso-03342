@@ -9,7 +9,7 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-import EnhancedUniversalPropertiesPanelFixed from '@/components/universal/EnhancedUniversalPropertiesPanelFixed';
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
@@ -221,8 +221,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               }
               propertiesPanel={
                 !isPreviewing && selectedBlock ? (
-                  // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
-                  <EnhancedUniversalPropertiesPanelFixed
+                  // 🆕 NOVO PAINEL DE PROPRIEDADES (SISTEMA ATUALIZADO)
+                  <PropertiesPanel
                     selectedBlock={selectedBlock}
                     onUpdate={(blockId: string, updates: Record<string, any>) => {
                       updateBlock(blockId, updates);
