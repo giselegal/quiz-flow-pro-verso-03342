@@ -1,169 +1,62 @@
-/**
- * Step14Template - Template Modular para Etapa 14 do Quiz
- *
- * ✅ APENAS TEMPLATE MODULAR - Questão estratégica 2
- * ❌ Componente monolítico removido para evitar conflitos arquiteturais
- *
- * CORREÇÃO DE FLUXO:
- * - Etapa 14: SEGUNDA questão estratégica (NÃO pontua)
- * - Monitora cliques para métricas da jornada do usuário
- */
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 14 - QUESTÃO ESTRATÉGICA: ORÇAMENTO
 
-// ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
 export const getStep14Template = () => {
   return [
-    // 🎯 CABEÇALHO COM PROGRESSO
     {
-      id: 'progress-header-step14',
-      type: 'quiz-header',
+      id: 'step14-header',
+      type: 'quiz-intro-header',
       properties: {
-        logoUrl:
-          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
-        logoWidth: 80,
-        logoHeight: 80,
-        progressValue: 78, // 78% - questões estratégicas
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: 77,
         progressMax: 100,
-        showBackButton: false,
-        showProgress: true,
-        stepNumber: '14 de 21',
-        spacing: 'small',
+        showBackButton: true,
       },
     },
-
-    // 🎨 BARRA DECORATIVA
     {
-      id: 'decorative-bar-step14',
-      type: 'decorative-bar-inline',
-      properties: {
-        width: '100%',
-        height: 4,
-        color: '#B89B7A',
-        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
-        borderRadius: 3,
-        marginTop: 0,
-        marginBottom: 32,
-        showShadow: true,
-        spacing: 'small',
-      },
-    },
-
-    // 📝 TÍTULO DA QUESTÃO ESTRATÉGICA
-    {
-      id: 'question-title-step14',
+      id: 'step14-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUESTÃO ESTRATÉGICA 2',
-        fontSize: 'text-2xl md:text-3xl',
+        content: 'QUAL É SEU ORÇAMENTO MENSAL PARA ROUPAS?',
+        fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 16,
-        spacing: 'medium',
       },
     },
-
-    // 🎯 PERGUNTA PRINCIPAL
     {
-      id: 'strategic-question-step14',
-      type: 'text-inline',
-      properties: {
-        content: 'Qual é o seu maior desafio quando se veste?',
-        fontSize: 'text-xl md:text-2xl',
-        fontWeight: 'font-semibold',
-        textAlign: 'text-center',
-        color: '#432818',
-        marginBottom: 32,
-        maxWidth: '720px',
-        spacing: 'medium',
-      },
-    },
-
-    // 📊 OPÇÕES DA QUESTÃO ESTRATÉGICA (NÃO PONTUAM - APENAS MÉTRICAS)
-    {
-      id: 'strategic-options-step14',
+      id: 'step14-budget-options',
       type: 'options-grid',
       properties: {
+        questionId: 'strategic-3',
         options: [
-          {
-            id: 'strategic-14-a',
-            text: 'Continuar →',
-            category: 'knowledge',
-            strategicType: 'challenge',
-          },
-          {
-            id: 'strategic-14-b',
-            text: 'Continuar →',
-            category: 'variety',
-            strategicType: 'challenge',
-          },
-          {
-            id: 'strategic-14-c',
-            text: 'Continuar →',
-            category: 'time',
-            strategicType: 'challenge',
-          },
-          {
-            id: 'strategic-14-d',
-            text: 'Continuar →',
-            category: 'confidence',
-            strategicType: 'challenge',
-          },
+          { id: 's3a', text: 'Até R$ 200 por mês', category: 'baixo', points: 1 },
+          { id: 's3b', text: 'Entre R$ 200 e R$ 500 por mês', category: 'medio-baixo', points: 1 },
+          { id: 's3c', text: 'Entre R$ 500 e R$ 1.000 por mês', category: 'medio', points: 1 },
+          { id: 's3d', text: 'Entre R$ 1.000 e R$ 2.000 por mês', category: 'medio-alto', points: 1 },
+          { id: 's3e', text: 'Acima de R$ 2.000 por mês', category: 'alto', points: 1 },
+          { id: 's3f', text: 'Prefiro não informar', category: 'nao-informar', points: 1 },
         ],
-        multiSelect: false, // Questões estratégicas: seleção única
-        columns: 2,
-        backgroundColor: '#FFFFFF',
-        borderColor: '#E5DDD5',
-        hoverBackgroundColor: '#F3E8E6',
-        selectedBackgroundColor: '#B89B7A',
-        selectedTextColor: '#FFFFFF',
-        borderRadius: 12,
-        padding: 16,
-        spacing: 'medium',
-        trackingEnabled: true, // ✅ HABILITADO PARA MÉTRICAS
+        columns: 1,
+        showImages: false,
+        multipleSelection: false,
+        maxSelections: 1,
+        minSelections: 1,
       },
     },
-
-    // 🔄 BOTÃO DE NAVEGAÇÃO
     {
-      id: 'navigation-button-step14',
+      id: 'step14-continue-button',
       type: 'button-inline',
       properties: {
         text: 'Continuar →',
-        variant: 'primary',
-        size: 'large',
         backgroundColor: '#B89B7A',
-        textColor: '#FFFFFF',
-        hoverBackgroundColor: '#A1835D',
-        borderRadius: 12,
-        padding: '16px 32px',
-        fontSize: 'text-lg',
-        fontWeight: 'font-semibold',
-        marginTop: 32,
-        marginBottom: 16,
-        showShadow: true,
-        spacing: 'medium',
-        disabled: true, // Desabilitado até seleção
-        requiresSelection: true, // Requer seleção para habilitar
-      },
-    },
-
-    // 📊 INDICADOR DE PROGRESSO ESTRATÉGICO
-    {
-      id: 'strategic-progress-step14',
-      type: 'text-inline',
-      properties: {
-        content: 'Questão Estratégica 2 de 6 • Não afeta sua pontuação',
-        fontSize: 'text-sm',
-        textAlign: 'text-center',
-        color: '#432818',
-        opacity: 0.6,
-        marginTop: 16,
-        spacing: 'small',
+        textColor: '#ffffff',
+        disabled: true,
       },
     },
   ];
 };
 
-// ✅ EXPORT PADRÃO (COMPATIBILIDADE)
 export default getStep14Template;
