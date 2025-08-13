@@ -9,7 +9,17 @@ import { useSupabaseQuizEditor, QuizData, SavedQuiz } from '@/hooks/useSupabaseQ
 import { BookOpen, Eye, Plus, Save, Settings, Database, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-export function IntegratedQuizEditor() {
+interface IntegratedQuizEditorProps {
+  onSave?: () => void;
+  onPreview?: () => void;
+  className?: string;
+}
+
+export default function IntegratedQuizEditor({ 
+  onSave, 
+  onPreview, 
+  className 
+}: IntegratedQuizEditorProps = {}) {
   const [activeTab, setActiveTab] = useState('edit');
   const [savedQuizzes, setSavedQuizzes] = useState<SavedQuiz[]>([]);
   
