@@ -14,20 +14,20 @@ export const useNavigationSafe = () => {
         // Log detalhado para debugging
         console.log('🚀 [NavigationSafe] Navegando para:', path);
         console.log('🚀 [NavigationSafe] Estado atual da página:', window.location.href);
-        
+
         // Validação da rota
         if (!path || path.length === 0) {
           throw new Error('Caminho de navegação inválido');
         }
-        
+
         // Navegação interna segura
         setLocation(path);
-        
+
         console.log('✅ [NavigationSafe] Navegação bem-sucedida');
       } catch (error) {
         console.error('❌ [NavigationSafe] Erro na navegação:', error);
         console.log('🔄 [NavigationSafe] Tentando fallback...');
-        
+
         // Fallback para navegação direta
         try {
           window.location.href = path;
