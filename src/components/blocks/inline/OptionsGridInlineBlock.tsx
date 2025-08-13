@@ -5,6 +5,7 @@ import type { BlockComponentProps } from '../../../types/blocks';
 interface OptionItem {
   id: string;
   text: string;
+  description?: string;
   imageUrl?: string;
   value?: string;
   category?: string;
@@ -137,14 +138,33 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
               {/* Texto da opção */}
               <div className="option-text">
-                <p
+                {/* Título da opção */}
+                <h4
                   className={cn(
-                    'text-sm font-medium leading-relaxed',
-                    isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-800'
+                    'text-sm font-bold leading-tight mb-1',
+                    isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-900'
                   )}
+                  style={{
+                    color: isSelectedOption ? selectedBorderColor : '#432818'
+                  }}
                 >
                   {option.text}
-                </p>
+                </h4>
+                
+                {/* Descrição da opção */}
+                {option.description && (
+                  <p
+                    className={cn(
+                      'text-xs leading-relaxed opacity-90',
+                      isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-600'
+                    )}
+                    style={{
+                      color: isSelectedOption ? selectedBorderColor : '#6B7280'
+                    }}
+                  >
+                    {option.description}
+                  </p>
+                )}
               </div>
 
               {/* Indicador de seleção */}
