@@ -39,6 +39,12 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     borderColor = '#E5E7EB',
     selectedBorderColor = '#B89B7A',
     hoverColor = '#F3E8D3',
+    // ✨ NOVAS PROPRIEDADES DO PAINEL
+    layoutOrientation = 'vertical',
+    contentType = 'text-and-image',
+    imagePosition = 'top',
+    gap = 16,
+    cardRadius = 12,
   } = block.properties || {};
 
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
@@ -89,12 +95,15 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       {/* Grid de opções */}
       <div
         className={cn(
-          'grid gap-4',
+          'grid',
           columns === 1 && 'grid-cols-1',
           columns === 2 && 'grid-cols-1 md:grid-cols-2',
           columns === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
           columns === 4 && 'grid-cols-2 md:grid-cols-4'
         )}
+        style={{
+          gap: `${gap}px`,
+        }}
       >
         {options.map((option: OptionItem) => {
           const isSelectedOption = selectedOptions.includes(option.id);
@@ -103,8 +112,10 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
             <div
               key={option.id}
               className={cn(
-                'option-card p-4 rounded-lg border-2 cursor-pointer transition-all duration-200',
+                'option-card p-4 border-2 cursor-pointer transition-all duration-200',
                 'hover:shadow-lg transform hover:-translate-y-1',
+                layoutOrientation === 'horizontal' && imagePosition === 'left' ? 'flex items-center gap-4' : '',
+                layoutOrientation === 'horizontal' && imagePosition === 'right' ? 'flex items-center gap-4 flex-row-reverse' : '',
                 isSelectedOption
                   ? `border-[${selectedBorderColor}] bg-[${selectedBorderColor}]/10 shadow-lg`
                   : `border-[${borderColor}] hover:border-[${selectedBorderColor}] hover:bg-[${hoverColor}]`
@@ -116,18 +127,24 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               style={{
                 borderColor: isSelectedOption ? selectedBorderColor : borderColor,
                 backgroundColor: isSelectedOption ? `${selectedBorderColor}20` : undefined,
+                borderRadius: `${cardRadius}px`,
               }}
             >
               {/* Imagem da opção */}
-              {showImages && option.imageUrl && (
-                <div className="option-image mb-3">
+              {showImages && option.imageUrl && contentType !== 'text-only' && (
+                <div className={cn(
+                  'option-image',
+                  layoutOrientation === 'vertical' && imagePosition === 'top' && 'mb-3',
+                  layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-2 mt-3',
+                  layoutOrientation === 'horizontal' && (imagePosition === 'left' || imagePosition === 'right') && 'flex-shrink-0'
+                )}>
                   <img
                     src={option.imageUrl}
                     alt={option.text}
                     className="w-full rounded-md object-cover"
                     style={{
-                      width: `${imageSize}px`,
-                      height: `${imageSize}px`,
+                      width: layoutOrientation === 'horizontal' ? `${Math.min(imageSize, 120)}px` : `${imageSize}px`,
+                      height: layoutOrientation === 'horizontal' ? `${Math.min(imageSize, 120)}px` : `${imageSize}px`,
                       maxWidth: '100%',
                       aspectRatio: '1/1',
                     }}
@@ -137,35 +154,41 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               )}
 
               {/* Texto da opção */}
-              <div className="option-text">
-                {/* Título da opção */}
-                <h4
-                  className={cn(
-                    'text-sm font-bold leading-tight mb-1',
-                    isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-900'
-                  )}
-                  style={{
-                    color: isSelectedOption ? selectedBorderColor : '#432818'
-                  }}
-                >
-                  {option.text}
-                </h4>
-                
-                {/* Descrição da opção */}
-                {option.description && (
-                  <p
+              {contentType !== 'image-only' && (
+                <div className={cn(
+                  'option-text',
+                  layoutOrientation === 'horizontal' && 'flex-1',
+                  layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-1'
+                )}>
+                  {/* Título da opção */}
+                  <h4
                     className={cn(
-                      'text-xs leading-relaxed opacity-90',
-                      isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-600'
+                      'text-sm font-bold leading-tight mb-1',
+                      isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-900'
                     )}
                     style={{
-                      color: isSelectedOption ? selectedBorderColor : '#6B7280'
+                      color: isSelectedOption ? selectedBorderColor : '#432818'
                     }}
                   >
-                    {option.description}
-                  </p>
-                )}
-              </div>
+                    {option.text}
+                  </h4>
+                  
+                  {/* Descrição da opção */}
+                  {option.description && (
+                    <p
+                      className={cn(
+                        'text-xs leading-relaxed opacity-90',
+                        isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-600'
+                      )}
+                      style={{
+                        color: isSelectedOption ? selectedBorderColor : '#6B7280'
+                      }}
+                    >
+                      {option.description}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Indicador de seleção */}
               {isSelectedOption && (
