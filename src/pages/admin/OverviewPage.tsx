@@ -30,24 +30,24 @@ import {
 
 const OverviewPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 p-6 space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
       {/* Header Moderno */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#432818] rounded-xl flex items-center justify-center shadow-lg">
               <Zap className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#432818] to-[#6B4F43] bg-clip-text text-transparent">
                 Dashboard QuizFlow
               </h1>
               <div className="flex items-center space-x-2 mt-1">
-                <Badge className="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-0 px-3 py-1">
+                <Badge className="bg-gradient-to-r from-[#B89B7A]/20 to-[#432818]/20 text-[#432818] border-0 px-3 py-1">
                   <Crown className="h-3 w-3 mr-1" />
                   Pro Plan
                 </Badge>
-                <Badge variant="outline" className="border-green-200 text-green-700 bg-green-50">
+                <Badge variant="outline" className="border-[#B89B7A]/40 text-[#B89B7A] bg-[#B89B7A]/10">
                   <Activity className="h-3 w-3 mr-1" />
                   Online
                 </Badge>
