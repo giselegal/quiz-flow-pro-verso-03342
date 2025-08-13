@@ -16,7 +16,7 @@ export default defineConfig({
     // Middleware para servir templates da pasta /templates
     middlewareMode: false,
     fs: {
-      allow: ['..', 'templates', 'public'],
+      allow: ['..', 'templates', 'public', 'src'],
     },
   },
   // Configuração para servir templates como assets estáticos

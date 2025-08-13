@@ -9,38 +9,43 @@ async function loadTemplate(stepNumber: number): Promise<any> {
   const stepId = stepNumber.toString().padStart(2, '0');
 
   try {
-    // ✅ STRATEGY 1: Tentar import estático primeiro (mais confiável)
-    let template = null;
-
-    // Import direto baseado no número do step
-    switch (stepNumber) {
-      case 1:
-        template = (await import('./step-01.json')).default;
-        break;
-      case 2:
-        template = (await import('./step-02.json')).default;
-        break;
-      case 3:
-        template = (await import('./step-03.json')).default;
-        break;
-      default:
-        // ✅ STRATEGY 2: Fallback para import dinâmico
-        const localPath = `./step-${stepId}.json`;
-        const localTemplate = await import(localPath);
-        template = localTemplate.default || localTemplate;
-        break;
+    // ✅ STRATEGY: Usar fetch HTTP para evitar problemas de build
+    const templatePath = `/src/config/templates/step-${stepId}.json`;
+    
+    // Durante desenvolvimento, usar fetch
+    if (import.meta.env.DEV) {
+      try {
+        const response = await fetch(templatePath);
+        if (response.ok) {
+          const template = await response.json();
+          if (template && template.blocks) {
+            console.log(`✅ Template ${stepNumber} carregado via fetch`);
+            return template;
+          }
+        }
+      } catch (fetchError) {
+        console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
+      }
+    }
+    
+    // ✅ FALLBACK: Import dinâmico apenas quando necessário
+    try {
+      const localPath = `./step-${stepId}.json`;
+      const moduleImport = await import(localPath);
+      const template = moduleImport.default || moduleImport;
+      
+      if (template && template.blocks) {
+        console.log(`✅ Template ${stepNumber} carregado via import`);
+        return template;
+      }
+    } catch (importError) {
+      console.warn(`⚠️ Import falhou para template ${stepNumber}:`, importError);
     }
 
-    if (template && template.blocks) {
-      console.log(`✅ Template ${stepNumber} carregado de src/config/templates/`);
-      return template;
-    }
-
-    console.warn(`⚠️ Template ${stepNumber} não encontrado em src/config/templates/`);
+    console.warn(`⚠️ Template ${stepNumber} não encontrado`);
     return null;
   } catch (error) {
-    console.warn(`⚠️ Erro ao carregar template ${stepNumber}:`, error);
-    console.warn(`Detalhes do erro:`, error);
+    console.warn(`⚠️ Erro geral ao carregar template ${stepNumber}:`, error);
     return null;
   }
 }
