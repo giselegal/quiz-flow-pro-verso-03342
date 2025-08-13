@@ -34,6 +34,13 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'subtitle', label: 'Subtítulo', type: 'text' },
       { key: 'alignment', label: 'Alinhamento', type: 'text' },
       { key: 'type', label: 'Tipo', type: 'text' },
+      // Propriedades de container e layout
+      { key: 'containerWidth', label: 'Largura do Container', type: 'text' },
+      { key: 'containerPosition', label: 'Posição do Container', type: 'text' },
+      { key: 'spacing', label: 'Espaçamento Interno', type: 'text' },
+      { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
+      { key: 'marginTop', label: 'Margem Superior', type: 'number' },
+      { key: 'marginBottom', label: 'Margem Inferior', type: 'number' },
     ],
   },
   'decorative-bar-inline': {
