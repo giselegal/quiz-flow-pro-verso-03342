@@ -9,7 +9,8 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-import EnhancedUniversalPropertiesPanel from '@/components/universal/EnhancedUniversalPropertiesPanel';
+// 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
@@ -146,7 +147,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       {/* Notificação de propriedades ativadas */}
       {showNotification && (
         <EditorNotification
-          message="🎨 Propriedades de edição ativadas na Etapa 1! Clique em qualquer componente para editá-lo diretamente."
+          message="Propriedades de edição ativadas na Etapa 1! Clique em qualquer componente para editá-lo diretamente."
           type="success"
           duration={8000}
           onClose={() => setShowNotification(false)}
@@ -173,7 +174,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   </h1>
                   <div className="text-sm text-stone-500">
                     {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                    {stageCount !== 1 ? 's' : ''}
+                    {stageCount !== 1 ? 's' : ''} • Novo Painel Ativo
                   </div>
                 </div>
               </div>
@@ -208,20 +209,17 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               }
               propertiesPanel={
                 !isPreviewing && selectedBlock ? (
-                  <EnhancedUniversalPropertiesPanel
-                    selectedBlock={{
-                      id: selectedBlock.id,
-                      type: selectedBlock.type,
-                      properties: {
-                        ...(selectedBlock.properties || {}),
-                        ...(selectedBlock.content || {}),
-                      },
-                    }}
+                  // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
+                  <PropertiesPanel
+                    selectedBlock={selectedBlock}
                     onUpdate={(blockId: string, updates: Record<string, any>) => {
                       updateBlock(blockId, updates);
                     }}
-                    onDelete={handleDeleteBlock}
                     onClose={() => setSelectedBlockId(null)}
+                    onDelete={(blockId: string) => {
+                      deleteBlock(blockId);
+                      setSelectedBlockId(null);
+                    }}
                   />
                 ) : !isPreviewing ? (
                   <div className="h-full p-4 flex items-center justify-center text-stone-500">
@@ -230,10 +228,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                         <Settings className="w-8 h-8 text-stone-400" />
                       </div>
                       <p className="text-sm font-medium">
-                        Clique em um componente para personalizar
+                        Selecione um bloco para editar propriedades
                       </p>
                       <p className="text-xs text-stone-400 mt-2">
-                        As propriedades específicas do componente
+                        Novo Painel de Propriedades • Editores Específicos
                         <br />
                         aparecerão aqui quando selecionado
                       </p>
