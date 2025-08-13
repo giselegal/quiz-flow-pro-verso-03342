@@ -8,6 +8,7 @@ import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
 import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
 import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
+import { OptionsGridPropertyEditor } from './editors/OptionsGridPropertyEditor';
 import { PricingPropertyEditor } from './editors/PricingPropertyEditor';
 import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
@@ -76,6 +77,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   // Renderizar editor específico baseado no tipo
   const renderEditor = () => {
     const blockType = selectedBlock.type;
+    console.log('🔧 PropertiesPanel - Block type:', blockType);
 
     // Editores já implementados - mapeamento direto
     switch (blockType) {
@@ -114,10 +116,21 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
           );
         }
 
-        // Mapeamento flexível para tipos relacionados a opções
+        // Mapeamento específico para options-grid
+        if (blockType === 'options-grid') {
+          console.log('✅ Using OptionsGridPropertyEditor for:', blockType);
+          return (
+            <OptionsGridPropertyEditor
+              block={selectedBlock}
+              onUpdate={handleUpdate}
+              isPreviewMode={isPreviewMode}
+            />
+          );
+        }
+
+        // Mapeamento flexível para tipos relacionados a opções (outros)
         const isOptionsType =
           blockType.includes('options') ||
-          blockType === 'options-grid' ||
           blockType.includes('result') ||
           blockType.includes('cta');
 
