@@ -8,9 +8,7 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-// ✅ PAINEL INTELIGENTE (ATUAL)
-import IntelligentPropertiesPanel from '@/components/editor/properties/IntelligentPropertiesPanel';
-// 🆕 NOVO PAINEL DE PROPRIEDADES (EM DESENVOLVIMENTO)
+// 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
 // Context & Hooks
@@ -31,9 +29,6 @@ import { useSyncedScroll } from '@/hooks/useSyncedScroll';
  * - Sistema de ativação automática de 21 etapas
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
-  // 🆕 Flag para testar o novo painel de propriedades
-  const [useNewPropertiesPanel, setUseNewPropertiesPanel] = useState(false);
-
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
@@ -88,33 +83,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   const handleStageSelect = (_stageId: string) => {
     // O EditorContext já gerencia internamente
-  };
-
-  // Função para determinar tipo de etapa baseado no ID da etapa ativa
-  const getStepTypeFromStageId = (
-    stageId: string | null
-  ):
-    | 'intro'
-    | 'question'
-    | 'transition'
-    | 'strategic'
-    | 'processing'
-    | 'result'
-    | 'lead'
-    | 'offer' => {
-    if (!stageId) return 'intro';
-
-    const stepNumber = getStepNumberFromStageId(stageId);
-
-    if (stepNumber === 1) return 'intro';
-    if (stepNumber >= 2 && stepNumber <= 14) return 'question';
-    if (stepNumber === 15 || stepNumber === 19) return 'transition';
-    if (stepNumber === 16) return 'processing';
-    if (stepNumber >= 17 && stepNumber <= 18) return 'result';
-    if (stepNumber === 20) return 'lead';
-    if (stepNumber === 21) return 'offer';
-
-    return 'question'; // fallback
   };
 
   const getStepNumberFromStageId = (stageId: string | null): number => {
@@ -188,22 +156,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   Editor de Funil - Etapa {activeStageId}
                 </h1>
 
-                {/* 🧪 Botão de teste do novo painel */}
-                <button
-                  onClick={() => setUseNewPropertiesPanel(!useNewPropertiesPanel)}
-                  className={`px-3 py-1 text-xs rounded-full border transition-colors ${
-                    useNewPropertiesPanel
-                      ? 'bg-green-100 border-green-300 text-green-700'
-                      : 'bg-gray-100 border-gray-300 text-gray-600'
-                  }`}
-                  title="Alternar entre painel antigo e novo"
-                >
-                  {useNewPropertiesPanel ? '🆕 Novo Painel' : '📋 Painel Atual'}
-                </button>
-
                 <div className="text-sm text-stone-500">
                   {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                  {stageCount !== 1 ? 's' : ''}
+                  {stageCount !== 1 ? 's' : ''} • 🆕 Novo Painel Ativo
                 </div>
               </div>
             </div>
@@ -235,49 +190,24 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                useNewPropertiesPanel ? (
-                  // 🆕 NOVO PAINEL DE PROPRIEDADES
-                  <PropertiesPanel
-                    selectedBlock={selectedBlock}
-                    onUpdate={(blockId: string, updates: Record<string, any>) => {
-                      updateBlock(blockId, updates);
-                    }}
-                    onClose={() => setSelectedBlockId(null)}
-                    onDelete={(blockId: string) => {
-                      deleteBlock(blockId);
-                      setSelectedBlockId(null);
-                    }}
-                  />
-                ) : (
-                  // ✅ PAINEL ATUAL (INTELIGENTE)
-                  <IntelligentPropertiesPanel
-                    selectedBlock={{
-                      id: selectedBlock.id,
-                      type: selectedBlock.type,
-                      properties: {
-                        ...(selectedBlock.properties || {}),
-                        ...(selectedBlock.content || {}),
-                      },
-                    }}
-                    stepType={getStepTypeFromStageId(activeStageId)}
-                    stepNumber={getStepNumberFromStageId(activeStageId)}
-                    onUpdate={(blockId: string, updates: Record<string, any>) => {
-                      updateBlock(blockId, updates);
-                    }}
-                    onClose={() => setSelectedBlockId(null)}
-                    onPreview={() => setIsPreviewing(true)}
-                    onReset={() => {
-                      // TODO: Implementar reset para propriedades padrão
-                      console.log('Reset proprieties for block:', selectedBlock.id);
-                    }}
-                  />
-                )
+                // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
+                <PropertiesPanel
+                  selectedBlock={selectedBlock}
+                  onUpdate={(blockId: string, updates: Record<string, any>) => {
+                    updateBlock(blockId, updates);
+                  }}
+                  onClose={() => setSelectedBlockId(null)}
+                  onDelete={(blockId: string) => {
+                    deleteBlock(blockId);
+                    setSelectedBlockId(null);
+                  }}
+                />
               ) : !isPreviewing ? (
                 <div className="h-full p-4 flex items-center justify-center text-stone-500">
                   <div className="text-center">
                     <p className="text-sm">Selecione um bloco para editar propriedades</p>
                     <p className="text-xs text-stone-400 mt-1">
-                      Painel Inteligente ativo • Drag & Drop habilitado
+                      🆕 Novo Painel de Propriedades • Editores Específicos
                     </p>
                   </div>
                 </div>
