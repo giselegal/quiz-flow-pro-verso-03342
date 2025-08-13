@@ -1,404 +1,159 @@
-import React, { useEffect } from 'react';
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 8 - QUESTÃO 7: TECIDOS PREFERIDOS
 
-/**
- * Step08Template - Componente para Etapa 8 do Quiz
- *
- * Template para questão 7: Configurável via painel de propriedades
- * Integração com sistema de quiz e editor de propriedades
- */
-
-// ✅ INTERFACE OBRIGATÓRIA PARA O EDITOR
-interface Step08TemplateProps {
-  id: string;
-  className?: string;
-  style?: React.CSSProperties;
-
-  properties?: {
-    enabled?: boolean;
-    title?: string;
-    subtitle?: string;
-    questionCounter?: string;
-    backgroundColor?: string;
-    textColor?: string;
-    showProgress?: boolean;
-    progressValue?: number;
-    buttonText?: string;
-    multipleSelection?: boolean;
-    minSelections?: number;
-    maxSelections?: number;
-    columns?: number;
-    imageSize?: number;
-  };
-
-  isEditing?: boolean;
-  isSelected?: boolean;
-  onUpdate?: (id: string, updates: any) => void;
-  onClick?: () => void;
-  onPropertyChange?: (key: string, value: any) => void;
-}
-
-// ✅ COMPONENTE PRINCIPAL
-export const Step08Template: React.FC<Step08TemplateProps> = ({
-  id,
-  className = '',
-  style = {},
-  properties = {
-    enabled: true,
-    title: 'QUESTÃO 7 - CONFIGURAR NO PAINEL',
-    subtitle: '',
-    questionCounter: 'Questão 7 de 10',
-    backgroundColor: '#FEFEFE',
-    textColor: '#432818',
-    showProgress: true,
-    progressValue: 40,
-    buttonText: 'Próxima Questão →',
-    multipleSelection: true,
-    autoAdvanceOnComplete: true,
-    autoAdvanceDelay: 1500,
-    minSelections: 3,
-    autoAdvance: true,
-    maxSelections: 3,
-    columns: 2,
-    imageSize: 256,
-  },
-  isEditing = false,
-  isSelected = false,
-  onUpdate,
-  onClick,
-}) => {
-  // ✅ DEBUG E MONITORAMENTO
-  useEffect(() => {
-    if (isEditing) {
-      console.log(`Step08Template ${id} entered editing mode`);
-    }
-  }, [isEditing, id]);
-
-  useEffect(() => {
-    console.log(`Step08Template ${id} properties updated:`, properties);
-  }, [properties, id]);
-
-  // ✅ FUNÇÃO DE CLIQUE
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClick?.();
-
-    if (isEditing) {
-      console.log(`Step08Template ${id} clicked in editing mode`);
-      onUpdate?.(id, { lastClicked: new Date().toISOString() });
-    }
-  };
-
-  // ✅ ESTILOS DINÂMICOS
-  const containerStyles: React.CSSProperties = {
-    backgroundColor: properties.backgroundColor,
-    color: properties.textColor,
-    width: '100%',
-    minHeight: '500px',
-    padding: '24px',
-    boxSizing: 'border-box',
-    position: 'relative',
-    cursor: isEditing ? 'pointer' : 'default',
-    border: isSelected ? '2px dashed #B89B7A' : '1px solid #e5e7eb',
-    borderRadius: '8px',
-    transition: 'all 0.3s ease',
-    opacity: properties.enabled === false ? 0.5 : 1,
-    pointerEvents: properties.enabled === false ? 'none' : 'auto',
-    ...style,
-  };
-
-  // ✅ RENDERIZAÇÃO CONDICIONAL QUANDO DESABILITADO
-  if (!properties.enabled && !isEditing) {
-    return null;
-  }
-
-  return (
-    <div
-      id={id}
-      className={`step08-template ${className} ${isEditing ? 'editing-mode' : ''}`}
-      style={containerStyles}
-      onClick={handleClick}
-    >
-      {/* Header com Progresso */}
-      {properties.showProgress && (
-        <div className="step-header mb-6">
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-            <div
-              className="bg-[#B89B7A] h-2 rounded-full transition-all duration-500"
-              style={{ width: `${properties.progressValue}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Conteúdo da Questão */}
-      <div className="step-content text-center">
-        {/* Título da Questão */}
-        <h1 className="text-2xl font-bold mb-2" style={{ color: properties.textColor }}>
-          {properties.title}
-        </h1>
-
-        {/* Contador da Questão */}
-        {properties.questionCounter && (
-          <p className="text-sm mb-6" style={{ color: '#6B7280' }}>
-            {properties.questionCounter}
-          </p>
-        )}
-
-        {/* Área de Conteúdo Configurável */}
-        <div className="content-area mb-6 p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-          <p className="text-gray-500 mb-4">
-            📝 Conteúdo da Etapa 8 - Configure no painel de propriedades
-          </p>
-
-          {/* Placeholder para opções */}
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="p-4 bg-white rounded border border-gray-200">
-                <div className="w-full h-20 bg-gray-100 rounded mb-2"></div>
-                <p className="text-xs text-gray-400">Opção {i}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Botão de Continuar */}
-        <div className="button-section">
-          <button
-            className="w-full max-w-md py-3 px-6 bg-[#B89B7A] text-white font-semibold rounded-md hover:bg-[#A1835D] transition-all duration-300"
-            disabled={isEditing}
-          >
-            {properties.buttonText}
-          </button>
-        </div>
-
-        {/* Info sobre Seleção */}
-        {properties.multipleSelection && (
-          <p className="text-xs text-gray-500 mt-4">
-            Selecione entre {properties.minSelections} e {properties.maxSelections} opções
-          </p>
-        )}
-      </div>
-
-      {/* Indicadores de Estado no Modo de Edição */}
-      {isEditing && (
-        <div className="absolute top-2 right-2 flex gap-2 items-center">
-          {!properties.enabled && (
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">Desabilitado</span>
-          )}
-          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded">Step 08</span>
-        </div>
-      )}
-
-      {/* Debug Info */}
-      {process.env.NODE_ENV === 'development' && isEditing && (
-        <div className="absolute bottom-2 left-2 text-xs text-gray-500 font-mono">ID: {id}</div>
-      )}
-    </div>
-  );
-};
-
-// ✅ FUNÇÃO DE TEMPLATE (MANTIDA PARA COMPATIBILIDADE)
 export const getStep08Template = () => {
   return [
-    // 🎯 CABEÇALHO COM PROGRESSO
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
-      id: 'quiz-header-step08',
-      type: 'quiz-header',
+      id: 'step08-header',
+      type: 'quiz-intro-header',
       properties: {
         logoUrl:
           'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
-        logoWidth: 80,
-        logoHeight: 80,
-        progressValue: 40,
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: 44,
         progressMax: 100,
         showBackButton: true,
-        showProgress: true,
-        stepNumber: '8 de 21',
-        spacing: 'small',
         marginTop: 0,
+        spacing: 'small',
         marginBottom: 0,
       },
     },
 
-    // 🎨 BARRA DECORATIVA
+    // 🎯 TÍTULO DA QUESTÃO
     {
-      id: 'decorative-bar-step08',
-      type: 'decorative-bar-inline',
-      properties: {
-        width: '100%',
-        height: 3,
-        color: '#B89B7A',
-        gradientColors: ['#B89B7A', '#D4C2A8', '#B89B7A'],
-        borderRadius: 2,
-        marginTop: 0,
-        marginBottom: 20,
-        showShadow: true,
-        spacing: 'small',
-      },
-    },
-
-    // 📝 PERGUNTA PRINCIPAL
-    {
-      id: 'question-text-step08',
+      id: 'step08-question-title',
       type: 'text-inline',
       properties: {
-        content: 'Quando o assunto são estampas, você prefere:',
+        content: 'QUAIS TECIDOS VOCÊ PREFERE?',
+        level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
-        fontFamily: 'Playfair Display, serif',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 24,
-        lineHeight: '1.3',
-        spacing: 'small',
+        marginBottom: 0,
         marginTop: 0,
+        spacing: 'small',
       },
     },
 
-    // 🖼️ IMAGEM DA PERGUNTA
+    // 📊 CONTADOR DE QUESTÃO
     {
-      id: 'question-image-step08',
-      type: 'image-display-inline',
+      id: 'step08-question-counter',
+      type: 'text-inline',
       properties: {
-        src: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838139/20250509_2144_Estampas_e_Padr%C3%B5es_simple_compose_01jtvt6y84tcz2w0tqp7j3rbpy_nwevaw.webp',
-        alt: 'Imagem da pergunta 8',
-        width: 400,
-        height: 300,
-        className: 'object-cover w-full max-w-md h-64 rounded-lg mx-auto shadow-md',
+        content: 'Questão 7 de 10',
+        fontSize: 'text-sm',
         textAlign: 'text-center',
+        color: '#6B7280',
         marginBottom: 24,
-        spacing: 'small',
         marginTop: 0,
+        spacing: 'small',
       },
     },
 
-    // 🎯 OPÇÕES DE RESPOSTA
-
+    // 🎯 GRADE DE OPÇÕES DE TECIDOS
     {
-      id: 'option-1-step08',
-      type: 'quiz-option',
+      id: 'step08-fabric-options',
+      type: 'options-grid',
       properties: {
-        optionId: 'sem-estampas',
-        label: 'Prefiro sem estampas - lisas e elegantes',
-        value: 'sem-estampas',
-        points: {
-          elegante: 3,
-          casual: 2,
-          criativo: 1,
-          classico: 3,
-          romantico: 1,
-          minimalista: 3,
-          boho: 1,
-          spacing: 'small',
-          marginTop: 0,
-          marginBottom: 0,
-        },
-
-        variant: 'default',
-        size: 'large',
-        textAlign: 'text-left',
-        marginBottom: 12,
-        borderRadius: 'rounded-lg',
-        backgroundColor: '#ffffff',
-        hoverColor: '#F8F4F1',
-        selectedColor: '#B89B7A',
-      },
-    },
-    {
-      id: 'option-2-step08',
-      type: 'quiz-option',
-      properties: {
-        optionId: 'listras-classicas',
-        label: 'Listras clássicas',
-        value: 'listras-classicas',
-        points: {
-          elegante: 2,
-          casual: 3,
-          criativo: 1,
-          classico: 3,
-          romantico: 1,
-          minimalista: 2,
-          boho: 1,
-          spacing: 'small',
-          marginTop: 0,
-          marginBottom: 0,
-        },
-
-        variant: 'default',
-        size: 'large',
-        textAlign: 'text-left',
-        marginBottom: 12,
-        borderRadius: 'rounded-lg',
-        backgroundColor: '#ffffff',
-        hoverColor: '#F8F4F1',
-        selectedColor: '#B89B7A',
-      },
-    },
-    {
-      id: 'option-3-step08',
-      type: 'quiz-option',
-      properties: {
-        optionId: 'florais-delicadas',
-        label: 'Florais delicadas e femininas',
-        value: 'florais-delicadas',
-        points: {
-          elegante: 1,
-          casual: 2,
-          criativo: 2,
-          classico: 2,
-          romantico: 3,
-          minimalista: 1,
-          boho: 3,
-          spacing: 'small',
-          marginTop: 0,
-          marginBottom: 0,
-        },
-
-        variant: 'default',
-        size: 'large',
-        textAlign: 'text-left',
-        marginBottom: 12,
-        borderRadius: 'rounded-lg',
-        backgroundColor: '#ffffff',
-        hoverColor: '#F8F4F1',
-        selectedColor: '#B89B7A',
-      },
-    },
-    {
-      id: 'option-4-step08',
-      type: 'quiz-option',
-      properties: {
-        optionId: 'geometricas-modernas',
-        label: 'Geométricas e modernas',
-        value: 'geometricas-modernas',
-        points: {
-          elegante: 2,
-          casual: 1,
-          criativo: 3,
-          classico: 1,
-          romantico: 1,
-          minimalista: 2,
-          boho: 2,
-          spacing: 'small',
-          marginTop: 0,
-          marginBottom: 0,
-        },
-
-        variant: 'default',
-        size: 'large',
-        textAlign: 'text-left',
-        marginBottom: 12,
-        borderRadius: 'rounded-lg',
-        backgroundColor: '#ffffff',
-        hoverColor: '#F8F4F1',
-        selectedColor: '#B89B7A',
+        questionId: 'q7',
+        options: [
+          {
+            id: '7a',
+            text: 'Algodão e linho naturais',
+            value: '7a',
+            category: 'Natural',
+            styleCategory: 'Natural',
+            points: 3,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735460/algodao-linho_m8q4kn.webp',
+          },
+          {
+            id: '7b',
+            text: 'Lã e tweed clássicos',
+            value: '7b',
+            category: 'Clássico',
+            styleCategory: 'Clássico',
+            points: 3,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735461/la-tweed_p7kj2q.webp',
+          },
+          {
+            id: '7c',
+            text: 'Tecidos técnicos modernos',
+            value: '7c',
+            category: 'Contemporâneo',
+            styleCategory: 'Contemporâneo',
+            points: 2,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735462/tecnicos-modernos_x9qn7t.webp',
+          },
+          {
+            id: '7d',
+            text: 'Seda e cashmere luxuosos',
+            value: '7d',
+            category: 'Elegante',
+            styleCategory: 'Elegante',
+            points: 4,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735463/seda-cashmere_k3lm8p.webp',
+          },
+          {
+            id: '7e',
+            text: 'Chiffon e rendas delicadas',
+            value: '7e',
+            category: 'Romântico',
+            styleCategory: 'Romântico',
+            points: 3,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735464/chiffon-renda_q7pn4k.webp',
+          },
+          {
+            id: '7f',
+            text: 'Couro e tecidos justos',
+            value: '7f',
+            category: 'Sexy',
+            styleCategory: 'Sexy',
+            points: 4,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735465/couro-justos_m2kj9l.webp',
+          },
+          {
+            id: '7g',
+            text: 'Tecidos estruturados marcantes',
+            value: '7g',
+            category: 'Dramático',
+            styleCategory: 'Dramático',
+            points: 4,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735466/estruturados_n8qm3x.webp',
+          },
+          {
+            id: '7h',
+            text: 'Mix de texturas diferentes',
+            value: '7h',
+            category: 'Criativo',
+            styleCategory: 'Criativo',
+            points: 4,
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735467/mix-texturas_k9pj7q.webp',
+          },
+        ],
+        columns: 2,
+        showImages: true,
+        multipleSelection: true,
+        maxSelections: 3,
+        minSelections: 3,
+        autoAdvance: true,
+        validationMessage: 'Selecione até 3 tipos de tecidos preferidos',
+        gridGap: 16,
+        responsiveColumns: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        requiredSelections: 3,
+        enableButtonOnlyWhenValid: false,
+        instantActivation: true,
+        showValidationFeedback: true,
       },
     },
 
-    // 🎯 BOTÃO CONTINUAR
+    // 🔘 BOTÃO DE NAVEGAÇÃO
     {
-      id: 'continue-button-step08',
+      id: 'step08-continue-button',
       type: 'button-inline',
       properties: {
         text: 'Próxima Questão →',
@@ -407,14 +162,9 @@ export const getStep08Template = () => {
         fullWidth: true,
         backgroundColor: '#B89B7A',
         textColor: '#ffffff',
-        requiresSelection: true,
-        textAlign: 'text-center',
-        borderRadius: 'rounded-full',
-        padding: 'py-3 px-6',
-        fontSize: 'text-base',
-        fontWeight: 'font-semibold',
-        marginTop: 24,
         disabled: true,
+        requiresValidSelection: true,
+        marginTop: 0,
         spacing: 'small',
         marginBottom: 0,
       },
