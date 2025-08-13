@@ -2,10 +2,10 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-14",
-    "name": "Q13 - QUAL VISUAL VOC MAIS",
-    "description": "Questão 13 de 13",
-    "category": "quiz-question",
-    "type": "question",
+    "name": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\"",
+    "description": "Questão estratégica 3 - Frequência de indecisão com roupas",
+    "category": "quiz-strategic",
+    "type": "strategic-question",
     "tags": ["quiz", "style", "quiz-question", "gisele-galvao"],
     "createdAt": "2025-08-10T03:45:03.516Z",
     "updatedAt": "2025-08-10T03:45:03.516Z",
@@ -83,7 +83,7 @@
       "id": "step14-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
+        "content": "Com que frequência você se pega pensando: \"Com que roupa eu vou?\" — mesmo com o guarda-roupa cheio?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -112,68 +112,36 @@
       "properties": {
         "options": [
           {
-            "id": "3a",
-            "text": "Visual leve, despojado e natural.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp",
-            "styleCategory": "Natural",
+            "id": "14a",
+            "text": "Quase todos os dias — é sempre uma indecisão",
+            "value": "sempre",
             "points": 1
           },
           {
-            "id": "3b",
-            "text": "Visual clássico e tradicional.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp",
-            "styleCategory": "Clássico",
+            "id": "14b",
+            "text": "Sempre que tenho um compromisso importante",
+            "value": "compromissos",
             "points": 2
           },
           {
-            "id": "3c",
-            "text": "Visual casual com toque atual.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp",
-            "styleCategory": "Contemporâneo",
-            "points": 2
-          },
-          {
-            "id": "3d",
-            "text": "Visual refinado e imponente.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp",
-            "styleCategory": "Elegante",
+            "id": "14c",
+            "text": "Às vezes, mas me sinto limitada nas escolhas",
+            "value": "limitada",
             "points": 3
           },
           {
-            "id": "3e",
-            "text": "Visual romântico, feminino e delicado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp",
-            "styleCategory": "Romântico",
-            "points": 2
-          },
-          {
-            "id": "3f",
-            "text": "Visual sensual, com saia justa e decote.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp",
-            "styleCategory": "Sexy",
-            "points": 3
-          },
-          {
-            "id": "3g",
-            "text": "Visual marcante e urbano (jeans + jaqueta).",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp",
-            "styleCategory": "Dramático",
-            "points": 3
-          },
-          {
-            "id": "3h",
-            "text": "Visual criativo, colorido e ousado.",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp",
-            "styleCategory": "Criativo",
+            "id": "14d",
+            "text": "Raramente — já me sinto segura ao me vestir",
+            "value": "segura",
             "points": 4
           }
         ],
-        "columns": 2,
-        "imageSize": 256,
-        "showImages": true,
-        "multipleSelection": true,
-        "minSelections": 3,
-        "maxSelections": 3,
+        "columns": 1,
+        "imageSize": 0,
+        "showImages": false,
+        "multipleSelection": false,
+        "minSelections": 1,
+        "maxSelections": 1,
         "borderColor": "#E5E7EB",
         "selectedBorderColor": "#B89B7A",
         "hoverColor": "#F3E8D3",

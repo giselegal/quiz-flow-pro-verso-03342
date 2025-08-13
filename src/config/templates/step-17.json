@@ -2,10 +2,10 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-17",
-    "name": "Estratégica 2 - Qual é o maior desafio que voc...",
-    "description": "Questão estratégica 2 de 5",
-    "category": "strategic-question",
-    "type": "strategicQuestion",
+    "name": "Qual desses resultados você mais gostaria de alcançar?",
+    "description": "Questão estratégica 6 - Objetivo desejado",
+    "category": "quiz-strategic",
+    "type": "strategic-question",
     "tags": ["quiz", "style", "strategic-question", "gisele-galvao"],
     "createdAt": "2025-08-10T03:45:03.518Z",
     "updatedAt": "2025-08-10T03:45:03.518Z",
@@ -97,7 +97,7 @@
       "id": "step17-question-title",
       "type": "text-inline",
       "properties": {
-        "content": "Qual é o maior desafio que você enfrenta ao se vestir?",
+        "content": "Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?",
         "fontSize": "text-2xl",
         "fontWeight": "font-bold",
         "textAlign": "text-center",
@@ -113,20 +113,34 @@
       "properties": {
         "options": [
           {
-            "id": "strategic-2-1",
-            "text": "Nunca sei o que combina com o quê"
+            "id": "17a",
+            "text": "Montar looks com mais facilidade e confiança",
+            "value": "facilidade_confianca",
+            "points": 4
           },
           {
-            "id": "strategic-2-2",
-            "text": "Tenho muitas roupas, mas sempre sinto que não tenho nada para vestir"
+            "id": "17b",
+            "text": "Usar o que já tenho e me sentir estilosa",
+            "value": "usar_bem",
+            "points": 3
           },
           {
-            "id": "strategic-2-3",
-            "text": "Não consigo criar looks diferentes com as peças que tenho"
+            "id": "17c",
+            "text": "Comprar com mais consciência e sem culpa",
+            "value": "comprar_consciencia",
+            "points": 2
           },
           {
-            "id": "strategic-2-4",
-            "text": "Compro peças por impulso que depois não uso"
+            "id": "17d",
+            "text": "Ser admirada pela imagem que transmito",
+            "value": "ser_admirada",
+            "points": 4
+          },
+          {
+            "id": "17e",
+            "text": "Resgatar peças esquecidas e criar novos looks com estilo",
+            "value": "resgatar_pecas",
+            "points": 3
           }
         ],
         "columns": 1,

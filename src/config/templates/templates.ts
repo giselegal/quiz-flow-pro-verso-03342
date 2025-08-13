@@ -11,7 +11,7 @@ async function loadTemplate(stepNumber: number): Promise<any> {
   try {
     // ✅ STRATEGY: Usar fetch HTTP para evitar problemas de build
     const templatePath = `/src/config/templates/step-${stepId}.json`;
-    
+
     // Durante desenvolvimento, usar fetch
     if (import.meta.env.DEV) {
       try {
@@ -27,13 +27,13 @@ async function loadTemplate(stepNumber: number): Promise<any> {
         console.warn(`⚠️ Fetch falhou para template ${stepNumber}:`, fetchError);
       }
     }
-    
+
     // ✅ FALLBACK: Import dinâmico apenas quando necessário
     try {
       const localPath = `./step-${stepId}.json`;
       const moduleImport = await import(localPath);
       const template = moduleImport.default || moduleImport;
-      
+
       if (template && template.blocks) {
         console.log(`✅ Template ${stepNumber} carregado via import`);
         return template;
