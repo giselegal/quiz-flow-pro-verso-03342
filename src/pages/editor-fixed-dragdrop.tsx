@@ -8,8 +8,8 @@ import { EditorNotification } from '@/components/editor/EditorNotification';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
