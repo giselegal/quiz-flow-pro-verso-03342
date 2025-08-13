@@ -24,7 +24,6 @@ import {
   Users,
   Zap,
 } from 'lucide-react';
-import { useLocation } from 'wouter';
 import { useNavigationSafe } from '@/hooks/useNavigationSafe';
 
 // Import dos novos ícones temáticos
@@ -37,7 +36,6 @@ import {
 } from '@/components/dashboard/TemplateIcons';
 
 const OverviewPage: React.FC = () => {
-  const [, setLocation] = useLocation();
   const { navigateToEditor, navigateToStep21 } = useNavigationSafe();
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
@@ -121,7 +119,7 @@ const OverviewPage: React.FC = () => {
 
         <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-[#F5F2E9] cursor-pointer"
-          onClick={() => setLocation('/step/21')}
+          onClick={() => navigateToStep21()}
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -301,7 +299,7 @@ const OverviewPage: React.FC = () => {
                 {/* Template 1: Página de Oferta */}
                 <div
                   className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                  onClick={() => setLocation('/step/21')}
+                  onClick={() => navigateToStep21()}
                 >
                   <BackgroundPattern variant="primary" />
 
@@ -476,7 +474,7 @@ const OverviewPage: React.FC = () => {
                 <Button
                   variant="outline"
                   className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
-                  onClick={() => setLocation('/admin/editor')}
+                  onClick={() => navigateToEditor()}
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Criar Novo Template
@@ -574,7 +572,7 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="secondary"
                 className="bg-white text-[#432818] hover:bg-[#FAF9F7]"
-                onClick={() => setLocation('/admin/editor')}
+                onClick={() => navigateToEditor()}
               >
                 <Plus className="h-5 w-5 mr-2" />
                 Editor Visual
@@ -583,7 +581,7 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white/10"
-                onClick={() => setLocation('/step/21')}
+                onClick={() => navigateToStep21()}
               >
                 <PlayCircle className="h-5 w-5 mr-2" />
                 Testar Etapa 21
