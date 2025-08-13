@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useNavigationSafe } from '@/hooks/useNavigationSafe';
 import {
   Activity,
   ArrowUpRight,
@@ -24,7 +25,6 @@ import {
   Users,
   Zap,
 } from 'lucide-react';
-import { useNavigationSafe } from '@/hooks/useNavigationSafe';
 
 // Import dos novos ícones temáticos
 import {
