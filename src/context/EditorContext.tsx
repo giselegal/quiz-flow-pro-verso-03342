@@ -13,7 +13,7 @@ import type { Block } from '../types/editor';
 import { EditorBlock, FunnelStage } from '../types/editor';
 import { TemplateManager } from '../utils/TemplateManager';
 import { performanceAnalyzer } from '../utils/performanceAnalyzer';
-// import { useFunnelComponents } from '../hooks/useFunnelComponents'; // TODO: Implementar integração
+import { useFunnelComponents } from '../hooks/useFunnelComponents';
 import { getFunnelIdFromEnvOrStorage, parseStepNumberFromStageId } from '../utils/funnelIdentity';
 
 interface EditorState {
@@ -64,12 +64,12 @@ interface EditorContextType {
   };
 
   blockActions: {
-    addBlock: (type: string, stageId?: string) => string;
-    addBlockAtPosition: (type: string, position: number, stageId?: string) => string;
+    addBlock: (type: string, stageId?: string) => Promise<string>;
+    addBlockAtPosition: (type: string, position: number, stageId?: string) => Promise<string>;
     duplicateBlock: (blockId: string, stageId?: string) => string;
-    deleteBlock: (blockId: string) => void;
-    updateBlock: (blockId: string, updates: Partial<EditorBlock>) => void;
-    reorderBlocks: (blockIds: string[], stageId?: string) => void;
+    deleteBlock: (blockId: string) => Promise<void>;
+    updateBlock: (blockId: string, updates: Partial<EditorBlock>) => Promise<void>;
+    reorderBlocks: (blockIds: string[], stageId?: string) => Promise<void>;
     setSelectedBlockId: (blockId: string | null) => void;
     getBlocksForStage: (stageId: string) => EditorBlock[];
   };
@@ -149,9 +149,28 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // Configuração de persistência
   const isSupabaseEnabled = import.meta.env.VITE_EDITOR_SUPABASE_ENABLED === 'true';
   
-  // Hook para gerenciar componentes no Supabase (comentado temporariamente para deploy)
-  // TODO: Implementar integração híbrida com Supabase/local
-  console.log('📊 Supabase disponível:', isSupabaseEnabled, 'StepNumber:', currentStepNumber);
+  // Hook para gerenciar componentes no Supabase
+  const {
+    components: supabaseComponents,
+    isLoading: isLoadingSupabase,
+    addComponent: addSupabaseComponent,
+    updateComponent: updateSupabaseComponent,
+    deleteComponent: deleteSupabaseComponent,
+    reorderComponents: reorderSupabaseComponents,
+    // refreshComponents: refreshSupabaseComponents, // TODO: Usar quando necessário
+  } = useFunnelComponents({
+    funnelId,
+    stepNumber: currentStepNumber,
+    enabled: isSupabaseEnabled,
+  });
+  
+  console.log('📊 Supabase Integration:', {
+    enabled: isSupabaseEnabled,
+    funnelId,
+    stepNumber: currentStepNumber,
+    componentsCount: supabaseComponents.length,
+    isLoading: isLoadingSupabase,
+  });
 
   // 📊 PERFORMANCE MONITORING
   useEffect(() => {
@@ -163,18 +182,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // ✅ INTEGRAÇÃO COM TEMPLATE MANAGER
   const templateManager = useTemplateManager({
-    onAddBlock: (blockData: Block) => {
+    onAddBlock: async (blockData: Block) => {
       const stageId = activeStageId;
-      const blockId = addBlock(blockData.type, stageId);
+      const blockId = await addBlock(blockData.type, stageId);
       if (blockId) {
-        updateBlock(blockId, {
+        await updateBlock(blockId, {
           content: blockData.content,
           order: blockData.order,
         });
       }
     },
-    onUpdateBlock: (blockId: string, updates: Partial<Block>) => {
-      updateBlock(blockId, updates);
+    onUpdateBlock: async (blockId: string, updates: Partial<Block>) => {
+      await updateBlock(blockId, updates);
     },
   });
 
@@ -665,8 +684,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
   // ═══════════════════════════════════════════════
+  // ✅ ENHANCED: addBlock com integração Supabase
   const addBlock = useCallback(
-    (type: string, targetStageId?: string): string => {
+    async (type: string, targetStageId?: string): Promise<string> => {
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
@@ -674,7 +694,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         return '';
       }
 
-      // 🎯 SISTEMA 1: ID Semântico ao invés de timestamp
+      // ID Semântico para o bloco
       const currentStageBlocks = stageBlocks[stageId] || [];
       const blockOrder = currentStageBlocks.length + 1;
       const blockId = `${stageId}-block-${type}-${blockOrder}`;
@@ -687,6 +707,25 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         properties: {},
       };
 
+      // ✅ INTEGRAÇÃO SUPABASE: Persistir se habilitado
+      if (isSupabaseEnabled && stageId === activeStageId) {
+        try {
+          console.log('🔄 Persistindo bloco no Supabase...');
+          // const instanceKey = `${type}-${blockOrder}-${Date.now()}`; // TODO: Usar se necessário
+          const supabaseComponent = await addSupabaseComponent(type, blockOrder - 1);
+          
+          if (supabaseComponent) {
+            console.log('✅ Bloco persistido no Supabase:', supabaseComponent.id);
+            // Atualizar ID local para usar o ID do Supabase
+            newBlock.id = supabaseComponent.id;
+          }
+        } catch (error) {
+          console.error('❌ Erro ao persistir no Supabase:', error);
+          // Continuar com estado local em caso de erro
+        }
+      }
+
+      // Atualizar estado local
       setStageBlocks(prev => ({
         ...prev,
         [stageId]: [...(prev[stageId] || []), newBlock],
@@ -700,20 +739,20 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       console.log(
-        '➕ EditorContext: Bloco adicionado (Sistema Semântico):',
-        blockId,
+        `➕ EditorContext: Bloco adicionado ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`,
+        newBlock.id,
         'tipo:',
         type,
         'etapa:',
         stageId
       );
-      return blockId;
+      return newBlock.id;
     },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
+    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById, isSupabaseEnabled, addSupabaseComponent]
   );
 
   const addBlockAtPosition = useCallback(
-    (type: string, position: number, targetStageId?: string): string => {
+    async (type: string, position: number, targetStageId?: string): Promise<string> => {
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
@@ -721,7 +760,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         return '';
       }
 
-      // 🎯 SISTEMA 1: ID Semântico com posição
+      // ID Semântico com posição
       const blockId = `${stageId}-block-${type}-pos-${position + 1}`;
       const currentStageBlocks = stageBlocks[stageId] || [];
 
@@ -732,6 +771,22 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         order: position + 1, // order baseado na posição
         properties: {},
       };
+
+      // ✅ INTEGRAÇÃO SUPABASE: Persistir se habilitado
+      if (isSupabaseEnabled && stageId === activeStageId) {
+        try {
+          console.log('🔄 Persistindo bloco na posição no Supabase...');
+          const supabaseComponent = await addSupabaseComponent(type, position);
+          
+          if (supabaseComponent) {
+            console.log('✅ Bloco na posição persistido no Supabase:', supabaseComponent.id);
+            newBlock.id = supabaseComponent.id;
+          }
+        } catch (error) {
+          console.error('❌ Erro ao persistir bloco na posição no Supabase:', error);
+          // Continuar com estado local
+        }
+      }
 
       // Inserir o bloco na posição específica
       const updatedBlocks = [...currentStageBlocks];
@@ -756,18 +811,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       console.log(
-        '➕ EditorContext: Bloco adicionado na posição (Sistema Semântico):',
+        `➕ EditorContext: Bloco adicionado na posição ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`,
         position,
         'blockId:',
-        blockId,
+        newBlock.id,
         'tipo:',
         type,
         'etapa:',
         stageId
       );
-      return blockId;
+      return newBlock.id;
     },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
+    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById, isSupabaseEnabled, addSupabaseComponent]
   );
 
   // 🎯 SISTEMA 1: FUNÇÃO DE DUPLICAÇÃO SEMÂNTICA
@@ -823,8 +878,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
   );
 
+  // ✅ ENHANCED: reorderBlocks com integração Supabase
   const reorderBlocks = useCallback(
-    (blockIds: string[], targetStageId?: string) => {
+    async (blockIds: string[], targetStageId?: string) => {
       const stageId = targetStageId || activeStageId;
 
       if (!validateStageId(stageId)) {
@@ -834,14 +890,42 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       const currentStageBlocks = stageBlocks[stageId] || [];
 
+      // ✅ VALIDAÇÃO RIGOROSA: Verificar conjunto exato de IDs
       if (blockIds.length !== currentStageBlocks.length) {
         console.warn(
-          '⚠️ EditorContext: Número de blockIds não confere com blocos existentes',
+          '⚠️ EditorContext: Reordenação inválida - quantidade:',
           blockIds.length,
           'vs',
           currentStageBlocks.length
         );
         return;
+      }
+
+      const currentIds = new Set(currentStageBlocks.map(b => b.id));
+      const newIds = new Set(blockIds);
+      
+      if (currentIds.size !== newIds.size) {
+        console.warn('⚠️ EditorContext: Reordenação inválida - IDs duplicados');
+        return;
+      }
+
+      for (const id of blockIds) {
+        if (!currentIds.has(id)) {
+          console.warn('⚠️ EditorContext: Reordenação inválida - ID desconhecido:', id);
+          return;
+        }
+      }
+
+      // ✅ INTEGRAÇÃO SUPABASE: Reordenar se habilitado
+      if (isSupabaseEnabled && stageId === activeStageId) {
+        try {
+          console.log('🔄 Reordenando blocos no Supabase...');
+          await reorderSupabaseComponents(blockIds);
+          console.log('✅ Blocos reordenados no Supabase');
+        } catch (error) {
+          console.error('❌ Erro ao reordenar no Supabase:', error);
+          // Continuar com reordenação local
+        }
       }
 
       // Reordenar blocos baseado na ordem dos IDs
@@ -865,17 +949,36 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       }));
 
       console.log(
-        '🔄 EditorContext: Blocos reordenados na etapa:',
+        `🔄 EditorContext: Blocos reordenados ${isSupabaseEnabled ? '(Supabase)' : '(Local)'} na etapa:`,
         stageId,
         'nova ordem:',
         blockIds
       );
     },
-    [activeStageId, validateStageId, stageBlocks]
+    [activeStageId, validateStageId, stageBlocks, isSupabaseEnabled, reorderSupabaseComponents]
   );
 
+  // ✅ ENHANCED: deleteBlock com integração Supabase
   const deleteBlock = useCallback(
-    (blockId: string) => {
+    async (blockId: string) => {
+      // ✅ INTEGRAÇÃO SUPABASE: Remover se habilitado
+      if (isSupabaseEnabled) {
+        try {
+          // Verificar se é um bloco da etapa ativa
+          const currentStageBlocks = stageBlocks[activeStageId] || [];
+          const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
+          
+          if (isActiveStageBlock) {
+            console.log('🔄 Removendo bloco do Supabase...');
+            await deleteSupabaseComponent(blockId);
+            console.log('✅ Bloco removido do Supabase');
+          }
+        } catch (error) {
+          console.error('❌ Erro ao remover do Supabase:', error);
+          // Continuar com remoção local
+        }
+      }
+
       let deletedFromStage = '';
 
       setStageBlocks(prev => {
@@ -911,14 +1014,34 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setSelectedBlockId(null);
       }
 
-      console.log('🗑️ EditorContext: Bloco removido:', blockId, 'da etapa:', deletedFromStage);
+      console.log(`🗑️ EditorContext: Bloco removido ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`, blockId, 'da etapa:', deletedFromStage);
     },
-    [selectedBlockId, getStageById, updateStage]
+    [selectedBlockId, getStageById, updateStage, isSupabaseEnabled, deleteSupabaseComponent, stageBlocks, activeStageId]
   );
 
-  const updateBlock = useCallback((blockId: string, updates: Partial<EditorBlock>) => {
+  // ✅ ENHANCED: updateBlock com integração Supabase
+  const updateBlock = useCallback(async (blockId: string, updates: Partial<EditorBlock>) => {
     console.log('🔧 EditorContext updateBlock chamado:', { blockId, updates });
 
+    // ✅ INTEGRAÇÃO SUPABASE: Persistir se habilitado
+    if (isSupabaseEnabled) {
+      try {
+        // Verificar se é um bloco da etapa ativa (Supabase só gerencia etapa ativa)
+        const currentStageBlocks = stageBlocks[activeStageId] || [];
+        const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
+        
+        if (isActiveStageBlock && updates.properties) {
+          console.log('🔄 Atualizando bloco no Supabase...');
+          await updateSupabaseComponent(blockId, { properties: updates.properties });
+          console.log('✅ Bloco atualizado no Supabase');
+        }
+      } catch (error) {
+        console.error('❌ Erro ao atualizar no Supabase:', error);
+        // Continuar com atualização local
+      }
+    }
+
+    // Atualizar estado local
     setStageBlocks(prev => {
       const updated = { ...prev };
 
@@ -995,8 +1118,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       return updated;
     });
 
-    console.log('📝 EditorContext: Bloco atualizado:', blockId, updates);
-  }, []);
+    console.log(`📝 EditorContext: Bloco atualizado ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`, blockId, updates);
+  }, [isSupabaseEnabled, updateSupabaseComponent, stageBlocks, activeStageId]);
 
   const getBlocksForStage = useCallback(
     (stageId: string): EditorBlock[] => {

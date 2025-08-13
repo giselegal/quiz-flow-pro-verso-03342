@@ -20,15 +20,26 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     uiState: { isPreviewing },
   } = useEditor();
 
-  const handleComponentSelect = (type: string) => {
-    const blockId = addBlock(type);
-    setSelectedBlockId(blockId);
-    console.log(`➕ Bloco ${type} adicionado via editor responsivo`);
+  const handleComponentSelect = async (type: string) => {
+    try {
+      const blockId = await addBlock(type);
+      if (blockId) {
+        setSelectedBlockId(blockId);
+        console.log(`➕ Bloco ${type} adicionado via editor responsivo`);
+      }
+    } catch (error) {
+      console.error('❌ Erro ao adicionar bloco:', error);
+    }
   };
 
-  const handleUpdateSelectedBlock = (updates: any) => {
+  const handleUpdateSelectedBlock = async (updates: any) => {
     if (selectedBlockId) {
-      updateBlock(selectedBlockId, updates);
+      try {
+        await updateBlock(selectedBlockId, updates);
+        console.log('✅ Bloco atualizado via editor responsivo:', selectedBlockId);
+      } catch (error) {
+        console.error('❌ Erro ao atualizar bloco:', error);
+      }
     }
   };
 
