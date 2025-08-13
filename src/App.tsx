@@ -15,6 +15,7 @@ const AuthPage = lazy(() => import('./pages/AuthPage'));
 const TestSupabaseIntegration = lazy(() => import('./pages/test-supabase-integration'));
 // Editor inline component to bypass TypeScript config issues
 const TemplatesIA = lazy(() => import('./pages/TemplatesIA'));
+const QuizEditorPage = lazy(() => import('./pages/QuizEditorPage'));
 const FunnelsPage = lazy(() => import('./pages/FunnelsPage'));
 const ResultPage = lazy(() => import('./pages/ResultPage'));
 const ResultConfigPage = lazy(() =>
@@ -103,6 +104,18 @@ function App() {
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <TemplatesIA />
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                />
+
+                {/* Quiz Editor Route - Protected */}
+                <ProtectedRoute
+                  path="/quiz-editor"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <QuizEditorPage />
                       </ErrorBoundary>
                     </Suspense>
                   )}
@@ -226,7 +239,7 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
-                
+
                 {/* Quiz Flow de 21 Etapas */}
                 <Route path="/quiz-flow">
                   {() => (

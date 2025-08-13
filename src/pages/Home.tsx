@@ -102,6 +102,14 @@ const Home = () => {
                     Dashboard
                   </Button>
                   <Button
+                    onClick={() => navigate('/quiz-editor')}
+                    variant="outline"
+                    className="border-brand-primary text-brand-primary hover:bg-brand-primary/10"
+                  >
+                    <Target className="h-4 w-4 mr-2" />
+                    Quiz Editor
+                  </Button>
+                  <Button
                     onClick={logout}
                     variant="outline"
                     className="border-brand-light text-brand-text hover:bg-brand-light/10"
@@ -164,6 +172,19 @@ const Home = () => {
                   {user ? 'Ir para Dashboard' : 'Começar Agora'}
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
+
+                {user && (
+                  <Button
+                    onClick={() => navigate('/quiz-editor')}
+                    size="lg"
+                    variant="outline"
+                    className="border-brand-primary text-brand-primary hover:bg-brand-primary/10 px-8 py-4 text-lg font-semibold"
+                  >
+                    <Target className="h-5 w-5 mr-2" />
+                    Editor de Quiz
+                  </Button>
+                )}
+
                 <Button
                   variant="outline"
                   size="lg"

@@ -50,6 +50,28 @@ export interface UserResponse {
   timestamp?: Date;
 }
 
+// Quiz Complete Block interface
+export interface QuizCompleteBlockData {
+  id: string;
+  type: 'quiz-complete';
+  properties: {
+    title: string;
+    description: string;
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    timeLimit?: number;
+    isPublic: boolean;
+    questions: any[]; // QuizQuestion array
+    totalQuestions: number;
+    settings: {
+      showProgress: boolean;
+      randomizeQuestions: boolean;
+      allowRetake: boolean;
+      passScore: number;
+    };
+  };
+}
+
 export const createDefaultBlock = (type: BlockType, stageId: string): Block => {
   // Gerar ID semântico baseado no contexto
   const semanticId = generateSemanticId({
