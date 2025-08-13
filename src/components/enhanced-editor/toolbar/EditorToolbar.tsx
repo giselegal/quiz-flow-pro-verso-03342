@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Eye, Save, Smartphone, Tablet, Monitor, Maximize2, Settings } from 'lucide-react';
+import { Eye, Save, Smartphone, Tablet, Monitor, Maximize2, Settings, Activity } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
@@ -10,6 +10,7 @@ interface EditorToolbarProps {
   onTogglePreview: () => void;
   onSave: () => void;
   onShowFunnelSettings?: () => void;
+  onShowMonitoring?: () => void;
 }
 
 export function EditorToolbar({
@@ -19,6 +20,7 @@ export function EditorToolbar({
   onTogglePreview,
   onSave,
   onShowFunnelSettings,
+  onShowMonitoring,
 }: EditorToolbarProps) {
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
@@ -99,6 +101,18 @@ export function EditorToolbar({
       </div>
 
       <div className="flex gap-2">
+        {onShowMonitoring && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onShowMonitoring}
+            className="border-blue-500 text-blue-600 hover:bg-blue-50"
+          >
+            <Activity className="w-4 h-4 mr-2" />
+            Monitoramento
+          </Button>
+        )}
+
         {onShowFunnelSettings && (
           <Button
             variant="outline"
