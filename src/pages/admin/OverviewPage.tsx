@@ -25,6 +25,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useLocation } from 'wouter';
+import { useNavigationSafe } from '@/hooks/useNavigationSafe';
 
 // Import dos novos ícones temáticos
 import {
@@ -37,6 +38,7 @@ import {
 
 const OverviewPage: React.FC = () => {
   const [, setLocation] = useLocation();
+  const { navigateToEditor, navigateToStep21 } = useNavigationSafe();
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#FEFEFE] to-[#F5F2E9] p-6 space-y-8">
       {/* Header Moderno */}
@@ -102,7 +104,7 @@ const OverviewPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card
           className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-[#FAF9F7] cursor-pointer"
-          onClick={() => setLocation('/admin/editor')}
+          onClick={() => navigateToEditor()}
         >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
