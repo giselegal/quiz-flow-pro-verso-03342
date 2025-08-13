@@ -77,36 +77,76 @@
       "properties": {
         "options": [
           {
-            "id": "2a",
-            "text": "Opção A - Descrição personalizada",
+            "id": "1a",
+            "text": "Natural & Confortável",
+            "description": "Amo roupas confortáveis e práticas para o dia a dia",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
-            "value": "2a",
+            "value": "1a",
             "category": "Natural",
             "points": 1
           },
           {
-            "id": "2b",
-            "text": "Opção B - Descrição personalizada",
+            "id": "1b",
+            "text": "Clássico & Elegante",
+            "description": "Prefiro peças atemporais e elegantes",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
-            "value": "2b",
+            "value": "1b",
             "category": "Clássico",
             "points": 2
           },
           {
-            "id": "2c",
-            "text": "Opção C - Descrição personalizada",
+            "id": "1c",
+            "text": "Contemporâneo & Moderno",
+            "description": "Gosto de combinar moderno com clássico",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
-            "value": "2c",
+            "value": "1c",
             "category": "Contemporâneo",
             "points": 2
           },
           {
-            "id": "2d",
-            "text": "Opção D - Descrição personalizada",
+            "id": "1d",
+            "text": "Elegante & Sofisticado",
+            "description": "Valorizo sofisticação e refinamento",
             "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
-            "value": "2d",
+            "value": "1d",
             "category": "Elegante",
             "points": 3
+          },
+          {
+            "id": "1e",
+            "text": "Romântico & Delicado",
+            "description": "Adoro looks delicados e femininos",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+            "value": "1e",
+            "category": "Romântico",
+            "points": 2
+          },
+          {
+            "id": "1f",
+            "text": "Sexy & Sedutor",
+            "description": "Prefiro roupas que valorizam minha silhueta",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+            "value": "1f",
+            "category": "Sexy",
+            "points": 3
+          },
+          {
+            "id": "1g",
+            "text": "Dramático & Impactante",
+            "description": "Gosto de looks marcantes e impactantes",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+            "value": "1g",
+            "category": "Dramático",
+            "points": 3
+          },
+          {
+            "id": "1h",
+            "text": "Criativo & Único",
+            "description": "Amo experimentar cores e estampas ousadas",
+            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+            "value": "1h",
+            "category": "Criativo",
+            "points": 4
           }
         ],
         "columns": 2,
