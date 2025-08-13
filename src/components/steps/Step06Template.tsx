@@ -63,6 +63,7 @@ export const getStep06Template = () => {
           {
             id: '5a',
             text: 'Tons terrosos e naturais',
+            description: 'Bege, marrom, verde oliva - cores da natureza',
             value: '5a',
             category: 'Natural',
             styleCategory: 'Natural',
@@ -72,6 +73,7 @@ export const getStep06Template = () => {
           {
             id: '5b',
             text: 'Preto, branco e neutros',
+            description: 'Paleta atemporal e elegante',
             value: '5b',
             category: 'Clássico',
             styleCategory: 'Clássico',
@@ -81,6 +83,7 @@ export const getStep06Template = () => {
           {
             id: '5c',
             text: 'Cinza, bege e modernos',
+            description: 'Sofisticação moderna e minimalista',
             value: '5c',
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
@@ -90,6 +93,7 @@ export const getStep06Template = () => {
           {
             id: '5d',
             text: 'Azul marinho e sofisticados',
+            description: 'Elegância refinada e atemporal',
             value: '5d',
             category: 'Elegante',
             styleCategory: 'Elegante',
@@ -99,6 +103,7 @@ export const getStep06Template = () => {
           {
             id: '5e',
             text: 'Rosa, lavanda e delicados',
+            description: 'Feminilidade suave e romântica',
             value: '5e',
             category: 'Romântico',
             styleCategory: 'Romântico',
@@ -108,6 +113,7 @@ export const getStep06Template = () => {
           {
             id: '5f',
             text: 'Vermelho e tons vibrantes',
+            description: 'Poder e sensualidade em evidência',
             value: '5f',
             category: 'Sexy',
             styleCategory: 'Sexy',
@@ -117,6 +123,7 @@ export const getStep06Template = () => {
           {
             id: '5g',
             text: 'Preto intenso e dramáticos',
+            description: 'Impacto visual máximo e marcante',
             value: '5g',
             category: 'Dramático',
             styleCategory: 'Dramático',
@@ -126,6 +133,7 @@ export const getStep06Template = () => {
           {
             id: '5h',
             text: 'Colorido e vibrante mix',
+            description: 'Criatividade e personalidade únicas',
             value: '5h',
             category: 'Criativo',
             styleCategory: 'Criativo',
@@ -156,7 +164,7 @@ export const getStep06Template = () => {
       id: 'step06-continue-button',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         fullWidth: true,

@@ -156,7 +156,7 @@ export const getStep07Template = () => {
       id: 'step07-continue-button',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         fullWidth: true,

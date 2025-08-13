@@ -258,7 +258,8 @@ export const getStep03Template = () => {
         options: [
           {
             id: '2a',
-            text: 'Próxima Questão →',
+            text: 'Natural & Confortável',
+            description: 'Amo roupas confortáveis e práticas para o dia a dia',
             value: '2a',
             category: 'Natural',
             styleCategory: 'Natural',
@@ -269,7 +270,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2b',
-            text: 'Próxima Questão →',
+            text: 'Clássico & Elegante',
+            description: 'Prefiro peças atemporais e elegantes',
             value: '2b',
             category: 'Clássico',
             styleCategory: 'Clássico',
@@ -277,7 +279,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2c',
-            text: 'Próxima Questão →',
+            text: 'Contemporâneo & Moderno',
+            description: 'Gosto de combinar moderno com clássico',
             value: '2c',
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
@@ -285,7 +288,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2d',
-            text: 'Próxima Questão →',
+            text: 'Elegante & Sofisticado',
+            description: 'Valorizo sofisticação e refinamento',
             value: '2d',
             category: 'Elegante',
             styleCategory: 'Elegante',
@@ -293,7 +297,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2e',
-            text: 'Próxima Questão →',
+            text: 'Romântico & Delicado',
+            description: 'Adoro looks delicados e femininos',
             value: '2e',
             category: 'Romântico',
             styleCategory: 'Romântico',
@@ -301,7 +306,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2f',
-            text: 'Próxima Questão →',
+            text: 'Sexy & Sedutor',
+            description: 'Prefiro roupas que valorizam minha silhueta',
             value: '2f',
             category: 'Sexy',
             styleCategory: 'Sexy',
@@ -309,7 +315,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2g',
-            text: 'Próxima Questão →',
+            text: 'Dramático & Impactante',
+            description: 'Gosto de looks marcantes e impactantes',
             value: '2g',
             category: 'Dramático',
             styleCategory: 'Dramático',
@@ -317,7 +324,8 @@ export const getStep03Template = () => {
           },
           {
             id: '2h',
-            text: 'Próxima Questão →',
+            text: 'Criativo & Único',
+            description: 'Amo experimentar cores e estampas ousadas',
             value: '2h',
             category: 'Criativo',
             styleCategory: 'Criativo',
@@ -354,7 +362,7 @@ export const getStep03Template = () => {
       type: 'button-inline',
       properties: {
         // 📝 TEXTO DINÂMICO
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         textWhenDisabled: 'Selecione 3 opções para continuar',
         textWhenComplete: 'Continuar →',
 

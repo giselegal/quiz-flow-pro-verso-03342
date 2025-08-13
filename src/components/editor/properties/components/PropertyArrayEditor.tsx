@@ -212,8 +212,30 @@ export const PropertyArrayEditor: React.FC<PropertyArrayEditorProps> = ({
               <div className="flex gap-2">
                 <Input
                   value={item.category || ''}
-                  onChange={e => handleUpdateItem(index, 'category', e.target.value)}
-                  placeholder="Categoria"
+                  onChange={e => {
+                    const newCategory = e.target.value;
+                    handleUpdateItem(index, 'category', newCategory);
+                    
+                    // Auto-preenchimento inteligente da descrição baseado na categoria
+                    if (newCategory && !item.description) {
+                      const categoryDescriptions: { [key: string]: string } = {
+                        'Natural': 'Amo roupas confortáveis e práticas para o dia a dia',
+                        'Clássico': 'Prefiro peças atemporais e elegantes',
+                        'Contemporâneo': 'Gosto de combinar moderno com clássico',
+                        'Elegante': 'Valorizo sofisticação e refinamento',
+                        'Romântico': 'Adoro looks delicados e femininos',
+                        'Sexy': 'Prefiro roupas que valorizam minha silhueta',
+                        'Dramático': 'Gosto de looks marcantes e impactantes',
+                        'Criativo': 'Amo experimentar cores e estampas ousadas'
+                      };
+                      
+                      const suggestedDescription = categoryDescriptions[newCategory];
+                      if (suggestedDescription) {
+                        handleUpdateItem(index, 'description', suggestedDescription);
+                      }
+                    }
+                  }}
+                  placeholder="Categoria (Natural, Clássico, etc.)"
                   disabled={disabled}
                   className="flex-1 text-xs"
                 />

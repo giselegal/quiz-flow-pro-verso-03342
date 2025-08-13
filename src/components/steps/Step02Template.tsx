@@ -60,7 +60,8 @@ export const getStep02Template = () => {
         options: [
           {
             id: '1a',
-            text: 'Próxima Questão →',
+            text: 'Natural & Confortável',
+            description: 'Amo roupas confortáveis e práticas para o dia a dia',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp',
             value: '1a',
@@ -69,7 +70,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1b',
-            text: 'Próxima Questão →',
+            text: 'Clássico & Elegante',
+            description: 'Prefiro peças atemporais e elegantes',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
             value: '1b',
@@ -78,7 +80,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1c',
-            text: 'Próxima Questão →',
+            text: 'Contemporâneo & Moderno',
+            description: 'Gosto de combinar moderno com clássico',
             imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp',
             value: '1c',
             category: 'Contemporâneo',
@@ -86,7 +89,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1d',
-            text: 'Próxima Questão →',
+            text: 'Elegante & Sofisticado',
+            description: 'Valorizo sofisticação e refinamento',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp',
             value: '1d',
@@ -95,7 +99,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1e',
-            text: 'Próxima Questão →',
+            text: 'Romântico & Delicado',
+            description: 'Adoro looks delicados e femininos',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp',
             value: '1e',
@@ -104,7 +109,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1f',
-            text: 'Próxima Questão →',
+            text: 'Sexy & Sedutor',
+            description: 'Prefiro roupas que valorizam minha silhueta',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp',
             value: '1f',
@@ -113,7 +119,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1g',
-            text: 'Próxima Questão →',
+            text: 'Dramático & Impactante',
+            description: 'Gosto de looks marcantes e impactantes',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp',
             value: '1g',
@@ -122,7 +129,8 @@ export const getStep02Template = () => {
           },
           {
             id: '1h',
-            text: 'Próxima Questão →',
+            text: 'Criativo & Único',
+            description: 'Amo experimentar cores e estampas ousadas',
             imageUrl:
               'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp',
             value: '1h',
@@ -161,7 +169,7 @@ export const getStep02Template = () => {
       type: 'button-inline',
       properties: {
         // 📝 TEXTO DINÂMICO
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         textWhenDisabled: 'Selecione 3 opções para continuar',
         textWhenComplete: 'Continuar',
 

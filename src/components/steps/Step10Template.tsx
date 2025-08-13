@@ -156,7 +156,7 @@ export const getStep10Template = () => {
       id: 'step10-continue-button',
       type: 'button-inline',
       properties: {
-        text: 'Próxima Questão →',
+        text: 'Continuar →',
         variant: 'primary',
         size: 'large',
         fullWidth: true,
