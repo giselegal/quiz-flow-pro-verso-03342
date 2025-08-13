@@ -6,13 +6,30 @@
  */
 
 // =============================================
+// QUIZ EDITOR INTEGRATION 🎯
+// =============================================
+
+export {
+  QuizEditorFixed,
+  SimpleQuizEditorFixed,
+  StandaloneQuizEditorFixed,
+} from './QuizEditorIntegration';
+
+// Quiz Editor Widget (configuração e documentação)
+export {
+  QUIZ_EDITOR_BLOCK,
+  QUIZ_EDITOR_CONFIG,
+  default as QuizEditorWidget,
+} from './QuizEditorWidget';
+
+// =============================================
 // MAIN COMPONENTS (Compound Components)
 // =============================================
 
 export {
   DefaultEditorFixed,
   EditorFixed, // Default Implementation
-  useEditorFixed, // Hook para configuração
+  useEditorFixed,
 } from './EditorFixed';
 
 // =============================================
