@@ -15,18 +15,24 @@ import {
   Eye,
   Filter,
   Globe,
-  Heart,
-  Lightbulb,
   PlayCircle,
   Plus,
   Settings,
-  Sparkles,
   Star,
   Target,
   TrendingUp,
   Users,
   Zap,
 } from 'lucide-react';
+
+// Import dos novos ícones temáticos
+import {
+  OfferPageIcon,
+  MarketingQuizIcon,
+  DigitalProductIcon,
+  EcommerceIcon,
+  BackgroundPattern,
+} from '@/components/dashboard/TemplateIcons';
 
 const OverviewPage: React.FC = () => {
   return (
@@ -286,132 +292,182 @@ const OverviewPage: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Quiz Item - Oferta Etapa 21 */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-[#FAF9F7] to-[#F5F2E9] rounded-lg border border-[#B89B7A]/20">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-[#B89B7A] to-[#432818] rounded-lg flex items-center justify-center">
-                    <Sparkles className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-[#432818]">
-                      Página de Oferta - Etapa 21 (Modular)
+              {/* Quiz Templates Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                {/* Template 1: Página de Oferta */}
+                <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                     onClick={() => window.open('/step/21', '_blank')}>
+                  <BackgroundPattern variant="primary" />
+                  
+                  <div className="relative">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A] to-[#432818] rounded-xl flex items-center justify-center shadow-md">
+                        <OfferPageIcon className="w-6 h-6" />
+                      </div>
+                      <Badge className="bg-[#B89B7A]/20 text-[#432818] border-0 text-xs px-2 py-1">
+                        Demo
+                      </Badge>
+                    </div>
+                    
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">
+                      Página de Oferta
                     </h3>
-                    <div className="flex items-center space-x-4 text-sm text-[#6B4F43] mt-1">
-                      <span className="flex items-center">
-                        <Globe className="h-4 w-4 mr-1" />
-                        Sistema JSON Completo
-                      </span>
-                      <span className="flex items-center">
-                        <Star className="h-4 w-4 mr-1" />7 Componentes Modulares
-                      </span>
+                    <p className="text-sm text-[#6B4F43] mb-3">
+                      Sistema modular com 21 etapas otimizadas para conversão
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
+                        <span className="flex items-center">
+                          <Globe className="h-3 w-3 mr-1" />
+                          JSON
+                        </span>
+                        <span className="flex items-center">
+                          <Star className="h-3 w-3 mr-1" />
+                          7 Módulos
+                        </span>
+                      </div>
+                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                        <PlayCircle className="h-3 w-3 mr-1" />
+                        Testar
+                      </Button>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-[#B89B7A]/20 text-[#432818] border-0">Demo</Badge>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => window.open('/step/21', '_blank')}
-                    className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
-                  >
-                    <PlayCircle className="h-4 w-4 mr-1" />
-                    Testar
-                  </Button>
+
+                {/* Template 2: Quiz de Marketing */}
+                <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                  <BackgroundPattern variant="secondary" />
+                  
+                  <div className="relative">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A] to-[#A08766] rounded-xl flex items-center justify-center shadow-md">
+                        <MarketingQuizIcon className="w-6 h-6" />
+                      </div>
+                      <Badge className="bg-green-100 text-green-700 border-0 text-xs px-2 py-1">
+                        Ativo
+                      </Badge>
+                    </div>
+                    
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">
+                      Quiz de Personalidade
+                    </h3>
+                    <p className="text-sm text-[#6B4F43] mb-3">
+                      Segmentação inteligente para campanhas de marketing
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
+                        <span className="flex items-center">
+                          <Eye className="h-3 w-3 mr-1" />
+                          2.8k views
+                        </span>
+                        <span className="flex items-center">
+                          <Target className="h-3 w-3 mr-1" />
+                          38% CVR
+                        </span>
+                      </div>
+                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                        <Eye className="h-3 w-3 mr-1" />
+                        Ver
+                      </Button>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Template 3: Funil de Vendas */}
+                <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                  <BackgroundPattern variant="accent" />
+                  
+                  <div className="relative">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A] to-[#A08766] rounded-xl flex items-center justify-center shadow-md">
+                        <DigitalProductIcon className="w-6 h-6" />
+                      </div>
+                      <Badge className="bg-green-100 text-green-700 border-0 text-xs px-2 py-1">
+                        Ativo
+                      </Badge>
+                    </div>
+                    
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">
+                      Produto Digital
+                    </h3>
+                    <p className="text-sm text-[#6B4F43] mb-3">
+                      Funil otimizado para vendas de infoprodutos
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
+                        <span className="flex items-center">
+                          <Eye className="h-3 w-3 mr-1" />
+                          1.5k views
+                        </span>
+                        <span className="flex items-center">
+                          <Target className="h-3 w-3 mr-1" />
+                          42% CVR
+                        </span>
+                      </div>
+                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                        <Eye className="h-3 w-3 mr-1" />
+                        Ver
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Template 4: E-commerce */}
+                <div className="group relative overflow-hidden rounded-xl border border-[#B89B7A]/20 bg-gradient-to-br from-white via-[#FAF9F7] to-[#F5F2E9] p-4 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                  <BackgroundPattern variant="primary" />
+                  
+                  <div className="relative">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#B89B7A]/80 to-[#A08766] rounded-xl flex items-center justify-center shadow-md">
+                        <EcommerceIcon className="w-6 h-6" />
+                      </div>
+                      <Badge className="bg-yellow-100 text-yellow-700 border-0 text-xs px-2 py-1">
+                        Pausado
+                      </Badge>
+                    </div>
+                    
+                    <h3 className="font-bold text-[#432818] text-lg mb-1">
+                      Segmentação E-commerce
+                    </h3>
+                    <p className="text-sm text-[#6B4F43] mb-3">
+                      Quiz para categorizar preferências de produtos
+                    </p>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3 text-xs text-[#6B4F43]">
+                        <span className="flex items-center">
+                          <Eye className="h-3 w-3 mr-1" />
+                          987 views
+                        </span>
+                        <span className="flex items-center">
+                          <Target className="h-3 w-3 mr-1" />
+                          29% CVR
+                        </span>
+                      </div>
+                      <Button size="sm" variant="ghost" className="text-[#B89B7A] hover:bg-[#B89B7A]/10 h-8 px-3">
+                        <Eye className="h-3 w-3 mr-1" />
+                        Ver
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
-              {/* Quiz Item */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                    <Lightbulb className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">
-                      Quiz de Personalidade - Marketing
-                    </h3>
-                    <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
-                      <span className="flex items-center">
-                        <Eye className="h-4 w-4 mr-1" />
-                        2,847 visualizações
-                      </span>
-                      <span className="flex items-center">
-                        <Target className="h-4 w-4 mr-1" />
-                        38% conversão
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-green-100 text-green-700 border-0">Ativo</Badge>
-                  <Button size="sm" variant="outline">
-                    <PlayCircle className="h-4 w-4 mr-1" />
-                    Ver
-                  </Button>
-                </div>
-              </div>
-
-              {/* Quiz Item 2 */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                    <Heart className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">
-                      Funil de Vendas - Produto Digital
-                    </h3>
-                    <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
-                      <span className="flex items-center">
-                        <Eye className="h-4 w-4 mr-1" />
-                        1,523 visualizações
-                      </span>
-                      <span className="flex items-center">
-                        <Target className="h-4 w-4 mr-1" />
-                        42% conversão
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-green-100 text-green-700 border-0">Ativo</Badge>
-                  <Button size="sm" variant="outline">
-                    <PlayCircle className="h-4 w-4 mr-1" />
-                    Ver
-                  </Button>
-                </div>
-              </div>
-
-              {/* Quiz Item 3 */}
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-100">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                    <Star className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">
-                      Quiz de Segmentação - E-commerce
-                    </h3>
-                    <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
-                      <span className="flex items-center">
-                        <Eye className="h-4 w-4 mr-1" />
-                        987 visualizações
-                      </span>
-                      <span className="flex items-center">
-                        <Target className="h-4 w-4 mr-1" />
-                        29% conversão
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Badge className="bg-yellow-100 text-yellow-700 border-0">Pausado</Badge>
-                  <Button size="sm" variant="outline">
-                    <PlayCircle className="h-4 w-4 mr-1" />
-                    Ver
-                  </Button>
-                </div>
+              {/* Quick Actions */}
+              <div className="flex items-center justify-center pt-4 border-t border-[#B89B7A]/10">
+                <Button 
+                  variant="outline" 
+                  className="border-[#B89B7A]/40 text-[#432818] hover:bg-[#B89B7A]/10"
+                  onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Criar Novo Template
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -423,7 +479,7 @@ const OverviewPage: React.FC = () => {
           <Card className="border-0 shadow-lg bg-white border-[#B89B7A]/20">
             <CardHeader>
               <CardTitle className="text-lg font-bold text-[#432818] flex items-center">
-                <Sparkles className="h-5 w-5 mr-2 text-[#B89B7A]" />
+                <TrendingUp className="h-5 w-5 mr-2 text-[#B89B7A]" />
                 Insights de Performance
               </CardTitle>
             </CardHeader>
