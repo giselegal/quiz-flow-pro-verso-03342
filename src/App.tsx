@@ -21,6 +21,7 @@ const ResultConfigPage = lazy(() =>
   import('./pages/ResultConfigPage').then(module => ({ default: module.ResultConfigPage }))
 );
 const QuizPageUser = lazy(() => import('./components/QuizPageUser'));
+const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -222,6 +223,15 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <QuizPageUser />
+                    </Suspense>
+                  )}
+                </Route>
+                
+                {/* Quiz Flow de 21 Etapas */}
+                <Route path="/quiz-flow">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <QuizFlowPage />
                     </Suspense>
                   )}
                 </Route>
