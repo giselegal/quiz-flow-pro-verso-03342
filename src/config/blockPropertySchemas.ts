@@ -124,46 +124,57 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
   'options-grid': {
     label: 'Grade de Opções',
     fields: [
-      { key: 'options', label: 'Opções', type: 'options-list' },
-      { key: 'layout', label: 'Layout', type: 'select', options: [
+      // === OPÇÕES ===
+      { key: 'options', label: '📝 Lista de Opções', type: 'options-list' },
+      
+      // === LAYOUT ===
+      { key: 'layout', label: '📐 Layout', type: 'select', options: [
         { label: 'Grade', value: 'grid' },
         { label: 'Lista', value: 'list' },
       ] },
-      { key: 'columns', label: 'Colunas', type: 'select', options: [
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
+      { key: 'columns', label: '📊 Colunas', type: 'select', options: [
+        { label: '1 Coluna', value: 1 },
+        { label: '2 Colunas', value: 2 },
+        { label: '3 Colunas', value: 3 },
+        { label: '4 Colunas', value: 4 },
       ] },
-      { key: 'direction', label: 'Direção', type: 'select', options: [
+      { key: 'direction', label: '↕️ Direção', type: 'select', options: [
         { label: 'Vertical', value: 'vertical' },
         { label: 'Horizontal', value: 'horizontal' },
       ] },
-      { key: 'disposition', label: 'Disposição', type: 'select', options: [
+      { key: 'gap', label: '📏 Espaçamento (px)', type: 'number' },
+      
+      // === DISPOSIÇÃO ===
+      { key: 'disposition', label: '🔄 Disposição', type: 'select', options: [
         { label: 'Imagem | Texto', value: 'image-text' },
         { label: 'Texto | Imagem', value: 'text-image' },
       ] },
-      { key: 'gap', label: 'Espaçamento (px)', type: 'number' },
-      { key: 'imageSize', label: 'Tamanho da Imagem (px)', type: 'number' },
-      { key: 'imageAspect', label: 'Proporção da Imagem', type: 'select', options: [
-        { label: '1:1', value: '1:1' },
-        { label: '4:3', value: '4:3' },
-        { label: '16:9', value: '16:9' },
+      { key: 'labelPosition', label: '📍 Posição do Texto', type: 'select', options: [
+        { label: 'Abaixo da Imagem', value: 'bottom' },
+        { label: 'À Direita da Imagem', value: 'right' },
       ] },
-      { key: 'showImages', label: 'Exibir Imagens', type: 'boolean' },
-      { key: 'multipleSelection', label: 'Seleção Múltipla', type: 'boolean' },
-      { key: 'minSelections', label: 'Mínimo Seleções', type: 'number' },
-      { key: 'maxSelections', label: 'Máximo Seleções', type: 'number' },
-      { key: 'allowDeselect', label: 'Permitir Desmarcar', type: 'boolean' },
-      { key: 'showCheckmark', label: 'Mostrar Check', type: 'boolean' },
-      { key: 'labelPosition', label: 'Posição do Rótulo', type: 'select', options: [
-        { label: 'Abaixo', value: 'bottom' },
-        { label: 'À Direita', value: 'right' },
+      
+      // === IMAGENS ===
+      { key: 'showImages', label: '🖼️ Exibir Imagens', type: 'boolean' },
+      { key: 'imageSize', label: '📐 Tamanho da Imagem (px)', type: 'number' },
+      { key: 'imageAspect', label: '📏 Proporção da Imagem', type: 'select', options: [
+        { label: 'Quadrado (1:1)', value: '1:1' },
+        { label: 'Paisagem (4:3)', value: '4:3' },
+        { label: 'Widescreen (16:9)', value: '16:9' },
       ] },
-      { key: 'cardRadius', label: 'Arredondamento (px)', type: 'number' },
-      { key: 'borderColor', label: 'Cor da Borda', type: 'color' },
-      { key: 'selectedBorderColor', label: 'Cor da Borda Selecionada', type: 'color' },
-      { key: 'hoverColor', label: 'Cor de Hover', type: 'color' },
+      
+      // === COMPORTAMENTO ===
+      { key: 'multipleSelection', label: '✅ Seleção Múltipla', type: 'boolean' },
+      { key: 'minSelections', label: '⬇️ Mínimo de Seleções', type: 'number' },
+      { key: 'maxSelections', label: '⬆️ Máximo de Seleções', type: 'number' },
+      { key: 'allowDeselect', label: '🔄 Permitir Desmarcar', type: 'boolean' },
+      { key: 'showCheckmark', label: '✔️ Mostrar Indicador de Seleção', type: 'boolean' },
+      
+      // === ESTILO ===
+      { key: 'cardRadius', label: '🟠 Arredondamento (px)', type: 'number' },
+      { key: 'borderColor', label: '🎨 Cor da Borda', type: 'color' },
+      { key: 'selectedBorderColor', label: '🌟 Cor da Borda Selecionada', type: 'color' },
+      { key: 'hoverColor', label: '✨ Cor de Hover', type: 'color' },
     ],
   },
 };
