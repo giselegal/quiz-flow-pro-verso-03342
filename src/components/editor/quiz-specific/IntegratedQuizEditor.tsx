@@ -1,3 +1,4 @@
+import { QuizPreview } from '@/components/quiz/QuizPreview';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,54 +8,49 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/use-toast';
 import { useEditor } from '@/context/EditorContext';
+import { QuizMetadata, SavedQuiz, useQuizCRUD } from '@/hooks/useQuizCRUD';
+import { useQuizStepsIntegration } from '@/hooks/useQuizStepsIntegration';
 import { QuizQuestion } from '@/types/quiz';
-import { BookOpen, Edit, Eye, Plus, Save, Settings, Target, Trash2 } from 'lucide-react';
-import React, { useState } from 'react';
+import {
+  BookOpen,
+  Database,
+  Edit,
+  Eye,
+  Play,
+  Plus,
+  Save,
+  Settings,
+  Target,
+  Trash2,
+} from 'lucide-react';
+import { useEffect, useState } from 'react';
 import QuestionEditor from '../../quiz-editor/QuestionEditor';
 
-interface IntegratedQuizEditorProps {
-  onSave?: () => void;
-  onPreview?: () => void;
-  className?: string;
-}
+export default function IntegratedQuizEditor() {
+  const { editorState } = useEditor();
 
-interface QuizMetadata {
-  title: string;
-  description: string;
-  category: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  timeLimit?: number;
-  isPublic: boolean;
-  settings: {
-    showProgress: boolean;
-    randomizeQuestions: boolean;
-    allowRetake: boolean;
-    passScore: number;
-  };
-}
+  // Integração com hooks de CRUD e 21 etapas
+  const { saveQuiz, loadUserQuizzes } = useQuizCRUD();
+  const {
+    stepsIntegration,
+    loading: stepsLoading,
+    saveCompleteQuiz,
+    isQuizStep,
+  } = useQuizStepsIntegration();
 
-/**
- * 🎯 EDITOR DE QUIZ INTEGRADO
- *
- * Editor completo de quiz integrado ao sistema /editor-fixed:
- * - Criação e edição de perguntas
- * - Múltiplos tipos de pergunta
- * - Configurações de quiz
- * - Preview em tempo real
- * - Integração com Supabase
- * - Interface responsiva
- */
-const IntegratedQuizEditor: React.FC<IntegratedQuizEditorProps> = ({
-  onSave,
-  onPreview,
-  className = '',
-}) => {
-  // Estado do Quiz
+  const [activeTab, setActiveTab] = useState('questions');
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [savedQuizzes, setSavedQuizzes] = useState<SavedQuiz[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Estado do Quiz com tipos corretos
   const [quizMetadata, setQuizMetadata] = useState<QuizMetadata>({
-    title: '',
-    description: '',
+    title: 'Novo Quiz',
+    description: 'Descrição do quiz',
     category: 'general',
-    difficulty: 'medium',
+    difficulty: 'medium', // Usando valor correto do tipo
     timeLimit: undefined,
     isPublic: false,
     settings: {
@@ -65,491 +61,559 @@ const IntegratedQuizEditor: React.FC<IntegratedQuizEditorProps> = ({
     },
   });
 
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(null);
-  const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [isLoading, setIsLoading] = useState(false);
+  // Carregar dados ao inicializar
+  useEffect(() => {
+    loadSavedQuizzes();
+    loadAllSteps();
+  }, []);
 
-  // Editor Context para integração
-  const {
-    blockActions: { addBlock },
-  } = useEditor();
-
-  // ===== HANDLERS =====
-  const handleSaveQuiz = async () => {
-    if (!quizMetadata.title.trim()) {
-      toast({
-        title: 'Erro',
-        description: 'Título do quiz é obrigatório',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    if (questions.length === 0) {
-      toast({
-        title: 'Erro',
-        description: 'Adicione pelo menos uma pergunta',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setIsLoading(true);
+  const loadSavedQuizzes = async () => {
     try {
-      // Simular salvamento (aqui integraria com Supabase)
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setLoading(true);
+      const quizzes = await loadUserQuizzes();
+      setSavedQuizzes(quizzes);
+    } catch (error) {
+      console.error('Erro ao carregar quizzes:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível carregar os quizzes salvos.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      // Adicionar quiz como bloco no editor-fixed (simulado)
-      addBlock('quiz-complete', undefined);
+  // Adicionar nova pergunta
+  const addNewQuestion = () => {
+    const newQuestion: QuizQuestion = {
+      id: `q_${Date.now()}`,
+      type: 'multiple-choice',
+      question: 'Nova pergunta',
+      options: [
+        { id: 'opt1', text: 'Opção 1', isCorrect: true },
+        { id: 'opt2', text: 'Opção 2', isCorrect: false },
+        { id: 'opt3', text: 'Opção 3', isCorrect: false },
+        { id: 'opt4', text: 'Opção 4', isCorrect: false },
+      ],
+      points: 10,
+      timeLimit: 30,
+      explanation: 'Explicação da resposta correta',
+    };
+
+    setQuestions(prev => [...prev, newQuestion]);
+    setSelectedQuestion(questions.length);
+  };
+
+  // Atualizar pergunta selecionada
+  const updateQuestion = (updatedQuestion: QuizQuestion) => {
+    if (selectedQuestion !== null) {
+      setQuestions(prev =>
+        prev.map((q, index) => (index === selectedQuestion ? updatedQuestion : q))
+      );
+    }
+  };
+
+  // Remover pergunta
+  const removeQuestion = (index: number) => {
+    setQuestions(prev => prev.filter((_, i) => i !== index));
+    if (selectedQuestion === index) {
+      setSelectedQuestion(null);
+    } else if (selectedQuestion && selectedQuestion > index) {
+      setSelectedQuestion(selectedQuestion - 1);
+    }
+  };
+
+  // Salvar quiz completo
+  const handleSaveQuiz = async () => {
+    try {
+      setLoading(true);
+
+      const quizToSave = {
+        metadata: quizMetadata,
+        questions: questions,
+      };
+
+      await saveQuiz(quizToSave);
 
       toast({
-        title: 'Sucesso',
-        description: `Quiz "${quizMetadata.title}" salvo com sucesso!`,
+        title: 'Sucesso!',
+        description: 'Quiz salvo com sucesso.',
       });
 
-      onSave?.();
+      await loadSavedQuizzes();
     } catch (error) {
       console.error('Erro ao salvar quiz:', error);
       toast({
         title: 'Erro',
-        description: 'Erro ao salvar quiz',
+        description: 'Não foi possível salvar o quiz.',
         variant: 'destructive',
       });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleAddQuestion = () => {
-    setIsCreatingNew(true);
-    setEditingQuestion(null);
-    setActiveTab('questions');
-  };
+  // Integração com 21 etapas
+  const handleIntegrateWithSteps = async () => {
+    try {
+      setLoading(true);
 
-  const handleSaveQuestion = (question: QuizQuestion) => {
-    if (isCreatingNew) {
-      const newQuestion: QuizQuestion = {
-        ...question,
-        id: `question-${Date.now()}`,
-        order: questions.length,
-      };
-      setQuestions(prev => [...prev, newQuestion]);
-    } else {
-      setQuestions(prev => prev.map(q => (q.id === question.id ? question : q)));
-    }
-
-    setEditingQuestion(null);
-    setIsCreatingNew(false);
-    setActiveTab('questions');
-  };
-
-  const handleEditQuestion = (question: QuizQuestion) => {
-    setEditingQuestion(question);
-    setIsCreatingNew(false);
-    setActiveTab('question-editor');
-  };
-
-  const handleDeleteQuestion = (questionId: string) => {
-    if (window.confirm('Tem certeza que deseja excluir esta pergunta?')) {
-      setQuestions(prev => prev.filter(q => q.id !== questionId));
-      if (editingQuestion?.id === questionId) {
-        setEditingQuestion(null);
-        setActiveTab('questions');
+      if (questions.length === 0) {
+        toast({
+          title: 'Aviso',
+          description: 'Adicione pelo menos uma pergunta antes de integrar com as etapas.',
+          variant: 'destructive',
+        });
+        return;
       }
-    }
-  };
 
-  const handleCancel = () => {
-    setEditingQuestion(null);
-    setIsCreatingNew(false);
-    setActiveTab('questions');
-  };
+      await saveCompleteQuiz(quizMetadata, questions);
 
-  const handleDeleteCurrent = () => {
-    if (editingQuestion) {
-      handleDeleteQuestion(editingQuestion.id);
-    }
-  };
-
-  const handlePreview = () => {
-    if (questions.length === 0) {
       toast({
-        title: 'Aviso',
-        description: 'Adicione perguntas para visualizar o preview',
-        variant: 'default',
+        title: 'Sucesso!',
+        description: 'Quiz integrado com as 21 etapas com sucesso.',
       });
-      return;
+
+      await loadAllSteps();
+    } catch (error) {
+      console.error('Erro ao integrar com etapas:', error);
+      toast({
+        title: 'Erro',
+        description: 'Não foi possível integrar o quiz com as etapas.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
-    onPreview?.();
   };
 
-  // ===== RENDER CONDICIONAL PARA EDITOR DE PERGUNTA =====
-  if (editingQuestion || isCreatingNew) {
+  // Carregar quiz salvo
+  const loadSavedQuiz = (quiz: SavedQuiz) => {
+    setQuizMetadata(quiz.metadata);
+    setQuestions(quiz.questions);
+    setSelectedQuestion(null);
+
+    toast({
+      title: 'Quiz Carregado',
+      description: `Quiz "${quiz.metadata.title}" foi carregado para edição.`,
+    });
+  };
+
+  if (isPreviewMode) {
     return (
-      <div className={`integrated-quiz-editor ${className}`}>
-        <Card className="h-full">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-[#432818]">
-                <Edit className="w-5 h-5" />
-                {isCreatingNew ? 'Nova Pergunta' : 'Editando Pergunta'}
-              </CardTitle>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCancel}
-                className="border-[#B89B7A] text-[#432818]"
-              >
-                Voltar
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <QuestionEditor
-              question={editingQuestion}
-              onSave={handleSaveQuestion}
-              onCancel={handleCancel}
-              onDelete={editingQuestion ? handleDeleteCurrent : undefined}
-              isNew={isCreatingNew}
-            />
-          </CardContent>
-        </Card>
+      <div className="h-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Preview do Quiz</h2>
+          <Button onClick={() => setIsPreviewMode(false)} variant="outline">
+            <Edit className="w-4 h-4 mr-2" />
+            Voltar ao Editor
+          </Button>
+        </div>
+        <QuizPreview
+          title={quizMetadata.title}
+          description={quizMetadata.description}
+          questions={questions}
+          onComplete={results => {
+            console.log('Resultados do quiz:', results);
+            toast({
+              title: 'Quiz Finalizado!',
+              description: `Pontuação: ${results.score}/${results.totalQuestions}`,
+            });
+          }}
+        />
       </div>
     );
   }
 
-  // ===== INTERFACE PRINCIPAL =====
   return (
-    <div className={`integrated-quiz-editor ${className}`}>
-      <Card className="h-full">
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-[#432818]">
-              <Target className="w-6 h-6" />
-              Editor de Quiz Integrado
-            </CardTitle>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePreview}
-                className="border-[#B89B7A] text-[#432818]"
-                disabled={questions.length === 0}
-              >
-                <Eye className="w-4 h-4 mr-2" />
-                Preview
-              </Button>
-              <Button
-                onClick={handleSaveQuiz}
-                className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
-                disabled={isLoading}
-              >
-                <Save className="w-4 h-4 mr-2" />
-                {isLoading ? 'Salvando...' : 'Salvar Quiz'}
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
+    <div className="h-full flex flex-col">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <BookOpen className="w-6 h-6" />
+          Editor de Quiz Integrado
+        </h1>
 
-        <CardContent className="p-0">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-            <div className="px-6 border-b border-[#B89B7A]/20">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="overview" className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" />
-                  Visão Geral
-                </TabsTrigger>
-                <TabsTrigger value="questions" className="flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  Perguntas ({questions.length})
-                </TabsTrigger>
-                <TabsTrigger value="settings" className="flex items-center gap-2">
-                  <Settings className="w-4 h-4" />
-                  Configurações
-                </TabsTrigger>
-              </TabsList>
-            </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setIsPreviewMode(true)}
+            variant="outline"
+            disabled={questions.length === 0}
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            Preview
+          </Button>
 
-            <div className="p-6">
-              {/* TAB: VISÃO GERAL */}
-              <TabsContent value="overview" className="space-y-6">
-                <div className="grid gap-4">
-                  <div>
-                    <Label htmlFor="quiz-title" className="text-sm font-medium text-[#432818]">
-                      Título do Quiz *
-                    </Label>
-                    <Input
-                      id="quiz-title"
-                      placeholder="Ex: Descubra seu estilo de aprendizado"
-                      value={quizMetadata.title}
-                      onChange={e => setQuizMetadata(prev => ({ ...prev, title: e.target.value }))}
-                      className="mt-1"
-                    />
-                  </div>
+          <Button
+            onClick={handleIntegrateWithSteps}
+            variant="outline"
+            disabled={loading || questions.length === 0}
+          >
+            <Database className="w-4 h-4 mr-2" />
+            Integrar 21 Etapas
+          </Button>
 
-                  <div>
-                    <Label
-                      htmlFor="quiz-description"
-                      className="text-sm font-medium text-[#432818]"
-                    >
-                      Descrição
-                    </Label>
-                    <Textarea
-                      id="quiz-description"
-                      placeholder="Descreva o objetivo e conteúdo do seu quiz..."
-                      value={quizMetadata.description}
-                      onChange={e =>
-                        setQuizMetadata(prev => ({ ...prev, description: e.target.value }))
-                      }
-                      className="mt-1"
-                      rows={3}
-                    />
-                  </div>
+          <Button onClick={handleSaveQuiz} disabled={loading || questions.length === 0}>
+            <Save className="w-4 h-4 mr-2" />
+            {loading ? 'Salvando...' : 'Salvar Quiz'}
+          </Button>
+        </div>
+      </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-sm font-medium text-[#432818]">Categoria</Label>
-                      <select
-                        value={quizMetadata.category}
-                        onChange={e =>
-                          setQuizMetadata(prev => ({ ...prev, category: e.target.value }))
-                        }
-                        className="mt-1 w-full rounded-md border border-input px-3 py-2 text-sm"
-                      >
-                        <option value="general">Geral</option>
-                        <option value="education">Educação</option>
-                        <option value="business">Negócios</option>
-                        <option value="lifestyle">Estilo de Vida</option>
-                        <option value="personality">Personalidade</option>
-                      </select>
-                    </div>
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="questions">
+            <Target className="w-4 h-4 mr-2" />
+            Perguntas ({questions.length})
+          </TabsTrigger>
+          <TabsTrigger value="metadata">
+            <Settings className="w-4 h-4 mr-2" />
+            Configurações
+          </TabsTrigger>
+          <TabsTrigger value="integration">
+            <Database className="w-4 h-4 mr-2" />
+            21 Etapas
+          </TabsTrigger>
+          <TabsTrigger value="library">
+            <BookOpen className="w-4 h-4 mr-2" />
+            Biblioteca ({savedQuizzes.length})
+          </TabsTrigger>
+        </TabsList>
 
-                    <div>
-                      <Label className="text-sm font-medium text-[#432818]">Dificuldade</Label>
-                      <select
-                        value={quizMetadata.difficulty}
-                        onChange={e =>
-                          setQuizMetadata(prev => ({ ...prev, difficulty: e.target.value as any }))
-                        }
-                        className="mt-1 w-full rounded-md border border-input px-3 py-2 text-sm"
-                      >
-                        <option value="easy">Fácil</option>
-                        <option value="medium">Médio</option>
-                        <option value="hard">Difícil</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ESTATÍSTICAS DO QUIZ */}
-                <Card className="bg-[#FAF9F7] border-[#B89B7A]/20">
-                  <CardContent className="p-4">
-                    <h4 className="font-medium text-[#432818] mb-3">Estatísticas do Quiz</h4>
-                    <div className="grid grid-cols-3 gap-4 text-sm">
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-[#B89B7A]">{questions.length}</div>
-                        <div className="text-[#8F7A6A]">Perguntas</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-[#B89B7A]">
-                          {questions.reduce((acc, q) => acc + (q.options?.length || 0), 0)}
+        {/* Conteúdo das Tabs */}
+        <div className="flex-1 mt-4">
+          <TabsContent value="questions" className="h-full">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
+              {/* Lista de Perguntas */}
+              <div className="lg:col-span-1">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Perguntas</span>
+                      <Button size="sm" onClick={addNewQuestion}>
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2 max-h-96 overflow-y-auto">
+                    {questions.length === 0 ? (
+                      <p className="text-muted-foreground text-sm">
+                        Nenhuma pergunta adicionada ainda.
+                      </p>
+                    ) : (
+                      questions.map((question, index) => (
+                        <div
+                          key={question.id}
+                          className={`p-3 border rounded cursor-pointer transition-colors ${
+                            selectedQuestion === index
+                              ? 'border-primary bg-primary/5'
+                              : 'hover:bg-muted/50'
+                          }`}
+                          onClick={() => setSelectedQuestion(index)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <p className="text-sm font-medium truncate">{question.question}</p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <Badge variant="outline" className="text-xs">
+                                  {question.type}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  {question.points}pts
+                                </span>
+                              </div>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={e => {
+                                e.stopPropagation();
+                                removeQuestion(index);
+                              }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div className="text-[#8F7A6A]">Total Opções</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-[#B89B7A]">
-                          ~{Math.max(1, Math.ceil(questions.length * 1.5))}min
-                        </div>
-                        <div className="text-[#8F7A6A]">Tempo Est.</div>
-                      </div>
-                    </div>
+                      ))
+                    )}
                   </CardContent>
                 </Card>
-              </TabsContent>
+              </div>
 
-              {/* TAB: PERGUNTAS */}
-              <TabsContent value="questions" className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-semibold text-[#432818]">
-                    Perguntas do Quiz ({questions.length})
-                  </h3>
-                  <Button
-                    onClick={handleAddQuestion}
-                    className="bg-[#B89B7A] hover:bg-[#A38A69] text-white"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nova Pergunta
-                  </Button>
+              {/* Editor da Pergunta Selecionada */}
+              <div className="lg:col-span-2">
+                {selectedQuestion !== null && questions[selectedQuestion] ? (
+                  <QuestionEditor
+                    question={questions[selectedQuestion]}
+                    onChange={updateQuestion}
+                  />
+                ) : (
+                  <Card>
+                    <CardContent className="flex items-center justify-center h-96">
+                      <div className="text-center">
+                        <Target className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                        <p className="text-muted-foreground">
+                          Selecione uma pergunta para editá-la ou adicione uma nova pergunta.
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="metadata" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Informações do Quiz</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="title">Título do Quiz</Label>
+                  <Input
+                    id="title"
+                    value={quizMetadata.title}
+                    onChange={e => setQuizMetadata(prev => ({ ...prev, title: e.target.value }))}
+                    placeholder="Digite o título do quiz"
+                  />
                 </div>
 
-                {questions.length === 0 ? (
-                  <Card className="p-8 text-center border-dashed border-2 border-[#B89B7A]/30">
-                    <div className="text-6xl mb-4">❓</div>
-                    <h4 className="text-lg font-medium text-[#432818] mb-2">
-                      Nenhuma pergunta adicionada
-                    </h4>
-                    <p className="text-[#8F7A6A] mb-4">
-                      Comece criando sua primeira pergunta para o quiz
-                    </p>
-                    <Button
-                      onClick={handleAddQuestion}
-                      variant="outline"
-                      className="border-[#B89B7A] text-[#432818]"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Adicionar Primeira Pergunta
-                    </Button>
-                  </Card>
+                <div>
+                  <Label htmlFor="category">Categoria</Label>
+                  <Input
+                    id="category"
+                    value={quizMetadata.category}
+                    onChange={e => setQuizMetadata(prev => ({ ...prev, category: e.target.value }))}
+                    placeholder="Ex: Matemática, História"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <Label htmlFor="description">Descrição</Label>
+                  <Textarea
+                    id="description"
+                    value={quizMetadata.description}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({ ...prev, description: e.target.value }))
+                    }
+                    placeholder="Descreva o objetivo e conteúdo do quiz"
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="difficulty">Dificuldade</Label>
+                  <select
+                    id="difficulty"
+                    value={quizMetadata.difficulty}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({
+                        ...prev,
+                        difficulty: e.target.value as 'beginner' | 'intermediate' | 'advanced',
+                      }))
+                    }
+                    className="w-full p-2 border border-input rounded-md"
+                  >
+                    <option value="beginner">Iniciante</option>
+                    <option value="intermediate">Intermediário</option>
+                    <option value="advanced">Avançado</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label htmlFor="passingScore">Nota Mínima (%)</Label>
+                  <Input
+                    id="passingScore"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={quizMetadata.passingScore}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({
+                        ...prev,
+                        passingScore: parseInt(e.target.value) || 70,
+                      }))
+                    }
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="timeLimit">Tempo Limite (minutos)</Label>
+                  <Input
+                    id="timeLimit"
+                    type="number"
+                    min="1"
+                    value={quizMetadata.timeLimit || ''}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({
+                        ...prev,
+                        timeLimit: e.target.value ? parseInt(e.target.value) : undefined,
+                      }))
+                    }
+                    placeholder="Opcional"
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="allowRetries"
+                    type="checkbox"
+                    checked={quizMetadata.allowRetries}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({
+                        ...prev,
+                        allowRetries: e.target.checked,
+                      }))
+                    }
+                  />
+                  <Label htmlFor="allowRetries">Permitir refazer</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="showCorrectAnswers"
+                    type="checkbox"
+                    checked={quizMetadata.showCorrectAnswers}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({
+                        ...prev,
+                        showCorrectAnswers: e.target.checked,
+                      }))
+                    }
+                  />
+                  <Label htmlFor="showCorrectAnswers">Mostrar respostas corretas</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="randomizeQuestions"
+                    type="checkbox"
+                    checked={quizMetadata.randomizeQuestions}
+                    onChange={e =>
+                      setQuizMetadata(prev => ({
+                        ...prev,
+                        randomizeQuestions: e.target.checked,
+                      }))
+                    }
+                  />
+                  <Label htmlFor="randomizeQuestions">Embaralhar perguntas</Label>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="integration" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Integração com 21 Etapas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {stepsLoading ? (
+                  <p>Carregando integração das etapas...</p>
                 ) : (
-                  <div className="space-y-3">
-                    {questions.map((question, index) => (
-                      <Card key={question.id} className="hover:shadow-md transition-shadow">
-                        <CardContent className="p-4">
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Badge variant="outline" className="text-xs">
-                                  Pergunta {index + 1}
-                                </Badge>
-                                <Badge
-                                  variant={question.type === 'normal' ? 'default' : 'secondary'}
-                                  className="text-xs"
-                                >
-                                  {question.type === 'normal' ? 'Múltipla Escolha' : question.type}
-                                </Badge>
-                              </div>
-                              <h4 className="font-medium text-[#432818] mb-2">
-                                {question.title || question.question || question.text}
-                              </h4>
-                              <p className="text-sm text-[#8F7A6A]">
-                                {question.options?.length || 0} opções •{question.multiSelect}{' '}
-                                seleções permitidas
-                              </p>
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Sistema de integração com as 21 etapas do editor. Etapas identificadas como
+                      quiz: {stepsIntegration.filter(step => isQuizStep(step.stepNumber)).length}
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {stepsIntegration
+                        .filter(step => isQuizStep(step.stepNumber))
+                        .map(step => (
+                          <Card key={step.stepNumber} className="p-3">
+                            <div className="flex items-center justify-between">
+                              <Badge variant="outline">Etapa {step.stepNumber}</Badge>
+                              <span className="text-xs text-muted-foreground">
+                                {step.questions.length} perguntas
+                              </span>
                             </div>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEditQuestion(question)}
-                                className="border-[#B89B7A] text-[#432818]"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleDeleteQuestion(question.id)}
-                                className="border-red-300 text-red-600 hover:bg-red-50"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
+                            <p className="text-sm mt-2 truncate">
+                              {step.templateData?.title || `Etapa ${step.stepNumber}`}
+                            </p>
+                          </Card>
+                        ))}
+                    </div>
+
+                    <Button
+                      onClick={handleIntegrateWithSteps}
+                      disabled={loading || questions.length === 0}
+                      className="w-full"
+                    >
+                      <Database className="w-4 h-4 mr-2" />
+                      {loading ? 'Integrando...' : 'Integrar Quiz Atual com Etapas'}
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="library" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Biblioteca de Quizzes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {loading ? (
+                  <p>Carregando quizzes salvos...</p>
+                ) : savedQuizzes.length === 0 ? (
+                  <p className="text-muted-foreground">Nenhum quiz salvo ainda.</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {savedQuizzes.map(quiz => (
+                      <Card
+                        key={quiz.id}
+                        className="cursor-pointer hover:shadow-md transition-shadow"
+                      >
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <Badge variant="outline">{quiz.metadata.difficulty}</Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {quiz.questions.length} perguntas
+                            </span>
+                          </div>
+                          <CardTitle className="text-lg">{quiz.metadata.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            {quiz.metadata.description}
+                          </p>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => loadSavedQuiz(quiz)}
+                              className="flex-1"
+                            >
+                              <Edit className="w-4 h-4 mr-2" />
+                              Editar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setQuestions(quiz.questions);
+                                setQuizMetadata(quiz.metadata);
+                                setIsPreviewMode(true);
+                              }}
+                            >
+                              <Play className="w-4 h-4" />
+                            </Button>
                           </div>
                         </CardContent>
                       </Card>
                     ))}
                   </div>
                 )}
-              </TabsContent>
-
-              {/* TAB: CONFIGURAÇÕES */}
-              <TabsContent value="settings" className="space-y-6">
-                <div className="grid gap-6">
-                  <Card className="p-4">
-                    <h4 className="font-medium text-[#432818] mb-4">Configurações de Exibição</h4>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label className="text-sm font-medium">Mostrar Progresso</Label>
-                          <p className="text-xs text-[#8F7A6A]">
-                            Exibir barra de progresso durante o quiz
-                          </p>
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={quizMetadata.settings.showProgress}
-                          onChange={e =>
-                            setQuizMetadata(prev => ({
-                              ...prev,
-                              settings: { ...prev.settings, showProgress: e.target.checked },
-                            }))
-                          }
-                          className="rounded"
-                        />
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label className="text-sm font-medium">Randomizar Perguntas</Label>
-                          <p className="text-xs text-[#8F7A6A]">Embaralhar ordem das perguntas</p>
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={quizMetadata.settings.randomizeQuestions}
-                          onChange={e =>
-                            setQuizMetadata(prev => ({
-                              ...prev,
-                              settings: { ...prev.settings, randomizeQuestions: e.target.checked },
-                            }))
-                          }
-                          className="rounded"
-                        />
-                      </div>
-                    </div>
-                  </Card>
-
-                  <Card className="p-4">
-                    <h4 className="font-medium text-[#432818] mb-4">Configurações de Acesso</h4>
-                    <div className="space-y-4">
-                      <div>
-                        <Label className="text-sm font-medium">Pontuação Mínima (%)</Label>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={quizMetadata.settings.passScore}
-                          onChange={e =>
-                            setQuizMetadata(prev => ({
-                              ...prev,
-                              settings: {
-                                ...prev.settings,
-                                passScore: parseInt(e.target.value) || 0,
-                              },
-                            }))
-                          }
-                          className="mt-1 w-24"
-                        />
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label className="text-sm font-medium">Permitir Repetir</Label>
-                          <p className="text-xs text-[#8F7A6A]">Usuário pode refazer o quiz</p>
-                        </div>
-                        <input
-                          type="checkbox"
-                          checked={quizMetadata.settings.allowRetake}
-                          onChange={e =>
-                            setQuizMetadata(prev => ({
-                              ...prev,
-                              settings: { ...prev.settings, allowRetake: e.target.checked },
-                            }))
-                          }
-                          className="rounded"
-                        />
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </TabsContent>
-            </div>
-          </Tabs>
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </div>
+      </Tabs>
     </div>
   );
-};
-
-export default IntegratedQuizEditor;
+}
