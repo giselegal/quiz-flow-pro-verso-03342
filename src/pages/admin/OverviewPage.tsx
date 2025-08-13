@@ -81,12 +81,15 @@ const OverviewPage: React.FC = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-blue-50/30 cursor-pointer">
+        <Card
+          className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md bg-gradient-to-br from-white to-blue-50/30 cursor-pointer"
+          onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
+        >
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-600">Criar Quiz</p>
-                <p className="text-xs text-slate-500 mt-1">Novo funil interativo</p>
+                <p className="text-sm font-medium text-slate-600">Editor Visual</p>
+                <p className="text-xs text-slate-500 mt-1">Criar quiz com arrastar e soltar</p>
               </div>
               <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Plus className="h-5 w-5 text-white" />
@@ -489,9 +492,10 @@ const OverviewPage: React.FC = () => {
                 size="lg"
                 variant="secondary"
                 className="bg-white text-blue-600 hover:bg-blue-50"
+                onClick={() => window.open('/editor-fixed-dragdrop', '_blank')}
               >
                 <Plus className="h-5 w-5 mr-2" />
-                Criar Quiz
+                Editor Visual
               </Button>
               <Button
                 size="lg"

@@ -19,8 +19,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { useSupabaseQuizEditor } from '@/hooks/useSupabaseQuizEditor';
-import { Settings, BookOpen } from 'lucide-react';
+import { BookOpen, Settings } from 'lucide-react';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
