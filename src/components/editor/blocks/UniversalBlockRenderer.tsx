@@ -2,6 +2,7 @@ import { getBlockComponent } from '@/config/enhancedBlockRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
+import { ProductionBlockBoundary, SimpleBlockFallback } from './ProductionBlockBoundary';
 
 export interface UniversalBlockRendererProps {
   block: Block;
@@ -94,56 +95,56 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   }
 
   if (!Component) {
-    // Fallback para tipo desconhecido
+    // Fallback mais robusto para componentes não encontrados
     return (
-      <div
-        className={cn(
-          'p-4 border-2 border-dashed border-gray-300 rounded-lg text-center text-gray-500',
-          containerClasses,
-          // Margens universais com controles deslizantes
-          getMarginClass(block.properties?.marginTop ?? 0, 'top'),
-          getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
-          getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
-          getMarginClass(block.properties?.marginRight ?? 0, 'right')
-        )}
-        onClick={onClick}
-        style={inlineStyles}
-      >
-        <p>Componente não encontrado: {block.type}</p>
-        <p className="text-xs mt-1">Verifique se o tipo está registrado</p>
-      </div>
+      <SimpleBlockFallback 
+        blockType={block.type}
+        blockId={block.id}
+        message={`Componente '${block.type}' não foi encontrado no registry`}
+      />
     );
   }
 
   try {
     return (
-      <div
-        className={cn(
-          'block-wrapper transition-all duration-200',
-          containerClasses,
-          isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
-        )}
-        onClick={onClick}
-        style={inlineStyles}
+      <ProductionBlockBoundary 
+        blockType={block.type}
+        blockId={block.id}
       >
-        <Component
-          block={block}
-          isSelected={isSelected}
+        <div
+          className={cn(
+            'block-wrapper transition-all duration-200',
+            containerClasses,
+            // Margens universais com controles deslizantes
+            getMarginClass(block.properties?.marginTop ?? 0, 'top'),
+            getMarginClass(block.properties?.marginBottom ?? 0, 'bottom'),
+            getMarginClass(block.properties?.marginLeft ?? 0, 'left'),
+            getMarginClass(block.properties?.marginRight ?? 0, 'right'),
+            isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2'
+          )}
           onClick={onClick}
-          onPropertyChange={onPropertyChange}
-        />
-      </div>
+          style={inlineStyles}
+        >
+          <Component
+            block={block}
+            properties={processedProperties}
+            isSelected={isSelected}
+            onClick={onClick}
+            onPropertyChange={onPropertyChange}
+            {...processedProperties}
+          />
+        </div>
+      </ProductionBlockBoundary>
     );
   } catch (error) {
-    console.error(`Erro ao renderizar bloco ${block.type}:`, error);
+    console.error(`Erro crítico ao renderizar bloco ${block.type}:`, error);
 
     return (
-      <div style={{ borderColor: '#B89B7A' }} onClick={onClick}>
-        <p>Erro ao renderizar: {block.type}</p>
-        <p className="text-xs mt-1">
-          {error instanceof Error ? error.message : 'Erro desconhecido'}
-        </p>
-      </div>
+      <SimpleBlockFallback 
+        blockType={block.type}
+        blockId={block.id}
+        message={error instanceof Error ? error.message : 'Erro de renderização crítico'}
+      />
     );
   }
 };
