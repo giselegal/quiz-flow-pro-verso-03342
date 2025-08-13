@@ -120,11 +120,11 @@ export class TemplateManager {
 
     try {
       // Tentar usar FixedTemplateService se disponível
-      const { FixedTemplateService } = await import('../services/stepTemplateService');
+      const { default: stepTemplateService } = await import('../services/stepTemplateService');
 
-      if (FixedTemplateService && typeof FixedTemplateService.getStepTemplate === 'function') {
-        console.log(`🛡️ Usando FixedTemplateService para fallback da etapa ${stepNumber}`);
-        const fixedTemplate = FixedTemplateService.getStepTemplate(stepNumber);
+      if (stepTemplateService && typeof stepTemplateService.getStepTemplate === 'function') {
+        console.log(`🛡️ Usando stepTemplateService para fallback da etapa ${stepNumber}`);
+        const fixedTemplate = stepTemplateService.getStepTemplate(stepNumber);
 
         if (fixedTemplate && fixedTemplate.length > 0) {
           // Converter EditorBlock[] para Block[]

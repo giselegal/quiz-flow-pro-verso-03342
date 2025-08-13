@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { STEP_TEMPLATES } from '../config/templates/templates';
+import { getStepTemplate, preloadAllTemplates } from '../config/templates/templates';
 import type { Block } from '../types/editor';
 
 // Interfaces para corresponder à estrutura real dos templates
@@ -105,37 +105,27 @@ export interface TemplateData {
   step?: number;
 }
 
-type StepNumber = keyof typeof STEP_TEMPLATES;
-type StepTemplate = (typeof STEP_TEMPLATES)[StepNumber];
+// removed unused STEP_TEMPLATES type dependencies
 
-function isValidStep(step: number): step is StepNumber {
+function isValidStep(step: number): boolean {
   return step >= 1 && step <= 21;
 }
 
 export const templateService = {
   async getTemplates(): Promise<TemplateData[]> {
-    const templates = (Object.entries(STEP_TEMPLATES) as [string, StepTemplate][]).map(
-      ([stepStr, template]) => ({
-        ...template,
-        step: parseInt(stepStr),
-      })
-    );
-
-    return templates;
+    const results: TemplateData[] = [];
+    for (let i = 1; i <= 21; i++) {
+      const tpl = await getStepTemplate(i);
+      if (tpl) results.push({ ...tpl, step: i });
+    }
+    return results;
   },
 
   async getTemplate(id: string): Promise<TemplateData | null> {
     const step = parseInt(id.replace('step-', ''));
-
-    if (!isValidStep(step)) {
-      return null;
-    }
-
-    const template = STEP_TEMPLATES[step];
-    return {
-      ...template,
-      step,
-    };
+    if (!isValidStep(step)) return null;
+    const template = await getStepTemplate(step);
+    return template ? { ...template, step } : null;
   },
 
   async searchTemplates(query: string): Promise<TemplateData[]> {
@@ -152,15 +142,9 @@ export const templateService = {
 
   // Nova função para obter template por número da etapa
   async getTemplateByStep(step: number): Promise<TemplateData | null> {
-    if (!isValidStep(step)) {
-      return null;
-    }
-
-    const template = STEP_TEMPLATES[step];
-    return {
-      ...template,
-      step,
-    };
+    if (!isValidStep(step)) return null;
+    const template = await getStepTemplate(step);
+    return template ? { ...template, step } : null;
   },
 
   // Nova função para converter blocos do template para blocos do editor
