@@ -6,14 +6,13 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { 
   MousePointer, Eye, Palette, Link, 
   ExternalLink, Download, Mail, Phone,
   ArrowRight, ArrowLeft, Plus, Check, X
 } from 'lucide-react';
 import { Block } from '@/types/editor';
-import { PropertyNumber } from '../PropertyNumber';
+import { PropertyNumber } from '../components/PropertyNumber';
 
 interface ButtonPropertyEditorProps {
   block: Block;
@@ -461,15 +460,15 @@ export const ButtonPropertyEditor: React.FC<ButtonPropertyEditorProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Border Radius</Label>
               <PropertyNumber
+                label="Border Radius"
                 value={borderRadius}
-                onChange={(value) => handleContentUpdate('borderRadius', value)}
+                onChange={(value: number) => handleContentUpdate('borderRadius', value)}
                 min={0}
                 max={50}
                 step={1}
-                suffix="px"
               />
+              <span className="text-xs text-gray-500">pixels</span>
             </div>
 
             <div className="space-y-2">

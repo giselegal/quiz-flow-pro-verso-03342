@@ -8,13 +8,12 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { 
-  Navigation, Eye, Plus, Trash2, GripVertical, 
+  Navigation, Eye, Plus, Trash2,
   Home, User, Settings, Mail, Phone, Info,
-  ChevronDown, Menu, X
+  ChevronDown, Menu
 } from 'lucide-react';
 import { Block } from '@/types/editor';
-import { PropertyArrayEditor } from '../PropertyArrayEditor';
-import { PropertyNumber } from '../PropertyNumber';
+import { PropertyNumber } from '../components/PropertyNumber';
 
 interface NavigationItem {
   id: string;
@@ -37,13 +36,19 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
   onUpdate,
   isPreviewMode = false
 }) => {
-  // Propriedades específicas da navegação
-  const items: NavigationItem[] = block.content?.items || [
-    { id: '1', label: 'Home', href: '/', icon: 'home' },
-    { id: '2', label: 'Sobre', href: '/sobre', icon: 'info' }
-  ];
+  // Propriedades específicas da navegação - com cast seguro
+  const items: NavigationItem[] = (Array.isArray(block.content?.items) && 
+                                  block.content.items.length > 0 && 
+                                  typeof block.content.items[0] === 'object' && 
+                                  'label' in block.content.items[0]) 
+                                  ? block.content.items as NavigationItem[]
+                                  : [
+                                      { id: '1', label: 'Home', href: '/', icon: 'home' },
+                                      { id: '2', label: 'Sobre', href: '/sobre', icon: 'info' }
+                                    ];
   const layout = block.content?.layout || 'horizontal';
   const alignment = block.content?.alignment || 'left';
+  const extendedAlignment = alignment as 'left' | 'center' | 'right' | 'space-between' | 'space-around';
   const showIcons = block.content?.showIcons || true;
   const showMobileMenu = block.content?.showMobileMenu || true;
   const backgroundColor = block.content?.backgroundColor || 'transparent';
@@ -163,8 +168,8 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
       display: 'flex',
       flexDirection: layout === 'vertical' ? 'column' as const : 'row' as const,
       alignItems: layout === 'vertical' ? 'stretch' : 'center',
-      justifyContent: alignment === 'space-between' ? 'space-between' : 
-                     alignment === 'space-around' ? 'space-around' :
+      justifyContent: extendedAlignment === 'space-between' ? 'space-between' : 
+                     extendedAlignment === 'space-around' ? 'space-around' :
                      alignment === 'center' ? 'center' :
                      alignment === 'right' ? 'flex-end' : 'flex-start',
       gap: `${spacing}px`,
@@ -240,108 +245,142 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
         {/* Itens de Navegação */}
         <div className="space-y-2">
           <Label>Itens de Navegação</Label>
-          <PropertyArrayEditor
-            items={items}
-            onUpdate={handleItemsUpdate}
-            itemName="item de navegação"
-            maxItems={10}
-            renderItem={(item, index) => (
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <Label className="text-xs">Texto</Label>
-                    <Input
-                      value={item.label || ''}
-                      onChange={(e) => {
-                        const updatedItems = [...items];
-                        updatedItems[index] = { ...updatedItems[index], label: e.target.value };
-                        handleItemsUpdate(updatedItems);
-                      }}
-                      placeholder="Texto do menu"
-                      className="h-8"
-                    />
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <Label className="text-xs">Link</Label>
-                    <Input
-                      value={item.href || ''}
-                      onChange={(e) => {
-                        const updatedItems = [...items];
-                        updatedItems[index] = { ...updatedItems[index], href: e.target.value };
-                        handleItemsUpdate(updatedItems);
-                      }}
-                      placeholder="/pagina ou #secao"
-                      className="h-8"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="space-y-1">
-                    <Label className="text-xs">Ícone</Label>
-                    <Select 
-                      value={item.icon || ''} 
-                      onValueChange={(value) => {
-                        const updatedItems = [...items];
-                        updatedItems[index] = { ...updatedItems[index], icon: value };
-                        handleItemsUpdate(updatedItems);
-                      }}
-                    >
-                      <SelectTrigger className="h-8">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {iconOptions.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
-                            <div className="flex items-center gap-2">
-                              {option.icon && <option.icon className="h-3 w-3" />}
-                              <span className="text-xs">{option.label}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <Label className="text-xs">Abrir</Label>
-                    <Select 
-                      value={item.target || '_self'} 
-                      onValueChange={(value) => {
-                        const updatedItems = [...items];
-                        updatedItems[index] = { ...updatedItems[index], target: value };
-                        handleItemsUpdate(updatedItems);
-                      }}
-                    >
-                      <SelectTrigger className="h-8">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="_self">Mesma aba</SelectItem>
-                        <SelectItem value="_blank">Nova aba</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="flex items-center justify-center pt-4">
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        checked={item.active || false}
-                        onCheckedChange={(checked) => {
+          <div className="space-y-3">
+            {items.map((item, index) => (
+              <Card key={item.id} className="p-3 border">
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Texto</Label>
+                      <Input
+                        value={item.label || ''}
+                        onChange={(e) => {
                           const updatedItems = [...items];
-                          updatedItems[index] = { ...updatedItems[index], active: checked };
+                          updatedItems[index] = { ...updatedItems[index], label: e.target.value };
                           handleItemsUpdate(updatedItems);
                         }}
-                        className="scale-75"
+                        placeholder="Texto do menu"
+                        className="h-8"
                       />
-                      <Label className="text-xs">Ativo</Label>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <Label className="text-xs">Link</Label>
+                      <Input
+                        value={item.href || ''}
+                        onChange={(e) => {
+                          const updatedItems = [...items];
+                          updatedItems[index] = { ...updatedItems[index], href: e.target.value };
+                          handleItemsUpdate(updatedItems);
+                        }}
+                        placeholder="/pagina ou #secao"
+                        className="h-8"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="space-y-1">
+                      <Label className="text-xs">Ícone</Label>
+                      <Select 
+                        value={item.icon || ''} 
+                        onValueChange={(value) => {
+                          const updatedItems = [...items];
+                          updatedItems[index] = { ...updatedItems[index], icon: value };
+                          handleItemsUpdate(updatedItems);
+                        }}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {iconOptions.map(option => (
+                            <SelectItem key={option.value} value={option.value}>
+                              <div className="flex items-center gap-2">
+                                {option.icon && <option.icon className="h-3 w-3" />}
+                                <span className="text-xs">{option.label}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <Label className="text-xs">Abrir</Label>
+                      <Select 
+                        value={item.target || '_self'} 
+                        onValueChange={(value) => {
+                          const updatedItems = [...items];
+                          updatedItems[index] = { ...updatedItems[index], target: value };
+                          handleItemsUpdate(updatedItems);
+                        }}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="_self">Mesma aba</SelectItem>
+                          <SelectItem value="_blank">Nova aba</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center justify-center pt-4">
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={item.active || false}
+                          onCheckedChange={(checked) => {
+                            const updatedItems = [...items];
+                            updatedItems[index] = { ...updatedItems[index], active: checked };
+                            handleItemsUpdate(updatedItems);
+                          }}
+                          className="scale-75"
+                        />
+                        <Label className="text-xs">Ativo</Label>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const newItem: NavigationItem = {
+                  id: `item-${Date.now()}`,
+                  label: `Item ${items.length + 1}`,
+                  href: '#',
+                  icon: '',
+                  target: '_self',
+                  active: false
+                };
+                handleItemsUpdate([...items, newItem]);
+              }}
+              disabled={items.length >= 10}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar Item
+            </Button>
+            
+            {items.length > 1 && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const updatedItems = items.slice(0, -1);
+                  handleItemsUpdate(updatedItems);
+                }}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Remover Último
+              </Button>
             )}
-          />
+          </div>
         </div>
 
         <Separator />
@@ -415,40 +454,40 @@ export const NavigationPropertyEditor: React.FC<NavigationPropertyEditorProps> =
           
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Tamanho da Fonte</Label>
               <PropertyNumber
+                label="Tamanho da Fonte"
                 value={fontSize}
-                onChange={(value) => handleContentUpdate('fontSize', value)}
+                onChange={(value: number) => handleContentUpdate('fontSize', value)}
                 min={12}
                 max={24}
                 step={1}
-                suffix="px"
               />
+              <span className="text-xs text-gray-500">pixels</span>
             </div>
 
             <div className="space-y-2">
-              <Label>Espaçamento</Label>
               <PropertyNumber
+                label="Espaçamento"
                 value={spacing}
-                onChange={(value) => handleContentUpdate('spacing', value)}
+                onChange={(value: number) => handleContentUpdate('spacing', value)}
                 min={4}
                 max={32}
                 step={2}
-                suffix="px"
               />
+              <span className="text-xs text-gray-500">pixels</span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label>Border Radius</Label>
             <PropertyNumber
+              label="Border Radius"
               value={borderRadius}
-              onChange={(value) => handleContentUpdate('borderRadius', value)}
+              onChange={(value: number) => handleContentUpdate('borderRadius', value)}
               min={0}
               max={20}
               step={1}
-              suffix="px"
             />
+            <span className="text-xs text-gray-500">pixels</span>
           </div>
         </div>
 

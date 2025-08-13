@@ -70,10 +70,12 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
   ];
 
   const renderPreview = () => {
+    const numericFontSize = typeof fontSize === 'number' ? fontSize : parseInt(fontSize) || 16;
+    
     const baseStyles = {
-      fontSize: `${fontSize}px`,
+      fontSize: `${numericFontSize}px`,
       fontWeight,
-      textAlign,
+      textAlign: textAlign as 'left' | 'center' | 'right',
       color,
       backgroundColor,
       padding: backgroundColor !== 'transparent' ? '8px 12px' : '0',
@@ -82,13 +84,13 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
     };
 
     const typeStyles = {
-      heading1: { fontSize: Math.max(fontSize, 32), fontWeight: 'bold', marginBottom: '16px' },
-      heading2: { fontSize: Math.max(fontSize, 24), fontWeight: 'bold', marginBottom: '12px' },
-      heading3: { fontSize: Math.max(fontSize, 20), fontWeight: 'semibold', marginBottom: '8px' },
-      paragraph: { fontSize, lineHeight: '1.6' },
-      lead: { fontSize: Math.max(fontSize, 18), fontWeight: 'medium' },
-      small: { fontSize: Math.min(fontSize, 14) },
-      caption: { fontSize: Math.min(fontSize, 12), opacity: 0.8 }
+      heading1: { fontSize: Math.max(numericFontSize, 32), fontWeight: 'bold', marginBottom: '16px' },
+      heading2: { fontSize: Math.max(numericFontSize, 24), fontWeight: 'bold', marginBottom: '12px' },
+      heading3: { fontSize: Math.max(numericFontSize, 20), fontWeight: 'semibold', marginBottom: '8px' },
+      paragraph: { fontSize: numericFontSize, lineHeight: '1.6' },
+      lead: { fontSize: Math.max(numericFontSize, 18), fontWeight: 'medium' },
+      small: { fontSize: Math.min(numericFontSize, 14) },
+      caption: { fontSize: Math.min(numericFontSize, 12), opacity: 0.8 }
     };
 
     const finalStyles = {
@@ -185,15 +187,15 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Tamanho da Fonte</Label>
               <PropertyNumber
+                label="Tamanho da Fonte"
                 value={fontSize}
-                onChange={(value) => handleContentUpdate('fontSize', value)}
+                onChange={(value: number) => handleContentUpdate('fontSize', value)}
                 min={8}
                 max={72}
                 step={1}
-                suffix="px"
               />
+              <span className="text-xs text-gray-500">pixels</span>
             </div>
 
             <div className="space-y-2">
@@ -314,15 +316,15 @@ export const TextPropertyEditor: React.FC<TextPropertyEditorProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Limite de Caracteres</Label>
             <PropertyNumber
+              label="Limite de Caracteres"
               value={maxLength}
-              onChange={(value) => handleContentUpdate('maxLength', value)}
+              onChange={(value: number) => handleContentUpdate('maxLength', value)}
               min={10}
               max={5000}
               step={10}
-              suffix=" chars"
             />
+            <span className="text-xs text-gray-500">caracteres</span>
           </div>
         </div>
 
