@@ -27,6 +27,9 @@ const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
 const MigrationPanel = lazy(() => import('./components/admin/MigrationPanel'));
+const IntegratedQuizEditor = lazy(
+  () => import('./components/editor/quiz-specific/IntegratedQuizEditor')
+);
 
 // Lazy load das páginas de debug (apenas em desenvolvimento)
 const DebugEditorContext = lazy(() => import('./pages/debug-editor'));
@@ -274,6 +277,14 @@ function App() {
                 />
 
                 {/* Protected Routes */}
+                <ProtectedRoute
+                  path="/admin/quiz-editor"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <IntegratedQuizEditor />
+                    </Suspense>
+                  )}
+                />
                 <ProtectedRoute
                   path="/admin/funis"
                   component={() => (

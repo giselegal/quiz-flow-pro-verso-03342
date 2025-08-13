@@ -1,17 +1,18 @@
 // @ts-nocheck
-import { Link, useLocation } from 'wouter';
+import { cn } from '@/lib/utils';
 import {
   BarChart3,
-  Settings,
-  Palette,
-  Eye,
-  Target,
+  BookOpen,
   Code,
-  TrendingUp,
+  Eye,
   Home,
   Layers,
+  Palette,
+  Settings,
+  Target,
+  TrendingUp,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Link, useLocation } from 'wouter';
 
 const sidebarItems = [
   {
@@ -23,6 +24,12 @@ const sidebarItems = [
     title: 'Quiz',
     href: '/admin/quiz',
     icon: Palette,
+  },
+  {
+    title: 'Editor de Quiz',
+    href: '/admin/quiz-editor',
+    icon: BookOpen,
+    description: 'Editor integrado de quizzes',
   },
   {
     title: 'Funis',

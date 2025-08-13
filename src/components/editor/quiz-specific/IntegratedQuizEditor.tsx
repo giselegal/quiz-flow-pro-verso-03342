@@ -5,330 +5,477 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/components/ui/use-toast';
+import { useSupabaseQuizEditor, QuizData, SavedQuiz } from '@/hooks/useSupabaseQuizEditor';
 import { QuizQuestion } from '@/types/quiz';
-import { BookOpen, Eye, Plus, Save, Settings, Target } from 'lucide-react';
-import { useState } from 'react';
+import { BookOpen, Eye, Plus, Save, Settings, Database, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-export default function IntegratedQuizEditor() {
-  const [activeTab, setActiveTab] = useState('questions');
-  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [loading, setLoading] = useState(false);
+export function IntegratedQuizEditor() {
+  const [activeTab, setActiveTab] = useState('edit');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('checking');
+  const [savedQuizzes, setSavedQuizzes] = useState([]);
+  
+  const { user } = useAuth();
+  const { saveQuiz, loadQuiz, loadAllQuizzes, deleteQuiz } = useQuizCRUD();
+  
+  const [quiz, setQuiz] = useState({
+    id: null,
+    title: 'Novo Quiz',
+    description: 'Descrição do quiz',
+    questions: [
+      {
+        id: 1,
+        question: 'Pergunta de exemplo?',
+        options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
+        correctAnswers: [0],
+        type: 'single' as const,
+      }
+    ],
+    settings: {
+      timeLimit: 300,
+      randomizeQuestions: false,
+      showCorrectAnswers: true,
+    }
+  });
 
-  // Estado simplificado do Quiz
-  const [quizTitle, setQuizTitle] = useState('Novo Quiz');
-  const [quizDescription, setQuizDescription] = useState('Descrição do quiz');
-  const [quizCategory, setQuizCategory] = useState('Geral');
-
-  // Adicionar nova pergunta
-  const addNewQuestion = () => {
-    const newQuestion: QuizQuestion = {
-      id: `q_${Date.now()}`,
-      text: 'Nova pergunta',
-      question: 'Nova pergunta',
-      options: [
-        { id: 'opt1', text: 'Opção 1' },
-        { id: 'opt2', text: 'Opção 2' },
-        { id: 'opt3', text: 'Opção 3' },
-        { id: 'opt4', text: 'Opção 4' },
-      ],
-      type: 'multiple-choice',
+  // Testar conexão com Supabase
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        const { data, error } = await supabase.from('quizzes').select('count').limit(1);
+        if (error) throw error;
+        setConnectionStatus('connected');
+        await loadSavedQuizzes();
+      } catch (error) {
+        console.error('Erro de conexão:', error);
+        setConnectionStatus('error');
+        toast({
+          title: "Erro de conexão",
+          description: "Não foi possível conectar ao banco de dados",
+          variant: "destructive",
+        });
+      }
     };
+    testConnection();
+  }, []);
 
-    setQuestions(prev => [...prev, newQuestion]);
-    setSelectedQuestion(questions.length);
-  };
-
-  // Atualizar pergunta selecionada
-  const updateQuestion = (index: number, updatedQuestion: QuizQuestion) => {
-    setQuestions(prev => prev.map((q, i) => (i === index ? updatedQuestion : q)));
-  };
-
-  // Remover pergunta
-  const removeQuestion = (index: number) => {
-    setQuestions(prev => prev.filter((_, i) => i !== index));
-    if (selectedQuestion === index) {
-      setSelectedQuestion(null);
-    } else if (selectedQuestion && selectedQuestion > index) {
-      setSelectedQuestion(selectedQuestion - 1);
+  const loadSavedQuizzes = async () => {
+    try {
+      const quizzes = await loadAllQuizzes();
+      setSavedQuizzes(quizzes);
+    } catch (error) {
+      console.error('Erro ao carregar quizzes:', error);
     }
   };
 
-  // Salvar quiz
   const handleSaveQuiz = async () => {
-    try {
-      setLoading(true);
-
-      // Lógica de salvamento simplificada
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+    if (!user) {
       toast({
-        title: 'Sucesso!',
-        description: 'Quiz salvo com sucesso.',
+        title: "Erro de autenticação",
+        description: "Você precisa estar logado para salvar um quiz",
+        variant: "destructive",
       });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const savedQuiz = await saveQuiz({
+        title: quiz.title,
+        description: quiz.description,
+        questions: quiz.questions,
+        settings: quiz.settings,
+        author_id: user.id
+      });
+      
+      setQuiz(prev => ({ ...prev, id: savedQuiz.id }));
+      
+      toast({
+        title: "Quiz salvo!",
+        description: "Quiz foi salvo com sucesso no banco de dados",
+      });
+      
+      await loadSavedQuizzes();
     } catch (error) {
       console.error('Erro ao salvar quiz:', error);
       toast({
-        title: 'Erro',
-        description: 'Não foi possível salvar o quiz.',
-        variant: 'destructive',
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar o quiz",
+        variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
-  if (isPreviewMode) {
-    return (
-      <div className="h-full">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Preview do Quiz</h2>
-          <Button onClick={() => setIsPreviewMode(false)} variant="outline">
-            Voltar ao Editor
-          </Button>
-        </div>
-        <QuizPreview
-          metadata={{
-            title: quizTitle,
-            description: quizDescription,
-            category: quizCategory,
-            difficulty: 'medium',
-            timeLimit: undefined,
-            isPublic: false,
-            settings: {
-              showProgress: true,
-              randomizeQuestions: false,
-              allowRetake: true,
-              passScore: 70,
-            },
-          }}
-          questions={questions}
-          onClose={() => setIsPreviewMode(false)}
-        />
-      </div>
-    );
-  }
+  const handleLoadQuiz = async (quizId: string) => {
+    setIsLoading(true);
+    try {
+      const loadedQuiz = await loadQuiz(quizId);
+      setQuiz({
+        id: loadedQuiz.id,
+        title: loadedQuiz.title,
+        description: loadedQuiz.description,
+        questions: loadedQuiz.questions,
+        settings: loadedQuiz.settings || {
+          timeLimit: 300,
+          randomizeQuestions: false,
+          showCorrectAnswers: true,
+        }
+      });
+      
+      toast({
+        title: "Quiz carregado!",
+        description: "Quiz foi carregado do banco de dados",
+      });
+    } catch (error) {
+      console.error('Erro ao carregar quiz:', error);
+      toast({
+        title: "Erro ao carregar",
+        description: "Não foi possível carregar o quiz",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const addQuestion = () => {
+    const newQuestion: QuizQuestion = {
+      id: Date.now(),
+      question: 'Nova pergunta?',
+      options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
+      correctAnswers: [0],
+      type: 'single',
+    };
+    setQuiz(prev => ({
+      ...prev,
+      questions: [...prev.questions, newQuestion],
+    }));
+  };
+
+  const updateQuestion = (index: number, field: string, value: any) => {
+    setQuiz(prev => ({
+      ...prev,
+      questions: prev.questions.map((q, i) => 
+        i === index ? { ...q, [field]: value } : q
+      ),
+    }));
+  };
+
+  const updateQuizInfo = (field: string, value: any) => {
+    setQuiz(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateSettings = (field: string, value: any) => {
+    setQuiz(prev => ({
+      ...prev,
+      settings: { ...prev.settings, [field]: value }
+    }));
+  };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <BookOpen className="w-6 h-6" />
-          Editor de Quiz Integrado
-        </h1>
-
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setIsPreviewMode(true)}
-            variant="outline"
-            disabled={questions.length === 0}
-          >
-            <Eye className="w-4 h-4 mr-2" />
-            Preview
-          </Button>
-
-          <Button onClick={handleSaveQuiz} disabled={loading || questions.length === 0}>
-            <Save className="w-4 h-4 mr-2" />
-            {loading ? 'Salvando...' : 'Salvar Quiz'}
-          </Button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-8">
+        {/* Status de Conexão */}
+        <div className="mb-6 text-center">
+          <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
+            connectionStatus === 'connected' 
+              ? 'bg-green-100 text-green-800' 
+              : connectionStatus === 'error'
+              ? 'bg-red-100 text-red-800'
+              : 'bg-yellow-100 text-yellow-800'
+          }`}>
+            <Database className="w-4 h-4 mr-2" />
+            {connectionStatus === 'connected' && 'Conectado ao banco de dados'}
+            {connectionStatus === 'error' && 'Erro de conexão com banco'}
+            {connectionStatus === 'checking' && 'Verificando conexão...'}
+          </div>
         </div>
-      </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="questions">
-            <Target className="w-4 h-4 mr-2" />
-            Perguntas ({questions.length})
-          </TabsTrigger>
-          <TabsTrigger value="settings">
-            <Settings className="w-4 h-4 mr-2" />
-            Configurações
-          </TabsTrigger>
-        </TabsList>
+        {/* Título do Editor */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            Editor de Quiz Integrado
+          </h1>
+          <p className="text-lg text-gray-600">
+            Sistema completo para criação e gestão de quizzes
+          </p>
+        </div>
 
-        {/* Conteúdo das Tabs */}
-        <div className="flex-1 mt-4">
-          <TabsContent value="questions" className="h-full">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
-              {/* Lista de Perguntas */}
-              <div className="lg:col-span-1">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>Perguntas</span>
-                      <Button size="sm" onClick={addNewQuestion}>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-4 w-full mb-6">
+            <TabsTrigger value="edit" className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              Editor
+            </TabsTrigger>
+            <TabsTrigger value="preview" className="flex items-center gap-2">
+              <Eye className="w-4 h-4" />
+              Preview
+            </TabsTrigger>
+            <TabsTrigger value="manage" className="flex items-center gap-2">
+              <Database className="w-4 h-4" />
+              Gerenciar
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              Configurações
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Aba de Edição */}
+          <TabsContent value="edit">
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Painel de Edição */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5" />
+                    Dados do Quiz
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <Label htmlFor="title">Título do Quiz</Label>
+                    <Input
+                      id="title"
+                      value={quiz.title}
+                      onChange={(e) => updateQuizInfo('title', e.target.value)}
+                      placeholder="Digite o título do quiz"
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="description">Descrição</Label>
+                    <Textarea
+                      id="description"
+                      value={quiz.description}
+                      onChange={(e) => updateQuizInfo('description', e.target.value)}
+                      placeholder="Descreva o quiz"
+                      rows={3}
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold">Perguntas</h3>
+                      <Button onClick={addQuestion} size="sm" className="gap-2">
                         <Plus className="w-4 h-4" />
+                        Adicionar
                       </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2 max-h-96 overflow-y-auto">
-                    {questions.length === 0 ? (
-                      <p className="text-muted-foreground text-sm">
-                        Nenhuma pergunta adicionada ainda.
-                      </p>
-                    ) : (
-                      questions.map((question, index) => (
-                        <div
-                          key={question.id}
-                          className={`p-3 border rounded cursor-pointer transition-colors ${
-                            selectedQuestion === index
-                              ? 'border-primary bg-primary/5'
-                              : 'hover:bg-muted/50'
-                          }`}
-                          onClick={() => setSelectedQuestion(index)}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <p className="text-sm font-medium truncate">
-                                {question.text || question.question}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {question.options.length} opções
-                              </p>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={e => {
-                                e.stopPropagation();
-                                removeQuestion(index);
-                              }}
-                            >
-                              ✕
-                            </Button>
+                    </div>
+
+                    {quiz.questions.map((question, index) => (
+                      <Card key={question.id} className="p-4">
+                        <div className="space-y-3">
+                          <Input
+                            value={question.question}
+                            onChange={(e) => updateQuestion(index, 'question', e.target.value)}
+                            placeholder="Digite a pergunta"
+                            className="font-medium"
+                          />
+                          
+                          <div className="space-y-2">
+                            {question.options.map((option, optionIndex) => (
+                              <div key={optionIndex} className="flex items-center gap-2">
+                                <input
+                                  type={question.type === 'single' ? 'radio' : 'checkbox'}
+                                  name={`question-${question.id}`}
+                                  checked={question.correctAnswers.includes(optionIndex)}
+                                  onChange={(e) => {
+                                    const newCorrectAnswers = e.target.checked
+                                      ? [...question.correctAnswers, optionIndex]
+                                      : question.correctAnswers.filter(i => i !== optionIndex);
+                                    updateQuestion(index, 'correctAnswers', newCorrectAnswers);
+                                  }}
+                                  className="text-blue-600"
+                                />
+                                <Input
+                                  value={option}
+                                  onChange={(e) => {
+                                    const newOptions = [...question.options];
+                                    newOptions[optionIndex] = e.target.value;
+                                    updateQuestion(index, 'options', newOptions);
+                                  }}
+                                  placeholder={`Opção ${optionIndex + 1}`}
+                                  className="flex-1"
+                                />
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))
+                      </Card>
+                    ))}
+                  </div>
+
+                  <Button 
+                    onClick={handleSaveQuiz} 
+                    disabled={isSaving} 
+                    className="w-full"
+                    size="lg"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Salvar Quiz
+                      </>
                     )}
-                  </CardContent>
-                </Card>
-              </div>
+                  </Button>
+                </CardContent>
+              </Card>
 
-              {/* Editor da Pergunta Selecionada */}
-              <div className="lg:col-span-2">
-                {selectedQuestion !== null && questions[selectedQuestion] ? (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Editar Pergunta {selectedQuestion + 1}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <Label>Pergunta</Label>
-                        <Textarea
-                          value={questions[selectedQuestion].text || ''}
-                          onChange={e => {
-                            const updated = {
-                              ...questions[selectedQuestion],
-                              text: e.target.value,
-                              question: e.target.value,
-                            };
-                            updateQuestion(selectedQuestion, updated);
-                          }}
-                          placeholder="Digite a pergunta"
-                          rows={2}
-                        />
-                      </div>
+              {/* Painel de Configurações */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="w-5 h-5" />
+                    Configurações
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <Label>Tempo Limite (segundos)</Label>
+                    <Input
+                      type="number"
+                      value={quiz.settings.timeLimit}
+                      onChange={(e) => updateSettings('timeLimit', parseInt(e.target.value))}
+                      className="mt-1"
+                    />
+                  </div>
 
-                      <div>
-                        <Label>Opções de Resposta</Label>
-                        <div className="space-y-2">
-                          {questions[selectedQuestion].options.map((option, optIndex) => (
-                            <div key={option.id} className="flex items-center gap-2">
-                              <span className="text-sm text-muted-foreground w-6">
-                                {String.fromCharCode(65 + optIndex)}
-                              </span>
-                              <Input
-                                value={option.text}
-                                onChange={e => {
-                                  const updated = { ...questions[selectedQuestion] };
-                                  updated.options[optIndex].text = e.target.value;
-                                  updateQuestion(selectedQuestion, updated);
-                                }}
-                                placeholder={`Opção ${optIndex + 1}`}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <Card>
-                    <CardContent className="flex items-center justify-center h-96">
-                      <div className="text-center">
-                        <Target className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                        <p className="text-muted-foreground">
-                          Selecione uma pergunta para editá-la ou adicione uma nova pergunta.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="randomize"
+                      checked={quiz.settings.randomizeQuestions}
+                      onChange={(e) => updateSettings('randomizeQuestions', e.target.checked)}
+                      className="text-blue-600"
+                    />
+                    <Label htmlFor="randomize">Embaralhar perguntas</Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="showAnswers"
+                      checked={quiz.settings.showCorrectAnswers}
+                      onChange={(e) => updateSettings('showCorrectAnswers', e.target.checked)}
+                      className="text-blue-600"
+                    />
+                    <Label htmlFor="showAnswers">Mostrar respostas corretas</Label>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="settings" className="space-y-4">
+          {/* Aba de Preview */}
+          <TabsContent value="preview">
             <Card>
               <CardHeader>
-                <CardTitle>Informações do Quiz</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Eye className="w-5 h-5" />
+                  Visualização do Quiz
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="title">Título do Quiz</Label>
-                  <Input
-                    id="title"
-                    value={quizTitle}
-                    onChange={e => setQuizTitle(e.target.value)}
-                    placeholder="Digite o título do quiz"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Descrição</Label>
-                  <Textarea
-                    id="description"
-                    value={quizDescription}
-                    onChange={e => setQuizDescription(e.target.value)}
-                    placeholder="Descreva o objetivo e conteúdo do quiz"
-                    rows={3}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="category">Categoria</Label>
-                  <Input
-                    id="category"
-                    value={quizCategory}
-                    onChange={e => setQuizCategory(e.target.value)}
-                    placeholder="Ex: Matemática, História"
-                  />
-                </div>
+              <CardContent>
+                <QuizPreview 
+                  quiz={{
+                    ...quiz,
+                    id: quiz.id || 'preview'
+                  }} 
+                />
               </CardContent>
             </Card>
+          </TabsContent>
 
+          {/* Aba de Gerenciamento */}
+          <TabsContent value="manage">
             <Card>
               <CardHeader>
-                <CardTitle>Recursos Integrados</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Database className="w-5 h-5" />
+                  Quizzes Salvos
+                </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-sm text-muted-foreground">
-                  <p>✅ Editor de Quiz integrado</p>
-                  <p>✅ Preview funcional com navegação</p>
-                  <p>✅ Sistema de perguntas/respostas</p>
-                  <p>✅ Integração com componentes UI</p>
-                  <p>🚀 Hooks CRUD disponíveis (useQuizCRUD)</p>
-                  <p>🚀 Sistema 21 etapas pronto (useQuizStepsIntegration)</p>
+              <CardContent>
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                    Carregando...
+                  </div>
+                ) : savedQuizzes.length > 0 ? (
+                  <div className="space-y-3">
+                    {savedQuizzes.map((savedQuiz: any) => (
+                      <div key={savedQuiz.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div>
+                          <h3 className="font-medium">{savedQuiz.title}</h3>
+                          <p className="text-sm text-gray-600">{savedQuiz.description}</p>
+                        </div>
+                        <Button
+                          onClick={() => handleLoadQuiz(savedQuiz.id)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Carregar
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>Nenhum quiz salvo ainda</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Aba de Configurações */}
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="w-5 h-5" />
+                  Configurações do Sistema
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h3 className="font-medium text-blue-800">Status da Conexão</h3>
+                    <p className="text-blue-600">
+                      {connectionStatus === 'connected' && '✅ Conectado ao Supabase'}
+                      {connectionStatus === 'error' && '❌ Erro de conexão'}
+                      {connectionStatus === 'checking' && '⏳ Verificando...'}
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h3 className="font-medium">Informações do Sistema</h3>
+                    <ul className="mt-2 space-y-1 text-sm text-gray-600">
+                      <li>• Editor integrado com Supabase</li>
+                      <li>• Salvamento automático em nuvem</li>
+                      <li>• Interface responsiva e intuitiva</li>
+                      <li>• Preview em tempo real</li>
+                    </ul>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
-        </div>
-      </Tabs>
+        </Tabs>
+      </div>
     </div>
   );
 }
