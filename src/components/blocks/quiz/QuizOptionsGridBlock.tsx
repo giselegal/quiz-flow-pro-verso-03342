@@ -201,13 +201,38 @@ const QuizOptionsGridBlock: React.FC<QuizOptionsGridBlockProps> = ({
   const handleAnswer = (selectedOptions: any[]) => {
     setSelectedOptions(selectedOptions);
 
+    // Determinar se a seleção está válida
+    const isValid = selectedOptions.length >= minSelections;
+    const currentCount = selectedOptions.length;
+
+    // ✅ NOVO: Disparar evento customizado para validação de botão
+    window.dispatchEvent(
+      new CustomEvent('quiz-selection-change', {
+        detail: {
+          gridId: id,
+          selectedCount: currentCount,
+          minRequired: minSelections,
+          maxAllowed: maxSelections,
+          isValid: isValid,
+          selectedOptions: selectedOptions.map(opt => opt.id),
+        },
+      })
+    );
+
+    console.log('🔘 [QuizOptionsGridBlock] Evento de seleção disparado:', {
+      gridId: id,
+      selectedCount: currentCount,
+      minRequired: minSelections,
+      isValid: isValid,
+    });
+
     // Notificar o editor que uma seleção foi feita
     if (onPropertyChange) {
       onPropertyChange(
         'selectedOptions',
         selectedOptions.map(opt => opt.id)
       );
-      onPropertyChange('hasCompleteSelection', selectedOptions.length >= minSelections);
+      onPropertyChange('hasCompleteSelection', isValid);
     }
   };
 

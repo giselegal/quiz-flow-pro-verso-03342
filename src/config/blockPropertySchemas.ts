@@ -114,11 +114,27 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
       { key: 'fullWidth', label: 'Largura Total', type: 'boolean' },
       { key: 'backgroundColor', label: 'Cor de Fundo', type: 'color' },
       { key: 'textColor', label: 'Cor do Texto', type: 'color' },
-      { key: 'requiresValidInput', label: 'Requer Input Válido', type: 'boolean' },
-      { key: 'disabledText', label: 'Texto Desabilitado', type: 'text' },
-      { key: 'showDisabledState', label: 'Mostrar Estado Desabilitado', type: 'boolean' },
-      { key: 'disabledOpacity', label: 'Opacidade Desabilitado', type: 'number' },
-      { key: 'marginTop', label: 'Margem Superior', type: 'number' },
+      
+      // === VALIDAÇÃO DE INPUT ===
+      { key: 'requiresValidInput', label: '📝 Requer Input Válido', type: 'boolean' },
+      { key: 'watchInputId', label: '🎯 ID do Input Monitorado', type: 'text' },
+      
+      // === VALIDAÇÃO DE GRID ===
+      { key: 'requiresGridSelection', label: '☑️ Requer Seleção no Grid', type: 'boolean' },
+      { key: 'watchGridId', label: '🎯 ID do Grid Monitorado', type: 'text' },
+      { key: 'minRequiredSelections', label: '⬇️ Mín. Seleções Necessárias', type: 'number' },
+      
+      // === ESTADOS ===
+      { key: 'disabledText', label: '❌ Texto Desabilitado', type: 'text' },
+      { key: 'showDisabledState', label: '👁️ Mostrar Estado Desabilitado', type: 'boolean' },
+      { key: 'disabledOpacity', label: '🔘 Opacidade Desabilitado', type: 'number' },
+      
+      // === NAVEGAÇÃO ===
+      { key: 'nextStepUrl', label: '🔗 URL Próximo Step', type: 'text' },
+      { key: 'nextStepId', label: '🎯 ID Próximo Step', type: 'text' },
+      
+      // === LAYOUT ===
+      { key: 'marginTop', label: '📏 Margem Superior', type: 'number' },
     ],
   },
   'options-grid': {

@@ -20,23 +20,32 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
     fullWidth = false,
     backgroundColor = '#B89B7A',
     textColor = '#ffffff',
-    // ✅ Novas propriedades para controle condicional
+    // ✅ Controle condicional para input
     requiresValidInput = false,
     watchInputId = '',
+    // ✅ NOVO: Controle condicional para grid
+    requiresGridSelection = false,
+    watchGridId = '',
+    minRequiredSelections = 3,
+    // Navegação
     nextStepUrl = '',
     nextStepId = '',
-    disabledText = 'Preencha os campos obrigatórios',
+    disabledText = 'Complete as seleções obrigatórias',
     // Estilo do botão desabilitado
     disabledOpacity = 0.5,
     showDisabledState = true,
   } = (block?.properties as any) || {};
 
-  const [isButtonEnabled, setIsButtonEnabled] = useState(!requiresValidInput);
+  const [isButtonEnabled, setIsButtonEnabled] = useState(
+    !requiresValidInput && !requiresGridSelection
+  );
+  const [gridSelectionValid, setGridSelectionValid] = useState(!requiresGridSelection);
+  const [inputValid, setInputValid] = useState(!requiresValidInput);
 
-  // ✅ Escutar eventos de mudança no input para habilitar/desabilitar botão
+  // ✅ Escutar eventos de mudança no input
   useEffect(() => {
     if (!requiresValidInput || !watchInputId) {
-      setIsButtonEnabled(true);
+      setInputValid(true);
       return;
     }
 
@@ -47,15 +56,14 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
         valid: boolean;
       };
 
-      // Se o input monitorado mudou, atualizar estado do botão
       if (detail.blockId === watchInputId) {
-        setIsButtonEnabled(detail.valid && detail.value.trim().length > 0);
-        console.log('🔘 [ButtonInlineFixed] Estado do botão atualizado:', {
+        const isValid = detail.valid && detail.value.trim().length > 0;
+        setInputValid(isValid);
+        console.log('🔘 [ButtonInlineFixed] Input validado:', {
           blockId: block?.id,
           inputId: watchInputId,
           inputValue: detail.value,
-          valid: detail.valid,
-          buttonEnabled: detail.valid && detail.value.trim().length > 0,
+          valid: isValid,
         });
       }
     };
@@ -63,6 +71,55 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
     window.addEventListener('quiz-input-change', handleInputChange);
     return () => window.removeEventListener('quiz-input-change', handleInputChange);
   }, [requiresValidInput, watchInputId, block?.id]);
+
+  // ✅ NOVO: Escutar eventos de mudança no grid
+  useEffect(() => {
+    if (!requiresGridSelection || !watchGridId) {
+      setGridSelectionValid(true);
+      return;
+    }
+
+    const handleGridSelectionChange = (e: Event) => {
+      const detail = (e as CustomEvent).detail as {
+        gridId: string;
+        selectedCount: number;
+        minRequired: number;
+        maxAllowed: number;
+        isValid: boolean;
+        selectedOptions: string[];
+      };
+
+      if (detail.gridId === watchGridId) {
+        // Usar minRequiredSelections se definido, senão usar minRequired do grid
+        const requiredCount = minRequiredSelections || detail.minRequired;
+        const isValid = detail.selectedCount >= requiredCount;
+        
+        setGridSelectionValid(isValid);
+        console.log('🔘 [ButtonInlineFixed] Grid validado:', {
+          blockId: block?.id,
+          gridId: watchGridId,
+          selectedCount: detail.selectedCount,
+          requiredCount: requiredCount,
+          valid: isValid,
+        });
+      }
+    };
+
+    window.addEventListener('quiz-selection-change', handleGridSelectionChange);
+    return () => window.removeEventListener('quiz-selection-change', handleGridSelectionChange);
+  }, [requiresGridSelection, watchGridId, minRequiredSelections, block?.id]);
+
+  // ✅ NOVO: Combinar validações de input e grid
+  useEffect(() => {
+    const overallValid = inputValid && gridSelectionValid;
+    setIsButtonEnabled(overallValid);
+    console.log('🔘 [ButtonInlineFixed] Estado geral do botão:', {
+      blockId: block?.id,
+      inputValid,
+      gridSelectionValid,
+      overallValid,
+    });
+  }, [inputValid, gridSelectionValid, block?.id]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
