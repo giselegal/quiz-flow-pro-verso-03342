@@ -1,5 +1,7 @@
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 20 - CAPTURA DE LEAD
+import React from 'react';
+import { getBlockComponent } from '@/config/enhancedBlockRegistry';
 
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 20 - CAPTURA DE LEAD
 export const getStep20Result = () => {
   return [
     {
@@ -71,4 +73,35 @@ export const getStep20Result = () => {
   ];
 };
 
-export default getStep20Result;
+// 🎯 COMPONENTE REACT PARA RENDERIZAR OS BLOCOS
+const Step20Result: React.FC = () => {
+  const blocks = getStep20Result();
+
+  return (
+    <div className="space-y-1">
+      {blocks.map(block => {
+        const Component = getBlockComponent(block.type);
+        
+        if (!Component) {
+          return (
+            <div key={block.id} className="p-4 border border-red-200 bg-red-50">
+              <p>Componente não encontrado: {block.type}</p>
+            </div>
+          );
+        }
+
+        return (
+          <Component
+            key={block.id}
+            id={block.id}
+            properties={block.properties}
+            block={block}
+            isSelected={false}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+export default Step20Result;
