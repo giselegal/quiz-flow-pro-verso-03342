@@ -135,6 +135,14 @@ export const blockPropertySchemas: Record<string, BlockSchema> = {
         { label: '3', value: 3 },
         { label: '4', value: 4 },
       ] },
+      { key: 'direction', label: 'Direção', type: 'select', options: [
+        { label: 'Vertical', value: 'vertical' },
+        { label: 'Horizontal', value: 'horizontal' },
+      ] },
+      { key: 'disposition', label: 'Disposição', type: 'select', options: [
+        { label: 'Imagem | Texto', value: 'image-text' },
+        { label: 'Texto | Imagem', value: 'text-image' },
+      ] },
       { key: 'gap', label: 'Espaçamento (px)', type: 'number' },
       { key: 'imageSize', label: 'Tamanho da Imagem (px)', type: 'number' },
       { key: 'imageAspect', label: 'Proporção da Imagem', type: 'select', options: [
