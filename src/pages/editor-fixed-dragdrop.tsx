@@ -12,6 +12,7 @@ import ProductionMonitoringDashboard from '@/components/editor/monitoring/Produc
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
+import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
@@ -21,6 +22,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { BookOpen, Settings } from 'lucide-react';
 
 /**
@@ -38,6 +40,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
+  
+  // ✅ SISTEMA UNIFICADO DE NAVEGAÇÃO
+  const funnelNavigation = useFunnelNavigation();
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
@@ -98,9 +103,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-  // Handlers de eventos
+  // Handlers de eventos (integrados com navegação)
   const handleSave = () => {
-    console.log('💾 Salvando editor...');
+    funnelNavigation.handleSave();
   };
 
   const handleDeleteBlock = (blockId: string) => {
@@ -174,8 +179,20 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       )}
 
       <div className="flex flex-col h-screen">
-        <div className="flex-none">
+          <div className="flex-none">
           <div className="sticky top-0 bg-white z-20">
+            {/* ✅ NAVEGAÇÃO UNIFICADA DO FUNIL */}
+            <FunnelNavigation
+              currentStep={funnelNavigation.currentStepNumber}
+              totalSteps={funnelNavigation.totalSteps}
+              onStepChange={funnelNavigation.navigateToStep}
+              onSave={funnelNavigation.handleSave}
+              onPreview={funnelNavigation.handlePreview}
+              isSaving={funnelNavigation.isSaving}
+              canNavigateNext={funnelNavigation.canNavigateNext}
+              canNavigatePrevious={funnelNavigation.canNavigatePrevious}
+            />
+            
             <EditorToolbar
               isPreviewing={isPreviewing}
               onTogglePreview={() => setIsPreviewing(!isPreviewing)}
@@ -190,11 +207,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               <div className="flex items-center justify-between p-2">
                 <div className="flex items-center space-x-4">
                   <h1 className="text-lg font-semibold text-stone-700">
-                    Editor de Funil - Etapa {activeStageId}
+                    Editor de Funil - {funnelNavigation.stepName}
                   </h1>
                   <div className="text-sm text-stone-500">
-                    {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                    {stageCount !== 1 ? 's' : ''} • Novo Painel Ativo
+                    Etapa {funnelNavigation.currentStepNumber}/{funnelNavigation.totalSteps} • {totalBlocks} bloco{totalBlocks !== 1 ? 's' : ''} • {Math.round(funnelNavigation.progressValue)}% completo
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -216,7 +232,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
               componentsPanel={
                 <SmartComponentsPanel
-                  currentStepNumber={getStepNumberFromStageId(activeStageId)}
+                  currentStepNumber={funnelNavigation.currentStepNumber}
                   onComponentSelect={componentType => {
                     if (activeStageId) {
                       addBlock(componentType, activeStageId);
