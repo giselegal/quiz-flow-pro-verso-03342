@@ -37,7 +37,7 @@ const SpacerBlockEditor: React.FC<SpacerBlockEditorProps> = ({ block, onUpdate }
           />
         </div>
 
-        <div style={{ backgroundColor: '#FAF9F7' }} style={{ height: content.height || '40px' }}>
+        <div style={{ backgroundColor: '#FAF9F7', height: content.height || '40px' }}>
           <div className="text-xs text-center text-gray-400">Visualização do espaçamento</div>
         </div>
       </div>

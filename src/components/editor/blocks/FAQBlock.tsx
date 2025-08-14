@@ -171,10 +171,6 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
       case 'flat':
         styleClasses = 'bg-transparent border-b border-gray-200 rounded-none hover:bg-gray-50';
         break;
-      case 'classic':
-        styleClasses =
-          'bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg hover:shadow-xl';
-        break;
       case 'modern':
       default:
         styleClasses =
