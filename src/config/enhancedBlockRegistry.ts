@@ -40,10 +40,10 @@ import SpacerInlineBlock from '../components/editor/blocks/SpacerInlineBlock';
 import StyleResultsEditor from '../components/editor/blocks/StyleResultsEditor';
 import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
 
-// Novos componentes para o Quiz
-import BonusShowcaseBlock from '../components/blocks/inline/BonusShowcaseBlock';
-import LoadingAnimationBlock from '../components/blocks/inline/LoadingAnimationBlock';
-import ResultStyleCardBlock from '../components/blocks/inline/ResultStyleCardBlock';
+// Novos componentes para o Quiz - TEMPORARIAMENTE COMENTADOS PARA DEBUG
+// import BonusShowcaseBlock from '../components/blocks/inline/BonusShowcaseBlock';
+// import LoadingAnimationBlock from '../components/blocks/inline/LoadingAnimationBlock';
+// import ResultStyleCardBlock from '../components/blocks/inline/ResultStyleCardBlock';
 
 // Componentes Step01
 import { IntroBlock } from '../components/steps/step01/IntroBlock';
