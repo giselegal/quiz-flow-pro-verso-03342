@@ -58,6 +58,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       updateBlock,
       reorderBlocks,
     },
+    persistenceActions: { saveFunnel, isSaving },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
@@ -99,8 +100,19 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   };
 
   // Handlers de eventos
-  const handleSave = () => {
-    console.log('💾 Salvando editor...');
+  const handleSave = async () => {
+    try {
+      console.log('💾 [Editor] Iniciando salvamento...');
+      const result = await saveFunnel();
+      
+      if (result.success) {
+        console.log('✅ [Editor] Salvamento concluído com sucesso!');
+      } else {
+        console.error('❌ [Editor] Falha no salvamento:', result.error);
+      }
+    } catch (error) {
+      console.error('❌ [Editor] Erro inesperado durante salvamento:', error);
+    }
   };
 
   const handleDeleteBlock = (blockId: string) => {
