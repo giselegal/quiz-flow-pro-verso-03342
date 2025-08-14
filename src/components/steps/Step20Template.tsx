@@ -1,9 +1,26 @@
 /**
- * Step20Template - Complete Result Page with All Modular Components (UPDATED)
- * Template for comprehensive result page using all new modular result components
+ * Step20Template - Complete Result Page with Personalized Data Integration
+ * Template for comprehensive result page that integrates with Step20Result component
+ * UPDATED: Now supports dynamic personalization based on quiz results
+ * 
+ * Usage:
+ * - Static: getStep20Template() - uses default values
+ * - Dynamic: getStep20Template({ userName: 'Maria', styleCategory: 'Natural', sessionId: 'abc123' })
+ * - With Step20Result: Use the Step20Result component directly for full interactivity
  */
-export const getStep20Template = () => {
-  console.log('📋 Step20Template - Complete Modular Result Page carregado!');
+export const getStep20Template = (userData?: { 
+  userName?: string; 
+  styleCategory?: string;
+  primaryStyleConfig?: any;
+  sessionId?: string;
+}) => {
+  console.log('📋 Step20Template - Personalized Result Page carregado!', userData);
+  
+  // Use dynamic data if available, fallback to defaults
+  const userName = userData?.userName || '';
+  const styleCategory = userData?.styleCategory || 'Elegante';
+  const sessionId = userData?.sessionId || 'demo-session';
+  
   return [
     {
       id: 'step20-result-header',
@@ -12,8 +29,8 @@ export const getStep20Template = () => {
         logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoHeight: 40,
-        userName: '',
-        showUserName: true,
+        userName: userName,
+        showUserName: userName ? true : false,
         backgroundColor: '#ffffff',
         containerWidth: 'full',
         spacing: 'normal',
@@ -24,9 +41,11 @@ export const getStep20Template = () => {
       id: 'step20-personalized-hook',
       type: 'personalized-hook-inline',
       properties: {
-        styleCategory: 'Elegante',
-        userName: '',
-        title: 'Seu Estilo {styleCategory} foi Revelado! ✨',
+        styleCategory: styleCategory,
+        userName: userName,
+        title: userName 
+          ? `${userName}, Seu Estilo ${styleCategory} foi Revelado! ✨`
+          : `Seu Estilo ${styleCategory} foi Revelado! ✨`,
         subtitle: 'Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.',
         ctaText: 'Quero Transformar Minha Imagem',
         ctaUrl: 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
@@ -59,15 +78,17 @@ export const getStep20Template = () => {
       id: 'step20-style-guides-visual',
       type: 'style-guides-visual-inline',
       properties: {
-        primaryStyleCategory: 'Elegante',
+        primaryStyleCategory: styleCategory,
         primaryGuideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/GUIA_ELEGANTE_bcksfq.webp',
         primaryStylePercentage: 75,
         showProgress: true,
         showSecondaryThumbnails: true,
         showExclusiveBadge: true,
-        badgeText: 'Exclusivo',
+        badgeText: userName ? `Exclusivo para ${userName}` : 'Exclusivo',
         badgeColor: '#B89B7A',
-        description: 'Seu guia de estilo personalizado baseado nas suas respostas do quiz',
+        description: userName 
+          ? `Seu guia de estilo personalizado ${userName}, baseado nas suas respostas do quiz`
+          : 'Seu guia de estilo personalizado baseado nas suas respostas do quiz',
         backgroundColor: '#ffffff',
         borderColor: '#B89B7A',
         containerWidth: 'xlarge',

@@ -84,7 +84,7 @@ function App() {
                   }}
                 </Route>
 
-                {/* Editor Fixed Route - Editor 4 Colunas com JSON + SISTEMA DE PREVIEW */}
+                {/* Editor Fixed Route - Editor 4 Colunas com Drag & Drop + Painel de Propriedades Otimizado */}
                 <ProtectedRoute
                   path="/editor-fixed"
                   component={() => (
@@ -93,7 +93,7 @@ function App() {
                         <EditorProvider>
                           <ScrollSyncProvider>
                             <div className="relative">
-                              <EditorWithPreview />
+                              <EditorFixedPageWithDragDrop />
                             </div>
                           </ScrollSyncProvider>
                         </EditorProvider>
@@ -102,16 +102,16 @@ function App() {
                   )}
                 />
 
-                {/* Rota original (backup) */}
+                {/* Rota alternativa com Preview System */}
                 <ProtectedRoute
-                  path="/editor-original"
+                  path="/editor-preview"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
                           <ScrollSyncProvider>
                             <div className="relative">
-                              <EditorFixedPageWithDragDrop />
+                              <EditorWithPreview />
                             </div>
                           </ScrollSyncProvider>
                         </EditorProvider>

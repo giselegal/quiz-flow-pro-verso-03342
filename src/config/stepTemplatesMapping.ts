@@ -159,14 +159,39 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   17: { stepNumber: 17, templateFunction: getStep17Template, name: 'Resultado Parcial', description: 'Primeiro resultado' },
   18: { stepNumber: 18, templateFunction: getStep18Template, name: 'Resultado Completo', description: 'Análise completa' },
   19: { stepNumber: 19, templateFunction: getStep19Template, name: 'Resultado Final', description: 'Apresentação final' },
-  20: { stepNumber: 20, templateFunction: getStep20Template, name: 'Página de Conversão', description: 'Oferta personalizada com resultado' },
+  20: { 
+    stepNumber: 20, 
+    templateFunction: (userData?: any) => {
+      // 🎯 STEP 20: Integração com dados personalizados
+      const userName = localStorage.getItem('quizUserName') || userData?.userName || '';
+      const styleCategory = localStorage.getItem('quizPrimaryStyle') || userData?.styleCategory || 'Elegante';
+      const sessionId = userData?.sessionId || 'default-session';
+      
+      console.log('🎨 Step20 personalized data:', { userName, styleCategory, sessionId });
+      
+      return getStep20Template({ userName, styleCategory, sessionId });
+    }, 
+    name: 'Página de Conversão', 
+    description: 'Oferta personalizada com resultado do usuário' 
+  },
   21: { stepNumber: 21, templateFunction: getStep21Template, name: 'Thank You Page', description: 'Confirmação e próximos passos' },
 };
 
 // 🔧 FUNÇÕES UTILITÁRIAS ATUALIZADAS
-export const getStepTemplate = (stepNumber: number): any[] => {
+export const getStepTemplate = (stepNumber: number, userData?: any): any[] => {
   const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
-  return stepTemplate ? stepTemplate.templateFunction() : getDefaultTemplate(stepNumber);
+  
+  if (stepTemplate) {
+    // Para Step 20, passa dados do usuário se disponíveis
+    if (stepNumber === 20) {
+      return stepTemplate.templateFunction(userData);
+    }
+    // Para outras etapas, usa função normal
+    return stepTemplate.templateFunction();
+  }
+  
+  // Fallback para template padrão
+  return getDefaultTemplate(stepNumber);
 };
 
 export const getStepInfo = (stepNumber: number) => {
