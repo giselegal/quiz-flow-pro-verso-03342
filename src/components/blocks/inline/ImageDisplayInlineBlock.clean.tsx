@@ -1,6 +1,6 @@
-import React from 'react';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
 
 /**
  * ImageDisplayInlineBlock - Versão Limpa
@@ -24,11 +24,7 @@ const ImageDisplayInlineBlockClean: React.FC<BlockComponentProps> = ({
 
   return (
     <div
-      className={cn(
-        'relative inline-block',
-        isSelected && 'ring-2 ring-blue-500',
-        className
-      )}
+      className={cn('relative inline-block', isSelected && 'ring-2 ring-blue-500', className)}
       onClick={onClick}
     >
       <img
@@ -36,7 +32,7 @@ const ImageDisplayInlineBlockClean: React.FC<BlockComponentProps> = ({
         alt={alt}
         className={cn(
           'rounded-lg shadow-md',
-          objectFit === 'cover' ? 'object-cover' : 'object-contain',
+          objectFit === 'cover' ? 'object-cover' : 'object-contain'
         )}
         style={{
           width: width === 'auto' ? 'auto' : width,

@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React from 'react';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
+import React from 'react';
 
 /**
  * BonusShowcaseBlock - Componente para showcase de bônus e ofertas especiais
@@ -32,7 +32,7 @@ const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
 
   const spacingClasses = {
     small: 'p-4 space-y-3',
-    medium: 'p-6 space-y-4', 
+    medium: 'p-6 space-y-4',
     large: 'p-8 space-y-6',
   };
 
@@ -51,7 +51,7 @@ const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
         isSelected && 'ring-2 ring-blue-500 ring-opacity-50',
         className
       )}
-      style={{ 
+      style={{
         backgroundColor,
         borderColor: accentColor + '20',
         color: textColor,
@@ -61,31 +61,21 @@ const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
       <div className="space-y-4">
         {/* Header */}
         <div className="space-y-2">
-          <h3 
-            className="text-xl font-bold"
-            style={{ color: accentColor }}
-          >
+          <h3 className="text-xl font-bold" style={{ color: accentColor }}>
             {title}
           </h3>
-          {subtitle && (
-            <p className="text-sm opacity-80">
-              {subtitle}
-            </p>
-          )}
+          {subtitle && <p className="text-sm opacity-80">{subtitle}</p>}
         </div>
 
         {/* Items List */}
         <div className="space-y-2">
           {items.map((item, index) => (
-            <div 
+            <div
               key={index}
               className="flex justify-between items-center py-2 border-b border-gray-200/50 last:border-b-0"
             >
               <span className="text-sm font-medium">{item.title}</span>
-              <span 
-                className="text-sm font-bold"
-                style={{ color: accentColor }}
-              >
+              <span className="text-sm font-bold" style={{ color: accentColor }}>
                 {item.value}
               </span>
             </div>
@@ -94,9 +84,9 @@ const BonusShowcaseBlock: React.FC<BlockComponentProps> = ({
 
         {/* Total Value */}
         {totalValue && (
-          <div 
+          <div
             className="pt-3 border-t text-lg font-bold"
-            style={{ 
+            style={{
               borderColor: accentColor + '30',
               color: accentColor,
             }}

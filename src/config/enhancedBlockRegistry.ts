@@ -19,7 +19,6 @@ import DecorativeBarInline from '../components/blocks/inline/DecorativeBarInline
 import DividerInlineBlock from '../components/blocks/inline/DividerInlineBlock';
 import HeadingInline from '../components/blocks/inline/HeadingInline';
 import ImageDisplayInline from '../components/blocks/inline/ImageDisplayInline';
-import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean'; // ✅ VERSÃO LIMPA
 import LegalNoticeInline from '../components/blocks/inline/LegalNoticeInline';
 import PricingCardInlineBlock from '../components/blocks/inline/PricingCardInlineBlock';
 import TextInline from '../components/blocks/inline/TextInline';
