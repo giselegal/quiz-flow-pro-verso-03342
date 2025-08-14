@@ -8,7 +8,7 @@ import { EditorNotification } from '@/components/editor/EditorNotification';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import { ProductionMonitoringDashboard } from '@/components/editor/monitoring/ProductionMonitoringDashboard';
+import ProductionMonitoringDashboard from '@/components/editor/monitoring/ProductionMonitoringDashboard';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
@@ -321,10 +321,22 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
         {/* Dashboard de Monitoramento */}
         {showMonitoringDashboard && (
-          <ProductionMonitoringDashboard
-            isOpen={showMonitoringDashboard}
-            onClose={() => setShowMonitoringDashboard(false)}
-          />
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b">
+                <h2 className="text-xl font-semibold">Production Monitoring</h2>
+                <button
+                  onClick={() => setShowMonitoringDashboard(false)}
+                  className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 border rounded"
+                >
+                  Fechar
+                </button>
+              </div>
+              <div className="flex-1 overflow-auto">
+                <ProductionMonitoringDashboard />
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </DndProvider>
