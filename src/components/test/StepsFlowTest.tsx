@@ -5,9 +5,8 @@
  */
 
 import { Block } from '@/types/editor';
+import { templateService } from '@/services/templateService';
 import React, { useState } from 'react';
-// Hook removido durante limpeza de conflitos
-// import { useEditorWithJson } from '../editor-fixed/useEditorWithJson';
 
 interface TestResult {
   step: number;
@@ -20,9 +19,11 @@ const StepsFlowTest: React.FC = () => {
   const [currentBlocks, setCurrentBlocks] = useState<Block[]>([]);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
+  const [currentTemplate, setCurrentTemplate] = useState<any>(null);
+  const [templateError, setTemplateError] = useState<string | null>(null);
+  const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
 
-  // Hook removido - funcionalidade simplificada
-  // const jsonFeatures = useEditorWithJson(currentBlocks, setCurrentBlocks);
+  // Funcionalidade simplificada usando templateService correto
   const jsonFeatures = {
     exportToJson: () => JSON.stringify(currentBlocks),
     importFromJson: (json: string) => {
@@ -32,7 +33,31 @@ const StepsFlowTest: React.FC = () => {
       } catch (error) {
         console.error('Erro ao importar JSON:', error);
       }
-    }
+    },
+    loadStepTemplate: async (step: number) => {
+      setIsLoadingTemplate(true);
+      setTemplateError(null);
+      try {
+        const template = await templateService.getTemplateByStep(step);
+        if (template) {
+          const blocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks || []);
+          setCurrentBlocks(blocks);
+          setCurrentTemplate(template);
+          setIsLoadingTemplate(false);
+          return true;
+        }
+        setTemplateError(`Template não encontrado para step ${step}`);
+        setIsLoadingTemplate(false);
+        return false;
+      } catch (error) {
+        setTemplateError(error instanceof Error ? error.message : 'Erro desconhecido');
+        setIsLoadingTemplate(false);
+        return false;
+      }
+    },
+    currentTemplate,
+    templateError,
+    isLoadingTemplate
   };
 
   const runFullTest = async () => {
