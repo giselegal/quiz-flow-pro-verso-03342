@@ -62,6 +62,11 @@ const QuizProgressBlock: React.FC<QuizProgressBlockProps> = ({
   showStepNumbers = true,
   className,
 }) => {
+  // Fixed: Add missing margin variables with defaults
+  const marginTop = 0;
+  const marginBottom = 0;
+  const marginLeft = 0;
+  const marginRight = 0;
   const progressPercentage = (currentStep / totalSteps) * 100;
 
   return (
