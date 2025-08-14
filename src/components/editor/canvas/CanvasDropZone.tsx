@@ -129,7 +129,6 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
                       onDeleteBlock(block.id);
                     }
                   }}
-                  isPreviewing={isPreviewing} // 🎯 Passar modo preview
                 />
 
                 {/* Drop zone entre blocos - agora aparece para QUALQUER item válido */}
