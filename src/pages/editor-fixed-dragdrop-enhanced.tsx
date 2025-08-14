@@ -54,7 +54,7 @@ const EditorFixedEnhancedPage: React.FC = () => {
       updateBlock,
       reorderBlocks,
     },
-    persistenceActions: { saveFunnel, isSaving },
+    persistenceActions: { saveFunnel },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
@@ -265,7 +265,6 @@ const EditorFixedEnhancedPage: React.FC = () => {
                     <CanvasDropZone
                       blocks={currentBlocks}
                       selectedBlockId={isPreviewing ? null : selectedBlockId}
-                      isPreviewing={isPreviewing}
                       onSelectBlock={isPreviewing ? () => {} : setSelectedBlockId}
                       onUpdateBlock={isPreviewing ? () => {} : updateBlock}
                       onDeleteBlock={isPreviewing ? () => {} : handleDeleteBlock}

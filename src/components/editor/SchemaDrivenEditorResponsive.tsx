@@ -19,7 +19,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     computed: { currentBlocks, selectedBlock },
     selectedBlockId,
     blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
-    uiState: { isPreviewing },
   } = useEditor();
 
   const funnelNavigation = useFunnelNavigation();
@@ -76,7 +75,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <CanvasDropZone
             blocks={currentBlocks}
             selectedBlockId={selectedBlockId}
-            isPreviewing={isPreviewing}
             onSelectBlock={setSelectedBlockId}
             onUpdateBlock={updateBlock}
             onDeleteBlock={deleteBlock}
@@ -90,8 +88,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <PropertyPanel selectedComponent={selectedBlock} onUpdate={handleUpdateSelectedBlock} />
         </ResizablePanel>
       </ResizablePanelGroup>
-
-      </div>
+    </div>
   );
 };
 

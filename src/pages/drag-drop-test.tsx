@@ -154,7 +154,6 @@ export const DragDropTestPage: React.FC = () => {
                 <CanvasDropZone
                   blocks={blocks}
                   selectedBlockId={selectedBlockId || null}
-                  isPreviewing={false}
                   onSelectBlock={setSelectedBlockId}
                   onUpdateBlock={handleUpdateBlock}
                   onDeleteBlock={handleDeleteBlock}
