@@ -10,7 +10,7 @@ import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel'
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { ProductionMonitoringDashboard } from '@/components/editor/monitoring/ProductionMonitoringDashboard';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
-import { SmartComponentsPanel } from '@/components/editor/smart-panel/SmartComponentsPanel';
+import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
 // Quiz Editor Integration
