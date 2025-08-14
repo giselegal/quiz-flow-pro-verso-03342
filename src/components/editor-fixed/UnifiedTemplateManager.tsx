@@ -1,7 +1,7 @@
-// @ts-nocheck
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { EditorBlock } from '@/types/editor';
+import * as React from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { getStepTemplate } from './FixedTemplateService';
-import { EditorBlock, Block } from '@/types/editor';
 
 /**
  * UNIFIED TEMPLATE MANAGER

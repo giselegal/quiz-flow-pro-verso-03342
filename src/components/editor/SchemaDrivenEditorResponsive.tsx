@@ -4,7 +4,8 @@ import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { PropertyPanel } from './PropertyPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
-import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
+// FunnelNavigation removido - componente não mais disponível
+// import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;

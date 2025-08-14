@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
 import AdminLayout from '@/components/admin/AdminLayout';
 import QuizEditor from '@/components/quiz-editor/QuizEditor';
 import { LoadingState } from '@/components/ui/loading-state';
-import { getTemplateById } from '@/services/templates/templateService';
+import { templateService } from '@/services/templateService';
 import { QuizTemplate } from '@/types/quizTemplate';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'wouter';
 
 interface QuizEditorPageProps {
   templateId?: string;
@@ -20,7 +20,7 @@ const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
     const loadTemplate = async () => {
       if (templateId) {
         try {
-          const template = await getTemplateById(templateId);
+          const template = await templateService.getTemplateByStep(parseInt(templateId));
           if (!template) {
             setError('Template não encontrado');
             setLocation('/admin/quiz-editor');
