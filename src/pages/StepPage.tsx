@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { StepNavigationSimple } from '@/components/navigation/StepNavigationSimple';
 import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
+import QuizNavigation from '@/components/quiz/QuizNavigation';
 import React, { lazy, Suspense } from 'react';
 import { useLocation, useParams } from 'wouter';
 
@@ -122,56 +122,46 @@ const StepPage: React.FC = () => {
         default:
           // Componente genérico para etapas não implementadas
           return (
-            <div className="min-h-screen bg-[#FAF9F7]">
-              <div className="container mx-auto px-4 py-8">
-                {/* Sistema de Navegação */}
-                <div className="mb-8">
-                  <StepNavigationSimple
-                    currentStep={stepNumber}
-                    onNext={handleNext}
-                    onPrevious={handlePrevious}
-                    onStepChange={(step: number) => setLocation(`/step/${step}`)}
-                  />
-                </div>
+            <>
+              {/* 🚀 NAVEGAÇÃO PREMIUM INTEGRADA */}
+              <QuizNavigation
+                canProceed={true}
+                onNext={handleNext}
+                onPrevious={handlePrevious}
+                currentQuestionType="normal"
+                selectedOptionsCount={3}
+                isLastQuestion={stepNumber === 21}
+                currentStep={stepNumber}
+                totalSteps={21}
+                stepName={stepConfig.name}
+                showUserInfo={true}
+                userName={navigation.session?.userData?.name}
+                sessionId={navigation.session?.id}
+              />
 
-                {/* Conteúdo da Etapa */}
-                <div className="max-w-4xl mx-auto">
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <h1 className="text-3xl font-bold text-[#432818] mb-4">{stepConfig.name}</h1>
-                      <p className="text-lg text-[#6B4F43] mb-8">{stepConfig.description}</p>
-                    </div>
+              <div className="min-h-screen bg-[#FAF9F7]">
+                <div className="container mx-auto px-4 py-8">
+                  {/* Conteúdo da Etapa */}
+                  <div className="max-w-4xl mx-auto">
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <h1 className="text-3xl font-bold text-[#432818] mb-4">{stepConfig.name}</h1>
+                        <p className="text-lg text-[#6B4F43] mb-8">{stepConfig.description}</p>
+                      </div>
 
-                    <div className="bg-white rounded-lg p-6 border border-gray-200">
-                      <p className="text-center text-gray-500">
-                        Conteúdo da etapa {stepNumber} será implementado aqui.
-                      </p>
-                      <p className="text-sm text-gray-400 mt-4 text-center">
-                        Template: step-{stepNumber.toString().padStart(2, '0')}.json
-                      </p>
-
-                      {/* Botões de navegação temporários */}
-                      <div className="flex justify-between mt-6">
-                        <button
-                          onClick={handlePrevious}
-                          disabled={stepNumber <= 1}
-                          className="px-6 py-3 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Anterior
-                        </button>
-                        <button
-                          onClick={handleNext}
-                          disabled={stepNumber >= 21}
-                          className="px-6 py-3 bg-[#B89B7A] text-white rounded-lg hover:bg-[#432818] disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Próximo
-                        </button>
+                      <div className="bg-white rounded-lg p-6 border border-gray-200">
+                        <p className="text-center text-gray-500">
+                          Conteúdo da etapa {stepNumber} será implementado aqui.
+                        </p>
+                        <p className="text-sm text-gray-400 mt-4 text-center">
+                          Template: step-{stepNumber.toString().padStart(2, '0')}.json
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </>
           );
       }
     } catch (error) {

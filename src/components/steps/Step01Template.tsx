@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import QuizNavigation from '@/components/quiz/QuizNavigation';
 
 interface Step01TemplateProps {
   sessionId: string;
@@ -15,10 +16,26 @@ interface Step01TemplateProps {
  * - Explicação do que será descoberto
  * - Motivação para começar o quiz
  * - Integração com styleConfig.ts (8 estilos)
+ * - 🚀 Navegação premium integrada
  */
 export default function Step01Template({ sessionId, onNext }: Step01TemplateProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-white to-[#B89B7A]/10">
+    <>
+      {/* 🚀 NAVEGAÇÃO PREMIUM */}
+      <QuizNavigation
+        canProceed={true}
+        onNext={onNext || (() => {})}
+        currentQuestionType="normal"
+        selectedOptionsCount={3}
+        isLastQuestion={false}
+        currentStep={1}
+        totalSteps={21}
+        stepName="Bem-vindo ao Quiz de Estilo"
+        showUserInfo={false}
+        sessionId={sessionId}
+      />
+
+      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-white to-[#B89B7A]/10">{/* Resto do conteúdo permanece igual */}
       <div className="max-w-4xl mx-auto px-6 py-12">
         <div className="text-center space-y-8">
           {/* Logo e boas-vindas */}
@@ -160,6 +177,7 @@ export default function Step01Template({ sessionId, onNext }: Step01TemplateProp
         </div>
       </div>
     </div>
+    </>
   );
 }
 

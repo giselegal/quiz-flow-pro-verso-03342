@@ -1,7 +1,17 @@
 // @ts-nocheck
+/**
+ * 🚀 QUIZ NAVIGATION - Navegação Premium para as 21 Etapas em Produção
+ * 
+ * Sistema de navegação avançado baseado no header do editor,
+ * adaptado para a experiência do usuário final durante o quiz.
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
-import { ChevronLeft, ChevronRight, Check, AlertTriangle } from 'lucide-react';
+import { Card, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Progress } from '../ui/progress';
+import { ChevronLeft, ChevronRight, Check, AlertTriangle, Save, Sparkles, User } from 'lucide-react';
 
 interface QuizNavigationProps {
   canProceed: boolean;
@@ -10,6 +20,14 @@ interface QuizNavigationProps {
   currentQuestionType: 'normal' | 'strategic';
   selectedOptionsCount: number;
   isLastQuestion?: boolean;
+  // Novas props para navegação premium
+  currentStep?: number;
+  totalSteps?: number;
+  stepName?: string;
+  onSave?: () => void;
+  showUserInfo?: boolean;
+  userName?: string;
+  sessionId?: string;
 }
 
 const QuizNavigation: React.FC<QuizNavigationProps> = ({
@@ -19,6 +37,14 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   currentQuestionType,
   selectedOptionsCount,
   isLastQuestion = false,
+  // Props premium
+  currentStep = 1,
+  totalSteps = 21,
+  stepName = 'Descobrindo seu estilo',
+  onSave,
+  showUserInfo = false,
+  userName,
+  sessionId
 }) => {
   const [showActivationEffect, setShowActivationEffect] = useState(false);
   const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
@@ -76,51 +102,177 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
     return '';
   }, [canProceed, currentQuestionType]);
 
+  // 🚀 FUNÇÕES PREMIUM PARA NAVEGAÇÃO AVANÇADA
+  const progressPercentage = (currentStep / totalSteps) * 100;
+
+  const getStepCategory = (step: number) => {
+    if (step === 1) return 'Introdução';
+    if (step >= 2 && step <= 14) return 'Descoberta';
+    if (step === 15) return 'Processamento';
+    if (step >= 16 && step <= 19) return 'Resultado';
+    if (step === 20) return 'Captura';
+    if (step === 21) return 'Oferta';
+    return 'Quiz';
+  };
+
+  const getCategoryColor = (step: number) => {
+    if (step === 1) return 'bg-blue-500';
+    if (step >= 2 && step <= 14) return 'bg-purple-500';
+    if (step === 15) return 'bg-orange-500';
+    if (step >= 16 && step <= 19) return 'bg-green-500';
+    if (step === 20) return 'bg-red-500';
+    if (step === 21) return 'bg-amber-500';
+    return 'bg-gray-500';
+  };
+
   const nextButtonText = 'Avançar';
 
   return (
-    <div className="mt-6 w-full px-4 md:px-0">
-      <div className="flex flex-col items-center w-full">
-        {/* O helper text para questões estratégicas agora é exibido */}
-        {!canProceed && <p className="text-sm text-[#8F7A6A] mb-3">{getHelperText()}</p>}
+    <>
+      {/* 🚀 NAVEGAÇÃO PREMIUM - Header Superior */}
+      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b shadow-sm">
+        {/* Header Principal */}
+        <div className="border-b bg-gradient-to-r from-[#FAF9F7] to-white">
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              {/* Logo e Info do Quiz */}
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-[#B89B7A] rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg font-bold text-[#432818]">
+                      Quiz de Descoberta de Estilo
+                    </h1>
+                    <div className="flex items-center space-x-2 text-sm text-[#6B4F43]">
+                      <span>Gisele Galvão</span>
+                      <span>•</span>
+                      <span>8 Estilos Únicos</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <div className="flex justify-center items-center w-full gap-3">
-          {onPrevious && (
-            <Button
-              variant="outline"
-              onClick={onPrevious}
-              className="text-[#8F7A6A] border-[#8F7A6A] hover:bg-[#F3E8E6]/50 hover:text-[#A38A69] py-3 px-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-opacity-50"
-            >
-              Voltar
-            </Button>
-          )}
-
-          {/* Botão Avançar/Ver Resultado agora é exibido para todos os tipos de questão */}
-          <Button
-            onClick={onNext}
-            disabled={!canProceed}
-            variant="outline"
-            className={`text-lg px-6 py-3 flex items-center transition-all duration-300 ease-in-out rounded-lg shadow-sm hover:shadow-md transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b29670]
-              ${
-                canProceed
-                  ? `bg-[#b29670] text-white hover:bg-[#a0845c] border-[#b29670] ${
-                      showActivationEffect ? 'scale-105 shadow-lg' : '' // Aplicar efeito se showActivationEffect for true
-                    }`
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-300'
-              }`}
-            aria-label={nextButtonText}
-            aria-disabled={!canProceed}
-          >
-            {nextButtonText}
-            {isLastQuestion ? (
-              <Check className="ml-2 h-5 w-5" />
-            ) : (
-              <ChevronRight className="ml-2 h-5 w-5" />
-            )}
-          </Button>
+              {/* Info do Usuário */}
+              {showUserInfo && userName && (
+                <div className="flex items-center space-x-2">
+                  <Badge variant="secondary" className="flex items-center gap-2">
+                    <User className="w-3 h-3" />
+                    {userName}
+                  </Badge>
+                  {sessionId && (
+                    <Badge variant="outline" className="text-xs">
+                      {sessionId.slice(0, 8)}
+                    </Badge>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* Navegação e Progresso */}
+        <Card className="border-0 rounded-none">
+          <CardContent className="py-4">
+            <div className="max-w-7xl mx-auto px-4">
+              <div className="flex items-center justify-between mb-4">
+                {/* Navegação Anterior */}
+                <div className="flex items-center gap-2">
+                  {onPrevious && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onPrevious}
+                      className="gap-2"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Anterior
+                    </Button>
+                  )}
+                </div>
+
+                {/* Informações da Etapa */}
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 ${getCategoryColor(currentStep)} rounded-full flex items-center justify-center text-white text-sm font-bold`}>
+                      {currentStep}
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {getStepCategory(currentStep)}
+                        </Badge>
+                        <span className="text-sm font-medium text-gray-700">
+                          {stepName}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Etapa {currentStep} de {totalSteps}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Ações */}
+                <div className="flex items-center gap-2">
+                  {onSave && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={onSave}
+                      className="gap-2"
+                    >
+                      <Save className="h-4 w-4" />
+                      Salvar
+                    </Button>
+                  )}
+
+                  <Button
+                    size="sm"
+                    onClick={onNext}
+                    disabled={!canProceed}
+                    className={`gap-2 transition-all duration-300 ${
+                      canProceed 
+                        ? 'bg-[#B89B7A] hover:bg-[#A68A6E] text-white' 
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    } ${showActivationEffect ? 'scale-105 shadow-lg' : ''}`}
+                  >
+                    {currentStep === totalSteps ? 'Finalizar' : 'Próxima'}
+                    {isLastQuestion ? <Check className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Barra de Progresso */}
+              <div className="w-full">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm text-gray-600">Progresso do Quiz</span>
+                  <span className="text-sm font-medium text-[#B89B7A]">
+                    {Math.round(progressPercentage)}%
+                  </span>
+                </div>
+                <Progress 
+                  value={progressPercentage} 
+                  className="h-2 bg-gray-200"
+                />
+              </div>
+
+              {/* Helper Text */}
+              {!canProceed && (
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-[#8F7A6A] flex items-center justify-center gap-2">
+                    <AlertTriangle className="h-4 w-4" />
+                    {getHelperText()}
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </>
   );
 };
 
