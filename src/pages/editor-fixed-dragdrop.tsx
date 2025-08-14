@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
-import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
 import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { EditorNotification } from '@/components/editor/EditorNotification';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
+import { ProductionMonitoringDashboard } from '@/components/editor/monitoring/ProductionMonitoringDashboard';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { SmartComponentsPanel } from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
 // Quiz Editor Integration
@@ -41,6 +42,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showQuizEditor, setShowQuizEditor] = useState(false);
+  const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
@@ -180,6 +182,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               viewportSize={viewportSize}
               onViewportSizeChange={setViewportSize}
               onShowFunnelSettings={() => setShowFunnelSettings(true)}
+              onShowMonitoring={() => setShowMonitoringDashboard(true)}
             />
 
             <div style={{ borderColor: '#E5DDD5' }} className="border-b bg-white">
@@ -211,8 +214,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               className="h-full"
               stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
               componentsPanel={
-                <CombinedComponentsPanel
+                <SmartComponentsPanel
                   currentStepNumber={getStepNumberFromStageId(activeStageId)}
+                  onComponentSelect={componentType => {
+                    if (activeStageId) {
+                      addBlock(componentType, activeStageId);
+                    }
+                  }}
                 />
               }
               canvas={
@@ -308,6 +316,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Dashboard de Monitoramento */}
+        {showMonitoringDashboard && (
+          <ProductionMonitoringDashboard
+            isOpen={showMonitoringDashboard}
+            onClose={() => setShowMonitoringDashboard(false)}
+          />
         )}
       </div>
     </DndProvider>

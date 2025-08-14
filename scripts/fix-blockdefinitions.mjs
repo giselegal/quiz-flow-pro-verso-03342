@@ -1,4 +1,39 @@
-import { BlockDefinition } from '@/types/editor';
+#!/usr/bin/env node
+/**
+ * 🔧 CORREÇÃO SEGURA DO BLOCKDEFINITIONS
+ * 
+ * Remove componentes problemáticos e mantém apenas os funcionais
+ */
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.join(__dirname, '..');
+
+const BLOCK_DEFINITIONS_FILE = path.join(projectRoot, 'src/config/blockDefinitions.ts');
+
+console.log('🔧 CORRIGINDO BLOCKDEFINITIONS - VERSÃO SEGURA');
+
+// Componentes testados e funcionais
+const SAFE_COMPONENTS = [
+  'HeadingInlineBlock',
+  'TextInlineBlock', 
+  'SpacerInlineBlock',
+  'QuizIntroHeaderBlock',
+  'QuizProgressBlock',
+  'QuizResultsEditor',
+  'StyleResultsEditor',
+  'FinalStepEditor',
+  'FormInputBlock',
+  'BadgeInlineBlock',
+  'DecorativeBarInlineBlock',
+  'LegalNoticeInlineBlock'
+];
+
+const SAFE_CONTENT = `import { BlockDefinition } from '@/types/editor';
 import { AlignLeft, Heading, Image, Minus, Square, Type, HelpCircle, FileText, Tag, Layout } from 'lucide-react';
 
 // Imports dos componentes funcionais
@@ -256,7 +291,15 @@ export const blockDefinitions: BlockDefinition[] = [
 ];
 
 // ========== STATISTICS ==========
-// Total Components: 12
+// Total Components: ${SAFE_COMPONENTS.length}
 // Categories: 6 (text, layout, quiz, forms, misc)
-// Generated: 8/13/2025, 8:07:23 PM
+// Generated: ${new Date().toLocaleString()}
 // Status: Safe Production Version
+`;
+
+// Escrever arquivo corrigido
+fs.writeFileSync(BLOCK_DEFINITIONS_FILE, SAFE_CONTENT, 'utf-8');
+
+console.log('✅ BlockDefinitions corrigido com componentes seguros!');
+console.log(`📊 ${SAFE_COMPONENTS.length} componentes funcionais mantidos`);
+console.log('🎯 Sistema pronto para produção!');
