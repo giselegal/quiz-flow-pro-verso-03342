@@ -78,25 +78,17 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
   // ===== FALLBACKS INTELIGENTES - STEP01 ESPECÍFICOS =====
   
   const step01Fallbacks: Record<string, string> = {
-    // Step01 JSON tipos → registry tipos
-    'quiz-intro-header': 'quiz-intro-header', // Direto
-    'decorative-bar': 'decorative-bar', // Direto 
-    'text': 'text', // Direto
-    'image': 'image', // Direto
-    'form-input': 'form-input', // Direto
-    'button': 'button', // Direto
-    
-    // Variações e aliases comuns
+    // Aliases e variações → tipos do registry
     'text-inline': 'text',
-    'heading': 'heading',
     'heading-inline': 'heading-inline',
-    'image-display-inline': 'image',
-    'button-inline': 'button',
+    'image-display-inline': 'image-display-inline', 
+    'button-inline': 'button-inline',
+    'decorative-bar': 'decorative-bar-inline',
     
-    // Fallbacks genéricos
+    // Fallbacks para tipos em português
     'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
     'texto-embutido': 'text',
-    'imagem-em-linha': 'image',
+    'imagem-em-linha': 'image-display-inline',
     'formulário-de-chumbo': 'form-input',
   };
 
@@ -120,8 +112,8 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
   }
 
   if (type.includes('image') || type.includes('photo') || type.includes('picture')) {
-    console.log(`🖼️ Fallback genérico: ${type} → image`);
-    return ENHANCED_BLOCK_REGISTRY['image'] || ENHANCED_BLOCK_REGISTRY['image-display-inline'];
+    console.log(`🖼️ Fallback genérico: ${type} → image-display-inline`);
+    return ENHANCED_BLOCK_REGISTRY['image-display-inline'] || ENHANCED_BLOCK_REGISTRY['image'];
   }
 
   if (type.includes('form') || type.includes('input') || type.includes('field')) {
