@@ -66,7 +66,7 @@ const BlockLoadingSkeleton: React.FC = () => (
 // Baseado na auditoria: 191 arquivos, 157 blocks, 70 inline components
 
 // ⚡ LAZY LOADING - Performance Optimization
-const ENHANCED_BLOCK_REGISTRY = {
+export const ENHANCED_BLOCK_REGISTRY = {
   // 🎯 BLOCKS BÁSICOS
   text: lazy(() => import('./TextBlock')),
   'text-inline': lazy(() => import('./TextInlineBlock')),
