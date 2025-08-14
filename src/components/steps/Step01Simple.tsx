@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Props {
   sessionId: string;
@@ -6,6 +6,37 @@ interface Props {
 }
 
 const Step01Simple: React.FC<Props> = ({ onNext }) => {
+  const [name, setName] = useState('');
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+
+  // Validate name input (minimum 2 characters)
+  useEffect(() => {
+    const isValid = name.trim().length >= 2;
+    setIsButtonEnabled(isValid);
+
+    // Dispatch custom event for compatibility with existing validation system
+    window.dispatchEvent(
+      new CustomEvent('quiz-input-change', {
+        detail: { 
+          blockId: 'intro-form-input', 
+          value: name.trim(), 
+          valid: isValid 
+        },
+      })
+    );
+  }, [name]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleNext = () => {
+    if (isButtonEnabled) {
+      console.log('✅ [Step01Simple] Navegando para próxima etapa com nome:', name.trim());
+      onNext();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF9F7]">
       <div className="container mx-auto px-4 py-8">
@@ -105,12 +136,38 @@ const Step01Simple: React.FC<Props> = ({ onNext }) => {
               quiz foi desenvolvido para te ajudar a entender seu estilo único através de uma
               jornada de autoconhecimento.
             </p>
+
+            {/* Form input for name */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-[#432818] mb-2">
+                Como posso te chamar?
+                <span className="text-[#B89B7A] ml-1">*</span>
+              </label>
+              <input
+                id="intro-form-input"
+                type="text"
+                placeholder="Digite seu primeiro nome aqui..."
+                value={name}
+                onChange={handleNameChange}
+                className="w-full px-4 py-3 border-2 border-[#B89B7A] rounded-lg focus:ring-2 focus:ring-[#B89B7A] focus:border-[#B89B7A] outline-none transition-all bg-white text-[#432818]"
+              />
+            </div>
+
             <div className="flex justify-center">
               <button
-                onClick={onNext}
-                className="px-8 py-4 bg-[#B89B7A] text-white text-lg font-medium rounded-lg hover:bg-[#432818] transition-colors"
+                id="intro-cta-button"
+                onClick={handleNext}
+                disabled={!isButtonEnabled}
+                className={`px-8 py-4 text-lg font-medium rounded-lg transition-all duration-300 ${
+                  isButtonEnabled
+                    ? 'bg-[#B89B7A] text-white hover:bg-[#432818] cursor-pointer'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+                }`}
               >
-                Começar Quiz
+                {isButtonEnabled 
+                  ? 'Quero Descobrir meu Estilo Agora!' 
+                  : 'Digite seu nome para continuar'
+                }
               </button>
             </div>
           </div>
