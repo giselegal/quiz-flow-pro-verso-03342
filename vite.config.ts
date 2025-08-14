@@ -13,10 +13,19 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 8080,
+    // Configurações para resolver problemas de CORS no Codespaces
+    cors: true,
+    strictPort: false,
     // Middleware para servir templates da pasta /templates
     middlewareMode: false,
     fs: {
       allow: ['..', 'templates', 'public', 'src'],
+    },
+    // Headers para resolver problemas de autenticação
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
   },
   // Configuração para servir templates como assets estáticos

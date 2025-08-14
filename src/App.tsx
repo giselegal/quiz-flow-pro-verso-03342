@@ -23,6 +23,7 @@ const ResultConfigPage = lazy(() =>
 );
 const QuizPageUser = lazy(() => import('./components/QuizPageUser'));
 const QuizFlowPage = lazy(() => import('./pages/QuizFlowPage'));
+const StepPage = lazy(() => import('./pages/StepPage'));
 
 // Lazy load das páginas admin
 const DashboardPage = lazy(() => import('./pages/admin/DashboardPage'));
@@ -43,6 +44,7 @@ const TestStep21 = lazy(() => import('./components/editor-fixed/OfferPageJson'))
 const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
 
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
+const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 
 // Loading component
 const PageLoading = () => (
@@ -204,11 +206,29 @@ function App() {
                   )}
                 </Route>
 
+                {/* Test Navigation Route */}
+                <Route path="/test/navigation">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestNavigation />
+                    </Suspense>
+                  )}
+                </Route>
+
                 {/* Test Step 21 Route */}
                 <Route path="/step/21">
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <TestStep21 />
+                    </Suspense>
+                  )}
+                </Route>
+
+                {/* Step Navigation Routes */}
+                <Route path="/step/:step">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <StepPage />
                     </Suspense>
                   )}
                 </Route>

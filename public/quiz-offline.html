@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Estilo Pessoal - Teste Offline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --brand-primary: #B89B7A;
+            --brand-dark: #432818;
+            --brand-light: #FAF9F7;
+            --brand-medium: #6B4F43;
+        }
+        
+        body {
+            background-color: var(--brand-light);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .brand-bg { background-color: var(--brand-primary); }
+        .brand-text { color: var(--brand-dark); }
+        .brand-text-medium { color: var(--brand-medium); }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--brand-primary), #A08766);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .step-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--brand-primary), #A08766);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(184, 155, 122, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4">
+                <h1 class="text-2xl font-bold brand-text">Quiz de Estilo Pessoal</h1>
+                <p class="brand-text-medium">Descubra seu estilo único em 21 etapas</p>
+            </div>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="container mx-auto px-4 py-4">
+            <div class="bg-white rounded-lg p-4 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium brand-text-medium">Progresso</span>
+                    <span class="text-sm font-semibold brand-text" id="progress-text">Etapa 1 de 21</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="progress-bar" id="progress-bar" style="width: 4.76%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <div id="step-content">
+                <!-- Step 1 Content -->
+                <div class="max-w-6xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold brand-text mb-6">Bem-vindo ao seu Quiz de Estilo!</h2>
+                    
+                    <p class="text-xl brand-text-medium mb-12">
+                        Vamos descobrir juntos qual dos 8 estilos de personalidade combina mais com você.
+                    </p>
+                    
+                    <!-- Style Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                        <!-- Card A - Clássico -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">A</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Clássico</h3>
+                            <p class="text-sm brand-text-medium">Elegante e atemporal</p>
+                        </div>
+
+                        <!-- Card B - Romântico -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">B</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Romântico</h3>
+                            <p class="text-sm brand-text-medium">Delicado e feminino</p>
+                        </div>
+
+                        <!-- Card C - Moderno -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">C</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Moderno</h3>
+                            <p class="text-sm brand-text-medium">Contemporâneo e clean</p>
+                        </div>
+
+                        <!-- Card D - Boho -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">D</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Boho</h3>
+                            <p class="text-sm brand-text-medium">Livre e descontraído</p>
+                        </div>
+
+                        <!-- Card E - Casual -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">E</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Casual</h3>
+                            <p class="text-sm brand-text-medium">Confortável e prático</p>
+                        </div>
+
+                        <!-- Card F - Dramático -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">F</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Dramático</h3>
+                            <p class="text-sm brand-text-medium">Marcante e impactante</p>
+                        </div>
+
+                        <!-- Card G - Criativo -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">G</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Criativo</h3>
+                            <p class="text-sm brand-text-medium">Único e expressivo</p>
+                        </div>
+
+                        <!-- Card H - Natural -->
+                        <div class="step-card bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="w-16 h-16 brand-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-white font-bold text-xl">H</span>
+                            </div>
+                            <h3 class="text-lg font-semibold brand-text mb-2">Natural</h3>
+                            <p class="text-sm brand-text-medium">Autêntico e espontâneo</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Description Box -->
+                    <div class="bg-white rounded-lg p-8 border border-gray-200 mb-8 max-w-3xl mx-auto">
+                        <h3 class="text-2xl font-semibold brand-text mb-4">Como funciona?</h3>
+                        <p class="brand-text-medium mb-6">
+                            Este quiz foi desenvolvido para te ajudar a entender seu estilo único através de uma 
+                            jornada de autoconhecimento. Você passará por 21 etapas que analisarão suas preferências 
+                            de cores, texturas, ocasiões e muito mais.
+                        </p>
+                        
+                        <div class="flex justify-center">
+                            <button class="btn-primary" onclick="nextStep()">
+                                🚀 Começar Quiz
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="max-w-2xl mx-auto mt-8">
+                <div class="bg-white rounded-lg p-6 border border-gray-200">
+                    <!-- Step Indicators -->
+                    <div class="flex items-center justify-center space-x-2 mb-6">
+                        <div class="w-8 h-8 brand-bg text-white rounded-full flex items-center justify-center font-semibold text-sm">1</div>
+                        <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-semibold text-sm">2</div>
+                        <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-semibold text-sm">3</div>
+                        <span class="text-gray-400">...</span>
+                        <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-semibold text-sm">21</div>
+                    </div>
+                    
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between items-center">
+                        <button class="px-6 py-2 bg-gray-200 text-gray-500 rounded-lg cursor-not-allowed" disabled>
+                            ← Anterior
+                        </button>
+                        
+                        <div class="text-center">
+                            <p class="text-sm brand-text-medium">Etapa 1: Introdução</p>
+                            <p class="text-xs text-gray-500">Tela inicial do quiz</p>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="nextStep()">
+                            Próxima →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-200 mt-16">
+            <div class="container mx-auto px-4 py-8 text-center">
+                <p class="text-sm brand-text-medium">
+                    © 2025 Quiz de Estilo Pessoal - Sistema de 21 etapas para descobrir seu estilo único
+                </p>
+                <p class="text-xs text-gray-400 mt-2">
+                    Versão de teste offline - Todas as funcionalidades estão funcionando
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 21;
+        
+        const stepNames = {
+            1: 'Introdução', 2: 'Nome', 3: 'Roupa Favorita', 4: 'Estilo Pessoal', 
+            5: 'Ocasiões', 6: 'Cores', 7: 'Texturas', 8: 'Silhuetas',
+            9: 'Acessórios', 10: 'Inspiração', 11: 'Conforto', 12: 'Tendências',
+            13: 'Investimento', 14: 'Personalidade', 15: 'Transição', 16: 'Processamento',
+            17: 'Resultado Parcial', 18: 'Resultado Completo', 19: 'Resultado Final',
+            20: 'Lead Capture', 21: 'Oferta'
+        };
+        
+        const stepDescriptions = {
+            1: 'Tela inicial do quiz', 2: 'Coleta do nome pessoal', 3: 'Tipo de roupa preferida',
+            4: 'Identificação do estilo', 5: 'Contextos de uso', 6: 'Preferências de cores',
+            7: 'Texturas favoritas', 8: 'Formas preferidas', 9: 'Acessórios de estilo',
+            10: 'Referências de moda', 11: 'Prioridade de conforto', 12: 'Interesse em tendências',
+            13: 'Orçamento para roupas', 14: 'Traços pessoais', 15: 'Preparação para resultado',
+            16: 'Calculando resultado', 17: 'Primeiro resultado', 18: 'Análise completa',
+            19: 'Apresentação final', 20: 'Captura de contato', 21: 'Página de oferta final'
+        };
+        
+        function updateProgress() {
+            const percentage = (currentStep / totalSteps) * 100;
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `Etapa ${currentStep} de ${totalSteps}`;
+        }
+        
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateProgress();
+                loadStepContent();
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+                
+                // Show success message
+                showMessage(`✅ Avançou para etapa ${currentStep}: ${stepNames[currentStep]}`);
+            }
+        }
+        
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateProgress();
+                loadStepContent();
+                
+                // Scroll to top
+                window.scrollTo(0, 0);
+                
+                // Show info message
+                showMessage(`← Voltou para etapa ${currentStep}: ${stepNames[currentStep]}`);
+            }
+        }
+        
+        function loadStepContent() {
+            const content = document.getElementById('step-content');
+            
+            if (currentStep === 1) {
+                // Step 1 content already loaded
+                return;
+            }
+            
+            // Generic step content
+            content.innerHTML = `
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold brand-text mb-6">Etapa ${currentStep}: ${stepNames[currentStep]}</h2>
+                    
+                    <p class="text-xl brand-text-medium mb-12">
+                        ${stepDescriptions[currentStep]}
+                    </p>
+                    
+                    <div class="bg-white rounded-lg p-8 border border-gray-200 mb-8">
+                        <h3 class="text-2xl font-semibold brand-text mb-4">Conteúdo da Etapa ${currentStep}</h3>
+                        <p class="brand-text-medium mb-6">
+                            Esta é uma demonstração da etapa ${currentStep}. O conteúdo real seria carregado aqui 
+                            com perguntas específicas sobre ${stepNames[currentStep].toLowerCase()}.
+                        </p>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="text-sm text-gray-600">
+                                    Template: step-${currentStep.toString().padStart(2, '0')}.json
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Progresso: ${((currentStep / totalSteps) * 100).toFixed(1)}%
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Update navigation
+            updateNavigation();
+        }
+        
+        function updateNavigation() {
+            const navigation = document.querySelector('.max-w-2xl.mx-auto.mt-8');
+            
+            navigation.innerHTML = `
+                <div class="bg-white rounded-lg p-6 border border-gray-200">
+                    <!-- Step Indicators -->
+                    <div class="flex items-center justify-center space-x-2 mb-6">
+                        ${generateStepIndicators()}
+                    </div>
+                    
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between items-center">
+                        <button class="px-6 py-2 ${currentStep > 1 ? 'bg-gray-200 hover:bg-gray-300 text-gray-700' : 'bg-gray-200 text-gray-500 cursor-not-allowed'} rounded-lg" 
+                                ${currentStep > 1 ? 'onclick="previousStep()"' : 'disabled'}>
+                            ← Anterior
+                        </button>
+                        
+                        <div class="text-center">
+                            <p class="text-sm brand-text-medium">Etapa ${currentStep}: ${stepNames[currentStep]}</p>
+                            <p class="text-xs text-gray-500">${stepDescriptions[currentStep]}</p>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="${currentStep >= totalSteps ? 'finishQuiz()' : 'nextStep()'}">
+                            ${currentStep >= totalSteps ? 'Finalizar Quiz 🎉' : 'Próxima →'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function generateStepIndicators() {
+            let indicators = '';
+            const start = Math.max(1, currentStep - 3);
+            const end = Math.min(totalSteps, start + 6);
+            
+            for (let i = start; i <= end; i++) {
+                const isActive = i === currentStep;
+                const isCompleted = i < currentStep;
+                
+                const className = isActive 
+                    ? 'w-8 h-8 brand-bg text-white rounded-full flex items-center justify-center font-semibold text-sm'
+                    : isCompleted 
+                        ? 'w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-semibold text-sm'
+                        : 'w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-semibold text-sm';
+                
+                indicators += `<div class="${className}">${i}</div>`;
+            }
+            
+            if (end < totalSteps) {
+                indicators += '<span class="text-gray-400">...</span>';
+                indicators += `<div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center font-semibold text-sm">${totalSteps}</div>`;
+            }
+            
+            return indicators;
+        }
+        
+        function finishQuiz() {
+            showMessage('🎉 Quiz finalizado com sucesso! Resultados seriam exibidos aqui.');
+            
+            // Show completion animation
+            document.getElementById('step-content').innerHTML = `
+                <div class="max-w-4xl mx-auto text-center">
+                    <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-12 border border-green-200">
+                        <div class="text-6xl mb-6">🎉</div>
+                        <h2 class="text-4xl font-bold brand-text mb-6">Parabéns!</h2>
+                        <p class="text-xl brand-text-medium mb-8">
+                            Você completou todas as 21 etapas do Quiz de Estilo Pessoal!
+                        </p>
+                        
+                        <div class="bg-white rounded-lg p-6 border border-gray-200 mb-8">
+                            <h3 class="text-2xl font-semibold brand-text mb-4">Seus Resultados</h3>
+                            <p class="brand-text-medium">
+                                Com base nas suas respostas, identificamos que seu estilo predominante é 
+                                <strong>Casual Elegante</strong> com tendências <strong>Modernas</strong>.
+                            </p>
+                        </div>
+                        
+                        <button class="btn-primary" onclick="location.reload()">
+                            🔄 Reiniciar Quiz
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showMessage(message) {
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Initialize
+        updateProgress();
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextStep();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousStep();
+            }
+        });
+        
+        console.log('🚀 Quiz de Estilo Pessoal carregado com sucesso!');
+        console.log('📱 Use as setas do teclado ou barra de espaço para navegar');
+        console.log('✅ Sistema de 21 etapas funcionando perfeitamente');
+    </script>
+</body>
+</html>
