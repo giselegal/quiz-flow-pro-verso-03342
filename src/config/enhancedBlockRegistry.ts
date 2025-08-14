@@ -19,7 +19,7 @@ import DecorativeBarInline from '../components/blocks/inline/DecorativeBarInline
 import DividerInlineBlock from '../components/blocks/inline/DividerInlineBlock';
 import HeadingInline from '../components/blocks/inline/HeadingInline';
 import ImageDisplayInline from '../components/blocks/inline/ImageDisplayInline';
-import ImageDisplayInlineBlock from '../components/blocks/inline/ImageDisplayInlineBlock';
+import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean'; // ✅ VERSÃO LIMPA
 import LegalNoticeInline from '../components/blocks/inline/LegalNoticeInline';
 import PricingCardInlineBlock from '../components/blocks/inline/PricingCardInlineBlock';
 import TextInline from '../components/blocks/inline/TextInline';
@@ -29,8 +29,8 @@ import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarI
 import FinalStepEditor from '../components/editor/blocks/FinalStepEditor';
 import FormContainerBlock from '../components/editor/blocks/FormContainerBlock';
 import FormInputBlock from '../components/editor/blocks/FormInputBlock';
-import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
+import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
 import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
 import QuizOptionBlock from '../components/editor/blocks/QuizOptionBlock';
@@ -69,7 +69,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // Text and Content
   'text-inline': TextInlineBlock,
   'heading-inline': HeadingInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlock,
+  // 'image-display-inline': ImageDisplayInlineBlock, // ❌ TEMPORARIAMENTE DESABILITADO PARA DEBUG
 
   // Quiz Components - Principais
   'quiz-intro-header': QuizIntroHeaderBlock,

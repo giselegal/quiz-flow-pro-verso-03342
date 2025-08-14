@@ -4,8 +4,8 @@
  * Testa o fluxo completo desde o carregamento até a renderização
  */
 
-import { Block } from '@/types/editor';
 import { templateService } from '@/services/templateService';
+import { Block } from '@/types/editor';
 import React, { useState } from 'react';
 
 interface TestResult {
@@ -57,7 +57,7 @@ const StepsFlowTest: React.FC = () => {
     },
     currentTemplate,
     templateError,
-    isLoadingTemplate
+    isLoadingTemplate,
   };
 
   const runFullTest = async () => {

@@ -54,17 +54,23 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         {/* FunnelNavigation removido durante limpeza de conflitos */}
         <div className="bg-gray-100 p-4 rounded-lg text-sm text-gray-600">
           <div className="flex items-center justify-between">
-            <span>Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}</span>
+            <span>
+              Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}
+            </span>
             <div className="flex gap-2">
-              <button 
-                onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)}
+              <button
+                onClick={() =>
+                  funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)
+                }
                 disabled={!funnelNavigation.canNavigatePrevious}
                 className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
               >
                 Anterior
               </button>
-              <button 
-                onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)}
+              <button
+                onClick={() =>
+                  funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)
+                }
                 disabled={!funnelNavigation.canNavigateNext}
                 className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50"
               >
@@ -74,7 +80,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           </div>
         </div>
       </div>
-      
+
       <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
         {/* Sidebar de componentes */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
