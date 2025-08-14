@@ -80,7 +80,7 @@ const StepPage: React.FC = () => {
 
       try {
         const template = await templateService.getTemplateByStep(stepNumber);
-        
+
         if (template && template.blocks) {
           const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
           setBlocks(editorBlocks);
@@ -172,9 +172,7 @@ const StepPage: React.FC = () => {
             <p className="text-[#432818] mb-4">
               Não foi possível carregar o conteúdo da etapa {stepNumber}.
             </p>
-            <p className="text-sm text-[#8B6F47] mb-4">
-              {templateError}
-            </p>
+            <p className="text-sm text-[#8B6F47] mb-4">{templateError}</p>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-[#432818] text-white rounded hover:bg-[#2A1810]"
@@ -200,8 +198,7 @@ const StepPage: React.FC = () => {
         return (
           <Suspense fallback={<LoadingSpinner />}>
             <Step20Result sessionId={sessionId} onContinue={handleNext} />
-        
-        </Suspense>
+          </Suspense>
         );
       }
 
@@ -245,9 +242,7 @@ const StepPage: React.FC = () => {
                 <div className="max-w-4xl mx-auto py-8">
                   <div className="space-y-6">
                     <div className="text-center">
-                      <h1 className="text-3xl font-bold text-[#432818] mb-4">
-                        {stepConfig.name}
-                      </h1>
+                      <h1 className="text-3xl font-bold text-[#432818] mb-4">{stepConfig.name}</h1>
                       <p className="text-lg text-[#6B4F43] mb-8">{stepConfig.description}</p>
                     </div>
 
