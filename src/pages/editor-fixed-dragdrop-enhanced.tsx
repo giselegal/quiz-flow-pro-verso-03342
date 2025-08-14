@@ -54,6 +54,7 @@ const EditorFixedEnhancedPage: React.FC = () => {
       updateBlock,
       reorderBlocks,
     },
+    persistenceActions: { saveFunnel, isSaving },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
@@ -97,11 +98,17 @@ const EditorFixedEnhancedPage: React.FC = () => {
   };
 
   // Handlers de eventos
-  const handleSave = () => {
-    console.log('💾 Salvando editor... (Supabase:', isSupabaseEnabled ? 'enabled' : 'disabled', ')');
-    if (isSupabaseEnabled) {
-      console.log('💾 Salvando no Supabase:', funnelId);
-      // TODO: Implementar save automático via hook
+  const handleSave = async () => {
+    try {
+      console.log('💾 Iniciando salvamento do editor... (Supabase:', isSupabaseEnabled ? 'enabled' : 'disabled', ')');
+      const result = await saveFunnel();
+      if (result.success) {
+        console.log('✅ Editor salvo com sucesso no Supabase:', funnelId);
+      } else {
+        console.error('❌ Erro no salvamento:', result.error);
+      }
+    } catch (error) {
+      console.error('❌ Erro inesperado ao salvar:', error);
     }
   };
 
