@@ -92,15 +92,24 @@ export default defineConfig({
             return 'app-pages';
           }
 
-          // Components
+          // Components (mais granular para reduzir tamanho dos chunks grandes)
           if (id.includes('src/components/')) {
-            // Editor components
-            if (id.includes('editor') || id.includes('Editor')) {
-              return 'editor-components';
+            // Editor blocks (normalmente muitos blocos pesados)
+            if (
+              id.includes('src/components/editor/blocks') ||
+              id.includes('/editor/blocks/') ||
+              id.includes('\\editor\\blocks\\')
+            ) {
+              return 'editor-components-blocks';
             }
 
-            // UI components
-            if (id.includes('ui/')) {
+            // Editor UI (toolbars, panels, canvas controls)
+            if (id.includes('src/components/editor/') || id.includes('/editor/')) {
+              return 'editor-components-ui';
+            }
+
+            // UI components (design system)
+            if (id.includes('ui/') || id.includes('/ui/')) {
               return 'ui-components';
             }
 
@@ -114,7 +123,7 @@ export default defineConfig({
               return 'quiz-components';
             }
 
-            // Other components
+            // Fallback for outros componentes
             return 'app-components';
           }
 
