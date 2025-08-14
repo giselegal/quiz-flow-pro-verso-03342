@@ -20,13 +20,29 @@ import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDispl
 // === CRIAÇÃO DE COMPONENTES PLACEHOLDER (OS ARQUIVOS NÃO EXISTIAM) ===
 // Estes componentes são criados aqui para evitar erros de importação.
 
-const QuizIntroHeaderBlock: React.FC<any> = (props) => {
-  return React.createElement(HeadingBlock, { 
-    ...props, 
-    level: "h1", 
-    text: props.title || 'Cabeçalho do Quiz' 
-  });
+const PlaceholderBlock: React.FC<{ type: string, props: any }> = ({ type, props }) => {
+  return React.createElement('div', {
+    style: {
+      padding: '12px',
+      margin: '8px 0',
+      border: '2px dashed #e5e7eb',
+      borderRadius: '8px',
+      backgroundColor: '#f9fafb',
+      color: '#6b7280'
+    }
+  }, [
+    React.createElement('p', { 
+      key: 'title',
+      style: { fontWeight: 'bold', fontSize: '14px' }
+    }, ['Componente Placeholder: ', React.createElement('code', { key: 'type' }, type)]),
+    React.createElement('pre', {
+      key: 'props',
+      style: { fontSize: '10px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }
+    }, JSON.stringify(props, null, 2))
+  ]);
 };
+
+const QuizIntroHeaderBlock: React.FC<any> = (props) => React.createElement(HeadingBlock, { ...props, level: "h1", text: props.title || 'Cabeçalho do Quiz' });
 
 const DecorativeBarInlineBlock: React.FC<any> = () => {
   return React.createElement('hr', { 
@@ -99,7 +115,7 @@ const BLOCK_ALIASES: Record<string, string> = {
 export const getBlockComponent = (type: string): React.ComponentType<any> => {
   if (!type) {
     console.warn('getBlockComponent: Tipo de bloco não fornecido. Usando placeholder.');
-    return TextInline; // Fallback simples para TextInline
+    return (props) => React.createElement(PlaceholderBlock, { type: 'undefined', props });
   }
 
   // 1. Tenta encontrar o tipo diretamente no registry
@@ -111,6 +127,17 @@ export const getBlockComponent = (type: string): React.ComponentType<any> => {
 
   // 2. Se não encontrar, tenta usar um alias
   const alias = BLOCK_ALIASES[type];
+  if (alias) {
+    component = ENHANCED_BLOCK_REGISTRY[alias];
+    if (component) {
+      console.log(`🔄 Mapeado via alias: "${type}" → "${alias}"`);
+      return component;
+    }
+  }
+
+  // 3. Se ainda não encontrar, retorna um placeholder para não quebrar a UI
+  console.warn(`❗️ Componente para o tipo "${type}" não foi encontrado. Renderizando placeholder.`);
+  return (props) => React.createElement(PlaceholderBlock, { type, props });
   if (alias) {
     component = ENHANCED_BLOCK_REGISTRY[alias];
     if (component) {
