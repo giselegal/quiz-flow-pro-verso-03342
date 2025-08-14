@@ -1,3 +1,4 @@
+import React from 'react';
 import { getBlockComponent } from '@/config/enhancedBlockRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
@@ -125,14 +126,16 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
           onClick={onClick}
           style={inlineStyles}
         >
-          <Component
-            block={block}
-            properties={processedProperties}
-            isSelected={isSelected}
-            onClick={onClick}
-            onPropertyChange={onPropertyChange}
-            {...processedProperties}
-          />
+          <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
+            <Component
+              block={block}
+              properties={processedProperties}
+              isSelected={isSelected}
+              onClick={onClick}
+              onPropertyChange={onPropertyChange}
+              {...processedProperties}
+            />
+          </React.Suspense>
         </div>
       </ProductionBlockBoundary>
     );

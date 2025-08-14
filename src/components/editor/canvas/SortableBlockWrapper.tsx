@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import * as BlockRegistry from '@/config/enhancedBlockRegistry';
@@ -8,7 +9,6 @@ import { Block } from '@/types/editor';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
-import React from 'react';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -235,26 +235,29 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
             // 🎯 MODO PREVIEW: Adicionar props funcionais para comportamento de produção
             if (isPreviewing) {
               return (
-                <Component
-                  {...componentProps}
-                  // Props especiais para modo preview (funcional)
-                  isPreviewMode={true}
-                  onNext={() => {
-                    // Simular navegação para próxima etapa
-                    console.log('🚀 Preview: Navegando para próxima etapa');
-                  }}
-                  onPrevious={() => {
-                    // Simular navegação para etapa anterior
-                    console.log('🚀 Preview: Navegando para etapa anterior');
-                  }}
-                  canProceed={true}
-                  sessionId="preview-session"
-                />
+                <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
+                  <Component
+                    {...componentProps}
+                    isPreviewMode={true}
+                    onNext={() => {
+                      console.log('🚀 Preview: Navegando para próxima etapa');
+                    }}
+                    onPrevious={() => {
+                      console.log('🚀 Preview: Navegando para etapa anterior');
+                    }}
+                    canProceed={true}
+                    sessionId="preview-session"
+                  />
+                </React.Suspense>
               );
             }
 
             // Modo editor normal
-            return <Component {...componentProps} />;
+            return (
+              <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
+                <Component {...componentProps} />
+              </React.Suspense>
+            );
           })()}
         </div>
       </Card>

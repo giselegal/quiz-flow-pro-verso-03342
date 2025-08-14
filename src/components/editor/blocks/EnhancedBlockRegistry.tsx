@@ -433,9 +433,10 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
 };
 
 // 🔧 UTILITY FUNCTIONS
-export function getBlockComponent(type: string): React.LazyExoticComponent<any> | null {
+export function getBlockComponent(type: string): React.ComponentType<any> | null {
   const registry = ENHANCED_BLOCK_REGISTRY as Record<string, React.LazyExoticComponent<any>>;
-  return registry[type] || null;
+  const component = registry[type];
+  return component ? component as React.ComponentType<any> : null;
 }
 
 export function getBlockDefinition(type: string): BlockDefinition | null {

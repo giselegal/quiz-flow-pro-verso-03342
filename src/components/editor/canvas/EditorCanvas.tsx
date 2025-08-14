@@ -1,3 +1,4 @@
+import React from 'react';
 import { getBlockComponent } from '@/config/enhancedBlockRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
@@ -70,18 +71,16 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
       );
     }
 
-    // 🔧 CORREÇÃO CRÍTICA: Passar properties diretamente para QuizOptionsGridBlock
-    const componentProps = {
-      id: block.id,
-      properties: block.properties,
-      isSelected: false,
-      // Manter compatibilidade com outros componentes que esperam block
-      block: block,
-    };
-
     return (
       <div className={cn('transition-all duration-200', containerClasses)} style={inlineStyles}>
-        <Component {...componentProps} />
+        <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
+          <Component
+            id={block.id}
+            properties={block.properties}
+            isSelected={false}
+            block={block}
+          />
+        </React.Suspense>
       </div>
     );
   };
