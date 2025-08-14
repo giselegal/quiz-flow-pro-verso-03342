@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
 interface VerticalCanvasHeaderProps {
@@ -102,10 +102,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               className="object-contain"
             />
           ) : (
-            <div
-              className="logo-placeholder"
-              style={{ color: '#8B7355', width: logoWidth, height: logoHeight }}
-            >
+            <div style={{ color: '#8B7355' }} style={{ width: logoWidth, height: logoHeight }}>
               Logo
             </div>
           )}

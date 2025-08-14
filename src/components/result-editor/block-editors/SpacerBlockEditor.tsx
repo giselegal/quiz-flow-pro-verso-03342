@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
 import { Block } from '@/types/editor';
+import { Slider } from '@/components/ui/slider';
 
 interface SpacerBlockEditorProps {
   block: Block;
@@ -37,7 +37,7 @@ const SpacerBlockEditor: React.FC<SpacerBlockEditorProps> = ({ block, onUpdate }
           />
         </div>
 
-        <div style={{ backgroundColor: '#FAF9F7', height: content.height || '40px' }}>
+        <div style={{ backgroundColor: '#FAF9F7' }} style={{ height: content.height || '40px' }}>
           <div className="text-xs text-center text-gray-400">Visualização do espaçamento</div>
         </div>
       </div>

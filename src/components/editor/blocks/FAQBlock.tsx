@@ -1,13 +1,21 @@
 // @ts-nocheck
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-import type { BlockComponentProps, FAQBlock, FAQItem } from '@/types/blocks';
-import { AnimatePresence, motion } from 'framer-motion';
-import { CheckCircle, ChevronDown, HelpCircle, Info, MessageSquare, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { InlineEditableText } from './InlineEditableText';
+import {
+  ChevronDown,
+  ChevronUp,
+  HelpCircle,
+  Search,
+  MessageSquare,
+  CheckCircle,
+  Info,
+} from 'lucide-react';
+import type { BlockComponentProps, FAQBlock, FAQItem } from '@/types/blocks';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface FAQBlockProps extends BlockComponentProps {
   block: FAQBlock;
@@ -162,6 +170,10 @@ const FAQBlock: React.FC<FAQBlockProps> = ({
         break;
       case 'flat':
         styleClasses = 'bg-transparent border-b border-gray-200 rounded-none hover:bg-gray-50';
+        break;
+      case 'classic':
+        styleClasses =
+          'bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl shadow-lg hover:shadow-xl';
         break;
       case 'modern':
       default:

@@ -1,7 +1,7 @@
 // @ts-nocheck
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ArrowLeftRight, Edit3 } from 'lucide-react';
-import React, { useState } from 'react';
 
 interface ComparisonInlineBlockProps {
   beforeTitle?: string;
@@ -97,7 +97,7 @@ const ComparisonInlineBlock: React.FC<ComparisonInlineBlockProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Before Section */}
-      <div className="before-section" style={{ borderColor: '#E5DDD5', width: `${dragPosition}%` }}>
+      <div style={{ borderColor: '#E5DDD5' }} style={{ width: `${dragPosition}%` }}>
         <h4
           className="font-bold text-red-800 mb-2 cursor-pointer text-center"
           onClick={e => {
