@@ -11,10 +11,7 @@ const componentImports = new Set();
 
 // 1. Analisar JSON examples
 console.log('\n📁 1. ANALISANDO ARQUIVOS JSON:');
-const jsonFiles = [
-  'examples/step01-blocks.json',
-  'examples/step01-blocks-corrigido.json',
-];
+const jsonFiles = ['examples/step01-blocks.json', 'examples/step01-blocks-corrigido.json'];
 
 jsonFiles.forEach(file => {
   const fullPath = path.join('/workspaces/quiz-quest-challenge-verse', file);
@@ -41,13 +38,13 @@ const templateDir = '/workspaces/quiz-quest-challenge-verse/src/components/steps
 
 if (fs.existsSync(templateDir)) {
   const files = fs.readdirSync(templateDir);
-  
+
   files.forEach(file => {
     if (file.endsWith('Template.tsx')) {
       const filePath = path.join(templateDir, file);
       try {
         const content = fs.readFileSync(filePath, 'utf8');
-        
+
         // Procurar por tipos de blocos em templates
         const typeMatches = content.match(/type:\s*['"`]([^'"`]+)['"`]/g) || [];
         typeMatches.forEach(match => {
@@ -55,7 +52,7 @@ if (fs.existsSync(templateDir)) {
           blockTypes.add(type);
           console.log(`   🔧 ${file}: ${type}`);
         });
-        
+
         // Procurar por imports de componentes
         const importMatches = content.match(/import\s+\{\s*([^}]+)\s*\}/g) || [];
         importMatches.forEach(match => {
@@ -67,7 +64,6 @@ if (fs.existsSync(templateDir)) {
             }
           });
         });
-        
       } catch (e) {
         console.log(`❌ Erro ao ler ${file}: ${e.message}`);
       }
@@ -96,13 +92,17 @@ if (fs.existsSync(registryPath)) {
 console.log('\n' + '='.repeat(60));
 console.log(`🎯 TIPOS DE BLOCOS ENCONTRADOS: ${blockTypes.size}`);
 console.log('📋 Lista completa:');
-Array.from(blockTypes).sort().forEach(type => {
-  console.log(`   - ${type}`);
-});
+Array.from(blockTypes)
+  .sort()
+  .forEach(type => {
+    console.log(`   - ${type}`);
+  });
 
 console.log(`\n🧩 COMPONENTES IMPORTADOS: ${componentImports.size}`);
-Array.from(componentImports).sort().forEach(comp => {
-  console.log(`   - ${comp}`);
-});
+Array.from(componentImports)
+  .sort()
+  .forEach(comp => {
+    console.log(`   - ${comp}`);
+  });
 
 console.log('\n🎯 ANÁLISE COMPLETA - Expandir registry com estes tipos!');

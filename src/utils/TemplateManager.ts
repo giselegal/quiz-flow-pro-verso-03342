@@ -30,7 +30,7 @@ export class TemplateManager {
       console.log(`🔄 Carregando template para etapa ${stepNumber}`);
 
       // ===== SISTEMA INTEGRADO: JSON + TYPESCRIPT =====
-      
+
       if (stepNumber === 1) {
         console.log('🎯 Step01: Sistema JSON integrado ativo');
       } else {

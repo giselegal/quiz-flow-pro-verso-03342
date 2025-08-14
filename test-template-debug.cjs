@@ -9,8 +9,8 @@ console.log('='.repeat(60));
 console.log('\n📁 1. ARQUIVOS JSON DISPONÍVEIS:');
 const jsonFiles = [
   'examples/step01-blocks.json',
-  'examples/step01-blocks-corrigido.json', 
-  'src/config/templates/step01.json'
+  'examples/step01-blocks-corrigido.json',
+  'src/config/templates/step01.json',
 ];
 
 jsonFiles.forEach(file => {
@@ -18,8 +18,10 @@ jsonFiles.forEach(file => {
   if (fs.existsSync(fullPath)) {
     try {
       const content = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
-      console.log(`✅ ${file}: ${Array.isArray(content) ? content.length : Object.keys(content).length} itens`);
-      
+      console.log(
+        `✅ ${file}: ${Array.isArray(content) ? content.length : Object.keys(content).length} itens`
+      );
+
       // Mostrar tipos de blocos
       if (Array.isArray(content) && content.length > 0) {
         const types = content.map(block => block.type).filter(Boolean);
@@ -38,22 +40,28 @@ console.log('\n🔧 2. ENHANCED BLOCK REGISTRY:');
 try {
   const registryPath = '/workspaces/quiz-quest-challenge-verse/src/config/enhancedBlockRegistry.ts';
   const registryContent = fs.readFileSync(registryPath, 'utf8');
-  
+
   // Extrair tipos do registry
   const registryMatches = registryContent.match(/'([^']+)':\s*\w+/g) || [];
   const registryTypes = registryMatches.map(match => match.split("'")[1]);
-  
+
   console.log(`✅ Registry atual: ${registryTypes.length} tipos`);
   console.log(`   🎯 Tipos: ${registryTypes.join(', ')}`);
-  
+
   // Verificar types específicos do Step01
-  const step01Types = ['quiz-intro-header', 'decorative-bar', 'text', 'image', 'form-input', 'button'];
+  const step01Types = [
+    'quiz-intro-header',
+    'decorative-bar',
+    'text',
+    'image',
+    'form-input',
+    'button',
+  ];
   console.log('\n📋 Compatibilidade Step01:');
   step01Types.forEach(type => {
     const exists = registryTypes.includes(type) || registryTypes.includes(`${type}-inline`);
     console.log(`   ${exists ? '✅' : '❌'} ${type}: ${exists ? 'Encontrado' : 'Faltando'}`);
   });
-  
 } catch (e) {
   console.log(`❌ Erro ao ler registry: ${e.message}`);
 }
@@ -63,14 +71,17 @@ console.log('\n⚙️ 3. TEMPLATE SERVICE:');
 try {
   const servicePath = '/workspaces/quiz-quest-challenge-verse/src/services/templateService.ts';
   const serviceContent = fs.readFileSync(servicePath, 'utf8');
-  
+
   const hasGetStepTemplate = serviceContent.includes('getStepTemplate');
   const hasStep01Logic = serviceContent.includes('step 1') || serviceContent.includes('step01');
-  
+
   console.log(`   ✅ Arquivo existe`);
-  console.log(`   ${hasGetStepTemplate ? '✅' : '❌'} getStepTemplate: ${hasGetStepTemplate ? 'Presente' : 'Ausente'}`);
-  console.log(`   ${hasStep01Logic ? '✅' : '❌'} Lógica Step01: ${hasStep01Logic ? 'Presente' : 'Ausente'}`);
-  
+  console.log(
+    `   ${hasGetStepTemplate ? '✅' : '❌'} getStepTemplate: ${hasGetStepTemplate ? 'Presente' : 'Ausente'}`
+  );
+  console.log(
+    `   ${hasStep01Logic ? '✅' : '❌'} Lógica Step01: ${hasStep01Logic ? 'Presente' : 'Ausente'}`
+  );
 } catch (e) {
   console.log(`❌ Erro ao ler templateService: ${e.message}`);
 }
@@ -80,16 +91,21 @@ console.log('\n📄 4. SISTEMA TEMPLATES.TS:');
 try {
   const templatesPath = '/workspaces/quiz-quest-challenge-verse/src/config/templates/templates.ts';
   const templatesContent = fs.readFileSync(templatesPath, 'utf8');
-  
+
   const hasGetStepTemplate = templatesContent.includes('getStepTemplate');
   const hasAsyncLogic = templatesContent.includes('async') && templatesContent.includes('Promise');
   const hasJsonImport = templatesContent.includes('.json');
-  
+
   console.log(`   ✅ Arquivo existe`);
-  console.log(`   ${hasGetStepTemplate ? '✅' : '❌'} getStepTemplate: ${hasGetStepTemplate ? 'Presente' : 'Ausente'}`);
-  console.log(`   ${hasAsyncLogic ? '✅' : '❌'} Lógica async: ${hasAsyncLogic ? 'Presente' : 'Ausente'}`);
-  console.log(`   ${hasJsonImport ? '✅' : '❌'} Import JSON: ${hasJsonImport ? 'Presente' : 'Ausente'}`);
-  
+  console.log(
+    `   ${hasGetStepTemplate ? '✅' : '❌'} getStepTemplate: ${hasGetStepTemplate ? 'Presente' : 'Ausente'}`
+  );
+  console.log(
+    `   ${hasAsyncLogic ? '✅' : '❌'} Lógica async: ${hasAsyncLogic ? 'Presente' : 'Ausente'}`
+  );
+  console.log(
+    `   ${hasJsonImport ? '✅' : '❌'} Import JSON: ${hasJsonImport ? 'Presente' : 'Ausente'}`
+  );
 } catch (e) {
   console.log(`❌ Erro ao ler templates.ts: ${e.message}`);
 }
