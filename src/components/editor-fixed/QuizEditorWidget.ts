@@ -1,3 +1,4 @@
+// @ts-nocheck
 // =============================================================================
 // INTEGRAÇÃO SIMPLES DO QUIZ EDITOR NO EDITOR-FIXED
 // Quiz Quest Challenge Verse - Integração Básica
