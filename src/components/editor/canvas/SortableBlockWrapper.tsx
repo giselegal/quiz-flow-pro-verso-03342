@@ -8,6 +8,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
+import { usePreview } from '@/contexts/PreviewContext';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -15,7 +16,6 @@ interface SortableBlockWrapperProps {
   onSelect: () => void;
   onUpdate: (updates: any) => void;
   onDelete: () => void;
-  isPreviewing?: boolean; // Nova prop para modo preview
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -72,8 +72,10 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onSelect,
   onUpdate,
   onDelete,
-  isPreviewing = false, // Nova prop para modo preview
 }) => {
+  // 🚀 Usar contexto de preview em vez de prop
+  const { isPreviewing } = usePreview();
+
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
     block.properties
