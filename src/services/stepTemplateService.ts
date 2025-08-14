@@ -2,7 +2,7 @@
 // ✨ SERVIÇO UNIFICADO PARA TEMPLATES POR ETAPA
 // Este serviço centraliza o acesso aos templates individuais mantendo a modularidade
 
-import { getStep01Template } from '../components/steps/Step01Template';
+// ⚠️ NOTA: Step01 migrado para sistema JSON (step-01.json) - não usa mais componente
 import { getStep02Template } from '../components/steps/Step02Template';
 import { getStep03Template } from '../components/steps/Step03Template';
 import { getStep04Template } from '../components/steps/Step04Template';
@@ -49,7 +49,13 @@ const STEP_MAPPING: Record<
     name: 'Introdução',
     type: 'intro',
     description: 'Apresentação do Quiz de Estilo',
-    getTemplate: getStep01Template,
+    getTemplate: () => {
+      // ⚠️ STEP01 MIGRADO PARA JSON - Este service não é mais usado para Step01
+      console.warn(
+        '⚠️ Step01 migrado para sistema JSON. Use templateService.getTemplateByStep(1) em vez do stepTemplateService'
+      );
+      return [];
+    },
   },
   2: {
     name: 'Coleta de Nome',

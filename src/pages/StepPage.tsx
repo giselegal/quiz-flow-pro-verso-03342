@@ -8,8 +8,6 @@ import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'wouter';
 
 // Lazy loading dos componentes de step
-const Step01Template = lazy(() => import('@/components/steps/Step01Template'));
-const Step01Simple = lazy(() => import('@/components/steps/Step01Simple'));
 const Step20Result = lazy(() => import('@/components/steps/Step20Result'));
 
 /**

@@ -1,8 +1,8 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos
 
+// ⚠️ NOTA: Step01 migrado para sistema JSON (step-01.json) - não usa mais componente
 // Importações dos templates de cada etapa (arquivos .tsx)
-import { getStep01Template } from '@/components/steps/Step01Template';
 import { getStep02Template } from '@/components/steps/Step02Template';
 import { getStep03Template } from '@/components/steps/Step03Template';
 import { getStep04Template } from '@/components/steps/Step04Template';
@@ -42,9 +42,15 @@ export const FULL_QUIZ_TEMPLATE = QUIZ_CONFIGURATION;
 export const STEP_TEMPLATES: StepTemplate[] = [
   {
     stepNumber: 1,
-    templateFunction: getStep01Template,
+    templateFunction: () => {
+      // ⚠️ STEP01 MIGRADO PARA JSON - Retorna array vazio
+      console.warn(
+        '⚠️ Step01 migrado para sistema JSON (step-01.json). Use templateService em vez deste mapping.'
+      );
+      return [];
+    },
     name: 'Quiz Intro',
-    description: 'Tela inicial com nome',
+    description: 'Tela inicial com lead-form (JSON)',
   },
   {
     stepNumber: 2,
