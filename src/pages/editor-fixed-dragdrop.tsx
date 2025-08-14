@@ -10,6 +10,7 @@ import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel'
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { ProductionMonitoringDashboard } from '@/components/editor/monitoring/ProductionMonitoringDashboard';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
@@ -23,7 +24,9 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
-import { BookOpen, Settings } from 'lucide-react';
+import { BookOpen, Settings, Save, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -49,6 +52,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showQuizEditor, setShowQuizEditor] = useState(false);
+  const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
   const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
 
   // Editor Context - Estado centralizado do editor
@@ -194,6 +198,64 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       )}
 
       <div className="flex flex-col h-screen">
+        {/* 🚀 HEADER AVANÇADO DO EDITOR */}
+        <div className="flex-shrink-0 border-b bg-background/95 backdrop-blur-sm">
+          <div className="flex items-center justify-between p-4">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-bold flex items-center space-x-2">
+                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-primary-foreground" />
+                </div>
+                <span>Editor Quiz Quest - 21 Etapas</span>
+              </h1>
+              <div className="flex items-center space-x-2">
+                <Badge variant="outline" className="text-xs">
+                  v3.0 - Sistema Integrado + Navegação Inteligente
+                </Badge>
+                <Badge variant="secondary" className="text-xs">
+                  Etapa {funnelNavigation.currentStepNumber}/{funnelNavigation.totalSteps}
+                </Badge>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={handleSave}
+                disabled={isSaving}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {isSaving ? 'Salvando...' : 'Salvar'}
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => setIsPreviewing(!isPreviewing)}
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                {isPreviewing ? 'Editar' : 'Preview'}
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => setShowFunnelSettings(true)}
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Configurar
+              </Button>
+              
+              <Button size="sm">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Testar Funil
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* NAVEGAÇÃO E TOOLBARS */}
           <div className="flex-none">
           <div className="sticky top-0 bg-white z-20">
             {/* ✅ NAVEGAÇÃO UNIFICADA DO FUNIL */}
@@ -218,24 +280,34 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               onShowMonitoring={() => setShowMonitoringDashboard(true)}
             />
 
-            <div style={{ borderColor: '#E5DDD5' }} className="border-b bg-white">
-              <div className="flex items-center justify-between p-2">
+            {/* INFORMAÇÕES DA ETAPA ATUAL */}
+            <div style={{ borderColor: '#E5DDD5' }} className="border-b bg-gradient-to-r from-blue-50/50 to-purple-50/50">
+              <div className="flex items-center justify-between p-3">
                 <div className="flex items-center space-x-4">
-                  <h1 className="text-lg font-semibold text-stone-700">
-                    Editor de Funil - {funnelNavigation.stepName}
-                  </h1>
-                  <div className="text-sm text-stone-500">
-                    Etapa {funnelNavigation.currentStepNumber}/{funnelNavigation.totalSteps} • {totalBlocks} bloco{totalBlocks !== 1 ? 's' : ''} • {Math.round(funnelNavigation.progressValue)}% completo
+                  <h2 className="text-lg font-semibold text-stone-700 flex items-center gap-2">
+                    <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {funnelNavigation.currentStepNumber}
+                    </div>
+                    {funnelNavigation.stepName}
+                  </h2>
+                  <div className="flex items-center space-x-3 text-sm text-stone-500">
+                    <span>{totalBlocks} componente{totalBlocks !== 1 ? 's' : ''}</span>
+                    <span>•</span>
+                    <span>{Math.round(funnelNavigation.progressValue)}% completo</span>
+                    <span>•</span>
+                    <span>Modo {isPreviewing ? 'Preview' : 'Edição'}</span>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <button
+                  <Button
                     onClick={() => setShowQuizEditor(true)}
-                    className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md flex items-center gap-2 transition-colors"
+                    size="sm"
+                    variant="secondary"
+                    className="flex items-center gap-2"
                   >
                     <BookOpen className="w-4 h-4" />
                     Quiz Editor
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
