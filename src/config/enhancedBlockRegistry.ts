@@ -1,10 +1,12 @@
 import React from 'react';
 
-// Imports básicos primeiro
-import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
-import HeadingInline from '../components/blocks/inline/HeadingInline';
-import TextInline from '../components/blocks/inline/TextInline';
+// ✅ MISSING COMPONENTS - Fix Import Paths
+import AccessibilitySkipLinkBlock from '../components/blocks/inline/AccessibilitySkipLinkBlock';
+import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
+import ImageInlineBlock from '../components/editor/blocks/ImageInlineBlock';
+import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 // Imports das etapas 20-21 (Result e Offer)
 import CountdownInlineBlock from '../components/blocks/inline/CountdownInlineBlock';
@@ -12,16 +14,25 @@ import QuizOfferPricingInlineBlock from '../components/blocks/inline/QuizOfferPr
 import QuizOfferCTAInlineBlock from '../components/blocks/inline/QuizOfferCTAInlineBlock';
 import ResultCardInlineBlock from '../components/blocks/inline/ResultCardInlineBlock';
 import TestimonialsInlineBlock from '../components/blocks/inline/TestimonialsInlineBlock';
+=======
+// ✅ EXISTING COMPONENTS - Fix Import Paths  
+import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
+import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
+import ButtonInlineBlock from '../components/editor/blocks/ButtonInlineBlock';
+import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
+import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
+import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
+>>>>>>> origin/copilot/fix-8af1cb0c-9277-4418-afa3-556cf126fe66
 
-// Imports dos novos componentes da Etapa 21 (Offer)
-import OfferHeaderInlineBlock from '../components/blocks/inline/OfferHeaderInlineBlock';
-import OfferHeroSectionInlineBlock from '../components/blocks/inline/OfferHeroSectionInlineBlock';
-import OfferProblemSectionInlineBlock from '../components/blocks/inline/OfferProblemSectionInlineBlock';
-import OfferSolutionSectionInlineBlock from '../components/blocks/inline/OfferSolutionSectionInlineBlock';
-import OfferProductShowcaseInlineBlock from '../components/blocks/inline/OfferProductShowcaseInlineBlock';
-import OfferGuaranteeSectionInlineBlock from '../components/blocks/inline/OfferGuaranteeSectionInlineBlock';
-import OfferFaqSectionInlineBlock from '../components/blocks/inline/OfferFaqSectionInlineBlock';
+// ✅ ADDITIONAL INLINE COMPONENTS
+import PricingInlineBlock from '../components/editor/blocks/PricingInlineBlock';
+import QuizProgressBlock from '../components/editor/blocks/QuizProgressBlock';
+import QuizResultsEditor from '../components/editor/blocks/QuizResultsEditor';
+import StyleResultsEditor from '../components/editor/blocks/StyleResultsEditor';
+import FinalStepEditor from '../components/editor/blocks/FinalStepEditor';
 
+<<<<<<< HEAD
 // Registry completo
 =======
 // Imports dos componentes que estavam faltando
@@ -53,22 +64,39 @@ const createFallbackComponent = (componentName: string) => {
 
 // Registry expandido com todos os componentes necessários
 >>>>>>> origin/copilot/fix-0a60db26-31d0-4b13-8018-ebd668661bf4
+=======
+// ✅ COMPREHENSIVE COMPONENT REGISTRY
+>>>>>>> origin/copilot/fix-8af1cb0c-9277-4418-afa3-556cf126fe66
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
-  // Text and Content básicos
-  'text-inline': TextInline,
-  'heading-inline': HeadingInline,
-  'button-inline': ButtonInlineFixed,
+  // ✅ BASIC COMPONENTS (Core functionality)
+  'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock, 
+  'button-inline': ButtonInlineBlock,
+  'image-inline': ImageInlineBlock,
+  'decorative-bar-inline': DecorativeBarInlineBlock,
+  'legal-notice-inline': LegalNoticeInlineBlock,
   
+<<<<<<< HEAD
 <<<<<<< HEAD
   // Componentes de Resultado (Etapa 20)
   'countdown-inline': CountdownInlineBlock,
   'result-card-inline': ResultCardInlineBlock,
   'testimonials-inline': TestimonialsInlineBlock,
+=======
+  // ✅ FORM COMPONENTS
+  'form-input': FormInputBlock,
+  'lead-form': LeadFormBlock,
+  'options-grid': OptionsGridBlock,
+>>>>>>> origin/copilot/fix-8af1cb0c-9277-4418-afa3-556cf126fe66
   
-  // Componentes de Oferta existentes (Etapa 21)
-  'quiz-offer-pricing': QuizOfferPricingInlineBlock,
-  'quiz-offer-cta': QuizOfferCTAInlineBlock,
+  // ✅ QUIZ COMPONENTS  
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'quiz-progress': QuizProgressBlock,
+  'quiz-results': QuizResultsEditor,
+  'style-results': StyleResultsEditor,
+  'final-step': FinalStepEditor,
   
+<<<<<<< HEAD
   // Novos componentes modulares da Etapa 21 (Offer)
   'offer-header': OfferHeaderInlineBlock,
   'offer-hero-section': OfferHeroSectionInlineBlock,
@@ -93,6 +121,13 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   'progress-inline': ProgressInlineBlock,
   'spacer-inline': SpacerInlineBlock,
 >>>>>>> origin/copilot/fix-0a60db26-31d0-4b13-8018-ebd668661bf4
+=======
+  // ✅ PRICING & BUSINESS COMPONENTS
+  'pricing-card': PricingInlineBlock,
+  
+  // ✅ ACCESSIBILITY COMPONENTS
+  'accessibility-skip-link': AccessibilitySkipLinkBlock,
+>>>>>>> origin/copilot/fix-8af1cb0c-9277-4418-afa3-556cf126fe66
 };
 
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {

@@ -77,7 +77,11 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     clickable = false,
     href = '',
     target = '_blank',
+<<<<<<< HEAD
     // Sistema de margens
+=======
+    // ✅ Add missing margin properties
+>>>>>>> origin/copilot/fix-8af1cb0c-9277-4418-afa3-556cf126fe66
     marginTop = 0,
     marginBottom = 0,
     marginLeft = 0,
