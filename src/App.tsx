@@ -306,6 +306,17 @@ function App() {
                   )}
                 </Route>
 
+                {/* Temporary route for testing - can be removed after authentication is configured */}
+                <Route path="/test-templates-ia">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <TemplatesIA />
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
+
                 {/* Test Supabase Integration Route */}
                 <ProtectedRoute
                   path="/test-supabase-integration"

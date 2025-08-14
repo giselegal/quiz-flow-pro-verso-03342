@@ -2,11 +2,11 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-// import { useToast } from "@/hooks/use-toast";
-import { type FunnelTemplate } from '@/services/FunnelAIAgent';
+import { useToast } from "@/hooks/use-toast";
+import { FunnelAIAgent, type FunnelTemplate } from '@/services/FunnelAIAgent';
 import { Bot, Check, Eye, Play, Sparkles, Wand2 } from 'lucide-react';
 import React, { useState } from 'react';
-// import { useRouter } from "wouter";
+import { useLocation } from "wouter";
 
 // Template da Consultora de Estilo com IA
 const STYLE_CONSULTANT_TEMPLATE: FunnelTemplate = {
@@ -463,19 +463,15 @@ const AGENT_STEPS: AgentStep[] = [
 ];
 
 const TemplatesIA: React.FC = () => {
-  const [isGenerating, _setIsGenerating] = useState(false);
-  const [currentStep, _setCurrentStep] = useState(-1);
-  const [steps, _setSteps] = useState<AgentStep[]>(AGENT_STEPS);
-  const [generatedFunnelId, _setGeneratedFunnelId] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentStep, setCurrentStep] = useState(-1);
+  const [steps, setSteps] = useState<AgentStep[]>(AGENT_STEPS);
+  const [generatedFunnelId, setGeneratedFunnelId] = useState<string | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<'STYLE_QUIZ' | 'STYLE_CONSULTANT'>(
     'STYLE_QUIZ'
   );
-  // const _router = useRouter(); // Não utilizado atualmente
-  // const _navigate = (_path: string) => {
-  //   // Para wouter, usamos window.location diretamente
-  //   // window.location.href = path;
-  // };
-  // const { toast: _toast } = useToast();
+  const [, setLocation] = useLocation(); 
+  const { toast } = useToast();
 
   const AVAILABLE_TEMPLATES = {
     STYLE_QUIZ: STYLE_QUIZ_TEMPLATE,
@@ -484,79 +480,89 @@ const TemplatesIA: React.FC = () => {
 
   const getCurrentTemplate = () => AVAILABLE_TEMPLATES[selectedTemplate];
 
-  // Validações de seleção (comentado - não utilizado)
-  // const validateSelection = () => {
-  //   if (!selectedTemplate) {
-  //     toast({
-  //       title: "⚠️ Template não selecionado",
-  //       description: "Por favor, selecione um template antes de continuar.",
-  //       variant: "destructive",
-  //     });
-  //     return false;
-  //   }
-  //
-  //   const template = getCurrentTemplate();
-  //   if (!template) {
-  //     toast({
-  //       title: "❌ Erro no Template",
-  //       description: "Template selecionado não encontrado. Tente novamente.",
-  //       variant: "destructive",
-  //     });
-  //     return false;
-  //   }
-  //
-  //   // Track analytics
-  //   trackAIAgentStart(getCurrentTemplate().meta.name);
-  //   return true;
-  // };
+  // Validações de seleção
+  const validateSelection = () => {
+    if (!selectedTemplate) {
+      toast({
+        title: "⚠️ Template não selecionado",
+        description: "Por favor, selecione um template antes de continuar.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
-  // const updateStepStatus = (stepIndex: number, status: AgentStep["status"], progress: number) => {
-  //   setSteps(prev =>
-  //     prev.map((step, index) => (index === stepIndex ? { ...step, status, progress } : step))
-  //   );
-  // };
+    const template = getCurrentTemplate();
+    if (!template) {
+      toast({
+        title: "❌ Erro no Template",
+        description: "Template selecionado não encontrado. Tente novamente.",
+        variant: "destructive",
+      });
+      return false;
+    }
 
-  // const simulateAgentWork = async () => {
-  //   setIsGenerating(true);
-  //   setCurrentStep(0);
-  //
-  //   for (let i = 0; i < AGENT_STEPS.length; i++) {
-  //     setCurrentStep(i);
-  //     updateStepStatus(i, "processing", 0);
-  //
-  //     // Simula progresso da etapa
-  //     for (let progress = 0; progress <= 100; progress += 10) {
-  //       await new Promise(resolve => setTimeout(resolve, Math.random() * 200 + 50));
-  //       updateStepStatus(i, "processing", progress);
-  //     }
-  //
-  //     updateStepStatus(i, "completed", 100);
-  //   }
-  //
-  //   // Simula geração do ID do funil baseado no template selecionado
-  //   const templatePrefix = selectedTemplate === "STYLE_QUIZ" ? "style-quiz" : "style-consultant";
-  //   const funnelId = `${templatePrefix}-${Date.now()}`;
-  //   setGeneratedFunnelId(funnelId);
-  //   setIsGenerating(false);
-  //
-  //   const templateName = getCurrentTemplate().meta.name;
-  //   toast({
-  //     title: "✅ Funil Criado com Sucesso!",
-  //     description: `${templateName} criado dinamicamente com IA. ID: ${funnelId}`,
-  //   });
-  // };
+    return true;
+  };
 
-  // const handlePreview = () => {
-  //   if (generatedFunnelId) {
-  //     navigate(`/quiz/${generatedFunnelId}`);
-  //   }
-  // };
-  //
-  // const handleEditInEditor = () => {
-  //   if (generatedFunnelId) {
-  //     navigate(`/editor-fixed?template=${generatedFunnelId}`);
-  //   }
-  // };
+  const updateStepStatus = (stepId: string, status: AgentStep["status"], progress: number) => {
+    setSteps(prev =>
+      prev.map(step => (step.id === stepId ? { ...step, status, progress } : step))
+    );
+  };
+
+  const simulateAgentWork = async () => {
+    if (!validateSelection()) return;
+
+    setIsGenerating(true);
+    setCurrentStep(0);
+
+    // Reset all steps to pending
+    setSteps(prev => prev.map(step => ({ ...step, status: 'pending', progress: 0 })));
+
+    const template = getCurrentTemplate();
+    const agent = new FunnelAIAgent((stepId, status, progress) => {
+      updateStepStatus(stepId, status, progress);
+      const stepIndex = AGENT_STEPS.findIndex(s => s.id === stepId);
+      if (stepIndex >= 0) {
+        setCurrentStep(stepIndex);
+      }
+    });
+
+    try {
+      const funnelId = await agent.generateFunnel(template);
+      setGeneratedFunnelId(funnelId);
+      setIsGenerating(false);
+      setCurrentStep(-1);
+
+      const templateName = getCurrentTemplate().meta.name;
+      toast({
+        title: "✅ Funil Criado com Sucesso!",
+        description: `${templateName} criado dinamicamente com IA. ID: ${funnelId}`,
+      });
+    } catch (error) {
+      console.error('Erro ao gerar funil:', error);
+      setIsGenerating(false);
+      setCurrentStep(-1);
+      
+      toast({
+        title: "❌ Erro na Geração",
+        description: "Houve um problema ao gerar o funil. Tente novamente.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handlePreview = () => {
+    if (generatedFunnelId) {
+      setLocation(`/quiz/${generatedFunnelId}`);
+    }
+  };
+
+  const handleEditInEditor = () => {
+    if (generatedFunnelId) {
+      setLocation(`/editor-fixed?template=${generatedFunnelId}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
@@ -699,7 +705,7 @@ const TemplatesIA: React.FC = () => {
 
                 {!generatedFunnelId && (
                   <Button
-                    onClick={() => {}}
+                    onClick={simulateAgentWork}
                     disabled={isGenerating}
                     className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
                     size="lg"
@@ -732,7 +738,7 @@ const TemplatesIA: React.FC = () => {
 
                     <div className="grid grid-cols-2 gap-3">
                       <Button
-                        onClick={() => {}}
+                        onClick={handlePreview}
                         variant="outline"
                         style={{ backgroundColor: '#FAF9F7' }}
                       >
@@ -740,7 +746,7 @@ const TemplatesIA: React.FC = () => {
                         Preview
                       </Button>
                       <Button
-                        onClick={() => {}}
+                        onClick={handleEditInEditor}
                         className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
                       >
                         <Play className="w-4 h-4 mr-2" />
