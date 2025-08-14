@@ -102,7 +102,7 @@ const VerticalCanvasHeaderBlock: React.FC<VerticalCanvasHeaderProps> = ({
               className="object-contain"
             />
           ) : (
-            <div style={{ color: '#8B7355', width: logoWidth, height: logoHeight }}>
+            <div className="logo-placeholder" style={{ color: '#8B7355', width: logoWidth, height: logoHeight }}>
               Logo
             </div>
           )}
