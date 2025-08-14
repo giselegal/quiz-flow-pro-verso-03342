@@ -51,7 +51,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [showQuizEditor, setShowQuizEditor] = useState(false);
   const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
-  const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
 
   // Editor Context - Estado centralizado do editor
   const {
