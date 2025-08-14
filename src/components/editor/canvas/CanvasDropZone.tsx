@@ -1,10 +1,10 @@
-import { usePreview } from '@/contexts/PreviewContext';
-import { cn } from '@/lib/utils';
-import { Block } from '@/types/editor';
+import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import React from 'react';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
+import { usePreview } from '@/contexts/PreviewContext';
 
 // Componente para drop zone entre blocos
 const InterBlockDropZone: React.FC<{
@@ -57,6 +57,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onDeleteBlock,
   className,
 }) => {
+  // Safe preview context usage with fallback  
   const { isPreviewing } = usePreview();
   const { setNodeRef, isOver, active } = useDroppable({
     id: 'canvas-drop-zone',

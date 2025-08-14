@@ -8,6 +8,7 @@ import { AdminAuthProvider } from './context/AdminAuthContext';
 import { AuthProvider } from './context/AuthContext';
 import { EditorProvider } from './context/EditorContext';
 import { ScrollSyncProvider } from './context/ScrollSyncContext';
+import { PreviewProvider } from './contexts/PreviewContext';
 
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
@@ -92,9 +93,11 @@ function App() {
                       <ErrorBoundary>
                         <EditorProvider>
                           <ScrollSyncProvider>
-                            <div className="relative">
-                              <EditorFixedPageWithDragDrop />
-                            </div>
+                            <PreviewProvider totalSteps={21} funnelId="editor-fixed">
+                              <div className="relative">
+                                <EditorFixedPageWithDragDrop />
+                              </div>
+                            </PreviewProvider>
                           </ScrollSyncProvider>
                         </EditorProvider>
                       </ErrorBoundary>

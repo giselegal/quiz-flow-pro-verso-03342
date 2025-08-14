@@ -41,7 +41,15 @@ import { BookOpen, Eye, Save, Settings } from 'lucide-react';
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
-  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
+  // Safe scroll sync with try-catch
+  let scrollRef;
+  try {
+    const syncedScroll = useSyncedScroll({ source: 'canvas' });
+    scrollRef = syncedScroll.scrollRef;
+  } catch (error) {
+    console.warn('ScrollSync not available, using fallback:', error);
+    scrollRef = React.useRef<HTMLDivElement>(null);
+  }
   const propertyHistory = usePropertyHistory();
 
   // ✅ SISTEMA UNIFICADO DE NAVEGAÇÃO

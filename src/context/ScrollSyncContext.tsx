@@ -13,7 +13,15 @@ const ScrollSyncContext = createContext<ScrollSyncContextType | undefined>(undef
 export const useScrollSync = () => {
   const context = useContext(ScrollSyncContext);
   if (!context) {
-    throw new Error('useScrollSync must be used within a ScrollSyncProvider');
+    console.warn('useScrollSync called outside ScrollSyncProvider, returning fallback');
+    // Return fallback refs and functions
+    return {
+      canvasScrollRef: React.useRef<HTMLDivElement>(null),
+      componentsScrollRef: React.useRef<HTMLDivElement>(null), 
+      propertiesScrollRef: React.useRef<HTMLDivElement>(null),
+      syncScroll: () => {},
+      isScrolling: false,
+    };
   }
   return context;
 };

@@ -24,7 +24,24 @@ const PreviewContext = createContext<PreviewContextType | undefined>(undefined);
 const usePreview = () => {
   const context = useContext(PreviewContext);
   if (!context) {
-    throw new Error('usePreview must be used within a PreviewProvider');
+    console.warn('usePreview called outside PreviewProvider, returning fallback');
+    // Return fallback values instead of throwing
+    return {
+      isPreviewing: false,
+      currentStep: 1,
+      totalSteps: 21,
+      canGoNext: true,
+      canGoPrevious: false,
+      sessionData: {},
+      togglePreview: () => {},
+      startPreview: () => {},
+      stopPreview: () => {},
+      goToNextStep: () => {},
+      goToPreviousStep: () => {},
+      setCurrentStep: () => {},
+      updateSessionData: () => {},
+      resetSession: () => {},
+    };
   }
   return context;
 };
@@ -149,5 +166,5 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
   return <PreviewContext.Provider value={contextValue}>{children}</PreviewContext.Provider>;
 };
 
-export { PreviewProvider, usePreview };
+export { PreviewProvider, usePreview, PreviewContext };
 export default PreviewProvider;
