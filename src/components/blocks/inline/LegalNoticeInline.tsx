@@ -1,4 +1,6 @@
 // @ts-nocheck
+import React from 'react';
+
 /**
  * ⚖️ COMPONENTE AVISO LEGAL INLINE
  * ================================

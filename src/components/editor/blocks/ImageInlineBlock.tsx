@@ -1,4 +1,5 @@
 // @ts-nocheck
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { Image as ImageIcon, Edit3 } from 'lucide-react';
 import type { BlockComponentProps } from '@/types/blocks';
@@ -76,6 +77,11 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     clickable = false,
     href = '',
     target = '_blank',
+    // Sistema de margens
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   // Object fit classes

@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * 🎨 COMPONENTE BARRA DECORATIVA INLINE
  * =====================================
