@@ -5,134 +5,122 @@ import {
   Image,
   MousePointer,
   Type,
+  FormInput,
+  Minus,
+  LayoutTemplate,
+  FileText
 } from "lucide-react";
 
-// === IMPORTS EXPANDIDOS - COMPONENTES PARA STEP01 E 21 ETAPAS ===
-
-// Componentes Inline básicos que funcionam
+// === COMPONENTES BÁSICOS FUNCIONAIS ===
 import TextInline from '../components/blocks/inline/TextInline';
 import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
 import HeadingBlock from '../components/blocks/inline/HeadingBlock';
 import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean';
 
-// Componentes Editor Blocks necessários para Step01
-import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
-import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
-import FormInputBlock from '../components/editor/blocks/FormInputBlock';
-import FormContainerBlock from '../components/editor/blocks/FormContainerBlock';
-import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
-import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
+// === CRIAÇÃO DE COMPONENTES PLACEHOLDER (OS ARQUIVOS NÃO EXISTIAM) ===
+// Estes componentes são criados aqui para evitar erros de importação.
 
-// === REGISTRY PRINCIPAL - APENAS COMPONENTES BÁSICOS E FUNCIONAIS ===
+const QuizIntroHeaderBlock: React.FC<any> = (props) => {
+  return React.createElement(HeadingBlock, { 
+    ...props, 
+    level: "h1", 
+    text: props.title || 'Cabeçalho do Quiz' 
+  });
+};
 
-/**
- * Enhanced Block Registry - Versão Expandida para Step01 e 21 Etapas
- * ✅ Componentes essenciais do Step01 JSON
- * ✅ Sem dependências circulares
- * ✅ Sistema de fallbacks robusto
- */
-export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
-  // ===== COMPONENTES STEP01TEMPLATE - BASEADOS NO TYPESCRIPT =====
-  
-  // Componentes específicos do getStep01Template()
-  'quiz-intro-header': QuizIntroHeaderBlock, // ✅ Cabeçalho com logo e progresso
-  'decorative-bar-inline': DecorativeBarInlineBlock, // ✅ Barra decorativa colorida
-  'text-inline': TextInlineBlock, // ✅ Texto formatado avançado (usado 2x)
-  'image-display-inline': ImageDisplayInlineBlockClean, // ✅ Imagem com estilos
-  'form-container': FormContainerBlock, // ✅ Container de formulário
-  'form-input': FormInputBlock, // ✅ Input de formulário
-  'button-inline': ButtonInlineFixed, // ✅ Botão interativo
-  
-  // ===== ALIASES E COMPATIBILIDADE =====
-  
-  // Aliases comuns
-  'decorative-bar': DecorativeBarInlineBlock,
-  'text': TextInlineBlock,
-  'image': ImageDisplayInlineBlockClean,
-  'button': ButtonInlineFixed,
-  'form': FormInputBlock,
-  
-  // Componentes básicos - BASE
-  'heading': HeadingBlock,
-  'heading-inline': HeadingInlineBlock,
+const DecorativeBarInlineBlock: React.FC<any> = () => {
+  return React.createElement('hr', { 
+    style: { border: '2px solid #ccc', margin: '16px 0' } 
+  });
+};
+
+const FormInputBlock: React.FC<any> = (props) => {
+  return React.createElement('input', { 
+    placeholder: props.placeholder || 'Campo de formulário',
+    style: { padding: '8px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' }
+  });
+};
+
+const FormContainerBlock: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  return React.createElement('div', { 
+    style: { padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px' } 
+  }, children);
+};
+
+const TextInlineBlock: React.FC<{ content?: string }> = ({ content }) => {
+  return React.createElement(TextInline, { content: content || 'Texto' });
+};
+
+const HeadingInlineBlock: React.FC<any> = (props) => {
+  return React.createElement(HeadingBlock, props);
 };
 
 /**
- * Obter componente por tipo - versão expandida com fallbacks robustos
+ * Registry de Blocos - Versão Corrigida e Unificada
+ * Define um nome "canônico" para cada componente.
  */
-export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
+export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
+  // Componentes básicos
+  'text': TextInline,
+  'heading': HeadingBlock,
+  'image': ImageDisplayInlineBlockClean,
+  'button': ButtonInlineFixed,
+
+  // Componentes para templates (Step 01 e outros)
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'decorative-bar': DecorativeBarInlineBlock,
+  'form-container': FormContainerBlock,
+  'form-input': FormInputBlock,
+
+  // Variações e componentes avançados
+  'text-advanced': TextInlineBlock,
+  'heading-advanced': HeadingInlineBlock,
+};
+
+// Mapeamento de aliases e nomes antigos para os nomes canônicos do registry
+const BLOCK_ALIASES: Record<string, string> = {
+  'text-inline': 'text',
+  'heading-inline': 'heading-advanced',
+  'image-display-inline': 'image',
+  'button-inline': 'button',
+  'decorative-bar-inline': 'decorative-bar',
+  'form': 'form-input',
+  
+  // Aliases do template JSON em português
+  'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
+  'texto-embutido': 'text',
+  'imagem-em-linha': 'image',
+  'formulário-de-chumbo': 'form-container', // Mapeado para container
+};
+
+/**
+ * Obtém um componente pelo seu tipo, usando o registry e os aliases.
+ */
+export const getBlockComponent = (type: string): React.ComponentType<any> => {
   if (!type) {
-    console.warn('🚨 getBlockComponent: Tipo não fornecido');
-    return null;
+    console.warn('getBlockComponent: Tipo de bloco não fornecido. Usando placeholder.');
+    return TextInline; // Fallback simples para TextInline
   }
 
-  console.log(`🔍 Buscando componente para tipo: "${type}"`);
-
-  // Busca direta no registry
+  // 1. Tenta encontrar o tipo diretamente no registry
   let component = ENHANCED_BLOCK_REGISTRY[type];
   if (component) {
-    console.log(`✅ Componente encontrado diretamente: ${type}`);
+    console.log(`✅ Componente encontrado: ${type}`);
     return component;
   }
 
-  // ===== FALLBACKS INTELIGENTES - STEP01 ESPECÍFICOS =====
-  
-  const step01Fallbacks: Record<string, string> = {
-    // Aliases e variações → tipos do registry
-    'text-inline': 'text',
-    'heading-inline': 'heading-inline',
-    'image-display-inline': 'image-display-inline', 
-    'button-inline': 'button-inline',
-    'decorative-bar': 'decorative-bar-inline',
-    
-    // Fallbacks para tipos em português
-    'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
-    'texto-embutido': 'text',
-    'imagem-em-linha': 'image-display-inline',
-    'formulário-de-chumbo': 'form-input',
-  };
-
-  const fallbackType = step01Fallbacks[type];
-  if (fallbackType && ENHANCED_BLOCK_REGISTRY[fallbackType]) {
-    component = ENHANCED_BLOCK_REGISTRY[fallbackType];
-    console.log(`🔄 Fallback Step01: ${type} → ${fallbackType}`);
-    return component;
+  // 2. Se não encontrar, tenta usar um alias
+  const alias = BLOCK_ALIASES[type];
+  if (alias) {
+    component = ENHANCED_BLOCK_REGISTRY[alias];
+    if (component) {
+      console.log(`� Mapeado via alias: "${type}" → "${alias}"`);
+      return component;
+    }
   }
 
-  // ===== FALLBACKS POR CATEGORIA =====
-  
-  if (type.includes('text') || type.includes('title') || type.includes('content')) {
-    console.log(`📝 Fallback genérico: ${type} → text`);
-    return ENHANCED_BLOCK_REGISTRY['text'] || ENHANCED_BLOCK_REGISTRY['text-inline'];
-  }
-
-  if (type.includes('button') || type.includes('cta') || type.includes('action')) {
-    console.log(`🔘 Fallback genérico: ${type} → button`);
-    return ENHANCED_BLOCK_REGISTRY['button'] || ENHANCED_BLOCK_REGISTRY['button-inline'];
-  }
-
-  if (type.includes('image') || type.includes('photo') || type.includes('picture')) {
-    console.log(`🖼️ Fallback genérico: ${type} → image-display-inline`);
-    return ENHANCED_BLOCK_REGISTRY['image-display-inline'] || ENHANCED_BLOCK_REGISTRY['image'];
-  }
-
-  if (type.includes('form') || type.includes('input') || type.includes('field')) {
-    console.log(`📝 Fallback genérico: ${type} → form-input`);
-    return ENHANCED_BLOCK_REGISTRY['form-input'];
-  }
-
-  if (type.includes('header') || type.includes('intro') || type.includes('quiz')) {
-    console.log(`🎯 Fallback genérico: ${type} → quiz-intro-header`);
-    return ENHANCED_BLOCK_REGISTRY['quiz-intro-header'];
-  }
-
-  // ===== FALLBACK FINAL =====
-  console.warn(`⚠️ Componente não encontrado, usando fallback final: ${type} → text`);
-  console.log('📋 Componentes disponíveis:', Object.keys(ENHANCED_BLOCK_REGISTRY));
-  return ENHANCED_BLOCK_REGISTRY['text'] || ENHANCED_BLOCK_REGISTRY['text-inline'] || null;
-
-  // Fallback básico para TextInline
-  console.warn(`🚨 Componente não encontrado: ${type}, usando fallback TextInline`);
+  // 3. Se ainda não encontrar, retorna TextInline como fallback
+  console.warn(`❗️ Componente para o tipo "${type}" não foi encontrado. Usando TextInline como fallback.`);
   return TextInline;
 };
 
@@ -147,28 +135,29 @@ export const getAvailableBlockTypes = (): string[] => {
  * Verificar se um tipo de bloco existe
  */
 export const blockTypeExists = (type: string): boolean => {
-  return type in ENHANCED_BLOCK_REGISTRY;
+  return type in ENHANCED_BLOCK_REGISTRY || type in BLOCK_ALIASES;
 };
 
 /**
- * Gerar definições de blocos para o sidebar
+ * Gera definições de blocos para a barra lateral do editor.
+ * Atualizado para incluir os novos componentes.
  */
 export const generateBlockDefinitions = (): BlockDefinition[] => {
   return [
     {
-      type: "text-inline",
-      name: "TextInline",
+      type: "text",
+      name: "Texto Simples",
       label: "Texto",
       category: "Conteúdo",
       description: "Bloco de texto editável",
       icon: Type,
-      component: ENHANCED_BLOCK_REGISTRY["text-inline"],
+      component: ENHANCED_BLOCK_REGISTRY["text"],
       properties: {},
       defaultProps: { content: "Digite seu texto aqui..." },
     },
     {
       type: "heading",
-      name: "HeadingBlock",
+      name: "Título",
       label: "Título",
       category: "Conteúdo",
       description: "Título com diferentes tamanhos",
@@ -178,53 +167,61 @@ export const generateBlockDefinitions = (): BlockDefinition[] => {
       defaultProps: { text: "Seu título aqui", level: "h2" },
     },
     {
-      type: "image-display-inline",
-      name: "ImageDisplayInlineBlockClean",
+      type: "image",
+      name: "Imagem",
       label: "Imagem",
       category: "Mídia",
       description: "Exibição de imagens",
       icon: Image,
-      component: ENHANCED_BLOCK_REGISTRY["image-display-inline"],
+      component: ENHANCED_BLOCK_REGISTRY["image"],
       properties: {},
       defaultProps: { src: "", alt: "Imagem" },
     },
     {
-      type: "button-inline",
-      name: "ButtonInlineFixed",
+      type: "button",
+      name: "Botão",
       label: "Botão",
       category: "Interativo",
       description: "Botão clicável",
       icon: MousePointer,
-      component: ENHANCED_BLOCK_REGISTRY["button-inline"],
+      component: ENHANCED_BLOCK_REGISTRY["button"],
       properties: {},
       defaultProps: { text: "Clique aqui", variant: "primary" },
+    },
+    {
+      type: "form-container",
+      name: "Container de Formulário",
+      label: "Container Form",
+      category: "Formulário",
+      description: "Container para agrupar elementos de formulário",
+      icon: LayoutTemplate,
+      component: ENHANCED_BLOCK_REGISTRY["form-container"],
+      properties: {},
+      defaultProps: {},
+    },
+    {
+      type: "form-input",
+      name: "Campo de Texto",
+      label: "Input",
+      category: "Formulário",
+      description: "Campo de entrada de texto",
+      icon: FormInput,
+      component: ENHANCED_BLOCK_REGISTRY["form-input"],
+      properties: {},
+      defaultProps: { placeholder: "Digite aqui" },
+    },
+    {
+      type: "decorative-bar",
+      name: "Barra Decorativa",
+      label: "Barra",
+      category: "Visual",
+      description: "Linha decorativa para separar seções",
+      icon: Minus,
+      component: ENHANCED_BLOCK_REGISTRY["decorative-bar"],
+      properties: {},
+      defaultProps: {},
     },
   ];
 };
 
-/**
- * Obter estatísticas do registry
- */
-export const getRegistryStats = () => {
-  const stats = {
-    totalComponents: Object.keys(ENHANCED_BLOCK_REGISTRY).length,
-    categories: new Set<string>(),
-    componentsByCategory: {} as Record<string, number>,
-  };
-
-  generateBlockDefinitions().forEach(def => {
-    stats.categories.add(def.category);
-    stats.componentsByCategory[def.category] = 
-      (stats.componentsByCategory[def.category] || 0) + 1;
-  });
-
-  return {
-    ...stats,
-    categories: Array.from(stats.categories),
-  };
-};
-
-/**
- * Registry padrão para compatibilidade
- */
 export default ENHANCED_BLOCK_REGISTRY;
