@@ -1,50 +1,54 @@
 import React from 'react';
 
-// Imports básicos primeiro
-import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
-import HeadingInline from '../components/blocks/inline/HeadingInline';
-import TextInline from '../components/blocks/inline/TextInline';
+// ✅ MISSING COMPONENTS - Fix Import Paths
+import AccessibilitySkipLinkBlock from '../components/blocks/inline/AccessibilitySkipLinkBlock';
+import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
+import ImageInlineBlock from '../components/editor/blocks/ImageInlineBlock';
+import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 
-// Imports das etapas 20-21 (Result e Offer)
-import CountdownInlineBlock from '../components/blocks/inline/CountdownInlineBlock';
-import QuizOfferPricingInlineBlock from '../components/blocks/inline/QuizOfferPricingInlineBlock';
-import QuizOfferCTAInlineBlock from '../components/blocks/inline/QuizOfferCTAInlineBlock';
-import ResultCardInlineBlock from '../components/blocks/inline/ResultCardInlineBlock';
-import TestimonialsInlineBlock from '../components/blocks/inline/TestimonialsInlineBlock';
+// ✅ EXISTING COMPONENTS - Fix Import Paths  
+import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
+import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
+import ButtonInlineBlock from '../components/editor/blocks/ButtonInlineBlock';
+import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
+import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
+import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import OptionsGridBlock from '../components/editor/blocks/OptionsGridBlock';
 
-// Imports dos novos componentes da Etapa 21 (Offer)
-import OfferHeaderInlineBlock from '../components/blocks/inline/OfferHeaderInlineBlock';
-import OfferHeroSectionInlineBlock from '../components/blocks/inline/OfferHeroSectionInlineBlock';
-import OfferProblemSectionInlineBlock from '../components/blocks/inline/OfferProblemSectionInlineBlock';
-import OfferSolutionSectionInlineBlock from '../components/blocks/inline/OfferSolutionSectionInlineBlock';
-import OfferProductShowcaseInlineBlock from '../components/blocks/inline/OfferProductShowcaseInlineBlock';
-import OfferGuaranteeSectionInlineBlock from '../components/blocks/inline/OfferGuaranteeSectionInlineBlock';
-import OfferFaqSectionInlineBlock from '../components/blocks/inline/OfferFaqSectionInlineBlock';
+// ✅ ADDITIONAL INLINE COMPONENTS
+import PricingInlineBlock from '../components/editor/blocks/PricingInlineBlock';
+import QuizProgressBlock from '../components/editor/blocks/QuizProgressBlock';
+import QuizResultsEditor from '../components/editor/blocks/QuizResultsEditor';
+import StyleResultsEditor from '../components/editor/blocks/StyleResultsEditor';
+import FinalStepEditor from '../components/editor/blocks/FinalStepEditor';
 
-// Registry completo
+// ✅ COMPREHENSIVE COMPONENT REGISTRY
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
-  // Text and Content básicos
-  'text-inline': TextInline,
-  'heading-inline': HeadingInline,
-  'button-inline': ButtonInlineFixed,
+  // ✅ BASIC COMPONENTS (Core functionality)
+  'text-inline': TextInlineBlock,
+  'heading-inline': HeadingInlineBlock, 
+  'button-inline': ButtonInlineBlock,
+  'image-inline': ImageInlineBlock,
+  'decorative-bar-inline': DecorativeBarInlineBlock,
+  'legal-notice-inline': LegalNoticeInlineBlock,
   
-  // Componentes de Resultado (Etapa 20)
-  'countdown-inline': CountdownInlineBlock,
-  'result-card-inline': ResultCardInlineBlock,
-  'testimonials-inline': TestimonialsInlineBlock,
+  // ✅ FORM COMPONENTS
+  'form-input': FormInputBlock,
+  'lead-form': LeadFormBlock,
+  'options-grid': OptionsGridBlock,
   
-  // Componentes de Oferta existentes (Etapa 21)
-  'quiz-offer-pricing': QuizOfferPricingInlineBlock,
-  'quiz-offer-cta': QuizOfferCTAInlineBlock,
+  // ✅ QUIZ COMPONENTS  
+  'quiz-intro-header': QuizIntroHeaderBlock,
+  'quiz-progress': QuizProgressBlock,
+  'quiz-results': QuizResultsEditor,
+  'style-results': StyleResultsEditor,
+  'final-step': FinalStepEditor,
   
-  // Novos componentes modulares da Etapa 21 (Offer)
-  'offer-header': OfferHeaderInlineBlock,
-  'offer-hero-section': OfferHeroSectionInlineBlock,
-  'offer-problem-section': OfferProblemSectionInlineBlock,
-  'offer-solution-section': OfferSolutionSectionInlineBlock,
-  'offer-product-showcase': OfferProductShowcaseInlineBlock,
-  'offer-guarantee-section': OfferGuaranteeSectionInlineBlock,
-  'offer-faq-section': OfferFaqSectionInlineBlock,
+  // ✅ PRICING & BUSINESS COMPONENTS
+  'pricing-card': PricingInlineBlock,
+  
+  // ✅ ACCESSIBILITY COMPONENTS
+  'accessibility-skip-link': AccessibilitySkipLinkBlock,
 };
 
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {

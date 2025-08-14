@@ -76,6 +76,11 @@ const ImageInlineBlock: React.FC<BlockComponentProps> = ({
     clickable = false,
     href = '',
     target = '_blank',
+    // ✅ Add missing margin properties
+    marginTop = 0,
+    marginBottom = 0,
+    marginLeft = 0,
+    marginRight = 0,
   } = block?.properties || {};
 
   // Object fit classes
