@@ -1,4 +1,4 @@
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 21 - THANK YOU PAGE
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 21 - Thank You Page (UPDATED)
 
 export const getStep21Template = () => {
   return [
@@ -25,6 +25,9 @@ export const getStep21Template = () => {
         fontWeight: 'font-bold',
         textAlign: 'text-center',
         color: '#B89B7A',
+        containerWidth: 'full',
+        spacing: 'large',
+        marginBottom: 16
       },
     },
     {
@@ -35,6 +38,9 @@ export const getStep21Template = () => {
         fontSize: 'text-lg',
         textAlign: 'text-center',
         color: '#432818',
+        containerWidth: 'full',
+        spacing: 'medium',
+        marginBottom: 24
       },
     },
     {
@@ -45,33 +51,41 @@ export const getStep21Template = () => {
         alt: 'Guia de estilo enviado com sucesso',
         width: 400,
         height: 300,
+        containerWidth: 'large',
+        spacing: 'large',
+        marginBottom: 24
       },
     },
     {
       id: 'step21-next-steps',
-      type: 'next-steps',
+      type: 'text-inline',
       properties: {
-        title: '📋 Próximos Passos:',
-        steps: [
-          '📧 Verifique sua caixa de entrada (e spam também)',
-          '📱 Salve nosso e-mail nos seus contatos',
-          '💬 Aguarde convite para o grupo VIP do WhatsApp',
-          '✨ Comece a transformar seu estilo hoje mesmo!'
-        ],
+        content: '📋 Próximos Passos:\n\n📧 Verifique sua caixa de entrada (e spam também)\n📱 Salve nosso e-mail nos seus contatos\n💬 Aguarde convite para o grupo VIP do WhatsApp\n✨ Comece a transformar seu estilo hoje mesmo!',
+        fontSize: 'text-base',
+        fontWeight: 'font-medium',
+        textAlign: 'text-left',
+        color: '#432818',
         backgroundColor: '#F9F9F7',
         borderColor: '#B89B7A',
+        containerWidth: 'large',
+        spacing: 'large',
+        marginBottom: 24
       },
     },
     {
       id: 'step21-final-message',
-      type: 'final-message',
+      type: 'text-inline',
       properties: {
-        message: '💕 Obrigada por confiar em mim para te ajudar a descobrir seu estilo único!',
-        author: 'Com carinho, Gisele Galvão',
-        backgroundColor: '#FAF9F7',
-        textColor: '#432818',
+        content: '💕 Obrigada por confiar em mim para te ajudar a descobrir seu estilo único!\n\nCom carinho, Gisele Galvão',
+        fontSize: 'text-base',
+        fontWeight: 'font-normal',
         fontStyle: 'italic',
         textAlign: 'text-center',
+        color: '#432818',
+        backgroundColor: '#FAF9F7',
+        containerWidth: 'large',
+        spacing: 'large',
+        marginBottom: 0
       },
     },
   ];

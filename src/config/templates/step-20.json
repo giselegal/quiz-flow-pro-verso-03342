@@ -2,11 +2,11 @@
   "templateVersion": "2.0",
   "metadata": {
     "id": "quiz-step-20",
-    "name": "Estratégica 5 - Qual aspecto você mais deseja ...",
-    "description": "Questão estratégica 5 de 5",
-    "category": "strategic-question",
-    "type": "strategicQuestion",
-    "tags": ["quiz", "style", "strategic-question", "gisele-galvao"],
+    "name": "Página de Conversão - Resultado Personalizado",
+    "description": "Página de conversão com resultado do quiz e oferta personalizada",
+    "category": "conversion-page",
+    "type": "conversionResult",
+    "tags": ["quiz", "style", "result", "conversion", "gisele-galvao"],
     "createdAt": "2025-08-10T03:45:03.520Z",
     "updatedAt": "2025-08-10T03:45:03.520Z",
     "author": "giselegal"
@@ -64,119 +64,86 @@
   },
   "blocks": [
     {
-      "id": "step20-header",
-      "type": "quiz-intro-header",
+      "id": "step20-result-header",
+      "type": "result-header-inline",
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
-        "progressValue": 90,
-        "progressTotal": 100,
-        "showProgress": true,
-        "showBackButton": true,
+        "logoHeight": 40,
+        "userName": "",
+        "showUserName": true,
+        "backgroundColor": "#ffffff",
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "normal",
+        "marginBottom": 0
       }
     },
     {
-      "id": "step20-question-title",
-      "type": "text-inline",
+      "id": "step20-personalized-hook",
+      "type": "personalized-hook-inline",
       "properties": {
-        "content": "Qual aspecto você mais deseja melhorar no seu estilo?",
-        "fontSize": "text-2xl",
-        "fontWeight": "font-bold",
-        "textAlign": "text-center",
-        "color": "#432818",
-        "fontFamily": "'Playfair Display', serif",
-        "containerWidth": "full",
-        "spacing": "medium"
+        "styleCategory": "Elegante",
+        "userName": "",
+        "title": "Seu Estilo {styleCategory} foi Revelado! ✨",
+        "subtitle": "Agora que descobrimos sua essência estilística, é hora de transformar isso em looks poderosos que comunicam exatamente quem você é.",
+        "ctaText": "Quero Transformar Minha Imagem",
+        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "showCTA": true,
+        "backgroundColor": "#ffffff",
+        "accentColor": "#B89B7A",
+        "containerWidth": "xlarge",
+        "spacing": "large",
+        "marginBottom": 16
       }
     },
     {
-      "id": "step20-options-grid",
-      "type": "options-grid",
+      "id": "step20-final-value-proposition",
+      "type": "final-value-proposition-inline",
       "properties": {
-        "options": [
-          {
-            "id": "strategic-5-1",
-            "text": "Aprender a combinar melhor as peças"
-          },
-          {
-            "id": "strategic-5-2",
-            "text": "Ter mais confiança ao escolher looks"
-          },
-          {
-            "id": "strategic-5-3",
-            "text": "Valorizar o corpo com as roupas certas"
-          },
-          {
-            "id": "strategic-5-4",
-            "text": "Sentir-se autêntica e única"
-          }
-        ],
-        "columns": 1,
-        "imageSize": 0,
-        "showImages": false,
-        "multipleSelection": false,
-        "minSelections": 1,
-        "maxSelections": 1,
-        "borderColor": "#E5E7EB",
-        "selectedBorderColor": "#B89B7A",
-        "hoverColor": "#F3E8D3",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginBottom": 16,
-        "selectionStyle": "highlight",
-        "allowDeselection": false,
-        "validationMessage": "Selecione uma opção para avançar."
-      }
-    },
-    {
-      "id": "step20-continue-button",
-      "type": "button-inline",
-      "properties": {
-        "text": "Finalizar Quiz →",
-        "textWhenDisabled": "Selecione uma opção para avançar",
-        "variant": "primary",
-        "size": "large",
-        "fullWidth": true,
-        "backgroundColor": "#B89B7A",
-        "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-        "textColor": "#ffffff",
-        "borderRadius": "10px",
-        "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-        "disabled": true,
-        "requiresValidInput": true,
-        "enableOnSelection": true,
-        "minSelections": 1,
-        "animation": "hover:scale-105, active:scale-95",
-        "containerWidth": "full",
-        "spacing": "medium",
-        "marginTop": 24
+        "title": "Vista-se de Você — na Prática",
+        "subtitle": "Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.",
+        "description": "O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder.",
+        "originalPrice": 175,
+        "currentPrice": 39,
+        "discount": 78,
+        "installments": "5x de R$ 8,83",
+        "ctaText": "GARANTIR MEU GUIA PERSONALIZADO AGORA",
+        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        "urgencyMessage": "⚡ Esta oferta expira ao sair desta página",
+        "backgroundColor": "#ffffff",
+        "accentColor": "#458B74",
+        "primaryColor": "#B89B7A",
+        "textColor": "#432818",
+        "containerWidth": "xlarge",
+        "spacing": "large",
+        "marginBottom": 0
       }
     }
   ],
   "validation": {
-    "required": true,
-    "minAnswers": 1,
-    "maxAnswers": 1,
-    "validationMessage": "Selecione uma opção para avançar."
+    "required": false,
+    "minAnswers": 0,
+    "maxAnswers": 0,
+    "validationMessage": ""
   },
   "analytics": {
-    "trackingId": "step-20-strategic-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "trackingId": "step-20-conversion-result",
+    "events": ["page_view", "interaction", "conversion", "cta_clicked"],
     "utmParams": true,
-    "customEvents": []
+    "customEvents": ["guide_download", "payment_initiated"]
   },
   "logic": {
     "navigation": {
       "nextStep": "step-21",
       "prevStep": "step-19",
-      "allowBack": true,
+      "allowBack": false,
       "autoAdvance": false
     },
     "scoring": null,
-    "conditions": null
+    "conditions": {
+      "personalizeContent": "based-on-quiz-results",
+      "showUserName": "if-available",
+      "styleCategory": "calculated-from-quiz"
+    }
   }
 }
