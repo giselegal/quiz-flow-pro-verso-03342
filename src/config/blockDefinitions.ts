@@ -11,6 +11,8 @@ import {
   FileText,
   Tag,
   Layout,
+  Gift,
+  Shield,
 } from 'lucide-react';
 
 // Imports dos componentes funcionais
@@ -35,6 +37,11 @@ import {
   UrgencyCountdownInlineBlock,
   BeforeAfterTransformationInlineBlock,
   FinalValuePropositionInlineBlock,
+  MotivationSectionInlineBlock,
+  BonusSectionInlineBlock,
+  TestimonialsInlineBlock,
+  GuaranteeSectionInlineBlock,
+  MentorSectionInlineBlock,
 } from '@/components/editor/blocks/result';
 
 export const blockDefinitions: BlockDefinition[] = [
@@ -604,10 +611,257 @@ export const blockDefinitions: BlockDefinition[] = [
       discount: 78,
     },
   },
+
+  {
+    type: 'motivation-section-inline',
+    name: 'Seção Motivacional',
+    description: 'Seção motivacional com benefícios e inspiração',
+    category: 'result',
+    icon: Type,
+    component: MotivationSectionInlineBlock,
+    properties: {
+      title: {
+        type: 'string',
+        default: 'Transforme Sua Imagem, Revele Sua Essência',
+        label: 'Título',
+      },
+      subtitle: {
+        type: 'textarea',
+        default: 'Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.',
+        label: 'Subtítulo',
+      },
+      motivationText: {
+        type: 'textarea',
+        default: 'Com a orientação certa, você pode transformar completamente a forma como o mundo te vê e, mais importante, como você se vê.',
+        label: 'Texto Motivacional',
+      },
+      showMotivationText: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Texto Motivacional',
+      },
+      showIcons: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Ícones',
+      },
+      accentColor: {
+        type: 'color',
+        default: '#B89B7A',
+        label: 'Cor de Destaque',
+      },
+    },
+    label: 'Motivação',
+    defaultProps: {
+      showMotivationText: true,
+      showIcons: true,
+    },
+  },
+
+  {
+    type: 'bonus-section-inline',
+    name: 'Seção de Bônus',
+    description: 'Seção de bônus exclusivos com valores',
+    category: 'result',
+    icon: Gift,
+    component: BonusSectionInlineBlock,
+    properties: {
+      title: {
+        type: 'string',
+        default: 'Bônus Exclusivos para Você',
+        label: 'Título',
+      },
+      subtitle: {
+        type: 'textarea',
+        default: 'Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de transformação:',
+        label: 'Subtítulo',
+      },
+      showValues: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Valores',
+      },
+      showHighlights: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Destaques',
+      },
+      accentColor: {
+        type: 'color',
+        default: '#B89B7A',
+        label: 'Cor de Destaque',
+      },
+    },
+    label: 'Bônus',
+    defaultProps: {
+      showValues: true,
+      showHighlights: true,
+    },
+  },
+
+  {
+    type: 'testimonials-inline',
+    name: 'Depoimentos',
+    description: 'Seção de depoimentos de clientes',
+    category: 'result',
+    icon: HelpCircle,
+    component: TestimonialsInlineBlock,
+    properties: {
+      title: {
+        type: 'string',
+        default: 'O Que Nossas Clientes Dizem',
+        label: 'Título',
+      },
+      subtitle: {
+        type: 'textarea',
+        default: 'Depoimentos reais de mulheres que transformaram sua imagem e autoestima',
+        label: 'Subtítulo',
+      },
+      showRatings: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Avaliações',
+      },
+      showProfession: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Profissão',
+      },
+      showBeforeAfter: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Antes/Depois',
+      },
+      layout: {
+        type: 'select',
+        default: 'grid',
+        label: 'Layout',
+        options: [
+          { value: 'grid', label: 'Grade' },
+          { value: 'carousel', label: 'Carrossel' },
+        ],
+      },
+      accentColor: {
+        type: 'color',
+        default: '#B89B7A',
+        label: 'Cor de Destaque',
+      },
+    },
+    label: 'Depoimentos',
+    defaultProps: {
+      showRatings: true,
+      showProfession: true,
+      layout: 'grid',
+    },
+  },
+
+  {
+    type: 'guarantee-section-inline',
+    name: 'Seção de Garantia',
+    description: 'Seção de garantia com elementos de confiança',
+    category: 'result',
+    icon: Shield,
+    component: GuaranteeSectionInlineBlock,
+    properties: {
+      title: {
+        type: 'string',
+        default: '100% Garantido ou Seu Dinheiro de Volta',
+        label: 'Título',
+      },
+      subtitle: {
+        type: 'textarea',
+        default: 'Experimente nosso guia por 7 dias. Se não ficar completamente satisfeita, devolvemos seu investimento.',
+        label: 'Subtítulo',
+      },
+      guaranteeDays: {
+        type: 'number',
+        default: 7,
+        label: 'Dias de Garantia',
+      },
+      showSealImage: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Selo de Garantia',
+      },
+      showTrustBadges: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Badges de Confiança',
+      },
+      accentColor: {
+        type: 'color',
+        default: '#10b981',
+        label: 'Cor de Destaque',
+      },
+    },
+    label: 'Garantia',
+    defaultProps: {
+      guaranteeDays: 7,
+      showSealImage: true,
+      showTrustBadges: true,
+    },
+  },
+
+  {
+    type: 'mentor-section-inline',
+    name: 'Seção do Mentor',
+    description: 'Seção do mentor com credenciais e conquistas',
+    category: 'result',
+    icon: FileText,
+    component: MentorSectionInlineBlock,
+    properties: {
+      mentorName: {
+        type: 'string',
+        default: 'Gisele Galvão',
+        label: 'Nome do Mentor',
+      },
+      mentorTitle: {
+        type: 'string',
+        default: 'Consultora de Imagem & Personal Stylist',
+        label: 'Título do Mentor',
+      },
+      mentorImage: {
+        type: 'string',
+        default: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/GISELE_MENTOR_FOTO_PROFISSIONAL_r14oz2.webp',
+        label: 'Imagem do Mentor',
+      },
+      mentorDescription: {
+        type: 'textarea',
+        default: 'Com mais de 10 anos de experiência em consultoria de imagem, Gisele já transformou a vida de mais de 2.000 mulheres, ajudando-as a descobrir seu estilo único e elevar sua autoestima.',
+        label: 'Descrição do Mentor',
+      },
+      showCredentials: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Credenciais',
+      },
+      showAchievements: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Conquistas',
+      },
+      showTestimonial: {
+        type: 'boolean',
+        default: true,
+        label: 'Mostrar Depoimento',
+      },
+      accentColor: {
+        type: 'color',
+        default: '#B89B7A',
+        label: 'Cor de Destaque',
+      },
+    },
+    label: 'Mentor',
+    defaultProps: {
+      mentorName: 'Gisele Galvão',
+      showCredentials: true,
+      showAchievements: true,
+    },
+  },
 ];
 
 // ========== STATISTICS ==========
-// Total Components: 18 (12 original + 6 result components)
+// Total Components: 23 (12 original + 11 result components)
 // Categories: 7 (text, layout, quiz, forms, misc, result)
-// Generated: 8/13/2025, 8:07:23 PM + Result Components Added
-// Status: Safe Production Version + Step 20 Components
+// Generated: 8/13/2025, 8:07:23 PM + Complete Result Components Added
+// Status: Safe Production Version + Complete Step 20 Modular Components

@@ -1,9 +1,9 @@
 /**
- * Step20Template - Result Page with Modular Components (UPDATED)
- * Template for result page using new modular result components
+ * Step20Template - Complete Result Page with All Modular Components (UPDATED)
+ * Template for comprehensive result page using all new modular result components
  */
 export const getStep20Template = () => {
-  console.log('📋 Step20Template - Modular Result Page carregado!');
+  console.log('📋 Step20Template - Complete Modular Result Page carregado!');
   return [
     {
       id: 'step20-result-header',
@@ -39,7 +39,7 @@ export const getStep20Template = () => {
       }
     },
     {
-      id: 'step20-urgency-countdown',
+      id: 'step20-urgency-countdown-a',
       type: 'urgency-countdown-inline',
       properties: {
         title: '⏰ Oferta Especial por Tempo Limitado!',
@@ -72,7 +72,29 @@ export const getStep20Template = () => {
         borderColor: '#B89B7A',
         containerWidth: 'xlarge',
         spacing: 'large',
-        marginBottom: 24
+        marginBottom: 32
+      }
+    },
+    {
+      id: 'step20-motivation-section',
+      type: 'motivation-section-inline',
+      properties: {
+        title: 'Transforme Sua Imagem, Revele Sua Essência',
+        subtitle: 'Seu estilo é uma ferramenta poderosa. Não se trata apenas de roupas, mas de comunicar quem você é e aspira ser.',
+        motivationText: 'Com a orientação certa, você pode transformar completamente a forma como o mundo te vê e, mais importante, como você se vê.',
+        benefits: [
+          'Construir looks com intenção e identidade visual marcante',
+          'Utilizar cores, modelagens e tecidos que realmente te favorecem',
+          'Alinhar sua imagem aos seus objetivos pessoais e profissionais',
+          'Desenvolver um guarda-roupa funcional e inteligente, sem desperdícios'
+        ],
+        showMotivationText: true,
+        showIcons: true,
+        backgroundColor: '#f9f4ef',
+        accentColor: '#B89B7A',
+        containerWidth: 'xlarge',
+        spacing: 'large',
+        marginBottom: 32
       }
     },
     {
@@ -91,18 +113,71 @@ export const getStep20Template = () => {
       }
     },
     {
-      id: 'step20-motivation-section',
-      type: 'text-inline',
+      id: 'step20-bonus-section',
+      type: 'bonus-section-inline',
       properties: {
-        content: '💎 **Sua jornada de transformação começa hoje!**\n\nCada guia é personalizado especificamente para seu estilo único, garantindo que você tenha as ferramentas certas, as cores ideais e as modelagens perfeitas para sua própria transformação extraordinária.',
-        fontSize: 'text-lg',
-        fontWeight: 'font-medium',
-        textAlign: 'text-center',
-        color: '#432818',
-        backgroundColor: '#f9f4ef',
-        containerWidth: 'large',
+        title: 'Bônus Exclusivos para Você',
+        subtitle: 'Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de transformação:',
+        showValues: true,
+        showHighlights: true,
+        backgroundColor: '#ffffff',
+        accentColor: '#B89B7A',
+        containerWidth: 'xxlarge',
         spacing: 'large',
-        marginBottom: 24
+        marginBottom: 32
+      }
+    },
+    {
+      id: 'step20-testimonials',
+      type: 'testimonials-inline',
+      properties: {
+        title: 'O Que Nossas Clientes Dizem',
+        subtitle: 'Depoimentos reais de mulheres que transformaram sua imagem e autoestima com nosso guia',
+        showRatings: true,
+        showProfession: true,
+        showBeforeAfter: true,
+        showHighlight: true,
+        layout: 'grid',
+        backgroundColor: '#ffffff',
+        accentColor: '#B89B7A',
+        containerWidth: 'xxlarge',
+        spacing: 'large',
+        marginBottom: 32
+      }
+    },
+    {
+      id: 'step20-guarantee-section',
+      type: 'guarantee-section-inline',
+      properties: {
+        title: '100% Garantido ou Seu Dinheiro de Volta',
+        subtitle: 'Experimente nosso guia por 7 dias completos. Se não ficar completamente satisfeita, devolvemos seu investimento.',
+        guaranteeDays: 7,
+        showSealImage: true,
+        showTrustBadges: true,
+        backgroundColor: '#f8fffe',
+        borderColor: '#10b981',
+        accentColor: '#10b981',
+        containerWidth: 'xlarge',
+        spacing: 'large',
+        marginBottom: 32
+      }
+    },
+    {
+      id: 'step20-mentor-section',
+      type: 'mentor-section-inline',
+      properties: {
+        mentorName: 'Gisele Galvão',
+        mentorTitle: 'Consultora de Imagem & Personal Stylist',
+        mentorImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/GISELE_MENTOR_FOTO_PROFISSIONAL_r14oz2.webp',
+        mentorDescription: 'Com mais de 10 anos de experiência em consultoria de imagem, Gisele já transformou a vida de mais de 2.000 mulheres, ajudando-as a descobrir seu estilo único e elevar sua autoestima.',
+        showCredentials: true,
+        showAchievements: true,
+        showTestimonial: true,
+        backgroundColor: '#ffffff',
+        accentColor: '#B89B7A',
+        containerWidth: 'xxlarge',
+        spacing: 'large',
+        marginBottom: 32
       }
     },
     {
@@ -123,7 +198,7 @@ export const getStep20Template = () => {
           'Guarda-roupa funcional e inteligente, sem compras por impulso'
         ],
         valueStack: [
-          { item: 'Guia Principal de Estilo', value: 79 },
+          { item: 'Guia Principal de Estilo Personalizado', value: 79 },
           { item: 'Bônus - Peças-chave do Guarda-roupa', value: 67 },
           { item: 'Bônus - Visagismo e Harmonia Facial', value: 29 }
         ],

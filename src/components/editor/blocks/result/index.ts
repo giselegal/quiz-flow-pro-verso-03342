@@ -5,3 +5,8 @@ export { default as StyleGuidesVisualInlineBlock } from './StyleGuidesVisualInli
 export { default as UrgencyCountdownInlineBlock } from './UrgencyCountdownInlineBlock';
 export { default as BeforeAfterTransformationInlineBlock } from './BeforeAfterTransformationInlineBlock';
 export { default as FinalValuePropositionInlineBlock } from './FinalValuePropositionInlineBlock';
+export { default as MotivationSectionInlineBlock } from './MotivationSectionInlineBlock';
+export { default as BonusSectionInlineBlock } from './BonusSectionInlineBlock';
+export { default as TestimonialsInlineBlock } from './TestimonialsInlineBlock';
+export { default as GuaranteeSectionInlineBlock } from './GuaranteeSectionInlineBlock';
+export { default as MentorSectionInlineBlock } from './MentorSectionInlineBlock';
