@@ -42,6 +42,8 @@ const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRe
 const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
 const TestStep21 = lazy(() => import('./components/editor-fixed/OfferPageJson'));
 const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
+// 🚀 EDITOR COM SISTEMA DE PREVIEW INTEGRADO
+const EditorWithPreview = lazy(() => import('./pages/editor').then(module => ({ default: module.EditorWithPreview })));
 
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));
@@ -82,9 +84,27 @@ function App() {
                   }}
                 </Route>
 
-                {/* Editor Fixed Route - Editor 4 Colunas com JSON */}
+                {/* Editor Fixed Route - Editor 4 Colunas com JSON + SISTEMA DE PREVIEW */}
                 <ProtectedRoute
                   path="/editor-fixed"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <ScrollSyncProvider>
+                            <div className="relative">
+                              <EditorWithPreview />
+                            </div>
+                          </ScrollSyncProvider>
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                />
+
+                {/* Rota original (backup) */}
+                <ProtectedRoute
+                  path="/editor-original"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
