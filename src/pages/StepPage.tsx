@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
+import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
 import React, { lazy, Suspense } from 'react';
 import { useLocation, useParams } from 'wouter';
 
@@ -145,7 +145,9 @@ const StepPage: React.FC = () => {
                   <div className="max-w-4xl mx-auto">
                     <div className="space-y-6">
                       <div className="text-center">
-                        <h1 className="text-3xl font-bold text-[#432818] mb-4">{stepConfig.name}</h1>
+                        <h1 className="text-3xl font-bold text-[#432818] mb-4">
+                          {stepConfig.name}
+                        </h1>
                         <p className="text-lg text-[#6B4F43] mb-8">{stepConfig.description}</p>
                       </div>
 

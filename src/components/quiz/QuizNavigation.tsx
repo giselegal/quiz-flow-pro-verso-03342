@@ -1,17 +1,25 @@
 // @ts-nocheck
 /**
  * 🚀 QUIZ NAVIGATION - Navegação Premium para as 21 Etapas em Produção
- * 
+ *
  * Sistema de navegação avançado baseado no header do editor,
  * adaptado para a experiência do usuário final durante o quiz.
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import {
+  AlertTriangle,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Save,
+  Sparkles,
+  User,
+} from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
 import { Progress } from '../ui/progress';
-import { ChevronLeft, ChevronRight, Check, AlertTriangle, Save, Sparkles, User } from 'lucide-react';
 
 interface QuizNavigationProps {
   canProceed: boolean;
@@ -44,7 +52,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   onSave,
   showUserInfo = false,
   userName,
-  sessionId
+  sessionId,
 }) => {
   const [showActivationEffect, setShowActivationEffect] = useState(false);
   const [autoAdvanceTimer, setAutoAdvanceTimer] = useState<NodeJS.Timeout | null>(null);
@@ -180,12 +188,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                 {/* Navegação Anterior */}
                 <div className="flex items-center gap-2">
                   {onPrevious && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={onPrevious}
-                      className="gap-2"
-                    >
+                    <Button variant="outline" size="sm" onClick={onPrevious} className="gap-2">
                       <ChevronLeft className="h-4 w-4" />
                       Anterior
                     </Button>
@@ -195,18 +198,18 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                 {/* Informações da Etapa */}
                 <div className="flex flex-col items-center gap-2">
                   <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 ${getCategoryColor(currentStep)} rounded-full flex items-center justify-center text-white text-sm font-bold`}>
+                    <div
+                      className={`w-8 h-8 ${getCategoryColor(currentStep)} rounded-full flex items-center justify-center text-white text-sm font-bold`}
+                    >
                       {currentStep}
                     </div>
-                    
+
                     <div className="text-center">
                       <div className="flex items-center gap-2">
                         <Badge variant="secondary" className="text-xs">
                           {getStepCategory(currentStep)}
                         </Badge>
-                        <span className="text-sm font-medium text-gray-700">
-                          {stepName}
-                        </span>
+                        <span className="text-sm font-medium text-gray-700">{stepName}</span>
                       </div>
                       <div className="text-xs text-gray-500">
                         Etapa {currentStep} de {totalSteps}
@@ -218,12 +221,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                 {/* Ações */}
                 <div className="flex items-center gap-2">
                   {onSave && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={onSave}
-                      className="gap-2"
-                    >
+                    <Button variant="outline" size="sm" onClick={onSave} className="gap-2">
                       <Save className="h-4 w-4" />
                       Salvar
                     </Button>
@@ -234,13 +232,17 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                     onClick={onNext}
                     disabled={!canProceed}
                     className={`gap-2 transition-all duration-300 ${
-                      canProceed 
-                        ? 'bg-[#B89B7A] hover:bg-[#A68A6E] text-white' 
+                      canProceed
+                        ? 'bg-[#B89B7A] hover:bg-[#A68A6E] text-white'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     } ${showActivationEffect ? 'scale-105 shadow-lg' : ''}`}
                   >
                     {currentStep === totalSteps ? 'Finalizar' : 'Próxima'}
-                    {isLastQuestion ? <Check className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                    {isLastQuestion ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -253,10 +255,7 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
                     {Math.round(progressPercentage)}%
                   </span>
                 </div>
-                <Progress 
-                  value={progressPercentage} 
-                  className="h-2 bg-gray-200"
-                />
+                <Progress value={progressPercentage} className="h-2 bg-gray-200" />
               </div>
 
               {/* Helper Text */}
