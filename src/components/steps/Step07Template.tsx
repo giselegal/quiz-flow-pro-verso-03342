@@ -26,7 +26,7 @@ export const getStep07Template = () => {
       id: 'step07-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAIS ACESSÓRIOS VOCÊ USA MAIS?',
+        content: 'QUAL CASACO É SEU FAVORITO?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',

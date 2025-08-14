@@ -19,7 +19,7 @@ export const getStep18Template = () => {
       id: 'step18-secondary-title',
       type: 'text-inline',
       properties: {
-        content: 'SEU ESTILO SECUNDÁRIO É:',
+        content: '✨ Obrigada por compartilhar suas respostas!',
         fontSize: 'text-xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

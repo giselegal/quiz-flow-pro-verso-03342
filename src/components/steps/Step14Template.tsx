@@ -19,7 +19,7 @@ export const getStep14Template = () => {
       id: 'step14-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAL É SEU ORÇAMENTO MENSAL PARA ROUPAS?',
+        content: 'Com que frequência você se pega pensando: "Com que roupa eu vou?" — mesmo com o guarda-roupa cheio?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

@@ -19,7 +19,7 @@ export const getStep13Template = () => {
       id: 'step13-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAL É SUA MAIOR DIFICULDADE COM ROUPAS?',
+        content: 'O que mais te desafia na hora de se vestir?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

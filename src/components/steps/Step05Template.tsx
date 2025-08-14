@@ -222,7 +222,7 @@ export const getStep05Template = () => {
       id: 'step05-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
+        content: 'QUAIS DETALHES VOCÊ GOSTA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',

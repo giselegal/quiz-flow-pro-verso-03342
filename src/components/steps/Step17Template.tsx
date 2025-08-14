@@ -19,7 +19,7 @@ export const getStep17Template = () => {
       id: 'step17-result-title',
       type: 'text-inline',
       properties: {
-        content: 'SEU ESTILO PESSOAL É:',
+        content: 'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',
