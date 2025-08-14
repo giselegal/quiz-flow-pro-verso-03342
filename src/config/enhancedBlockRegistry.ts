@@ -7,7 +7,7 @@ import {
   Type,
 } from "lucide-react";
 
-// === IMPORTS BÁSICOS - APENAS COMPONENTES FUNCIONAIS ===
+// === IMPORTS EXPANDIDOS - COMPONENTES PARA STEP01 E 21 ETAPAS ===
 
 // Componentes Inline básicos que funcionam
 import TextInline from '../components/blocks/inline/TextInline';
@@ -15,18 +15,38 @@ import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
 import HeadingBlock from '../components/blocks/inline/HeadingBlock';
 import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean';
 
+// Componentes Editor Blocks necessários para Step01
+import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
+import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
+import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
+import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
+
 // === REGISTRY PRINCIPAL - APENAS COMPONENTES BÁSICOS E FUNCIONAIS ===
 
 /**
- * Enhanced Block Registry - Versão Simplificada
- * ✅ Apenas componentes que funcionam garantidamente
+ * Enhanced Block Registry - Versão Expandida para Step01 e 21 Etapas
+ * ✅ Componentes essenciais do Step01 JSON
  * ✅ Sem dependências circulares
- * ✅ Sistema de fallbacks básico
+ * ✅ Sistema de fallbacks robusto
  */
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
+  // ===== COMPONENTES STEP01 - BASEADOS NO JSON =====
+  
+  // Componentes específicos do Step01 JSON
+  'quiz-intro-header': QuizIntroHeaderBlock, // ✅ Cabeçalho com logo e progresso
+  'decorative-bar': DecorativeBarInlineBlock, // ✅ Barra decorativa colorida
+  'text': TextInlineBlock, // ✅ Texto formatado avançado
+  'image': ImageDisplayInlineBlockClean, // ✅ Imagem com estilos
+  'form-input': FormInputBlock, // ✅ Input de formulário
+  'button': ButtonInlineFixed, // ✅ Botão interativo
+  
+  // ===== COMPONENTES BÁSICOS - COMPATIBILIDADE =====
+  
   // Text and Content - BASE
-  'text-inline': TextInline,
+  'text-inline': TextInlineBlock,
   'heading': HeadingBlock,
+  'heading-inline': HeadingInlineBlock,
   'image-display-inline': ImageDisplayInlineBlockClean,
 
   // Interactive Elements
@@ -34,7 +54,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 };
 
 /**
- * Obter componente por tipo - versão simplificada
+ * Obter componente por tipo - versão expandida com fallbacks robustos
  */
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
   if (!type) {
@@ -42,12 +62,78 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
     return null;
   }
 
+  console.log(`🔍 Buscando componente para tipo: "${type}"`);
+
   // Busca direta no registry
-  const component = ENHANCED_BLOCK_REGISTRY[type];
+  let component = ENHANCED_BLOCK_REGISTRY[type];
   if (component) {
-    console.log(`✅ Componente encontrado: ${type}`);
+    console.log(`✅ Componente encontrado diretamente: ${type}`);
     return component;
   }
+
+  // ===== FALLBACKS INTELIGENTES - STEP01 ESPECÍFICOS =====
+  
+  const step01Fallbacks: Record<string, string> = {
+    // Step01 JSON tipos → registry tipos
+    'quiz-intro-header': 'quiz-intro-header', // Direto
+    'decorative-bar': 'decorative-bar', // Direto 
+    'text': 'text', // Direto
+    'image': 'image', // Direto
+    'form-input': 'form-input', // Direto
+    'button': 'button', // Direto
+    
+    // Variações e aliases comuns
+    'text-inline': 'text',
+    'heading': 'heading',
+    'heading-inline': 'heading-inline',
+    'image-display-inline': 'image',
+    'button-inline': 'button',
+    
+    // Fallbacks genéricos
+    'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
+    'texto-embutido': 'text',
+    'imagem-em-linha': 'image',
+    'formulário-de-chumbo': 'form-input',
+  };
+
+  const fallbackType = step01Fallbacks[type];
+  if (fallbackType && ENHANCED_BLOCK_REGISTRY[fallbackType]) {
+    component = ENHANCED_BLOCK_REGISTRY[fallbackType];
+    console.log(`🔄 Fallback Step01: ${type} → ${fallbackType}`);
+    return component;
+  }
+
+  // ===== FALLBACKS POR CATEGORIA =====
+  
+  if (type.includes('text') || type.includes('title') || type.includes('content')) {
+    console.log(`📝 Fallback genérico: ${type} → text`);
+    return ENHANCED_BLOCK_REGISTRY['text'] || ENHANCED_BLOCK_REGISTRY['text-inline'];
+  }
+
+  if (type.includes('button') || type.includes('cta') || type.includes('action')) {
+    console.log(`🔘 Fallback genérico: ${type} → button`);
+    return ENHANCED_BLOCK_REGISTRY['button'] || ENHANCED_BLOCK_REGISTRY['button-inline'];
+  }
+
+  if (type.includes('image') || type.includes('photo') || type.includes('picture')) {
+    console.log(`🖼️ Fallback genérico: ${type} → image`);
+    return ENHANCED_BLOCK_REGISTRY['image'] || ENHANCED_BLOCK_REGISTRY['image-display-inline'];
+  }
+
+  if (type.includes('form') || type.includes('input') || type.includes('field')) {
+    console.log(`📝 Fallback genérico: ${type} → form-input`);
+    return ENHANCED_BLOCK_REGISTRY['form-input'];
+  }
+
+  if (type.includes('header') || type.includes('intro') || type.includes('quiz')) {
+    console.log(`🎯 Fallback genérico: ${type} → quiz-intro-header`);
+    return ENHANCED_BLOCK_REGISTRY['quiz-intro-header'];
+  }
+
+  // ===== FALLBACK FINAL =====
+  console.warn(`⚠️ Componente não encontrado, usando fallback final: ${type} → text`);
+  console.log('📋 Componentes disponíveis:', Object.keys(ENHANCED_BLOCK_REGISTRY));
+  return ENHANCED_BLOCK_REGISTRY['text'] || ENHANCED_BLOCK_REGISTRY['text-inline'] || null;
 
   // Fallback básico para TextInline
   console.warn(`🚨 Componente não encontrado: ${type}, usando fallback TextInline`);
