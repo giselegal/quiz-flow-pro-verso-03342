@@ -1,8 +1,10 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useEditor } from '@/context/EditorContext';
+import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { PropertyPanel } from './PropertyPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
+import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -19,6 +21,8 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
     uiState: { isPreviewing },
   } = useEditor();
+
+  const funnelNavigation = useFunnelNavigation();
 
   const handleComponentSelect = async (type: string) => {
     try {
@@ -45,7 +49,21 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   return (
     <div className={`h-full w-full bg-gray-50 ${className}`}>
-      <ResizablePanelGroup direction="horizontal" className="h-full">
+      {/* Navigation Header */}
+      <div className="h-16 border-b bg-white flex items-center px-4">
+        <FunnelNavigation
+          currentStep={funnelNavigation.currentStepNumber}
+          totalSteps={funnelNavigation.totalSteps}
+          onStepChange={funnelNavigation.navigateToStep}
+          onSave={funnelNavigation.handleSave}
+          onPreview={funnelNavigation.handlePreview}
+          isSaving={funnelNavigation.isSaving}
+          canNavigateNext={funnelNavigation.canNavigateNext}
+          canNavigatePrevious={funnelNavigation.canNavigatePrevious}
+        />
+      </div>
+      
+      <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
         {/* Sidebar de componentes */}
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
           <ComponentsSidebar onComponentSelect={handleComponentSelect} />
