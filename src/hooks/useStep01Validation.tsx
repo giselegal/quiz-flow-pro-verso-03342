@@ -29,7 +29,8 @@ export const useStep01Validation = () => {
 
       // ✅ Verifica se é o input de nome (IDs alinhados com template)
       const nameInputIds = [
-        'intro-form-input',    // ✅ ID do template Step01
+        'intro-form-input',    // ✅ ID do template Step01 (PRINCIPAL)
+        'step01-form-input',   // ✅ ID alternativo para step-01
         'name-input-modular',
         'intro-name-input', 
         'user-name-input',
@@ -53,20 +54,24 @@ export const useStep01Validation = () => {
           isButtonEnabled: isValid,
         }));
 
-        // ✅ Disparar evento para atualizar botão (ID alinhado com template)
-        window.dispatchEvent(
-          new CustomEvent('step01-button-state-change', {
-            detail: {
-              buttonId: 'intro-cta-button',  // ✅ ID do template Step01
-              enabled: isValid,
-              disabled: !isValid,
-              requiresValidInput: !isValid,
-            },
-          })
-        );
+        // ✅ Disparar evento para atualizar botão (IDs alinhados com template)
+        const buttonIds = ['intro-cta-button', 'step01-cta-button', 'step01-start-button'];
         
-        console.log('🔄 [useStep01Validation] Button state event dispatched:', {
-          buttonId: 'intro-cta-button',
+        buttonIds.forEach(buttonId => {
+          window.dispatchEvent(
+            new CustomEvent('step01-button-state-change', {
+              detail: {
+                buttonId: buttonId,
+                enabled: isValid,
+                disabled: !isValid,
+                requiresValidInput: !isValid,
+              },
+            })
+          );
+        });
+        
+        console.log('🔄 [useStep01Validation] Button state events dispatched for all buttons:', {
+          buttonIds,
           enabled: isValid,
           nameValue: value.trim()
         });

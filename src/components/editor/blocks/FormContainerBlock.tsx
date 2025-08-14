@@ -29,23 +29,38 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
 
   // 🔒 Regra: habilitar botão somente após nome válido (configurável no painel)
   useEffect(() => {
-    if (!(properties as any)?.requireNameToEnableButton) return;
+    // ✅ Lista de IDs de botão possíveis no Step-01
+    const possibleButtonIds = [
+      'intro-cta-button',     // ✅ ID principal do template Step01
+      'step01-cta-button',    // ✅ ID alternativo
+      'step01-start-button',  // ✅ ID alternativo
+      'cta-button-modular',   // ✅ ID genérico
+      (properties as any)?.targetButtonId // ✅ ID configurável via properties
+    ].filter(Boolean);
 
-    const targetButtonId = (properties as any)?.targetButtonId || 'cta-button-modular';
-
-    // Estado inicial: desabilitar visualmente se configurado
-    const applyDisabled = (disabled: boolean) => {
-      const btn = document.getElementById(targetButtonId) as HTMLButtonElement | null;
-      if (!btn) return;
-      btn.disabled = disabled;
-      if ((properties as any)?.visuallyDisableButton) {
-        btn.classList.toggle('opacity-50', disabled);
-        btn.classList.toggle('pointer-events-none', disabled);
-        btn.classList.toggle('cursor-not-allowed', disabled);
-      }
+    // Estado inicial: desabilitar visualmente todos os botões possíveis
+    const applyDisabled = (disabled: boolean, targetId?: string) => {
+      const idsToCheck = targetId ? [targetId] : possibleButtonIds;
+      
+      idsToCheck.forEach(buttonId => {
+        const btn = document.getElementById(buttonId) as HTMLButtonElement | null;
+        if (!btn) return;
+        
+        btn.disabled = disabled;
+        if ((properties as any)?.visuallyDisableButton) {
+          btn.classList.toggle('opacity-50', disabled);
+          btn.classList.toggle('pointer-events-none', disabled);
+          btn.classList.toggle('cursor-not-allowed', disabled);
+        }
+        
+        // Log apenas quando encontrar o botão
+        if (btn) {
+          console.log(`🔘 [FormContainerBlock] Button ${buttonId} ${disabled ? 'DISABLED' : 'ENABLED'}`);
+        }
+      });
     };
 
-    // Aplica estado inicial
+    // Aplica estado inicial (desabilitar todos)
     applyDisabled(true);
 
     const handler = (e: Event) => {
@@ -54,8 +69,15 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         enabled: boolean;
         disabled: boolean;
       };
-      if (!detail || detail.buttonId !== targetButtonId) return;
-      applyDisabled(!detail.enabled);
+      
+      if (!detail || !possibleButtonIds.includes(detail.buttonId)) return;
+      
+      // Log apenas mudanças de estado importantes
+      if (detail.enabled) {
+        console.log(`✅ [FormContainerBlock] Button ${detail.buttonId} ENABLED`);
+      }
+      
+      applyDisabled(!detail.enabled, detail.buttonId);
     };
 
     window.addEventListener('step01-button-state-change', handler as EventListener);

@@ -239,29 +239,29 @@ export const getStep01Template = () => {
         marginBottom: 16,
         paddingTop: 0,
         paddingBottom: 0,
-        requireNameToEnableButton: true,
-        targetButtonId: 'intro-cta-button',  // ✅ ID consistente para validação
-        visuallyDisableButton: true,
+        requireNameToEnableButton: true, // ✅ Habilitar validação de botão
+        targetButtonId: 'intro-cta-button', // ✅ ID do botão principal  
+        visuallyDisableButton: true, // ✅ Feedback visual
       },
       children: [
         {
-          id: 'intro-form-input',
-          type: 'form-input',
-          properties: {
+      id: 'intro-form-input', // ✅ ID PRINCIPAL para validação
+      type: 'form-input',
+      properties: {
             inputType: 'text',
             placeholder: 'Digite seu primeiro nome aqui...',
             label: 'Como posso te chamar?',
             required: true,
-            name: 'userName',
+            name: 'userName', // ✅ Nome para identificar campo principal
             backgroundColor: '#ffffff',
             borderColor: '#B89B7A',
             marginBottom: 16,
           },
         },
         {
-          id: 'intro-cta-button',
-          type: 'button-inline',
-          properties: {
+      id: 'intro-cta-button', // ✅ ID PRINCIPAL para eventos de botão
+      type: 'button-inline',
+      properties: {
             text: 'Quero Descobrir meu Estilo Agora!',
             variant: 'primary',
             size: 'lg',

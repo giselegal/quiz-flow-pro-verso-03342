@@ -77,6 +77,22 @@ const DebugStep01: React.FC = () => {
     console.log('🧪 [DebugStep01] Logs limpos');
   };
 
+  // Testar validação manual
+  const testValidation = () => {
+    console.log('🧪 [DebugStep01] Testando validação manual...');
+    
+    // Simular evento de input válido
+    window.dispatchEvent(new CustomEvent('quiz-input-change', {
+      detail: {
+        blockId: 'intro-form-input',
+        value: 'Teste de Nome',
+        valid: true
+      }
+    }));
+    
+    console.log('✅ [DebugStep01] Evento de teste disparado');
+  };
+
   return (
     <div className="fixed top-4 right-4 w-80 bg-white border-2 border-gray-200 rounded-lg p-4 shadow-lg z-50 max-h-96 overflow-y-auto">
       <div className="space-y-3">
@@ -110,9 +126,15 @@ const DebugStep01: React.FC = () => {
           </div>
         </div>
 
-        <Button onClick={goToStep01} size="sm" className="w-full">
-          🎯 IR PARA STEP-01
-        </Button>
+        <div className="space-y-2">
+          <Button onClick={goToStep01} size="sm" className="w-full">
+            🎯 IR PARA STEP-01
+          </Button>
+          
+          <Button onClick={testValidation} variant="outline" size="sm" className="w-full">
+            🧪 TESTAR VALIDAÇÃO
+          </Button>
+        </div>
 
         <div className="border-t pt-2">
           <h4 className="text-xs font-semibold mb-2">📊 EVENTOS RECENTES:</h4>

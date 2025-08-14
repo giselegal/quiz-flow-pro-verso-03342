@@ -23,7 +23,9 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
+import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { BookOpen, Settings } from 'lucide-react';
+import DebugStep01 from '@/components/debug/DebugStep01';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -43,6 +45,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   
   // ✅ SISTEMA UNIFICADO DE NAVEGAÇÃO
   const funnelNavigation = useFunnelNavigation();
+  
+  // ✅ VALIDAÇÃO ESPECÍFICA PARA STEP-01 (CAMPO NOME)
+  const { isNameValid, nameValue, isButtonEnabled } = useStep01Validation();
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
@@ -353,6 +358,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+        
+        {/* Debug Step01 - mostrar apenas na etapa 1 */}
+        {(activeStageId === 'step-1' || activeStageId === 'step-01') && (
+          <DebugStep01 />
         )}
       </div>
     </DndProvider>
