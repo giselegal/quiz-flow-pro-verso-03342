@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import * as BlockRegistry from '@/config/enhancedBlockRegistry';
 import { usePreview } from '@/contexts/PreviewContext';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
@@ -99,7 +99,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   } = block.properties || {};
 
   // Buscar componente no registry (eliminando UniversalBlockRenderer)
-  const Component = getBlockComponent(block.type);
+  const Component = BlockRegistry.getBlockComponent(block.type);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: block.id,
