@@ -1,5 +1,28 @@
 // src/config/stepTemplatesMapping.ts
-// Mapeamento das 21 etapas para seus templates específicos (usando templates JSON)
+// Mapeamento das 21 etapas para seus templates específicos (usando templates TSX reais)
+
+// ✅ IMPORTS DOS TEMPLATES TSX REAIS
+import { getStep01Template } from '@/components/steps/Step01Template';
+import { getStep02Template } from '@/components/steps/Step02Template';
+import { getStep03Template } from '@/components/steps/Step03Template';
+import { getStep04Template } from '@/components/steps/Step04Template';
+import { getStep05Template } from '@/components/steps/Step05Template';
+import { getStep06Template } from '@/components/steps/Step06Template';
+import { getStep07Template } from '@/components/steps/Step07Template';
+import { getStep08Template } from '@/components/steps/Step08Template';
+import { getStep09Template } from '@/components/steps/Step09Template';
+import { getStep10Template } from '@/components/steps/Step10Template';
+import { getStep11Template } from '@/components/steps/Step11Template';
+import { getStep12Template } from '@/components/steps/Step12Template';
+import { getStep13Template } from '@/components/steps/Step13Template';
+import { getStep14Template } from '@/components/steps/Step14Template';
+import { getStep15Template } from '@/components/steps/Step15Template';
+import { getStep16Template } from '@/components/steps/Step16Template';
+import { getStep17Template } from '@/components/steps/Step17Template';
+import { getStep18Template } from '@/components/steps/Step18Template';
+import { getStep19Template } from '@/components/steps/Step19Template';
+import { getStep20Template } from '@/components/steps/Step20Template';
+import { getStep21Template } from '@/components/steps/Step21Template';
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -115,30 +138,60 @@ const getStep1IntroTemplate = () => [
   },
 ];
 
-// 📋 TEMPLATES COMPLETOS DE CADA ETAPA
-export const STEP_TEMPLATES: StepTemplate[] = STEP_CONFIGS.map((config, index) => {
-  const stepNumber = index + 1;
+// 📋 MAPEAMENTO DOS TEMPLATES TSX REAIS (CORRIGIDO)
+export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
+  1: { stepNumber: 1, templateFunction: getStep01Template, name: 'Introdução', description: 'Tela inicial do quiz' },
+  2: { stepNumber: 2, templateFunction: getStep02Template, name: 'Nome', description: 'Coleta do nome pessoal' },
+  3: { stepNumber: 3, templateFunction: getStep03Template, name: 'Roupa Favorita', description: 'Tipo de roupa preferida' },
+  4: { stepNumber: 4, templateFunction: getStep04Template, name: 'Estilo Pessoal', description: 'Identificação do estilo' },
+  5: { stepNumber: 5, templateFunction: getStep05Template, name: 'Ocasiões', description: 'Contextos de uso' },
+  6: { stepNumber: 6, templateFunction: getStep06Template, name: 'Cores', description: 'Preferências de cores' },
+  7: { stepNumber: 7, templateFunction: getStep07Template, name: 'Texturas', description: 'Texturas favoritas' },
+  8: { stepNumber: 8, templateFunction: getStep08Template, name: 'Silhuetas', description: 'Formas preferidas' },
+  9: { stepNumber: 9, templateFunction: getStep09Template, name: 'Acessórios', description: 'Acessórios de estilo' },
+  10: { stepNumber: 10, templateFunction: getStep10Template, name: 'Inspiração', description: 'Referências de moda' },
+  11: { stepNumber: 11, templateFunction: getStep11Template, name: 'Conforto', description: 'Prioridade de conforto' },
+  12: { stepNumber: 12, templateFunction: getStep12Template, name: 'Tendências', description: 'Interesse em tendências' },
+  13: { stepNumber: 13, templateFunction: getStep13Template, name: 'Investimento', description: 'Orçamento para roupas' },
+  14: { stepNumber: 14, templateFunction: getStep14Template, name: 'Personalidade', description: 'Traços pessoais' },
+  15: { stepNumber: 15, templateFunction: getStep15Template, name: 'Transição', description: 'Preparação para resultado' },
+  16: { stepNumber: 16, templateFunction: getStep16Template, name: 'Processamento', description: 'Calculando resultado' },
+  17: { stepNumber: 17, templateFunction: getStep17Template, name: 'Resultado Parcial', description: 'Primeiro resultado' },
+  18: { stepNumber: 18, templateFunction: getStep18Template, name: 'Resultado Completo', description: 'Análise completa' },
+  19: { stepNumber: 19, templateFunction: getStep19Template, name: 'Resultado Final', description: 'Apresentação final' },
+  20: { stepNumber: 20, templateFunction: getStep20Template, name: 'Página de Conversão', description: 'Oferta personalizada com resultado' },
+  21: { stepNumber: 21, templateFunction: getStep21Template, name: 'Thank You Page', description: 'Confirmação e próximos passos' },
+};
 
-  return {
-    stepNumber,
-    templateFunction:
-      stepNumber === 1 ? getStep1IntroTemplate : () => getDefaultTemplate(stepNumber),
-    name: config.name,
-    description: config.description,
-  };
-});
+// 🔧 FUNÇÕES UTILITÁRIAS ATUALIZADAS
+export const getStepTemplate = (stepNumber: number): any[] => {
+  const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
+  return stepTemplate ? stepTemplate.templateFunction() : getDefaultTemplate(stepNumber);
+};
+
+export const getStepInfo = (stepNumber: number) => {
+  const template = STEP_TEMPLATES_MAPPING[stepNumber];
+  return template ? { name: template.name, description: template.description } : null;
+};
+
+export const getAllSteps = (): StepTemplate[] => {
+  return Object.values(STEP_TEMPLATES_MAPPING); // 🎯 RETORNA OS 21 TEMPLATES REAIS
+};
+
+// ✅ COMPATIBILIDADE: Array exportado também
+export const STEP_TEMPLATES: StepTemplate[] = getAllSteps();
 
 // 🔧 UTILITÁRIOS
 export const getTemplateByStep = (stepNumber: number): StepTemplate | undefined => {
-  return STEP_TEMPLATES.find(template => template.stepNumber === stepNumber);
+  return STEP_TEMPLATES_MAPPING[stepNumber];
 };
 
 export const getTotalSteps = (): number => {
-  return STEP_TEMPLATES.length;
+  return Object.keys(STEP_TEMPLATES_MAPPING).length;
 };
 
 // 📋 CONFIGURAÇÃO EXPORTADA PARA PÁGINAS
-export const STEP_CONFIG: StepConfig[] = STEP_TEMPLATES.map(template => ({
+export const STEP_CONFIG: StepConfig[] = getAllSteps().map(template => ({
   step: template.stepNumber,
   name: template.name,
   description: template.description,
@@ -147,15 +200,14 @@ export const STEP_CONFIG: StepConfig[] = STEP_TEMPLATES.map(template => ({
 // 📊 ESTATÍSTICAS
 export const getTemplateStats = () => {
   return {
-    totalTemplates: STEP_TEMPLATES.length,
-    introSteps: 1,
-    questionSteps: 13,
-    transitionSteps: 1,
-    processingSteps: 1,
-    resultSteps: 3,
-    leadSteps: 1,
-    offerSteps: 1,
+    totalTemplates: getTotalSteps(),
+    introSteps: 1, // Step 1
+    questionSteps: 13, // Steps 2-14 (perguntas do quiz)
+    strategicSteps: 4, // Steps 15-18 (perguntas estratégicas)
+    resultSteps: 1, // Step 19 (apresentação resultado)
+    conversionSteps: 1, // Step 20 (conversão/venda)
+    thankYouSteps: 1, // Step 21 (confirmação)
   };
 };
 
-export default STEP_TEMPLATES;
+export default STEP_TEMPLATES_MAPPING;

@@ -1317,6 +1317,261 @@ export const useUnifiedProperties = (
           ),
         ];
 
+      // ✅ NOVOS CASES: Result Components (Steps 20-21)
+      case 'result-header-inline':
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            'logoUrl',
+            currentBlock?.properties?.logoUrl || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            PropertyType.URL,
+            'URL da Logo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'logoAlt',
+            currentBlock?.properties?.logoAlt || 'Logo',
+            PropertyType.TEXT,
+            'Texto Alternativo',
+            PropertyCategory.ACCESSIBILITY
+          ),
+          createProperty(
+            'logoHeight',
+            currentBlock?.properties?.logoHeight || 40,
+            PropertyType.RANGE,
+            'Altura da Logo',
+            PropertyCategory.STYLE,
+            { min: 20, max: 200, step: 5 }
+          ),
+          createProperty(
+            'userName',
+            currentBlock?.properties?.userName || '',
+            PropertyType.TEXT,
+            'Nome do Usuário',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'showUserName',
+            currentBlock?.properties?.showUserName ?? true,
+            PropertyType.SWITCH,
+            'Exibir Nome do Usuário',
+            PropertyCategory.BEHAVIOR
+          ),
+        ];
+
+      case 'personalized-hook-inline':
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            'title',
+            currentBlock?.properties?.title || 'Seu Estilo {styleCategory} foi Revelado! ✨',
+            PropertyType.TEXT,
+            'Título',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'subtitle',
+            currentBlock?.properties?.subtitle || '',
+            PropertyType.TEXTAREA,
+            'Subtítulo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'styleCategory',
+            currentBlock?.properties?.styleCategory || 'Elegante',
+            PropertyType.SELECT,
+            'Categoria de Estilo',
+            PropertyCategory.CONTENT,
+            {
+              options: [
+                { value: 'Natural', label: 'Natural' },
+                { value: 'Clássico', label: 'Clássico' },
+                { value: 'Contemporâneo', label: 'Contemporâneo' },
+                { value: 'Elegante', label: 'Elegante' },
+                { value: 'Romântico', label: 'Romântico' },
+                { value: 'Sexy', label: 'Sexy' },
+                { value: 'Dramático', label: 'Dramático' },
+                { value: 'Criativo', label: 'Criativo' },
+              ],
+            }
+          ),
+          createProperty(
+            'ctaText',
+            currentBlock?.properties?.ctaText || 'Quero Transformar Minha Imagem',
+            PropertyType.TEXT,
+            'Texto do Botão',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'ctaUrl',
+            currentBlock?.properties?.ctaUrl || '',
+            PropertyType.URL,
+            'URL do Botão',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'showCTA',
+            currentBlock?.properties?.showCTA ?? true,
+            PropertyType.SWITCH,
+            'Exibir Botão CTA',
+            PropertyCategory.BEHAVIOR
+          ),
+        ];
+
+      case 'final-value-proposition-inline':
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            'title',
+            currentBlock?.properties?.title || 'Vista-se de Você — na Prática',
+            PropertyType.TEXT,
+            'Título',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'subtitle',
+            currentBlock?.properties?.subtitle || '',
+            PropertyType.TEXTAREA,
+            'Subtítulo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'description',
+            currentBlock?.properties?.description || '',
+            PropertyType.TEXTAREA,
+            'Descrição',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'originalPrice',
+            currentBlock?.properties?.originalPrice || 175,
+            PropertyType.NUMBER,
+            'Preço Original',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'currentPrice',
+            currentBlock?.properties?.currentPrice || 39,
+            PropertyType.NUMBER,
+            'Preço Atual',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'installments',
+            currentBlock?.properties?.installments || '5x de R$ 8,83',
+            PropertyType.TEXT,
+            'Parcelamento',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'ctaText',
+            currentBlock?.properties?.ctaText || 'GARANTIR MEU GUIA PERSONALIZADO AGORA',
+            PropertyType.TEXT,
+            'Texto do Botão',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'ctaUrl',
+            currentBlock?.properties?.ctaUrl || '',
+            PropertyType.URL,
+            'URL do Botão',
+            PropertyCategory.CONTENT
+          ),
+        ];
+
+      // ✅ Step 21 Components  
+      case 'next-steps':
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            'title',
+            currentBlock?.properties?.title || '📋 Próximos Passos:',
+            PropertyType.TEXT,
+            'Título',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'steps',
+            currentBlock?.properties?.steps || [],
+            PropertyType.ARRAY,
+            'Lista de Passos',
+            PropertyCategory.CONTENT
+          ),
+        ];
+
+      case 'final-message':
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            'message',
+            currentBlock?.properties?.message || '💕 Obrigada por confiar em mim!',
+            PropertyType.TEXTAREA,
+            'Mensagem',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'author',
+            currentBlock?.properties?.author || 'Com carinho, Gisele Galvão',
+            PropertyType.TEXT,
+            'Assinatura',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'fontStyle',
+            currentBlock?.properties?.fontStyle || 'italic',
+            PropertyType.SELECT,
+            'Estilo da Fonte',
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: 'normal', label: 'Normal' },
+                { value: 'italic', label: 'Itálico' },
+              ],
+            }
+          ),
+        ];
+
+      // ✅ Additional inline components commonly used
+      case 'urgency-countdown-inline':
+      case 'style-guides-visual-inline':  
+      case 'motivation-section-inline':
+      case 'before-after-transformation-inline':
+      case 'bonus-section-inline':
+      case 'testimonials-inline':
+      case 'guarantee-section-inline':
+      case 'mentor-section-inline':
+        return [
+          ...getUniversalProperties(),
+          createProperty(
+            'title',
+            currentBlock?.properties?.title || '',
+            PropertyType.TEXT,
+            'Título',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'subtitle',
+            currentBlock?.properties?.subtitle || '',
+            PropertyType.TEXTAREA,
+            'Subtítulo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'backgroundColor',
+            currentBlock?.properties?.backgroundColor || '#ffffff',
+            PropertyType.COLOR,
+            'Cor de Fundo',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'accentColor',
+            currentBlock?.properties?.accentColor || '#B89B7A',
+            PropertyType.COLOR,
+            'Cor de Destaque',
+            PropertyCategory.STYLE
+          ),
+        ];
+
       default:
         console.warn(
           `🔧 useUnifiedProperties: Tipo de bloco "${blockType}" não tem propriedades específicas definidas.`
