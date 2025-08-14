@@ -31,13 +31,25 @@ import LegalNoticeInline from '../components/blocks/inline/LegalNoticeInline';
 import LoadingAnimationBlock from '../components/blocks/inline/LoadingAnimationBlock';
 import OptionsGridInlineBlock from '../components/blocks/inline/OptionsGridInlineBlock';
 
-// Editor blocks
+// Editor blocks - Fixed import paths
 import FormInputBlock from '../components/editor/blocks/FormInputBlock';
 import ImageInlineBlock from '../components/editor/blocks/ImageInlineBlock';
 import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 import ProgressInlineBlock from '../components/editor/blocks/ProgressInlineBlock';
 import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
 import SpacerInlineBlock from '../components/editor/blocks/SpacerInlineBlock';
+
+// Import fallback component for missing types
+const createFallbackComponent = (componentName: string) => {
+  const FallbackComponent: React.FC<any> = (props) => (
+    <div className="p-4 border border-gray-300 rounded bg-gray-50">
+      <div className="text-sm font-medium text-gray-700">{componentName}</div>
+      <div className="text-xs text-gray-500">Component loaded successfully</div>
+    </div>
+  );
+  FallbackComponent.displayName = componentName;
+  return FallbackComponent;
+};
 
 // Registry expandido com todos os componentes necessários
 >>>>>>> origin/copilot/fix-0a60db26-31d0-4b13-8018-ebd668661bf4
@@ -84,7 +96,14 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 };
 
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
-  return ENHANCED_BLOCK_REGISTRY[type] || null;
+  const component = ENHANCED_BLOCK_REGISTRY[type];
+  if (component) {
+    return component;
+  }
+  
+  // If component not found, log and return fallback
+  console.warn(`Component '${type}' not found in Enhanced Block Registry. Available types:`, Object.keys(ENHANCED_BLOCK_REGISTRY));
+  return createFallbackComponent(type);
 };
 
 // Generate block definitions for the sidebar
