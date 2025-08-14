@@ -8,6 +8,10 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
+// 🚀 PREVIEW SYSTEM
+import { PreviewProvider } from '@/contexts/PreviewContext';
+import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
+import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -27,6 +31,7 @@ import { useSyncedScroll } from '@/hooks/useSyncedScroll';
  * - Atalhos de teclado e histórico de mudanças
  * - Preview mode e viewport responsivo
  * - Sistema de ativação automática de 21 etapas
+ * 🚀 SISTEMA DE PREVIEW INTEGRADO
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
@@ -48,7 +53,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       updateBlock,
       reorderBlocks,
     },
-    persistenceActions: { saveFunnel, isSaving },
+    persistenceActions: { saveFunnel },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
     computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
@@ -191,7 +196,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   <CanvasDropZone
                     blocks={currentBlocks}
                     selectedBlockId={selectedBlockId}
-                    isPreviewing={isPreviewing}
                     onSelectBlock={setSelectedBlockId}
                     onUpdateBlock={updateBlock}
                     onDeleteBlock={handleDeleteBlock}
@@ -241,3 +245,23 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 };
 
 export default EditorFixedPageWithDragDrop;
+
+// 🚀 WRAPPER COM SISTEMA DE PREVIEW COMPLETO
+export const EditorWithPreview: React.FC = () => {
+  return (
+    <PreviewProvider totalSteps={21} funnelId="default">
+      <div className="relative h-screen">
+        {/* Componente de Preview Navigation - Flutuante */}
+        <PreviewNavigation position="floating" />
+        
+        {/* Editor Principal */}
+        <EditorFixedPageWithDragDrop />
+        
+        {/* Toggle de Preview - Posição fixa no canto */}
+        <div className="fixed bottom-4 right-4 z-50">
+          <PreviewToggleButton variant="full" />
+        </div>
+      </div>
+    </PreviewProvider>
+  );
+};

@@ -4,6 +4,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
+import { usePreview } from '@/contexts/PreviewContext';
 
 // Componente para drop zone entre blocos
 const InterBlockDropZone: React.FC<{
@@ -42,7 +43,6 @@ const InterBlockDropZone: React.FC<{
 interface CanvasDropZoneProps {
   blocks: Block[];
   selectedBlockId: string | null;
-  isPreviewing: boolean;
   onSelectBlock: (id: string) => void;
   onUpdateBlock: (id: string, updates: any) => void;
   onDeleteBlock: (id: string) => void;
@@ -52,12 +52,12 @@ interface CanvasDropZoneProps {
 export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   blocks,
   selectedBlockId,
-  isPreviewing,
   onSelectBlock,
   onUpdateBlock,
   onDeleteBlock,
   className,
 }) => {
+  const { isPreviewing } = usePreview();
   const { setNodeRef, isOver, active } = useDroppable({
     id: 'canvas-drop-zone',
     data: {
