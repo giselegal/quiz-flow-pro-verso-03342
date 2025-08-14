@@ -9,24 +9,23 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 
+import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
-import { ProductionMonitoringDashboard } from '@/components/editor/monitoring/ProductionMonitoringDashboard';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
 
 // Context & Hooks
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useEditor } from '@/context/EditorContext';
+import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
-import { BookOpen, Settings, Save, Eye } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { BookOpen, Eye, Save, Settings } from 'lucide-react';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -43,10 +42,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
-  
+
   // ✅ SISTEMA UNIFICADO DE NAVEGAÇÃO
   const funnelNavigation = useFunnelNavigation();
-  
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
@@ -116,7 +114,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       // Integração com navegação e salvamento
       funnelNavigation.handleSave();
       const result = await saveFunnel();
-      
+
       if (result.success) {
         console.log('✅ [Editor] Salvamento concluído com sucesso!');
       } else {
@@ -219,34 +217,21 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             </div>
 
             <div className="flex items-center space-x-2">
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={handleSave}
-                disabled={isSaving}
-              >
+              <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
                 <Save className="w-4 h-4 mr-2" />
                 {isSaving ? 'Salvando...' : 'Salvar'}
               </Button>
-              
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => setIsPreviewing(!isPreviewing)}
-              >
+
+              <Button size="sm" variant="outline" onClick={() => setIsPreviewing(!isPreviewing)}>
                 <Eye className="w-4 h-4 mr-2" />
                 {isPreviewing ? 'Editar' : 'Preview'}
               </Button>
-              
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => setShowFunnelSettings(true)}
-              >
+
+              <Button size="sm" variant="outline" onClick={() => setShowFunnelSettings(true)}>
                 <Settings className="w-4 h-4 mr-2" />
                 Configurar
               </Button>
-              
+
               <Button size="sm">
                 <BookOpen className="w-4 h-4 mr-2" />
                 Testar Funil
@@ -256,7 +241,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         </div>
 
         {/* NAVEGAÇÃO E TOOLBARS */}
-          <div className="flex-none">
+        <div className="flex-none">
           <div className="sticky top-0 bg-white z-20">
             {/* ✅ NAVEGAÇÃO UNIFICADA DO FUNIL */}
             <FunnelNavigation
@@ -269,7 +254,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               canNavigateNext={funnelNavigation.canNavigateNext}
               canNavigatePrevious={funnelNavigation.canNavigatePrevious}
             />
-            
+
             <EditorToolbar
               isPreviewing={isPreviewing}
               onTogglePreview={() => setIsPreviewing(!isPreviewing)}
@@ -281,7 +266,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             />
 
             {/* INFORMAÇÕES DA ETAPA ATUAL */}
-            <div style={{ borderColor: '#E5DDD5' }} className="border-b bg-gradient-to-r from-blue-50/50 to-purple-50/50">
+            <div
+              style={{ borderColor: '#E5DDD5' }}
+              className="border-b bg-gradient-to-r from-blue-50/50 to-purple-50/50"
+            >
               <div className="flex items-center justify-between p-3">
                 <div className="flex items-center space-x-4">
                   <h2 className="text-lg font-semibold text-stone-700 flex items-center gap-2">
@@ -291,7 +279,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     {funnelNavigation.stepName}
                   </h2>
                   <div className="flex items-center space-x-3 text-sm text-stone-500">
-                    <span>{totalBlocks} componente{totalBlocks !== 1 ? 's' : ''}</span>
+                    <span>
+                      {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''}
+                    </span>
                     <span>•</span>
                     <span>{Math.round(funnelNavigation.progressValue)}% completo</span>
                     <span>•</span>
