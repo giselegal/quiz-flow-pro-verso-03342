@@ -124,13 +124,13 @@ const QuizNavigation: React.FC<QuizNavigationProps> = ({
   };
 
   const getCategoryColor = (step: number) => {
-    if (step === 1) return 'bg-blue-500';
-    if (step >= 2 && step <= 14) return 'bg-purple-500';
-    if (step === 15) return 'bg-orange-500';
-    if (step >= 16 && step <= 19) return 'bg-green-500';
-    if (step === 20) return 'bg-red-500';
-    if (step === 21) return 'bg-amber-500';
-    return 'bg-gray-500';
+    if (step === 1) return 'bg-[#B89B7A]'; // Introdução - cor principal da marca
+    if (step >= 2 && step <= 14) return 'bg-[#8B6F47]'; // Descoberta - tom médio da paleta
+    if (step === 15) return 'bg-[#A67C52]'; // Processamento - variação da marca
+    if (step >= 16 && step <= 19) return 'bg-[#7A5A3A]'; // Resultado - tom escuro da paleta
+    if (step === 20) return 'bg-[#432818]'; // Captura - cor secundária da marca
+    if (step === 21) return 'bg-[#D4C4A8]'; // Oferta - tom claro da paleta
+    return 'bg-[#B89B7A]'; // Padrão - cor principal da marca
   };
 
   const nextButtonText = 'Avançar';

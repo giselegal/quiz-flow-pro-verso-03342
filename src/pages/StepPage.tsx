@@ -1,7 +1,10 @@
 // @ts-nocheck
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
-import React, { lazy, Suspense } from 'react';
+import { templateService } from '@/services/templateService';
+import { Block } from '@/types/editor';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'wouter';
 
 // Lazy loading dos componentes de step
@@ -61,8 +64,41 @@ const StepPage: React.FC = () => {
   const stepNumber = parseInt(step || '1');
   const navigation = useStepNavigationOffline();
 
+  // Estados para o sistema de blocos
+  const [blocks, setBlocks] = useState<Block[]>([]);
+  const [isLoadingTemplate, setIsLoadingTemplate] = useState(true);
+  const [templateError, setTemplateError] = useState<string | null>(null);
+
   // Verificar se a etapa é válida
   const stepConfig = STEPS_CONFIG.find(config => config.step === stepNumber);
+
+  // Carregar template da etapa
+  useEffect(() => {
+    const loadStepTemplate = async () => {
+      setIsLoadingTemplate(true);
+      setTemplateError(null);
+
+      try {
+        const template = await templateService.getTemplateByStep(stepNumber);
+        
+        if (template && template.blocks) {
+          const editorBlocks = templateService.convertTemplateBlocksToEditorBlocks(template.blocks);
+          setBlocks(editorBlocks);
+        } else {
+          // Fallback para etapas sem template específico
+          setBlocks([]);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar template:', error);
+        setTemplateError(error instanceof Error ? error.message : 'Erro desconhecido');
+        setBlocks([]);
+      } finally {
+        setIsLoadingTemplate(false);
+      }
+    };
+
+    loadStepTemplate();
+  }, [stepNumber]);
 
   if (!stepConfig) {
     return (
@@ -98,90 +134,154 @@ const StepPage: React.FC = () => {
     }
   };
 
-  // Renderizar conteúdo da etapa
+  // Funções para sistema de blocos (modo preview)
+  const handleSelectBlock = (id: string) => {
+    // No modo preview/produção, não permitir seleção
+  };
+
+  const handleUpdateBlock = (id: string, updates: any) => {
+    // No modo preview/produção, não permitir edição
+  };
+
+  const handleDeleteBlock = (id: string) => {
+    // No modo preview/produção, não permitir exclusão
+  };
+
+  // Renderizar conteúdo da etapa usando sistema de blocos
   const renderStepContent = () => {
     const sessionId = navigation.session?.id || `session-${Date.now()}`;
 
+    // Loading state
+    if (isLoadingTemplate) {
+      return (
+        <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B89B7A] mx-auto"></div>
+            <p className="text-[#6B4F43]">Carregando etapa {stepNumber}...</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Error state
+    if (templateError) {
+      return (
+        <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
+          <div className="bg-[#FAF9F7] border border-[#D4C4A8] rounded-lg p-6 text-center max-w-md">
+            <h2 className="text-xl font-bold text-[#432818] mb-2">Erro ao carregar a etapa</h2>
+            <p className="text-[#432818] mb-4">
+              Não foi possível carregar o conteúdo da etapa {stepNumber}.
+            </p>
+            <p className="text-sm text-[#8B6F47] mb-4">
+              {templateError}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-[#432818] text-white rounded hover:bg-[#2A1810]"
+            >
+              Recarregar
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     try {
-      // Renderização baseada no componente específico
-      switch (stepConfig.component) {
-        case 'Step01Template':
-          return (
-            <Suspense fallback={<LoadingSpinner />}>
-              <Step01Simple sessionId={sessionId} onNext={handleNext} />
-            </Suspense>
-          );
+      // Casos especiais para componentes customizados
+      if (stepConfig.component === 'Step01Template') {
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Step01Simple sessionId={sessionId} onNext={handleNext} />
+          </Suspense>
+        );
+      }
 
-        case 'Step20Result':
-          return (
-            <Suspense fallback={<LoadingSpinner />}>
-              <Step20Result sessionId={sessionId} onContinue={handleNext} />
-            </Suspense>
-          );
+      if (stepConfig.component === 'Step20Result') {
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Step20Result sessionId={sessionId} onContinue={handleNext} />
+        
+        </Suspense>
+        );
+      }
 
-        default:
-          // Componente genérico para etapas não implementadas
-          return (
-            <>
-              {/* 🚀 NAVEGAÇÃO PREMIUM INTEGRADA */}
-              <QuizNavigation
-                canProceed={true}
-                onNext={handleNext}
-                onPrevious={handlePrevious}
-                currentQuestionType="normal"
-                selectedOptionsCount={3}
-                isLastQuestion={stepNumber === 21}
-                currentStep={stepNumber}
-                totalSteps={21}
-                stepName={stepConfig.name}
-                showUserInfo={true}
-                userName={navigation.session?.userData?.name}
-                sessionId={navigation.session?.id}
-              />
+      // 🚀 SISTEMA DE BLOCOS - RENDERIZAÇÃO COMO PREVIEW DO EDITOR
+      return (
+        <>
+          {/* 🚀 NAVEGAÇÃO PREMIUM INTEGRADA */}
+          <QuizNavigation
+            canProceed={true}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            currentQuestionType="normal"
+            selectedOptionsCount={3}
+            isLastQuestion={stepNumber === 21}
+            currentStep={stepNumber}
+            totalSteps={21}
+            stepName={stepConfig.name}
+            showUserInfo={true}
+            userName={navigation.session?.userData?.name}
+            sessionId={navigation.session?.id}
+          />
 
-              <div className="min-h-screen bg-[#FAF9F7]">
-                <div className="container mx-auto px-4 py-8">
-                  {/* Conteúdo da Etapa */}
-                  <div className="max-w-4xl mx-auto">
-                    <div className="space-y-6">
-                      <div className="text-center">
-                        <h1 className="text-3xl font-bold text-[#432818] mb-4">
-                          {stepConfig.name}
-                        </h1>
-                        <p className="text-lg text-[#6B4F43] mb-8">{stepConfig.description}</p>
-                      </div>
+          {/* 🎯 CONTEÚDO RENDERIZADO COM SISTEMA DE BLOCOS */}
+          <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-white/30 to-[#B89B7A]/10">
+            <div className="container mx-auto px-4">
+              {blocks.length > 0 ? (
+                // Usar o mesmo sistema do editor em modo preview
+                <div className="max-w-4xl mx-auto">
+                  <CanvasDropZone
+                    blocks={blocks}
+                    selectedBlockId={null}
+                    isPreviewing={true} // 🎯 MODO PREVIEW - sem controles de edição
+                    onSelectBlock={handleSelectBlock}
+                    onUpdateBlock={handleUpdateBlock}
+                    onDeleteBlock={handleDeleteBlock}
+                    className="py-8"
+                  />
+                </div>
+              ) : (
+                // Fallback para etapas sem template de blocos
+                <div className="max-w-4xl mx-auto py-8">
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <h1 className="text-3xl font-bold text-[#432818] mb-4">
+                        {stepConfig.name}
+                      </h1>
+                      <p className="text-lg text-[#6B4F43] mb-8">{stepConfig.description}</p>
+                    </div>
 
-                      <div className="bg-white rounded-lg p-6 border border-gray-200">
-                        <p className="text-center text-gray-500">
-                          Conteúdo da etapa {stepNumber} será implementado aqui.
-                        </p>
-                        <p className="text-sm text-gray-400 mt-4 text-center">
-                          Template: step-{stepNumber.toString().padStart(2, '0')}.json
-                        </p>
-                      </div>
+                    <div className="bg-white rounded-lg p-6 border border-gray-200">
+                      <p className="text-center text-gray-500">
+                        Conteúdo da etapa {stepNumber} será implementado aqui.
+                      </p>
+                      <p className="text-sm text-gray-400 mt-4 text-center">
+                        Template: step-{stepNumber.toString().padStart(2, '0')}.json
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            </>
-          );
-      }
+              )}
+            </div>
+          </div>
+        </>
+      );
     } catch (error) {
       console.error('Erro ao renderizar conteúdo da etapa:', error);
 
       return (
         <div className="min-h-screen bg-[#FAF9F7] flex items-center justify-center">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center max-w-md">
-            <h2 className="text-xl font-bold text-red-800 mb-2">Erro ao carregar a etapa</h2>
-            <p className="text-red-600 mb-4">
+          <div className="bg-[#FAF9F7] border border-[#D4C4A8] rounded-lg p-6 text-center max-w-md">
+            <h2 className="text-xl font-bold text-[#432818] mb-2">Erro ao carregar a etapa</h2>
+            <p className="text-[#432818] mb-4">
               Não foi possível carregar o conteúdo da etapa {stepNumber}.
             </p>
-            <p className="text-sm text-red-500 mb-4">
+            <p className="text-sm text-[#8B6F47] mb-4">
               {error instanceof Error ? error.message : 'Erro desconhecido'}
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              className="px-4 py-2 bg-[#432818] text-white rounded hover:bg-[#2A1810]"
             >
               Recarregar
             </button>
