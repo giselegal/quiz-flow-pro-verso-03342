@@ -10,7 +10,6 @@ const ImageDisplayInlineBlockClean: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
   className = '',
 }) => {
   const {

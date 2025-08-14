@@ -8,8 +8,6 @@
 import { ComponentType } from 'react';
 import {
   getBlockComponent as getEnhancedComponent,
-  getBlockDefinition,
-  getAllBlockTypes,
 } from './enhancedBlockRegistry';
 
 // Import the new LeadFormBlock for direct mapping
@@ -59,7 +57,7 @@ export const hasBlockComponent = (blockType: string): boolean => {
 };
 
 // Re-export do sistema Enhanced para compatibilidade
-export { getBlockDefinition, getAllBlockTypes };
+// export { getBlockDefinition, getAllBlockTypes };
 
 // Mantém compatibilidade com código legado
 export const EDITOR_BLOCKS_MAP = UNIFIED_BLOCK_MAP;
