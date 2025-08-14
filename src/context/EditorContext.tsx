@@ -9,6 +9,7 @@ import React, {
   useState,
 } from 'react';
 import { useTemplateManager } from '../hooks/useTemplateManager';
+import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
 import type { Block } from '../types/editor';
 import { EditorBlock, FunnelStage } from '../types/editor';
 import { TemplateManager } from '../utils/TemplateManager';
@@ -79,6 +80,11 @@ interface EditorContextType {
     loadTemplateByStep: (step: number) => Promise<void>;
     applyCurrentTemplate: () => Promise<void>;
     isLoadingTemplate: boolean;
+  };
+
+  persistenceActions: {
+    saveFunnel: () => Promise<{ success: boolean; error?: string }>;
+    isSaving: boolean;
   };
 
   uiState: {
@@ -196,6 +202,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       await updateBlock(blockId, updates);
     },
   });
+
+  // ✅ INTEGRAÇÃO COM SISTEMA DE PERSISTÊNCIA
+  const { saveFunnel: saveFunnelToPersistence, isSaving: isPersistenceSaving } = useEditorPersistence();
 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
@@ -369,6 +378,55 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO
 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+
+  // ✅ FUNÇÃO PARA SALVAR O ESTADO ATUAL DO EDITOR
+  const saveFunnel = useCallback(async () => {
+    try {
+      console.log('💾 [EditorContext] Iniciando salvamento do funil...');
+      
+      // Converter o estado atual do editor para o formato de persistência
+      const funnelData = {
+        id: funnelId,
+        name: `Quiz Funil - ${new Date().toLocaleDateString()}`,
+        description: 'Funil criado com Editor Visual',
+        isPublished: false,
+        version: 1,
+        settings: {
+          theme: 'default',
+          primaryColor: '#B89B7A',
+          secondaryColor: '#432818',
+        },
+        pages: stages.map((stage, index) => ({
+          id: stage.id,
+          pageType: stage.type,
+          pageOrder: index,
+          title: stage.name,
+          blocks: stageBlocks[stage.id] || [],
+          metadata: stage.metadata || {},
+        })),
+      };
+
+      console.log('📊 [EditorContext] Dados a serem salvos:', {
+        funnelId,
+        stagesCount: stages.length,
+        pagesCount: funnelData.pages.length,
+        totalBlocks: Object.values(stageBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
+      });
+
+      const result = await saveFunnelToPersistence(funnelData);
+      
+      if (result.success) {
+        console.log('✅ [EditorContext] Funil salvo com sucesso!');
+      } else {
+        console.error('❌ [EditorContext] Falha no salvamento:', result.error);
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('❌ [EditorContext] Erro inesperado ao salvar:', error);
+      return { success: false, error: 'Erro inesperado' };
+    }
+  }, [funnelId, stages, stageBlocks, saveFunnelToPersistence]);
 
   // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
   useEffect(() => {
@@ -1269,6 +1327,11 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         await templateManager.applyCurrentTemplate();
       },
       isLoadingTemplate: templateManager.isLoading,
+    },
+
+    persistenceActions: {
+      saveFunnel,
+      isSaving: isPersistenceSaving,
     },
 
     uiState: {
