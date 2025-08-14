@@ -44,9 +44,6 @@ import BonusShowcaseBlock from '../components/blocks/inline/BonusShowcaseBlock';
 import LoadingAnimationBlock from '../components/blocks/inline/LoadingAnimationBlock';
 import ResultStyleCardBlock from '../components/blocks/inline/ResultStyleCardBlock';
 
-// Componentes Step01
-import { IntroBlock } from '../components/steps/step01/IntroBlock';
-
 // Componentes de Oferta (Etapa 21) - removidos durante limpeza
 // Imports removidos durante limpeza de conflitos:
 // import {
@@ -73,7 +70,6 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   // Quiz Components - Principais
   'quiz-intro-header': QuizIntroHeaderBlock,
   'quiz-header': QuizIntroHeaderBlock, // Alias
-  'step01-intro': IntroBlock,
   'form-input': FormInputBlock,
   'lead-form': LeadFormBlock, // ✅ Componente específico para multiple fields
 
@@ -130,7 +126,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   strategicQuestion: TextInlineBlock, // Fallback para tipo "strategicQuestion"
   mainTransition: TextInlineBlock, // Fallback para tipo "mainTransition"
   result: QuizResultsEditor, // Fallback para tipo "result"
-  intro: IntroBlock, // Fallback para tipo "intro"
+  intro: TextInlineBlock, // Fallback para tipo "intro"
   progress: QuizProgressBlock, // Fallback para tipo "progress"
 };
 
@@ -161,7 +157,7 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
 
     // Quiz específicos
     'quiz-header': 'quiz-intro-header',
-    intro: 'step01-intro',
+    intro: 'text-inline',
     form: 'form-input',
     'lead-form': 'lead-form', // ✅ Mantém mapeamento direto
     options: 'options-grid',
