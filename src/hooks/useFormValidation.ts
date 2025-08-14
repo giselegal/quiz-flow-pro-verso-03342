@@ -21,42 +21,42 @@ export const useFormValidation = (formData: Record<string, string>) => {
   // Regras de validação por tipo de campo
   const validateField = useCallback((fieldName: string, value: string): ValidationResult => {
     const trimmedValue = value.trim();
-    
+
     switch (fieldName) {
       case 'name':
         return {
           isValid: trimmedValue.length >= 2,
-          message: trimmedValue.length < 2 ? 'Nome deve ter pelo menos 2 caracteres' : ''
+          message: trimmedValue.length < 2 ? 'Nome deve ter pelo menos 2 caracteres' : '',
         };
-      
+
       case 'email':
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValidEmail = emailRegex.test(trimmedValue);
         return {
           isValid: isValidEmail,
-          message: isValidEmail ? '' : 'E-mail inválido'
+          message: isValidEmail ? '' : 'E-mail inválido',
         };
-      
+
       case 'phone':
         const phoneDigits = trimmedValue.replace(/\D/g, '');
         const isValidPhone = phoneDigits.length >= 10;
         return {
           isValid: isValidPhone,
-          message: isValidPhone ? '' : 'Telefone deve ter pelo menos 10 dígitos'
+          message: isValidPhone ? '' : 'Telefone deve ter pelo menos 10 dígitos',
         };
-      
+
       case 'whatsapp':
         const whatsappDigits = trimmedValue.replace(/\D/g, '');
         const isValidWhatsapp = whatsappDigits.length >= 10;
         return {
           isValid: isValidWhatsapp,
-          message: isValidWhatsapp ? '' : 'WhatsApp deve ter pelo menos 10 dígitos'
+          message: isValidWhatsapp ? '' : 'WhatsApp deve ter pelo menos 10 dígitos',
         };
-      
+
       default:
         return {
           isValid: trimmedValue.length > 0,
-          message: trimmedValue.length === 0 ? 'Campo obrigatório' : ''
+          message: trimmedValue.length === 0 ? 'Campo obrigatório' : '',
         };
     }
   }, []);
@@ -81,19 +81,28 @@ export const useFormValidation = (formData: Record<string, string>) => {
   }, [formData, validateField]);
 
   // Validar campo individual
-  const validateSingleField = useCallback((fieldName: string, value: string) => {
-    return validateField(fieldName, value);
-  }, [validateField]);
+  const validateSingleField = useCallback(
+    (fieldName: string, value: string) => {
+      return validateField(fieldName, value);
+    },
+    [validateField]
+  );
 
   // Obter mensagem de validação de um campo
-  const getFieldValidation = useCallback((fieldName: string): ValidationResult => {
-    return validationState[fieldName] || { isValid: false, message: '' };
-  }, [validationState]);
+  const getFieldValidation = useCallback(
+    (fieldName: string): ValidationResult => {
+      return validationState[fieldName] || { isValid: false, message: '' };
+    },
+    [validationState]
+  );
 
   // Verificar se um campo específico é válido
-  const isFieldValid = useCallback((fieldName: string): boolean => {
-    return validationState[fieldName]?.isValid || false;
-  }, [validationState]);
+  const isFieldValid = useCallback(
+    (fieldName: string): boolean => {
+      return validationState[fieldName]?.isValid || false;
+    },
+    [validationState]
+  );
 
   // Obter resumo da validação
   const getValidationSummary = useCallback(() => {
@@ -108,7 +117,7 @@ export const useFormValidation = (formData: Record<string, string>) => {
       validFields,
       invalidFields,
       isComplete: isFormValid,
-      completionPercentage: totalFields > 0 ? Math.round((validFields / totalFields) * 100) : 0
+      completionPercentage: totalFields > 0 ? Math.round((validFields / totalFields) * 100) : 0,
     };
   }, [formData, validationState, isFormValid]);
 
@@ -124,7 +133,7 @@ export const useFormValidation = (formData: Record<string, string>) => {
     getValidationSummary,
 
     // Utilities
-    hasErrors: Object.values(validationState).some(v => !v.isValid && v.message.length > 0)
+    hasErrors: Object.values(validationState).some(v => !v.isValid && v.message.length > 0),
   };
 };
 

@@ -13,44 +13,51 @@ export interface Step01ValidationEvents {
 export const useStep01Validation = ({
   onNameValid,
   onFormComplete,
-  onButtonStateChange
+  onButtonStateChange,
 }: Step01ValidationEvents = {}) => {
-
   // Handler para validação do campo nome no step-01
-  const handleNameValidation = useCallback((event: CustomEvent) => {
-    const { detail } = event;
-    const { value, valid } = detail;
-    
-    console.log('📝 Step01 name validation:', { value, valid });
-    
-    if (onNameValid) {
-      onNameValid(valid, value);
-    }
+  const handleNameValidation = useCallback(
+    (event: CustomEvent) => {
+      const { detail } = event;
+      const { value, valid } = detail;
 
-    // Disparar evento de mudança de estado do botão
-    if (onButtonStateChange) {
-      onButtonStateChange(valid);
-    }
+      console.log('📝 Step01 name validation:', { value, valid });
 
-    // Disparar evento nativo para o FormContainerBlock
-    window.dispatchEvent(new CustomEvent('step01-button-state-change', {
-      detail: {
-        buttonId: 'cta-button-modular',
-        enabled: valid,
-        disabled: !valid
+      if (onNameValid) {
+        onNameValid(valid, value);
       }
-    }));
-  }, [onNameValid, onButtonStateChange]);
+
+      // Disparar evento de mudança de estado do botão
+      if (onButtonStateChange) {
+        onButtonStateChange(valid);
+      }
+
+      // Disparar evento nativo para o FormContainerBlock
+      window.dispatchEvent(
+        new CustomEvent('step01-button-state-change', {
+          detail: {
+            buttonId: 'cta-button-modular',
+            enabled: valid,
+            disabled: !valid,
+          },
+        })
+      );
+    },
+    [onNameValid, onButtonStateChange]
+  );
 
   // Handler para formulário completo no step-01
-  const handleFormComplete = useCallback((event: CustomEvent) => {
-    const { detail } = event;
-    console.log('✅ Step01 form complete:', detail);
-    
-    if (onFormComplete) {
-      onFormComplete(detail.formData || {});
-    }
-  }, [onFormComplete]);
+  const handleFormComplete = useCallback(
+    (event: CustomEvent) => {
+      const { detail } = event;
+      console.log('✅ Step01 form complete:', detail);
+
+      if (onFormComplete) {
+        onFormComplete(detail.formData || {});
+      }
+    },
+    [onFormComplete]
+  );
 
   // Registrar event listeners
   useEffect(() => {
@@ -70,14 +77,16 @@ export const useStep01Validation = ({
 
   // Função para disparar eventos manualmente
   const dispatchNameValidation = useCallback((name: string, isValid: boolean) => {
-    window.dispatchEvent(new CustomEvent('quiz-input-change', {
-      detail: {
-        blockId: 'intro-name-input',
-        value: name,
-        valid: isValid,
-        field: 'name'
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('quiz-input-change', {
+        detail: {
+          blockId: 'intro-name-input',
+          value: name,
+          valid: isValid,
+          field: 'name',
+        },
+      })
+    );
   }, []);
 
   return {

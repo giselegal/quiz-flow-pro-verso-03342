@@ -39,7 +39,7 @@ export type UpdateComponentInput = {
 
 /**
  * Serviço para gerenciar componentes do funil no Supabase
- * 
+ *
  * Funcionalidades:
  * - CRUD de componentes por etapa
  * - Validação rigorosa de reordenação
@@ -52,9 +52,9 @@ export const funnelComponentsService = {
    */
   async getComponents(params: { funnelId: string; stepNumber: number }) {
     const { funnelId, stepNumber } = params;
-    
+
     console.log(`🔍 Buscando componentes: funil=${funnelId}, etapa=${stepNumber}`);
-    
+
     const { data, error } = await supabase
       .from('component_instances')
       .select('*')
@@ -66,7 +66,7 @@ export const funnelComponentsService = {
       console.error('❌ Erro ao buscar componentes:', error);
       throw error;
     }
-    
+
     console.log(`✅ Encontrados ${data?.length || 0} componentes`);
     return (data || []) as ComponentInstance[];
   },
@@ -75,14 +75,14 @@ export const funnelComponentsService = {
    * Adiciona novo componente à etapa
    */
   async addComponent(input: AddComponentInput) {
-    const { 
-      funnelId, 
-      stepNumber, 
-      instanceKey, 
-      componentTypeKey, 
-      orderIndex, 
-      properties = {}, 
-      stageId = null 
+    const {
+      funnelId,
+      stepNumber,
+      instanceKey,
+      componentTypeKey,
+      orderIndex,
+      properties = {},
+      stageId = null,
     } = input;
 
     console.log(`➕ Adicionando componente: ${componentTypeKey} na posição ${orderIndex}`);
@@ -142,10 +142,7 @@ export const funnelComponentsService = {
   async deleteComponent(id: string) {
     console.log(`🗑️ Removendo componente: ${id}`);
 
-    const { error } = await supabase
-      .from('component_instances')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('component_instances').delete().eq('id', id);
 
     if (error) {
       console.error('❌ Erro ao remover componente:', error);
@@ -160,11 +157,7 @@ export const funnelComponentsService = {
    * Reordena componentes com validação rigorosa
    * Garante que a nova ordem é uma permutação exata dos IDs existentes
    */
-  async reorderComponents(params: { 
-    funnelId: string; 
-    stepNumber: number; 
-    newOrderIds: string[] 
-  }) {
+  async reorderComponents(params: { funnelId: string; stepNumber: number; newOrderIds: string[] }) {
     const { funnelId, stepNumber, newOrderIds } = params;
 
     console.log(`🔀 Reordenando componentes: ${newOrderIds.length} itens`);
@@ -184,7 +177,7 @@ export const funnelComponentsService = {
     // Validação: conjunto idêntico de IDs
     const currentSet = new Set(currentIds);
     const newSet = new Set(newIds);
-    
+
     if (currentSet.size !== newSet.size) {
       throw new Error('Reordenação inválida: IDs duplicados detectados');
     }
@@ -198,14 +191,14 @@ export const funnelComponentsService = {
     // Aplicar nova ordem sequencialmente
     // Para atomicidade total, considerar usar uma stored procedure/RPC
     console.log('🔄 Aplicando nova ordem...');
-    
+
     for (let i = 0; i < newOrderIds.length; i++) {
       const id = newOrderIds[i];
       const { error } = await supabase
         .from('component_instances')
         .update({ order_index: i + 1 })
         .eq('id', id);
-        
+
       if (error) {
         console.error(`❌ Erro ao reordenar item ${id}:`, error);
         throw error;
@@ -236,5 +229,5 @@ export const funnelComponentsService = {
 
     console.log(`✅ Encontrados ${data?.length || 0} tipos de componentes`);
     return data || [];
-  }
+  },
 };

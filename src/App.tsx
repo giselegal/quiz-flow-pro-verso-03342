@@ -311,7 +311,10 @@ function App() {
                   path="/test-supabase-integration"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
-                      <TestSupabaseIntegration />
+                      <div className="p-8">
+                        <h1>Teste Supabase - Página removida</h1>
+                        <p>Esta página foi removida durante a limpeza de conflitos.</p>
+                      </div>
                     </Suspense>
                   )}
                 />

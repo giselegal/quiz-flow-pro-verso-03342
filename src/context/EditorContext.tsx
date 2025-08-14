@@ -49,7 +49,7 @@ interface EditorContextType {
   activeStageId: string; // ✅ ETAPA ATIVA ATUAL
   selectedBlockId: string | null; // ✅ BLOCO SELECIONADO
   editorState: EditorState; // ✅ ESTADO DO EDITOR
-  
+
   // ✅ NOVO: Sistema de persistência Supabase
   funnelId: string; // ✅ ID DO FUNIL ATUAL
   isSupabaseEnabled: boolean; // ✅ PERSISTÊNCIA HABILITADA
@@ -144,17 +144,17 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // Estado principal do editor
   const [state, dispatch] = useReducer(reducer, initialState);
-  
+
   // ✅ NOVO: Sistema de persistência Supabase
   const funnelId = getFunnelIdFromEnvOrStorage() || 'default-funnel';
   console.log('🔍 EditorProvider: FunnelId inicializado:', funnelId);
-  
+
   const [activeStageId, setActiveStageId] = useState<string>('step-01');
   const currentStepNumber = parseStepNumberFromStageId(activeStageId);
-  
+
   // Configuração de persistência
   const isSupabaseEnabled = import.meta.env.VITE_EDITOR_SUPABASE_ENABLED === 'true';
-  
+
   // Hook para gerenciar componentes no Supabase
   const {
     components: supabaseComponents,
@@ -169,7 +169,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     stepNumber: currentStepNumber,
     enabled: isSupabaseEnabled,
   });
-  
+
   console.log('📊 Supabase Integration:', {
     enabled: isSupabaseEnabled,
     funnelId,
@@ -204,7 +204,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   });
 
   // ✅ INTEGRAÇÃO COM SISTEMA DE PERSISTÊNCIA
-  const { saveFunnel: saveFunnelToPersistence, isSaving: isPersistenceSaving } = useEditorPersistence();
+  const { saveFunnel: saveFunnelToPersistence, isSaving: isPersistenceSaving } =
+    useEditorPersistence();
 
   // ═══════════════════════════════════════════════
   // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
@@ -345,7 +346,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
           const adjustedLoaded: EditorBlock[] = (loadedBlocks || []).map((b, idx) => ({
             ...b,
-            order: hasHeader ? b.order ?? idx + 1 : idx + 2,
+            order: hasHeader ? (b.order ?? idx + 1) : idx + 2,
           }));
 
           const withHeader: EditorBlock[] = hasHeader
@@ -383,7 +384,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const saveFunnel = useCallback(async () => {
     try {
       console.log('💾 [EditorContext] Iniciando salvamento do funil...');
-      
+
       // Converter o estado atual do editor para o formato de persistência
       const funnelData = {
         id: funnelId,
@@ -414,13 +415,13 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       });
 
       const result = await saveFunnelToPersistence(funnelData);
-      
+
       if (result.success) {
         console.log('✅ [EditorContext] Funil salvo com sucesso!');
       } else {
         console.error('❌ [EditorContext] Falha no salvamento:', result.error);
       }
-      
+
       return result;
     } catch (error) {
       console.error('❌ [EditorContext] Erro inesperado ao salvar:', error);
@@ -580,10 +581,12 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
         const adjustedLoaded: EditorBlock[] = (loadedBlocks || []).map((b, idx) => ({
           ...b,
-          order: hasHeader ? b.order ?? idx + 1 : idx + 2,
+          order: hasHeader ? (b.order ?? idx + 1) : idx + 2,
         }));
 
-        const withHeader: EditorBlock[] = hasHeader ? adjustedLoaded : [headerBlock, ...adjustedLoaded];
+        const withHeader: EditorBlock[] = hasHeader
+          ? adjustedLoaded
+          : [headerBlock, ...adjustedLoaded];
 
         if (withHeader && withHeader.length > 0) {
           setStageBlocks(prev => ({
@@ -591,7 +594,9 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             [stageId]: withHeader, // ✅ Usar blocos com Header garantido
           }));
 
-          console.log(`✅ Template ${stageId} carregado dinamicamente: ${withHeader.length} blocos`);
+          console.log(
+            `✅ Template ${stageId} carregado dinamicamente: ${withHeader.length} blocos`
+          );
           console.log(`📦 Tipos de blocos: ${withHeader.map(b => b.type).join(', ')}`);
 
           // Atualizar metadados da etapa
@@ -771,7 +776,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           console.log('🔄 Persistindo bloco no Supabase...');
           // const instanceKey = `${type}-${blockOrder}-${Date.now()}`; // TODO: Usar se necessário
           const supabaseComponent = await addSupabaseComponent(type, blockOrder - 1);
-          
+
           if (supabaseComponent) {
             console.log('✅ Bloco persistido no Supabase:', supabaseComponent.id);
             // Atualizar ID local para usar o ID do Supabase
@@ -806,7 +811,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       );
       return newBlock.id;
     },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById, isSupabaseEnabled, addSupabaseComponent]
+    [
+      activeStageId,
+      validateStageId,
+      stageBlocks,
+      updateStage,
+      getStageById,
+      isSupabaseEnabled,
+      addSupabaseComponent,
+    ]
   );
 
   const addBlockAtPosition = useCallback(
@@ -835,7 +848,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         try {
           console.log('🔄 Persistindo bloco na posição no Supabase...');
           const supabaseComponent = await addSupabaseComponent(type, position);
-          
+
           if (supabaseComponent) {
             console.log('✅ Bloco na posição persistido no Supabase:', supabaseComponent.id);
             newBlock.id = supabaseComponent.id;
@@ -880,7 +893,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       );
       return newBlock.id;
     },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById, isSupabaseEnabled, addSupabaseComponent]
+    [
+      activeStageId,
+      validateStageId,
+      stageBlocks,
+      updateStage,
+      getStageById,
+      isSupabaseEnabled,
+      addSupabaseComponent,
+    ]
   );
 
   // 🎯 SISTEMA 1: FUNÇÃO DE DUPLICAÇÃO SEMÂNTICA
@@ -961,7 +982,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       const currentIds = new Set(currentStageBlocks.map(b => b.id));
       const newIds = new Set(blockIds);
-      
+
       if (currentIds.size !== newIds.size) {
         console.warn('⚠️ EditorContext: Reordenação inválida - IDs duplicados');
         return;
@@ -1025,7 +1046,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           // Verificar se é um bloco da etapa ativa
           const currentStageBlocks = stageBlocks[activeStageId] || [];
           const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
-          
+
           if (isActiveStageBlock) {
             console.log('🔄 Removendo bloco do Supabase...');
             await deleteSupabaseComponent(blockId);
@@ -1072,112 +1093,132 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setSelectedBlockId(null);
       }
 
-      console.log(`🗑️ EditorContext: Bloco removido ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`, blockId, 'da etapa:', deletedFromStage);
+      console.log(
+        `🗑️ EditorContext: Bloco removido ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`,
+        blockId,
+        'da etapa:',
+        deletedFromStage
+      );
     },
-    [selectedBlockId, getStageById, updateStage, isSupabaseEnabled, deleteSupabaseComponent, stageBlocks, activeStageId]
+    [
+      selectedBlockId,
+      getStageById,
+      updateStage,
+      isSupabaseEnabled,
+      deleteSupabaseComponent,
+      stageBlocks,
+      activeStageId,
+    ]
   );
 
   // ✅ ENHANCED: updateBlock com integração Supabase
-  const updateBlock = useCallback(async (blockId: string, updates: Partial<EditorBlock>) => {
-    console.log('🔧 EditorContext updateBlock chamado:', { blockId, updates });
+  const updateBlock = useCallback(
+    async (blockId: string, updates: Partial<EditorBlock>) => {
+      console.log('🔧 EditorContext updateBlock chamado:', { blockId, updates });
 
-    // ✅ INTEGRAÇÃO SUPABASE: Persistir se habilitado
-    if (isSupabaseEnabled) {
-      try {
-        // Verificar se é um bloco da etapa ativa (Supabase só gerencia etapa ativa)
-        const currentStageBlocks = stageBlocks[activeStageId] || [];
-        const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
-        
-        if (isActiveStageBlock && updates.properties) {
-          console.log('🔄 Atualizando bloco no Supabase...');
-          await updateSupabaseComponent(blockId, { properties: updates.properties });
-          console.log('✅ Bloco atualizado no Supabase');
+      // ✅ INTEGRAÇÃO SUPABASE: Persistir se habilitado
+      if (isSupabaseEnabled) {
+        try {
+          // Verificar se é um bloco da etapa ativa (Supabase só gerencia etapa ativa)
+          const currentStageBlocks = stageBlocks[activeStageId] || [];
+          const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
+
+          if (isActiveStageBlock && updates.properties) {
+            console.log('🔄 Atualizando bloco no Supabase...');
+            await updateSupabaseComponent(blockId, { properties: updates.properties });
+            console.log('✅ Bloco atualizado no Supabase');
+          }
+        } catch (error) {
+          console.error('❌ Erro ao atualizar no Supabase:', error);
+          // Continuar com atualização local
         }
-      } catch (error) {
-        console.error('❌ Erro ao atualizar no Supabase:', error);
-        // Continuar com atualização local
       }
-    }
 
-    // Atualizar estado local
-    setStageBlocks(prev => {
-      const updated = { ...prev };
+      // Atualizar estado local
+      setStageBlocks(prev => {
+        const updated = { ...prev };
 
-      for (const stageId in updated) {
-        const blocks = updated[stageId];
-        const blockIndex = blocks.findIndex(block => block.id === blockId);
+        for (const stageId in updated) {
+          const blocks = updated[stageId];
+          const blockIndex = blocks.findIndex(block => block.id === blockId);
 
-        if (blockIndex !== -1) {
-          updated[stageId] = blocks.map(block => {
-            if (block.id === blockId) {
-              console.log('🔧 Bloco encontrado, estado atual:', block);
+          if (blockIndex !== -1) {
+            updated[stageId] = blocks.map(block => {
+              if (block.id === blockId) {
+                console.log('🔧 Bloco encontrado, estado atual:', block);
 
-              // Criar uma nova cópia do bloco
-              const updatedBlock = { ...block };
+                // Criar uma nova cópia do bloco
+                const updatedBlock = { ...block };
 
-              // Processar cada propriedade de atualização separadamente
-              Object.entries(updates).forEach(([key, value]) => {
-                console.log(`🔧 Processando update: ${key} =`, value);
+                // Processar cada propriedade de atualização separadamente
+                Object.entries(updates).forEach(([key, value]) => {
+                  console.log(`🔧 Processando update: ${key} =`, value);
 
-                if (key === 'properties') {
-                  // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
-                  updatedBlock.properties = {
-                    ...block.properties,
-                    ...(value as Record<string, any>),
-                  };
-                  console.log('🔧 Properties merged:', updatedBlock.properties);
-
-                  // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
-                  updatedBlock.content = {
-                    ...block.content,
-                    ...(value as Record<string, any>),
-                  };
-                  console.log('🔧 Content também sincronizado:', updatedBlock.content);
-                } else if (key === 'content') {
-                  // Para content, fazer um merge profundo preservando imutabilidade
-                  updatedBlock.content = {
-                    ...block.content,
-                    ...(value as Record<string, any>),
-                  };
-                  console.log('🔧 Content atualizado:', updatedBlock.content);
-                } else {
-                  // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
-                  if (block.content && typeof value !== 'object') {
-                    updatedBlock.content = {
-                      ...block.content,
-                      [key]: value,
-                    };
-                    console.log('🔧 Content direto atualizado:', updatedBlock.content);
-                  }
-
-                  if (block.properties) {
+                  if (key === 'properties') {
+                    // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
                     updatedBlock.properties = {
                       ...block.properties,
-                      [key]: value,
+                      ...(value as Record<string, any>),
                     };
-                    console.log('🔧 Properties direto atualizada:', updatedBlock.properties);
+                    console.log('🔧 Properties merged:', updatedBlock.properties);
+
+                    // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
+                    updatedBlock.content = {
+                      ...block.content,
+                      ...(value as Record<string, any>),
+                    };
+                    console.log('🔧 Content também sincronizado:', updatedBlock.content);
+                  } else if (key === 'content') {
+                    // Para content, fazer um merge profundo preservando imutabilidade
+                    updatedBlock.content = {
+                      ...block.content,
+                      ...(value as Record<string, any>),
+                    };
+                    console.log('🔧 Content atualizado:', updatedBlock.content);
                   } else {
-                    // Para outras propriedades, atualização direta com casting seguro
-                    (updatedBlock as any)[key] = value;
-                    console.log(`🔧 Propriedade direta ${key} atualizada:`, value);
+                    // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
+                    if (block.content && typeof value !== 'object') {
+                      updatedBlock.content = {
+                        ...block.content,
+                        [key]: value,
+                      };
+                      console.log('🔧 Content direto atualizado:', updatedBlock.content);
+                    }
+
+                    if (block.properties) {
+                      updatedBlock.properties = {
+                        ...block.properties,
+                        [key]: value,
+                      };
+                      console.log('🔧 Properties direto atualizada:', updatedBlock.properties);
+                    } else {
+                      // Para outras propriedades, atualização direta com casting seguro
+                      (updatedBlock as any)[key] = value;
+                      console.log(`🔧 Propriedade direta ${key} atualizada:`, value);
+                    }
                   }
-                }
-              });
+                });
 
-              console.log('🔧 Bloco final atualizado:', updatedBlock);
-              return updatedBlock;
-            }
-            return block;
-          });
-          break;
+                console.log('🔧 Bloco final atualizado:', updatedBlock);
+                return updatedBlock;
+              }
+              return block;
+            });
+            break;
+          }
         }
-      }
 
-      return updated;
-    });
+        return updated;
+      });
 
-    console.log(`📝 EditorContext: Bloco atualizado ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`, blockId, updates);
-  }, [isSupabaseEnabled, updateSupabaseComponent, stageBlocks, activeStageId]);
+      console.log(
+        `📝 EditorContext: Bloco atualizado ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`,
+        blockId,
+        updates
+      );
+    },
+    [isSupabaseEnabled, updateSupabaseComponent, stageBlocks, activeStageId]
+  );
 
   const getBlocksForStage = useCallback(
     (stageId: string): EditorBlock[] => {
@@ -1287,7 +1328,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     activeStageId,
     selectedBlockId,
     editorState: state,
-    
+
     // ✅ NOVO: Sistema de persistência Supabase
     funnelId,
     isSupabaseEnabled,

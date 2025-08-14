@@ -53,7 +53,7 @@ export const getStepName = (stepNumber: number): string => {
     1: 'Introdução',
     2: 'Nome',
     3: 'Roupa Favorita',
-    4: 'Estilo Pessoal', 
+    4: 'Estilo Pessoal',
     5: 'Ocasiões',
     6: 'Cores',
     7: 'Texturas',
@@ -70,7 +70,7 @@ export const getStepName = (stepNumber: number): string => {
     18: 'Resultado Completo',
     19: 'Resultado Final',
     20: 'Lead Capture',
-    21: 'Oferta'
+    21: 'Oferta',
   };
   return stepNames[stepNumber] || `Etapa ${stepNumber}`;
 };

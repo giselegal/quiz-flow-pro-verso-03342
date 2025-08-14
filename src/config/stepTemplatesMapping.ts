@@ -43,13 +43,14 @@ const STEP_CONFIGS = [
 // Template padrão para fallback
 const getDefaultTemplate = (stepNumber: number) => {
   const config = STEP_CONFIGS[stepNumber - 1];
-  
+
   return [
     {
       id: `step${stepNumber}-header`,
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -80,7 +81,7 @@ const getDefaultTemplate = (stepNumber: number) => {
         textAlign: 'text-center',
         color: '#6B4F43',
       },
-    }
+    },
   ];
 };
 
@@ -90,7 +91,8 @@ const getStep1IntroTemplate = () => [
     id: 'intro-header',
     type: 'quiz-intro-header',
     properties: {
-      logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+      logoUrl:
+        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       logoAlt: 'Logo Gisele Galvão',
       logoWidth: 96,
       logoHeight: 96,
@@ -110,16 +112,17 @@ const getStep1IntroTemplate = () => [
       ctaColor: '#B89B7A',
       backgroundColor: '#FAF9F7',
     },
-  }
+  },
 ];
 
 // 📋 TEMPLATES COMPLETOS DE CADA ETAPA
 export const STEP_TEMPLATES: StepTemplate[] = STEP_CONFIGS.map((config, index) => {
   const stepNumber = index + 1;
-  
+
   return {
     stepNumber,
-    templateFunction: stepNumber === 1 ? getStep1IntroTemplate : () => getDefaultTemplate(stepNumber),
+    templateFunction:
+      stepNumber === 1 ? getStep1IntroTemplate : () => getDefaultTemplate(stepNumber),
     name: config.name,
     description: config.description,
   };
@@ -138,7 +141,7 @@ export const getTotalSteps = (): number => {
 export const STEP_CONFIG: StepConfig[] = STEP_TEMPLATES.map(template => ({
   step: template.stepNumber,
   name: template.name,
-  description: template.description
+  description: template.description,
 }));
 
 // 📊 ESTATÍSTICAS

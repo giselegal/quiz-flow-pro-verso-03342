@@ -251,22 +251,26 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}
                 </span>
                 <div className="flex gap-2">
-                  <button 
-                    onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)}
+                  <button
+                    onClick={() =>
+                      funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)
+                    }
                     disabled={!funnelNavigation.canNavigatePrevious}
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 text-sm"
                   >
                     Anterior
                   </button>
-                  <button 
+                  <button
                     onClick={funnelNavigation.handleSave}
                     disabled={funnelNavigation.isSaving}
                     className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50 text-sm"
                   >
                     {funnelNavigation.isSaving ? 'Salvando...' : 'Salvar'}
                   </button>
-                  <button 
-                    onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)}
+                  <button
+                    onClick={() =>
+                      funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)
+                    }
                     disabled={!funnelNavigation.canNavigateNext}
                     className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50 text-sm"
                   >

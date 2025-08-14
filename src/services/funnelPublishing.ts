@@ -39,7 +39,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     if (!validation.isValid) {
       return {
         success: false,
-        error: `Validação falhou: ${validation.errors.join(', ')}`
+        error: `Validação falhou: ${validation.errors.join(', ')}`,
       };
     }
 
@@ -52,7 +52,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
         description: funnelData.description,
         is_published: true,
         settings: funnelData.settings || {},
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -61,7 +61,7 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       console.error('❌ Erro ao salvar funil:', funnelError);
       return {
         success: false,
-        error: `Erro ao salvar funil: ${funnelError.message}`
+        error: `Erro ao salvar funil: ${funnelError.message}`,
       };
     }
 
@@ -76,19 +76,17 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
       metadata: {
         stepNumber: stage.order,
         totalSteps: 21,
-        createdAt: new Date().toISOString()
-      }
+        createdAt: new Date().toISOString(),
+      },
     }));
 
-    const { error: pagesError } = await supabase
-      .from('funnel_pages')
-      .upsert(pages);
+    const { error: pagesError } = await supabase.from('funnel_pages').upsert(pages);
 
     if (pagesError) {
       console.error('❌ Erro ao salvar páginas:', pagesError);
       return {
         success: false,
-        error: `Erro ao salvar páginas: ${pagesError.message}`
+        error: `Erro ao salvar páginas: ${pagesError.message}`,
       };
     }
 
@@ -104,14 +102,13 @@ export const publishFunnel = async (funnelData: PublishFunnelData): Promise<Publ
     return {
       success: true,
       publicUrl,
-      funnelId: funnelData.id
+      funnelId: funnelData.id,
     };
-
   } catch (error) {
     console.error('❌ Erro na publicação:', error);
     return {
       success: false,
-      error: `Erro inesperado: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+      error: `Erro inesperado: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
     };
   }
 };
@@ -143,7 +140,7 @@ const validateFunnelData = (funnelData: PublishFunnelData) => {
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   };
 };
 
@@ -199,7 +196,9 @@ export const unpublishFunnel = async (funnelId: string): Promise<boolean> => {
 /**
  * Verifica se um funil está publicado
  */
-export const checkFunnelStatus = async (funnelId: string): Promise<{
+export const checkFunnelStatus = async (
+  funnelId: string
+): Promise<{
   isPublished: boolean;
   publicUrl?: string;
 }> => {
@@ -217,7 +216,7 @@ export const checkFunnelStatus = async (funnelId: string): Promise<{
 
     return {
       isPublished: data?.is_published || false,
-      publicUrl: data?.is_published ? generatePublicUrl(funnelId) : undefined
+      publicUrl: data?.is_published ? generatePublicUrl(funnelId) : undefined,
     };
   } catch (error) {
     console.error('❌ Erro ao verificar status:', error);
@@ -230,5 +229,5 @@ export default {
   unpublishFunnel,
   checkFunnelStatus,
   validateFunnelData,
-  generatePublicUrl
+  generatePublicUrl,
 };

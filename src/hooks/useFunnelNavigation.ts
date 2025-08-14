@@ -7,7 +7,7 @@ import {
   getPreviousStepNumber,
   isValidStepNumber,
   calculateProgress,
-  getStepName
+  getStepName,
 } from '@/utils/navigationHelpers';
 
 /**
@@ -20,7 +20,7 @@ export const useFunnelNavigation = () => {
     stages,
     stageActions: { setActiveStage },
     computed: { currentBlocks },
-    templateActions: { loadTemplateByStep, isLoadingTemplate }
+    templateActions: { loadTemplateByStep, isLoadingTemplate },
   } = useEditor();
 
   const [isSaving, setIsSaving] = useState(false);
@@ -51,41 +51,48 @@ export const useFunnelNavigation = () => {
   }, [activeStageId]);
 
   // Validar conteúdo da etapa
-  const validateStepContent = useCallback((stepNumber: number): boolean => {
-    const stageId = numberToStageId(stepNumber);
-    const stage = stages.find(s => s.id === stageId);
-    return !!(stage && (stage.metadata?.blocksCount || 0) > 0);
-  }, [stages]);
+  const validateStepContent = useCallback(
+    (stepNumber: number): boolean => {
+      const stageId = numberToStageId(stepNumber);
+      const stage = stages.find(s => s.id === stageId);
+      return !!(stage && (stage.metadata?.blocksCount || 0) > 0);
+    },
+    [stages]
+  );
 
   // Navegação para etapa específica
-  const navigateToStep = useCallback(async (stepNumber: number) => {
-    if (!isValidStepNumber(stepNumber) || isLoadingTemplate) {
-      console.warn(`❌ Navegação inválida ou em carregamento: ${stepNumber}`);
-      return;
-    }
-
-    const targetStageId = numberToStageId(stepNumber);
-    console.log(`🚀 Navegando para etapa ${stepNumber} (${getStepName(stepNumber)})`);
-
-    try {
-      // Carregar template se necessário
-      if (!validateStepContent(stepNumber)) {
-        console.log(`📝 Carregando template para etapa ${stepNumber}...`);
-        await loadTemplateByStep(stepNumber);
+  const navigateToStep = useCallback(
+    async (stepNumber: number) => {
+      if (!isValidStepNumber(stepNumber) || isLoadingTemplate) {
+        console.warn(`❌ Navegação inválida ou em carregamento: ${stepNumber}`);
+        return;
       }
 
-      // Navegar
-      setActiveStage(targetStageId);
-      
-      // Disparar evento customizado para sincronização
-      window.dispatchEvent(new CustomEvent('funnel-navigation-change', {
-        detail: { stepNumber, stageId: targetStageId, stepName: getStepName(stepNumber) }
-      }));
+      const targetStageId = numberToStageId(stepNumber);
+      console.log(`🚀 Navegando para etapa ${stepNumber} (${getStepName(stepNumber)})`);
 
-    } catch (error) {
-      console.error(`❌ Erro na navegação para etapa ${stepNumber}:`, error);
-    }
-  }, [setActiveStage, loadTemplateByStep, isLoadingTemplate, validateStepContent]);
+      try {
+        // Carregar template se necessário
+        if (!validateStepContent(stepNumber)) {
+          console.log(`📝 Carregando template para etapa ${stepNumber}...`);
+          await loadTemplateByStep(stepNumber);
+        }
+
+        // Navegar
+        setActiveStage(targetStageId);
+
+        // Disparar evento customizado para sincronização
+        window.dispatchEvent(
+          new CustomEvent('funnel-navigation-change', {
+            detail: { stepNumber, stageId: targetStageId, stepName: getStepName(stepNumber) },
+          })
+        );
+      } catch (error) {
+        console.error(`❌ Erro na navegação para etapa ${stepNumber}:`, error);
+      }
+    },
+    [setActiveStage, loadTemplateByStep, isLoadingTemplate, validateStepContent]
+  );
 
   // Próxima etapa
   const handleNext = useCallback(async () => {
@@ -108,15 +115,18 @@ export const useFunnelNavigation = () => {
     setIsSaving(true);
     try {
       console.log(`💾 Salvando progresso da etapa ${currentStepNumber}...`);
-      
+
       // Simular salvamento (implementar Supabase depois)
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      localStorage.setItem(`funnel-step-${currentStepNumber}-saved`, JSON.stringify({
-        stageId: activeStageId,
-        blocks: currentBlocks,
-        timestamp: Date.now()
-      }));
+
+      localStorage.setItem(
+        `funnel-step-${currentStepNumber}-saved`,
+        JSON.stringify({
+          stageId: activeStageId,
+          blocks: currentBlocks,
+          timestamp: Date.now(),
+        })
+      );
 
       console.log(`✅ Etapa ${currentStepNumber} salva com sucesso`);
     } catch (error) {
@@ -137,7 +147,7 @@ export const useFunnelNavigation = () => {
   useEffect(() => {
     const handleKeyboard = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey) return; // Ignorar atalhos do sistema
-      
+
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -205,6 +215,6 @@ export const useFunnelNavigation = () => {
 
     // Utilities
     getStepName: (step: number) => getStepName(step),
-    calculateProgress: (current: number) => calculateProgress(current, totalSteps)
+    calculateProgress: (current: number) => calculateProgress(current, totalSteps),
   };
 };

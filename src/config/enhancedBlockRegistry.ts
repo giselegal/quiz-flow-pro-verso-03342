@@ -52,7 +52,7 @@ import { IntroBlock } from '../components/steps/step01/IntroBlock';
 // Imports removidos durante limpeza de conflitos:
 // import {
 //   OfferFaqSection,
-//   OfferGuaranteeSection, 
+//   OfferGuaranteeSection,
 //   OfferHeader,
 //   OfferHeroSection,
 //   OfferProblemSection,
@@ -141,7 +141,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
   // DEBUG: Log do tipo sendo buscado
   console.log(`🔍 Buscando componente para tipo: "${type}"`);
-  
+
   // Primeiro: buscar componente direto
   let component = ENHANCED_BLOCK_REGISTRY[type];
 

@@ -1,6 +1,17 @@
 // @ts-nocheck
 import { BlockDefinition } from '@/types/editor';
-import { AlignLeft, Heading, Image, Minus, Square, Type, HelpCircle, FileText, Tag, Layout } from 'lucide-react';
+import {
+  AlignLeft,
+  Heading,
+  Image,
+  Minus,
+  Square,
+  Type,
+  HelpCircle,
+  FileText,
+  Tag,
+  Layout,
+} from 'lucide-react';
 
 // Imports dos componentes funcionais
 import HeadingInlineBlock from '@/components/editor/blocks/HeadingInlineBlock';
@@ -253,7 +264,7 @@ export const blockDefinitions: BlockDefinition[] = [
       text: 'Badge',
       variant: 'default',
     },
-  }
+  },
 ];
 
 // ========== STATISTICS ==========

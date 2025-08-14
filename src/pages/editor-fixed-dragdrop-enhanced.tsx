@@ -100,7 +100,11 @@ const EditorFixedEnhancedPage: React.FC = () => {
   // Handlers de eventos
   const handleSave = async () => {
     try {
-      console.log('💾 Iniciando salvamento do editor... (Supabase:', isSupabaseEnabled ? 'enabled' : 'disabled', ')');
+      console.log(
+        '💾 Iniciando salvamento do editor... (Supabase:',
+        isSupabaseEnabled ? 'enabled' : 'disabled',
+        ')'
+      );
       const result = await saveFunnel();
       if (result.success) {
         console.log('✅ Editor salvo com sucesso no Supabase:', funnelId);
@@ -164,7 +168,7 @@ const EditorFixedEnhancedPage: React.FC = () => {
 
         const oldSet = new Set(oldBlockIds);
         const newSet = new Set(newBlockIds);
-        
+
         if (oldSet.size !== newSet.size) {
           console.warn('⚠️ Reordenação abortada: IDs duplicados detectados');
           return;
@@ -197,7 +201,7 @@ const EditorFixedEnhancedPage: React.FC = () => {
           setSelectedBlockId(blockId);
         }
       }}
-      selectedBlockId={isPreviewing ? undefined : (selectedBlockId || undefined)}
+      selectedBlockId={isPreviewing ? undefined : selectedBlockId || undefined}
       onBlockUpdate={(blockId, updates) => {
         if (!isPreviewing) {
           updateBlock(blockId, updates as any);
@@ -236,7 +240,9 @@ const EditorFixedEnhancedPage: React.FC = () => {
                 <div className="flex items-center space-x-4">
                   <h1 className="text-lg font-semibold text-stone-700">
                     Editor Enhanced - Etapa {activeStageId}
-                    {isSupabaseEnabled && <span className="text-xs text-green-600 ml-2">[Supabase]</span>}
+                    {isSupabaseEnabled && (
+                      <span className="text-xs text-green-600 ml-2">[Supabase]</span>
+                    )}
                   </h1>
                   <div className="text-sm text-stone-500">
                     {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
@@ -302,7 +308,9 @@ const EditorFixedEnhancedPage: React.FC = () => {
                       </p>
                       <div className="mt-4 text-xs text-stone-400 space-y-1">
                         <div className="flex items-center justify-center space-x-2">
-                          <div className={`w-2 h-2 rounded-full ${isSupabaseEnabled ? 'bg-green-400' : 'bg-blue-400'}`}></div>
+                          <div
+                            className={`w-2 h-2 rounded-full ${isSupabaseEnabled ? 'bg-green-400' : 'bg-blue-400'}`}
+                          ></div>
                           <span>{isSupabaseEnabled ? 'Supabase Online' : 'Modo Local'}</span>
                         </div>
                         <div className="flex items-center justify-center space-x-2">
