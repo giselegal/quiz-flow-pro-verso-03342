@@ -25,7 +25,7 @@ const Step20Result = lazy(() => import('@/components/steps/Step20Result'));
 
 // Configuração básica das etapas
 const STEPS_CONFIG = [
-  { step: 1, name: 'Introdução', description: 'Tela inicial do quiz', component: 'Step01Template' },
+  { step: 1, name: 'Introdução', description: 'Tela inicial do quiz', component: 'generic' }, // ✅ Mudado para usar sistema de blocos
   { step: 2, name: 'Nome', description: 'Coleta do nome pessoal', component: 'generic' },
   { step: 3, name: 'Roupa Favorita', description: 'Tipo de roupa preferida', component: 'generic' },
   { step: 4, name: 'Estilo Pessoal', description: 'Identificação do estilo', component: 'generic' },
@@ -185,14 +185,8 @@ const StepPage: React.FC = () => {
     }
 
     try {
-      // Casos especiais para componentes customizados
-      if (stepConfig.component === 'Step01Template') {
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Step01Simple sessionId={sessionId} onNext={handleNext} />
-          </Suspense>
-        );
-      }
+      // ✅ REMOVIDO: Caso especial Step01 - agora usa sistema de blocos
+      // Step01 agora utiliza template JSON com lead-form como outros steps
 
       if (stepConfig.component === 'Step20Result') {
         return (
