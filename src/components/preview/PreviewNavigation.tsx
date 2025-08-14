@@ -1,8 +1,8 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 import { usePreview } from '@/contexts/PreviewContext';
+import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import React from 'react';
 
 interface PreviewNavigationProps {
   position?: 'floating' | 'sticky';
@@ -30,9 +30,10 @@ export const PreviewNavigation: React.FC<PreviewNavigationProps> = ({
     return null;
   }
 
-  const positionClasses = position === 'floating' 
-    ? 'fixed top-4 left-1/2 transform -translate-x-1/2 z-40' 
-    : 'sticky top-0 z-30';
+  const positionClasses =
+    position === 'floating'
+      ? 'fixed top-4 left-1/2 transform -translate-x-1/2 z-40'
+      : 'sticky top-0 z-30';
 
   return (
     <div className={`${positionClasses} ${className}`}>
@@ -45,7 +46,7 @@ export const PreviewNavigation: React.FC<PreviewNavigationProps> = ({
             </div>
           </CardTitle>
         </CardHeader>
-        
+
         <CardContent className="pt-0">
           <div className="flex items-center justify-between space-x-2">
             {/* Navegação */}
@@ -59,11 +60,11 @@ export const PreviewNavigation: React.FC<PreviewNavigationProps> = ({
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              
+
               <div className="text-xs px-2 py-1 bg-stone-100 rounded min-w-[60px] text-center">
                 {currentStep}/{totalSteps}
               </div>
-              
+
               <Button
                 onClick={goToNextStep}
                 disabled={!canGoNext}
@@ -86,7 +87,7 @@ export const PreviewNavigation: React.FC<PreviewNavigationProps> = ({
               >
                 <RotateCcw className="h-3 w-3" />
               </Button>
-              
+
               {Object.keys(sessionData).length > 0 && (
                 <div className="text-xs text-stone-600 bg-stone-100 px-2 py-1 rounded">
                   {Object.keys(sessionData).length} dados
@@ -94,7 +95,7 @@ export const PreviewNavigation: React.FC<PreviewNavigationProps> = ({
               )}
             </div>
           </div>
-          
+
           {/* Informações extras */}
           <div className="mt-2 text-xs text-stone-500 text-center">
             Use as setas para navegar entre as etapas do funil

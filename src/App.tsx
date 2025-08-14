@@ -43,7 +43,9 @@ const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'
 const TestStep21 = lazy(() => import('./components/editor-fixed/OfferPageJson'));
 const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
 // 🚀 EDITOR COM SISTEMA DE PREVIEW INTEGRADO
-const EditorWithPreview = lazy(() => import('./pages/editor').then(module => ({ default: module.EditorWithPreview })));
+const EditorWithPreview = lazy(() =>
+  import('./pages/editor').then(module => ({ default: module.EditorWithPreview }))
+);
 
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));

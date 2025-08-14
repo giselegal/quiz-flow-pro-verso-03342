@@ -1,10 +1,10 @@
+import { usePreview } from '@/contexts/PreviewContext';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import React from 'react';
 import { SortableBlockWrapper } from './SortableBlockWrapper';
-import { usePreview } from '@/contexts/PreviewContext';
 
 // Componente para drop zone entre blocos
 const InterBlockDropZone: React.FC<{

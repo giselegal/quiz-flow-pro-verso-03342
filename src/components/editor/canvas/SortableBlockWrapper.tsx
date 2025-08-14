@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { usePreview } from '@/contexts/PreviewContext';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -8,7 +9,6 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import React from 'react';
-import { usePreview } from '@/contexts/PreviewContext';
 
 interface SortableBlockWrapperProps {
   block: Block;

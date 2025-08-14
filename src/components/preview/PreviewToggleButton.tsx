@@ -1,8 +1,8 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Play, Square } from 'lucide-react';
 import { usePreview } from '@/contexts/PreviewContext';
+import { Play, Square } from 'lucide-react';
+import React from 'react';
 
 interface PreviewToggleButtonProps {
   variant?: 'icon' | 'text' | 'full';
@@ -13,12 +13,7 @@ export const PreviewToggleButton: React.FC<PreviewToggleButtonProps> = ({
   variant = 'full',
   className = '',
 }) => {
-  const { 
-    isPreviewing, 
-    togglePreview, 
-    currentStep, 
-    totalSteps 
-  } = usePreview();
+  const { isPreviewing, togglePreview, currentStep, totalSteps } = usePreview();
 
   // Variante apenas ícone
   if (variant === 'icon') {
@@ -70,7 +65,7 @@ export const PreviewToggleButton: React.FC<PreviewToggleButtonProps> = ({
             </>
           )}
         </Button>
-        
+
         {isPreviewing && (
           <div className="text-xs text-center text-stone-600">
             Etapa {currentStep} de {totalSteps}

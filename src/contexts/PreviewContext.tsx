@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 interface PreviewContextType {
   isPreviewing: boolean;
@@ -7,7 +7,7 @@ interface PreviewContextType {
   canGoNext: boolean;
   canGoPrevious: boolean;
   sessionData: Record<string, any>;
-  
+
   // Ações
   togglePreview: () => void;
   startPreview: () => void;
@@ -38,7 +38,7 @@ interface PreviewProviderProps {
 const PreviewProvider: React.FC<PreviewProviderProps> = ({
   children,
   totalSteps = 21,
-  funnelId
+  funnelId,
 }) => {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [currentStep, setCurrentStepState] = useState(1);
@@ -77,14 +77,14 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     if (canGoNext) {
       const nextStep = currentStep + 1;
       setCurrentStepState(nextStep);
-      
+
       // Se estiver em preview, simular navegação real
       if (isPreviewing && funnelId) {
         // Simular a navegação sem recarregar a página
         const newUrl = `/dashboard/funnel/${funnelId}/step/${nextStep}`;
         console.log('🚀 Preview: Navegando para etapa', nextStep, '-', newUrl);
       }
-      
+
       console.log('🚀 Preview: Avançou para etapa', nextStep);
     }
   }, [currentStep, canGoNext, isPreviewing, funnelId]);
@@ -93,28 +93,31 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     if (canGoPrevious) {
       const previousStep = currentStep - 1;
       setCurrentStepState(previousStep);
-      
+
       // Se estiver em preview, simular navegação real
       if (isPreviewing && funnelId) {
         const newUrl = `/dashboard/funnel/${funnelId}/step/${previousStep}`;
         console.log('🚀 Preview: Navegando para etapa', previousStep, '-', newUrl);
       }
-      
+
       console.log('🚀 Preview: Voltou para etapa', previousStep);
     }
   }, [currentStep, canGoPrevious, isPreviewing, funnelId]);
 
-  const setCurrentStep = useCallback((step: number) => {
-    if (step >= 1 && step <= totalSteps) {
-      setCurrentStepState(step);
-      console.log('🚀 Preview: Definiu etapa atual para', step);
-    }
-  }, [totalSteps]);
+  const setCurrentStep = useCallback(
+    (step: number) => {
+      if (step >= 1 && step <= totalSteps) {
+        setCurrentStepState(step);
+        console.log('🚀 Preview: Definiu etapa atual para', step);
+      }
+    },
+    [totalSteps]
+  );
 
   const updateSessionData = useCallback((key: string, value: any) => {
     setSessionData(prev => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
     console.log('🚀 Preview: Dados da sessão atualizados:', { key, value });
   }, []);
@@ -132,7 +135,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     canGoNext,
     canGoPrevious,
     sessionData,
-    
+
     togglePreview,
     startPreview,
     stopPreview,
@@ -143,11 +146,7 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     resetSession,
   };
 
-  return (
-    <PreviewContext.Provider value={contextValue}>
-      {children}
-    </PreviewContext.Provider>
-  );
+  return <PreviewContext.Provider value={contextValue}>{children}</PreviewContext.Provider>;
 };
 
 export { PreviewProvider, usePreview };

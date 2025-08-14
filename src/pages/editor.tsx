@@ -9,9 +9,9 @@ import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel'
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 // 🚀 PREVIEW SYSTEM
-import { PreviewProvider } from '@/contexts/PreviewContext';
-import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
+import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
+import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -253,10 +253,10 @@ export const EditorWithPreview: React.FC = () => {
       <div className="relative h-screen">
         {/* Componente de Preview Navigation - Flutuante */}
         <PreviewNavigation position="floating" />
-        
+
         {/* Editor Principal */}
         <EditorFixedPageWithDragDrop />
-        
+
         {/* Toggle de Preview - Posição fixa no canto */}
         <div className="fixed bottom-4 right-4 z-50">
           <PreviewToggleButton variant="full" />
