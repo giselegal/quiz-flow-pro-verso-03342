@@ -240,7 +240,7 @@ export const getStep01Template = () => {
         paddingTop: 0,
         paddingBottom: 0,
         requireNameToEnableButton: true,
-        targetButtonId: 'intro-cta-button',
+        targetButtonId: 'intro-cta-button',  // ✅ ID consistente para validação
         visuallyDisableButton: true,
       },
       children: [

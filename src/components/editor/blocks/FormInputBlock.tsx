@@ -132,11 +132,18 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
         // Salvar resposta específica
         userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
-        // Se for o campo de nome, salvar também como nome do usuário
-        if (name === 'userName' || block?.id === 'intro-name-input') {
+        // Se for o campo de nome, salvar também como nome do usuário (IDs alinhados)
+        if (name === 'userName' || block?.id === 'intro-form-input' || block?.id === 'intro-name-input') {
           userResponseService.saveUserName('userId', newValue.trim());
-          console.log('✅ Nome do usuário salvo:', newValue.trim());
+          console.log('✅ [FormInputBlock] Nome do usuário salvo:', newValue.trim());
         }
+        
+        console.log('📝 [FormInputBlock] Input change processed:', {
+          blockId: block?.id,
+          value: newValue.trim(),
+          valid,
+          isNameField: name === 'userName' || block?.id === 'intro-form-input'
+        });
 
         // Notificar componente pai
         if (onValueChange) {
