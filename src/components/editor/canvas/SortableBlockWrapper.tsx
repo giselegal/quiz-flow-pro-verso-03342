@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getBlockComponent } from '@/config/enhancedBlockRegistry';
@@ -8,6 +7,7 @@ import { Block } from '@/types/editor';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
+import React from 'react';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -215,7 +215,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           {(() => {
             const { gridColumns: _omitGridColumns, ...safeProcessedProps } =
               processedProperties || {};
-            
+
             // Props base para o componente
             const componentProps = {
               block: {
