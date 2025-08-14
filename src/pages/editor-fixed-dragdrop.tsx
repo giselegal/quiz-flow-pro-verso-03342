@@ -11,7 +11,7 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 
 // FunnelNavigation removido durante limpeza de conflitos
 // import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
-import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import OptimizedPropertiesPanel from '@/components/editor/OptimizedPropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
@@ -78,7 +78,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   }, [activeStageId]);
 
-  // Listener global: navegação entre etapas disparada por botões
+  // Converte selectedBlock para UnifiedBlock
+  const unifiedSelectedBlock = selectedBlock ? {
+    id: selectedBlock.id,
+    type: selectedBlock.type,
+    properties: selectedBlock.properties || {},
+    content: selectedBlock.content || {},
+    children: selectedBlock.children,
+    parentId: selectedBlock.parentId
+  } : null;
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as { stepId?: string };
@@ -360,11 +368,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 </div>
               }
               propertiesPanel={
-                !isPreviewing && selectedBlock ? (
-                  // 🆕 NOVO PAINEL DE PROPRIEDADES (SISTEMA ATUALIZADO)
-                  <PropertiesPanel
-                    selectedBlock={selectedBlock}
-                    onUpdate={(blockId: string, updates: Record<string, any>) => {
+                !isPreviewing && unifiedSelectedBlock ? (
+                  // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
+                  <OptimizedPropertiesPanel
+                    selectedBlock={unifiedSelectedBlock}
+                    onUpdate={(blockId: string, updates: Partial<any>) => {
                       updateBlock(blockId, updates);
                     }}
                     onClose={() => setSelectedBlockId(null)}
