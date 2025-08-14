@@ -1,4 +1,4 @@
-// 🎯 TEMPLATE DE BLOCOS DA ETAPA 21 - THANK YOU PAGE (UPDATED)
+// 🎯 TEMPLATE DE BLOCOS DA ETAPA 21 - Thank You Page (UPDATED)
 
 export const getStep21Template = () => {
   return [
