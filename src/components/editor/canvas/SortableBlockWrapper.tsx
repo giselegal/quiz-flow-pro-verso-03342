@@ -15,6 +15,7 @@ interface SortableBlockWrapperProps {
   onSelect: () => void;
   onUpdate: (updates: any) => void;
   onDelete: () => void;
+  isPreviewing?: boolean; // Nova prop para modo preview
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
@@ -71,6 +72,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onSelect,
   onUpdate,
   onDelete,
+  isPreviewing = false, // Nova prop para modo preview
 }) => {
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
@@ -178,53 +180,79 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
           borderColor: isSelected ? '#3b82f6' : '#E5DDD5',
         }}
       >
-        {/* Drag handle and controls - only show on hover */}
-        <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
-            style={{ touchAction: 'none' }} // Importante para dispositivos touch
-            {...attributes}
-            {...listeners}
-          >
-            <GripVertical className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            style={{ color: '#432818' }}
-            onClick={e => {
-              e.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
-        </div>
+        {/* Drag handle and controls - only show on hover and NOT in preview mode */}
+        {!isPreviewing && (
+          <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center gap-1">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="h-6 w-6 p-0 cursor-grab active:cursor-grabbing touch-none"
+              style={{ touchAction: 'none' }} // Importante para dispositivos touch
+              {...attributes}
+              {...listeners}
+            >
+              <GripVertical className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              style={{ color: '#432818' }}
+              onClick={e => {
+                e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
 
         {/* 🎯 Container 2: Componente Individual sem bordas - apenas padding mínimo */}
         <div
           className="p-1" // 🎯 Apenas padding, sem bordas
-          onClick={onSelect}
+          onClick={!isPreviewing ? onSelect : undefined} // Não executar onClick no modo preview
         >
           {(() => {
             const { gridColumns: _omitGridColumns, ...safeProcessedProps } =
               processedProperties || {};
-            return (
-              <Component
-                block={{
-                  ...block,
-                  properties: {
-                    ...block.properties,
-                    ...safeProcessedProps, // ❗ Evita sobrescrever gridColumns dos componentes
-                  },
-                }}
-                isSelected={false} // 🎯 Forçar isSelected=false para remover bordas do componente
-                onClick={onSelect}
-                onPropertyChange={handlePropertyChange}
-              />
-            );
+            
+            // Props base para o componente
+            const componentProps = {
+              block: {
+                ...block,
+                properties: {
+                  ...block.properties,
+                  ...safeProcessedProps, // ❗ Evita sobrescrever gridColumns dos componentes
+                },
+              },
+              isSelected: false, // 🎯 Forçar isSelected=false para remover bordas do componente
+              onClick: onSelect,
+              onPropertyChange: handlePropertyChange,
+            };
+
+            // 🎯 MODO PREVIEW: Adicionar props funcionais para comportamento de produção
+            if (isPreviewing) {
+              return (
+                <Component
+                  {...componentProps}
+                  // Props especiais para modo preview (funcional)
+                  isPreviewMode={true}
+                  onNext={() => {
+                    // Simular navegação para próxima etapa
+                    console.log('🚀 Preview: Navegando para próxima etapa');
+                  }}
+                  onPrevious={() => {
+                    // Simular navegação para etapa anterior
+                    console.log('🚀 Preview: Navegando para etapa anterior');
+                  }}
+                  canProceed={true}
+                  sessionId="preview-session"
+                />
+              );
+            }
+
+            // Modo editor normal
+            return <Component {...componentProps} />;
           })()}
         </div>
       </Card>
