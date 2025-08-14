@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Block } from '@/types/editor';
 import { Slider } from '@/components/ui/slider';
+import { Block } from '@/types/editor';
 
 interface SpacerBlockEditorProps {
   block: Block;

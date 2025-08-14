@@ -1,21 +1,13 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import { InlineEditableText } from './InlineEditableText';
-import {
-  ChevronDown,
-  ChevronUp,
-  HelpCircle,
-  Search,
-  MessageSquare,
-  CheckCircle,
-  Info,
-} from 'lucide-react';
-import type { BlockComponentProps, FAQBlock, FAQItem } from '@/types/blocks';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import type { BlockComponentProps, FAQBlock, FAQItem } from '@/types/blocks';
+import { AnimatePresence, motion } from 'framer-motion';
+import { CheckCircle, ChevronDown, HelpCircle, Info, MessageSquare, Search } from 'lucide-react';
+import React, { useState } from 'react';
+import { InlineEditableText } from './InlineEditableText';
 
 interface FAQBlockProps extends BlockComponentProps {
   block: FAQBlock;

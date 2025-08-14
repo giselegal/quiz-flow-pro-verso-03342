@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ArrowLeftRight, Edit3 } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface ComparisonInlineBlockProps {
   beforeTitle?: string;
