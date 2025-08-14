@@ -26,7 +26,6 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
     imageWidth = 400,
     imageHeight = 300,
     ctaText = "Fazer o Quiz Agora",
-    ctaIcon = "ShoppingBag",
     ctaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
     showCountdown = true,
     countdownInitial = {
@@ -34,7 +33,6 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
       minutes: 59,
       seconds: 59
     },
-    containerWidth = "full",
     spacing = "large"
   } = properties;
 
@@ -45,7 +43,7 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
     if (!showCountdown) return;
 
     const interval = setInterval(() => {
-      setTime(prevTime => {
+      setTime((prevTime: any) => {
         if (prevTime.seconds > 0) {
           return { ...prevTime, seconds: prevTime.seconds - 1 };
         } else if (prevTime.minutes > 0) {
@@ -109,7 +107,7 @@ const OfferSolutionSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Descrição */}
           <p className="text-lg text-[#6B4F43] mb-8 max-w-2xl mx-auto">
-            {description.split('**').map((part, index) => 
+            {description.split('**').map((part: string, index: number) => 
               index % 2 === 1 ? <strong key={index}>{part}</strong> : part
             )}
           </p>

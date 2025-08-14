@@ -12,7 +12,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -81,7 +81,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
 
   // Process secondary styles for thumbnails
   const secondaryThumbnails = Array.isArray(secondaryStyles) 
-    ? secondaryStyles.slice(0, 2).map((style, index) => ({
+    ? secondaryStyles.slice(0, 2).map((style: any) => ({
         src: style.guideImage || `https://via.placeholder.com/80x120?text=${style.category}`,
         alt: `Guia de Estilo ${style.category}`,
         category: style.category,
@@ -103,11 +103,6 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
             <Progress 
               value={primaryStylePercentage} 
               className="h-2 bg-gray-200" 
-              style={{
-                '& > div': {
-                  background: `linear-gradient(to right, ${borderColor}, #aa6b5d)`,
-                }
-              }}
             />
           </div>
         )}

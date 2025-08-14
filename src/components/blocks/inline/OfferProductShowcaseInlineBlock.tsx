@@ -43,9 +43,7 @@ const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
       limitedOffer: true
     },
     finalCtaText = "Garantir Minha Transformação",
-    finalCtaIcon = "ShoppingCart",
     finalCtaUrl = "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-    containerWidth = "full",
     spacing = "large"
   } = properties;
 
@@ -86,7 +84,7 @@ const OfferProductShowcaseInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* Products Grid */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {products.map((product, index) => (
+            {products.map((product: any, index: number) => (
               <div key={product.id || index} className="text-center">
                 <div className="aspect-[4/5] bg-white rounded-lg mb-3 flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
                   <img

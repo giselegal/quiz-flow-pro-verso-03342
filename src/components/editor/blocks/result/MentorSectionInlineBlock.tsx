@@ -12,7 +12,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -162,7 +162,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
                   Formação e Credenciais:
                 </h4>
                 <ul className="space-y-2">
-                  {credentials.map((credential, index) => (
+                  {credentials.map((credential: string, index: number) => (
                     <li key={index} className="flex items-start gap-2 text-sm">
                       <Award className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: accentColor }} />
                       <span>{credential}</span>
@@ -181,7 +181,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
               Resultados Comprovados
             </h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {achievements.map((achievement, index) => {
+              {achievements.map((achievement: any, index: number) => {
                 const IconComponent = getIcon(achievement.icon);
                 return (
                   <div key={index} className="text-center">

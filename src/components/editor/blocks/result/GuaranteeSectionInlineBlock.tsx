@@ -12,7 +12,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -162,7 +162,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
             {/* Features List */}
             <ul className="space-y-2 text-left">
-              {features.map((feature, index) => (
+              {features.map((feature: string, index: number) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
                   <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: accentColor }} />
                   <span>{feature}</span>
@@ -176,7 +176,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
         {showTrustBadges && trustBadges.length > 0 && (
           <div className="border-t pt-6" style={{ borderColor: borderColor + '30' }}>
             <div className="flex flex-wrap items-center justify-center gap-6">
-              {trustBadges.map((badge, index) => {
+              {trustBadges.map((badge: any, index: number) => {
                 const IconComponent = getIcon(badge.icon);
                 return (
                   <div key={index} className="flex items-center gap-2">

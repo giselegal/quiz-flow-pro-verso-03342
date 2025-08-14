@@ -12,7 +12,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -117,7 +117,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
         {/* Bonuses Grid */}
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6">
-            {bonuses.map((bonus, index) => (
+            {bonuses.map((bonus: any, index: number) => (
               <div 
                 key={bonus.id || index} 
                 className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] border border-opacity-10 relative overflow-hidden"
@@ -155,7 +155,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
                   {/* Highlights */}
                   {showHighlights && bonus.highlights && bonus.highlights.length > 0 && (
                     <ul className="space-y-1 text-xs">
-                      {bonus.highlights.map((highlight, highlightIndex) => (
+                      {bonus.highlights.map((highlight: any, highlightIndex: number) => (
                         <li key={highlightIndex} className="flex items-center gap-2">
                           <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 flex-shrink-0" />
                           <span>{highlight}</span>

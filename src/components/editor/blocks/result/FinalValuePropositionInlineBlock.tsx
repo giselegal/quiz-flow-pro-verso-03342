@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { BlockComponentProps } from '@/types/blocks';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, CheckCircle, Lock, Zap } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Lock } from 'lucide-react';
 
 /**
  * FinalValuePropositionInlineBlock - Final CTA with value proposition
@@ -13,7 +13,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -149,7 +149,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
             O Guia de Estilo e Imagem + Bônus Exclusivos
           </h3>
           <ul className="space-y-3 text-left">
-            {benefits.map((benefit, index) => (
+            {benefits.map((benefit: string, index: number) => (
               <li key={index} className="flex items-start">
                 <div 
                   className="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-white mr-2 mt-0.5"
@@ -170,7 +170,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
           </h3>
           
           <div className="space-y-3 mb-6">
-            {valueStack.map((item, index) => (
+            {valueStack.map((item: { item: string; value: number }, index: number) => (
               <div key={index} className="flex justify-between items-center p-2 border-b" style={{ borderColor: primaryColor + '10' }}>
                 <span>{item.item}</span>
                 <span className="font-medium">R$ {item.value},00</span>

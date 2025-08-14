@@ -30,7 +30,7 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
     imageWidth = 500,
     imageHeight = 350,
     layout = "side-by-side",
-    containerWidth = "full",
+    
     spacing = "large"
   } = properties;
 
@@ -66,9 +66,9 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
               
               {/* Lista de problemas */}
               <div className="space-y-4 text-lg text-[#6B4F43] mb-6">
-                {problems.map((problem, index) => (
+                {problems.map((problem: string, index: number) => (
                   <p key={index}>
-                    {problem.split('**').map((part, partIndex) => 
+                    {problem.split('**').map((part: string, partIndex: number) => 
                       partIndex % 2 === 1 ? <strong key={partIndex}>{part}</strong> : part
                     )}
                   </p>
@@ -79,7 +79,7 @@ const OfferProblemSectionInlineBlock: React.FC<BlockComponentProps> = ({
               {highlightText && (
                 <div className="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-400">
                   <p className="text-[#432818] font-semibold">
-                    {highlightText.split('**').map((part, index) => 
+                    {highlightText.split('**').map((part: string, index: number) => 
                       index % 2 === 1 ? <strong key={index}>{part}</strong> : part
                     )}
                   </p>

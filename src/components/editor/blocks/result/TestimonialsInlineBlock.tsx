@@ -12,7 +12,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -158,7 +158,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
           'max-w-6xl mx-auto',
           layout === 'grid' ? 'grid md:grid-cols-3 gap-6' : 'space-y-6'
         )}>
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial: any, index: number) => (
             <div 
               key={testimonial.id || index}
               className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-opacity-10 relative"

@@ -26,7 +26,6 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
         answer: "O quiz leva apenas alguns minutos para ser completado. São perguntas simples e objetivas sobre suas preferências e estilo de vida."
       }
     ],
-    containerWidth = "full",
     spacing = "large"
   } = properties;
 
@@ -62,7 +61,7 @@ const OfferFaqSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
           {/* FAQ Items */}
           <div className="space-y-4">
-            {questions.map((item, index) => (
+            {questions.map((item: { question: string; answer: string }, index: number) => (
               <div
                 key={index}
                 className="bg-white rounded-lg shadow-md overflow-hidden border-l-4 border-[#B89B7A]"

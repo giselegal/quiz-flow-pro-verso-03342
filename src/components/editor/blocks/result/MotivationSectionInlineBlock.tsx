@@ -12,7 +12,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -118,7 +118,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
             Com a orientação certa, você pode:
           </h3>
           <ul className="space-y-4 text-left">
-            {benefits.map((benefit, index) => {
+            {benefits.map((benefit: string, index: number) => {
               const IconComponent = showIcons ? icons[index % icons.length] : null;
               return (
                 <li key={index} className="flex items-start gap-3">

@@ -12,7 +12,7 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  onPropertyChange,
+  
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -111,7 +111,7 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Transformations Grid */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {transformations.map((transformation, index) => (
+          {transformations.map((transformation: any, index: number) => (
             <div key={transformation.id || index} className="space-y-4">
               {/* Before/After Images */}
               <div className="relative">

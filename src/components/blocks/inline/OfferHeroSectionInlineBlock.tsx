@@ -36,7 +36,6 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
       { icon: "Lock", text: "100% Seguro" },
       { icon: "Shield", text: "7 Dias Garantia" }
     ],
-    containerWidth = "full",
     spacing = "large"
   } = properties;
 
@@ -91,7 +90,7 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
           
           {/* Subtítulo */}
           <p className="text-lg md:text-xl text-[#6B4F43] mb-8 max-w-2xl mx-auto leading-relaxed">
-            {subtitle.split('**').map((part, index) => 
+            {subtitle.split('**').map((part: string, index: number) => 
               index % 2 === 1 ? <strong key={index}>{part}</strong> : part
             )}
           </p>
@@ -122,7 +121,7 @@ const OfferHeroSectionInlineBlock: React.FC<BlockComponentProps> = ({
           {/* Trust elements */}
           {trustElements && trustElements.length > 0 && (
             <div className="flex items-center justify-center gap-6 text-sm text-[#8B7355]">
-              {trustElements.map((element, index) => {
+              {trustElements.map((element: { icon: string; text: string }, index: number) => {
                 const TrustIcon = iconMap[element.icon as keyof typeof iconMap] || Lock;
                 return (
                   <div key={index} className="flex items-center gap-1">

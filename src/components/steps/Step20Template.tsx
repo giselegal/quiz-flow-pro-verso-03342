@@ -19,7 +19,6 @@ export const getStep20Template = (userData?: {
   // Use dynamic data if available, fallback to defaults
   const userName = userData?.userName || '';
   const styleCategory = userData?.styleCategory || 'Elegante';
-  const sessionId = userData?.sessionId || 'demo-session';
   
   return [
     {

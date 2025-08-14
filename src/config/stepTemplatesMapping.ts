@@ -27,7 +27,7 @@ import { getStep21Template } from '@/components/steps/Step21Template';
 // Interface para o template de etapa
 export interface StepTemplate {
   stepNumber: number;
-  templateFunction: () => any[];
+  templateFunction: (userData?: any) => any[];
   name: string;
   description: string;
 }
@@ -108,35 +108,7 @@ const getDefaultTemplate = (stepNumber: number) => {
   ];
 };
 
-// Templates específicos de etapas
-const getStep1IntroTemplate = () => [
-  {
-    id: 'intro-header',
-    type: 'quiz-intro-header',
-    properties: {
-      logoUrl:
-        'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
-      logoAlt: 'Logo Gisele Galvão',
-      logoWidth: 96,
-      logoHeight: 96,
-      progressValue: 0,
-      progressMax: 100,
-      showBackButton: false,
-      showProgress: false,
-    },
-  },
-  {
-    id: 'intro-hero',
-    type: 'hero-section',
-    properties: {
-      title: 'DESCUBRA SEU ESTILO ÚNICO',
-      subtitle: 'Responda 21 perguntas simples e receba um guia personalizado',
-      ctaText: 'COMEÇAR QUIZ GRATUITO',
-      ctaColor: '#B89B7A',
-      backgroundColor: '#FAF9F7',
-    },
-  },
-];
+// Templates específicos removidos para evitar duplicação
 
 // 📋 MAPEAMENTO DOS TEMPLATES TSX REAIS (CORRIGIDO)
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
@@ -183,11 +155,14 @@ export const getStepTemplate = (stepNumber: number, userData?: any): any[] => {
   
   if (stepTemplate) {
     // Para Step 20, passa dados do usuário se disponíveis
-    if (stepNumber === 20) {
+    if (stepNumber === 20 && typeof stepTemplate.templateFunction === 'function') {
       return stepTemplate.templateFunction(userData);
     }
     // Para outras etapas, usa função normal
-    return stepTemplate.templateFunction();
+    if (typeof stepTemplate.templateFunction === 'function') {
+      return stepTemplate.templateFunction();
+    }
+    return [];
   }
   
   // Fallback para template padrão

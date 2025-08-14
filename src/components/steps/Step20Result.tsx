@@ -77,12 +77,14 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
                 description: 'Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico que reflete sua personalidade genuína.',
                 image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
                 guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+                keywords: ['natural', 'conforto', 'autêntico']
               },
               secondaryStyle: 'Clássico',
               secondaryStyleConfig: {
                 name: 'Clássico',
                 category: 'Elegância Atemporal',
                 description: 'Com toques clássicos que adicionam sofisticação ao seu estilo natural.',
+                keywords: ['clássico', 'elegância', 'sofisticação'],
                 image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
                 guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp',
               },
@@ -124,6 +126,7 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
                 },
               },
               guide: {
+                imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
                 personalizedTips: [
                   'Aposte em tecidos naturais como algodão e linho',
                   'Escolha cores terrosas que complementam sua personalidade',

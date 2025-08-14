@@ -24,8 +24,6 @@ const OfferGuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
     imageAlt = "Garantia 7 dias",
     imageWidth = 200,
     imageHeight = 200,
-    layout = "centered",
-    containerWidth = "full",
     spacing = "large"
   } = properties;
 
@@ -69,7 +67,7 @@ const OfferGuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
           
           {/* Descrição */}
           <p className="text-lg text-[#6B4F43] max-w-2xl mx-auto">
-            {description.split('**').map((part, index) => 
+            {description.split('**').map((part: string, index: number) => 
               index % 2 === 1 ? <strong key={index}>{part}</strong> : part
             )}
           </p>
