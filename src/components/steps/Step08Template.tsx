@@ -26,7 +26,7 @@ export const getStep08Template = () => {
       id: 'step08-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAIS TECIDOS VOCÊ PREFERE?',
+        content: 'QUAL SUA CALÇA FAVORITA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',

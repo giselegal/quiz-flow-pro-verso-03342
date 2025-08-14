@@ -26,7 +26,7 @@ export const getStep09Template = () => {
       id: 'step09-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAIS CALÇADOS VOCÊ USA MAIS?',
+        content: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',

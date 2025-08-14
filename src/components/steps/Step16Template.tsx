@@ -19,7 +19,7 @@ export const getStep16Template = () => {
       id: 'step16-title',
       type: 'text-inline',
       properties: {
-        content: 'PREPARANDO SEU RESULTADO PERSONALIZADO...',
+        content: 'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

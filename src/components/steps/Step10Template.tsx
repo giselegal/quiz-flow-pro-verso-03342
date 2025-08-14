@@ -26,7 +26,7 @@ export const getStep10Template = () => {
       id: 'step10-question-title',
       type: 'text-inline',
       properties: {
-        content: 'PARA QUAIS OCASIÕES VOCÊ MAIS SE VESTE?',
+        content: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',

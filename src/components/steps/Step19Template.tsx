@@ -19,7 +19,7 @@ export const getStep19Template = () => {
       id: 'step19-final-title',
       type: 'text-inline',
       properties: {
-        content: 'SEU PERFIL DE ESTILO COMPLETO',
+        content: 'Quanto você estaria disposta a investir em um guia completo de estilo personalizado?',
         fontSize: 'text-3xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

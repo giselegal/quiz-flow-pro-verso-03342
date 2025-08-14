@@ -19,7 +19,7 @@ export const getStep15Template = () => {
       id: 'step15-title',
       type: 'text-inline',
       properties: {
-        content: 'ANALISANDO SEU ESTILO...',
+        content: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...',
         fontSize: 'text-3xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

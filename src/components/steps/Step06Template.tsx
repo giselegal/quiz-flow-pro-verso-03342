@@ -26,7 +26,7 @@ export const getStep06Template = () => {
       id: 'step06-question-title',
       type: 'text-inline',
       properties: {
-        content: 'QUAIS CORES VOCÊ MAIS SE IDENTIFICA?',
+        content: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?',
         level: 'h2',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
