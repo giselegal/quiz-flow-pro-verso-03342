@@ -122,15 +122,32 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
           <div className="text-center space-y-6">
             <div className="inline-flex items-center space-x-2 bg-white/20 rounded-full px-4 py-2">
               <Sparkles className="h-5 w-5" />
-              <span className="text-sm font-medium">Seu Resultado Personalizado</span>
+              <span className="text-sm font-medium">
+                {results.userName 
+                  ? `Resultado Personalizado para ${results.userName}`
+                  : 'Seu Resultado Personalizado'
+                }
+              </span>
             </div>
 
             <h1 className="text-4xl md:text-5xl font-bold">
-              Seu Estilo é <span className="text-[#FAF9F7]">{styleProfile.primaryStyle}</span>
+              {results.userName ? (
+                <>
+                  Olá <span className="text-[#FAF9F7]">{results.userName}</span>,<br />
+                  Seu Estilo é <span className="text-[#FAF9F7]">{styleProfile.primaryStyle}</span>
+                </>
+              ) : (
+                <>
+                  Seu Estilo é <span className="text-[#FAF9F7]">{styleProfile.primaryStyle}</span>
+                </>
+              )}
             </h1>
 
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-              {styleProfile.primaryStyleConfig.description}
+              {results.userName 
+                ? `${results.userName}, ${styleProfile.primaryStyleConfig.description.toLowerCase()}`
+                : styleProfile.primaryStyleConfig.description
+              }
             </p>
 
             <div className="flex flex-wrap justify-center gap-3">

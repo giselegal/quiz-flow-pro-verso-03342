@@ -60,6 +60,7 @@ export interface PersonalizedRecommendations {
 export interface QuizResults {
   sessionId: string;
   userId?: string;
+  userName?: string; // Nome do usuário capturado na etapa 1
   styleProfile: StyleProfile;
   recommendations: PersonalizedRecommendations;
   completionScore: number;
@@ -152,21 +153,25 @@ class QuizResultsService {
     const responses = session.responses || {};
 
     try {
-      // 1. Analisar respostas por categoria
+      // 1. Extrair nome do usuário da etapa 1
+      const userName = this.extractUserName(responses);
+      
+      // 2. Analisar respostas por categoria
       const analysis = this.analyzeResponses(responses);
 
-      // 2. Calcular perfil de estilo baseado no styleConfig.ts
+      // 3. Calcular perfil de estilo baseado no styleConfig.ts
       const styleProfile = this.calculateStyleProfile(analysis, responses);
 
-      // 3. Gerar recomendações personalizadas
+      // 4. Gerar recomendações personalizadas
       const recommendations = this.generateRecommendations(styleProfile, analysis);
 
-      // 4. Calcular score de completude
+      // 5. Calcular score de completude
       const completionScore = this.calculateCompletionScore(responses);
 
       const results: QuizResults = {
         sessionId: session.id,
         userId: session.quiz_user_id,
+        userName,
         styleProfile,
         recommendations,
         completionScore,
@@ -194,6 +199,52 @@ class QuizResultsService {
       console.error('❌ Erro no cálculo de resultados:', error);
       throw new Error(`Falha no cálculo de resultados: ${error.message}`);
     }
+  }
+
+  /**
+   * Extrai nome do usuário da etapa 1 (lead-form)
+   */
+  private extractUserName(responses: Record<string, any>): string {
+    // Verificar etapa 1 - formulário de nome
+    const step1Response = responses['1'];
+    if (step1Response && typeof step1Response === 'object') {
+      // Buscar campo de nome em diferentes formatos possíveis
+      const nameFields = ['name', 'nome', 'userName', 'user_name', 'fullName', 'step01-lead-form'];
+      
+      for (const field of nameFields) {
+        if (step1Response[field] && typeof step1Response[field] === 'string') {
+          const name = step1Response[field].trim();
+          if (name.length >= 2) {
+            console.log('👤 Nome extraído da etapa 1:', name);
+            return name;
+          }
+        }
+      }
+      
+      // Verificar se existe um objeto aninhado com dados do formulário
+      if (step1Response['step01-lead-form'] && typeof step1Response['step01-lead-form'] === 'object') {
+        const formData = step1Response['step01-lead-form'];
+        if (formData.name && typeof formData.name === 'string') {
+          const name = formData.name.trim();
+          if (name.length >= 2) {
+            console.log('👤 Nome extraído do formulário:', name);
+            return name;
+          }
+        }
+      }
+    }
+
+    // Fallback: verificar localStorage se disponível
+    if (typeof window !== 'undefined') {
+      const storedName = localStorage.getItem('quizUserName');
+      if (storedName && storedName.trim().length >= 2) {
+        console.log('👤 Nome recuperado do localStorage:', storedName);
+        return storedName.trim();
+      }
+    }
+
+    console.log('⚠️ Nome do usuário não encontrado nas respostas');
+    return '';
   }
 
   /**
