@@ -12,6 +12,9 @@ import {
   getAllBlockTypes,
 } from './enhancedBlockRegistry';
 
+// Import the new LeadFormBlock for direct mapping
+import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
+
 // Blocos básicos consolidados (mais completos)
 import HeaderBlock from '../components/editor/blocks/HeaderBlock';
 import TextBlock from '../components/editor/blocks/TextBlock';
@@ -29,6 +32,9 @@ export const UNIFIED_BLOCK_MAP: Record<string, ComponentType<any>> = {
   text: TextBlock,
   image: ImageBlock,
   'rich-text': RichTextBlock,
+
+  // Form Components
+  'lead-form': LeadFormBlock, // ✅ Multi-field form component
 
   // Blocos de quiz e resultado (funcionais)
   'quiz-result-calculated': QuizResultCalculatedBlock,

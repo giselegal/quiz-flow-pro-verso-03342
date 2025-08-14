@@ -29,6 +29,7 @@ import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarI
 import FinalStepEditor from '../components/editor/blocks/FinalStepEditor';
 import FormContainerBlock from '../components/editor/blocks/FormContainerBlock';
 import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';
 import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
 import LegalNoticeInlineBlock from '../components/editor/blocks/LegalNoticeInlineBlock';
 import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
@@ -74,7 +75,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   'quiz-header': QuizIntroHeaderBlock, // Alias
   'step01-intro': IntroBlock,
   'form-input': FormInputBlock,
-  'lead-form': FormInputBlock,
+  'lead-form': LeadFormBlock, // ✅ Componente específico para multiple fields
 
   // Interactive Elements
   'button-inline': ButtonInlineFixed,
@@ -159,7 +160,7 @@ export const getBlockComponent = (type: string): React.ComponentType<any> | null
     'quiz-header': 'quiz-intro-header',
     intro: 'step01-intro',
     form: 'form-input',
-    'lead-form': 'form-input',
+    'lead-form': 'lead-form', // ✅ Mantém mapeamento direto
     options: 'options-grid',
 
     // Tipos estruturais → componentes visuais

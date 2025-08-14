@@ -18,6 +18,7 @@ import TextInlineBlock from "../components/blocks/inline/TextInlineBlock";
 // Componentes específicos
 import DecorativeBarInlineBlock from "../components/blocks/inline/DecorativeBarInlineBlock";
 import FormInputBlock from "../components/blocks/inline/FormInputBlock";
+import LeadFormBlock from "../components/editor/blocks/LeadFormBlock";
 import LegalNoticeInlineBlock from "../components/blocks/inline/LegalNoticeInlineBlock";
 import QuizIntroHeaderBlock from "../components/blocks/inline/QuizIntroHeaderBlock";
 import ResultCardBlock from "../components/blocks/inline/ResultCardBlock";
@@ -48,6 +49,7 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
 
   // Form Components
   "form-input": FormInputBlock,
+  "lead-form": LeadFormBlock, // ✅ Multi-field form component
   "legal-notice-inline": LegalNoticeInlineBlock,
 
   // Quiz Components para compatibilidade

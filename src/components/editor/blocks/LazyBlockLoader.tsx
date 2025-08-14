@@ -88,6 +88,7 @@ const LAZY_COMPONENTS = {
   // FORMS COMPONENTS
   'form-input': () => lazy(() => import('@/components/editor/blocks/FormInputBlock')),
   'form-container': () => lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
+  'lead-form': () => lazy(() => import('@/components/editor/blocks/LeadFormBlock')),
 
   // ANALYTICS COMPONENTS
   'chart-area': () => lazy(() => import('@/components/editor/blocks/ChartAreaBlock')),
