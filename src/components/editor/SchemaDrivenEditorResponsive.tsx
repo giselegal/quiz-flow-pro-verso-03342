@@ -5,8 +5,6 @@ import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { PropertyPanel } from './PropertyPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
 import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
-// Step01ValidationProvider will be initialized automatically in the hook
-import DebugStep01 from '@/components/debug/DebugStep01';
 
 interface SchemaDrivenEditorResponsiveProps {
   funnelId?: string;
@@ -93,18 +91,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      {/* 🧪 Debug Components */}
-      <DebugStep01 />
-      
-      {/* Debug: Testar navegação para step-20 */}
-      <div className="fixed bottom-4 right-4 z-50 bg-blue-100 p-3 rounded-lg border border-blue-300">
-        <button
-          onClick={() => funnelNavigation.navigateToStep(20)}
-          className="text-xs px-2 py-1 bg-blue-200 hover:bg-blue-300 rounded transition-colors"
-        >
-          🧪 IR PARA STEP-20
-        </button>
-      </div>
       </div>
   );
 };

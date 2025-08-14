@@ -8,7 +8,7 @@ import { EditorNotification } from '@/components/editor/EditorNotification';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import ProductionMonitoringDashboard from '@/components/editor/monitoring/ProductionMonitoringDashboard';
+
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
@@ -23,9 +23,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
-import { useStep01Validation } from '@/hooks/useStep01Validation';
 import { BookOpen, Settings } from 'lucide-react';
-import DebugStep01 from '@/components/debug/DebugStep01';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -46,8 +44,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   // ✅ SISTEMA UNIFICADO DE NAVEGAÇÃO
   const funnelNavigation = useFunnelNavigation();
   
-  // ✅ VALIDAÇÃO ESPECÍFICA PARA STEP-01 (CAMPO NOME)
-  const { isNameValid, nameValue, isButtonEnabled } = useStep01Validation();
 
   // Estado local
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
@@ -353,16 +349,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   Fechar
                 </button>
               </div>
-              <div className="flex-1 overflow-auto">
-                <ProductionMonitoringDashboard />
+              <div className="flex-1 overflow-auto p-4">
+                <p>Dashboard de monitoramento removido</p>
               </div>
             </div>
           </div>
-        )}
-        
-        {/* Debug Step01 - mostrar apenas na etapa 1 */}
-        {(activeStageId === 'step-1' || activeStageId === 'step-01') && (
-          <DebugStep01 />
         )}
       </div>
     </DndProvider>
