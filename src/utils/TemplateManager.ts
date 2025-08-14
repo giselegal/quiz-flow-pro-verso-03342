@@ -10,7 +10,7 @@ export class TemplateManager {
   private static cache = new Map<string, Block[]>();
 
   /**
-   * Carrega blocos de uma etapa usando o templateService com retry e fallback robusto
+   * Carrega blocos de uma etapa usando o templateService INTEGRADO com JSON Step01
    */
   static async loadStepBlocks(stepId: string): Promise<Block[]> {
     try {
@@ -27,9 +27,17 @@ export class TemplateManager {
       }
 
       const stepNumber = parseInt(stepId.replace('step-', ''));
-      console.log(`🔄 Carregando template para etapa ${stepNumber} (tentativa 1)`);
+      console.log(`🔄 Carregando template para etapa ${stepNumber}`);
 
-      // Implementa retry com backoff
+      // ===== SISTEMA INTEGRADO: JSON + TYPESCRIPT =====
+      
+      if (stepNumber === 1) {
+        console.log('🎯 Step01: Sistema JSON integrado ativo');
+      } else {
+        console.log(`🔧 Step${stepNumber}: Sistema TypeScript tradicional`);
+      }
+
+      // Usar o templateService que já integra JSON para Step01
       let template = null;
       const maxRetries = 3;
 
@@ -42,6 +50,7 @@ export class TemplateManager {
             console.log(
               `✅ Template carregado na tentativa ${attempt}: ${template.blocks.length} blocos`
             );
+            console.log(`🎯 Sistema usado: ${stepNumber === 1 ? 'JSON Step01' : 'TypeScript'}`);
             break;
           }
 

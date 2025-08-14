@@ -19,6 +19,7 @@ import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDispl
 import QuizIntroHeaderBlock from '../components/editor/blocks/QuizIntroHeaderBlock';
 import DecorativeBarInlineBlock from '../components/editor/blocks/DecorativeBarInlineBlock';
 import FormInputBlock from '../components/editor/blocks/FormInputBlock';
+import FormContainerBlock from '../components/editor/blocks/FormContainerBlock';
 import TextInlineBlock from '../components/editor/blocks/TextInlineBlock';
 import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
 
@@ -31,26 +32,29 @@ import HeadingInlineBlock from '../components/editor/blocks/HeadingInlineBlock';
  * ✅ Sistema de fallbacks robusto
  */
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
-  // ===== COMPONENTES STEP01 - BASEADOS NO JSON =====
+  // ===== COMPONENTES STEP01TEMPLATE - BASEADOS NO TYPESCRIPT =====
   
-  // Componentes específicos do Step01 JSON
+  // Componentes específicos do getStep01Template()
   'quiz-intro-header': QuizIntroHeaderBlock, // ✅ Cabeçalho com logo e progresso
-  'decorative-bar': DecorativeBarInlineBlock, // ✅ Barra decorativa colorida
-  'text': TextInlineBlock, // ✅ Texto formatado avançado
-  'image': ImageDisplayInlineBlockClean, // ✅ Imagem com estilos
+  'decorative-bar-inline': DecorativeBarInlineBlock, // ✅ Barra decorativa colorida
+  'text-inline': TextInlineBlock, // ✅ Texto formatado avançado (usado 2x)
+  'image-display-inline': ImageDisplayInlineBlockClean, // ✅ Imagem com estilos
+  'form-container': FormContainerBlock, // ✅ Container de formulário
   'form-input': FormInputBlock, // ✅ Input de formulário
-  'button': ButtonInlineFixed, // ✅ Botão interativo
+  'button-inline': ButtonInlineFixed, // ✅ Botão interativo
   
-  // ===== COMPONENTES BÁSICOS - COMPATIBILIDADE =====
+  // ===== ALIASES E COMPATIBILIDADE =====
   
-  // Text and Content - BASE
-  'text-inline': TextInlineBlock,
+  // Aliases comuns
+  'decorative-bar': DecorativeBarInlineBlock,
+  'text': TextInlineBlock,
+  'image': ImageDisplayInlineBlockClean,
+  'button': ButtonInlineFixed,
+  'form': FormInputBlock,
+  
+  // Componentes básicos - BASE
   'heading': HeadingBlock,
   'heading-inline': HeadingInlineBlock,
-  'image-display-inline': ImageDisplayInlineBlockClean,
-
-  // Interactive Elements
-  'button-inline': ButtonInlineFixed,
 };
 
 /**
