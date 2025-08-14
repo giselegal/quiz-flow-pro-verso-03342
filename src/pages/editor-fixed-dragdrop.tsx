@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
-import { SmartComponentsPanel } from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { EditorNotification } from '@/components/editor/EditorNotification';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
-import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import { ProductionMonitoringDashboard } from '@/components/editor/monitoring/ProductionMonitoringDashboard';
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { SmartComponentsPanel } from '@/components/editor/smart-panel/SmartComponentsPanel';
+import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
@@ -203,7 +203,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               componentsPanel={
                 <SmartComponentsPanel
                   currentStepNumber={getStepNumberFromStageId(activeStageId)}
-                  onComponentSelect={(componentType) => {
+                  onComponentSelect={componentType => {
                     if (activeStageId) {
                       addBlock(componentType, activeStageId);
                     }
