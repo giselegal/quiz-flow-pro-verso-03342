@@ -138,11 +138,14 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
  * Obter componente por tipo (com fallbacks inteligentes)
  */
 export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
+  // DEBUG: Log do tipo sendo buscado
+  console.log(`🔍 Buscando componente para tipo: "${type}"`);
+  
   // Primeiro: buscar componente direto
   let component = ENHANCED_BLOCK_REGISTRY[type];
 
   if (component) {
-    console.log(`✅ Componente encontrado: ${type}`);
+    console.log(`✅ Componente encontrado diretamente: ${type}`);
     return component;
   }
 

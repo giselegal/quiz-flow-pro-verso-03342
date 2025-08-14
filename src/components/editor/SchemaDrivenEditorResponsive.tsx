@@ -90,6 +90,16 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
           <PropertyPanel selectedComponent={selectedBlock} onUpdate={handleUpdateSelectedBlock} />
         </ResizablePanel>
       </ResizablePanelGroup>
+
+      {/* Debug: Testar navegação para step-20 */}
+      <div className="fixed bottom-4 right-4 z-50 bg-blue-100 p-3 rounded-lg border border-blue-300">
+        <button
+          onClick={() => funnelNavigation.navigateToStep(20)}
+          className="text-xs px-2 py-1 bg-blue-200 hover:bg-blue-300 rounded transition-colors"
+        >
+          🧪 IR PARA STEP-20
+        </button>
+      </div>
     </div>
   );
 };

@@ -4,6 +4,9 @@ import { userResponseService } from '../../../services/userResponseService';
 import { useFunnelNavigation } from '../../../hooks/useFunnelNavigation';
 import type { BlockComponentProps } from '../../../types/blocks';
 
+// ✅ ADICIONAR DEBUG PARA VERIFICAR SE ESTÁ SENDO CARREGADO
+console.log('🔧 LeadFormBlock carregado!');
+
 interface LeadFormBlockProps extends BlockComponentProps {
   onComplete?: (data: LeadFormData) => void;
 }
@@ -27,7 +30,10 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
   className = '',
   onComplete,
 }) => {
+  console.log('🎯 LeadFormBlock renderizado com props:', { block: block?.id, type: block?.type });
+
   if (!block) {
+    console.error('❌ LeadFormBlock: bloco não encontrado');
     return (
       <div className="p-4 border-2 border-red-300 rounded-lg">
         <p className="text-red-600">Erro: Bloco não encontrado</p>

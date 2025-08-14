@@ -1,120 +1,79 @@
 /**
- * Step20Template - Resultado Final com Cálculo Inteligente
- * ✅ INTEGRAÇÃO COM SISTEMA DE PONTUAÇÃO
+ * Step20Template - Lead Capture (UPDATED)
+ * Template para captura de leads com formulário completo
  */
-
 export const getStep20Template = () => {
+  console.log('📋 Step20Template - Lead Capture carregado!');
   return [
     {
-      id: 'step20-result',
-      type: 'quiz-results',
+      id: 'step20-header',
+      type: 'quiz-intro-header',
       properties: {
-        title: {
-          text: 'Seu Resultado Personalizado',
-          fontSize: 'text-3xl',
-          fontWeight: 'font-bold',
-          textAlign: 'text-center',
-          color: 'text-blue-600',
-          marginBottom: 'mb-8',
-        },
-        subtitle: {
-          text: 'Baseado nas suas respostas das questões 2-11',
-          fontSize: 'text-lg',
-          textAlign: 'text-center',
-          color: 'text-gray-700',
-          marginBottom: 'mb-12',
-        },
-        backgroundColor: 'bg-gradient-to-b from-blue-50 to-white',
-        padding: 'p-8',
-        borderRadius: 'rounded-xl',
-        shadow: 'shadow-lg',
-        minHeight: 'min-h-screen',
-        displayMode: 'full-analysis',
-        showScoreBreakdown: true,
-        showRecommendations: true,
-        enableExport: true,
-        resultLayout: 'vertical',
-        animationDelay: 500,
-        // ✅ NOVO: Configuração de cálculo automático
-        scoreCalculation: {
-          source: 'questions_2_to_11',
-          method: 'weighted',
-          showPercentage: true,
-          showProfile: true,
-          showCategoryBreakdown: true,
-          autoCalculate: true,
-        },
-        resultConfig: {
-          showProgressBar: true,
-          showCategoryScores: true,
-          showPersonalizedMessage: true,
-          includeNextSteps: true,
-          enableSocialShare: true,
-          resultCardStyle: 'modern',
-          // ✅ NOVO: Perfis de resultado
-          profileMessages: {
-            'Expert Avançado': {
-              title: 'Parabéns! Você é um Expert',
-              message:
-                'Seu conhecimento em marketing digital é excepcional. Você está pronto para estratégias avançadas.',
-              color: 'text-green-600',
-              bgColor: 'bg-green-50',
-            },
-            'Profissional Experiente': {
-              title: 'Muito Bom! Profissional Sólido',
-              message:
-                'Você tem uma base forte. Com algumas otimizações, pode chegar ao nível expert.',
-              color: 'text-blue-600',
-              bgColor: 'bg-blue-50',
-            },
-            Intermediário: {
-              title: 'Bom Progresso! Nível Intermediário',
-              message:
-                'Você está no caminho certo. Foque em automatização e métricas para evoluir.',
-              color: 'text-yellow-600',
-              bgColor: 'bg-yellow-50',
-            },
-            Iniciante: {
-              title: 'Começando Bem! Grande Potencial',
-              message:
-                'Todo expert começou como você. Foque nos fundamentos e evolua consistentemente.',
-              color: 'text-purple-600',
-              bgColor: 'bg-purple-50',
-            },
-          },
-        },
-        resultStyles: {
-          cardBackground: 'bg-white',
-          cardBorder: 'border border-gray-200',
-          cardShadow: 'shadow-xl',
-          titleColor: 'text-gray-900',
-          scoreColor: 'text-blue-600',
-          descriptionColor: 'text-gray-700',
-          accentColor: 'blue',
-        },
-        tracking: {
-          event: 'quiz_result_calculated',
-          properties: {
-            step: 20,
-            resultType: 'weighted_score',
-            calculatedFrom: 'questions_2_to_11',
-            includesCategoryBreakdown: true,
-          },
-        },
-        stepInfo: {
-          step: 20,
-          category: 'result',
-          isScoring: true,
-          isStrategic: false,
-          isTransition: false,
-          isResult: true,
-          flowPosition: 'final-result',
-          dependencies: ['questions_2_to_11_completed', 'user_name_collected'],
-          nextStep: 21,
-          description: 'Resultado final com cálculo inteligente baseado em 10 perguntas principais',
-        },
-      },
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: 95,
+        progressTotal: 100,
+        showProgress: true,
+        containerWidth: 'full',
+        spacing: 'small'
+      }
     },
+    {
+      id: 'step20-title',
+      type: 'text-inline',
+      properties: {
+        content: 'RECEBA SEU GUIA DE ESTILO COMPLETO',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
+        containerWidth: 'full',
+        spacing: 'small'
+      }
+    },
+    {
+      id: 'step20-subtitle',
+      type: 'text-inline',
+      properties: {
+        content: 'Deixe seus dados e receba gratuitamente seu guia personalizado baseado nas suas respostas',
+        fontSize: 'text-base',
+        textAlign: 'text-center',
+        color: '#6B7280',
+        containerWidth: 'full',
+        spacing: 'small',
+        marginBottom: 24
+      }
+    },
+    {
+      id: 'step20-lead-form',
+      type: 'lead-form', // ✅ COMPONENTE CORRETO
+      properties: {
+        fields: ['name', 'email', 'phone'],
+        submitText: 'Receber Guia Gratuito →',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#B89B7A',
+        textColor: '#432818',
+        primaryColor: '#B89B7A',
+        containerWidth: 'full',
+        spacing: 'medium',
+        marginTop: 16,
+        marginBottom: 32
+      }
+    },
+    {
+      id: 'step20-privacy-notice',
+      type: 'text-inline',
+      properties: {
+        content: '🔒 Seus dados estão seguros conosco. Não compartilhamos suas informações com terceiros.',
+        fontSize: 'text-xs',
+        textAlign: 'text-center',
+        color: '#9CA3AF',
+        containerWidth: 'full',
+        spacing: 'small'
+      }
+    }
   ];
 };
 
