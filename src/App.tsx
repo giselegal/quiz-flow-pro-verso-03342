@@ -12,7 +12,6 @@ import { ScrollSyncProvider } from './context/ScrollSyncContext';
 // Lazy load das páginas principais para code splitting
 const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
-const TestSupabaseIntegration = lazy(() => import('./pages/test-supabase-integration'));
 // Editor inline component to bypass TypeScript config issues
 const TemplatesIA = lazy(() => import('./pages/TemplatesIA'));
 const QuizEditorPage = lazy(() => import('./pages/QuizEditorPage'));
