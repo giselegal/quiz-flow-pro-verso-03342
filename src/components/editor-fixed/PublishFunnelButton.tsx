@@ -20,14 +20,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Globe, 
-  Loader2, 
-  CheckCircle, 
-  AlertTriangle,
-  Copy,
-  ExternalLink 
-} from 'lucide-react';
+import { Globe, Loader2, CheckCircle, AlertTriangle, Copy, ExternalLink } from 'lucide-react';
 import { publishFunnel, PublishFunnelData } from '@/services/funnelPublishing';
 import { toast } from '@/components/ui/use-toast';
 
@@ -42,7 +35,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
   funnelData,
   onPublishSuccess,
   disabled,
-  className = ''
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -54,7 +47,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
 
   const [formData, setFormData] = useState({
     name: funnelData.name || '',
-    description: funnelData.description || ''
+    description: funnelData.description || '',
   });
 
   const handlePublish = async () => {
@@ -62,7 +55,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
       toast({
         title: 'Nome obrigatório',
         description: 'Por favor, insira um nome para o funil.',
-        variant: 'destructive'
+        variant: 'destructive',
       });
       return;
     }
@@ -74,7 +67,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
       const dataToPublish: PublishFunnelData = {
         ...funnelData,
         name: formData.name,
-        description: formData.description
+        description: formData.description,
       };
 
       const result = await publishFunnel(dataToPublish);
@@ -83,11 +76,10 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
       if (result.success && result.publicUrl) {
         onPublishSuccess?.(result.publicUrl);
       }
-
     } catch (error) {
       setPublishResult({
         success: false,
-        error: `Erro inesperado: ${error instanceof Error ? error.message : 'Erro desconhecido'}`
+        error: `Erro inesperado: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
       });
     } finally {
       setIsPublishing(false);
@@ -143,7 +135,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
                 <Input
                   id="funnel-name"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Ex: Quiz de Estilo Pessoal"
                 />
               </div>
@@ -153,7 +145,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
                 <Textarea
                   id="funnel-description"
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Descreva o objetivo do seu quiz..."
                   rows={3}
                 />
@@ -163,11 +155,17 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
                   <div className="space-y-1">
-                    <p><strong>Seu funil possui:</strong></p>
+                    <p>
+                      <strong>Seu funil possui:</strong>
+                    </p>
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="secondary">{funnelData.stages?.length || 0} etapas</Badge>
                       <Badge variant="secondary">
-                        {funnelData.stages?.reduce((total, stage) => total + (stage.blocks?.length || 0), 0)} blocos
+                        {funnelData.stages?.reduce(
+                          (total, stage) => total + (stage.blocks?.length || 0),
+                          0
+                        )}{' '}
+                        blocos
                       </Badge>
                     </div>
                   </div>
@@ -179,8 +177,8 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
               <Button variant="outline" onClick={resetDialog}>
                 Cancelar
               </Button>
-              <Button 
-                onClick={handlePublish} 
+              <Button
+                onClick={handlePublish}
                 disabled={isPublishing || !formData.name.trim()}
                 className="gap-2"
               >
@@ -215,11 +213,7 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
                   <div className="space-y-2">
                     <Label>URL Pública:</Label>
                     <div className="flex items-center gap-2">
-                      <Input 
-                        value={publishResult.publicUrl} 
-                        readOnly 
-                        className="text-sm"
-                      />
+                      <Input value={publishResult.publicUrl} readOnly className="text-sm" />
                       <Button
                         variant="outline"
                         size="sm"
@@ -250,12 +244,10 @@ export const PublishFunnelButton: React.FC<PublishFunnelButtonProps> = ({
             )}
 
             <DialogFooter>
-              <Button onClick={resetDialog}>
-                Fechar
-              </Button>
+              <Button onClick={resetDialog}>Fechar</Button>
               {publishResult.success && publishResult.publicUrl && (
-                <Button 
-                  variant="default" 
+                <Button
+                  variant="default"
                   onClick={() => openPublicUrl(publishResult.publicUrl!)}
                   className="gap-2"
                 >

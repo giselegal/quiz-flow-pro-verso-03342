@@ -107,55 +107,27 @@
       }
     },
     {
-      "id": "intro-form-container",
-      "type": "form-container",
+      "id": "intro-lead-form",
+      "type": "lead-form",
       "position": 5,
       "properties": {
-        "backgroundColor": "transparent",
+        "showNameField": true,
+        "showEmailField": false,
+        "showPhoneField": false,
+        "nameLabel": "Como posso te chamar?",
+        "namePlaceholder": "Digite seu primeiro nome aqui...",
+        "submitText": "Quero Descobrir meu Estilo Agora!",
+        "loadingText": "Digite seu nome para continuar",
+        "successText": "Perfeito! Vamos descobrir seu estilo!",
+        "requiredFields": "name",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#B89B7A",
+        "textColor": "#432818",
+        "primaryColor": "#B89B7A",
         "marginTop": 0,
         "marginBottom": 16,
-        "paddingTop": 0,
-        "paddingBottom": 0,
-        "requireNameToEnableButton": true,
-        "targetButtonId": "intro-cta-button",
-        "visuallyDisableButton": true,
-        "containerWidth": "full"
-      },
-      "children": [
-        {
-          "id": "intro-form-input",
-          "type": "form-input",
-          "properties": {
-            "inputType": "text",
-            "placeholder": "Digite seu primeiro nome aqui...",
-            "label": "Como posso te chamar?",
-            "required": true,
-            "name": "userName",
-            "backgroundColor": "#ffffff",
-            "borderColor": "#B89B7A",
-            "marginBottom": 16
-          }
-        },
-        {
-          "id": "intro-cta-button",
-          "type": "button-inline",
-          "properties": {
-            "text": "Quero Descobrir meu Estilo Agora!",
-            "variant": "primary",
-            "size": "lg",
-            "fullWidth": true,
-            "backgroundColor": "#B89B7A",
-            "textColor": "#ffffff",
-            "requiresValidInput": true,
-            "watchInputId": "intro-form-input",
-            "nextStepUrl": "/quiz/step-2",
-            "nextStepId": "step-2",
-            "disabledText": "Digite seu nome para continuar",
-            "showDisabledState": true,
-            "disabledOpacity": 0.6
-          }
-        }
-      ]
+        "fieldSpacing": 6
+      }
     }
   ],
   "logic": {

@@ -419,7 +419,8 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Texto do botão */}
         <span className="flex-1 text-center truncate relative z-10 font-medium">
-          {(isButtonDisabled && showDisabledState && disabledText ? disabledText : text) || 'Clique aqui'}
+          {(isButtonDisabled && showDisabledState && disabledText ? disabledText : text) ||
+            'Clique aqui'}
         </span>
 
         {/* Ícone à direita */}

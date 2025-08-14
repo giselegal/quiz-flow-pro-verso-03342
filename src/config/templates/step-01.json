@@ -131,79 +131,39 @@
       }
     },
     {
-      "id": "step01-form-container",
-      "type": "form-container",
+      "id": "step01-lead-form",
+      "type": "lead-form",
       "properties": {
-        "elementId": "quiz-form",
-        "className": "w-full max-w-md mx-auto",
-        "marginTop": 32
-      },
-      "children": [
-        {
-          "id": "step01-name-field",
-          "type": "input-field",
-          "properties": {
-            "label": "NOME *",
-            "labelColor": "#432818",
-            "labelFontSize": "text-xs",
-            "labelFontWeight": "font-semibold",
-            "id": "name",
-            "name": "name",
-            "type": "text",
-            "placeholder": "Digite seu nome",
-            "autoFocus": true,
-            "autoComplete": "off",
-            "maxLength": 32,
-            "required": true,
-            "validation": {
-              "required": true,
-              "minLength": 2,
-              "errorMessage": "Por favor, digite seu nome para continuar"
-            },
-            "className": "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 border-[#B89B7A] focus:outline-none focus:ring-2 focus:ring-[#A1835D] focus:ring-offset-2",
-            "errorClassName": "mt-1.5 text-sm text-red-500 font-medium",
-            "containerWidth": "full",
-            "spacing": "small"
-          }
-        },
-        {
-          "id": "step01-continue-button",
-          "type": "button-inline",
-          "properties": {
-            "text": "Quero Descobrir meu Estilo Agora!",
-            "textWhenDisabled": "Digite seu nome para continuar",
-            "variant": "primary",
-            "size": "large",
-            "fullWidth": true,
-            "backgroundColor": "#B89B7A",
-            "backgroundGradient": "linear-gradient(90deg, #B89B7A, #aa6b5d)",
-            "textColor": "#ffffff",
-            "borderRadius": "10px",
-            "shadow": "0 4px 14px rgba(184, 155, 122, 0.15)",
-            "disabled": true,
-            "requiresValidInput": true,
-            "enableOnInput": "name",
-            "minInputLength": 2,
-            "animation": "hover:scale-105, active:scale-95",
-            "containerWidth": "full",
-            "spacing": "small",
-            "marginTop": 24
-          }
-        },
-        {
-          "id": "step01-privacy-text",
-          "type": "text-inline",
-          "properties": {
-            "content": "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href=\"#\" class=\"text-[#B89B7A] hover:text-[#A1835D] underline\">política de privacidade</a>",
-            "fontSize": "text-xs",
-            "textAlign": "text-center",
-            "color": "#9CA3AF",
-            "marginTop": 8,
-            "containerWidth": "full",
-            "spacing": "small"
-          }
-        }
-      ]
+        "showNameField": true,
+        "showEmailField": false,
+        "showPhoneField": false,
+        "nameLabel": "NOME",
+        "namePlaceholder": "Digite seu nome",
+        "submitText": "Quero Descobrir meu Estilo Agora!",
+        "loadingText": "Digite seu nome para continuar",
+        "successText": "Perfeito! Vamos descobrir seu estilo!",
+        "requiredFields": "name",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#B89B7A",
+        "textColor": "#432818",
+        "primaryColor": "#B89B7A",
+        "marginTop": 32,
+        "marginBottom": 8,
+        "fieldSpacing": 6
+      }
+    },
+    {
+      "id": "step01-privacy-text",
+      "type": "text-inline",
+      "properties": {
+        "content": "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa <a href=\"#\" class=\"text-[#B89B7A] hover:text-[#A1835D] underline\">política de privacidade</a>",
+        "fontSize": "text-xs",
+        "textAlign": "text-center",
+        "color": "#9CA3AF",
+        "marginTop": 8,
+        "containerWidth": "full",
+        "spacing": "small"
+      }
     },
     {
       "id": "step01-footer",

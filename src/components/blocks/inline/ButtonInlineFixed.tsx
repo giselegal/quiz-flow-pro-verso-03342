@@ -93,7 +93,7 @@ const ButtonInlineFixed: React.FC<ButtonInlineFixedProps> = ({
         // Usar minRequiredSelections se definido, senão usar minRequired do grid
         const requiredCount = minRequiredSelections || detail.minRequired;
         const isValid = detail.selectedCount >= requiredCount;
-        
+
         setGridSelectionValid(isValid);
         console.log('🔘 [ButtonInlineFixed] Grid validado:', {
           blockId: block?.id,

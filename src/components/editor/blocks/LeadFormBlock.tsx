@@ -1,7 +1,7 @@
 import { Mail, Phone, User } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { userResponseService } from '../../../services/userResponseService';
 import { useFunnelNavigation } from '../../../hooks/useFunnelNavigation';
+import { userResponseService } from '../../../services/userResponseService';
 import type { BlockComponentProps } from '../../../types/blocks';
 
 // ✅ ADICIONAR DEBUG PARA VERIFICAR SE ESTÁ SENDO CARREGADO
@@ -41,16 +41,49 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
     );
   }
 
+  // ✅ CONFIGURAÇÃO FLEXÍVEL VIA PROPRIEDADES
   const {
-    fields = ['name', 'email', 'phone'],
+    // Controle de campos visíveis
+    showNameField = true,
+    showEmailField = true,
+    showPhoneField = true,
+
+    // Labels personalizáveis
+    nameLabel = 'Nome completo',
+    namePlaceholder = 'Seu nome completo',
+    emailLabel = 'E-mail',
+    emailPlaceholder = 'seu.email@exemplo.com',
+    phoneLabel = 'WhatsApp/Telefone',
+    phonePlaceholder = '(11) 99999-9999',
+
+    // Configuração do botão
     submitText = 'Receber Guia Gratuito',
+    loadingText = 'Enviando...',
+    successText = 'Dados recebidos com sucesso!',
+
+    // Validação
+    requiredFields = 'name,email,phone',
+
+    // Aparência
     backgroundColor = '#FFFFFF',
     borderColor = '#B89B7A',
     textColor = '#432818',
     primaryColor = '#B89B7A',
+
+    // Espaçamento
     marginTop = 8,
     marginBottom = 8,
+    fieldSpacing = 6,
   } = (block?.properties as any) || {};
+
+  // ✅ DETERMINAR CAMPOS ATIVOS DINAMICAMENTE
+  const activeFields: string[] = [];
+  if (showNameField) activeFields.push('name');
+  if (showEmailField) activeFields.push('email');
+  if (showPhoneField) activeFields.push('phone');
+
+  // ✅ CAMPOS OBRIGATÓRIOS BASEADOS NA CONFIGURAÇÃO
+  const requiredFieldsList = requiredFields.split(',').map((f: string) => f.trim());
 
   const [formData, setFormData] = useState<LeadFormData>({
     name: '',
@@ -77,7 +110,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
       phone: userResponseService.getResponse(`${block?.id}-phone`) || '',
     };
     setFormData(savedData);
-    
+
     // Validar dados carregados
     validateField('name', savedData.name);
     validateField('email', savedData.email);
@@ -100,14 +133,15 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
         break;
       case 'phone':
         const phoneRegex = /^[\d\s\-\(\)\+]{10,}$/;
-        isValid = phoneRegex.test(value.replace(/\D/g, '')) && value.replace(/\D/g, '').length >= 10;
+        isValid =
+          phoneRegex.test(value.replace(/\D/g, '')) && value.replace(/\D/g, '').length >= 10;
         message = isValid ? '' : 'Telefone deve ter pelo menos 10 dígitos';
         break;
     }
 
     setValidation(prev => ({
       ...prev,
-      [fieldName]: { isValid, message }
+      [fieldName]: { isValid, message },
     }));
 
     return isValid;
@@ -115,14 +149,14 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
 
   const handleInputChange = (fieldName: string, value: string) => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
-    
+
     // Validação em tempo real
     const isValid = validateField(fieldName, value);
-    
+
     // Salvar se válido
     if (isValid && value.trim()) {
       userResponseService.saveStepResponse(`${block?.id}-${fieldName}`, value.trim());
-      
+
       // Se for nome, salvar também como nome do usuário
       if (fieldName === 'name') {
         userResponseService.saveUserName('userId', value.trim());
@@ -142,14 +176,17 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
           field: fieldName,
           value: value.trim(),
           isValid,
-          formData: { ...formData, [fieldName]: value }
+          formData: { ...formData, [fieldName]: value },
         },
       })
     );
   };
 
   const isFormValid = () => {
-    return fields.every((field: string) => validation[field]?.isValid);
+    // ✅ VALIDAR APENAS CAMPOS ATIVOS E OBRIGATÓRIOS
+    return activeFields
+      .filter(field => requiredFieldsList.includes(field))
+      .every((field: string) => validation[field]?.isValid);
   };
 
   const handleSubmit = async () => {
@@ -221,27 +258,29 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
     }
   };
 
+  // ✅ OBTER LABEL PERSONALIZADO BASEADO NAS PROPRIEDADES
   const getFieldLabel = (fieldName: string) => {
     switch (fieldName) {
       case 'name':
-        return 'Nome completo';
+        return nameLabel;
       case 'email':
-        return 'E-mail';
+        return emailLabel;
       case 'phone':
-        return 'WhatsApp/Telefone';
+        return phoneLabel;
       default:
         return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
     }
   };
 
+  // ✅ OBTER PLACEHOLDER PERSONALIZADO BASEADO NAS PROPRIEDADES
   const getFieldPlaceholder = (fieldName: string) => {
     switch (fieldName) {
       case 'name':
-        return 'Seu nome completo';
+        return namePlaceholder;
       case 'email':
-        return 'seu.email@exemplo.com';
+        return emailPlaceholder;
       case 'phone':
-        return '(11) 99999-9999';
+        return phonePlaceholder;
       default:
         return `Digite seu ${fieldName}`;
     }
@@ -271,12 +310,22 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
       >
         <div className="space-y-4">
           <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <h3 className="text-xl font-bold" style={{ color: textColor }}>
-            Dados recebidos com sucesso!
+            {successText}
           </h3>
           <p className="text-sm opacity-75" style={{ color: textColor }}>
             Em instantes você será direcionado para receber seu guia personalizado.
@@ -290,10 +339,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
     <div
       className={`
         p-6 rounded-lg transition-all duration-200
-        ${isSelected
-          ? 'border-2 cursor-pointer'
-          : 'border-2 hover:shadow-md'
-        }
+        ${isSelected ? 'border-2 cursor-pointer' : 'border-2 hover:shadow-md'}
         ${className}
       `}
       style={{
@@ -306,16 +352,20 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
       data-block-id={block?.id}
       data-block-type={block?.type}
     >
-      <div className="space-y-6">
-        {fields.map((fieldName: string) => {
+      {/* ✅ RENDERIZAR APENAS CAMPOS ATIVOS */}
+      <div className="space-y-6" style={{ gap: `${fieldSpacing * 4}px` }}>
+        {activeFields.map((fieldName: string) => {
           const Icon = getFieldIcon(fieldName);
           const fieldValidation = validation[fieldName];
-          
+
           return (
             <div key={fieldName} className="space-y-2">
               <div className="flex items-center gap-2">
                 <Icon className="w-4 h-4" style={{ color: borderColor }} />
-                <label className="text-sm font-medium uppercase tracking-wide" style={{ color: textColor }}>
+                <label
+                  className="text-sm font-medium uppercase tracking-wide"
+                  style={{ color: textColor }}
+                >
                   {getFieldLabel(fieldName)} *
                 </label>
               </div>
@@ -323,21 +373,22 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
                 type={getFieldType(fieldName)}
                 placeholder={getFieldPlaceholder(fieldName)}
                 value={formData[fieldName as keyof LeadFormData]}
-                onChange={(e) => handleInputChange(fieldName, e.target.value)}
+                onChange={e => handleInputChange(fieldName, e.target.value)}
                 className={`
                   w-full px-4 py-3 border-2 rounded-lg
                   focus:ring-2 focus:ring-opacity-50 
                   transition-all outline-none placeholder-opacity-60
-                  ${fieldValidation?.isValid
-                    ? 'border-green-400 bg-green-50'
-                    : formData[fieldName as keyof LeadFormData] && !fieldValidation?.isValid
-                      ? 'border-red-400 bg-red-50'
-                      : 'hover:border-opacity-80'
+                  ${
+                    fieldValidation?.isValid
+                      ? 'border-green-400 bg-green-50'
+                      : formData[fieldName as keyof LeadFormData] && !fieldValidation?.isValid
+                        ? 'border-red-400 bg-red-50'
+                        : 'hover:border-opacity-80'
                   }
                 `}
                 style={{
-                  borderColor: fieldValidation?.isValid 
-                    ? '#10b981' 
+                  borderColor: fieldValidation?.isValid
+                    ? '#10b981'
                     : formData[fieldName as keyof LeadFormData] && !fieldValidation?.isValid
                       ? '#ef4444'
                       : borderColor,
@@ -360,13 +411,14 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
           className={`
             w-full py-4 px-6 rounded-lg font-bold text-white
             transition-all duration-200 transform
-            ${isFormValid() && !isSubmitting
-              ? 'hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
-              : 'opacity-50 cursor-not-allowed'
+            ${
+              isFormValid() && !isSubmitting
+                ? 'hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
+                : 'opacity-50 cursor-not-allowed'
             }
           `}
           style={{
-            background: isFormValid() 
+            background: isFormValid()
               ? `linear-gradient(90deg, ${primaryColor}, #aa6b5d)`
               : '#d1d5db',
             boxShadow: isFormValid() ? `0 4px 14px ${primaryColor}33` : 'none',
@@ -375,7 +427,7 @@ const LeadFormBlock: React.FC<LeadFormBlockProps> = ({
           {isSubmitting ? (
             <div className="flex items-center justify-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Enviando...
+              {loadingText}
             </div>
           ) : (
             submitText
