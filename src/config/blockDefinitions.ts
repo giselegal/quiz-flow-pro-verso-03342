@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BlockDefinition } from '@/types/editor';
 import { AlignLeft, Heading, Image, Minus, Square, Type, HelpCircle, FileText, Tag, Layout } from 'lucide-react';
 

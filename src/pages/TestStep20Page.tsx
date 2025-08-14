@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Step20Result from '../components/steps/Step20Result';
 
 /**

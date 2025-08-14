@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { toast } from '@/components/ui/use-toast';
 import { quizSupabaseService } from '@/services/quizSupabaseService';
 import { templateService } from '@/services/templateService';

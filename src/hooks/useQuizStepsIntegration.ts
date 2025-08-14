@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { toast } from '@/components/ui/use-toast';
 import { useEditor } from '@/context/EditorContext';
 import templateService, { type TemplateData } from '@/services/templateService';

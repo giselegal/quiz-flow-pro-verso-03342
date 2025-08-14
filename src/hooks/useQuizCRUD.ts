@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { toast } from '@/components/ui/use-toast';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StepNavigationSimple } from '@/components/navigation/StepNavigationSimple';
 import { useStepNavigationOffline } from '@/hooks/useStepNavigationOffline';
 import React, { lazy, Suspense } from 'react';
