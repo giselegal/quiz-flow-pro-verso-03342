@@ -48,17 +48,18 @@ import ResultStyleCardBlock from '../components/blocks/inline/ResultStyleCardBlo
 // Componentes Step01
 import { IntroBlock } from '../components/steps/step01/IntroBlock';
 
-// Componentes de Oferta (Etapa 21)
-import {
-  OfferFaqSection,
-  OfferGuaranteeSection,
-  OfferHeader,
-  OfferHeroSection,
-  OfferProblemSection,
-  OfferProductShowcase,
-  OfferSolutionSection,
-} from '../components/editor-fixed/offer';
-import Step21OfferPage from '../components/editor-fixed/step-types/Step21OfferPage';
+// Componentes de Oferta (Etapa 21) - removidos durante limpeza
+// Imports removidos durante limpeza de conflitos:
+// import {
+//   OfferFaqSection,
+//   OfferGuaranteeSection, 
+//   OfferHeader,
+//   OfferHeroSection,
+//   OfferProblemSection,
+//   OfferProductShowcase,
+//   OfferSolutionSection,
+// } from '../components/editor-fixed/offer';
+// import Step21OfferPage from '../components/editor-fixed/step-types/Step21OfferPage';
 
 // === REGISTRY PRINCIPAL - SEM DUPLICATAS ===
 
@@ -106,15 +107,15 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   'bonus-showcase': BonusShowcaseBlock, // ofertas especiais
   'loading-animation': LoadingAnimationBlock, // transições
 
-  // ✅ COMPONENTES DE OFERTA - ETAPA 21
-  'step-21-offer': Step21OfferPage, // Componente principal da etapa 21
-  'offer-header': OfferHeader,
-  'offer-hero-section': OfferHeroSection,
-  'offer-problem-section': OfferProblemSection,
-  'offer-solution-section': OfferSolutionSection,
-  'offer-product-showcase': OfferProductShowcase,
-  'offer-guarantee-section': OfferGuaranteeSection,
-  'offer-faq-section': OfferFaqSection,
+  // ✅ COMPONENTES DE OFERTA - REMOVIDOS DURANTE LIMPEZA
+  // 'step-21-offer': Step21OfferPage, // Componente principal da etapa 21
+  // 'offer-header': OfferHeader,
+  // 'offer-hero-section': OfferHeroSection,
+  // 'offer-problem-section': OfferProblemSection,
+  // 'offer-solution-section': OfferSolutionSection,
+  // 'offer-product-showcase': OfferProductShowcase,
+  // 'offer-guarantee-section': OfferGuaranteeSection,
+  // 'offer-faq-section': OfferFaqSection,
 
   // ✅ COMPONENTES LEGACY (COMPATIBILIDADE)
   text: TextInline,

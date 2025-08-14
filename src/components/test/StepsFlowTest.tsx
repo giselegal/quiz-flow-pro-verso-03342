@@ -6,7 +6,8 @@
 
 import { Block } from '@/types/editor';
 import React, { useState } from 'react';
-import { useEditorWithJson } from '../editor-fixed/useEditorWithJson';
+// Hook removido durante limpeza de conflitos
+// import { useEditorWithJson } from '../editor-fixed/useEditorWithJson';
 
 interface TestResult {
   step: number;
@@ -20,7 +21,19 @@ const StepsFlowTest: React.FC = () => {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
 
-  const jsonFeatures = useEditorWithJson(currentBlocks, setCurrentBlocks);
+  // Hook removido - funcionalidade simplificada
+  // const jsonFeatures = useEditorWithJson(currentBlocks, setCurrentBlocks);
+  const jsonFeatures = {
+    exportToJson: () => JSON.stringify(currentBlocks),
+    importFromJson: (json: string) => {
+      try {
+        const blocks = JSON.parse(json);
+        setCurrentBlocks(blocks);
+      } catch (error) {
+        console.error('Erro ao importar JSON:', error);
+      }
+    }
+  };
 
   const runFullTest = async () => {
     setIsRunning(true);

@@ -1,5 +1,6 @@
 import React from 'react';
-import { TemplateProvider } from '@/components/editor-fixed/UnifiedTemplateManager';
+// TemplateProvider removido durante limpeza de conflitos
+// import { TemplateProvider } from '@/components/editor-fixed/UnifiedTemplateManager';
 import EditorFixedEnhancedPage from '@/pages/editor-fixed-dragdrop-enhanced';
 import { useToast } from '@/hooks/use-toast';
 
@@ -64,9 +65,10 @@ const TestSupabaseIntegrationPage: React.FC = () => {
 
       {/* Editor Principal */}
       <div className="h-[calc(100vh-80px)]">
-        <TemplateProvider>
-          <EditorFixedEnhancedPage />
-        </TemplateProvider>
+                {/* TemplateProvider removido durante limpeza */}
+        <div>
+          <TestSupabaseIntegrationPage />
+        </div>
       </div>
     </div>
   );

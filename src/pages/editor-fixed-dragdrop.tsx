@@ -9,7 +9,8 @@ import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelS
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 
-import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
+// FunnelNavigation removido durante limpeza de conflitos
+// import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
@@ -243,16 +244,37 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         <div className="flex-none">
           <div className="sticky top-0 bg-white z-20">
             {/* ✅ NAVEGAÇÃO UNIFICADA DO FUNIL */}
-            <FunnelNavigation
-              currentStep={funnelNavigation.currentStepNumber}
-              totalSteps={funnelNavigation.totalSteps}
-              onStepChange={funnelNavigation.navigateToStep}
-              onSave={funnelNavigation.handleSave}
-              onPreview={funnelNavigation.handlePreview}
-              isSaving={funnelNavigation.isSaving}
-              canNavigateNext={funnelNavigation.canNavigateNext}
-              canNavigatePrevious={funnelNavigation.canNavigatePrevious}
-            />
+            {/* FunnelNavigation removido durante limpeza de conflitos */}
+            <div className="bg-gray-100 p-4 rounded-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">
+                  Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}
+                </span>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)}
+                    disabled={!funnelNavigation.canNavigatePrevious}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 text-sm"
+                  >
+                    Anterior
+                  </button>
+                  <button 
+                    onClick={funnelNavigation.handleSave}
+                    disabled={funnelNavigation.isSaving}
+                    className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50 text-sm"
+                  >
+                    {funnelNavigation.isSaving ? 'Salvando...' : 'Salvar'}
+                  </button>
+                  <button 
+                    onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)}
+                    disabled={!funnelNavigation.canNavigateNext}
+                    className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50 text-sm"
+                  >
+                    Próxima
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <EditorToolbar
               isPreviewing={isPreviewing}

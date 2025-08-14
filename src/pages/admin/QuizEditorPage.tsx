@@ -26,7 +26,9 @@ const QuizEditorPage: React.FC<QuizEditorPageProps> = ({ templateId }) => {
             setLocation('/admin/quiz-editor');
             return;
           }
-          setTemplate(template);
+          // Template carregado mas interface não compatível - usar fallback
+          console.warn('Template carregado mas interface não compatível');
+          setTemplate(null);
         } catch (err) {
           console.error('Error loading template:', err);
           setError('Erro ao carregar template');

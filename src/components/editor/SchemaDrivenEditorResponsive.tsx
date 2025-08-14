@@ -51,16 +51,28 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
     <div className={`h-full w-full bg-gray-50 ${className}`}>
       {/* Navigation Header */}
       <div className="h-16 border-b bg-white flex items-center px-4">
-        <FunnelNavigation
-          currentStep={funnelNavigation.currentStepNumber}
-          totalSteps={funnelNavigation.totalSteps}
-          onStepChange={funnelNavigation.navigateToStep}
-          onSave={funnelNavigation.handleSave}
-          onPreview={funnelNavigation.handlePreview}
-          isSaving={funnelNavigation.isSaving}
-          canNavigateNext={funnelNavigation.canNavigateNext}
-          canNavigatePrevious={funnelNavigation.canNavigatePrevious}
-        />
+        {/* FunnelNavigation removido durante limpeza de conflitos */}
+        <div className="bg-gray-100 p-4 rounded-lg text-sm text-gray-600">
+          <div className="flex items-center justify-between">
+            <span>Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}</span>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)}
+                disabled={!funnelNavigation.canNavigatePrevious}
+                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <button 
+                onClick={() => funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)}
+                disabled={!funnelNavigation.canNavigateNext}
+                className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50"
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
       
       <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
