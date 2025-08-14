@@ -26,6 +26,15 @@ export { default as BonusListInlineBlock } from './BonusListInlineBlock';
 export { default as QuizOfferCTAInlineBlock } from './QuizOfferCTAInlineBlock';
 export { default as QuizOfferPricingInlineBlock } from './QuizOfferPricingInlineBlock';
 
+// Novos componentes modulares da Etapa 21 (Offer Page)
+export { default as OfferHeaderInlineBlock } from './OfferHeaderInlineBlock';
+export { default as OfferHeroSectionInlineBlock } from './OfferHeroSectionInlineBlock';
+export { default as OfferProblemSectionInlineBlock } from './OfferProblemSectionInlineBlock';
+export { default as OfferSolutionSectionInlineBlock } from './OfferSolutionSectionInlineBlock';
+export { default as OfferProductShowcaseInlineBlock } from './OfferProductShowcaseInlineBlock';
+export { default as OfferGuaranteeSectionInlineBlock } from './OfferGuaranteeSectionInlineBlock';
+export { default as OfferFaqSectionInlineBlock } from './OfferFaqSectionInlineBlock';
+
 // Utilitários
 export { default as DividerInlineBlock } from './DividerInlineBlock';
 export { default as BenefitsInlineBlock } from './BenefitsInlineBlock';
