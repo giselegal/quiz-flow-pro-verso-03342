@@ -13,12 +13,23 @@ interface Option {
 }
 
 interface OptionsGridBlockProps extends BlockComponentProps {
+  // Preview mode props
+  isPreviewMode?: boolean;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  onNavigate?: (stepId: string) => void;
+  onUpdateSessionData?: (key: string, value: any) => void;
+  sessionData?: Record<string, any>;
+  onStepComplete?: (data: any) => void;
+  autoAdvanceOnComplete?: boolean;
+  
   properties: {
     question?: string;
     questionId?: string;
     options?: Option[];
     columns?: number | string;
     selectedOption?: string;
+    selectedOptions?: string[];
     // 🎯 CONTROLES DE IMAGEM
     showImages?: boolean;
     imageSize?: 'small' | 'medium' | 'large' | 'custom' | string; // Permite strings também
@@ -105,6 +116,12 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   onClick,
   onPropertyChange,
   className = '',
+  // Preview mode props
+  isPreviewMode = false,
+  onNext,
+  onUpdateSessionData,
+  sessionData = {},
+  onStepComplete,
 }) => {
   const {
     question,
@@ -112,6 +129,7 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     options = [],
     columns = 2,
     selectedOption,
+    selectedOptions = [],
     // 🎯 PROPRIEDADES DE IMAGEM
     showImages = true,
     imageSize = 'medium',
@@ -138,13 +156,27 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
     enableButtonOnlyWhenValid = true,
     showValidationFeedback = true,
     autoAdvanceOnComplete = false,
-    autoAdvanceDelay = 0,
+    autoAdvanceDelay = 1500,
     instantActivation = true,
     trackSelectionOrder = false,
     // 🎯 PROPRIEDADES LEGADAS
     className: blockClassName,
     showQuestionTitle = true,
   } = (block?.properties as any) || {};
+
+  // State for preview mode selections
+  const [previewSelections, setPreviewSelections] = React.useState<string[]>([]);
+  
+  React.useEffect(() => {
+    // Initialize from session data in preview mode
+    if (isPreviewMode && sessionData) {
+      const sessionKey = `step_selections_${block?.id}`;
+      const savedSelections = sessionData[sessionKey];
+      if (savedSelections && Array.isArray(savedSelections)) {
+        setPreviewSelections(savedSelections);
+      }
+    }
+  }, [isPreviewMode, sessionData, block?.id]);
 
   // Helpers
   const toPxNumber = (val?: number | string): number | undefined => {
@@ -217,10 +249,111 @@ const OptionsGridBlock: React.FC<OptionsGridBlockProps> = ({
   })();
 
   const handleOptionSelect = (optionId: string) => {
-    if (onPropertyChange) {
-      onPropertyChange('selectedOption', optionId);
+    if (isPreviewMode) {
+      // Preview mode: Handle selection with real behavior
+      let newSelections: string[];
+      
+      if (multipleSelection) {
+        if (previewSelections.includes(optionId)) {
+          // Deselect if already selected
+          if (allowDeselection) {
+            newSelections = previewSelections.filter(id => id !== optionId);
+          } else {
+            newSelections = previewSelections; // Don't change if deselection not allowed
+          }
+        } else {
+          // Add selection if under max limit
+          if (previewSelections.length < maxSelections) {
+            newSelections = [...previewSelections, optionId];
+          } else {
+            newSelections = previewSelections; // Don't exceed max selections
+          }
+        }
+      } else {
+        // Single selection
+        if (previewSelections.includes(optionId) && allowDeselection) {
+          newSelections = [];
+        } else {
+          newSelections = [optionId];
+        }
+      }
+      
+      setPreviewSelections(newSelections);
+      
+      // Save to session data
+      if (onUpdateSessionData) {
+        const sessionKey = `step_selections_${block?.id}`;
+        onUpdateSessionData(sessionKey, newSelections);
+        
+        // Save individual option details for analytics
+        const selectedOptionDetails = newSelections.map(id => {
+          const option = options.find(opt => opt.id === id);
+          return {
+            id,
+            text: option?.text,
+            category: option?.category,
+            styleCategory: option?.styleCategory,
+            points: option?.points,
+          };
+        });
+        onUpdateSessionData(`${sessionKey}_details`, selectedOptionDetails);
+      }
+      
+      // Check if we should auto-advance
+      const hasMinSelections = newSelections.length >= (minSelections || 1);
+      const hasRequiredSelections = newSelections.length >= (requiredSelections || minSelections || 1);
+      
+      if (autoAdvanceOnComplete && hasRequiredSelections && onNext) {
+        console.log('🚀 OptionsGrid: Auto-advancing after selection', newSelections);
+        
+        // Trigger step completion event
+        if (onStepComplete) {
+          onStepComplete({
+            stepId: block?.id,
+            selections: newSelections,
+            selectedOptionDetails,
+            autoAdvance: true,
+          });
+        }
+        
+        // Auto-advance with delay
+        setTimeout(() => {
+          onNext();
+        }, autoAdvanceDelay || 1500);
+      } else if (onStepComplete && hasMinSelections) {
+        // Just trigger completion without auto-advance
+        onStepComplete({
+          stepId: block?.id,
+          selections: newSelections,
+          selectedOptionDetails,
+          autoAdvance: false,
+        });
+      }
+    } else {
+      // Editor mode: Use the property change handler
+      if (onPropertyChange) {
+        if (multipleSelection) {
+          const currentSelections = selectedOptions || [];
+          const newSelections = currentSelections.includes(optionId)
+            ? currentSelections.filter(id => id !== optionId)
+            : [...currentSelections, optionId];
+          onPropertyChange('selectedOptions', newSelections);
+        } else {
+          onPropertyChange('selectedOption', optionId);
+        }
+      }
     }
   };
+  
+  // Get current selections (different logic for preview vs editor mode)
+  const getCurrentSelections = () => {
+    if (isPreviewMode) {
+      return previewSelections;
+    }
+    return multipleSelection ? (selectedOptions || []) : (selectedOption ? [selectedOption] : []);
+  };
+  
+  const currentSelections = getCurrentSelections();
 
   return (
     <div
