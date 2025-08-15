@@ -2,12 +2,12 @@
 import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 /**
- * Gera template para questões principais do quiz (steps 3-11 = q1-q10)
+ * Gera template para questões principais do quiz (steps 2-11 = q1-q10)
  */
 export const generateQuizQuestionTemplate = (stepNumber: number, questionIndex: number) => {
-  const questionData = COMPLETE_QUIZ_QUESTIONS[questionIndex] || COMPLETE_QUIZ_QUESTIONS[1];
+  const questionData = COMPLETE_QUIZ_QUESTIONS[questionIndex] || COMPLETE_QUIZ_QUESTIONS[0];
   const progressValue = (stepNumber / 21) * 100;
-  const questionNumber = stepNumber - 2; // Step 3 = Question 1
+  const questionNumber = stepNumber - 1; // Step 2 = Question 1
   
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
@@ -138,7 +138,7 @@ export const generateQuizQuestionTemplate = (stepNumber: number, questionIndex: 
  * Gera template para questões estratégicas (steps 13-18 = strategic1-strategic6)
  */
 export const generateStrategicQuestionTemplate = (stepNumber: number, strategicIndex: number) => {
-  const questionData = COMPLETE_QUIZ_QUESTIONS[12 + strategicIndex]; // strategic1-6 start at index 12
+  const questionData = COMPLETE_QUIZ_QUESTIONS[10 + strategicIndex]; // strategic1-6 start at index 10
   const progressValue = (stepNumber / 21) * 100;
   
   return [
@@ -344,16 +344,17 @@ export const generateTransitionTemplate = (stepNumber: number, transitionId: str
 
 // ✅ TEMPLATES CORRIGIDOS COM MAPEAMENTO CORRETO
 
-// Steps 3-11: Quiz Questions (q1-q10)
-export const ConnectedStep03Template = () => generateQuizQuestionTemplate(3, 1);  // q1
-export const ConnectedStep04Template = () => generateQuizQuestionTemplate(4, 2);  // q2
-export const ConnectedStep05Template = () => generateQuizQuestionTemplate(5, 3);  // q3
-export const ConnectedStep06Template = () => generateQuizQuestionTemplate(6, 4);  // q4
-export const ConnectedStep07Template = () => generateQuizQuestionTemplate(7, 5);  // q5
-export const ConnectedStep08Template = () => generateQuizQuestionTemplate(8, 6);  // q6
-export const ConnectedStep09Template = () => generateQuizQuestionTemplate(9, 7);  // q7
-export const ConnectedStep10Template = () => generateQuizQuestionTemplate(10, 8); // q8
-export const ConnectedStep11Template = () => generateQuizQuestionTemplate(11, 9); // q9
+// Steps 2-11: Quiz Questions (q1-q10) 
+export const ConnectedStep02Template = () => generateQuizQuestionTemplate(2, 0);  // q1
+export const ConnectedStep03Template = () => generateQuizQuestionTemplate(3, 1);  // q2
+export const ConnectedStep04Template = () => generateQuizQuestionTemplate(4, 2);  // q3
+export const ConnectedStep05Template = () => generateQuizQuestionTemplate(5, 3);  // q4
+export const ConnectedStep06Template = () => generateQuizQuestionTemplate(6, 4);  // q5
+export const ConnectedStep07Template = () => generateQuizQuestionTemplate(7, 5);  // q6
+export const ConnectedStep08Template = () => generateQuizQuestionTemplate(8, 6);  // q7
+export const ConnectedStep09Template = () => generateQuizQuestionTemplate(9, 7);  // q8
+export const ConnectedStep10Template = () => generateQuizQuestionTemplate(10, 8); // q9
+export const ConnectedStep11Template = () => generateQuizQuestionTemplate(11, 9); // q10
 
 // Step 12: Transition 1 (to strategic questions)
 export const ConnectedStep12Template = () => generateTransitionTemplate(12, 'transition1');
@@ -370,6 +371,7 @@ export const ConnectedStep18Template = () => generateStrategicQuestionTemplate(1
 export const ConnectedStep19Template = () => generateTransitionTemplate(19, 'transition2');
 
 // ✅ EXPORTS INDIVIDUAIS PARA COMPATIBILIDADE
+export const getConnectedStep02Template = () => ConnectedStep02Template();
 export const getConnectedStep03Template = () => ConnectedStep03Template();
 export const getConnectedStep04Template = () => ConnectedStep04Template();
 export const getConnectedStep05Template = () => ConnectedStep05Template();
