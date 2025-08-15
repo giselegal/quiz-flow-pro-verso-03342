@@ -18,7 +18,7 @@ import { useFunnelComponents } from '../hooks/useFunnelComponents';
 import { getFunnelIdFromEnvOrStorage, parseStepNumberFromStageId } from '../utils/funnelIdentity';
 
 // ✅ IMPORTAR SISTEMA DE MAPEAMENTO REAL DAS ETAPAS
-import { getAllSteps } from '../config/stepTemplatesMapping';
+import { getAllSteps, getStepTemplate } from '../config/stepTemplatesMapping';
 
 // ✅ IMPORTAR HOOKS DE QUIZ PARA INTEGRAÇÃO
 import { useQuizLogic } from '../hooks/useQuizLogic';
@@ -390,51 +390,55 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     return initialBlocks;
   });
 
-  // ✅ EFEITO OTIMIZADO - LAZY LOADING COM REQUESTIDLECALLBACK
+  // ✅ SISTEMA HÍBRIDO: CARREGAMENTO COM TSX TEMPLATES CONECTADOS
   useEffect(() => {
     const loadInitialTemplates = async () => {
-      console.log('🔄 EditorProvider: Lazy loading otimizado iniciado');
+      console.log('🔄 EditorProvider: Carregando templates híbridos TSX/JSON');
 
       // Usar requestIdleCallback para não bloquear UI
       if ('requestIdleCallback' in window) {
         (window as any).requestIdleCallback(async () => {
           try {
-            // Carregar apenas a primeira etapa imediatamente
+            // Carregar primeira etapa usando sistema híbrido
             const stageId = 'step-01';
-            console.log(`🔄 Carregando template prioritário: ${stageId}`);
+            const stepNumber = 1;
+            console.log(`🔄 Carregando template híbrido: ${stageId}`);
             
-            const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
+            // ✅ USAR SISTEMA HÍBRIDO: TSX TEMPLATES CONECTADOS
+            const loadedBlocks = getStepTemplate(stepNumber);
             
             if (loadedBlocks && loadedBlocks.length > 0) {
               setStageBlocks(prev => ({
                 ...prev,
                 [stageId]: loadedBlocks,
               }));
-              console.log(`✅ Template ${stageId} carregado: ${loadedBlocks.length} blocos`);
+              console.log(`✅ Template híbrido ${stageId} carregado: ${loadedBlocks.length} blocos`);
             }
 
-            // Carregar outras etapas com delay progressivo
+            // Carregar outras etapas com delay progressivo usando sistema híbrido
             setTimeout(() => {
               for (let i = 2; i <= 5; i++) {
                 const nextStageId = `step-${String(i).padStart(2, '0')}`;
                 setTimeout(async () => {
                   try {
-                    const nextBlocks = await TemplateManager.loadStepBlocks(nextStageId);
+                    // ✅ USAR SISTEMA HÍBRIDO PARA TODAS AS ETAPAS
+                    const nextBlocks = getStepTemplate(i);
                     if (nextBlocks && nextBlocks.length > 0) {
                       setStageBlocks(prev => ({
                         ...prev,
                         [nextStageId]: nextBlocks,
                       }));
+                      console.log(`✅ Template híbrido ${nextStageId} carregado: ${nextBlocks.length} blocos`);
                     }
                   } catch (error) {
-                    console.warn(`⚠️ Erro ao carregar ${nextStageId}:`, error);
+                    console.warn(`⚠️ Erro ao carregar template híbrido ${nextStageId}:`, error);
                   }
                 }, i * 100); // Delay de 100ms entre etapas
               }
             }, 1000); // Aguardar 1s antes de carregar demais
             
           } catch (error) {
-            console.error('❌ Erro no carregamento otimizado:', error);
+            console.error('❌ Erro no carregamento híbrido:', error);
           }
         });
       } else {
@@ -613,7 +617,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   // 🎯 STAGE ACTIONS (GERENCIAMENTO DE ETAPAS)
   // ═══════════════════════════════════════════════
 
-  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE JSON (SISTEMA HÍBRIDO)
+  // ✅ SISTEMA HÍBRIDO: CARREGAR BLOCOS DE TEMPLATE TSX CONECTADO
   const loadStageTemplate = useCallback(
     async (stageId: string) => {
       const stage = stages.find(s => s.id === stageId);
@@ -621,12 +625,18 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
       const stepNumber = parseInt(stageId.replace('step-', ''));
 
-      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
+      console.log(`🎨 EditorContext: Carregando template híbrido para etapa ${stepNumber}`);
       dispatch({ type: 'SET_STATE', payload: 'loading' });
 
       try {
-        // Carregar blocos do template JSON e aplicar no estado
-        const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
+        // ✅ SISTEMA HÍBRIDO: USAR TSX TEMPLATES CONECTADOS
+        const userData = {
+          userName: quizLogic.userName,
+          styleCategory: quizLogic.quizResult?.primaryStyle || 'Elegante',
+          sessionId: funnelId,
+        };
+        
+        const loadedBlocks = getStepTemplate(stepNumber, userData);
 
         // ✅ Garantir Header padrão no topo para todas as etapas
         const hasHeader = (loadedBlocks || []).some(
@@ -1431,9 +1441,28 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         }
       },
       loadTemplateByStep: async step => {
-        const template = await templateManager.loadTemplateByStep(step);
-        if (template) {
-          await templateManager.applyTemplate(template);
+        const stepId = `step-${String(step).padStart(2, '0')}`;
+        console.log(`🔄 templateActions: Carregando Step ${step} via sistema híbrido`);
+        
+        try {
+          const userData = {
+            userName: quizLogic.userName,
+            styleCategory: quizLogic.quizResult?.primaryStyle || 'Elegante',
+            sessionId: funnelId,
+          };
+          
+          const blocks = getStepTemplate(step, userData);
+          
+          if (blocks && blocks.length > 0) {
+            setStageBlocks(prev => ({
+              ...prev,
+              [stepId]: blocks,
+            }));
+            setActiveStageId(stepId);
+            console.log(`✅ templateActions: Step ${step} carregado com ${blocks.length} blocos`);
+          }
+        } catch (error) {
+          console.error(`❌ templateActions: Erro ao carregar Step ${step}:`, error);
         }
       },
       applyCurrentTemplate: async () => {

@@ -1,8 +1,8 @@
 import React from 'react';
-import EditorFixedMinimal from '@/components/editor-fixed/EditorFixedMinimal';
+import EditorFixedHybrid from '@/components/editor-fixed/EditorFixedHybrid';
 
 const EditorFixedPage: React.FC = () => {
-  return <EditorFixedMinimal />;
+  return <EditorFixedHybrid />;
 };
 
 export default EditorFixedPage;
