@@ -86,6 +86,7 @@ export type BlockType =
   | 'legal-notice-inline'
 
   // Blocos de quiz
+  | 'quiz-intro'
   | 'quiz-intro-header'
   | 'quiz-start-page-inline'
   | 'quiz-question-inline'

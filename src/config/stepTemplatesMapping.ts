@@ -156,15 +156,24 @@ export const getStepTemplate = (stepNumber: number, userData?: any): any[] => {
   const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
   
   if (stepTemplate) {
-    // Para Step 20, passa dados do usuário se disponíveis
-    if (stepNumber === 20 && typeof stepTemplate.templateFunction === 'function') {
-      return stepTemplate.templateFunction(userData);
+    try {
+      // Para Step 20, passa dados do usuário se disponíveis
+      if (stepNumber === 20 && typeof stepTemplate.templateFunction === 'function') {
+        const result = stepTemplate.templateFunction(userData);
+        return Array.isArray(result) ? result : [];
+      }
+      
+      // Para outras etapas, usa função normal
+      if (typeof stepTemplate.templateFunction === 'function') {
+        const result = stepTemplate.templateFunction();
+        return Array.isArray(result) ? result : [];
+      }
+      
+      return [];
+    } catch (error) {
+      console.error(`Erro ao carregar template da etapa ${stepNumber}:`, error);
+      return getDefaultTemplate(stepNumber);
     }
-    // Para outras etapas, usa função normal
-    if (typeof stepTemplate.templateFunction === 'function') {
-      return stepTemplate.templateFunction();
-    }
-    return [];
   }
   
   // Fallback para template padrão

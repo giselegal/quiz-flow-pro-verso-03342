@@ -402,32 +402,39 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     
     const loadInitialTemplates = async () => {
       console.log('🔄 EditorProvider: Função loadInitialTemplates executada');
-      console.log('🔄 EditorProvider: Carregando templates híbridos TSX/JSON');
+      console.log('🔄 EditorProvider: Carregando templates híbridos TSX/JSON convertidos');
 
       // Usar requestIdleCallback para não bloquear UI
       if ('requestIdleCallback' in window) {
         (window as any).requestIdleCallback(async () => {
           try {
+            // Import do conversor de templates
+            const { convertTemplateConfigsToBlocks } = await import('../utils/templateBlockConverter');
+            
             // Carregar primeira etapa usando sistema híbrido
             const stageId = 'step-01';
             const stepNumber = 1;
             console.log(`🔄 Carregando template híbrido: ${stageId}`);
             
-            // ✅ USAR SISTEMA HÍBRIDO: TSX TEMPLATES CONECTADOS
-            const loadedBlocks = getStepTemplate(stepNumber);
+            // ✅ USAR SISTEMA HÍBRIDO: TSX TEMPLATES CONECTADOS + CONVERSÃO
+            const templateConfigs = getStepTemplate(stepNumber);
             console.log(`🔍 DEBUG getStepTemplate(${stepNumber}):`, {
-              result: loadedBlocks,
-              type: typeof loadedBlocks,
-              isArray: Array.isArray(loadedBlocks),
-              length: loadedBlocks?.length,
+              result: templateConfigs,
+              type: typeof templateConfigs,
+              isArray: Array.isArray(templateConfigs),
+              length: templateConfigs?.length,
             });
             
-            if (loadedBlocks && loadedBlocks.length > 0) {
+            if (templateConfigs && templateConfigs.length > 0) {
+              // ✅ CONVERTER: Configurações TSX → Blocos JSON Editáveis
+              const editableBlocks = convertTemplateConfigsToBlocks(templateConfigs, stageId);
+              console.log(`🔄 Convertidos ${templateConfigs.length} configs → ${editableBlocks.length} blocos editáveis`);
+              
               setStageBlocks(prev => ({
                 ...prev,
-                [stageId]: loadedBlocks,
+                [stageId]: editableBlocks,
               }));
-              console.log(`✅ Template híbrido ${stageId} carregado: ${loadedBlocks.length} blocos`);
+              console.log(`✅ Template híbrido ${stageId} carregado: ${editableBlocks.length} blocos`);
             } else {
               console.warn(`⚠️ Template híbrido ${stageId}: Nenhum bloco retornado`);
             }
@@ -438,14 +445,19 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 const nextStageId = `step-${String(i).padStart(2, '0')}`;
                 setTimeout(async () => {
                   try {
-                    // ✅ USAR SISTEMA HÍBRIDO PARA TODAS AS ETAPAS
-                    const nextBlocks = getStepTemplate(i);
-                    if (nextBlocks && nextBlocks.length > 0) {
+                    // ✅ USAR SISTEMA HÍBRIDO PARA TODAS AS ETAPAS + CONVERSÃO
+                    const { convertTemplateConfigsToBlocks } = await import('../utils/templateBlockConverter');
+                    const templateConfigs = getStepTemplate(i);
+                    
+                    if (templateConfigs && templateConfigs.length > 0) {
+                      // ✅ CONVERTER: Configurações TSX → Blocos JSON Editáveis
+                      const editableBlocks = convertTemplateConfigsToBlocks(templateConfigs, nextStageId);
+                      
                       setStageBlocks(prev => ({
                         ...prev,
-                        [nextStageId]: nextBlocks,
+                        [nextStageId]: editableBlocks,
                       }));
-                      console.log(`✅ Template híbrido ${nextStageId} carregado: ${nextBlocks.length} blocos`);
+                      console.log(`✅ Template híbrido ${nextStageId} carregado: ${editableBlocks.length} blocos`);
                     }
                   } catch (error) {
                     console.warn(`⚠️ Erro ao carregar template híbrido ${nextStageId}:`, error);

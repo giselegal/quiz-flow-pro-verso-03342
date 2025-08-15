@@ -12,6 +12,7 @@ import OptionsGridInlineBlock from '../components/blocks/inline/OptionsGridInlin
 import DecorativeBarInline from '../components/blocks/inline/DecorativeBarInline';
 import LegalNoticeInline from '../components/blocks/inline/LegalNoticeInline';
 import LoadingAnimationBlock from '../components/blocks/inline/LoadingAnimationBlock';
+import FormInputInline from '../components/blocks/inline/FormInputInline';
 
 // Quiz Components
 import QuizIntroBlock from '../components/blocks/quiz/QuizIntroBlock';
@@ -68,12 +69,12 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   'legal-notice-inline': LegalNoticeInline,
   
   // ===== QUIZ INTRODUCTION COMPONENTS =====
-  'quiz-intro': QuizIntroBlock, // Use proper QuizIntroBlock
-  'quiz-intro-header': QuizIntroHeaderBlock, // Quiz header with logo and progress
+  'quiz-intro': QuizIntroBlock,
+  'quiz-intro-header': QuizIntroHeaderBlock,
   
   // ===== QUIZ INTERACTION COMPONENTS =====
   'options-grid': OptionsGridInlineBlock,
-  'form-input': createFallbackComponent('FormInput'),
+  'form-input': FormInputInline,
   'spacer-inline': createFallbackComponent('SpacerInline'),
   
   // ===== LOADING & PROGRESS COMPONENTS =====
