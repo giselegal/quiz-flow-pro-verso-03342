@@ -105,7 +105,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       </CardHeader>
 
       <CardContent className="flex-1 p-0 overflow-hidden">
-        <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">
+        <div className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable]">
           <div className="space-y-2 p-4">
             {stages.map(stage => (
               <div

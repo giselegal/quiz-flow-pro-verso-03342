@@ -19,6 +19,7 @@
 .editor-scrollable {
   overflow-y: auto !important;
   scrollbar-gutter: stable !important;
+  cursor: default !important;
 }
 
 /* Especificamente para componentes do editor */
@@ -37,6 +38,13 @@
   cursor: default !important;
 }
 
+/* Força scroll funcional em painéis específicos */
+[data-panel-group] [class*="scroll"],
+[data-panel-group] .CardContent,
+[data-panel-group] [class*="ScrollArea"] {
+  cursor: default !important;
+}
+
 /* Cursor específico apenas nos handles de resize */
 [data-panel-resize-handle-id] {
   cursor: ew-resize !important;
@@ -44,6 +52,12 @@
 
 [data-panel-resize-handle-id]:hover {
   cursor: ew-resize !important;
+}
+
+/* Fix para ScrollArea do Radix UI */
+[data-radix-scroll-area-viewport] {
+  cursor: default !important;
+  overflow-y: auto !important;
 }
 
 /* Variáveis Globais de Estilo para o Canvas */

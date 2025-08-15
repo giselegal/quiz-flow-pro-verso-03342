@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 
 interface SmartComponentsPanelProps {
   onAddComponent?: (type: string) => void;
@@ -14,6 +15,7 @@ interface SmartComponentsPanelProps {
 
 const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddComponent }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { scrollRef } = useSyncedScroll({ source: 'components' });
 
   // Use real block definitions from registry
   const allComponents = generateBlockDefinitions();
@@ -26,7 +28,7 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
   );
 
   return (
-    <Card className="h-full">
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-sm">
           <Layout className="h-4 w-4" />
@@ -42,7 +44,11 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
           />
         </div>
       </CardHeader>
-      <CardContent className="space-y-2 max-h-96 overflow-y-auto">
+      <CardContent className="flex-1 overflow-hidden p-0">
+        <div 
+          ref={scrollRef}
+          className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable] space-y-2 p-4"
+        >
         {components.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">No components found</p>
         ) : (
@@ -62,6 +68,7 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
             </Button>
           ))
         )}
+        </div>
       </CardContent>
     </Card>
   );
