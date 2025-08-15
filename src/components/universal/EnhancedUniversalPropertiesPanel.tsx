@@ -257,7 +257,13 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
           <PropertyChangeIndicator key={`${key}-${idx}`}>
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium text-[#432818]">{label}</Label>
-              <Switch checked={!!value} onCheckedChange={checked => updateProperty(key, checked)} />
+              <Switch 
+                checked={!!value} 
+                onCheckedChange={(checked) => {
+                  console.log('🎯 EnhancedPanel SWITCH mudou:', { key, checked, label });
+                  updateProperty(key, checked);
+                }} 
+              />
             </div>
           </PropertyChangeIndicator>
         );

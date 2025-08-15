@@ -1989,11 +1989,31 @@ export const useUnifiedProperties = (
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
+      console.log('🔄 useUnifiedProperties updateProperty CHAMADO:', { 
+        blockId: block?.id,
+        blockType: block?.type, 
+        key, 
+        value,
+        hasOnUpdate: !!onUpdateExternal,
+        currentProperties: block?.properties 
+      });
+      
       setProperties(prev => prev.map(prop => (prop.key === key ? { ...prop, value } : prop)));
 
       if (onUpdateExternal && block) {
         const updatedProps = { ...block.properties, [key]: value };
+        
+        console.log('✅ useUnifiedProperties EXECUTANDO onUpdate:', {
+          blockId: block.id,
+          updatedProps
+        });
+        
         onUpdateExternal(block.id, { properties: updatedProps });
+      } else {
+        console.log('❌ useUnifiedProperties FALHOU:', { 
+          hasOnUpdate: !!onUpdateExternal,
+          hasBlock: !!block 
+        });
       }
     },
     [onUpdateExternal, block]

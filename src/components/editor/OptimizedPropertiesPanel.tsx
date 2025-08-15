@@ -42,17 +42,13 @@ import {
   Paintbrush,
   Layout,
   Type,
-  Eye,
-  EyeOff,
   RotateCcw,
   Trash2,
   X,
-  Save,
   AlertCircle,
   CheckCircle,
   Loader2,
   Zap,
-  KeyboardIcon,
 } from 'lucide-react';
 
 // Hooks
@@ -62,7 +58,7 @@ import {
   useUnifiedProperties,
   PropertyType,
 } from '@/hooks/useUnifiedProperties';
-import { useBlockForm } from '@/hooks/useBlockForm';
+// import { useBlockForm } from '@/hooks/useBlockForm'; // ✅ Removido para evitar dual update
 
 // Enhanced Array Editor with improved UX
 const EnhancedArrayEditor: React.FC<{
@@ -166,8 +162,6 @@ interface OptimizedPropertiesPanelProps {
   onUpdate?: (blockId: string, updates: Partial<UnifiedBlock>) => void;
   onClose?: () => void;
   onDelete?: (blockId: string) => void;
-  isPreviewMode?: boolean;
-  onTogglePreview?: () => void;
 }
 
 export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> = ({
@@ -175,14 +169,9 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   onUpdate,
   onClose,
   onDelete,
-  isPreviewMode = false,
-  onTogglePreview,
 }) => {
   // Estados locais aprimorados
   const [activeTab, setActiveTab] = useState<string>('properties');
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
-  const [showKeyboardHints, setShowKeyboardHints] = useState(false);
 
   // Refs para keyboard navigation
   const panelRef = useRef<HTMLDivElement>(null);
@@ -191,34 +180,10 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
     useUnifiedProperties(selectedBlock?.type || '', selectedBlock?.id, selectedBlock, onUpdate);
 
-  // Hook de formulário otimizado
-  const {
-    updateProperty: formUpdateProperty,
-    errors,
-    isDirty,
-  } = useBlockForm(
-    selectedBlock
-      ? {
-          id: selectedBlock.id,
-          type: selectedBlock.type,
-          properties: selectedBlock.properties || {},
-        }
-      : null,
-    {
-      onUpdate: onUpdate
-        ? updates => {
-            if (selectedBlock) {
-              setIsLoading(true);
-              onUpdate(selectedBlock.id, updates);
-              setLastSaved(new Date());
-              setTimeout(() => setIsLoading(false), 300);
-            }
-          }
-        : undefined,
-      debounceMs: 300,
-      validateOnChange: true,
-    }
-  );
+  // ✅ CORREÇÃO DUAL UPDATE: Usar apenas useUnifiedProperties
+  // Remover useBlockForm para evitar conflito
+  const errors: Record<string, string> = {};
+  const isDirty = false;
 
   // Categorias organizadas com memoização otimizada
   const categorizedProperties = useMemo(() => {
@@ -293,8 +258,9 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         : baseClasses;
 
       const handleChange = (newValue: any) => {
+        console.log('🎯 OptimizedPropertiesPanel handleChange:', { key, newValue });
         updateProperty(key, newValue);
-        formUpdateProperty(key, newValue);
+        // ✅ CORREÇÃO: Remover formUpdateProperty (dual update)
       };
 
       const renderFieldContent = () => {
@@ -440,7 +406,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         </div>
       );
     },
-    [updateProperty, formUpdateProperty, errors]
+    [updateProperty, errors]
   );
 
   // Status de validação
@@ -499,7 +465,6 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h2 className="font-semibold text-foreground">Propriedades</h2>
-                {isLoading && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="text-xs">
@@ -517,40 +482,6 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
           </div>
 
           <div className="flex items-center gap-1">
-            {/* Quick Actions */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowKeyboardHints(!showKeyboardHints)}
-                  className="h-8 w-8 p-0"
-                >
-                  <KeyboardIcon className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Atalhos do teclado</TooltipContent>
-            </Tooltip>
-
-            {/* Preview Toggle */}
-            {onTogglePreview && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onTogglePreview}
-                    className={`h-8 w-8 p-0 ${isPreviewMode ? 'bg-muted' : ''}`}
-                  >
-                    {isPreviewMode ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {isPreviewMode ? 'Sair do modo visualização' : 'Modo visualização'}
-                </TooltipContent>
-              </Tooltip>
-            )}
-
             {/* Close Button */}
             {onClose && (
               <Tooltip>
@@ -565,26 +496,6 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
           </div>
         </div>
 
-        {/* Keyboard Hints */}
-        {showKeyboardHints && (
-          <div className="p-3 bg-muted/50 border-b text-xs space-y-2">
-            <div className="font-medium">Atalhos disponíveis:</div>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <kbd className="px-1 py-0.5 bg-background rounded">Ctrl+1</kbd> Propriedades
-              </div>
-              <div>
-                <kbd className="px-1 py-0.5 bg-background rounded">Ctrl+2</kbd> Estilo
-              </div>
-              <div>
-                <kbd className="px-1 py-0.5 bg-background rounded">Ctrl+S</kbd> Salvar
-              </div>
-              <div>
-                <kbd className="px-1 py-0.5 bg-background rounded">Esc</kbd> Fechar
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Enhanced Content with Tabs */}
         <div className="flex-1 overflow-hidden">
@@ -682,21 +593,9 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
         <div className="p-4 border-t bg-background/95 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs font-mono">
+                 <Badge variant="outline" className="text-xs font-mono">
                 ID: {selectedBlock.id}
               </Badge>
-              {isDirty && (
-                <Badge variant="secondary" className="text-xs">
-                  <Save className="h-3 w-3 mr-1" />
-                  Modificado
-                </Badge>
-              )}
-              {lastSaved && (
-                <Badge variant="outline" className="text-xs text-green-600">
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  Salvo {lastSaved.toLocaleTimeString()}
-                </Badge>
-              )}
             </div>
 
             <div className="flex items-center gap-1">

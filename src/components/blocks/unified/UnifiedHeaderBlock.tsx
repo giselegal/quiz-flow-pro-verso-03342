@@ -57,6 +57,22 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
   const props = useMemo(() => {
     const properties = block?.properties || {};
     
+    // ✅ DEBUG: Log de propriedades para verificar propagação
+    if (block?.type === 'unified-header' || block?.type?.includes('header')) {
+      console.log('🎯 UnifiedHeaderBlock props ATUALIZADAS:', {
+        blockId: block.id,
+        blockType: block.type,
+        properties,
+        showPrimaryStyleName: properties.showPrimaryStyleName,
+        showPrimaryStyleDescription: properties.showPrimaryStyleDescription,
+        showPrimaryStyleProgress: properties.showPrimaryStyleProgress,
+        showPrimaryStyleImage: properties.showPrimaryStyleImage,
+        showPrimaryStyleGuide: properties.showPrimaryStyleGuide,
+        enableProgressBar: properties.enableProgressBar,
+        progressValue: properties.progressValue
+      });
+    }
+    
     return {
       // Logo e Branding
       logoUrl: properties.logoUrl || properties.logo || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
