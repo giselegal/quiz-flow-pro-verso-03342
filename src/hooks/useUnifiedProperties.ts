@@ -387,18 +387,34 @@ export const useUnifiedProperties = (
             { min: 30, max: 200, step: 5, unit: 'px' }
           ),
           
+           // 🎯 CONTROLES DE EXIBIÇÃO
+          createProperty(
+            'showTitle',
+            currentBlock?.properties?.showTitle ?? true,
+            PropertyType.SWITCH,
+            'Mostrar Título',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'showUserName',
+            currentBlock?.properties?.showUserName ?? true,
+            PropertyType.SWITCH,
+            'Mostrar Nome do Usuário',
+            PropertyCategory.CONTENT
+          ),
+          
           // 🎯 TÍTULOS E CONTEÚDO
           createProperty(
             'title',
-            currentBlock?.properties?.title || currentBlock?.properties?.customTitle || 'Título Principal',
+            currentBlock?.properties?.title || currentBlock?.properties?.customTitle || 'Parabéns, {userName}!',
             PropertyType.TEXT,
             'Título',
             PropertyCategory.CONTENT,
-            { placeholder: 'Digite o título...' }
+            { placeholder: 'Digite o título... (use {userName} para nome dinâmico)' }
           ),
           createProperty(
             'subtitle',
-            currentBlock?.properties?.subtitle || '',
+            currentBlock?.properties?.subtitle || 'Seu resultado personalizado está pronto',
             PropertyType.TEXT,
             'Subtítulo',
             PropertyCategory.CONTENT,
@@ -408,9 +424,9 @@ export const useUnifiedProperties = (
             'userName',
             currentBlock?.properties?.userName || 'Usuário',
             PropertyType.TEXT,
-            'Nome do Usuário',
+            'Nome do Usuário (Fallback)',
             PropertyCategory.CONTENT,
-            { placeholder: 'Nome a ser exibido' }
+            { placeholder: 'Nome de fallback (usado se não encontrado dinamicamente)' }
           ),
           
           // 🎯 CORES E ESTILO
@@ -468,12 +484,19 @@ export const useUnifiedProperties = (
             { min: 0, max: 100, step: 4, unit: 'px' }
           ),
           
-          // 🎯 PROGRESSO (Para Quiz Headers)
+           // 🎯 PROGRESSO (Para Quiz Headers)
+          createProperty(
+            'enableProgressBar',
+            (currentBlock?.properties?.enableProgressBar || currentBlock?.properties?.showProgress) ?? false,
+            PropertyType.SWITCH,
+            'Ativar Barra de Progresso',
+            PropertyCategory.BEHAVIOR
+          ),
           createProperty(
             'showProgress',
             currentBlock?.properties?.showProgress ?? false,
             PropertyType.SWITCH,
-            'Mostrar Progresso',
+            'Mostrar Barra de Progresso',
             PropertyCategory.BEHAVIOR
           ),
           createProperty(

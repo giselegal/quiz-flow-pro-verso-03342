@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { BlockComponentProps } from '@/types/blocks';
 import { useGarbageCollector } from '@/hooks/useGarbageCollector';
+import { useUserName } from '@/hooks/useUserName';
 
 /**
  * 🎯 UNIFIED HEADER BLOCK - Consolidação Otimizada de Headers
@@ -37,6 +38,9 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
 }) => {
   // 🧹 Garbage collection para performance otimizada
   useGarbageCollector();
+  
+  // 🎯 Hook para buscar nome do usuário dinamicamente
+  const dynamicUserName = useUserName();
 
   // Propriedades unificadas com fallbacks seguros
   const props = useMemo(() => {
@@ -50,10 +54,17 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       logoHeight: properties.logoHeight || 60,
       showLogo: properties.showLogo ?? true,
       
+      // Controles de exibição
+      showTitle: properties.showTitle ?? true,
+      showUserName: properties.showUserName ?? true,
+      
       // Conteúdo
-      title: properties.title || properties.customTitle || 'Título',
-      subtitle: properties.subtitle || '',
+      title: properties.title || properties.customTitle || 'Parabéns, {userName}!',
+      subtitle: properties.subtitle || 'Seu resultado personalizado está pronto',
       userName: properties.userName || 'Usuário',
+      
+      // Nome dinâmico (prioridade sobre userName estático)
+      displayName: dynamicUserName || properties.userName || 'Usuário',
       
       // Layout
       backgroundColor: properties.backgroundColor || '#ffffff',
@@ -62,6 +73,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       isSticky: properties.isSticky ?? false,
       
       // Progresso
+      enableProgressBar: (properties.enableProgressBar || properties.showProgress) ?? false,
       showProgress: properties.showProgress ?? false,
       progressValue: properties.progressValue || 0,
       progressMax: properties.progressMax || 100,
@@ -134,8 +146,12 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           )}
         </div>
 
-        {props.showProgress && (
+        {(props.enableProgressBar || props.showProgress) && (
           <div className="mt-4">
+            <div className="flex justify-between text-sm text-[#6B4F43] mb-1">
+              <span>Progresso</span>
+              <span>{Math.round((props.progressValue / props.progressMax) * 100)}%</span>
+            </div>
             <Progress
               value={Math.min(props.progressValue, props.progressMax)}
               className="h-2"
@@ -171,15 +187,20 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           </motion.div>
         )}
 
-        <motion.h1
-          className="font-playfair text-xl md:text-3xl font-semibold px-2"
-          style={{ color: props.textColor, textAlign: props.textAlign }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          {props.title.replace('{userName}', props.userName)}
-        </motion.h1>
+        {props.showTitle && (
+          <motion.h1
+            className="font-playfair text-xl md:text-3xl font-semibold px-2"
+            style={{ color: props.textColor, textAlign: props.textAlign }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            {props.showUserName 
+              ? props.title.replace('{userName}', props.displayName)
+              : props.title.replace('{userName}', '').replace(/,\s*$/, '').replace(/^\s*,/, '').trim()
+            }
+          </motion.h1>
+        )}
 
         <motion.div
           className="w-24 h-1 mx-auto bg-gradient-to-r from-amber-300 to-amber-500 rounded-full"
@@ -212,7 +233,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             )}
           </div>
 
-          {props.showProgress && (
+          {(props.enableProgressBar || props.showProgress) && (
             <div className="flex-1 max-w-md mx-4">
               <div className="flex justify-between text-sm" style={{ color: '#6B4F43' }}>
                 <span>Progresso</span>
@@ -281,12 +302,17 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             </div>
           )}
 
-          <h1
-            className="text-2xl md:text-4xl font-bold mb-4"
-            style={{ color: props.textColor }}
-          >
-            {props.title}
-          </h1>
+          {props.showTitle && (
+            <h1
+              className="text-2xl md:text-4xl font-bold mb-4"
+              style={{ color: props.textColor }}
+            >
+              {props.showUserName 
+                ? props.title.replace('{userName}', props.displayName)
+                : props.title.replace('{userName}', '').replace(/,\s*$/, '').replace(/^\s*,/, '').trim()
+              }
+            </h1>
+          )}
 
           {props.subtitle && (
             <p
@@ -326,8 +352,8 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
   const relevantKeys = [
     'logoUrl', 'logoAlt', 'logoWidth', 'logoHeight', 'showLogo',
     'title', 'subtitle', 'userName', 'backgroundColor', 'textColor',
-    'showProgress', 'progressValue', 'progressMax', 'showBackButton',
-    'heroImage', 'showImage'
+    'showTitle', 'showUserName', 'enableProgressBar', 'showProgress', 
+    'progressValue', 'progressMax', 'showBackButton', 'heroImage', 'showImage'
   ];
   
   return relevantKeys.every(key => prevProps_[key] === nextProps_[key]);
