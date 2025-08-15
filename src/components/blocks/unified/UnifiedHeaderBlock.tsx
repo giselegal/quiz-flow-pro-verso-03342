@@ -6,6 +6,9 @@ import { Progress } from '@/components/ui/progress';
 import { BlockComponentProps } from '@/types/blocks';
 import { useGarbageCollector } from '@/hooks/useGarbageCollector';
 import { useUserName } from '@/hooks/useUserName';
+import { useStyleResultsForHeader } from '@/hooks/useStyleResultsForHeader';
+import { PrimaryStyleSection } from './components/PrimaryStyleSection';
+import { SecondaryStylesSection } from './components/SecondaryStylesSection';
 
 /**
  * 🎯 UNIFIED HEADER BLOCK - Consolidação Otimizada de Headers
@@ -78,6 +81,19 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       
       // Navegação
       showBackButton: properties.showBackButton ?? false,
+
+      // ✅ ESTILOS - ESTILO PREDOMINANTE
+      showPrimaryStyleName: properties.showPrimaryStyleName ?? false,
+      showPrimaryStyleDescription: properties.showPrimaryStyleDescription ?? false,
+      showPrimaryStyleProgress: properties.showPrimaryStyleProgress ?? false,
+      showPrimaryStyleImage: properties.showPrimaryStyleImage ?? false,
+      showPrimaryStyleGuide: properties.showPrimaryStyleGuide ?? false,
+
+      // ✅ ESTILOS - ESTILOS SECUNDÁRIOS
+      showSecondaryStyleName: properties.showSecondaryStyleName ?? false,
+      showSecondaryStyleProgress: properties.showSecondaryStyleProgress ?? false,
+      showThirdStyleName: properties.showThirdStyleName ?? false,
+      showThirdStyleProgress: properties.showThirdStyleProgress ?? false,
       
       // Margens
       marginTop: properties.marginTop || 0,
@@ -122,6 +138,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
   }, [variant, props]);
 
   function renderQuizIntroContent() {
+    const styleResults = useStyleResultsForHeader();
     return (
       <div className="p-4">
         <div className="relative w-full min-h-[120px] flex items-center justify-center">
@@ -163,6 +180,25 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             />
           </div>
         )}
+
+        {/* ✅ SEÇÃO DE ESTILOS */}
+        <PrimaryStyleSection
+          styleResult={styleResults.primaryStyle}
+          showName={props.showPrimaryStyleName}
+          showDescription={props.showPrimaryStyleDescription}
+          showProgress={props.showPrimaryStyleProgress}
+          showImage={props.showPrimaryStyleImage}
+          showGuide={props.showPrimaryStyleGuide}
+        />
+
+        <SecondaryStylesSection
+          secondaryStyle={styleResults.secondaryStyle}
+          thirdStyle={styleResults.thirdStyle}
+          showSecondaryName={props.showSecondaryStyleName}
+          showSecondaryProgress={props.showSecondaryStyleProgress}
+          showThirdName={props.showThirdStyleName}
+          showThirdProgress={props.showThirdStyleProgress}
+        />
       </div>
     );
   }
@@ -374,7 +410,12 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
     'title', 'subtitle', 'userName', 'backgroundColor', 'textColor',
     'showTitle', 'showUserName', 'enableProgressBar', 
     'progressValue', 'progressMax', 'showBackButton', 'heroImage', 'showImage',
-    'isSticky', 'marginTop', 'marginBottom'
+    'isSticky', 'marginTop', 'marginBottom',
+    // Propriedades de estilo
+    'showPrimaryStyleName', 'showPrimaryStyleDescription', 'showPrimaryStyleProgress',
+    'showPrimaryStyleImage', 'showPrimaryStyleGuide',
+    'showSecondaryStyleName', 'showSecondaryStyleProgress',
+    'showThirdStyleName', 'showThirdStyleProgress'
   ];
   
   return relevantKeys.every(key => prevProps_[key] === nextProps_[key]);

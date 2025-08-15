@@ -500,6 +500,73 @@ export const useUnifiedProperties = (
             PropertyCategory.BEHAVIOR,
             { min: 1, placeholder: '100' }
           ),
+
+          // ✅ ESTILOS - ESTILO PREDOMINANTE
+          createProperty(
+            'showPrimaryStyleName',
+            currentBlock?.properties?.showPrimaryStyleName ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Nome do Estilo Predominante',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showPrimaryStyleDescription',
+            currentBlock?.properties?.showPrimaryStyleDescription ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Descrição do Estilo Predominante',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showPrimaryStyleProgress',
+            currentBlock?.properties?.showPrimaryStyleProgress ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Barra de Progresso do Estilo Predominante',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showPrimaryStyleImage',
+            currentBlock?.properties?.showPrimaryStyleImage ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Imagem do Estilo Predominante',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showPrimaryStyleGuide',
+            currentBlock?.properties?.showPrimaryStyleGuide ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Guia do Estilo Predominante',
+            PropertyCategory.BEHAVIOR
+          ),
+
+          // ✅ ESTILOS - ESTILOS SECUNDÁRIOS
+          createProperty(
+            'showSecondaryStyleName',
+            currentBlock?.properties?.showSecondaryStyleName ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Nome do 2º Estilo',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showSecondaryStyleProgress',
+            currentBlock?.properties?.showSecondaryStyleProgress ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Barra do 2º Estilo',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showThirdStyleName',
+            currentBlock?.properties?.showThirdStyleName ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Nome do 3º Estilo',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'showThirdStyleProgress',
+            currentBlock?.properties?.showThirdStyleProgress ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Barra do 3º Estilo',
+            PropertyCategory.BEHAVIOR
+          ),
           
           // 🎯 NAVEGAÇÃO
           createProperty(
