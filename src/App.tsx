@@ -74,21 +74,47 @@ function App() {
             <div className="min-h-screen bg-background">
               <PixelInitializer pageType="other" />
               <Switch>
-                {/* Redirect /editor para /editor-fixed */}
-                <Route path="/editor">
-                  {() => {
-                    console.log('🔄 App: Redirecionando /editor para /editor-fixed');
-                    window.location.href = '/editor-fixed';
-                    return null;
+                {/* Editor Route - Carrega EditorWithPreview com sistema de preview integrado */}
+                <ProtectedRoute
+                  path="/editor"
+                  component={() => {
+                    console.log('🚀 App: Carregando EditorWithPreview na rota /editor');
+                    return (
+                      <Suspense fallback={<PageLoading />}>
+                        <ErrorBoundary>
+                          <EditorProvider>
+                            <ScrollSyncProvider>
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
+                            </ScrollSyncProvider>
+                          </EditorProvider>
+                        </ErrorBoundary>
+                      </Suspense>
+                    );
                   }}
-                </Route>
-                <Route path="/editor/:id">
-                  {() => {
-                    console.log('🔄 App: Redirecionando /editor/:id para /editor-fixed');
-                    window.location.href = '/editor-fixed';
-                    return null;
+                />
+                
+                {/* Editor com ID - também carrega EditorWithPreview */}
+                <ProtectedRoute
+                  path="/editor/:id"
+                  component={() => {
+                    console.log('🚀 App: Carregando EditorWithPreview com ID na rota /editor/:id');
+                    return (
+                      <Suspense fallback={<PageLoading />}>
+                        <ErrorBoundary>
+                          <EditorProvider>
+                            <ScrollSyncProvider>
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
+                            </ScrollSyncProvider>
+                          </EditorProvider>
+                        </ErrorBoundary>
+                      </Suspense>
+                    );
                   }}
-                </Route>
+                />
 
                 {/* Editor Fixed Simples - Versão Garantida */}
                 <ProtectedRoute
