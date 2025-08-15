@@ -38,9 +38,6 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
     minSelections = 1,
     maxSelections = 3,
     showImages = true,
-    borderColor = '#E5E7EB',
-    selectedBorderColor = '#B89B7A',
-    hoverColor = '#F3E8D3',
     // ✨ NOVAS PROPRIEDADES DO PAINEL
     layoutOrientation = 'vertical',
     contentType = 'text-and-image',
@@ -77,9 +74,22 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
           }
         }
 
-        // Reportar validao ao editor/painel
+        // Reportar validao ao editor/painel
         const isValid = newSelected.length >= minSelections;
         if (onValidate) onValidate(isValid);
+
+        // Dispatch quiz selection change event
+        window.dispatchEvent(
+          new CustomEvent('quiz-selection-change', {
+            detail: {
+              blockId: block.id,
+              selectedOptions: newSelected,
+              isValid,
+              minSelections,
+              maxSelections,
+            },
+          })
+        );
 
         return newSelected;
       });
@@ -97,6 +107,19 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       const isValid = newSelected.length >= minSelections;
       if (onValidate) onValidate(isValid);
+
+      // Dispatch quiz selection change event
+      window.dispatchEvent(
+        new CustomEvent('quiz-selection-change', {
+          detail: {
+            blockId: block.id,
+            selectedOptions: newSelected,
+            isValid,
+            minSelections,
+            maxSelections,
+          },
+        })
+      );
     }
   };
 
@@ -140,16 +163,14 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                   ? 'flex items-center gap-4 flex-row-reverse'
                   : '',
                 isSelectedOption
-                  ? `border-[${selectedBorderColor}] bg-[${selectedBorderColor}]/10 shadow-lg`
-                  : `border-[${borderColor}] hover:border-[${selectedBorderColor}] hover:bg-[${hoverColor}]`
+                  ? 'border-[var(--primary)] bg-[var(--primary)]/10 shadow-lg'
+                  : 'border-gray-200 hover:border-[var(--primary)] hover:bg-[var(--primary)]/5'
               )}
               onClick={e => {
                 e.stopPropagation();
                 handleOptionClick(option.id);
               }}
               style={{
-                borderColor: isSelectedOption ? selectedBorderColor : borderColor,
-                backgroundColor: isSelectedOption ? `${selectedBorderColor}20` : undefined,
                 borderRadius: `${cardRadius}px`,
               }}
             >
@@ -201,11 +222,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                   <h4
                     className={cn(
                       'text-sm font-bold leading-tight mb-1',
-                      isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-900'
+                      isSelectedOption ? 'text-[var(--primary)]' : 'text-foreground'
                     )}
-                    style={{
-                      color: isSelectedOption ? selectedBorderColor : '#432818',
-                    }}
                   >
                     {option.text}
                   </h4>
@@ -215,11 +233,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                     <p
                       className={cn(
                         'text-xs leading-relaxed opacity-90',
-                        isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-600'
+                        isSelectedOption ? 'text-[var(--primary)]' : 'text-muted-foreground'
                       )}
-                      style={{
-                        color: isSelectedOption ? selectedBorderColor : '#6B7280',
-                      }}
                     >
                       {option.description}
                     </p>
@@ -230,10 +245,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               {/* Indicador de seleção */}
               {isSelectedOption && (
                 <div className="selection-indicator mt-2 flex justify-center">
-                  <div
-                    className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold"
-                    style={{ backgroundColor: selectedBorderColor }}
-                  >
+                  <div className="w-5 h-5 rounded-full bg-[var(--primary)] flex items-center justify-center text-primary-foreground text-xs font-bold">
                     ✓
                   </div>
                 </div>
@@ -245,7 +257,10 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
       {/* Feedback de seleção */}
       <div className="selection-feedback mt-4 text-center">
-        <p style={{ color: '#6B4F43' }}>
+        <p className={cn(
+          'text-sm',
+          isValidSelection ? 'text-green-600' : 'text-muted-foreground'
+        )}>
           {multipleSelection
             ? `${selectedOptions.length} de ${maxSelections} selecionados${!isValidSelection ? ` (mínimo ${minSelections})` : ''}`
             : selectedOptions.length > 0

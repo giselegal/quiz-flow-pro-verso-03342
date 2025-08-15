@@ -65,13 +65,6 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   onClick,
   onPropertyChange: _onPropertyChange,
   className = '',
-  // Preview mode props
-  isPreviewMode = false,
-  onNext,
-  onPrevious,
-  onNavigate,
-  sessionData = {},
-  onUpdateSessionData,
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
@@ -136,6 +129,23 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
       setIsValidated(!!nameValue && nameValue.trim().length > 0);
     } else {
       setIsValidated(true);
+    }
+  }, [requiresValidInput]);
+
+  // Efeito para ouvir mudanças de seleção do quiz
+  useEffect(() => {
+    const handleQuizSelectionChange = (event: CustomEvent) => {
+      const { isValid } = event.detail;
+      if (requiresValidInput) {
+        setIsValidated(isValid);
+      }
+    };
+
+    if (requiresValidInput) {
+      window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+      return () => {
+        window.removeEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+      };
     }
   }, [requiresValidInput]);
 
@@ -367,71 +377,47 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
-            // In preview mode, use proper navigation functions
-            if (isPreviewMode && onNext && text && text.includes('Descobrir meu Estilo')) {
-              // For quiz start button in preview mode
-              const userName = sessionData?.userName || 'Preview User';
-              console.log('🚀 Preview Mode: Iniciando quiz para:', userName);
-              
-              if (onUpdateSessionData) {
-                onUpdateSessionData('userName', userName);
-                onUpdateSessionData('startTime', Date.now());
-                onUpdateSessionData('quizStarted', true);
-              }
-              
-              // Navigate to next step using preview context
-              onNext();
+            // Handle URL navigation
+            if (action === 'url' && (href || url)) {
+              const targetUrl = url || href;
+              window.open(targetUrl, target);
               return;
             }
 
-            // In preview mode, handle step navigation directly
-            if (isPreviewMode && action === 'next-step' && nextStepId && onNavigate) {
-              onNavigate(nextStepId);
-              return;
-            }
-
-            // In preview mode, handle generic navigation
-            if (isPreviewMode && onNext && (action === 'next-step' || !action || action === 'none')) {
-              onNext();
-              return;
-            }
-
-            // Regular editor mode or production behavior
+            // Handle step navigation
             if (action === 'next-step' && nextStepId) {
               window.dispatchEvent(
                 new CustomEvent('navigate-to-step', {
                   detail: { stepId: nextStepId, source: `button-${block?.id}` },
                 })
               );
-            } else if (action === 'url' && (href || url)) {
-              const targetUrl = url || href;
-              window.open(targetUrl, target);
+              return;
             }
 
-            // Se for o botão de iniciar quiz (Step 1), fazer tracking e navegação
+            // Handle quiz start button
             if (text && text.includes('Descobrir meu Estilo')) {
               const userName = userResponseService.getResponse('intro-name-input') || 'Anônimo';
               console.log('🚀 Iniciando tracking do quiz para:', userName);
 
-              // 🚀 INTEGRAÇÃO SUPABASE: Criar usuário e iniciar sessão
+              // Initialize quiz with Supabase
               await initializeQuizWithSupabase(userName);
 
-              // Marcar início do quiz no analytics
+              // Track quiz start
               trackQuizStart(userName);
 
-              // Salvar timestamp de início
+              // Save start time and user data
               localStorage.setItem('quiz_start_time', Date.now().toString());
               localStorage.setItem('quiz_start_tracked', 'true');
               localStorage.setItem('userName', userName);
 
-              // Disparar evento customizado para outras partes do sistema
+              // Dispatch quiz start event
               window.dispatchEvent(
                 new CustomEvent('quiz-start', {
                   detail: { userName, timestamp: Date.now() },
                 })
               );
 
-              // Navegar para Step 2 (primeira questão)
+              // Navigate to first question
               window.dispatchEvent(
                 new CustomEvent('navigate-to-step', {
                   detail: { stepId: 'etapa-2', source: 'step1-button' },
