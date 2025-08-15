@@ -9,6 +9,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* CORREÇÃO CRÍTICA: Fix para barras de rolagem vertical no editor */
+/* Previne que o cursor de resize interfira com scroll vertical */
+[data-panel-group] * {
+  cursor: inherit !important;
+}
+
+/* Força barras de rolagem sempre visíveis onde necessário */
+.editor-scrollable {
+  overflow-y: auto !important;
+  scrollbar-gutter: stable !important;
+}
+
+/* Especificamente para componentes do editor */
+[data-panel-group] .overflow-y-auto,
+[data-panel-group] .h-full.overflow-y-auto,
+[data-panel-group] .flex-1.overflow-y-auto {
+  overflow-y: auto !important;
+  cursor: default !important;
+}
+
+/* Garante que elementos com scroll mantenham cursor padrão */
+.overflow-y-auto,
+.overflow-auto,
+[class*="overflow-y-auto"],
+[class*="overflow-auto"] {
+  cursor: default !important;
+}
+
+/* Cursor específico apenas nos handles de resize */
+[data-panel-resize-handle-id] {
+  cursor: ew-resize !important;
+}
+
+[data-panel-resize-handle-id]:hover {
+  cursor: ew-resize !important;
+}
+
 /* Variáveis Globais de Estilo para o Canvas */
 :root {
   --global-gap: 0.25rem; /* 4px */

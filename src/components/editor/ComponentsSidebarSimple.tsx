@@ -134,7 +134,7 @@ const ComponentsSidebarSimple: React.FC<ComponentsSidebarSimpleProps> = () => {
       </CardHeader>
 
       <CardContent className="flex-1 overflow-hidden">
-        <div ref={scrollRef} className="h-full overflow-y-auto overflow-x-hidden">
+        <div ref={scrollRef} className="h-full overflow-y-auto editor-scrollable overflow-x-hidden">
           <div className="space-y-1 p-0">
             {orderedCategories.map(category => (
               <div key={category} className="space-y-1">

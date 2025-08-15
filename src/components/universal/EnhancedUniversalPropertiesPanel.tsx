@@ -550,7 +550,7 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
 
       <CardContent
         ref={scrollRef}
-        className="flex-1 p-4 space-y-6 overflow-y-auto [scrollbar-gutter:stable]"
+        className="flex-1 p-4 space-y-6 overflow-y-auto editor-scrollable [scrollbar-gutter:stable]"
       >
         {/* Seções organizadas por categoria */}
         {categoryOrder.map(categoryKey => {

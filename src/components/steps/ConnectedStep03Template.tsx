@@ -167,8 +167,150 @@ export const ConnectedStep03Template = () => {
   ];
 };
 
+// Função para obter blocos estáticos (sem hooks)
+export const getStep03Blocks = () => {
+  // 🎯 Buscar questão real dos dados (q2 = segunda questão) 
+  const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q2') || COMPLETE_QUIZ_QUESTIONS[2];
+  
+  return [
+    // 📱 CABEÇALHO COM LOGO E PROGRESSO
+    {
+      id: 'step03-header',
+      type: 'quiz-intro-header',
+      properties: {
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: 15,
+        progressMax: 100,
+        showBackButton: true,
+        marginTop: 0,
+        spacing: 'small',
+        marginBottom: 0,
+      },
+    },
+
+    // 🎯 TÍTULO DA QUESTÃO (DADOS REAIS)
+    {
+      id: 'step03-question-title',
+      type: 'text-inline',
+      properties: {
+        content: questionData.text, // "RESUMA A SUA PERSONALIDADE:"
+        level: 'h2',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
+        marginBottom: 0,
+        marginTop: 0,
+        spacing: 'small',
+      },
+    },
+
+    // 📊 CONTADOR DE QUESTÃO
+    {
+      id: 'step03-question-counter',
+      type: 'text-inline',
+      properties: {
+        content: 'Questão 2 de 10',
+        fontSize: 'text-sm',
+        textAlign: 'text-center',
+        color: '#6B7280',
+        marginBottom: 24,
+        marginTop: 0,
+        spacing: 'small',
+      },
+    },
+
+    // 🎯 OPÇÕES DE PERSONALIDADE CONECTADAS (DADOS REAIS)
+    {
+      id: 'step03-personality-options',
+      type: 'options-grid',
+      properties: {
+        questionId: questionData.id,
+        
+        // 🎯 OPÇÕES REAIS DOS DADOS
+        options: questionData.options.map((option: any) => ({
+          id: option.id,
+          text: option.text,
+          description: option.text,
+          value: option.id,
+          category: option.styleCategory,
+          styleCategory: option.styleCategory,
+          points: option.weight,
+          marginTop: 0,
+          spacing: 'small',
+          marginBottom: 0,
+        })),
+        
+        // 🎨 LAYOUT BASEADO NO TIPO (text = 1 coluna)
+        columns: 1, // SEM IMAGENS = 1 COLUNA
+        showImages: false, // Questão de personalidade não tem imagens
+        multipleSelection: true,
+        maxSelections: questionData.multiSelect || 3,
+        minSelections: questionData.multiSelect || 3,
+        autoAdvance: true,
+        validationMessage: 'Selecione até 3 opções',
+        gridGap: 12,
+        responsiveColumns: false,
+
+        // 🚀 AUTOAVANÇO E ATIVAÇÃO
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        instantActivation: true,
+        requiredSelections: 3,
+        enableButtonOnlyWhenValid: false,
+        instantButtonActivation: true,
+        showValidationFeedback: true,
+
+        // 📊 STATUS CONECTADO - Estados padrão
+        currentSelections: [],
+        isLoading: false,
+      },
+    },
+
+    // 🔘 BOTÃO CONECTADO COM ATIVAÇÃO INSTANTÂNEA
+    {
+      id: 'step03-continue-button',
+      type: 'button-inline',
+      properties: {
+        text: 'Continuar →',
+        textWhenDisabled: 'Selecione 3 opções para continuar',
+        textWhenComplete: 'Continuar →',
+
+        variant: 'primary',
+        size: 'large',
+        backgroundColor: '#B89B7A',
+        textColor: '#ffffff',
+        disabledBackgroundColor: '#E5E7EB',
+        disabledTextColor: '#9CA3AF',
+
+        // 🔗 ESTADO CONECTADO - Estado padrão
+        disabled: true,
+        requiresValidInput: true,
+        instantActivation: true,
+        noDelay: true,
+
+        // 🚀 AUTOAVANÇO
+        autoAdvanceAfterActivation: false,
+        autoAdvanceDelay: 1500,
+
+        // 📊 FEEDBACK RÁPIDO
+        showSuccessAnimation: false,
+        showPulseWhenEnabled: false,
+        quickFeedback: true,
+        marginTop: 0,
+        spacing: 'small',
+        marginBottom: 0,
+      },
+    },
+  ];
+};
+
 export const getConnectedStep03Template = () => {
-  return ConnectedStep03Template();
+  // Retorna os blocos estáticos ao invés de chamar o componente
+  return getStep03Blocks();
 };
 
 export default ConnectedStep03Template;
