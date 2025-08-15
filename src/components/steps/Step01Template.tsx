@@ -1,3 +1,5 @@
+import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
+import ConnectedLeadForm from '@/components/forms/ConnectedLeadForm';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +12,7 @@ interface Step01TemplateProps {
 
 /**
  * 🎯 STEP 01: INTRODUÇÃO AO QUIZ DE ESTILO
+ * ✅ CONECTADO AOS HOOKS: useQuizLogic + useSupabaseQuiz
  *
  * Template de introdução que estabelece expectativas e prepara o usuário
  * - Boas-vindas elegante com brand colors
@@ -17,10 +20,15 @@ interface Step01TemplateProps {
  * - Motivação para começar o quiz
  * - Integração com styleConfig.ts (8 estilos)
  * - 🚀 Navegação premium integrada
+ * - 🔗 ConnectedTemplateWrapper para capturar nome do usuário
  */
 export default function Step01Template({ sessionId, onNext }: Step01TemplateProps) {
   return (
-    <>
+    <ConnectedTemplateWrapper 
+      stepNumber={1} 
+      stepType="intro" 
+      sessionId={sessionId}
+    >
       {/* 🚀 NAVEGAÇÃO PREMIUM */}
       <QuizNavigation
         canProceed={true}
@@ -155,22 +163,24 @@ export default function Step01Template({ sessionId, onNext }: Step01TemplateProp
               </div>
             </div>
 
-            {/* Call to action */}
+            {/* Call to action with connected form */}
             <Card className="bg-gradient-to-r from-[#B89B7A] to-[#432818] text-white">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold mb-4">Pronta para descobrir seu estilo?</h3>
                 <p className="text-white/90 mb-6 max-w-xl mx-auto">
-                  Vamos começar com algumas perguntas simples sobre suas preferências e descobrir
+                  Vamos começar capturando seu nome para personalizar sua experiência e depois descobrir
                   juntas qual estilo reflete sua verdadeira essência.
                 </p>
 
-                <button
-                  onClick={onNext}
-                  className="bg-white text-[#432818] hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors duration-300 inline-flex items-center space-x-2 text-lg"
-                >
-                  <span>Começar Quiz</span>
-                  <ArrowRight className="h-5 w-5" />
-                </button>
+                {/* ✅ FORMULÁRIO CONECTADO AOS HOOKS */}
+                <ConnectedLeadForm 
+                  onSubmit={(data) => {
+                    console.log('✅ Step01: Nome capturado via ConnectedLeadForm:', data.name);
+                    // Avançar para próxima etapa após capturar nome
+                    setTimeout(() => onNext && onNext(), 500);
+                  }}
+                  className="text-left"
+                />
 
                 <p className="text-xs text-white/70 mt-4">Sessão: {sessionId}</p>
               </CardContent>
@@ -178,7 +188,7 @@ export default function Step01Template({ sessionId, onNext }: Step01TemplateProp
           </div>
         </div>
       </div>
-    </>
+    </ConnectedTemplateWrapper>
   );
 }
 

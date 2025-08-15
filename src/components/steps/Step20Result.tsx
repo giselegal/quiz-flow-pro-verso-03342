@@ -1,9 +1,11 @@
+import ConnectedTemplateWrapper from '@/components/quiz/ConnectedTemplateWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { quizResultsService, type QuizResults } from '@/services/quizResultsService';
 import {
   ChevronRight,
@@ -24,17 +26,22 @@ interface Step20ResultProps {
 
 /**
  * 🎯 STEP 20: RESULTADO FINAL DO QUIZ DE ESTILO
+ * ✅ CONECTADO AOS HOOKS: useQuizLogic.completeQuiz() + calculateStyleScores()
  *
  * Exibe o resultado personalizado baseado no styleConfig.ts
  * - Estilo predominante com imagem e descrição
  * - Guia personalizado para download
  * - Recomendações de guarda-roupa, cores e marcas
  * - Progress e scores detalhados
+ * - 🔗 Integração automática com cálculos do quiz
  */
 export default function Step20Result({ sessionId, onContinue }: Step20ResultProps) {
   const [results, setResults] = useState<QuizResults | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // ✅ INTEGRAÇÃO: Hook para acessar resultado calculado
+  const { quizResult, userName, completeQuiz, answers } = useQuizLogic();
 
   useEffect(() => {
     loadResults();
@@ -45,7 +52,64 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
       setLoading(true);
       setError(null);
 
-      // Tentar carregar resultados existentes
+      // ✅ PRIORIDADE 1: Usar resultado do useQuizLogic se disponível
+      if (quizResult && quizResult.primaryStyle) {
+        console.log('✅ Usando resultado do useQuizLogic:', quizResult);
+        
+        const mappedResults: QuizResults = {
+          sessionId,
+          userName: userName || 'Usuário',
+          styleProfile: {
+            primaryStyle: quizResult.primaryStyle.category,
+            percentage: quizResult.primaryStyle.percentage,
+            description: `Seu estilo predominante é ${quizResult.primaryStyle.category} com ${quizResult.primaryStyle.percentage}% de compatibilidade.`,
+            characteristics: [
+              'Estilo autêntico e personalizado',
+              'Baseado em suas preferências reais',
+              'Calculado a partir de suas respostas'
+            ],
+            colors: ['#B89B7A', '#432818', '#6B4F43'], // Cores padrão
+            keywords: [quizResult.primaryStyle.category.toLowerCase()]
+          },
+          scores: Object.entries(quizResult.scores || {}).map(([style, score]) => ({
+            style,
+            score: score as number,
+            percentage: Math.round(((score as number) / Math.max(1, Object.values(quizResult.scores || {}).reduce((a, b) => Math.max(a as number, b as number), 1) as number)) * 100)
+          })),
+          completedAt: quizResult.completedAt || new Date(),
+          totalQuestions: quizResult.totalQuestions || answers.length,
+          recommendations: {
+            wardrobe: [
+              'Peças que refletem seu estilo personal',
+              'Investir em itens-chave do seu perfil',
+              'Combinar com acessórios complementares'
+            ],
+            colors: ['Tons que harmonizam com sua personalidade'],
+            brands: ['Marcas alinhadas ao seu estilo'],
+            tips: ['Dicas personalizadas baseadas no seu resultado']
+          },
+          metadata: {
+            version: '2.0',
+            algorithm: 'useQuizLogic-integrated',
+            timestamp: new Date(),
+          }
+        };
+        
+        setResults(mappedResults);
+        setLoading(false);
+        return;
+      }
+
+      // ✅ PRIORIDADE 2: Tentar completar quiz se há respostas mas sem resultado
+      if (answers.length > 0 && !quizResult) {
+        console.log('🔄 Forçando cálculo de resultado com', answers.length, 'respostas');
+        completeQuiz();
+        // Aguardar um momento para o cálculo completar
+        setTimeout(() => loadResults(), 100);
+        return;
+      }
+
+      // FALLBACK: Carregar do serviço ou gerar demo
       let loadedResults = await quizResultsService.getResults(sessionId);
 
       // Se não existir, calcular novos resultados
@@ -214,7 +278,12 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
   const { styleProfile, recommendations, completionScore } = results;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-white to-[#B89B7A]/10">
+    <ConnectedTemplateWrapper 
+      stepNumber={20} 
+      stepType="result" 
+      sessionId={sessionId}
+    >
+      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-white to-[#B89B7A]/10">
       {/* Header com resultado principal */}
       <div className="relative overflow-hidden bg-gradient-to-r from-[#B89B7A] to-[#432818] text-white">
         <div className="absolute inset-0 bg-black/10"></div>
@@ -617,7 +686,7 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
                 className="bg-white text-[#432818] hover:bg-gray-100"
               >
                 <Download className="h-5 w-5 mr-2" />
-                Baixar Guia Completo
+                            Baixar Guia Completo
               </Button>
               {onContinue && (
                 <Button
@@ -635,5 +704,6 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
         </Card>
       </div>
     </div>
+    </ConnectedTemplateWrapper>
   );
 }
