@@ -145,6 +145,29 @@ function App() {
                   )}
                 />
 
+                {/* Editor Fixed Dragdrop Route - Enhanced Editor with Drag & Drop */}
+                <ProtectedRoute
+                  path="/editor-fixed-dragdrop"
+                  component={() => {
+                    console.log('🚀 App: Carregando EditorFixedPageWithDragDrop (dragdrop)');
+                    return (
+                      <Suspense fallback={<PageLoading />}>
+                        <ErrorBoundary>
+                          <EditorProvider>
+                            <ScrollSyncProvider>
+                              <PreviewProvider totalSteps={21} funnelId="editor-fixed-dragdrop">
+                                <div className="relative">
+                                  <EditorFixedPageWithDragDrop />
+                                </div>
+                              </PreviewProvider>
+                            </ScrollSyncProvider>
+                          </EditorProvider>
+                        </ErrorBoundary>
+                      </Suspense>
+                    );
+                  }}
+                />
+
                 {/* Editor Fixed Minimal Route */}
 
                 {/* Templates IA Route - Protected */}
