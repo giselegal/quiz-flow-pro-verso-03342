@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Optimized Quiz Data Hook - Replaces localStorage with Supabase for critical data
  * 

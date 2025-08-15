@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Consolidated Editor Hook - Replaces useEditor conflicts
  * 

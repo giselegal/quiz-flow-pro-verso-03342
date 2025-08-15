@@ -127,7 +127,7 @@ export const usePerformanceOptimization = (): PerformanceHookReturn => {
     
     // Clear all intervals
     activeIntervals.current.forEach((interval) => {
-      clearInterval(interval);
+      clearInterval(interval as NodeJS.Timeout);
     });
     activeIntervals.current.clear();
     
