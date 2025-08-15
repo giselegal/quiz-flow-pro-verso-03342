@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * SIMPLIFIED SMART COMPONENTS PANEL
  */
@@ -7,6 +7,7 @@ import { Search, Layout } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
 
 interface SmartComponentsPanelProps {
   onAddComponent?: (type: string) => void;
@@ -15,44 +16,54 @@ interface SmartComponentsPanelProps {
 const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddComponent }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const components = [
-    { id: 'text-inline', name: 'Text Block', category: 'Content' },
-    { id: 'quiz-question', name: 'Quiz Question', category: 'Quiz' },
-    { id: 'button-inline', name: 'Button', category: 'Actions' },
-  ];
-
-  const filteredComponents = components.filter(comp =>
-    comp.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // Use real block definitions from registry
+  const allComponents = generateBlockDefinitions();
+  
+  // Filter based on search term
+  const components = allComponents.filter(comp => 
+    comp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    comp.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Layout className="h-5 w-5" />
-          Smart Components
+    <Card className="h-full">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-sm">
+          <Layout className="h-4 w-4" />
+          Components
         </CardTitle>
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search components..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-8"
           />
         </div>
       </CardHeader>
-      <CardContent className="space-y-2">
-        {filteredComponents.map((component) => (
-          <Button
-            key={component.id}
-            variant="outline"
-            className="w-full justify-start"
-            onClick={() => onAddComponent?.(component.id)}
-          >
-            {component.name}
-          </Button>
-        ))}
+      <CardContent className="space-y-2 max-h-96 overflow-y-auto">
+        {components.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            No components found
+          </p>
+        ) : (
+          components.map((component) => (
+            <Button
+              key={component.type}
+              variant="outline"
+              size="sm"
+              className="w-full justify-start"
+              onClick={() => onAddComponent?.(component.type)}
+              title={component.description}
+            >
+              <div className="flex flex-col items-start">
+                <span className="font-medium">{component.name}</span>
+                <span className="text-xs text-muted-foreground">{component.category}</span>
+              </div>
+            </Button>
+          ))
+        )}
       </CardContent>
     </Card>
   );

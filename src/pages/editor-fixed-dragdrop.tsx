@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import ErrorBoundary from '@/components/editor/ErrorBoundary';
+import { PreviewProvider } from '@/contexts/PreviewContext';
+import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
@@ -161,7 +164,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   });
 
   return (
-    <DndProvider
+    <ErrorBoundary>
+      <PreviewProvider totalSteps={21}>
+        <ScrollSyncProvider>
+          <DndProvider
       blocks={(currentBlocks || []).map(block => ({
         id: block.id,
         type: block.type,
@@ -463,7 +469,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           </div>
         )}
       </div>
-    </DndProvider>
+          </DndProvider>
+        </ScrollSyncProvider>
+      </PreviewProvider>
+    </ErrorBoundary>
   );
 };
 

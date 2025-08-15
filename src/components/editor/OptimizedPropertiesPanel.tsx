@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 /**
  * 🚀 OptimizedPropertiesPanel - Painel de Propriedades Otimizado
  * 
@@ -11,9 +11,6 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 
 // UI Components
 import { Button } from '@/components/ui/button';
@@ -30,13 +27,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
+
 import { Badge } from '@/components/ui/badge';
 
 // Visual Controls
 import ColorPicker from '@/components/visual-controls/ColorPicker';
 import SizeSlider from '@/components/visual-controls/SizeSlider';
-import AlignmentButtons from '@/components/visual-controls/AlignmentButtons';
 
 // Icons
 import { 
@@ -48,8 +44,7 @@ import {
   EyeOff, 
   RotateCcw, 
   Trash2,
-  X,
-  Palette
+  X
 } from 'lucide-react';
 
 // Hooks
@@ -57,8 +52,7 @@ import {
   UnifiedBlock,
   UnifiedProperty,
   useUnifiedProperties,
-  PropertyType,
-  PropertyCategory
+  PropertyType
 } from '@/hooks/useUnifiedProperties';
 import { useBlockForm } from '@/hooks/useBlockForm';
 
@@ -157,9 +151,8 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
     onUpdate
   );
 
-  // Hook de formulário otimizado com Zod
+  // Hook de formulário otimizado
   const { 
-    form, 
     updateProperty: formUpdateProperty, 
     errors,
     isValid,
