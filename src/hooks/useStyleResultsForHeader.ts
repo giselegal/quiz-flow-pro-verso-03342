@@ -1,5 +1,6 @@
 import { styleConfig } from '@/config/styleConfig';
 import { getStyleColor } from '@/utils/styleUtils';
+import { useQuizResult } from '@/hooks/useQuizResult';
 import { useMemo } from 'react';
 
 export interface StyleResultForHeader {
@@ -19,20 +20,19 @@ export interface StyleResultsForHeader {
 
 /**
  * Hook para fornecer dados de resultados de estilo para o header
- * Inclui dados mockados para preview no editor
+ * Usa dados reais do quiz quando disponíveis, senão usa dados mock para preview no editor
  */
 export const useStyleResultsForHeader = (): StyleResultsForHeader => {
+  // 🔥 CONECTANDO DADOS REAIS DO QUIZ
+  const { primaryStyle, secondaryStyles } = useQuizResult();
+  
   return useMemo(() => {
-    // Dados mock para preview no editor - sempre retorna os mesmos dados
-    const mockStyles = [
-      { name: 'Natural', percentage: 45 },
-      { name: 'Contemporâneo', percentage: 28 },
-      { name: 'Clássico', percentage: 27 }
-    ];
-
+    console.log('🎯 useStyleResultsForHeader - Dados reais:', { primaryStyle, secondaryStyles });
+    
     const createStyleResult = (name: string, percentage: number): StyleResultForHeader => {
       const config = styleConfig[name];
       if (!config) {
+        console.warn(`⚠️ Estilo não encontrado: ${name}`);
         return {
           name,
           description: 'Estilo não encontrado',
@@ -52,11 +52,37 @@ export const useStyleResultsForHeader = (): StyleResultsForHeader => {
         color: getStyleColor(name as any)
       };
     };
+    
+    // Se temos dados reais do quiz, usar eles
+    if (primaryStyle && secondaryStyles && secondaryStyles.length >= 2) {
+      const realStyles = [
+        { name: primaryStyle.style, percentage: Math.round(primaryStyle.percentage) },
+        { name: secondaryStyles[0].style, percentage: Math.round(secondaryStyles[0].percentage) },
+        { name: secondaryStyles[1].style, percentage: Math.round(secondaryStyles[1].percentage) }
+      ];
+      
+      console.log('✅ Usando dados REAIS do quiz:', realStyles);
+      
+      return {
+        primaryStyle: createStyleResult(realStyles[0].name, realStyles[0].percentage),
+        secondaryStyle: createStyleResult(realStyles[1].name, realStyles[1].percentage),
+        thirdStyle: createStyleResult(realStyles[2].name, realStyles[2].percentage)
+      };
+    }
+    
+    // Fallback: Dados mock para preview no editor
+    const mockStyles = [
+      { name: 'Natural', percentage: 45 },
+      { name: 'Contemporâneo', percentage: 28 },
+      { name: 'Clássico', percentage: 27 }
+    ];
+    
+    console.log('📝 Usando dados MOCK (preview):', mockStyles);
 
     return {
       primaryStyle: createStyleResult(mockStyles[0].name, mockStyles[0].percentage),
       secondaryStyle: createStyleResult(mockStyles[1].name, mockStyles[1].percentage),
       thirdStyle: createStyleResult(mockStyles[2].name, mockStyles[2].percentage)
     };
-  }, []);
+  }, [primaryStyle, secondaryStyles]);
 };
