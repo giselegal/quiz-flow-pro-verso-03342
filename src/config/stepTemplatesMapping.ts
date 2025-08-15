@@ -3,8 +3,8 @@
 
 // ✅ IMPORTS DOS TEMPLATES TSX REAIS
 import { getStep01Template } from '@/components/steps/Step01Template';
-import { getStep02Template } from '@/components/steps/Step02Template';
-import { getStep03Template } from '@/components/steps/Step03Template';
+import { getConnectedStep02Template } from '@/components/steps/ConnectedStep02Template';
+import { getConnectedStep03Template } from '@/components/steps/ConnectedStep03Template';
 import { getStep04Template } from '@/components/steps/Step04Template';
 import { getStep05Template } from '@/components/steps/Step05Template';
 import { getStep06Template } from '@/components/steps/Step06Template';
@@ -38,29 +38,33 @@ export interface StepConfig {
   description: string;
 }
 
-// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES CORRETOS E SEM DUPLICAÇÃO
+// 🎯 DADOS REAIS DAS QUESTÕES (usados pelos templates conectados)
+// import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
+
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES REAIS DAS QUESTÕES
 const STEP_CONFIGS = [
-  { name: 'Introdução', description: 'Tela inicial do quiz' },
-  { name: 'Nome', description: 'Coleta do nome pessoal' },
-  { name: 'Roupa Favorita', description: 'Tipo de roupa preferida' },
-  { name: 'Estilo Pessoal', description: 'Identificação do estilo' },
-  { name: 'Ocasiões', description: 'Contextos de uso' },
-  { name: 'Cores', description: 'Preferências de cores' },
-  { name: 'Texturas', description: 'Texturas favoritas' },
-  { name: 'Silhuetas', description: 'Formas preferidas' },
-  { name: 'Acessórios', description: 'Acessórios de estilo' },
-  { name: 'Inspiração', description: 'Referências de moda' },
-  { name: 'Conforto', description: 'Prioridade de conforto' },
-  { name: 'Tendências', description: 'Interesse em tendências' },
-  { name: 'Investimento', description: 'Orçamento para roupas' },
-  { name: 'Personalidade', description: 'Traços pessoais' },
-  { name: 'Transição', description: 'Preparação para resultado' },
-  { name: 'Processamento', description: 'Calculando resultado' },
-  { name: 'Resultado Parcial', description: 'Primeiro resultado' },
-  { name: 'Resultado Completo', description: 'Análise completa' },
-  { name: 'Resultado Final', description: 'Apresentação final' },
-  { name: 'Lead Capture', description: 'Captura de contato' },
-  { name: 'Oferta', description: 'Página de oferta final' },
+  { name: 'Quiz de Estilo Pessoal', description: 'Descubra seu estilo único' },
+  { name: 'VAMOS NOS CONHECER?', description: 'Digite seu nome para personalizar' },
+  { name: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', description: 'Primeira questão do quiz' },
+  { name: 'RESUMA A SUA PERSONALIDADE:', description: 'Segunda questão do quiz' },
+  { name: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', description: 'Terceira questão do quiz' },
+  { name: 'QUAIS DETALHES VOCÊ GOSTA?', description: 'Quarta questão do quiz' },
+  { name: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', description: 'Quinta questão do quiz' },
+  { name: 'QUAL CASACO É SEU FAVORITO?', description: 'Sexta questão do quiz' },
+  { name: 'QUAL SUA CALÇA FAVORITA?', description: 'Sétima questão do quiz' },
+  { name: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', description: 'Oitava questão do quiz' },
+  { name: 'QUAL BOLSA É A SUA CARA?', description: 'Nona questão do quiz' },
+  { name: 'QUAL SITUAÇÃO VOCÊ MAIS VIVE NO SEU DIA A DIA?', description: 'Décima questão do quiz' },
+  { name: 'Questões Estratégicas 1', description: 'Perguntas complementares' },
+  { name: 'Questões Estratégicas 2', description: 'Perguntas complementares' },
+  { name: 'Questões Estratégicas 3', description: 'Perguntas complementares' },
+  { name: 'Analisando Respostas...', description: 'Processando seu perfil' },
+  { name: 'Calculando Resultado...', description: 'Definindo seu estilo' },
+  { name: 'Seu Resultado Está Pronto!', description: 'Descobrindo seu estilo' },
+  { name: 'SEU ESTILO PESSOAL É:', description: 'Apresentação do resultado' },
+  { name: 'Resultado Completo', description: 'Análise detalhada' },
+  { name: 'RECEBA SEU GUIA DE ESTILO COMPLETO', description: 'Captura de lead' },
+  { name: 'Oferta Especial', description: 'Página de conversão' },
 ];
 
 // Template padrão para fallback
@@ -110,31 +114,30 @@ const getDefaultTemplate = (stepNumber: number) => {
 
 // Templates específicos removidos para evitar duplicação
 
-// 📋 MAPEAMENTO DOS TEMPLATES TSX REAIS (CORRIGIDO)
+// 📋 MAPEAMENTO DOS TEMPLATES TSX REAIS COM NOMES CORRETOS
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
-  1: { stepNumber: 1, templateFunction: getStep01Template, name: 'Introdução', description: 'Tela inicial do quiz' },
-  2: { stepNumber: 2, templateFunction: getStep02Template, name: 'Nome', description: 'Coleta do nome pessoal' },
-  3: { stepNumber: 3, templateFunction: getStep03Template, name: 'Roupa Favorita', description: 'Tipo de roupa preferida' },
-  4: { stepNumber: 4, templateFunction: getStep04Template, name: 'Estilo Pessoal', description: 'Identificação do estilo' },
-  5: { stepNumber: 5, templateFunction: getStep05Template, name: 'Ocasiões', description: 'Contextos de uso' },
-  6: { stepNumber: 6, templateFunction: getStep06Template, name: 'Cores', description: 'Preferências de cores' },
-  7: { stepNumber: 7, templateFunction: getStep07Template, name: 'Texturas', description: 'Texturas favoritas' },
-  8: { stepNumber: 8, templateFunction: getStep08Template, name: 'Silhuetas', description: 'Formas preferidas' },
-  9: { stepNumber: 9, templateFunction: getStep09Template, name: 'Acessórios', description: 'Acessórios de estilo' },
-  10: { stepNumber: 10, templateFunction: getStep10Template, name: 'Inspiração', description: 'Referências de moda' },
-  11: { stepNumber: 11, templateFunction: getStep11Template, name: 'Conforto', description: 'Prioridade de conforto' },
-  12: { stepNumber: 12, templateFunction: getStep12Template, name: 'Tendências', description: 'Interesse em tendências' },
-  13: { stepNumber: 13, templateFunction: getStep13Template, name: 'Investimento', description: 'Orçamento para roupas' },
-  14: { stepNumber: 14, templateFunction: getStep14Template, name: 'Personalidade', description: 'Traços pessoais' },
-  15: { stepNumber: 15, templateFunction: getStep15Template, name: 'Transição', description: 'Preparação para resultado' },
-  16: { stepNumber: 16, templateFunction: getStep16Template, name: 'Processamento', description: 'Calculando resultado' },
-  17: { stepNumber: 17, templateFunction: getStep17Template, name: 'Resultado Parcial', description: 'Primeiro resultado' },
-  18: { stepNumber: 18, templateFunction: getStep18Template, name: 'Resultado Completo', description: 'Análise completa' },
-  19: { stepNumber: 19, templateFunction: getStep19Template, name: 'Resultado Final', description: 'Apresentação final' },
+  1: { stepNumber: 1, templateFunction: getStep01Template, name: STEP_CONFIGS[0].name, description: STEP_CONFIGS[0].description },
+  2: { stepNumber: 2, templateFunction: getConnectedStep02Template, name: STEP_CONFIGS[1].name, description: STEP_CONFIGS[1].description },
+  3: { stepNumber: 3, templateFunction: getConnectedStep03Template, name: STEP_CONFIGS[2].name, description: STEP_CONFIGS[2].description },
+  4: { stepNumber: 4, templateFunction: getStep04Template, name: STEP_CONFIGS[3].name, description: STEP_CONFIGS[3].description },
+  5: { stepNumber: 5, templateFunction: getStep05Template, name: STEP_CONFIGS[4].name, description: STEP_CONFIGS[4].description },
+  6: { stepNumber: 6, templateFunction: getStep06Template, name: STEP_CONFIGS[5].name, description: STEP_CONFIGS[5].description },
+  7: { stepNumber: 7, templateFunction: getStep07Template, name: STEP_CONFIGS[6].name, description: STEP_CONFIGS[6].description },
+  8: { stepNumber: 8, templateFunction: getStep08Template, name: STEP_CONFIGS[7].name, description: STEP_CONFIGS[7].description },
+  9: { stepNumber: 9, templateFunction: getStep09Template, name: STEP_CONFIGS[8].name, description: STEP_CONFIGS[8].description },
+  10: { stepNumber: 10, templateFunction: getStep10Template, name: STEP_CONFIGS[9].name, description: STEP_CONFIGS[9].description },
+  11: { stepNumber: 11, templateFunction: getStep11Template, name: STEP_CONFIGS[10].name, description: STEP_CONFIGS[10].description },
+  12: { stepNumber: 12, templateFunction: getStep12Template, name: STEP_CONFIGS[11].name, description: STEP_CONFIGS[11].description },
+  13: { stepNumber: 13, templateFunction: getStep13Template, name: STEP_CONFIGS[12].name, description: STEP_CONFIGS[12].description },
+  14: { stepNumber: 14, templateFunction: getStep14Template, name: STEP_CONFIGS[13].name, description: STEP_CONFIGS[13].description },
+  15: { stepNumber: 15, templateFunction: getStep15Template, name: STEP_CONFIGS[14].name, description: STEP_CONFIGS[14].description },
+  16: { stepNumber: 16, templateFunction: getStep16Template, name: STEP_CONFIGS[15].name, description: STEP_CONFIGS[15].description },
+  17: { stepNumber: 17, templateFunction: getStep17Template, name: STEP_CONFIGS[16].name, description: STEP_CONFIGS[16].description },
+  18: { stepNumber: 18, templateFunction: getStep18Template, name: STEP_CONFIGS[17].name, description: STEP_CONFIGS[17].description },
+  19: { stepNumber: 19, templateFunction: getStep19Template, name: STEP_CONFIGS[18].name, description: STEP_CONFIGS[18].description },
   20: { 
     stepNumber: 20, 
     templateFunction: (userData?: any) => {
-      // 🎯 STEP 20: Integração com dados personalizados
       const userName = localStorage.getItem('quizUserName') || userData?.userName || '';
       const styleCategory = localStorage.getItem('quizPrimaryStyle') || userData?.styleCategory || 'Elegante';
       const sessionId = userData?.sessionId || 'default-session';
@@ -143,10 +146,10 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
       
       return getStep20Template({ userName, styleCategory, sessionId });
     }, 
-    name: 'Página de Conversão', 
-    description: 'Oferta personalizada com resultado do usuário' 
+    name: STEP_CONFIGS[19].name, 
+    description: STEP_CONFIGS[19].description 
   },
-  21: { stepNumber: 21, templateFunction: getStep21Template, name: 'Thank You Page', description: 'Confirmação e próximos passos' },
+  21: { stepNumber: 21, templateFunction: getStep21Template, name: STEP_CONFIGS[20].name, description: STEP_CONFIGS[20].description },
 };
 
 // 🔧 FUNÇÕES UTILITÁRIAS ATUALIZADAS
@@ -197,16 +200,19 @@ export const STEP_CONFIG: StepConfig[] = getAllSteps().map(template => ({
   description: template.description,
 }));
 
-// 📊 ESTATÍSTICAS
+// 📊 ESTATÍSTICAS ATUALIZADAS
 export const getTemplateStats = () => {
   return {
     totalTemplates: getTotalSteps(),
-    introSteps: 1, // Step 1
-    questionSteps: 13, // Steps 2-14 (perguntas do quiz)
-    strategicSteps: 4, // Steps 15-18 (perguntas estratégicas)
-    resultSteps: 1, // Step 19 (apresentação resultado)
-    conversionSteps: 1, // Step 20 (conversão/venda)
-    thankYouSteps: 1, // Step 21 (confirmação)
+    introSteps: 1, // Step 1 - Quiz intro
+    nameSteps: 1, // Step 2 - Nome
+    questionSteps: 9, // Steps 3-11 (perguntas principais)
+    strategicSteps: 3, // Steps 12-14 (perguntas estratégicas) 
+    transitionSteps: 2, // Steps 15-16 (transição/processamento)
+    resultSteps: 4, // Steps 17-20 (resultado/lead)
+    conversionSteps: 1, // Step 21 (oferta)
+    connectedTemplates: 2, // Steps 2-3 já conectados aos hooks
+    pendingConnections: 19, // Steps restantes para conectar
   };
 };
 
