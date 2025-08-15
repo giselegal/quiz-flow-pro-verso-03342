@@ -48,11 +48,11 @@ const NameFormComponent: React.FC<NameFormComponentProps> = ({
   className = "",
   isEditable = false,
   onStart,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
   const [nome, setNome] = useState('');
   const [error, setError] = useState('');
-  const { userName, setUserName } = useUserName();
+  const { userName: _userName, setUserName } = useUserName();
 
   // Função simplificada de submit
   const handleSubmit = async (e: React.FormEvent) => {

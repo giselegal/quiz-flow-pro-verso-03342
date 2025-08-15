@@ -1,6 +1,6 @@
 import { BlockDefinition } from '@/types/editor';
 import React from 'react';
-import { Type, Heading, Image, Sparkles, Grid, Clock, Award, Star, Settings } from 'lucide-react';
+import { Type, Heading, Image, Sparkles, Grid, Clock, Star, Settings } from 'lucide-react';
 
 // Basic Inline Components
 import TextInline from '../components/blocks/inline/TextInline';

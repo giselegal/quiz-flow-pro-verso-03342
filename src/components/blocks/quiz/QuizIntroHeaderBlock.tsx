@@ -1,4 +1,4 @@
-import React from 'react';
+// Remove unused React import
 import { cn } from '@/lib/utils';
 
 interface QuizIntroHeaderBlockProps {

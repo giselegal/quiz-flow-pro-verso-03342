@@ -41,7 +41,7 @@ const DescriptionTextComponent: React.FC<DescriptionTextComponentProps> = ({
   lineHeight = "relaxed",
   className = "",
   isEditable = false,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
 
   // Função para aplicar destaque a frases específicas

@@ -33,7 +33,7 @@ const FooterComponent: React.FC<FooterComponentProps> = ({
   textAlign = "center",
   className = "",
   isEditable = false,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
 
   const getFontSizeClass = () => {

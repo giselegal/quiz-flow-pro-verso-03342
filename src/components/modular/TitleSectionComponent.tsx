@@ -39,7 +39,7 @@ const TitleSectionComponent: React.FC<TitleSectionComponentProps> = ({
   textAlign = "center",
   className = "",
   isEditable = false,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
 
   // Função para destacar palavras específicas

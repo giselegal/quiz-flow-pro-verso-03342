@@ -164,7 +164,7 @@ export const DEFAULT_CONFIG = {
       { text: 'Estilo Predominante', color: '#B89B7A', fontWeight: '600' },
       { text: 'essência', color: '#432818', fontWeight: '600' },
       { text: 'confiança', color: '#432818', fontWeight: '600' },
-    ],
+    ] as { text: string; color?: string; fontWeight?: string; }[],
     textColor: '#6B7280',
     fontSize: 'base' as const,
   },

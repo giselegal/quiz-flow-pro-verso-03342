@@ -25,7 +25,7 @@ const SkipLinkComponent: React.FC<SkipLinkComponentProps> = ({
   text = "Pular para o formulário",
   className = "",
   isEditable = false,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
 
   return (

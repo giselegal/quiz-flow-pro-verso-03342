@@ -54,7 +54,7 @@ const OptimizedImageComponent: React.FC<OptimizedImageComponentProps> = ({
   backgroundColor = "#F8F5F0",
   className = "",
   isEditable = false,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
 
   // Usar imagens customizadas ou padrão

@@ -40,14 +40,15 @@ const HeaderLogoComponent: React.FC<HeaderLogoComponentProps> = ({
   alt = "Logo Gisele Galvão",
   className = "",
   isEditable = false,
-  onPropertyChange,
+  onPropertyChange: _onPropertyChange,
 }) => {
   
-  const handlePropertyChange = (key: string, value: any) => {
-    if (onPropertyChange) {
-      onPropertyChange(key, value);
-    }
-  };
+  // Property change handler for future use
+  // const _handlePropertyChange = (key: string, value: any) => {
+  //   if (onPropertyChange) {
+  //     onPropertyChange(key, value);
+  //   }
+  // };
 
   return (
     <header 
