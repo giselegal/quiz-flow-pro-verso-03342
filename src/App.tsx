@@ -51,6 +51,7 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
+const ModularComponentsDemo = lazy(() => import('./pages/modular-demo'));
 
 // Loading component
 const PageLoading = () => (
@@ -346,6 +347,15 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <TestNavigation />
+                    </Suspense>
+                  )}
+                </Route>
+
+                {/* Modular Components Demo Route */}
+                <Route path="/demo/modular">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ModularComponentsDemo />
                     </Suspense>
                   )}
                 </Route>
