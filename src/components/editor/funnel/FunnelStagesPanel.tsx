@@ -19,6 +19,8 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
     activeStageId,
     stageActions: { setActiveStage, addStage, removeStage },
     computed: { stageCount },
+    // ✅ NOVO: Estado do quiz para mostrar progresso
+    quizState,
   } = useEditor();
 
   const handleAddStage = (e: React.MouseEvent) => {
@@ -78,9 +80,27 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           Etapas do Funil
-          <Badge variant="secondary" className="ml-auto">
-            {stageCount}/21
-          </Badge>
+          <div className="ml-auto flex items-center gap-2">
+            <Badge variant="secondary">
+              {stageCount}/21
+            </Badge>
+            {/* ✅ NOVO: Indicador de progresso do quiz */}
+            {quizState.userName && (
+              <Badge variant="outline" className="text-xs">
+                👤 {quizState.userName}
+              </Badge>
+            )}
+            {quizState.answers.length > 0 && (
+              <Badge variant="default" className="text-xs">
+                📊 {quizState.answers.length} respostas
+              </Badge>
+            )}
+            {quizState.isQuizCompleted && (
+              <Badge variant="default" className="text-xs bg-green-500">
+                ✅ Completo
+              </Badge>
+            )}
+          </div>
         </CardTitle>
       </CardHeader>
 

@@ -62,7 +62,16 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     persistenceActions: { saveFunnel },
     computed: { currentBlocks, selectedBlock },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
+    // ✅ NOVO: Estado do quiz integrado
+    quizState,
   } = editorContext;
+  
+  // ✅ DEBUG: Log do estado do quiz
+  console.log('🎯 Editor Quiz State:', {
+    userName: quizState.userName,
+    answersCount: quizState.answers.length,
+    isCompleted: quizState.isQuizCompleted,
+  });
   
   // Safe scroll sync with try-catch
   let scrollRef;

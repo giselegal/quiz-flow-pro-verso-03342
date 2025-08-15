@@ -236,6 +236,42 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     crudReady: !!quizCRUD,
   });
 
+  // ✅ INTEGRAÇÃO: Event Listeners para conectar templates aos hooks
+  useEffect(() => {
+    console.log('🎯 EditorProvider: Configurando event listeners para quiz...');
+
+    const handleQuizFormComplete = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { formData } = customEvent.detail || {};
+      
+      if (formData?.name) {
+        console.log('👤 EditorContext: Capturando nome do usuário via event:', formData.name);
+        quizLogic.setUserNameFromInput(formData.name);
+      }
+    };
+
+    const handleQuizSelectionChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { selectedOptions, questionId } = customEvent.detail || {};
+      
+      if (selectedOptions && questionId) {
+        console.log('📊 EditorContext: Capturando seleções via event:', { questionId, selectedOptions });
+        selectedOptions.forEach((optionId: string) => {
+          quizLogic.answerQuestion(questionId, optionId);
+        });
+      }
+    };
+
+    // Registrar listeners
+    window.addEventListener('quiz-form-complete', handleQuizFormComplete);
+    window.addEventListener('quiz-selection-change', handleQuizSelectionChange);
+
+    return () => {
+      window.removeEventListener('quiz-form-complete', handleQuizFormComplete);
+      window.removeEventListener('quiz-selection-change', handleQuizSelectionChange);
+    };
+  }, [quizLogic]);
+
   // ✅ INTEGRAÇÃO COM TEMPLATE MANAGER
   const templateManager = useTemplateManager({
     onAddBlock: async (blockData: Block) => {
