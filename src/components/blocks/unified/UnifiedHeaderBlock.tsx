@@ -73,8 +73,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       isSticky: properties.isSticky ?? false,
       
       // Progresso
-      enableProgressBar: (properties.enableProgressBar || properties.showProgress) ?? false,
-      showProgress: properties.showProgress ?? false,
+      enableProgressBar: properties.enableProgressBar ?? false,
       progressValue: properties.progressValue || 0,
       progressMax: properties.progressMax || 100,
       
@@ -146,16 +145,16 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           )}
         </div>
 
-        {(props.enableProgressBar || props.showProgress) && (
+        {props.enableProgressBar && (
           <div className="mt-4">
-            <div className="flex justify-between text-sm text-[#6B4F43] mb-1">
+            <div className="flex justify-between text-sm text-muted-foreground mb-2">
               <span>Progresso</span>
               <span>{Math.round((props.progressValue / props.progressMax) * 100)}%</span>
             </div>
             <Progress
               value={Math.min(props.progressValue, props.progressMax)}
-              className="h-2"
-              indicatorClassName="bg-[#B89B7A]"
+              className="h-1 bg-muted/30"
+              indicatorClassName="bg-primary transition-all duration-300"
             />
           </div>
         )}
@@ -197,7 +196,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           >
             {props.showUserName 
               ? props.title.replace('{userName}', props.displayName)
-              : props.title.replace('{userName}', '').replace(/,\s*$/, '').replace(/^\s*,/, '').trim()
+              : props.title.replace(/,?\s*\{userName\}!?/g, '').replace(/^,\s*|,\s*$/g, '').trim() || 'Parabéns!'
             }
           </motion.h1>
         )}
@@ -233,13 +232,17 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             )}
           </div>
 
-          {(props.enableProgressBar || props.showProgress) && (
+          {props.enableProgressBar && (
             <div className="flex-1 max-w-md mx-4">
-              <div className="flex justify-between text-sm" style={{ color: '#6B4F43' }}>
+              <div className="flex justify-between text-sm text-muted-foreground mb-1">
                 <span>Progresso</span>
                 <span>{Math.round((props.progressValue / props.progressMax) * 100)}%</span>
               </div>
-              <Progress value={(props.progressValue / props.progressMax) * 100} className="h-2 mt-1" />
+              <Progress 
+                value={(props.progressValue / props.progressMax) * 100} 
+                className="h-1 bg-muted/30" 
+                indicatorClassName="bg-primary"
+              />
             </div>
           )}
         </div>
@@ -309,7 +312,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             >
               {props.showUserName 
                 ? props.title.replace('{userName}', props.displayName)
-                : props.title.replace('{userName}', '').replace(/,\s*$/, '').replace(/^\s*,/, '').trim()
+                : props.title.replace(/,?\s*\{userName\}!?/g, '').replace(/^,\s*|,\s*$/g, '').trim() || 'Bem-vindo!'
               }
             </h1>
           )}
@@ -352,7 +355,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
   const relevantKeys = [
     'logoUrl', 'logoAlt', 'logoWidth', 'logoHeight', 'showLogo',
     'title', 'subtitle', 'userName', 'backgroundColor', 'textColor',
-    'showTitle', 'showUserName', 'enableProgressBar', 'showProgress', 
+    'showTitle', 'showUserName', 'enableProgressBar', 
     'progressValue', 'progressMax', 'showBackButton', 'heroImage', 'showImage'
   ];
   

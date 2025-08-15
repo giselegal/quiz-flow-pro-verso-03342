@@ -487,16 +487,9 @@ export const useUnifiedProperties = (
            // 🎯 PROGRESSO (Para Quiz Headers)
           createProperty(
             'enableProgressBar',
-            (currentBlock?.properties?.enableProgressBar || currentBlock?.properties?.showProgress) ?? false,
+            currentBlock?.properties?.enableProgressBar ?? false,
             PropertyType.SWITCH,
             'Ativar Barra de Progresso',
-            PropertyCategory.BEHAVIOR
-          ),
-          createProperty(
-            'showProgress',
-            currentBlock?.properties?.showProgress ?? false,
-            PropertyType.SWITCH,
-            'Mostrar Barra de Progresso',
             PropertyCategory.BEHAVIOR
           ),
           createProperty(
