@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { useQuiz } from '@/hooks/useQuiz';
+import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { styleConfig } from '@/config/styleConfig';
 import { Progress } from '@/components/ui/progress';
 
@@ -61,7 +61,8 @@ const StyleCardBlock: React.FC<StyleCardBlockProps> = ({
   showImage = true,
   className,
 }) => {
-  const { primaryStyle } = useQuiz();
+  const { quizResult } = useQuizLogic();
+  const primaryStyle = quizResult?.primaryStyle;
 
   if (!primaryStyle) {
     return (
