@@ -315,9 +315,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
            </div>
         </div>
 
-        {/* Debug Template Loader */}
-        <div className="fixed bottom-4 right-4 z-50 max-w-md">
+        {/* Debug Components */}
+        <div className="fixed bottom-4 right-4 z-50 max-w-md space-y-4">
           <DebugTemplateLoader />
+          <QuizIntegrationTest />
         </div>
 
         {/* Painel de Configurações do Funil */}
