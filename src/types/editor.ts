@@ -1,18 +1,12 @@
-// @ts-nocheck
 import { LucideIcon } from 'lucide-react';
 
-export enum PropertyType {
-  TEXT = 'text',
-  TEXTAREA = 'textarea',
-  NUMBER = 'number',
-  BOOLEAN = 'boolean',
-  COLOR = 'color',
-  SELECT = 'select',
-  RANGE = 'range',
-  IMAGE = 'image',
-  OPTION_SCORE = 'option_score',
-  OPTION_CATEGORY = 'option_category',
-}
+// Import PropertyType and PropertySchema for internal use
+import { PropertyType, PropertySchema } from './propertySchema';
+
+// Re-export the unified PropertySchema as the primary interface
+export type { PropertySchema, PropertyType, PropertyCategory, PropertyCategoryOrString, UnifiedProperty } from './propertySchema';
+
+// Remove the duplicate PropertyType enum - use the one from propertySchema.ts
 
 export interface PropertyDefinition {
   id: string;
@@ -28,29 +22,19 @@ export interface PropertyDefinition {
   step?: number;
 }
 
-export interface PropertySchema {
+// Keep the legacy interface for backwards compatibility with explicit naming
+export interface LegacyPropertySchema {
   type: 'string' | 'number' | 'boolean' | 'select' | 'textarea' | 'array' | 'color' | 'range';
-
   default: any;
-
   label: string;
-
   description?: string;
-
   category?: 'general' | 'layout' | 'styling' | 'content' | 'behavior' | 'validation' | 'advanced';
-
   required?: boolean;
-
   placeholder?: string;
-
   options?: Array<{ value: string; label: string }>;
-
   min?: number;
-
   max?: number;
-
   step?: number;
-
   rows?: number;
 }
 

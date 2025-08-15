@@ -29,6 +29,7 @@ import {
 // TYPES - Tipos estendidos baseados no modelo
 // =====================================================================
 
+// Legacy PropertyType for this file (maintain compatibility for now)
 export type PropertyType =
   | 'text'
   | 'number'
@@ -42,15 +43,7 @@ export type PropertyType =
   | 'textarea'
   | 'rich-text';
 
-export type LayoutType = '1-column' | '2-columns' | '3-columns' | '4-columns';
-export type DirectionType = 'vertical' | 'horizontal';
-export type DispositionType = 'image-text' | 'text-image' | 'text-only' | 'image-only';
-export type BorderSizeType = 'none' | 'small' | 'medium' | 'large';
-export type ShadowSizeType = 'none' | 'small' | 'medium' | 'large';
-export type SpacingType = 'small' | 'medium' | 'large';
-export type DetailType = 'none' | 'line' | 'dot';
-export type StyleType = 'simple' | 'card' | 'modern' | 'minimal';
-
+// Legacy PropertySchema for this file  
 export interface PropertySchema {
   key: string;
   label: string;
@@ -65,6 +58,15 @@ export interface PropertySchema {
   hidden?: boolean;
   group?: string; // Para agrupar propriedades em cards
 }
+
+export type LayoutType = '1-column' | '2-columns' | '3-columns' | '4-columns';
+export type DirectionType = 'vertical' | 'horizontal';
+export type DispositionType = 'image-text' | 'text-image' | 'text-only' | 'image-only';
+export type BorderSizeType = 'none' | 'small' | 'medium' | 'large';
+export type ShadowSizeType = 'none' | 'small' | 'medium' | 'large';
+export type SpacingType = 'small' | 'medium' | 'large';
+export type DetailType = 'none' | 'line' | 'dot';
+export type StyleType = 'simple' | 'card' | 'modern' | 'minimal';
 
 export interface Block {
   id: string;

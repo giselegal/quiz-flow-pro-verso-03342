@@ -37,7 +37,7 @@ const ArrayEditor: React.FC<ArrayEditorProps> = ({ value, onChange, property }) 
             category: 'Geral',
             points: 1,
           }
-        : property.default || '';
+        : property.defaultValue || '';
 
     onChange([...value, newItem]);
   };
