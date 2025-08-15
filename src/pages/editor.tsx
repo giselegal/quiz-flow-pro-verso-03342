@@ -12,8 +12,8 @@ import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolba
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/contexts/PreviewContext';
-// 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
-import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+// 🆕 PAINEL DE PROPRIEDADES UNIFICADO (MESMO DO EDITOR-FIXED)
+import { IntegratedPropertiesPanel } from '@/components/universal/IntegratedPropertiesPanel';
 import { SmartStepRenderer } from '@/components/templates/SmartStepRenderer';
 
 // Context & Hooks
@@ -21,6 +21,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { Settings } from 'lucide-react';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -173,10 +174,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   Editor de Funil - Etapa {activeStageId}
                 </h1>
 
-                <div className="text-sm text-stone-500">
-                  {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                  {stageCount !== 1 ? 's' : ''} • Novo Painel Ativo
-                </div>
+                 <div className="text-sm text-stone-500">
+                   {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
+                   {stageCount !== 1 ? 's' : ''} • Painel Integrado Ativo
+                 </div>
               </div>
             </div>
           </div>
@@ -215,11 +216,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             }
             propertiesPanel={
               !isPreviewing && selectedBlock ? (
-                // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
-                <PropertiesPanel
-                  selectedBlock={selectedBlock}
+                // 🎯 PAINEL INTEGRADO UNIFICADO (MESMO DO EDITOR-FIXED)
+                <IntegratedPropertiesPanel
+                  selectedBlock={{
+                    id: selectedBlock.id,
+                    type: selectedBlock.type,
+                    properties: selectedBlock.properties || {},
+                    content: selectedBlock.content || {},
+                  }}
                   onUpdate={(blockId: string, updates: Record<string, any>) => {
+                    console.log('🔥 EDITOR onUpdate CHAMADO:', { blockId, updates });
                     updateBlock(blockId, updates);
+                    console.log('🔥 EDITOR updateBlock executado');
                   }}
                   onClose={() => setSelectedBlockId(null)}
                   onDelete={(blockId: string) => {
@@ -228,14 +236,17 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   }}
                 />
               ) : !isPreviewing ? (
-                <div className="h-full p-4 flex items-center justify-center text-stone-500">
-                  <div className="text-center">
-                    <p className="text-sm">Selecione um bloco para editar propriedades</p>
-                    <p className="text-xs text-stone-400 mt-1">
-                      Novo Painel de Propriedades • Editores Específicos
-                    </p>
-                  </div>
-                </div>
+                 <div className="h-full p-4 flex items-center justify-center text-stone-500">
+                   <div className="text-center">
+                     <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
+                       <Settings className="w-8 h-8 text-stone-400" />
+                     </div>
+                     <p className="text-sm font-medium">Selecione um bloco para editar propriedades</p>
+                     <p className="text-xs text-stone-400 mt-2">
+                       Painel Integrado • Editores Específicos<br />aparecerão aqui quando selecionado
+                     </p>
+                   </div>
+                 </div>
               ) : null
             }
           />
