@@ -74,7 +74,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onDelete,
 }) => {
   // 🚀 Usar contexto de preview em vez de prop
-  const { isPreviewing } = usePreview();
+  const { isPreviewing, goToNextStep, goToPreviousStep, updateSessionData, sessionData } = usePreview();
 
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
@@ -246,14 +246,24 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
                   <Component
                     {...componentProps}
                     isPreviewMode={true}
-                    onNext={() => {
-                      console.log('🚀 Preview: Navegando para próxima etapa');
+                    onNext={goToNextStep}
+                    onPrevious={goToPreviousStep}
+                    onNavigate={(stepId: string) => {
+                      // For direct navigation to specific steps
+                      window.dispatchEvent(
+                        new CustomEvent('navigate-to-step', {
+                          detail: { stepId, source: `block-${block.id}` }
+                        })
+                      );
                     }}
-                    onPrevious={() => {
-                      console.log('🚀 Preview: Navegando para etapa anterior');
-                    }}
+                    onUpdateSessionData={updateSessionData}
+                    sessionData={sessionData}
                     canProceed={true}
                     sessionId="preview-session"
+                    // Pass real production-like props
+                    enableQuizFlow={true}
+                    enableNavigation={true}
+                    previewMode="production"
                   />
                 </React.Suspense>
               );

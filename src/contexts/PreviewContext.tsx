@@ -15,6 +15,7 @@ interface PreviewContextType {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   setCurrentStep: (step: number) => void;
+  navigateToStep: (stepId: string) => void; // New function
   updateSessionData: (key: string, value: any) => void;
   resetSession: () => void;
 }
@@ -39,6 +40,7 @@ const usePreview = () => {
       goToNextStep: () => {},
       goToPreviousStep: () => {},
       setCurrentStep: () => {},
+      navigateToStep: () => {},
       updateSessionData: () => {},
       resetSession: () => {},
     };
@@ -96,10 +98,18 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       setCurrentStepState(nextStep);
 
       // Se estiver em preview, simular navegação real
-      if (isPreviewing && funnelId) {
-        // Simular a navegação sem recarregar a página
-        const newUrl = `/dashboard/funnel/${funnelId}/step/${nextStep}`;
-        console.log('🚀 Preview: Navegando para etapa', nextStep, '-', newUrl);
+      if (isPreviewing) {
+        // Dispatch event for editor to handle step change
+        window.dispatchEvent(
+          new CustomEvent('quiz-navigate-to-step', {
+            detail: { stepId: `step-${nextStep.toString().padStart(2, '0')}`, source: 'preview-navigation' },
+          })
+        );
+        
+        if (funnelId) {
+          const newUrl = `/dashboard/funnel/${funnelId}/step/${nextStep}`;
+          console.log('🚀 Preview: Navegando para etapa', nextStep, '-', newUrl);
+        }
       }
 
       console.log('🚀 Preview: Avançou para etapa', nextStep);
@@ -112,14 +122,58 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
       setCurrentStepState(previousStep);
 
       // Se estiver em preview, simular navegação real
-      if (isPreviewing && funnelId) {
-        const newUrl = `/dashboard/funnel/${funnelId}/step/${previousStep}`;
-        console.log('🚀 Preview: Navegando para etapa', previousStep, '-', newUrl);
+      if (isPreviewing) {
+        // Dispatch event for editor to handle step change
+        window.dispatchEvent(
+          new CustomEvent('quiz-navigate-to-step', {
+            detail: { stepId: `step-${previousStep.toString().padStart(2, '0')}`, source: 'preview-navigation' },
+          })
+        );
+        
+        if (funnelId) {
+          const newUrl = `/dashboard/funnel/${funnelId}/step/${previousStep}`;
+          console.log('🚀 Preview: Navegando para etapa', previousStep, '-', newUrl);
+        }
       }
 
       console.log('🚀 Preview: Voltou para etapa', previousStep);
     }
   }, [currentStep, canGoPrevious, isPreviewing, funnelId]);
+
+  const navigateToStep = useCallback(
+    (stepId: string) => {
+      // Convert stepId to step number
+      let stepNumber: number;
+      if (stepId.startsWith('step-')) {
+        stepNumber = parseInt(stepId.replace('step-', ''), 10);
+      } else if (stepId.startsWith('etapa-')) {
+        stepNumber = parseInt(stepId.replace('etapa-', ''), 10);
+      } else if (!isNaN(parseInt(stepId, 10))) {
+        stepNumber = parseInt(stepId, 10);
+      } else {
+        console.warn('🚨 Preview: StepId inválido:', stepId);
+        return;
+      }
+
+      if (stepNumber >= 1 && stepNumber <= totalSteps) {
+        setCurrentStepState(stepNumber);
+
+        // Se estiver em preview, dispatch event for editor to handle
+        if (isPreviewing) {
+          window.dispatchEvent(
+            new CustomEvent('quiz-navigate-to-step', {
+              detail: { stepId: `step-${stepNumber.toString().padStart(2, '0')}`, source: 'preview-direct-navigation' },
+            })
+          );
+        }
+
+        console.log('🚀 Preview: Navegou diretamente para etapa', stepNumber, 'via ID:', stepId);
+      } else {
+        console.warn('🚨 Preview: Número de etapa inválido:', stepNumber);
+      }
+    },
+    [totalSteps, isPreviewing]
+  );
 
   const setCurrentStep = useCallback(
     (step: number) => {
@@ -159,9 +213,36 @@ const PreviewProvider: React.FC<PreviewProviderProps> = ({
     goToNextStep,
     goToPreviousStep,
     setCurrentStep,
+    navigateToStep,
     updateSessionData,
     resetSession,
   };
+
+  // Listen to navigation events from components in preview mode
+  React.useEffect(() => {
+    const handleNavigateToStep = (event: CustomEvent) => {
+      if (isPreviewing && event.detail?.stepId) {
+        navigateToStep(event.detail.stepId);
+      }
+    };
+
+    const handleQuizStart = (event: CustomEvent) => {
+      if (isPreviewing) {
+        console.log('🚀 Preview: Quiz started with user data:', event.detail);
+        updateSessionData('userName', event.detail?.userName || 'Anonymous');
+        updateSessionData('startTime', event.detail?.timestamp || Date.now());
+      }
+    };
+
+    // Listen for navigation events
+    window.addEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+    window.addEventListener('quiz-start', handleQuizStart as EventListener);
+
+    return () => {
+      window.removeEventListener('navigate-to-step', handleNavigateToStep as EventListener);
+      window.removeEventListener('quiz-start', handleQuizStart as EventListener);
+    };
+  }, [isPreviewing, navigateToStep, updateSessionData]);
 
   return <PreviewContext.Provider value={contextValue}>{children}</PreviewContext.Provider>;
 };
