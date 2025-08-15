@@ -178,11 +178,16 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     isLoading: isLoadingSupabase,
   });
 
-  // 📊 PERFORMANCE MONITORING
+  // 📊 PERFORMANCE MONITORING OTIMIZADO
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
-      console.log('🚀 EditorProvider: Iniciando análise de performance...');
-      performanceAnalyzer.startMonitoring();
+      // Usar requestIdleCallback para não impactar inicialização
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => {
+          console.log('🚀 EditorProvider: Análise de performance (baixa prioridade)');
+          performanceAnalyzer.startMonitoring();
+        });
+      }
     }
   }, []);
 
@@ -309,67 +314,58 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     return initialBlocks;
   });
 
-  // ✅ EFEITO PARA CARREGAR TEMPLATES JSON ASSÍNCRONO
+  // ✅ EFEITO OTIMIZADO - LAZY LOADING COM REQUESTIDLECALLBACK
   useEffect(() => {
     const loadInitialTemplates = async () => {
-      console.log('🔄 EditorProvider: Iniciando carregamento de templates JSON...');
+      console.log('🔄 EditorProvider: Lazy loading otimizado iniciado');
 
-      // Carregar templates para as primeiras 3 etapas imediatamente
-      for (let i = 1; i <= 3; i++) {
-        const stageId = `step-${String(i).padStart(2, '0')}`;
+      // Usar requestIdleCallback para não bloquear UI
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(async () => {
+          try {
+            // Carregar apenas a primeira etapa imediatamente
+            const stageId = 'step-01';
+            console.log(`🔄 Carregando template prioritário: ${stageId}`);
+            
+            const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
+            
+            if (loadedBlocks && loadedBlocks.length > 0) {
+              setStageBlocks(prev => ({
+                ...prev,
+                [stageId]: loadedBlocks,
+              }));
+              console.log(`✅ Template ${stageId} carregado: ${loadedBlocks.length} blocos`);
+            }
 
-        try {
-          console.log(`🔄 Carregando template JSON para ${stageId}...`);
-          const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
-
-          const hasHeader = (loadedBlocks || []).some(
-            b => b.type === 'quiz-intro-header' || b.type === 'header'
-          );
-
-          const headerBlock: EditorBlock = {
-            id: `${stageId}-block-quiz-intro-header-1`,
-            type: 'quiz-intro-header' as any,
-            content: {
-              title: 'Título do Header',
-              subtitle: 'Subtítulo opcional',
-              type: 'hero',
-              alignment: 'center',
-            } as any,
-            order: 1,
-            properties: {
-              title: 'Título do Header',
-              subtitle: 'Subtítulo opcional',
-              type: 'hero',
-              alignment: 'center',
-            },
-          };
-
-          const adjustedLoaded: EditorBlock[] = (loadedBlocks || []).map((b, idx) => ({
-            ...b,
-            order: hasHeader ? (b.order ?? idx + 1) : idx + 2,
-          }));
-
-          const withHeader: EditorBlock[] = hasHeader
-            ? adjustedLoaded
-            : [headerBlock, ...adjustedLoaded];
-
-          if (withHeader && withHeader.length > 0) {
-            setStageBlocks(prev => ({
-              ...prev,
-              [stageId]: withHeader,
-            }));
-            console.log(`✅ Template ${stageId} carregado: ${withHeader.length} blocos`);
-            console.log(`📦 Tipos de blocos: ${withHeader.map(b => b.type).join(', ')}`);
-          } else {
-            console.warn(`⚠️ Nenhum bloco encontrado para ${stageId}, inserindo Header padrão`);
-            setStageBlocks(prev => ({
-              ...prev,
-              [stageId]: [headerBlock],
-            }));
+            // Carregar outras etapas com delay progressivo
+            setTimeout(() => {
+              for (let i = 2; i <= 5; i++) {
+                const nextStageId = `step-${String(i).padStart(2, '0')}`;
+                setTimeout(async () => {
+                  try {
+                    const nextBlocks = await TemplateManager.loadStepBlocks(nextStageId);
+                    if (nextBlocks && nextBlocks.length > 0) {
+                      setStageBlocks(prev => ({
+                        ...prev,
+                        [nextStageId]: nextBlocks,
+                      }));
+                    }
+                  } catch (error) {
+                    console.warn(`⚠️ Erro ao carregar ${nextStageId}:`, error);
+                  }
+                }, i * 100); // Delay de 100ms entre etapas
+              }
+            }, 1000); // Aguardar 1s antes de carregar demais
+            
+          } catch (error) {
+            console.error('❌ Erro no carregamento otimizado:', error);
           }
-        } catch (error) {
-          console.error(`❌ Erro ao carregar ${stageId}:`, error);
-        }
+        });
+      } else {
+        // Fallback para browsers sem requestIdleCallback
+        setTimeout(() => {
+          loadInitialTemplates();
+        }, 100);
       }
     };
 

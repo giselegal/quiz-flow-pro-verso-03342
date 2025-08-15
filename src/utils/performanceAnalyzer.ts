@@ -62,12 +62,17 @@ class PerformanceAnalyzer {
       return originalSetTimeout(() => {
         const executionTime = performance.now() - start;
 
-        // Aumentar threshold para 250ms para reduzir ruído
-        if (executionTime > 250) {
+        // Threshold otimizado para 500ms para reduzir ruído excessivo
+        if (executionTime > 500) {
           this.violationCount++;
-          console.warn(
-            `⚠️ setTimeout Violation: ${executionTime.toFixed(2)}ms (delay: ${delay}ms)`
-          );
+          // Throttle warnings usando requestIdleCallback
+          if ('requestIdleCallback' in window && this.violationCount % 10 === 0) {
+            (window as any).requestIdleCallback(() => {
+              console.warn(
+                `⚠️ setTimeout Violation Batch: ${this.violationCount} violations (latest: ${executionTime.toFixed(2)}ms)`
+              );
+            });
+          }
         }
 
         callback(...args);
@@ -241,16 +246,30 @@ class PerformanceAnalyzer {
 // Export singleton instance
 export const performanceAnalyzer = PerformanceAnalyzer.getInstance();
 
-// Auto-start monitoring in development
+// Auto-start monitoring in development (OTIMIZADO)
 if (process.env.NODE_ENV === 'development') {
-  setTimeout(() => {
-    performanceAnalyzer.startMonitoring();
-
-    // Generate report every 30 seconds
-    setInterval(() => {
-      performanceAnalyzer.logReport();
-    }, 30000);
-  }, 2000); // Wait 2 seconds for app to initialize
+  // Usar requestIdleCallback para não bloquear inicialização
+  if ('requestIdleCallback' in window) {
+    (window as any).requestIdleCallback(() => {
+      performanceAnalyzer.startMonitoring();
+      
+      // Relatórios menos frequentes - a cada 60s
+      setInterval(() => {
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(() => {
+            performanceAnalyzer.logReport();
+          });
+        } else {
+          performanceAnalyzer.logReport();
+        }
+      }, 60000); // 60s ao invés de 30s
+    });
+  } else {
+    // Fallback sem bloquear
+    setTimeout(() => {
+      performanceAnalyzer.startMonitoring();
+    }, 5000); // Aguardar 5s para app estabilizar
+  }
 }
 
 export default performanceAnalyzer;
