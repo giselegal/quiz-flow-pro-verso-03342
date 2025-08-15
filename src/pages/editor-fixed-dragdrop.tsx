@@ -13,7 +13,7 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 
 // FunnelNavigation removido durante limpeza de conflitos
 // import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
-import OptimizedPropertiesPanel from '@/components/editor/OptimizedPropertiesPanel';
+import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 
@@ -259,7 +259,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               propertiesPanel={
                 !isPreviewing && unifiedSelectedBlock ? (
                   // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
-                  <OptimizedPropertiesPanel
+                  <EnhancedUniversalPropertiesPanel
                     selectedBlock={unifiedSelectedBlock}
                     onUpdate={(blockId: string, updates: Partial<any>) => {
                       updateBlock(blockId, updates);
