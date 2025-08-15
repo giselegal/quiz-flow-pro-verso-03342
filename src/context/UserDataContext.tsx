@@ -104,6 +104,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
         .from('quiz_users')
         .insert([{
           id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          session_id: userData.session_id || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           ...userData,
         }])
         .select()
@@ -128,6 +129,7 @@ export const UserDataProvider: React.FC<UserDataProviderProps> = ({ children }) 
         .insert([{
           id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           quiz_user_id: currentUser.id,
+          funnel_id: sessionData.funnel_id || 'default_funnel',
           last_activity: new Date().toISOString(),
           ...sessionData,
         }])

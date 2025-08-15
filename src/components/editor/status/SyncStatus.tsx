@@ -73,8 +73,8 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
       return `Erro no auto-save (${autoSaveState.errorCount})`;
     }
 
-    if (autoSaveState.lastSave) {
-      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSave.getTime()) / 1000);
+    if (autoSaveState.lastSaved) {
+      const timeDiff = Math.floor((Date.now() - autoSaveState.lastSaved.getTime()) / 1000);
       if (timeDiff < 60) {
         return `Salvo há ${timeDiff}s`;
       } else if (timeDiff < 3600) {
@@ -111,7 +111,7 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         </Badge>
 
         {/* Auto-save indicator */}
-        {autoSaveState.isEnabled && (
+        {autoSaveState.enabled && (
           <Badge variant="outline" className="text-xs">
             Auto-save: {autoSaveState.interval}s
           </Badge>
@@ -170,10 +170,10 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         {/* Auto-save settings */}
         <div className="flex items-center justify-between">
           <div style={{ color: '#6B4F43' }}>
-            Auto-save: {autoSaveState.isEnabled ? `${autoSaveState.interval}s` : 'Desabilitado'}
+            Auto-save: {autoSaveState.enabled ? `${autoSaveState.interval}s` : 'Desabilitado'}
           </div>
           <Button size="sm" variant="outline" onClick={onToggleAutoSave} className="h-7 text-xs">
-            {autoSaveState.isEnabled ? 'Desabilitar' : 'Habilitar'}
+            {autoSaveState.enabled ? 'Desabilitar' : 'Habilitar'}
           </Button>
         </div>
 
@@ -189,10 +189,10 @@ export const SyncStatus: React.FC<SyncStatusProps> = ({
         )}
 
         {/* Última sincronização */}
-        {autoSaveState.lastSave && (
+        {autoSaveState.lastSaved && (
           <div style={{ color: '#8B7355' }}>
             <History className="w-3 h-3" />
-            <span>Última sincronização: {autoSaveState.lastSave.toLocaleTimeString()}</span>
+            <span>Última sincronização: {autoSaveState.lastSaved.toLocaleTimeString()}</span>
           </div>
         )}
 

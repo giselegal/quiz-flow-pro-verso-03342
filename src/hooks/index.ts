@@ -50,7 +50,7 @@ export { useScrollTracking } from './useScrollTracking';
 // Dados (with Supabase integration)
 export { useAutosave } from './useAutosave';
 export { useHistory } from './useHistory';
-export { useSupabase } from './useSupabase';
+// export { useSupabase } from './useSupabase'; // TODO: Create if needed
 export { useSupabaseQuiz } from './useSupabaseQuiz';
 
 // Utilitários
