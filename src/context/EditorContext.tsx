@@ -165,6 +165,12 @@ export const useEditor = () => {
 
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   console.log('🔥 EditorProvider: INICIANDO PROVIDER!');
+  console.log('🔥 EditorProvider: Ambiente atual:', {
+    isDev: import.meta.env.DEV,
+    mode: import.meta.env.MODE,
+    supabaseUrl: !!import.meta.env.VITE_SUPABASE_URL,
+    supabaseEnabled: import.meta.env.VITE_EDITOR_SUPABASE_ENABLED,
+  });
 
   // Estado principal do editor
   const [state, dispatch] = useReducer(reducer, initialState);

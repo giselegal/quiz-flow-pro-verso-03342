@@ -94,6 +94,24 @@ function App() {
                     );
                   }}
                 />
+
+                {/* Editor Test Route - Para debug e testes */}
+                <ProtectedRoute
+                  path="/editor-test"
+                  component={() => {
+                    console.log('🧪 App: Carregando EditorTestPage');
+                    const EditorTestPage = lazy(() => import('./pages/editor-test'));
+                    return (
+                      <Suspense fallback={<PageLoading />}>
+                        <ErrorBoundary>
+                          <EditorProvider>
+                            <EditorTestPage />
+                          </EditorProvider>
+                        </ErrorBoundary>
+                      </Suspense>
+                    );
+                  }}
+                />
                 
                 {/* Editor com ID - também carrega EditorWithPreview */}
                 <ProtectedRoute
