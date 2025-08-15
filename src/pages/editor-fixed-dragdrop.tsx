@@ -40,31 +40,7 @@ import { BookOpen, Eye, Save, Settings } from 'lucide-react';
  * - Sistema de ativação automática de 21 etapas
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
-  // ⚡ SAFE HOOKS - Verificar se contextos estão disponíveis
-  const { stageActions, activeStageId } = useEditor();
-  
-  // Safe scroll sync with try-catch
-  let scrollRef;
-  try {
-    const syncedScroll = useSyncedScroll({ source: 'canvas' });
-    scrollRef = syncedScroll.scrollRef;
-  } catch (error) {
-    console.warn('ScrollSync not available, using fallback:', error);
-    scrollRef = { current: null };
-  }
-  
-  
-  // ✅ SAFE FUNNEL NAVIGATION - Hook principal unificado
-  const funnelNavigation = useFunnelNavigation();
-  const propertyHistory = usePropertyHistory();
-
-  // Estado local do editor
-  const [showFunnelSettings, setShowFunnelSettings] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
-  const [showQuizEditor, setShowQuizEditor] = useState(false);
-  const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
-
-  // Editor Context - Estado centralizado do editor
+  // ⚡ EDITOR CONTEXT - Estado centralizado (UMA ÚNICA EXTRAÇÃO)
   const {
     activeStageId,
     selectedBlockId,
@@ -78,9 +54,29 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       reorderBlocks,
     },
     persistenceActions: { saveFunnel, isSaving },
+    computed: { currentBlocks, selectedBlock, totalBlocks },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
-    computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
+  
+  // Safe scroll sync with try-catch
+  let scrollRef;
+  try {
+    const syncedScroll = useSyncedScroll({ source: 'canvas' });
+    scrollRef = syncedScroll.scrollRef;
+  } catch (error) {
+    console.warn('ScrollSync not available, using fallback:', error);
+    scrollRef = { current: null };
+  }
+  
+  // ✅ SAFE FUNNEL NAVIGATION - Hook principal unificado
+  const funnelNavigation = useFunnelNavigation();
+  const propertyHistory = usePropertyHistory();
+
+  // Estado local do editor
+  const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [showQuizEditor, setShowQuizEditor] = useState(false);
+  const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
 
   // Mostrar notificação quando carregar a etapa 1
   useEffect(() => {
