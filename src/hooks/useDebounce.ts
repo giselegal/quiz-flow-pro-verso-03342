@@ -53,7 +53,7 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
     );
 
     if (strategy === 'timeout') {
-      setTimeoutId(newTimeoutId);
+      setTimeoutId(newTimeoutId as number | null);
     }
   }) as T;
 

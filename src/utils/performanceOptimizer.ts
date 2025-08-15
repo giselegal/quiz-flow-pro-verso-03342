@@ -201,16 +201,48 @@ export const QUIZ_PERF = {
   },
 };
 
-// 5️⃣ EXPORT: API pública otimizada
+// 5️⃣ EXPORT: API pública otimizada com fallbacks
 export const PerformanceOptimizer = {
-  // Schedulers otimizados
-  schedule: SmartTimeout.schedule,
-  scheduleInterval: SmartTimeout.scheduleInterval,
+  // Schedulers otimizados com fallbacks seguros
+  schedule: (callback: () => void, delay: number = 0, strategy: 'animation' | 'message' | 'timeout' = 'animation') => {
+    try {
+      return SmartTimeout.schedule(callback, delay, strategy);
+    } catch (error) {
+      console.warn('PerformanceOptimizer.schedule fallback:', error);
+      // Fallback seguro para setTimeout nativo
+      return setTimeout(callback, Math.max(delay, 0));
+    }
+  },
+  
+  scheduleInterval: (callback: () => void, delay: number, strategy: 'animation' | 'timeout' = 'animation') => {
+    try {
+      return SmartTimeout.scheduleInterval(callback, delay, strategy);
+    } catch (error) {
+      console.warn('PerformanceOptimizer.scheduleInterval fallback:', error);
+      // Fallback seguro para setInterval nativo
+      return setInterval(callback, Math.max(delay, 16));
+    }
+  },
 
-  // Debounce otimizado
-  debounce: OptimizedDebounce.create,
+  // Debounce otimizado com fallback
+  debounce: <T extends (...args: any[]) => any>(fn: T, delay: number, key?: string) => {
+    try {
+      return OptimizedDebounce.create(fn, delay, key);
+    } catch (error) {
+      console.warn('PerformanceOptimizer.debounce fallback:', error);
+      // Fallback simples para debounce
+      let timeoutId: any;
+      const debouncedFn = ((...args: any[]) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn(...args), delay);
+      }) as T & { cancel: () => void };
+      
+      debouncedFn.cancel = () => clearTimeout(timeoutId);
+      return debouncedFn;
+    }
+  },
 
-  // Utilitários
+  // Utilitários seguros
   isHighFrequencyUpdate: (delay: number) => delay < 100,
   getSuggestedStrategy: (
     delay: number,
@@ -221,6 +253,9 @@ export const PerformanceOptimizer = {
     return 'timeout';
   },
 };
+
+// Garantir que seja um export default também para compatibilidade
+export default PerformanceOptimizer;
 
 /**
  * Inicializa observadores de performance

@@ -28,7 +28,7 @@ export const useAutoSaveDebounce = (
     if (!isActiveRef.current) return;
 
     // Limpar timeout anterior
-    if (debounceRef.current) {
+    if (debounceRef.current !== null) {
       clearTimeout(debounceRef.current);
     }
 
@@ -75,10 +75,10 @@ export const useAutoSaveDebounce = (
           }
         }
       }
-    }, delay);
+    }, delay) as number | null;
 
     // Garantir save máximo a cada maxDelay
-    if (maxDelayRef.current) {
+    if (maxDelayRef.current !== null) {
       clearTimeout(maxDelayRef.current);
     }
 
@@ -95,7 +95,7 @@ export const useAutoSaveDebounce = (
           console.error('[AutoSave] Erro no save forçado:', error);
         }
       }
-    }, maxInterval);
+    }, maxInterval) as number | null;
   }, [saveFunction, delay, maxInterval]);
 
   // Save imediato (para ações importantes)

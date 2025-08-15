@@ -40,7 +40,9 @@ import { BookOpen, Eye, Save, Settings } from 'lucide-react';
  * - Sistema de ativação automática de 21 etapas
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
-  // Hooks para funcionalidades avançadas
+  // ⚡ SAFE HOOKS - Verificar se contextos estão disponíveis
+  const { stageActions, activeStageId } = useEditor();
+  
   // Safe scroll sync with try-catch
   let scrollRef;
   try {
@@ -48,14 +50,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     scrollRef = syncedScroll.scrollRef;
   } catch (error) {
     console.warn('ScrollSync not available, using fallback:', error);
-    scrollRef = React.useRef<HTMLDivElement>(null);
+    scrollRef = { current: null };
   }
+  
+  
+  // ✅ SAFE FUNNEL NAVIGATION - Hook principal unificado
+  const funnelNavigation = useFunnelNavigation();
   const propertyHistory = usePropertyHistory();
 
-  // ✅ SISTEMA UNIFICADO DE NAVEGAÇÃO
-  const funnelNavigation = useFunnelNavigation();
-
-  // Estado local
+  // Estado local do editor
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showQuizEditor, setShowQuizEditor] = useState(false);
