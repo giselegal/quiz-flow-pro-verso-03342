@@ -1,22 +1,18 @@
 import { supabase } from '@/integrations/supabase/client';
 import { 
-  type Funnel, 
-  type FunnelPage, 
   type InsertFunnel, 
   type InsertFunnelPage,
   type UpdateFunnel,
   type AutoSaveState,
   type FunnelVersion,
-  generateId,
-  validateFunnel,
-  validateFunnelPage
+  generateId
 } from '@/types/unified-schema';
 
 export interface SchemaDrivenFunnelData {
   id: string;
   name: string;
   description: string;
-  pages: FunnelPage[];
+  pages: any[]; // Using any[] to avoid FunnelPage type conflicts
   theme?: string;
   isPublished?: boolean;
   version?: number;
@@ -290,7 +286,7 @@ export const schemaDrivenFunnelService = {
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const updateData: Partial<FunnelPage> = {};
+      const updateData: any = {};
       if (updates.title !== undefined) updateData.title = updates.title;
       if (updates.blocks !== undefined) updateData.blocks = updates.blocks;
       if (updates.order !== undefined) updateData.page_order = updates.order;

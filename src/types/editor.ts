@@ -148,7 +148,7 @@ export interface FAQItem {
 export interface HeadlineContent extends EditableContent {
   title: string;
   subtitle?: string;
-  fontSize?: number;
+  fontSize?: string; // Changed from number to string
   fontWeight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold' | 'extrabold';
   textAlign?: 'left' | 'center' | 'right';
   color?: string;
@@ -160,7 +160,7 @@ export interface HeadlineContent extends EditableContent {
 export interface TextContent extends EditableContent {
   text: string;
   textType?: 'paragraph' | 'lead' | 'small' | 'caption';
-  fontSize?: number;
+  fontSize?: string; // Changed from number to string
   fontWeight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
   textAlign?: 'left' | 'center' | 'right' | 'justify';
   color?: string;
@@ -207,8 +207,8 @@ export interface VideoContent extends EditableContent {
   muted?: boolean;
   loop?: boolean;
   aspectRatio?: '16:9' | '4:3' | '1:1' | 'custom';
-  width?: number;
-  height?: number;
+  width?: string; // Changed from number to string
+  height?: string; // Changed from number to string
   caption?: string;
 }
 
@@ -253,10 +253,10 @@ export interface ImageContent extends EditableContent {
   url: string;
   alt: string;
   caption?: string;
-  width?: number;
-  height?: number;
+  width?: string; // Changed from number to string
+  height?: string; // Changed from number to string
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
-  borderRadius?: number;
+  borderRadius?: string; // Changed from number to string
   showCaption?: boolean;
   lightbox?: boolean;
   link?: string;
@@ -468,17 +468,7 @@ export type TypedBlock =
   | ImageBlock
   | Block; // Fallback para tipos não especificados
 
-export interface Block {
-  id: string;
-
-  type: BlockType;
-
-  content: EditableContent;
-
-  order: number;
-
-  properties?: Record<string, any>;
-}
+// Remove duplicate Block interface - keeping the first one with BlockContent
 
 export type EditorBlock = Block;
 
@@ -542,7 +532,7 @@ export const getContentType = (blockType: BlockType): string => {
   return 'EditableContent';
 };
 
-export type EditorBlock = Block;
+// Remove duplicate EditorBlock declaration
 
 export interface FunnelStage {
   id: string;
