@@ -16,9 +16,7 @@ export { AddBlockButton } from './AddBlockButton';
 export { default as EditBlockContent } from './EditBlockContent';
 // export { EditorBlockItem } from "./EditorBlockItem";
 export { EmptyEditor } from './EmptyEditor';
-export { default as ModernPropertyPanel } from './ModernPropertyPanel';
 export { PageEditor } from './PageEditor';
-export { PropertyPanel } from './PropertyPanel';
 export { StepsPanel } from './StepsPanel';
 
 // 🎯 PAINEL DE PROPRIEDADES RECOMENDADO (use este!)

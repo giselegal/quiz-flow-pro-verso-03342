@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/componen
 import { useEditor } from '@/context/EditorContext';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
-import { PropertyPanel } from './PropertyPanel';
+import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
 // FunnelNavigation removido - componente não mais disponível
 // import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
@@ -104,7 +104,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
         {/* Painel de propriedades */}
         <ResizablePanel defaultSize={25}>
-          <PropertyPanel selectedComponent={selectedBlock} onUpdate={handleUpdateSelectedBlock} />
+          <EnhancedUniversalPropertiesPanel selectedBlock={selectedBlock || null} onUpdate={handleUpdateSelectedBlock} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
