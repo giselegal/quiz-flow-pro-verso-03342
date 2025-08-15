@@ -53,7 +53,6 @@ import {
   CheckCircle,
   Loader2,
   Zap,
-  Palette,
 } from 'lucide-react';
 
 // Hooks
@@ -725,26 +724,6 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
 
   // Categorias organizadas
   const categoryOrder = ['logo', 'content', 'style', 'layout', 'alignment', 'behavior', 'scoring', 'advanced'];
-  const categoryIcons = {
-    logo: Type,
-    content: Type,
-    style: Paintbrush,
-    layout: Layout,
-    alignment: Layout,
-    behavior: Settings,
-    scoring: Palette,
-    advanced: Settings,
-  };
-  const categoryLabels = {
-    logo: '🏷️ Logo',
-    content: '📝 Conteúdo',
-    style: '🎨 Estilo',
-    layout: '📐 Layout',
-    alignment: '📐 Alinhamento',
-    behavior: '⚙️ Comportamento',
-    scoring: '🏆 Pontuação',
-    advanced: '🔧 Avançado',
-  };
 
   // Se nenhum bloco selecionado
   if (!selectedBlock) {
