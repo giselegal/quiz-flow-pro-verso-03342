@@ -1,12 +1,22 @@
-// @ts-nocheck
 import { supabase } from '@/integrations/supabase/client';
-import type { Database } from '@/integrations/supabase/types';
+import { 
+  type Funnel, 
+  type FunnelPage, 
+  type InsertFunnel, 
+  type InsertFunnelPage,
+  type UpdateFunnel,
+  type AutoSaveState,
+  type FunnelVersion,
+  generateId,
+  validateFunnel,
+  validateFunnelPage
+} from '@/types/unified-schema';
 
 export interface SchemaDrivenFunnelData {
   id: string;
   name: string;
   description: string;
-  pages: any[];
+  pages: FunnelPage[];
   theme?: string;
   isPublished?: boolean;
   version?: number;
@@ -26,38 +36,18 @@ export interface SchemaDrivenPageData {
   funnel_id: string;
 }
 
-export interface AutoSaveState {
-  enabled: boolean;
-  lastSaved?: Date;
-  hasUnsavedChanges: boolean;
-  pendingChanges: number;
-  errorCount: number;
-  interval?: number;
-  isEnabled?: boolean;
-  lastSave?: Date;
-}
-
-export interface FunnelVersion {
-  id: string;
-  version: number;
-  name: string;
-  createdAt: Date;
-  data: any;
-  isAutoSave?: boolean;
-  description?: string;
-}
-
-const generateId = () => `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+// Re-export types from unified schema for backward compatibility
+export type { AutoSaveState, FunnelVersion };
 
 export const schemaDrivenFunnelService = {
-  async createFunnel(funnel: any): Promise<SchemaDrivenFunnelData> {
+  async createFunnel(funnel: Partial<SchemaDrivenFunnelData>): Promise<SchemaDrivenFunnelData> {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const funnelData = {
+      const funnelData: InsertFunnel = {
         id: generateId(),
         name: funnel.name || 'Novo Funil',
         description: funnel.description || '',
@@ -76,13 +66,13 @@ export const schemaDrivenFunnelService = {
 
       // Criar páginas se existirem
       if (funnel.pages && funnel.pages.length > 0) {
-        const pagesData = funnel.pages.map((page: any, index: number) => ({
+        const pagesData: InsertFunnelPage[] = funnel.pages.map((page, index) => ({
           id: generateId(),
           funnel_id: data.id,
-          page_type: page.type || 'content',
+          page_type: (page as any).type || 'content',
           page_order: index,
-          title: page.title || page.name || `Página ${index + 1}`,
-          blocks: page.blocks || [],
+          title: (page as any).title || (page as any).name || `Página ${index + 1}`,
+          blocks: (page as any).blocks || [],
         }));
 
         await supabase.from('funnel_pages').insert(pagesData);
@@ -99,9 +89,9 @@ export const schemaDrivenFunnelService = {
         isPublished: data.is_published || false,
         version: data.version || 1,
         config: settings.config || {},
-        createdAt: new Date(data.created_at!),
-        lastModified: new Date(data.updated_at!),
-        user_id: data.user_id!,
+        createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+        lastModified: data.updated_at ? new Date(data.updated_at) : new Date(),
+        user_id: data.user_id || '',
       };
     } catch (error) {
       console.error('Erro ao criar funil:', error);
@@ -109,14 +99,14 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async updateFunnel(id: string, updates: any): Promise<SchemaDrivenFunnelData | null> {
+  async updateFunnel(id: string, updates: Partial<SchemaDrivenFunnelData>): Promise<SchemaDrivenFunnelData | null> {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const updateData: any = {};
+      const updateData: Partial<UpdateFunnel> = {};
 
       if (updates.name !== undefined) updateData.name = updates.name;
       if (updates.description !== undefined) updateData.description = updates.description;
@@ -168,9 +158,9 @@ export const schemaDrivenFunnelService = {
         isPublished: data.is_published || false,
         version: data.version || 1,
         config: settings.config || {},
-        createdAt: new Date(data.created_at!),
-        lastModified: new Date(data.updated_at!),
-        user_id: data.user_id!,
+        createdAt: data.created_at ? new Date(data.created_at) : new Date(),
+        lastModified: data.updated_at ? new Date(data.updated_at) : new Date(),
+        user_id: data.user_id || '',
       };
     } catch (error) {
       console.error('Erro ao atualizar funil:', error);
@@ -213,9 +203,9 @@ export const schemaDrivenFunnelService = {
         isPublished: funnel.is_published || false,
         version: funnel.version || 1,
         config: settings.config || {},
-        createdAt: new Date(funnel.created_at!),
-        lastModified: new Date(funnel.updated_at!),
-        user_id: funnel.user_id!,
+        createdAt: funnel.created_at ? new Date(funnel.created_at) : new Date(),
+        lastModified: funnel.updated_at ? new Date(funnel.updated_at) : new Date(),
+        user_id: funnel.user_id || '',
       };
     } catch (error) {
       console.error('Erro ao buscar funil:', error);
@@ -249,9 +239,9 @@ export const schemaDrivenFunnelService = {
           isPublished: funnel.is_published || false,
           version: funnel.version || 1,
           config: settings.config || {},
-          createdAt: new Date(funnel.created_at!),
-          lastModified: new Date(funnel.updated_at!),
-          user_id: funnel.user_id!,
+          createdAt: funnel.created_at ? new Date(funnel.created_at) : new Date(),
+          lastModified: funnel.updated_at ? new Date(funnel.updated_at) : new Date(),
+          user_id: funnel.user_id || '',
         };
       });
     } catch (error) {
@@ -281,7 +271,7 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async saveFunnel(funnel: any): Promise<SchemaDrivenFunnelData> {
+  async saveFunnel(funnel: Partial<SchemaDrivenFunnelData>): Promise<SchemaDrivenFunnelData> {
     if (funnel.id) {
       const updated = await this.updateFunnel(funnel.id, funnel);
       if (updated) return updated;
@@ -293,17 +283,17 @@ export const schemaDrivenFunnelService = {
     return this.getFunnel(id);
   },
 
-  async updatePage(pageId: string, updates: any): Promise<boolean> {
+  async updatePage(pageId: string, updates: Partial<SchemaDrivenPageData>): Promise<boolean> {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const updateData: any = {};
+      const updateData: Partial<FunnelPage> = {};
       if (updates.title !== undefined) updateData.title = updates.title;
       if (updates.blocks !== undefined) updateData.blocks = updates.blocks;
-      if (updates.page_order !== undefined) updateData.page_order = updates.page_order;
+      if (updates.order !== undefined) updateData.page_order = updates.order;
 
       const { error } = await supabase.from('funnel_pages').update(updateData).eq('id', pageId);
 
@@ -315,14 +305,14 @@ export const schemaDrivenFunnelService = {
     }
   },
 
-  async createPage(funnelId: string, page: any): Promise<SchemaDrivenPageData | null> {
+  async createPage(funnelId: string, page: Partial<SchemaDrivenPageData>): Promise<SchemaDrivenPageData | null> {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const pageData = {
+      const pageData: InsertFunnelPage = {
         id: generateId(),
         funnel_id: funnelId,
         page_type: page.type || 'content',
