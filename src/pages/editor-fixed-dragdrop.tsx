@@ -21,8 +21,6 @@ import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolba
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
 
 // Context & Hooks
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { useEditor } from '@/context/EditorContext';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -57,7 +55,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       reorderBlocks,
     },
     persistenceActions: { saveFunnel },
-    computed: { currentBlocks, selectedBlock, totalBlocks },
+    computed: { currentBlocks, selectedBlock },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
   } = editorContext;
   
@@ -210,63 +208,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       )}
 
       <div className="flex flex-col h-screen">
-        {/* 🚀 HEADER AVANÇADO DO EDITOR */}
-        <div className="flex-shrink-0 border-b bg-background/95 backdrop-blur-sm">
-          <div className="flex items-center justify-between p-4">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Settings className="w-4 h-4 text-primary-foreground" />
-                </div>
-                <span>Editor Quiz Quest - 21 Etapas</span>
-              </h1>
-              <div className="flex items-center space-x-2">
-                <Badge variant="outline" className="text-xs">
-                  v3.0 - Sistema Integrado + Navegação Inteligente
-                </Badge>
-                <Badge variant="secondary" className="text-xs">
-                  Etapa {funnelNavigation.currentStepNumber}/{funnelNavigation.totalSteps}
-                </Badge>
-              </div>
-            </div>
-
-            {/* Action buttons moved to EditorToolbar - no duplicates */}
-          </div>
-        </div>
-
         {/* NAVEGAÇÃO E TOOLBARS */}
         <div className="flex-none">
           <div className="sticky top-0 bg-white z-20">
-            {/* ✅ NAVEGAÇÃO UNIFICADA DO FUNIL */}
-            {/* FunnelNavigation removido durante limpeza de conflitos */}
-            <div className="bg-gray-100 p-4 rounded-lg">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">
-                  Etapa {funnelNavigation.currentStepNumber} de {funnelNavigation.totalSteps}
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() =>
-                      funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber - 1)
-                    }
-                    disabled={!funnelNavigation.canNavigatePrevious}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 text-sm"
-                  >
-                    Anterior
-                  </button>
-                  <button
-                    onClick={() =>
-                      funnelNavigation.navigateToStep(funnelNavigation.currentStepNumber + 1)
-                    }
-                    disabled={!funnelNavigation.canNavigateNext}
-                    className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50 text-sm"
-                  >
-                    Próxima
-                  </button>
-                </div>
-              </div>
-            </div>
-
             <EditorToolbar
               isPreviewing={isPreviewing}
               onTogglePreview={() => setIsPreviewing(!isPreviewing)}
@@ -276,43 +220,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               onShowFunnelSettings={() => setShowFunnelSettings(true)}
               onShowMonitoring={() => setShowMonitoringDashboard(true)}
             />
-
-            {/* INFORMAÇÕES DA ETAPA ATUAL */}
-            <div
-              style={{ borderColor: '#E5DDD5' }}
-              className="border-b bg-gradient-to-r from-blue-50/50 to-purple-50/50"
-            >
-              <div className="flex items-center justify-between p-3">
-                <div className="flex items-center space-x-4">
-                  <h2 className="text-lg font-semibold text-stone-700 flex items-center gap-2">
-                    <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                      {funnelNavigation.currentStepNumber}
-                    </div>
-                    {funnelNavigation.stepName}
-                  </h2>
-                  <div className="flex items-center space-x-3 text-sm text-stone-500">
-                    <span>
-                      {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''}
-                    </span>
-                    <span>•</span>
-                    <span>{Math.round(funnelNavigation.progressValue)}% completo</span>
-                    <span>•</span>
-                    <span>Modo {isPreviewing ? 'Preview' : 'Edição'}</span>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    onClick={() => setShowQuizEditor(true)}
-                    size="sm"
-                    variant="secondary"
-                    className="flex items-center gap-2"
-                  >
-                    <BookOpen className="w-4 h-4" />
-                    Quiz Editor
-                  </Button>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="flex-1 overflow-hidden">
