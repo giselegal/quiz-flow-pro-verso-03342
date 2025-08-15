@@ -298,10 +298,10 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
       ? "border-destructive focus:border-destructive focus:ring-destructive/20" 
       : baseClasses;
 
-    const handleChange = useCallback((newValue: any) => {
+    const handleChange = (newValue: any) => {
       updateProperty(key, newValue);
       formUpdateProperty(key, newValue);
-    }, [key, updateProperty, formUpdateProperty]);
+    };
 
     const renderFieldContent = () => {
       switch (type) {
