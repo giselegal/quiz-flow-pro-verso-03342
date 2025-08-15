@@ -586,6 +586,171 @@ export const useUnifiedProperties = (
           ),
         ];
 
+      case 'quiz-intro':
+        return [
+          ...getUniversalProperties(),
+          
+          // Content Properties
+          createProperty(
+            'logoUrl',
+            currentBlock?.properties?.logoUrl || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            PropertyType.URL,
+            'URL da Logo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'logoAlt',
+            currentBlock?.properties?.logoAlt || 'Logo da Marca',
+            PropertyType.TEXT,
+            'Texto Alternativo da Logo',
+            PropertyCategory.ACCESSIBILITY
+          ),
+          createProperty(
+            'logoWidth',
+            currentBlock?.properties?.logoWidth || 96,
+            PropertyType.RANGE,
+            'Largura da Logo (px)',
+            PropertyCategory.STYLE,
+            { min: 48, max: 200, step: 4 }
+          ),
+          createProperty(
+            'logoHeight',
+            currentBlock?.properties?.logoHeight || 96,
+            PropertyType.RANGE,
+            'Altura da Logo (px)',
+            PropertyCategory.STYLE,
+            { min: 48, max: 200, step: 4 }
+          ),
+          createProperty(
+            'mainTitle',
+            currentBlock?.properties?.mainTitle || 'Descubra Seu Estilo',
+            PropertyType.TEXT,
+            'Título Principal',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'subtitle',
+            currentBlock?.properties?.subtitle || 'Único e Autêntico',
+            PropertyType.TEXT,
+            'Subtítulo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'description',
+            currentBlock?.properties?.description || 'Em apenas alguns minutos, vamos revelar qual dos 8 estilos representa perfeitamente sua personalidade.',
+            PropertyType.TEXTAREA,
+            'Descrição',
+            PropertyCategory.CONTENT,
+            { rows: 3 }
+          ),
+          
+          // Form Properties
+          createProperty(
+            'inputLabel',
+            currentBlock?.properties?.inputLabel || 'Como posso te chamar?',
+            PropertyType.TEXT,
+            'Rótulo do Campo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'inputPlaceholder',
+            currentBlock?.properties?.inputPlaceholder || 'Digite seu primeiro nome aqui...',
+            PropertyType.TEXT,
+            'Placeholder do Campo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'buttonText',
+            currentBlock?.properties?.buttonText || 'Quero Descobrir meu Estilo Agora!',
+            PropertyType.TEXT,
+            'Texto do Botão',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'requiredFieldMessage',
+            currentBlock?.properties?.requiredFieldMessage || 'Digite seu nome para continuar',
+            PropertyType.TEXT,
+            'Mensagem de Campo Obrigatório',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'minNameLength',
+            currentBlock?.properties?.minNameLength || 2,
+            PropertyType.RANGE,
+            'Tamanho Mínimo do Nome',
+            PropertyCategory.BEHAVIOR,
+            { min: 1, max: 10, step: 1 }
+          ),
+          
+          // Style Properties
+          createProperty(
+            'backgroundColor',
+            currentBlock?.properties?.backgroundColor || 'transparent',
+            PropertyType.COLOR,
+            'Cor de Fundo',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'primaryColor',
+            currentBlock?.properties?.primaryColor || BRAND_COLORS.primary,
+            PropertyType.COLOR,
+            'Cor Primária',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'textColor',
+            currentBlock?.properties?.textColor || BRAND_COLORS.text,
+            PropertyType.COLOR,
+            'Cor do Texto',
+            PropertyCategory.STYLE
+          ),
+          
+          // Layout Properties
+          createProperty(
+            'variant',
+            currentBlock?.properties?.variant || 'default',
+            PropertyType.SELECT,
+            'Variante do Layout',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'default', label: 'Completo (padrão)' },
+                { value: 'compact', label: 'Compacto' },
+                { value: 'minimal', label: 'Minimalista' }
+              ]
+            }
+          ),
+          createProperty(
+            'showProgress',
+            currentBlock?.properties?.showProgress !== false,
+            PropertyType.SWITCH,
+            'Mostrar Progresso',
+            PropertyCategory.LAYOUT
+          ),
+          createProperty(
+            'progressValue',
+            currentBlock?.properties?.progressValue || 4.76,
+            PropertyType.RANGE,
+            'Valor do Progresso (%)',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 0.1 }
+          ),
+          createProperty(
+            'showStylePreviews',
+            currentBlock?.properties?.showStylePreviews !== false,
+            PropertyType.SWITCH,
+            'Mostrar Pré-visualização dos Estilos',
+            PropertyCategory.LAYOUT
+          ),
+          createProperty(
+            'showBenefits',
+            currentBlock?.properties?.showBenefits !== false,
+            PropertyType.SWITCH,
+            'Mostrar Seção de Benefícios',
+            PropertyCategory.LAYOUT
+          ),
+        ];
+
       case 'image-display-inline':
         return [
           ...getUniversalProperties(),

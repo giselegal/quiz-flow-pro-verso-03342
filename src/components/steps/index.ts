@@ -1,10 +1,15 @@
 /**
- * 🚀 STEPS OTIMIZADOS - INDEX
+ * 🚀 STEPS OTIMIZADOS - INDEX  
  * ==========================
  */
 
-// Step otimizado pronto para produção
-export { ProductionReadyStep, QuickOptimizedStep } from './ProductionReadyStep';
+// Step01 Optimized - New consolidated version
+export { default as Step01TemplateOptimized } from './Step01TemplateOptimized';
+export { getStep01TemplateOptimized } from './Step01TemplateOptimized';
 
-// Steps existentes (se houver)
-// export * from './Step01Template_OPTIMIZED';
+// Legacy Step01 - Backward compatibility
+export { default as Step01Template } from './Step01Template';
+export { getStep01Template } from './Step01Template';
+
+// Other optimized steps
+export { ProductionReadyStep, QuickOptimizedStep } from './ProductionReadyStep';

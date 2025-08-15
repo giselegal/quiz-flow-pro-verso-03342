@@ -80,8 +80,11 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   image: ImageDisplayInlineBlockClean,
   button: ButtonInlineFixed,
 
-  // Componentes para templates (Step 01 e outros)
-  'quiz-intro-header': QuizIntroHeaderBlock,
+  // Quiz Components - Optimized and Consolidated
+  'quiz-intro': React.lazy(() => import('../components/blocks/quiz/QuizIntroOptimizedBlock')),
+  'quiz-intro-header': QuizIntroHeaderBlock, // Legacy support
+  
+  // Form and Layout Components
   'decorative-bar': DecorativeBarInlineBlock,
   'form-container': FormContainerBlock,
   'form-input': FormInputBlock,
@@ -105,6 +108,11 @@ const BLOCK_ALIASES: Record<string, string> = {
   'options-grid-inline': 'options-grid', // ✅ Alias para options-grid
   form: 'form-input',
 
+  // Quiz Intro Aliases - Consolidated to single optimized component
+  'quiz-intro-optimized': 'quiz-intro',
+  'step01-intro': 'quiz-intro', // Legacy step01 support
+  'quiz-intro-complete': 'quiz-intro', // Alternative naming
+  
   // Aliases do template JSON em português
   'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
   'texto-embutido': 'text',
