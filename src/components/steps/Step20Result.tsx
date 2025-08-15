@@ -6,6 +6,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
+import { useEditor } from '@/context/EditorContext';
 import { quizResultsService, type QuizResults } from '@/services/quizResultsService';
 import { styleConfig } from '@/config/styleConfig';
 import {
@@ -41,31 +42,44 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // ✅ INTEGRAÇÃO: Hook para acessar resultado calculado
+  // ✅ INTEGRAÇÃO COMPLETA: Hook para acessar resultado calculado + EditorContext
+  const { quizState } = useEditor();
   const { quizResult, userName, completeQuiz, answers } = useQuizLogic();
 
   useEffect(() => {
     loadResults();
-  }, [sessionId]);
+  }, [sessionId, quizResult, quizState]);
 
   const loadResults = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // ✅ PRIORIDADE 1: Usar resultado do useQuizLogic se disponível
+      // ✅ PRIORIDADE 1: Usar resultado REAL do useQuizLogic integrado com EditorContext
       if (quizResult && quizResult.primaryStyle) {
-        console.log('✅ Usando resultado do useQuizLogic:', quizResult);
+        console.log('✅ Step20: Usando resultado REAL do quiz:', {
+          primaryStyle: quizResult.primaryStyle,
+          userName: quizState.userName || userName,
+          totalAnswers: quizState.answers.length,
+          strategicAnswers: quizState.strategicAnswers.length
+        });
+        
+        const realUserName = quizState.userName || userName || 'Usuário';
+        const primaryStyleName = quizResult.primaryStyle.category;
         
         const mappedResults: QuizResults = {
           sessionId,
-          userName: userName || 'Usuário',
+          userName: realUserName,
           styleProfile: {
-            primaryStyle: quizResult.primaryStyle.category,
-            primaryStyleConfig: styleConfig[quizResult.primaryStyle.category] || styleConfig['boho-chic'],
-            colorPalette: ['#B89B7A', '#432818', '#6B4F43'], // Cores baseadas no estilo
-            bodyType: 'personalizado', // Pode ser expandido com dados das etapas estratégicas
-            lifestyle: 'moderno', // Pode ser expandido com dados das etapas estratégicas
+            primaryStyle: primaryStyleName,
+            primaryStyleConfig: styleConfig[primaryStyleName] || styleConfig['Natural'],
+            secondaryStyle: quizResult.secondaryStyles?.[0]?.category,
+            secondaryStyleConfig: quizResult.secondaryStyles?.[0] 
+              ? styleConfig[quizResult.secondaryStyles[0].category] 
+              : undefined,
+            colorPalette: ['#B89B7A', '#432818', '#6B4F43'],
+            bodyType: 'personalizado',
+            lifestyle: 'moderno',
             occasionPriorities: ['casual', 'trabalho', 'social'],
             confidence: quizResult.primaryStyle.percentage,
             styleScores: quizResult.scores || {},
@@ -73,40 +87,50 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
           recommendations: {
             wardrobe: {
               essentials: [
-                'Peças que refletem seu estilo personal',
-                'Investir em itens-chave do seu perfil',
+                `Peças ${primaryStyleName.toLowerCase()} que refletem sua personalidade`,
+                'Investir em itens-chave do seu perfil de estilo',
+                'Peças versáteis para diferentes ocasiões'
               ],
               colors: ['Tons que harmonizam com sua personalidade'],
               patterns: ['Padrões adequados ao seu perfil'],
-              accessories: ['Acessórios complementares']
+              accessories: ['Acessórios que complementam seu estilo']
             },
             shopping: {
-              priorityItems: ['Itens essenciais para seu guarda-roupa'],
-              budgetSuggestions: ['Dicas de investimento inteligente'],
+              priorityItems: ['Básicos de qualidade', 'Peças statement', 'Acessórios chave'],
+              budgetSuggestions: ['Invista em peças versáteis', 'Priorize qualidade'],
               brands: ['Marcas alinhadas ao seu estilo']
             },
             styling: {
-              tips: ['Dicas de combinação e styling'],
-              combinations: ['Combinações recomendadas'],
+              tips: [
+                `Como usar seu estilo ${primaryStyleName.toLowerCase()} no dia a dia`,
+                'Combinações que valorizam sua personalidade',
+                'Dicas para diferentes ocasiões'
+              ],
+              combinations: ['Looks para trabalho', 'Looks casuais', 'Looks sociais'],
               occasions: {
-                'trabalho': ['Looks profissionais'],
-                'casual': ['Looks do dia a dia'],
-                'social': ['Looks para eventos']
+                'trabalho': [`Looks profissionais ${primaryStyleName.toLowerCase()}`],
+                'casual': [`Looks casuais ${primaryStyleName.toLowerCase()}`],
+                'social': [`Looks sociais ${primaryStyleName.toLowerCase()}`]
               }
             },
             guide: {
-              imageUrl: '/images/style-guide-placeholder.jpg',
-              downloadUrl: '/downloads/personal-style-guide.pdf',
-              personalizedTips: ['Dicas personalizadas baseadas no seu resultado']
+              imageUrl: styleConfig[primaryStyleName]?.guideImage || '/images/style-guide-placeholder.jpg',
+              downloadUrl: `/downloads/${primaryStyleName.toLowerCase()}-style-guide.pdf`,
+              personalizedTips: [
+                `${realUserName}, seu estilo ${primaryStyleName} é caracterizado por...`,
+                'Cores que mais te favorecem baseado no seu perfil',
+                'Como adaptar seu estilo para diferentes contextos',
+                'Investimentos inteligentes para seu guarda-roupa'
+              ]
             }
           },
-          completionScore: quizResult.primaryStyle.percentage || 85,
+          completionScore: Math.round((quizState.answers.length / 21) * 100),
           calculatedAt: new Date().toISOString(),
           metadata: {
-            totalQuestions: quizResult.totalQuestions || answers.length,
-            answeredQuestions: quizResult.totalQuestions || answers.length,
-            timeSpent: 0, // Pode ser implementado com tracking de tempo
-            algorithm: 'useQuizLogic-integrated'
+            totalQuestions: 21,
+            answeredQuestions: quizState.answers.length,
+            timeSpent: 0,
+            algorithm: 'EditorContext-integrated-v2.0'
           }
         };
         
@@ -115,12 +139,14 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
         return;
       }
 
-      // ✅ PRIORIDADE 2: Tentar completar quiz se há respostas mas sem resultado
-      if (answers.length > 0 && !quizResult) {
-        console.log('🔄 Forçando cálculo de resultado com', answers.length, 'respostas');
+      // ✅ PRIORIDADE 2: Forçar cálculo se há respostas suficientes
+      if ((quizState.answers.length > 5 || answers.length > 5) && !quizResult) {
+        console.log('🔄 Step20: Forçando cálculo com respostas existentes:', {
+          contextAnswers: quizState.answers.length,
+          hookAnswers: answers.length
+        });
         completeQuiz();
-        // Aguardar um momento para o cálculo completar
-        setTimeout(() => loadResults(), 100);
+        setTimeout(() => loadResults(), 200);
         return;
       }
 
