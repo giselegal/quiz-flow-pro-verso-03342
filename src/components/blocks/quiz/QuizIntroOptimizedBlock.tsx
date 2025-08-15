@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { useGarbageCollector, useComponentCleanup } from '@/hooks/useGarbageCollector';
 import type { BlockComponentProps } from '@/types/blocks';
 
 /**
@@ -134,6 +135,36 @@ const QuizIntroOptimizedBlock = React.memo<QuizIntroOptimizedBlockProps>(({
   // State management
   const [inputValue, setInputValue] = useState('');
   const [isValidInput, setIsValidInput] = useState(false);
+  
+  // Performance optimizations
+  const { startAutoCleanup, stopAutoCleanup, forceCleanup } = useGarbageCollector({
+    intervalMs: 120000, // 2 minutos
+    threshold: 0.8,
+    aggressiveCleanup: false,
+  });
+  
+  const { addCleanupCallback, performComponentCleanup } = useComponentCleanup(`quiz-intro-${block?.id}`);
+  
+  // Auto-cleanup on mount/unmount
+  useEffect(() => {
+    startAutoCleanup();
+    
+    // Cleanup callback para event listeners
+    const cleanupEventListeners = () => {
+      // Remover todos os event listeners customizados
+      window.removeEventListener('quiz-input-change', () => {});
+      window.removeEventListener('quiz-form-complete', () => {});
+    };
+    
+    addCleanupCallback(cleanupEventListeners);
+    
+    return () => {
+      stopAutoCleanup();
+      performComponentCleanup();
+      // Force cleanup antes de unmount
+      setTimeout(() => forceCleanup(), 100);
+    };
+  }, [startAutoCleanup, stopAutoCleanup, forceCleanup, addCleanupCallback, performComponentCleanup, block?.id]);
   
   // Memoized validation logic
   const validateInput = useCallback((value: string): boolean => {

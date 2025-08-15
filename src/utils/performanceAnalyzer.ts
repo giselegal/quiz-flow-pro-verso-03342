@@ -155,7 +155,8 @@ class PerformanceAnalyzer {
       }
 
       if (this.isMonitoring) {
-        setTimeout(checkMemory, 10000);
+        // Aumentar intervalo para 30 segundos para reduzir overhead
+        setTimeout(checkMemory, 30000);
       }
     };
 
@@ -246,29 +247,31 @@ class PerformanceAnalyzer {
 // Export singleton instance
 export const performanceAnalyzer = PerformanceAnalyzer.getInstance();
 
-// Auto-start monitoring in development (OTIMIZADO)
+// Auto-start monitoring in development (SUPER OTIMIZADO)
 if (process.env.NODE_ENV === 'development') {
   // Usar requestIdleCallback para não bloquear inicialização
   if ('requestIdleCallback' in window) {
     (window as any).requestIdleCallback(() => {
-      performanceAnalyzer.startMonitoring();
-      
-      // Relatórios menos frequentes - a cada 60s
-      setInterval(() => {
-        if ('requestIdleCallback' in window) {
-          (window as any).requestIdleCallback(() => {
-            performanceAnalyzer.logReport();
-          });
-        } else {
-          performanceAnalyzer.logReport();
-        }
-      }, 60000); // 60s ao invés de 30s
-    });
-  } else {
-    // Fallback sem bloquear
-    setTimeout(() => {
-      performanceAnalyzer.startMonitoring();
-    }, 5000); // Aguardar 5s para app estabilizar
+      // Aguardar app estabilizar mais tempo
+      setTimeout(() => {
+        performanceAnalyzer.startMonitoring();
+        
+        // Relatórios muito menos frequentes - a cada 5 minutos
+        const reportInterval = setInterval(() => {
+          if ('requestIdleCallback' in window) {
+            (window as any).requestIdleCallback(() => {
+              performanceAnalyzer.logReport();
+            });
+          }
+        }, 300000); // 5 minutos
+        
+        // Limpar após 30 minutos para evitar memory leaks
+        setTimeout(() => {
+          clearInterval(reportInterval);
+          performanceAnalyzer.stopMonitoring();
+        }, 1800000); // 30 minutos
+      }, 10000); // 10s para estabilizar
+    }, { timeout: 5000 });
   }
 }
 
