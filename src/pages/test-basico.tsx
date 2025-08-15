@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 /**
  * Test Básico - Sem dependências externas

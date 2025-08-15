@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useEditor } from '@/context/EditorContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
