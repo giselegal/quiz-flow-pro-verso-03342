@@ -371,20 +371,12 @@ export const useUnifiedProperties = (
             { placeholder: 'Descrição do logo' }
           ),
           createProperty(
-            'logoWidth',
-            currentBlock?.properties?.logoWidth || 200,
+            'logoScale',
+            currentBlock?.properties?.logoScale || 1,
             PropertyType.RANGE,
-            'Largura do Logo',
+            'Escala do Logo',
             PropertyCategory.LAYOUT,
-            { min: 50, max: 400, step: 10, unit: 'px' }
-          ),
-          createProperty(
-            'logoHeight',
-            currentBlock?.properties?.logoHeight || 60,
-            PropertyType.RANGE,
-            'Altura do Logo',
-            PropertyCategory.LAYOUT,
-            { min: 30, max: 200, step: 5, unit: 'px' }
+            { min: 0.5, max: 3, step: 0.1, unit: 'x' }
           ),
           
            // 🎯 CONTROLES DE EXIBIÇÃO
@@ -741,20 +733,12 @@ export const useUnifiedProperties = (
             PropertyCategory.ACCESSIBILITY
           ),
           createProperty(
-            'logoWidth',
-            headerProps.logoWidth,
+            'logoScale',
+            1,
             PropertyType.RANGE,
-            'Largura da Logo (px)',
+            'Escala da Logo',
             PropertyCategory.STYLE,
-            { min: 50, max: 400, step: 10 }
-          ),
-          createProperty(
-            'logoHeight',
-            headerProps.logoHeight,
-            PropertyType.RANGE,
-            'Altura da Logo (px)',
-            PropertyCategory.STYLE,
-            { min: 50, max: 400, step: 10 }
+            { min: 0.5, max: 3, step: 0.1, unit: 'x' }
           ),
 
           // Estilo
@@ -805,20 +789,12 @@ export const useUnifiedProperties = (
             PropertyCategory.ACCESSIBILITY
           ),
           createProperty(
-            'logoWidth',
-            currentBlock?.properties?.logoWidth || 96,
+            'logoScale',
+            currentBlock?.properties?.logoScale || 1,
             PropertyType.RANGE,
-            'Largura da Logo (px)',
+            'Escala da Logo',
             PropertyCategory.STYLE,
-            { min: 48, max: 200, step: 4 }
-          ),
-          createProperty(
-            'logoHeight',
-            currentBlock?.properties?.logoHeight || 96,
-            PropertyType.RANGE,
-            'Altura da Logo (px)',
-            PropertyCategory.STYLE,
-            { min: 48, max: 200, step: 4 }
+            { min: 0.5, max: 2.5, step: 0.1, unit: 'x' }
           ),
           createProperty(
             'mainTitle',

@@ -50,8 +50,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       // Logo e Branding
       logoUrl: properties.logoUrl || properties.logo || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
       logoAlt: properties.logoAlt || 'Logo',
-      logoWidth: properties.logoWidth || 200,
-      logoHeight: properties.logoHeight || 60,
+      logoScale: properties.logoScale || 1,
       showLogo: properties.showLogo ?? true,
       
       // Controles de exibição
@@ -137,8 +136,11 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
               <img
                 src={props.logoUrl}
                 alt={props.logoAlt}
-                style={{ width: `${props.logoWidth}px`, height: `${props.logoHeight}px` }}
-                className="object-contain"
+                className="object-contain max-w-[200px] max-h-[80px]"
+                style={{
+                  transform: `scale(${props.logoScale})`,
+                  transformOrigin: 'center'
+                }}
                 loading="eager"
               />
             </div>
@@ -179,8 +181,11 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             <img
               src={props.logoUrl}
               alt={props.logoAlt}
-              style={{ height: `${props.logoHeight}px` }}
-              className="mx-auto object-contain"
+              className="mx-auto object-contain max-w-[200px] max-h-[80px]"
+              style={{
+                transform: `scale(${props.logoScale})`,
+                transformOrigin: 'center'
+              }}
               loading="eager"
             />
           </motion.div>
@@ -226,8 +231,11 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
               <img
                 src={props.logoUrl}
                 alt={props.logoAlt}
-                style={{ width: `${props.logoWidth}px`, height: `${props.logoHeight}px` }}
-                className="object-contain"
+                className="object-contain max-w-[120px] max-h-[40px]"
+                style={{
+                  transform: `scale(${props.logoScale})`,
+                  transformOrigin: 'left center'
+                }}
               />
             )}
           </div>
@@ -259,8 +267,11 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
               <img 
                 src={props.logoUrl} 
                 alt={props.logoAlt}
-                style={{ height: `${props.logoHeight}px` }}
-                className="mx-auto object-contain"
+                className="mx-auto object-contain max-w-[200px] max-h-[80px]"
+                style={{
+                  transform: `scale(${props.logoScale})`,
+                  transformOrigin: 'center'
+                }}
               />
             </div>
           )}
@@ -299,8 +310,11 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
               <img
                 src={props.logoUrl}
                 alt={props.logoAlt}
-                style={{ width: `${props.logoWidth}px`, height: `${props.logoHeight}px` }}
-                className="mx-auto object-contain"
+                className="mx-auto object-contain max-w-[200px] max-h-[80px]"
+                style={{
+                  transform: `scale(${props.logoScale})`,
+                  transformOrigin: 'center'
+                }}
               />
             </div>
           )}
@@ -353,10 +367,11 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
   const nextProps_ = nextProps.block?.properties || {};
   
   const relevantKeys = [
-    'logoUrl', 'logoAlt', 'logoWidth', 'logoHeight', 'showLogo',
+    'logoUrl', 'logoAlt', 'logoScale', 'showLogo',
     'title', 'subtitle', 'userName', 'backgroundColor', 'textColor',
     'showTitle', 'showUserName', 'enableProgressBar', 
-    'progressValue', 'progressMax', 'showBackButton', 'heroImage', 'showImage'
+    'progressValue', 'progressMax', 'showBackButton', 'heroImage', 'showImage',
+    'isSticky', 'marginTop', 'marginBottom'
   ];
   
   return relevantKeys.every(key => prevProps_[key] === nextProps_[key]);
