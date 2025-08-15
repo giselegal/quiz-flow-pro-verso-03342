@@ -658,6 +658,250 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
       },
     ],
   },
+
+  // ✅ ETAPA 11: PÁGINA DE TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
+  {
+    id: 'transition1',
+    text: 'Enquanto calculamos o seu resultado...',
+    title: 'Enquanto calculamos o seu resultado...',
+    order: 11,
+    type: 'transition',
+    options: [],
+  },
+
+  // ✅ QUESTÕES ESTRATÉGICAS (12-17) - 1 seleção obrigatória, pontuação 0
+  
+  // QUESTÃO ESTRATÉGICA 1: Como você se vê hoje?
+  {
+    id: 'strategic1',
+    text: 'Como você se vê hoje?',
+    title: 'Como você se vê hoje?',
+    order: 12,
+    type: 'strategic-question',
+    multiSelect: 1,
+    options: [
+      {
+        id: 'st1a',
+        text: 'Me sinto desconectada da mulher que sou hoje',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st1b',
+        text: 'Tenho dúvidas sobre o que realmente me valoriza',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st1c',
+        text: 'Às vezes acerto, às vezes erro',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st1d',
+        text: 'Me sinto segura, mas sei que posso evoluir',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+    ],
+  },
+
+  // QUESTÃO ESTRATÉGICA 2: O que mais te desafia na hora de se vestir?
+  {
+    id: 'strategic2',
+    text: 'O que mais te desafia na hora de se vestir?',
+    title: 'O que mais te desafia na hora de se vestir?',
+    order: 13,
+    type: 'strategic-question',
+    multiSelect: 1,
+    options: [
+      {
+        id: 'st2a',
+        text: 'Tenho peças, mas não sei como combiná-las',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st2b',
+        text: 'Compro por impulso e me arrependo depois',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st2c',
+        text: 'Minha imagem não reflete quem eu sou',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st2d',
+        text: 'Perco tempo e acabo usando sempre os mesmos looks',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+    ],
+  },
+
+  // QUESTÃO ESTRATÉGICA 3: Frequência de indecisão
+  {
+    id: 'strategic3',
+    text: 'Com que frequência você se pega pensando: "Com que roupa eu vou?" — mesmo com o guarda-roupa cheio?',
+    title: 'Com que frequência você se pega pensando: "Com que roupa eu vou?" — mesmo com o guarda-roupa cheio?',
+    order: 14,
+    type: 'strategic-question',
+    multiSelect: 1,
+    options: [
+      {
+        id: 'st3a',
+        text: 'Quase todos os dias — é sempre uma indecisão',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st3b',
+        text: 'Sempre que tenho um compromisso importante',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st3c',
+        text: 'Às vezes, mas me sinto limitada nas escolhas',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st3d',
+        text: 'Raramente — já me sinto segura ao me vestir',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+    ],
+  },
+
+  // QUESTÃO ESTRATÉGICA 4: Interesse em material estratégico
+  {
+    id: 'strategic4',
+    text: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...',
+    title: 'Pense no quanto você já gastou com roupas que não usa ou que não representam quem você é...',
+    order: 15,
+    type: 'strategic-question',
+    multiSelect: 1,
+    options: [
+      {
+        id: 'st4a',
+        text: 'Sim! Se existisse algo assim, eu quero',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st4b',
+        text: 'Sim, mas teria que ser no momento certo',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st4c',
+        text: 'Tenho dúvidas se funcionaria pra mim',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st4d',
+        text: 'Não, prefiro continuar como estou',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+    ],
+  },
+
+  // QUESTÃO ESTRATÉGICA 5: Investimento em estilo
+  {
+    id: 'strategic5',
+    text: 'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
+    title: 'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
+    order: 16,
+    type: 'strategic-question',
+    multiSelect: 1,
+    options: [
+      {
+        id: 'st5a',
+        text: 'Sim! Por esse resultado, vale muito',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st5b',
+        text: 'Sim, mas só se eu tiver certeza de que funciona pra mim',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st5c',
+        text: 'Talvez — depende do que está incluso',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st5d',
+        text: 'Não, ainda não estou pronta para investir',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+    ],
+  },
+
+  // QUESTÃO ESTRATÉGICA 6: Resultados desejados
+  {
+    id: 'strategic6',
+    text: 'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
+    title: 'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
+    order: 17,
+    type: 'strategic-question',
+    multiSelect: 1,
+    options: [
+      {
+        id: 'st6a',
+        text: 'Montar looks com mais facilidade e confiança',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st6b',
+        text: 'Usar o que já tenho e me sentir estilosa',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st6c',
+        text: 'Comprar com mais consciência e sem culpa',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st6d',
+        text: 'Ser admirada pela imagem que transmito',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+      {
+        id: 'st6e',
+        text: 'Resgatar peças esquecidas e criar novos looks com estilo',
+        styleCategory: 'Strategic',
+        weight: 0,
+      },
+    ],
+  },
+
+  // ✅ ETAPA 18: PÁGINA DE TRANSIÇÃO PARA RESULTADO
+  {
+    id: 'transition2',
+    text: 'Obrigada por compartilhar...',
+    title: 'Obrigada por compartilhar...',
+    order: 18,
+    type: 'transition',
+    options: [],
+  },
 ];
 
 // Categorias de estilo disponíveis
