@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { useQuizHooks } from '@/hooks/useQuizHooks';
 
 interface QuizProgressProps {
   currentQuestionIndex: number;

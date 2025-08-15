@@ -23,7 +23,6 @@ export { useLiveEditor } from './useLiveEditor';
 export { useStepWithContainer, useQuizStepContainer } from './useStepWithContainer';
 
 // Quiz hooks (core)
-export { useQuiz } from './useQuiz';
 export { useQuizBuilder } from './useQuizBuilder';
 export { useQuizConfig } from './useQuizConfig';
 export { useQuizLogic } from './useQuizLogic';
