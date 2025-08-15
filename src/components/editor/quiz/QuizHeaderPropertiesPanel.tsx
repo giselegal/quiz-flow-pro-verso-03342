@@ -11,7 +11,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useEditor } from '@/context/EditorContext';
-import { Eye, Image, Palette, Scale, Settings, Upload } from 'lucide-react';
+import { Eye, Image, Palette, Scale, Settings, Upload, Award } from 'lucide-react';
 import React, { useState } from 'react';
 
 // Color picker moderno e elegante
@@ -127,7 +127,7 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
 
       <div className="flex-1 overflow-auto p-3">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 h-8">
+          <TabsList className="grid w-full grid-cols-5 h-8">
             <TabsTrigger value="general" className="text-xs">
               <Eye className="h-3 w-3 mr-1" />
               Geral
@@ -143,6 +143,10 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
             <TabsTrigger value="layout" className="text-xs">
               <Scale className="h-3 w-3 mr-1" />
               Layout
+            </TabsTrigger>
+            <TabsTrigger value="results" className="text-xs">
+              <Award className="h-3 w-3 mr-1" />
+              Resultados
             </TabsTrigger>
           </TabsList>
 
@@ -427,6 +431,116 @@ export const QuizHeaderPropertiesPanel: React.FC<QuizHeaderPropertiesPanelProps>
                     max={100}
                     step={4}
                     className="w-full"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="results" className="space-y-4 m-0">
+            <Card className="border" style={{ borderColor: '#E5DDD5' }}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm" style={{ color: '#432818' }}>
+                  Estilo Predominante
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Nome do Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showPredominantStyleName ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleName', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Descrição do Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showPredominantStyleDescription ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleDescription', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Barra de Porcentagem
+                  </Label>
+                  <Switch
+                    checked={properties.showPredominantStylePercentage ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStylePercentage', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Imagem do Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showPredominantStyleImage ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleImage', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Imagem do Guia
+                  </Label>
+                  <Switch
+                    checked={properties.showPredominantStyleGuide ?? false}
+                    onCheckedChange={checked => handlePropertyUpdate('showPredominantStyleGuide', checked)}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border" style={{ borderColor: '#E5DDD5' }}>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm" style={{ color: '#432818' }}>
+                  Estilos Secundários
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Nome do 2º Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showSecondaryStyleName ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showSecondaryStyleName', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Barra do 2º Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showSecondaryStylePercentage ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showSecondaryStylePercentage', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Nome do 3º Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showThirdStyleName ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showThirdStyleName', checked)}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs" style={{ color: '#6B4F43' }}>
+                    Barra do 3º Estilo
+                  </Label>
+                  <Switch
+                    checked={properties.showThirdStylePercentage ?? true}
+                    onCheckedChange={checked => handlePropertyUpdate('showThirdStylePercentage', checked)}
                   />
                 </div>
               </CardContent>
