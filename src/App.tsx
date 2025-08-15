@@ -51,7 +51,6 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
-const ModularComponentsDemo = lazy(() => import('./pages/modular-demo'));
 
 // Loading component
 const PageLoading = () => (
@@ -85,30 +84,10 @@ function App() {
                         <ErrorBoundary>
                           <EditorProvider>
                             <ScrollSyncProvider>
-                              <PreviewProvider totalSteps={21} funnelId="default">
-                                <div className="relative">
-                                  <EditorWithPreview />
-                                </div>
-                              </PreviewProvider>
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
                             </ScrollSyncProvider>
-                          </EditorProvider>
-                        </ErrorBoundary>
-                      </Suspense>
-                    );
-                  }}
-                />
-
-                {/* Editor Test Route - Para debug e testes */}
-                <ProtectedRoute
-                  path="/editor-test"
-                  component={() => {
-                    console.log('🧪 App: Carregando EditorTestPage');
-                    const EditorTestPage = lazy(() => import('./pages/editor-test'));
-                    return (
-                      <Suspense fallback={<PageLoading />}>
-                        <ErrorBoundary>
-                          <EditorProvider>
-                            <EditorTestPage />
                           </EditorProvider>
                         </ErrorBoundary>
                       </Suspense>
@@ -126,11 +105,9 @@ function App() {
                         <ErrorBoundary>
                           <EditorProvider>
                             <ScrollSyncProvider>
-                              <PreviewProvider totalSteps={21} funnelId="default">
-                                <div className="relative">
-                                  <EditorWithPreview />
-                                </div>
-                              </PreviewProvider>
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
                             </ScrollSyncProvider>
                           </EditorProvider>
                         </ErrorBoundary>
@@ -184,11 +161,9 @@ function App() {
                       <ErrorBoundary>
                         <EditorProvider>
                           <ScrollSyncProvider>
-                            <PreviewProvider totalSteps={21} funnelId="default">
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
-                            </PreviewProvider>
+                            <div className="relative">
+                              <EditorWithPreview />
+                            </div>
                           </ScrollSyncProvider>
                         </EditorProvider>
                       </ErrorBoundary>
@@ -353,15 +328,6 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <TestNavigation />
-                    </Suspense>
-                  )}
-                </Route>
-
-                {/* Modular Components Demo Route */}
-                <Route path="/demo/modular">
-                  {() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ModularComponentsDemo />
                     </Suspense>
                   )}
                 </Route>

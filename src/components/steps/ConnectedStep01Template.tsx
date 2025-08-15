@@ -1,42 +1,20 @@
 import { useEditor } from '@/context/EditorContext';
 import { useTemplateConfig } from '@/hooks/useTemplateConfig';
 import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-
-// Design tokens centralizados - otimizados
-const colors = {
-  primary: '#B89B7A',
-  primaryDark: '#A1835D',
-  secondary: '#432818',
-  background: '#FEFEFE',
-  backgroundAlt: '#F8F5F0',
-  text: '#432818',
-  textLight: '#6B7280',
-  border: '#E5E7EB',
-};
-
-// URLs otimizadas pré-construídas para performance
-const LOGO_BASE_URL = 'https://res.cloudinary.com/der8kogzu/image/upload/';
-const LOGO_IMAGE_ID = 'v1752430327/LOGO_DA_MARCA_GISELE_l78gin';
-
-const STATIC_LOGO_IMAGE_URLS = {
-  webp: `${LOGO_BASE_URL}f_webp,q_70,w_120,h_50,c_fit/${LOGO_IMAGE_ID}.webp`,
-  png: `${LOGO_BASE_URL}f_png,q_70,w_120,h_50,c_fit/${LOGO_IMAGE_ID}.png`,
-};
 
 /**
- * 🎯 STEP 01 CONECTADO - MODERNIZADO E OTIMIZADO
- * ✅ INTEGRADO: useEditor + useTemplateConfig + Performance otimizada
- * ✅ Design responsivo e acessível
- * ✅ URLs pré-construídas para LCP
- * ✅ Validação em tempo real
+ * 🎯 STEP 01 CONECTADO - INTRODUÇÃO E CAPTURA DE NOME
+ * ✅ INTEGRADO: useEditor + useTemplateConfig + JSON híbrido
+ * 
+ * Funcionalidades:
+ * - Carrega configuração JSON para design e layout
+ * - Conecta ao EditorContext.quizState para capturar nome
+ * - Aplicar estilos e comportamentos baseados na configuração
  */
 export const ConnectedStep01Template = () => {
   const { quizState } = useEditor();
   const { config, loading, getDesignTokens } = useTemplateConfig(1);
   const [localName, setLocalName] = useState('');
-  const [error, setError] = useState('');
 
   // Aplicar tokens de design da configuração JSON
   const designTokens = getDesignTokens();
@@ -46,35 +24,19 @@ export const ConnectedStep01Template = () => {
     if (quizState.userName) {
       setLocalName(quizState.userName);
     }
-    
-    // Reportar Web Vitals na inicialização
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('step01-mounted');
-    }
   }, [quizState.userName]);
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validação modernizada
-    if (!localName.trim()) {
-      setError('Por favor, digite seu nome para continuar');
-      return;
-    }
-    
-    setError(''); // Limpar erro
-    console.log('👤 ConnectedStep01: Capturando nome:', localName);
-    quizState.setUserNameFromInput(localName);
-    
-    // Disparar evento personalizado para navegação
-    const event = new CustomEvent('quiz-form-complete', {
-      detail: { formData: { name: localName.trim() } }
-    });
-    window.dispatchEvent(event);
-    
-    // Reportar interação para analytics
-    if (typeof window !== 'undefined' && 'performance' in window) {
-      window.performance.mark('user-interaction');
+    if (localName.trim()) {
+      console.log('👤 ConnectedStep01: Capturando nome:', localName);
+      quizState.setUserNameFromInput(localName);
+      
+      // Disparar evento personalizado para navegação
+      const event = new CustomEvent('quiz-form-complete', {
+        detail: { formData: { name: localName.trim() } }
+      });
+      window.dispatchEvent(event);
     }
   };
 
@@ -90,190 +52,108 @@ export const ConnectedStep01Template = () => {
   }
 
   return (
-    <main
-      className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-white to-gray-50 py-8"
-      style={{
-        backgroundColor: designTokens?.backgroundColor || colors.background,
+    <div 
+      className="min-h-screen flex flex-col"
+      style={{ 
+        backgroundColor: designTokens?.backgroundColor || '#FAF9F7',
         fontFamily: designTokens?.fontFamily || "'Playfair Display', serif"
       }}
-      data-section="intro"
     >
-      {/* Skip link para acessibilidade */}
-      <a 
-        href="#quiz-form" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
-      >
-        Pular para o formulário
-      </a>
-      
-      <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-8 mx-auto">
-        {/* Logo centralizado - renderização otimizada */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className="relative">
-            <picture>
-              <source srcSet={STATIC_LOGO_IMAGE_URLS.webp} type="image/webp" />
-              <img
-                src={STATIC_LOGO_IMAGE_URLS.png}
-                alt="Logo Gisele Galvão"
-                className="h-auto mx-auto"
-                width={120}
-                height={50}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                style={{
-                  objectFit: 'contain',
-                  maxWidth: '100%',
-                  aspectRatio: '120 / 50',
-                }}
-              />
-            </picture>
-            {/* Barra dourada */}
-            <div
-              className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5"
-              style={{
-                width: '300px',
-                maxWidth: '90%',
-                margin: '0 auto',
-              }}
-            />
-          </div>
+      {/* Header com logo */}
+      <div className="w-full py-6 px-4">
+        <div className="flex justify-center">
+          <img
+            src="https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp"
+            alt="Logo Gisele Galvão"
+            className="w-24 h-24 object-contain"
+          />
         </div>
+      </div>
 
-        {/* Título principal - EXATO conforme requisitos */}
-        <h1
-          className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display"
-          style={{
-            fontFamily: '"Playfair Display", serif',
-            fontWeight: 400,
-            color: designTokens?.secondaryColor || colors.secondary
-          }}
-        >
-          <span className="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com{' '}
-          <span className="text-[#B89B7A]">Você</span>.
-        </h1>
-        
-        {/* Subtítulo principal conforme requisitos */}
-        <h2
-          className="text-xl font-semibold text-center leading-tight px-2 sm:text-2xl md:text-3xl mt-4"
-          style={{
-            fontFamily: '"Playfair Display", serif',
-            fontWeight: 600,
-            color: colors.secondary
-          }}
-        >
-          Descubra seu estilo predominante e transforme seu guarda-roupa
-        </h2>
-      </header>
+      {/* Conteúdo principal */}
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="max-w-2xl w-full text-center space-y-8">
+          {/* Título principal */}
+          <div className="space-y-4">
+            <h1 
+              className="text-4xl md:text-5xl font-bold leading-tight"
+              style={{ color: designTokens?.secondaryColor || '#432818' }}
+            >
+              Descubra Seu Estilo Pessoal Único
+            </h1>
+            <p 
+              className="text-xl md:text-2xl leading-relaxed"
+              style={{ color: designTokens?.primaryColor || '#B89B7A' }}
+            >
+              Um quiz personalizado para revelar o estilo que mais combina com sua personalidade
+            </p>
+          </div>
 
-      <section className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto">
-        {/* Texto descritivo */}
-        <p 
-          className="text-sm text-center leading-relaxed px-2 sm:text-base"
-          style={{ color: colors.textLight }}
-        >
-          Em poucos minutos, descubra seu{' '}
-          <span className="font-semibold text-[#B89B7A]">
-            Estilo Predominante
-          </span>{' '}
-          — e aprenda a montar looks que realmente refletem sua{' '}
-          <span className="font-semibold" style={{ color: colors.secondary }}>
-            essência
-          </span>, com
-          praticidade e{' '}
-          <span className="font-semibold" style={{ color: colors.secondary }}>
-            confiança
-          </span>.
-        </p>
-
-        {/* Formulário modernizado */}
-        <div id="quiz-form" className="mt-8">
-          <form
-            onSubmit={handleNameSubmit}
-            className="w-full space-y-6"
-            autoComplete="off"
-          >
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-lg font-bold mb-2 text-center"
-                style={{ color: colors.secondary }}
+          {/* Formulário de nome */}
+          <form onSubmit={handleNameSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label 
+                htmlFor="userName" 
+                className="text-lg font-medium block"
+                style={{ color: designTokens?.secondaryColor || '#432818' }}
               >
-                NOME
+                Para começar, qual é o seu nome?
               </label>
-              <p className="text-sm text-center mb-3" style={{ color: colors.textLight }}>
-                Digite seu nome
-              </p>
-              <Input
-                id="name"
-                placeholder="Por favor, digite seu nome para continuar"
+              <input
+                type="text"
+                id="userName"
                 value={localName}
-                onChange={(e) => {
-                  setLocalName(e.target.value);
-                  if (error) setError('');
+                onChange={(e) => setLocalName(e.target.value)}
+                placeholder="Digite seu primeiro nome..."
+                className="w-full px-6 py-4 rounded-lg border-2 border-gray-200 focus:border-[#B89B7A] focus:outline-none text-lg transition-colors"
+                style={{
+                  background: designTokens?.card.background || '#fff',
+                  borderRadius: designTokens?.card.borderRadius || '16px'
                 }}
-                className={cn(
-                  "w-full p-3 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE] text-center",
-                  error 
-                    ? "border-red-500 focus:ring-red-500 focus-visible:ring-red-500" 
-                    : "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]"
-                )}
-                autoFocus
-                aria-required="true"
-                autoComplete="off"
-                inputMode="text"
-                maxLength={32}
-                aria-invalid={!!error}
-                aria-describedby={error ? "name-error" : undefined}
                 required
               />
-              {error && (
-                <p id="name-error" className="mt-2 text-sm text-red-500 font-medium text-center">{error}</p>
-              )}
             </div>
-            
+
             <button
               type="submit"
-              className={cn(
-                'w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300',
-                'focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2',
-                'sm:py-4 sm:px-6 sm:text-lg',
-                'md:py-4 md:text-xl',
-                localName.trim() 
-                  ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]' 
-                  : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
-              )}
-              aria-disabled={!localName.trim()}
+              disabled={!localName.trim()}
+              className="w-full py-4 px-8 text-white font-semibold text-lg rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+              style={{
+                background: localName.trim() 
+                  ? designTokens?.button.background || 'linear-gradient(90deg, #B89B7A, #aa6b5d)'
+                  : '#ccc',
+                borderRadius: designTokens?.button.borderRadius || '10px',
+                boxShadow: localName.trim() 
+                  ? designTokens?.button.shadow || '0 4px 14px rgba(184, 155, 122, 0.15)'
+                  : 'none'
+              }}
             >
-              <span className="flex items-center justify-center gap-2">
-                Quero Descobrir meu Estilo Agora!
-              </span>
+              Começar Quiz →
             </button>
-
-            {/* Texto explicativo adicional conforme requisitos */}
-            <p className="text-sm text-center mt-2" style={{ color: colors.textLight }}>
-              Digite seu nome para continuar
-            </p>
-
-            <p className="text-xs text-center pt-1" style={{ color: colors.textLight }}>
-              Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa{' '}
-              <a 
-                href="#" 
-                className="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded"
-              >
-                política de privacidade
-              </a>
-            </p>
           </form>
+
+          {/* Informações adicionais */}
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 bg-[#B89B7A] rounded-full"></span>
+                <span>3 minutos</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 bg-[#B89B7A] rounded-full"></span>
+                <span>13 perguntas</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="w-2 h-2 bg-[#B89B7A] rounded-full"></span>
+                <span>Resultado personalizado</span>
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 max-w-md mx-auto">
+              Suas respostas são privadas e usadas apenas para calcular seu resultado personalizado.
+            </p>
+          </div>
         </div>
-      </section>
-      
-      {/* Rodapé */}
-      <footer className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto">
-        <p className="text-xs" style={{ color: colors.textLight }}>
-          2025 - Gisele Galvão - Todos os direitos reservados
-        </p>
-      </footer>
+      </div>
 
       {/* Debug info (apenas em desenvolvimento) */}
       {process.env.NODE_ENV === 'development' && (
@@ -283,23 +163,8 @@ export const ConnectedStep01Template = () => {
           <div>Template: {config.metadata.id}</div>
         </div>
       )}
-    </main>
+    </div>
   );
-};
-
-export const getConnectedStep01Template = () => {
-  // Para compatibilidade com o sistema de mapeamento, retorna um array de blocos
-  return [
-    {
-      id: 'step01-quiz-intro-connected',
-      type: 'quiz-intro',
-      properties: {
-        // Usar o componente ConnectedStep01Template diretamente
-        component: ConnectedStep01Template,
-        variant: 'modern',
-      },
-    },
-  ];
 };
 
 export default ConnectedStep01Template;

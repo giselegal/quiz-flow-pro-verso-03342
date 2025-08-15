@@ -1,8 +1,8 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos (usando templates TSX reais)
 
-// ✅ IMPORTS DOS TEMPLATES CONECTADOS (TODOS UNIFICADOS)
-import { getConnectedStep01Template } from '@/components/steps/ConnectedStep01Template';
+// ✅ IMPORTS DOS TEMPLATES TSX REAIS (CONECTADOS)
+import { getStep01Template } from '@/components/steps/Step01Template';
 import { getConnectedStep02Template } from '@/components/steps/ConnectedStep02Template';
 import { getConnectedStep03Template } from '@/components/steps/ConnectedStep03Template';
 import { getConnectedStep04Template } from '@/components/steps/ConnectedStep04Template';
@@ -21,8 +21,8 @@ import { getConnectedStep16Template } from '@/components/steps/ConnectedStep16Te
 import { getConnectedStep17Template } from '@/components/steps/ConnectedStep17Template';
 import { getConnectedStep18Template } from '@/components/steps/ConnectedStep18Template';
 import { getConnectedStep19Template } from '@/components/steps/ConnectedStep19Template';
-import { getConnectedStep20Template } from '@/components/steps/ConnectedStep20Template';
-import { getConnectedStep21Template } from '@/components/steps/ConnectedStep21Template';
+import { getStep20Template } from '@/components/steps/Step20Template';
+import { getStep21Template } from '@/components/steps/Step21Template';
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -41,12 +41,10 @@ export interface StepConfig {
 // 🎯 DADOS REAIS DAS QUESTÕES (usados pelos templates conectados)
 // import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
-// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS - FLUXO CORRETO BASEADO NOS REQUISITOS
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES REAIS DAS QUESTÕES
 const STEP_CONFIGS = [
-  // ETAPA 1: Coleta do nome
-  { name: 'Coleta do nome', description: 'Descubra seu estilo predominante e transforme seu guarda-roupa' },
-  
-  // ETAPAS 2-11: 10 questões normais com pontuação - 3 seleções obrigatórias
+  { name: 'Quiz de Estilo Pessoal', description: 'Descubra seu estilo único' },
+  { name: 'VAMOS NOS CONHECER?', description: 'Digite seu nome para personalizar' },
   { name: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', description: 'Primeira questão do quiz' },
   { name: 'RESUMA A SUA PERSONALIDADE:', description: 'Segunda questão do quiz' },
   { name: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', description: 'Terceira questão do quiz' },
@@ -57,26 +55,16 @@ const STEP_CONFIGS = [
   { name: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', description: 'Oitava questão do quiz' },
   { name: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', description: 'Nona questão do quiz' },
   { name: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...', description: 'Décima questão do quiz' },
-  
-  // ETAPA 12: Página de transição p/ questões estratégicas
   { name: 'Enquanto calculamos o seu resultado...', description: 'Transição para questões estratégicas' },
-  
-  // ETAPAS 13-18: 6 Questões Estratégicas
   { name: 'Como você se vê hoje?', description: 'Primeira questão estratégica' },
   { name: 'O que mais te desafia na hora de se vestir?', description: 'Segunda questão estratégica' },
   { name: 'Com que frequência você se pega pensando: "Com que roupa eu vou?"', description: 'Terceira questão estratégica' },
   { name: 'Ter acesso a um material estratégico faria diferença?', description: 'Quarta questão estratégica' },
   { name: 'Você consideraria R$ 97,00 um bom investimento?', description: 'Quinta questão estratégica' },
   { name: 'Qual resultado você mais gostaria de alcançar?', description: 'Sexta questão estratégica' },
-  
-  // ETAPA 19: Página de transição p/ Resultado
   { name: 'Obrigada por compartilhar...', description: 'Transição para resultado' },
-  
-  // ETAPA 20: Página de resultado personalizada + ofertas: Teste A
-  { name: 'SEU ESTILO PESSOAL É:', description: 'Resultado personalizado com ofertas (Teste A)' },
-  
-  // ETAPA 21: Teste B (QuizOfferPage)
-  { name: 'RECEBA SEU GUIA DE ESTILO COMPLETO', description: 'Página de oferta direta (Teste B)' },
+  { name: 'SEU ESTILO PESSOAL É:', description: 'Apresentação do resultado' },
+  { name: 'RECEBA SEU GUIA DE ESTILO COMPLETO', description: 'Página de conversão' },
 ];
 
 // Template padrão para fallback
@@ -126,9 +114,9 @@ const getDefaultTemplate = (stepNumber: number) => {
 
 // Templates específicos removidos para evitar duplicação
 
-// 📋 MAPEAMENTO UNIFICADO - TODOS OS TEMPLATES CONECTADOS
+// 📋 MAPEAMENTO DOS TEMPLATES TSX CONECTADOS COM NOMES CORRETOS
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
-  1: { stepNumber: 1, templateFunction: getConnectedStep01Template, name: STEP_CONFIGS[0].name, description: STEP_CONFIGS[0].description },
+  1: { stepNumber: 1, templateFunction: getStep01Template, name: STEP_CONFIGS[0].name, description: STEP_CONFIGS[0].description },
   2: { stepNumber: 2, templateFunction: getConnectedStep02Template, name: STEP_CONFIGS[1].name, description: STEP_CONFIGS[1].description },
   3: { stepNumber: 3, templateFunction: getConnectedStep03Template, name: STEP_CONFIGS[2].name, description: STEP_CONFIGS[2].description },
   4: { stepNumber: 4, templateFunction: getConnectedStep04Template, name: STEP_CONFIGS[3].name, description: STEP_CONFIGS[3].description },
@@ -147,8 +135,21 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   17: { stepNumber: 17, templateFunction: getConnectedStep17Template, name: STEP_CONFIGS[16].name, description: STEP_CONFIGS[16].description },
   18: { stepNumber: 18, templateFunction: getConnectedStep18Template, name: STEP_CONFIGS[17].name, description: STEP_CONFIGS[17].description },
   19: { stepNumber: 19, templateFunction: getConnectedStep19Template, name: STEP_CONFIGS[18].name, description: STEP_CONFIGS[18].description },
-  20: { stepNumber: 20, templateFunction: getConnectedStep20Template, name: STEP_CONFIGS[19].name, description: STEP_CONFIGS[19].description },
-  21: { stepNumber: 21, templateFunction: getConnectedStep21Template, name: STEP_CONFIGS[20].name, description: STEP_CONFIGS[20].description },
+  20: { 
+    stepNumber: 20, 
+    templateFunction: (userData?: any) => {
+      const userName = localStorage.getItem('quizUserName') || userData?.userName || '';
+      const styleCategory = localStorage.getItem('quizPrimaryStyle') || userData?.styleCategory || 'Elegante';
+      const sessionId = userData?.sessionId || 'default-session';
+      
+      console.log('🎨 Step20 personalized data:', { userName, styleCategory, sessionId });
+      
+      return getStep20Template({ userName, styleCategory, sessionId });
+    }, 
+    name: STEP_CONFIGS[19].name, 
+    description: STEP_CONFIGS[19].description 
+  },
+  21: { stepNumber: 21, templateFunction: getStep21Template, name: STEP_CONFIGS[20].name, description: STEP_CONFIGS[20].description },
 };
 
 // 🔧 FUNÇÕES UTILITÁRIAS ATUALIZADAS
@@ -156,24 +157,15 @@ export const getStepTemplate = (stepNumber: number, userData?: any): any[] => {
   const stepTemplate = STEP_TEMPLATES_MAPPING[stepNumber];
   
   if (stepTemplate) {
-    try {
-      // Para Step 20, passa dados do usuário se disponíveis
-      if (stepNumber === 20 && typeof stepTemplate.templateFunction === 'function') {
-        const result = stepTemplate.templateFunction(userData);
-        return Array.isArray(result) ? result : [];
-      }
-      
-      // Para outras etapas, usa função normal
-      if (typeof stepTemplate.templateFunction === 'function') {
-        const result = stepTemplate.templateFunction();
-        return Array.isArray(result) ? result : [];
-      }
-      
-      return [];
-    } catch (error) {
-      console.error(`Erro ao carregar template da etapa ${stepNumber}:`, error);
-      return getDefaultTemplate(stepNumber);
+    // Para Step 20, passa dados do usuário se disponíveis
+    if (stepNumber === 20 && typeof stepTemplate.templateFunction === 'function') {
+      return stepTemplate.templateFunction(userData);
     }
+    // Para outras etapas, usa função normal
+    if (typeof stepTemplate.templateFunction === 'function') {
+      return stepTemplate.templateFunction();
+    }
+    return [];
   }
   
   // Fallback para template padrão
@@ -208,19 +200,19 @@ export const STEP_CONFIG: StepConfig[] = getAllSteps().map(template => ({
   description: template.description,
 }));
 
-// 📊 ESTATÍSTICAS UNIFICADAS - SISTEMA COMPLETO
+// 📊 ESTATÍSTICAS ATUALIZADAS
 export const getTemplateStats = () => {
   return {
     totalTemplates: getTotalSteps(),
-    introSteps: 1, // Step 1 - Quiz intro conectado
-    nameSteps: 1, // Step 2 - Nome conectado
-    questionSteps: 10, // Steps 3-12 (perguntas principais conectadas)
-    strategicSteps: 6, // Steps 13-18 (perguntas estratégicas conectadas) 
-    transitionSteps: 2, // Steps 19-20 (transição conectada)
-    resultSteps: 1, // Step 21 (resultado conectado)
-    connectedTemplates: 21, // ✅ TODOS OS 21 STEPS CONECTADOS!
-    pendingConnections: 0, // ✅ NENHUM STEP PENDENTE!
-    systemHealth: '100% Unified', // ✅ SISTEMA TOTALMENTE UNIFICADO
+    introSteps: 1, // Step 1 - Quiz intro
+    nameSteps: 1, // Step 2 - Nome
+    questionSteps: 9, // Steps 3-11 (perguntas principais)
+    strategicSteps: 3, // Steps 12-14 (perguntas estratégicas) 
+    transitionSteps: 2, // Steps 15-16 (transição/processamento)
+    resultSteps: 4, // Steps 17-20 (resultado/lead)
+    conversionSteps: 1, // Step 21 (oferta)
+    connectedTemplates: 2, // Steps 2-3 já conectados aos hooks
+    pendingConnections: 19, // Steps restantes para conectar
   };
 };
 

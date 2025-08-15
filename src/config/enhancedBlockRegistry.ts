@@ -1,254 +1,255 @@
 import { BlockDefinition } from '@/types/editor';
+import { FormInput, Heading, Image, LayoutTemplate, Minus, MousePointer, Type } from 'lucide-react';
 import React from 'react';
-import { Type, Heading, Image, Sparkles, Grid, Clock, Star, Settings } from 'lucide-react';
 
-// Basic Inline Components
-import TextInline from '../components/blocks/inline/TextInline';
+// === COMPONENTES BÁSICOS FUNCIONAIS ===
+import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
 import HeadingBlock from '../components/blocks/inline/HeadingBlock';
-import HeadingInline from '../components/blocks/inline/HeadingInline';
-import ButtonInline from '../components/blocks/inline/ButtonInline';
-import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean';
 import OptionsGridInlineBlock from '../components/blocks/inline/OptionsGridInlineBlock';
-import DecorativeBarInline from '../components/blocks/inline/DecorativeBarInline';
-import LegalNoticeInline from '../components/blocks/inline/LegalNoticeInline';
-import LoadingAnimationBlock from '../components/blocks/inline/LoadingAnimationBlock';
-import FormInputInline from '../components/blocks/inline/FormInputInline';
+import TextInline from '../components/blocks/inline/TextInline';
+import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean';
 
-// Quiz Components
-import QuizIntroBlock from '../components/blocks/quiz/QuizIntroBlock';
-import QuizIntroHeaderBlock from '../components/blocks/quiz/QuizIntroHeaderBlock';
+// === CRIAÇÃO DE COMPONENTES PLACEHOLDER (OS ARQUIVOS NÃO EXISTIAM) ===
+// Estes componentes são criados aqui para evitar erros de importação.
 
-// Template Blocks - Wrappers para templates TSX conectados
-import Step01TemplateBlock from "../components/blocks/templates/Step01TemplateBlock";
-
-// Offer Components
-import QuizOfferPricingInlineBlock from '../components/blocks/inline/QuizOfferPricingInlineBlock';
-import QuizOfferCTAInlineBlock from '../components/blocks/inline/QuizOfferCTAInlineBlock';
-import TestimonialsInlineBlock from '../components/blocks/inline/TestimonialsInlineBlock';
-import CountdownInlineBlock from '../components/blocks/inline/CountdownInlineBlock';
-
-// Result Components
-import ResultCardInlineBlock from '../components/blocks/inline/ResultCardInlineBlock';
-import SecondaryStylesInlineBlock from '../components/blocks/inline/SecondaryStylesInlineBlock';
-import StyleCharacteristicsInlineBlock from '../components/blocks/inline/StyleCharacteristicsInlineBlock';
-import CharacteristicsListInlineBlock from '../components/blocks/inline/CharacteristicsListInlineBlock';
-import BenefitsInlineBlock from '../components/blocks/inline/BenefitsInlineBlock';
-
-// Fallback component
-const createFallbackComponent = (componentName: string) => {
-  const FallbackComponent: React.FC<any> = (props) => 
-    React.createElement('div', {
-      className: "p-4 border border-dashed border-gray-300 rounded bg-gray-50"
-    }, [
-      React.createElement('div', {
-        key: 'name',
-        className: "text-sm font-medium text-gray-700"
-      }, componentName),
-      React.createElement('div', {
-        key: 'desc',
-        className: "text-xs text-gray-500"
-      }, 'Component needs implementation'),
-      props.children && React.createElement('div', {
-        key: 'children',
-        className: "mt-2"
-      }, props.children)
-    ]);
-  FallbackComponent.displayName = componentName;
-  return FallbackComponent;
-};
-
-// Comprehensive registry with all components needed for 21 steps
-export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
-  // ===== BASIC TEXT & CONTENT COMPONENTS =====
-  'text-inline': TextInline,
-  'heading-inline': HeadingInline,
-  'heading': HeadingBlock,
-  'button-inline': ButtonInline,
-  'image-display-inline': ImageDisplayInlineBlockClean,
-  'decorative-bar-inline': DecorativeBarInline,
-  'legal-notice-inline': LegalNoticeInline,
-  
-  // ===== QUIZ INTRODUCTION COMPONENTS =====
-  'quiz-intro': QuizIntroBlock,
-  'quiz-intro-header': QuizIntroHeaderBlock,
-  
-  // ===== QUIZ INTERACTION COMPONENTS =====
-  'options-grid': OptionsGridInlineBlock,
-  'form-input': FormInputInline,
-  'spacer-inline': createFallbackComponent('SpacerInline'),
-  
-  // ===== LOADING & PROGRESS COMPONENTS =====
-  'loading-animation': LoadingAnimationBlock,
-  'progress-inline': createFallbackComponent('ProgressInline'),
-  
-  // ===== RESULT COMPONENTS =====
-  'result-header-inline': createFallbackComponent('ResultHeaderInline'),
-  'style-card-inline': ResultCardInlineBlock,
-  'style-characteristics-inline': StyleCharacteristicsInlineBlock,
-  'secondary-styles-inline': SecondaryStylesInlineBlock,
-  'characteristics-list-inline': CharacteristicsListInlineBlock,
-  'benefits-inline': BenefitsInlineBlock,
-  
-  // ===== OFFER PAGE COMPONENTS =====
-  'quiz-offer-pricing-inline': QuizOfferPricingInlineBlock,
-  'quiz-offer-cta-inline': QuizOfferCTAInlineBlock,
-  'testimonials-inline': TestimonialsInlineBlock,
-  'countdown-inline': CountdownInlineBlock,
-  'before-after-inline': createFallbackComponent('BeforeAfterInline'),
-  'bonus-list-inline': createFallbackComponent('BonusListInline'),
-  'guarantee-inline': createFallbackComponent('GuaranteeInline'),
-  
-  // ===== TEMPLATE WRAPPERS =====
-  "step01-template": Step01TemplateBlock,
-};
-
-// Fallback component for missing components
-const FallbackComponent: React.ComponentType<any> = ({ block, ...props }) => 
-  React.createElement('div', 
-    { 
-      className: "p-4 border border-dashed border-gray-300 rounded text-center text-gray-500",
-      ...props 
+const PlaceholderBlock: React.FC<{ type: string; props: any }> = ({ type, props }) => {
+  return React.createElement(
+    'div',
+    {
+      style: {
+        padding: '12px',
+        margin: '8px 0',
+        border: '2px dashed #e5e7eb',
+        borderRadius: '8px',
+        backgroundColor: '#f9fafb',
+        color: '#6b7280',
+      },
     },
     [
-      React.createElement('div', 
-        { key: 'type', className: 'font-medium' }, 
-        `Component: ${block?.type || 'unknown'}`
+      React.createElement(
+        'p',
+        {
+          key: 'title',
+          style: { fontWeight: 'bold', fontSize: '14px' },
+        },
+        ['Componente Placeholder: ', React.createElement('code', { key: 'type' }, type)]
       ),
-      React.createElement('div', 
-        { key: 'msg', className: 'text-xs mt-1' }, 
-        'Available in registry but needs proper implementation'
-      )
+      React.createElement(
+        'pre',
+        {
+          key: 'props',
+          style: { fontSize: '10px', whiteSpace: 'pre-wrap', wordBreak: 'break-all' },
+        },
+        JSON.stringify(props, null, 2)
+      ),
     ]
   );
+};
 
-export const getBlockComponent = (type: string): React.ComponentType<any> => {
-  const component = ENHANCED_BLOCK_REGISTRY[type];
+const DecorativeBarInlineBlock: React.FC<any> = () =>
+  React.createElement('hr', { style: { border: '2px solid #ccc', margin: '16px 0' } });
+const FormInputBlock: React.FC<any> = props =>
+  React.createElement('input', {
+    placeholder: props.placeholder || 'Campo de formulário',
+    style: { padding: '8px', width: '100%', border: '1px solid #ccc', borderRadius: '4px' },
+  });
+const FormContainerBlock: React.FC<{ children?: React.ReactNode }> = ({ children }) =>
+  React.createElement(
+    'div',
+    { style: { padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px' } },
+    children
+  );
+const TextInlineBlock: React.FC<{ content?: string }> = ({ content }) =>
+  React.createElement(TextInline, { content: content || 'Texto' });
+const HeadingInlineBlock: React.FC<any> = props => React.createElement(HeadingBlock, props);
+
+/**
+ * Registry de Blocos - Versão Corrigida e Unificada
+ * Define um nome "canônico" para cada componente.
+ */
+export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
+  // Componentes básicos
+  text: TextInline,
+  heading: HeadingBlock,
+  image: ImageDisplayInlineBlockClean,
+  button: ButtonInlineFixed,
+
+  // 🎯 UNIFIED HEADER SYSTEM - Consolidated All Headers
+  'header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'unified-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  
+  // Quiz Headers - All variants unified
+  'quiz-intro': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'quiz-intro-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'quiz-result-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'offer-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'vertical-canvas-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  
+  // Form and Layout Components
+  'decorative-bar': DecorativeBarInlineBlock,
+  'form-container': FormContainerBlock,
+  'form-input': FormInputBlock,
+
+  // Quiz e interação  
+  'options-grid': OptionsGridInlineBlock, // ✅ Componente faltante adicionado
+  'options-grid-inline': OptionsGridInlineBlock,
+
+  // Variações e componentes avançados
+  'text-advanced': TextInlineBlock,
+  'heading-advanced': HeadingInlineBlock,
+};
+
+// Mapeamento de aliases e nomes antigos para os nomes canônicos do registry
+const BLOCK_ALIASES: Record<string, string> = {
+  'text-inline': 'text',
+  'heading-inline': 'heading-advanced',
+  'image-display-inline': 'image',
+  'button-inline': 'button',
+  'decorative-bar-inline': 'decorative-bar',
+  'options-grid-inline': 'options-grid', // ✅ Alias para options-grid
+  form: 'form-input',
+
+  // 🎯 UNIFIED HEADER ALIASES - All headers point to unified component
+  'quiz-intro-optimized': 'quiz-intro',
+  'step01-intro': 'quiz-intro',
+  'quiz-intro-complete': 'quiz-intro',
+  'header-block': 'header',
+  'result-header': 'quiz-result-header',
+  'offer-hero': 'offer-header',
+  'canvas-header': 'vertical-canvas-header',
+  'intro-header': 'quiz-intro-header',
+  
+  // Aliases do template JSON em português
+  'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
+  'texto-embutido': 'text',
+  'imagem-em-linha': 'image',
+  'formulário-de-chumbo': 'form-container',
+};
+
+/**
+ * Obtém um componente pelo seu tipo, usando o registry e os aliases.
+ */
+// Função getBlockComponent - exportada corretamente para compatibilidade com importações
+export function getBlockComponent(type: string): React.ComponentType<any> {
+  if (!type) {
+    console.warn('getBlockComponent: Tipo de bloco não fornecido. Usando placeholder.');
+    return props => React.createElement(PlaceholderBlock, { type: 'undefined', props });
+  }
+
+  // 1. Tenta encontrar o tipo diretamente no registry
+  let component = ENHANCED_BLOCK_REGISTRY[type];
   if (component) {
+    // ✅ Removido log excessivo para melhorar performance
     return component;
   }
-  
-  console.warn(`Component '${type}' not found in Enhanced Block Registry. Available types:`, Object.keys(ENHANCED_BLOCK_REGISTRY));
-  return FallbackComponent;
-};
 
-export const getAvailableBlockTypes = (): string[] => {
-  return Object.keys(ENHANCED_BLOCK_REGISTRY);
-};
+  // 2. Se não encontrar, tenta usar um alias
+  const alias = BLOCK_ALIASES[type];
+  if (alias) {
+    component = ENHANCED_BLOCK_REGISTRY[alias];
+    if (component) {
+      // ✅ Log apenas quando usa alias para debug específico
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`🔄 Mapeado via alias: "${type}" → "${alias}"`);
+      }
+      return component;
+    }
+  }
 
-export const blockTypeExists = (type: string): boolean => {
-  return type in ENHANCED_BLOCK_REGISTRY;
-};
+  // 3. Se nada foi encontrado, retorna placeholder com log de warning apenas em desenvolvimento
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(`❗️ Componente para o tipo "${type}" não foi encontrado. Renderizando placeholder.`);
+  }
+  return props => React.createElement(PlaceholderBlock, { type, props });
+}
 
-export const generateBlockDefinitions = (): BlockDefinition[] => {
-  const definitions: BlockDefinition[] = [
+/**
+ * Gera definições de blocos para a barra lateral do editor.
+ * Atualizado para incluir os novos componentes.
+ */
+export function generateBlockDefinitions(): BlockDefinition[] {
+  return [
     {
-      type: "text-inline",
-      name: "TextInline",
-      label: "Texto",
-      category: "Conteúdo",
-      description: "Bloco de texto editável",
+      type: 'text',
+      name: 'Texto Simples',
+      label: 'Texto',
+      category: 'Conteúdo',
+      description: 'Adicionar texto formatado',
       icon: Type,
-      component: ENHANCED_BLOCK_REGISTRY["text-inline"],
+      component: ENHANCED_BLOCK_REGISTRY['text'],
+      defaultProps: { content: 'Digite seu texto aqui...' },
       properties: {},
-      defaultProps: { content: "Digite seu texto aqui..." },
     },
     {
-      type: "heading-inline",
-      name: "HeadingInline",
-      label: "Título",
-      category: "Conteúdo",
-      description: "Título com diferentes tamanhos",
+      type: 'heading',
+      name: 'Título',
+      label: 'Título',
+      category: 'Conteúdo',
+      description: 'Adicionar título',
       icon: Heading,
-      component: ENHANCED_BLOCK_REGISTRY["heading-inline"],
+      component: ENHANCED_BLOCK_REGISTRY['heading'],
+      defaultProps: { text: 'Seu título aqui', level: 'h2' },
       properties: {},
-      defaultProps: { text: "Seu título aqui", level: "h2" },
     },
     {
-      type: "button-inline",
-      name: "ButtonInline",
-      label: "Botão",
-      category: "Interação",
-      description: "Botão clicável",
-      icon: Settings,
-      component: ENHANCED_BLOCK_REGISTRY["button-inline"],
-      properties: {},
-      defaultProps: { text: "Clique aqui", variant: "primary" },
-    },
-    {
-      type: "image-display-inline",
-      name: "ImageDisplayInlineBlockClean",
-      label: "Imagem",
-      category: "Mídia",
-      description: "Exibição de imagens",
+      type: 'image',
+      name: 'Imagem',
+      label: 'Imagem',
+      category: 'Mídia',
+      description: 'Exibir imagem',
       icon: Image,
-      component: ENHANCED_BLOCK_REGISTRY["image-display-inline"],
+      component: ENHANCED_BLOCK_REGISTRY['image'],
+      defaultProps: { src: '', alt: 'Imagem' },
       properties: {},
-      defaultProps: { src: "", alt: "Imagem" },
     },
     {
-      type: "options-grid",
-      name: "OptionsGridInlineBlock",
-      label: "Grade de Opções",
-      category: "Quiz",
-      description: "Grade de opções para quiz",
-      icon: Grid,
-      component: ENHANCED_BLOCK_REGISTRY["options-grid"],
+      type: 'button',
+      name: 'Botão',
+      label: 'Botão',
+      category: 'Interativo',
+      description: 'Botão clicável',
+      icon: MousePointer,
+      component: ENHANCED_BLOCK_REGISTRY['button'],
+      defaultProps: { text: 'Clique aqui', variant: 'primary' },
       properties: {},
-      defaultProps: { options: [] },
     },
     {
-      type: "quiz-intro",
-      name: "QuizIntro",
-      label: "Introdução do Quiz",
-      category: "Quiz",
-      description: "Componente de introdução do quiz",
-      icon: Sparkles,
-      component: ENHANCED_BLOCK_REGISTRY["quiz-intro"],
+      type: 'form-container',
+      name: 'Container de Formulário',
+      label: 'Container Form',
+      category: 'Formulário',
+      description: 'Container para formulários',
+      icon: LayoutTemplate,
+      component: ENHANCED_BLOCK_REGISTRY['form-container'],
+      defaultProps: {},
       properties: {},
-      defaultProps: { title: "Quiz de Estilo Pessoal" },
     },
     {
-      type: "loading-animation",
-      name: "LoadingAnimationBlock",
-      label: "Animação de Carregamento",
-      category: "UI",
-      description: "Animação de carregamento",
-      icon: Clock,
-      component: ENHANCED_BLOCK_REGISTRY["loading-animation"],
+      type: 'form-input',
+      name: 'Campo de Texto',
+      label: 'Input',
+      category: 'Formulário',
+      description: 'Campo de entrada de texto',
+      icon: FormInput,
+      component: ENHANCED_BLOCK_REGISTRY['form-input'],
+      defaultProps: { placeholder: 'Digite aqui' },
       properties: {},
-      defaultProps: { message: "Carregando..." },
     },
     {
-      type: "step01-template",
-      name: "Step01TemplateBlock",
-      label: "Template Etapa 1",
-      category: "Templates",
-      description: "Template conectado da Etapa 1",
-      icon: Sparkles,
-      component: ENHANCED_BLOCK_REGISTRY["step01-template"],
+      type: 'decorative-bar',
+      name: 'Barra Decorativa',
+      label: 'Barra',
+      category: 'Visual',
+      description: 'Barra decorativa colorida',
+      icon: Minus,
+      component: ENHANCED_BLOCK_REGISTRY['decorative-bar'],
+      defaultProps: {},
       properties: {},
-      defaultProps: { stepNumber: 1, stepName: "Quiz de Estilo Pessoal" },
-    }
+    },
   ];
+}
 
-  // Add definitions for all registered components
-  Object.keys(ENHANCED_BLOCK_REGISTRY).forEach(type => {
-    if (!definitions.find(def => def.type === type)) {
-      definitions.push({
-        type,
-        name: type.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        label: type.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        category: type.includes('quiz') ? 'Quiz' : type.includes('offer') ? 'Oferta' : 'Outros',
-        description: `Componente ${type}`,
-        icon: Star,
-        component: ENHANCED_BLOCK_REGISTRY[type],
-        properties: {},
-        defaultProps: {},
-      });
-    }
-  });
-
-  return definitions;
-};
-
+export const getAvailableBlockTypes = (): string[] => Object.keys(ENHANCED_BLOCK_REGISTRY);
+export const blockTypeExists = (type: string): boolean =>
+  type in ENHANCED_BLOCK_REGISTRY || type in BLOCK_ALIASES;
 export default ENHANCED_BLOCK_REGISTRY;

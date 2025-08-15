@@ -1,8 +1,6 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { useEditor } from '@/context/EditorContext';
 import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
@@ -25,10 +23,6 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
   } = useEditor();
 
   const funnelNavigation = useFunnelNavigation();
-  
-  // Scroll sync para sincronização entre painéis
-  const canvasScroll = useSyncedScroll({ source: 'canvas' });
-  const componentsScroll = useSyncedScroll({ source: 'components' });
 
   const handleComponentSelect = async (type: string) => {
     try {
@@ -87,44 +81,32 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
         </div>
       </div>
 
-      <ScrollSyncProvider>
-        <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
-          {/* Sidebar de componentes */}
-          <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-            <div
-              ref={componentsScroll.scrollRef}
-              className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable]"
-            >
-              <ComponentsSidebar onComponentSelect={handleComponentSelect} />
-            </div>
-          </ResizablePanel>
+      <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
+        {/* Sidebar de componentes */}
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <ComponentsSidebar onComponentSelect={handleComponentSelect} />
+        </ResizablePanel>
 
-          <ResizableHandle withHandle />
+        <ResizableHandle withHandle />
 
-          {/* Canvas principal */}
-          <ResizablePanel defaultSize={55}>
-            <div
-              ref={canvasScroll.scrollRef}
-              className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable]"
-            >
-              <CanvasDropZone
-                blocks={currentBlocks}
-                selectedBlockId={selectedBlockId}
-                onSelectBlock={setSelectedBlockId}
-                onUpdateBlock={updateBlock}
-                onDeleteBlock={deleteBlock}
-              />
-            </div>
-          </ResizablePanel>
+        {/* Canvas principal */}
+        <ResizablePanel defaultSize={55}>
+          <CanvasDropZone
+            blocks={currentBlocks}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={setSelectedBlockId}
+            onUpdateBlock={updateBlock}
+            onDeleteBlock={deleteBlock}
+          />
+        </ResizablePanel>
 
-          <ResizableHandle withHandle />
+        <ResizableHandle withHandle />
 
-          {/* Painel de propriedades */}
-          <ResizablePanel defaultSize={25}>
-            <EnhancedUniversalPropertiesPanel selectedBlock={selectedBlock || null} onUpdate={handleUpdateSelectedBlock} />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </ScrollSyncProvider>
+        {/* Painel de propriedades */}
+        <ResizablePanel defaultSize={25}>
+          <EnhancedUniversalPropertiesPanel selectedBlock={selectedBlock || null} onUpdate={handleUpdateSelectedBlock} />
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 };

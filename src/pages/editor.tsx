@@ -11,6 +11,7 @@ import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolba
 // 🚀 PREVIEW SYSTEM
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
+import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -33,7 +34,7 @@ import { useSyncedScroll } from '@/hooks/useSyncedScroll';
  * 🚀 SISTEMA DE PREVIEW INTEGRADO
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
-  console.log('🔧 EditorFixedPageWithDragDrop: Iniciando editor...');
+  // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
 
@@ -247,38 +248,20 @@ export default EditorFixedPageWithDragDrop;
 
 // 🚀 WRAPPER COM SISTEMA DE PREVIEW COMPLETO
 export const EditorWithPreview: React.FC = () => {
-  console.log('🚀 EditorWithPreview: Carregando componente...');
-  
-  try {
-    return (
-      <div className="relative h-screen overflow-hidden">
+  return (
+    <PreviewProvider totalSteps={21} funnelId="default">
+      <div className="relative h-screen">
         {/* Componente de Preview Navigation - Flutuante */}
         <PreviewNavigation position="floating" />
 
         {/* Editor Principal */}
-        <div className="h-full w-full">
-          <EditorFixedPageWithDragDrop />
-        </div>
+        <EditorFixedPageWithDragDrop />
 
         {/* Toggle de Preview - Posição fixa no canto */}
         <div className="fixed bottom-4 right-4 z-50">
           <PreviewToggleButton variant="full" />
         </div>
       </div>
-    );
-  } catch (error) {
-    console.error('❌ EditorWithPreview: Erro no carregamento:', error);
-    
-    // Fallback: carregar apenas o editor principal sem preview
-    return (
-      <div className="relative h-screen">
-        <div className="p-4 bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm">
-          ⚠️ Modo de Fallback - Preview desabilitado temporariamente
-        </div>
-        <div className="h-full w-full">
-          <EditorFixedPageWithDragDrop />
-        </div>
-      </div>
-    );
-  }
+    </PreviewProvider>
+  );
 };

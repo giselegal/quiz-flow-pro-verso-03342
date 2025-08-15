@@ -38,7 +38,7 @@ export const CombinedComponentsPanel: React.FC<CombinedComponentsPanelProps> = (
           </TabsContent>
 
           <TabsContent value="reusable" className="h-full m-0 p-0">
-            <div className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable]">
+            <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">
               <div className="p-2">
                 <ReusableComponentsPanel
                   currentStepNumber={currentStepNumber}

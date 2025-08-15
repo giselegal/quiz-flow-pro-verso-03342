@@ -105,16 +105,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
       </CardHeader>
 
       <CardContent className="flex-1 p-0 overflow-hidden">
-        <div 
-          className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable]"
-          onScroll={(e) => {
-            console.log('🔄 FunnelStagesPanel: Scroll detectado!', {
-              scrollTop: e.currentTarget.scrollTop,
-              scrollHeight: e.currentTarget.scrollHeight,
-              clientHeight: e.currentTarget.clientHeight
-            });
-          }}
-        >
+        <div className="h-full overflow-y-auto [scrollbar-gutter:stable]">
           <div className="space-y-2 p-4">
             {stages.map(stage => (
               <div

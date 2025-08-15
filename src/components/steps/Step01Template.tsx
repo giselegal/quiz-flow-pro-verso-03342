@@ -192,26 +192,121 @@ export default function Step01Template({ sessionId, onNext }: Step01TemplateProp
   );
 }
 
-// ✅ TEMPLATE CONECTADO: Usa wrapper de bloco que renderiza componente TSX completo
+// ✅ BACKUP: Template original de blocos para compatibilidade
 export const getStep01Template = () => {
   return [
     {
-      id: 'step01-connected-template',
-      type: 'step01-template', // ✅ Usa o wrapper registrado no enhancedBlockRegistry
+      id: 'step01-header',
+      type: 'quiz-intro-header',
       properties: {
-        // Propriedades básicas do template
-        stepNumber: 1,
-        stepName: 'Quiz de Estilo Pessoal',
-        sessionId: 'editor-session',
-        
-        // Metadados para o editor
-        templateType: 'connected',
-        isConnectedTemplate: true,
-        
-        // Layout preferences
-        containerWidth: 'full',
-        spacing: 'normal',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoAlt: 'Logo Gisele Galvão',
+        logoWidth: 96,
+        logoHeight: 96,
+        progressValue: 0,
+        progressMax: 100,
+        showBackButton: false,
+        showProgress: false,
       },
+    },
+    {
+      id: 'intro-decorative-bar',
+      type: 'decorative-bar-inline',
+      properties: {
+        width: '100%',
+        height: 4,
+        color: '#B89B7A',
+        backgroundColor: '#B89B7A',
+        marginTop: 0,
+        marginBottom: 24,
+      },
+    },
+    {
+      id: 'intro-main-title',
+      type: 'text-inline',
+      properties: {
+        content:
+          '<span style="color: #B89B7A">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com <span style="color: #B89B7A">Você</span>.',
+        fontSize: 'text-2xl',
+        fontWeight: 'font-bold',
+        textAlign: 'text-center',
+        color: '#432818',
+        marginBottom: 16,
+      },
+    },
+    {
+      id: 'intro-image',
+      type: 'image-display-inline',
+      properties: {
+        src: 'https://res.cloudinary.com/der8kogzu/image/upload/f_avif,q_85,w_300,c_limit/v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb.avif',
+        alt: 'Descubra seu estilo predominante',
+        width: 300,
+        height: 204,
+        containerPosition: 'center',
+        marginBottom: 16,
+      },
+    },
+    {
+      id: 'intro-subtitle',
+      type: 'text-inline',
+      properties: {
+        content: 'Descubra seu <strong>ESTILO PREDOMINANTE</strong> em apenas alguns minutos!',
+        fontSize: 'text-lg',
+        fontWeight: 'font-medium',
+        textAlign: 'text-center',
+        color: '#432818',
+        marginBottom: 24,
+      },
+    },
+    {
+      id: 'intro-form-container',
+      type: 'form-container',
+      properties: {
+        backgroundColor: 'transparent',
+        marginTop: 0,
+        marginBottom: 16,
+        paddingTop: 0,
+        paddingBottom: 0,
+        requireNameToEnableButton: true, // ✅ Habilitar validação de botão
+        targetButtonId: 'intro-cta-button', // ✅ ID do botão principal
+        visuallyDisableButton: true, // ✅ Feedback visual
+      },
+      children: [
+        {
+          id: 'intro-form-input', // ✅ ID PRINCIPAL para validação
+          type: 'form-input',
+          properties: {
+            inputType: 'text',
+            placeholder: 'Digite seu primeiro nome aqui...',
+            label: 'Como posso te chamar?',
+            required: true,
+            name: 'userName', // ✅ Nome para identificar campo principal
+            backgroundColor: '#ffffff',
+            borderColor: '#B89B7A',
+            marginBottom: 16,
+          },
+        },
+        {
+          id: 'intro-cta-button', // ✅ ID PRINCIPAL para eventos de botão
+          type: 'button-inline',
+          properties: {
+            text: 'Quero Descobrir meu Estilo Agora!',
+            variant: 'primary',
+            size: 'lg',
+            fullWidth: true,
+            backgroundColor: '#B89B7A',
+            textColor: '#ffffff',
+            requiresValidInput: true,
+            watchInputId: 'intro-form-input',
+            nextStepUrl: '/quiz/step-2',
+            nextStepId: 'step-2',
+            disabledText: 'Digite seu nome para continuar',
+            showDisabledState: true,
+            disabledOpacity: 0.6,
+          },
+        },
+      ],
     },
   ];
 };

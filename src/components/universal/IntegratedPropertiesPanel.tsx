@@ -25,7 +25,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -345,9 +345,6 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
   
   // Refs para navegação por teclado
   const panelRef = useRef<HTMLDivElement>(null);
-  
-  // Scroll sync para sincronização com outras colunas
-  const { scrollRef } = useSyncedScroll({ source: 'properties' });
 
   // Hook de propriedades unificadas (fonte única de verdade)
   console.log('🔥 IntegratedPanel - ANTES do hook:', { selectedBlock, type: selectedBlock?.type, id: selectedBlock?.id });
@@ -826,10 +823,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
               </TabsTrigger>
             </TabsList>
 
-            <div
-              ref={scrollRef}
-              className="flex-1 p-4 overflow-y-auto editor-scrollable [scrollbar-gutter:stable]"
-            >
+            <ScrollArea className="flex-1 p-4">
               <TabsContent value="properties" className="mt-0 space-y-4">
                 {/* Categoria Comportamento (15 funcionalidades do header) */}
                 {categorizedProperties.behavior?.length > 0 && (
@@ -938,7 +932,7 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
                   </Card>
                 )}
               </TabsContent>
-            </div>
+            </ScrollArea>
           </Tabs>
         </div>
 

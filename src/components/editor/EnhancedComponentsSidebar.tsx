@@ -97,14 +97,7 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
       <CardContent className="flex-1 overflow-hidden">
         <div
           ref={scrollRef}
-          className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable] overflow-x-hidden"
-          onScroll={(e) => {
-            console.log('🔄 EnhancedComponentsSidebar: Scroll detectado!', {
-              scrollTop: e.currentTarget.scrollTop,
-              scrollHeight: e.currentTarget.scrollHeight,
-              clientHeight: e.currentTarget.clientHeight
-            });
-          }}
+          className="h-full overflow-y-auto [scrollbar-gutter:stable] overflow-x-hidden"
         >
           <div className="space-y-1 p-0">
             {orderedCategories.map(category => (
