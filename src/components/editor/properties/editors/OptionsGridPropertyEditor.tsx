@@ -1,5 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -7,11 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Grid3X3, Settings, ImageIcon } from 'lucide-react';
+import { Grid3X3, ImageIcon, Settings } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
-import { PropertyEditorProps } from '../interfaces/PropertyEditor';
 import { PropertyArrayEditor } from '../components/PropertyArrayEditor';
+import { PropertyEditorProps } from '../interfaces/PropertyEditor';
 
 export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
   block,
