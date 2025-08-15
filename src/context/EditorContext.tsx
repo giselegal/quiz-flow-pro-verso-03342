@@ -398,7 +398,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
   // ✅ SISTEMA HÍBRIDO: CARREGAMENTO COM TSX TEMPLATES CONECTADOS
   useEffect(() => {
+    console.log('🔄 EditorProvider: Iniciando useEffect para carregamento de templates');
+    
     const loadInitialTemplates = async () => {
+      console.log('🔄 EditorProvider: Função loadInitialTemplates executada');
       console.log('🔄 EditorProvider: Carregando templates híbridos TSX/JSON');
 
       // Usar requestIdleCallback para não bloquear UI
@@ -412,6 +415,12 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             
             // ✅ USAR SISTEMA HÍBRIDO: TSX TEMPLATES CONECTADOS
             const loadedBlocks = getStepTemplate(stepNumber);
+            console.log(`🔍 DEBUG getStepTemplate(${stepNumber}):`, {
+              result: loadedBlocks,
+              type: typeof loadedBlocks,
+              isArray: Array.isArray(loadedBlocks),
+              length: loadedBlocks?.length,
+            });
             
             if (loadedBlocks && loadedBlocks.length > 0) {
               setStageBlocks(prev => ({
@@ -419,6 +428,8 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
                 [stageId]: loadedBlocks,
               }));
               console.log(`✅ Template híbrido ${stageId} carregado: ${loadedBlocks.length} blocos`);
+            } else {
+              console.warn(`⚠️ Template híbrido ${stageId}: Nenhum bloco retornado`);
             }
 
             // Carregar outras etapas com delay progressivo usando sistema híbrido
