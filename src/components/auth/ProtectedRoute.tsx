@@ -7,6 +7,8 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, component: Component }) => {
+  console.log('🔒 ProtectedRoute: INICIANDO para path:', path);
+  
   const { user } = useAuth();
 
   // Allow access during development (multiple checks for robustness)
@@ -17,15 +19,25 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ path, component:
   
   const shouldAllowAccess = user || isDevelopment;
 
-  // Debug log to help identify the issue
-  console.log('🔒 ProtectedRoute Debug:', {
+  // Enhanced debug log
+  console.log('🔒 ProtectedRoute Debug DETALHADO:', {
     path,
     user: !!user,
+    userDetails: user ? 'Logado' : 'Não logado',
     isDevelopment,
     shouldAllowAccess,
     hostname: window.location.hostname,
-    env: import.meta.env.MODE
+    env: import.meta.env.MODE,
+    devCheck: import.meta.env.DEV,
+    nodeEnv: process.env.NODE_ENV,
+    componentName: Component.name || 'Unknown'
   });
 
-  return <Route path={path}>{shouldAllowAccess ? <Component /> : <div>Acesso negado. Faça login.</div>}</Route>;
+  if (!shouldAllowAccess) {
+    console.log('❌ ProtectedRoute: ACESSO NEGADO para', path);
+    return <Route path={path}><div>Acesso negado. Faça login.</div></Route>;
+  }
+
+  console.log('✅ ProtectedRoute: ACESSO PERMITIDO para', path, '- Carregando componente');
+  return <Route path={path}><Component /></Route>;
 };

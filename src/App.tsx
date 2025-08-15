@@ -77,12 +77,14 @@ function App() {
                 {/* Redirect /editor para /editor-fixed */}
                 <Route path="/editor">
                   {() => {
+                    console.log('🔄 App: Redirecionando /editor para /editor-fixed');
                     window.location.href = '/editor-fixed';
                     return null;
                   }}
                 </Route>
                 <Route path="/editor/:id">
                   {() => {
+                    console.log('🔄 App: Redirecionando /editor/:id para /editor-fixed');
                     window.location.href = '/editor-fixed';
                     return null;
                   }}
@@ -105,21 +107,24 @@ function App() {
                 {/* Editor Fixed Route - Editor 4 Colunas com Drag & Drop + Painel de Propriedades Otimizado */}
                 <ProtectedRoute
                   path="/editor-fixed"
-                  component={() => (
-                    <Suspense fallback={<PageLoading />}>
-                      <ErrorBoundary>
-                        <EditorProvider>
-                          <ScrollSyncProvider>
-                            <PreviewProvider totalSteps={21} funnelId="editor-fixed">
-                              <div className="relative">
-                                <EditorFixedPageWithDragDrop />
-                              </div>
-                            </PreviewProvider>
-                          </ScrollSyncProvider>
-                        </EditorProvider>
-                      </ErrorBoundary>
-                    </Suspense>
-                  )}
+                  component={() => {
+                    console.log('🚀 App: Carregando EditorFixedPageWithDragDrop');
+                    return (
+                      <Suspense fallback={<PageLoading />}>
+                        <ErrorBoundary>
+                          <EditorProvider>
+                            <ScrollSyncProvider>
+                              <PreviewProvider totalSteps={21} funnelId="editor-fixed">
+                                <div className="relative">
+                                  <EditorFixedPageWithDragDrop />
+                                </div>
+                              </PreviewProvider>
+                            </ScrollSyncProvider>
+                          </EditorProvider>
+                        </ErrorBoundary>
+                      </Suspense>
+                    );
+                  }}
                 />
 
                 {/* Rota alternativa com Preview System */}

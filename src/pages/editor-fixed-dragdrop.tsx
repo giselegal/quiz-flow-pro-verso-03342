@@ -40,8 +40,13 @@ import { BookOpen, Settings } from 'lucide-react';
  * - Sistema de ativação automática de 21 etapas
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
+  console.log('🚀 EditorFixedPageWithDragDrop: COMPONENTE INICIANDO');
+  
   // ⚡ EDITOR CONTEXT - Estado centralizado (UMA ÚNICA EXTRAÇÃO)
+  console.log('🚀 EditorFixedPageWithDragDrop: Tentando obter EditorContext...');
   const editorContext = useEditor();
+  console.log('✅ EditorFixedPageWithDragDrop: EditorContext obtido com sucesso');
+  
   const {
     activeStageId: activeStage,
     selectedBlockId,
