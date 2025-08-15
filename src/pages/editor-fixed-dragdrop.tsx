@@ -28,7 +28,7 @@ import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { BookOpen, Eye, Save, Settings } from 'lucide-react';
+import { BookOpen, Settings } from 'lucide-react';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -56,7 +56,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       updateBlock,
       reorderBlocks,
     },
-    persistenceActions: { saveFunnel, isSaving },
+    persistenceActions: { saveFunnel },
     computed: { currentBlocks, selectedBlock, totalBlocks },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
   } = editorContext;
@@ -230,27 +230,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Button size="sm" variant="outline" onClick={handleSave} disabled={isSaving}>
-                <Save className="w-4 h-4 mr-2" />
-                {isSaving ? 'Salvando...' : 'Salvar'}
-              </Button>
-
-              <Button size="sm" variant="outline" onClick={() => setIsPreviewing(!isPreviewing)}>
-                <Eye className="w-4 h-4 mr-2" />
-                {isPreviewing ? 'Editar' : 'Preview'}
-              </Button>
-
-              <Button size="sm" variant="outline" onClick={() => setShowFunnelSettings(true)}>
-                <Settings className="w-4 h-4 mr-2" />
-                Configurar
-              </Button>
-
-              <Button size="sm">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Testar Funil
-              </Button>
-            </div>
+            {/* Action buttons moved to EditorToolbar - no duplicates */}
           </div>
         </div>
 
@@ -273,13 +253,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50 text-sm"
                   >
                     Anterior
-                  </button>
-                  <button
-                    onClick={funnelNavigation.handleSave}
-                    disabled={funnelNavigation.isSaving}
-                    className="px-3 py-1 bg-blue-500 text-white rounded disabled:opacity-50 text-sm"
-                  >
-                    {funnelNavigation.isSaving ? 'Salvando...' : 'Salvar'}
                   </button>
                   <button
                     onClick={() =>
