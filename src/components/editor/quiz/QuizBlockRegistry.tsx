@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { IntroBlock } from '@/components/steps/step01/IntroBlock';
-import { QuizIntroHeaderBlock } from './QuizIntroHeaderBlock';
+import { QuizIntroHeaderBlock } from '@/components/blocks/unified/UnifiedHeaderVariant';
 import QuizQuestionBlock from './QuizQuestionBlock';
 
 // Mapeamento de componentes do quiz

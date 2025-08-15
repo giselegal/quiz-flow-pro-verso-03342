@@ -94,7 +94,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-start-page': lazy(() => import('./QuizStartPageBlock')),
   'quiz-transition': lazy(() => import('./QuizTransitionBlock')),
   'quiz-title': lazy(() => import('./QuizTitleBlock')),
-  'quiz-intro-header': lazy(() => import('./QuizIntroHeaderBlock')),
+  'quiz-intro-header': lazy(() => import('../unified/UnifiedHeaderVariant').then(module => ({ default: module.QuizIntroHeaderBlock }))),
   'vertical-canvas-header': lazy(() => import('./VerticalCanvasHeaderBlock')),
   'options-grid': lazy(() => import('./OptionsGridBlock')),
   // Alias inline — usado pelo editor para edição em canvas quando necessário

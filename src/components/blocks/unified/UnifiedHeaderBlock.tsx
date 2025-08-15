@@ -139,6 +139,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
 
   function renderQuizIntroContent() {
     const styleResults = useStyleResultsForHeader();
+    
     return (
       <div className="p-4">
         <div className="relative w-full min-h-[120px] flex items-center justify-center">
