@@ -45,6 +45,14 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
   // 🎯 Hook para buscar nome do usuário dinamicamente
   const dynamicUserName = useUserName();
 
+  // 🆔 Extrair stepId do block.id para IDs personalizados por etapa
+  const stepId = useMemo(() => {
+    if (!block?.id) return undefined;
+    // Extrair stepId do formato: "step01-header" -> "step01"
+    const match = block.id.match(/^(step\d+)/);
+    return match ? match[1] : undefined;
+  }, [block?.id]);
+
   // Propriedades unificadas com fallbacks seguros
   const props = useMemo(() => {
     const properties = block?.properties || {};
@@ -190,6 +198,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           showProgress={props.showPrimaryStyleProgress}
           showImage={props.showPrimaryStyleImage}
           showGuide={props.showPrimaryStyleGuide}
+          stepId={stepId}
         />
 
         <SecondaryStylesSection
@@ -199,6 +208,7 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           showSecondaryProgress={props.showSecondaryStyleProgress}
           showThirdName={props.showThirdStyleName}
           showThirdProgress={props.showThirdStyleProgress}
+          stepId={stepId}
         />
       </div>
     );

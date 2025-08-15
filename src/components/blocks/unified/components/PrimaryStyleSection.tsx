@@ -9,6 +9,7 @@ interface PrimaryStyleSectionProps {
   showProgress: boolean;
   showImage: boolean;
   showGuide: boolean;
+  stepId?: string;
 }
 
 export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
@@ -17,18 +18,21 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
   showDescription,
   showProgress,
   showImage,
-  showGuide
+  showGuide,
+  stepId
 }) => {
+  // Gerar prefixo dos IDs baseado no stepId
+  const idPrefix = stepId ? `${stepId}-` : 'header-';
   // Se nenhum elemento estiver ativo, não renderizar nada
   if (!showName && !showDescription && !showProgress && !showImage && !showGuide) {
     return null;
   }
 
   return (
-    <div className="mt-6 space-y-4">
+    <div id={`${idPrefix}primary-style-section`} className="mt-6 space-y-4">
       {/* Título da seção */}
       <div className="text-center">
-        <h3 className="text-lg font-semibold text-foreground">Seu Estilo Predominante</h3>
+        <h3 id={`${idPrefix}primary-style-title`} className="text-lg font-semibold text-foreground">Seu Estilo Predominante</h3>
       </div>
 
       {/* Conteúdo principal */}
@@ -37,6 +41,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
         {showName && (
           <div className="text-center">
             <h4 
+              id={`${idPrefix}primary-style-name`}
               className="text-2xl font-bold"
               style={{ color: styleResult.color }}
             >
@@ -48,7 +53,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
         {/* Descrição do estilo */}
         {showDescription && (
           <div className="text-center px-4">
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p id={`${idPrefix}primary-style-description`} className="text-sm text-muted-foreground leading-relaxed">
               {styleResult.description}
             </p>
           </div>
@@ -62,6 +67,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
               <span>{styleResult.percentage}%</span>
             </div>
             <Progress
+              id={`${idPrefix}primary-style-progress`}
               value={styleResult.percentage}
               className="h-2"
               indicatorClassName="transition-all duration-500"
@@ -79,6 +85,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
             <div className="flex justify-center">
               <div className="relative">
                 <img
+                  id={`${idPrefix}primary-style-image`}
                   src={styleResult.image}
                   alt={`Estilo ${styleResult.name}`}
                   className="w-32 h-32 rounded-full object-cover border-4 shadow-lg"
@@ -97,6 +104,7 @@ export const PrimaryStyleSection: React.FC<PrimaryStyleSectionProps> = ({
             <div className="flex justify-center">
               <div className="relative w-full max-w-48">
                 <img
+                  id={`${idPrefix}primary-style-guide`}
                   src={styleResult.guideImage}
                   alt={`Guia de estilo ${styleResult.name}`}
                   className="w-full h-32 rounded-lg object-cover shadow-lg"
