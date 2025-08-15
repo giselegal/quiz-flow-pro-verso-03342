@@ -18,6 +18,7 @@ import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponent
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import DebugTemplateLoader from '@/components/debug/DebugTemplateLoader';
 import QuizIntegrationTest from '@/components/debug/QuizIntegrationTest';
+import { SmartStepRenderer } from '@/components/templates/SmartStepRenderer';
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
@@ -257,13 +258,22 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
                 >
                   <div className={getCanvasClassName()}>
-                    <CanvasDropZone
-                      blocks={currentBlocks}
-                      selectedBlockId={selectedBlockId}
-                      onSelectBlock={setSelectedBlockId}
-                      onUpdateBlock={updateBlock}
-                      onDeleteBlock={handleDeleteBlock}
-                    />
+                    {isPreviewing && activeStage ? (
+                      // 🎯 MODO PREVIEW: Usa SmartStepRenderer para visualizar as etapas do quiz
+                      <SmartStepRenderer 
+                        stepNumber={parseInt(activeStage.replace(/[^\d]/g, '')) || 1}
+                        onContinue={() => console.log('Preview mode - continue disabled')}
+                      />
+                    ) : (
+                      // ✏️ MODO EDIÇÃO: Usa CanvasDropZone para editar blocos
+                      <CanvasDropZone
+                        blocks={currentBlocks}
+                        selectedBlockId={selectedBlockId}
+                        onSelectBlock={setSelectedBlockId}
+                        onUpdateBlock={updateBlock}
+                        onDeleteBlock={handleDeleteBlock}
+                      />
+                    )}
                   </div>
                 </div>
               }
