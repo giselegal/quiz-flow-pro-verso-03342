@@ -196,9 +196,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               >
                 <div className={getCanvasClassName()}>
                   {isPreviewing && activeStageId ? (
-                    // 🎯 MODO PREVIEW: Usa SmartStepRenderer para visualizar as etapas do quiz
+                    // 🎯 MODO PREVIEW: Usa SmartStepRenderer com blocos editáveis
                     <SmartStepRenderer 
                       stepNumber={getStepNumberFromStageId(activeStageId)}
+                      currentBlocks={currentBlocks} // 🆕 Passar blocos editáveis
                       onContinue={() => console.log('Preview mode - continue disabled')}
                     />
                   ) : (

@@ -9,6 +9,7 @@ interface QuizQuestionStepProps {
   onContinue?: () => void;
   currentAnswers: Array<{ questionId: string; optionId: string; points: number }>;
   onAnswerChange: (questionId: string, optionId: string, points: number) => void;
+  currentBlocks?: any[]; // Blocos editáveis do editor
 }
 
 /**
@@ -22,10 +23,28 @@ export const QuizQuestionStep: React.FC<QuizQuestionStepProps> = ({
   totalQuestions,
   onContinue,
   currentAnswers,
-  onAnswerChange
+  onAnswerChange,
+  currentBlocks = [] // 🆕 Blocos editáveis (futuro uso para personalização)
 }) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [canContinue, setCanContinue] = useState(false);
+
+  // 🆕 Função para extrair dados dos blocos editáveis
+  const getContentFromBlocks = () => {
+    if (currentBlocks.length === 0) return null;
+    
+    // Buscar blocos específicos por tipo/id
+    const titleBlock = currentBlocks.find(b => b.type === 'heading' || b.id?.includes('title') || b.id?.includes('question'));
+    const buttonBlock = currentBlocks.find(b => b.type === 'button' || b.id?.includes('button') || b.id?.includes('continue'));
+    
+    return {
+      title: titleBlock?.content?.text || titleBlock?.properties?.text,
+      buttonText: buttonBlock?.content?.text || buttonBlock?.properties?.text,
+    };
+  };
+
+  const customContent = getContentFromBlocks();
+  console.log('🎯 QuizQuestionStep: Conteúdo customizado extraído:', customContent);
 
   const maxSelections = question.multiSelect || 3;
   const progressPercentage = (stepNumber / 21) * 100;
@@ -123,7 +142,7 @@ export const QuizQuestionStep: React.FC<QuizQuestionStepProps> = ({
           {/* Question Title */}
           <div className="text-center mb-8">
             <h1 className="text-3xl lg:text-4xl font-bold text-[#432818] mb-4">
-              {question.text}
+              {customContent?.title || question.text}
             </h1>
             <p className="text-lg text-gray-600">
               Questão {questionNumber} de {totalQuestions}
@@ -214,7 +233,7 @@ export const QuizQuestionStep: React.FC<QuizQuestionStepProps> = ({
                 }
               `}
             >
-              {canContinue ? 'Continuar →' : `Selecione ${maxSelections - selectedOptions.length} opção(ões) para continuar`}
+              {canContinue ? (customContent?.buttonText || 'Continuar →') : `Selecione ${maxSelections - selectedOptions.length} opção(ões) para continuar`}
             </button>
           </div>
         </div>

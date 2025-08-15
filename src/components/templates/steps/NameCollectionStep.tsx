@@ -4,6 +4,7 @@ interface NameCollectionStepProps {
   onContinue?: () => void;
   currentName?: string;
   onNameChange: (name: string) => void;
+  currentBlocks?: any[]; // Blocos editáveis do editor
 }
 
 /**
@@ -13,10 +14,30 @@ interface NameCollectionStepProps {
 export const NameCollectionStep: React.FC<NameCollectionStepProps> = ({
   onContinue,
   currentName,
-  onNameChange
+  onNameChange,
+  currentBlocks = [] // 🆕 Blocos editáveis (futuro uso para personalização)
 }) => {
   const [inputValue, setInputValue] = useState(currentName || '');
   const [isValid, setIsValid] = useState(!!currentName);
+
+  // 🆕 Função para extrair dados dos blocos editáveis
+  const getContentFromBlocks = () => {
+    if (currentBlocks.length === 0) return null;
+    
+    // Buscar blocos específicos por tipo/id
+    const titleBlock = currentBlocks.find(b => b.type === 'heading' || b.id?.includes('title'));
+    const subtitleBlock = currentBlocks.find(b => b.type === 'text' && b.id?.includes('subtitle'));
+    const buttonBlock = currentBlocks.find(b => b.type === 'button' || b.id?.includes('button'));
+    
+    return {
+      title: titleBlock?.content?.text || titleBlock?.properties?.text,
+      subtitle: subtitleBlock?.content?.text || subtitleBlock?.properties?.text,
+      buttonText: buttonBlock?.content?.text || buttonBlock?.properties?.text,
+    };
+  };
+
+  const customContent = getContentFromBlocks();
+  console.log('🎯 NameCollectionStep: Conteúdo customizado extraído:', customContent);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -73,12 +94,12 @@ export const NameCollectionStep: React.FC<NameCollectionStepProps> = ({
           
           {/* Main Title */}
           <h1 className="text-4xl lg:text-5xl font-bold text-[#432818] leading-tight">
-            Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.
+            {customContent?.title || "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você."}
           </h1>
 
           {/* Subtitle */}
           <h2 className="text-2xl lg:text-3xl font-semibold text-[#B89B7A] leading-relaxed">
-            Descubra seu estilo predominante e transforme seu guarda-roupa
+            {customContent?.subtitle || "Descubra seu estilo predominante e transforme seu guarda-roupa"}
           </h2>
 
           {/* Description */}
@@ -124,7 +145,7 @@ export const NameCollectionStep: React.FC<NameCollectionStepProps> = ({
                 }
               `}
             >
-              {isValid ? 'Quero Descobrir meu Estilo Agora!' : 'Digite seu nome para continuar'}
+              {isValid ? (customContent?.buttonText || 'Quero Descobrir meu Estilo Agora!') : 'Digite seu nome para continuar'}
             </button>
           </div>
 

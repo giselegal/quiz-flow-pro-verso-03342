@@ -12,6 +12,7 @@ import { ResultStep } from './steps/ResultStep';
 interface SmartStepRendererProps {
   stepNumber: number;
   onContinue?: () => void;
+  currentBlocks?: any[]; // Blocos editáveis do editor
 }
 
 /**
@@ -33,7 +34,8 @@ interface SmartStepRendererProps {
  */
 export const SmartStepRenderer: React.FC<SmartStepRendererProps> = ({
   stepNumber,
-  onContinue
+  onContinue,
+  currentBlocks = []
 }) => {
   const { quizState } = useEditor();
 
@@ -44,6 +46,7 @@ export const SmartStepRenderer: React.FC<SmartStepRendererProps> = ({
         onContinue={onContinue}
         currentName={quizState.userName}
         onNameChange={quizState.setUserNameFromInput}
+        currentBlocks={currentBlocks} // 🆕 Passar blocos editáveis
       />
     );
   }
@@ -68,6 +71,7 @@ export const SmartStepRenderer: React.FC<SmartStepRendererProps> = ({
         onAnswerChange={(questionId: string, optionId: string, _points: number) => {
           quizState.answerQuestion(questionId, optionId);
         }}
+        currentBlocks={currentBlocks} // 🆕 Passar blocos editáveis
       />
     );
   }
