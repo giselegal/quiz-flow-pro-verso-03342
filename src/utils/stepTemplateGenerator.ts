@@ -1,10 +1,12 @@
 import { StepConfig } from '@/components/steps/BaseStepTemplate';
+import { Block, BlockType } from '@/types/editor';
 
 /**
  * STEP TEMPLATE GENERATOR - Utilitário para gerar templates de steps
  * ✅ Padronização automática
  * ✅ Templates reutilizáveis
  * ✅ Configuração dinâmica
+ * ✅ TypeScript correto
  */
 
 export interface QuestionOption {
@@ -42,6 +44,96 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
     options
   } = config;
 
+  const blocks: Block[] = [
+    // Progress bar
+    {
+      id: `step-${stepNumber}-progress`,
+      type: 'progress-inline' as BlockType,
+      order: 1,
+      content: {
+        title: 'Progress'
+      },
+      properties: {
+        currentStep: stepNumber - 1,
+        totalSteps: 19,
+        showPercentage: true,
+        marginBottom: 32
+      }
+    },
+    // Question header
+    {
+      id: `step-${stepNumber}-question-header`,
+      type: 'heading-inline' as BlockType,
+      order: 2,
+      content: {
+        title: title,
+        level: 2,
+        textAlign: 'center',
+        fontSize: '1.75rem',
+        fontWeight: 'semibold'
+      },
+      properties: {
+        marginBottom: description ? 16 : 32
+      }
+    }
+  ];
+
+  // Optional description
+  if (description) {
+    blocks.push({
+      id: `step-${stepNumber}-description`,
+      type: 'text-inline' as BlockType,
+      order: 3,
+      content: {
+        text: description,
+        textAlign: 'center',
+        fontSize: '1.1rem'
+      },
+      properties: {
+        color: 'hsl(var(--muted-foreground))',
+        marginBottom: 32
+      }
+    });
+  }
+
+  // Options grid
+  blocks.push({
+    id: `step-${stepNumber}-options-grid`,
+    type: 'options-grid' as BlockType,
+    order: description ? 4 : 3,
+    content: {
+      title: 'Options'
+    },
+    properties: {
+      questionId,
+      allowMultiple,
+      minSelections,
+      maxSelections,
+      showImages,
+      columns,
+      options,
+      marginBottom: 32
+    }
+  });
+
+  // Next button
+  blocks.push({
+    id: `step-${stepNumber}-next-button`,
+    type: 'button-inline' as BlockType,
+    order: description ? 5 : 4,
+    content: {
+      title: allowMultiple ? 'Continuar' : 'Próxima Questão'
+    },
+    properties: {
+      variant: 'default',
+      size: 'lg',
+      action: 'next-step',
+      disabled: true,
+      requiresValidation: true,
+      validationTarget: `step-${stepNumber}-options-grid`
+    }
+  });
+
   return {
     id: `step-${stepNumber.toString().padStart(2, '0')}-${questionId}`,
     title,
@@ -49,78 +141,7 @@ export const generateQuestionStepConfig = (config: QuestionConfig): StepConfig =
     layout: 'vertical',
     spacing: 'md',
     padding: 'p-6',
-    blocks: [
-      // Progress bar
-      {
-        id: `step-${stepNumber}-progress`,
-        type: 'progress-inline',
-        order: 1,
-        properties: {
-          currentStep: stepNumber - 1,
-          totalSteps: 19,
-          showPercentage: true,
-          marginBottom: 32
-        }
-      },
-      // Question header
-      {
-        id: `step-${stepNumber}-question-header`,
-        type: 'heading-inline',
-        order: 2,
-        properties: {
-          text: title,
-          level: 2,
-          textAlign: 'center',
-          fontSize: '1.75rem',
-          fontWeight: '600',
-          marginBottom: description ? 16 : 32
-        }
-      },
-      // Optional description
-      ...(description ? [{
-        id: `step-${stepNumber}-description`,
-        type: 'text-inline',
-        order: 3,
-        properties: {
-          text: description,
-          textAlign: 'center',
-          fontSize: '1.1rem',
-          color: 'hsl(var(--muted-foreground))',
-          marginBottom: 32
-        }
-      }] : []),
-      // Options grid
-      {
-        id: `step-${stepNumber}-options-grid`,
-        type: 'options-grid-inline',
-        order: description ? 4 : 3,
-        properties: {
-          questionId,
-          allowMultiple,
-          minSelections,
-          maxSelections,
-          showImages,
-          columns,
-          options,
-          marginBottom: 32
-        }
-      },
-      // Next button
-      {
-        id: `step-${stepNumber}-next-button`,
-        type: 'button-inline-fixed',
-        order: description ? 5 : 4,
-        properties: {
-          text: allowMultiple ? 'Continuar' : 'Próxima Questão',
-          variant: 'default',
-          size: 'lg',
-          action: 'next-step',
-          disabled: true,
-          requiresValidation: true,
-          validationTarget: `step-${stepNumber}-options-grid`
-        }
-      }
-    ]
+    blocks
   };
 };
 
@@ -144,17 +165,19 @@ export const generateIntroStepConfig = (config: {
     image
   } = config;
 
-  const blocks = [
+  const blocks: Block[] = [
     {
       id: `step-${stepNumber}-header`,
-      type: 'heading-inline',
+      type: 'heading-inline' as BlockType,
       order: 1,
-      properties: {
-        text: title,
+      content: {
+        title: title,
         level: 1,
         textAlign: 'center',
         fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-        fontWeight: '700',
+        fontWeight: 'bold'
+      },
+      properties: {
         marginBottom: subtitle ? 16 : 24
       }
     }
@@ -163,12 +186,14 @@ export const generateIntroStepConfig = (config: {
   if (subtitle) {
     blocks.push({
       id: `step-${stepNumber}-subtitle`,
-      type: 'text-inline',
+      type: 'text-inline' as BlockType,
       order: 2,
-      properties: {
+      content: {
         text: subtitle,
         textAlign: 'center',
-        fontSize: '1.25rem',
+        fontSize: '1.25rem'
+      },
+      properties: {
         color: 'hsl(var(--muted-foreground))',
         marginBottom: 24
       }
@@ -178,13 +203,15 @@ export const generateIntroStepConfig = (config: {
   if (image) {
     blocks.push({
       id: `step-${stepNumber}-image`,
-      type: 'image-display-inline',
+      type: 'image-display-inline' as BlockType,
       order: blocks.length + 1,
-      properties: {
-        src: image,
+      content: {
+        url: image,
         alt: 'Imagem ilustrativa',
-        width: 400,
-        height: 300,
+        width: '400px',
+        height: '300px'
+      },
+      properties: {
         borderRadius: 16,
         alignment: 'center',
         marginBottom: 32
@@ -195,12 +222,14 @@ export const generateIntroStepConfig = (config: {
   if (features && features.length > 0) {
     blocks.push({
       id: `step-${stepNumber}-features`,
-      type: 'text-inline',
+      type: 'text-inline' as BlockType,
       order: blocks.length + 1,
-      properties: {
+      content: {
         text: features.join('\n'),
         textAlign: 'center',
-        fontSize: '1.1rem',
+        fontSize: '1.1rem'
+      },
+      properties: {
         lineHeight: '1.8',
         marginBottom: 40
       }
@@ -210,12 +239,14 @@ export const generateIntroStepConfig = (config: {
   if (description) {
     blocks.push({
       id: `step-${stepNumber}-description`,
-      type: 'text-inline',
+      type: 'text-inline' as BlockType,
       order: blocks.length + 1,
-      properties: {
+      content: {
         text: description,
         textAlign: 'center',
-        fontSize: '1rem',
+        fontSize: '1rem'
+      },
+      properties: {
         color: 'hsl(var(--muted-foreground))',
         marginBottom: 32
       }
@@ -224,10 +255,12 @@ export const generateIntroStepConfig = (config: {
 
   blocks.push({
     id: `step-${stepNumber}-cta-button`,
-    type: 'button-inline-fixed',
+    type: 'button-inline' as BlockType,
     order: blocks.length + 1,
+    content: {
+      title: ctaText
+    },
     properties: {
-      text: ctaText,
       variant: 'default',
       size: 'lg',
       action: 'next-step'
