@@ -261,9 +261,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
                   <IntegratedPropertiesPanel
                     selectedBlock={unifiedSelectedBlock}
-                    onUpdate={(blockId: string, updates: Partial<any>) => {
-                      updateBlock(blockId, updates);
-                    }}
+                     onUpdate={(blockId: string, updates: Partial<any>) => {
+                       console.log('🔥 EDITOR onUpdate CHAMADO:', { blockId, updates });
+                       updateBlock(blockId, updates);
+                       console.log('🔥 EDITOR updateBlock executado');
+                     }}
                     onClose={() => setSelectedBlockId(null)}
                     onDelete={(blockId: string) => {
                       deleteBlock(blockId);

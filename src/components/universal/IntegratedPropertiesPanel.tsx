@@ -347,8 +347,10 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Hook de propriedades unificadas (fonte única de verdade)
+  console.log('🔥 IntegratedPanel - ANTES do hook:', { selectedBlock, type: selectedBlock?.type, id: selectedBlock?.id });
   const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
     useUnifiedProperties(selectedBlock?.type || '', selectedBlock?.id, selectedBlock, onUpdate);
+  console.log('🔥 IntegratedPanel - DEPOIS do hook:', { properties: properties?.length, onUpdate: !!onUpdate });
 
   // Logs de debug para desenvolvimento
   useEffect(() => {
@@ -427,7 +429,9 @@ export const IntegratedPropertiesPanel: React.FC<IntegratedPropertiesPanelProps>
 
       const handleChange = async (newValue: any) => {
         setIsLoading(true);
-        console.log('🎯 IntegratedPanel handleChange:', { key, newValue, label });
+        console.log('🔥 IntegratedPanel handleChange CHAMADO:', { key, newValue, label, selectedBlockId: selectedBlock?.id });
+        console.log('🔥 updateProperty function exists?', !!updateProperty);
+        console.log('🔥 onUpdate function exists?', !!onUpdate);
         
         try {
           // Validação simples
