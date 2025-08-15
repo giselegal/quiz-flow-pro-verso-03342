@@ -79,10 +79,14 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
         if (onValidate) onValidate(isValid);
 
         // Dispatch quiz selection change event
+        const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
+        const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`; // Step 2 = q1, etc.
+        
         window.dispatchEvent(
           new CustomEvent('quiz-selection-change', {
             detail: {
               blockId: block.id,
+              questionId, // ✅ NOVO: ID da questão para mapeamento no quiz
               selectedOptions: newSelected,
               isValid,
               minSelections,
@@ -109,10 +113,14 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       if (onValidate) onValidate(isValid);
 
       // Dispatch quiz selection change event
+      const stepNumber = parseInt(block.id?.match(/step-(\d+)/)?.[1] || '0');
+      const questionId = stepNumber > 1 ? `q${stepNumber - 1}` : `q1`; // Step 2 = q1, etc.
+      
       window.dispatchEvent(
         new CustomEvent('quiz-selection-change', {
           detail: {
             blockId: block.id,
+            questionId, // ✅ NOVO: ID da questão para mapeamento no quiz
             selectedOptions: newSelected,
             isValid,
             minSelections,

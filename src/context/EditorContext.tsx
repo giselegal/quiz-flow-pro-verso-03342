@@ -17,6 +17,12 @@ import { performanceAnalyzer } from '../utils/performanceAnalyzer';
 import { useFunnelComponents } from '../hooks/useFunnelComponents';
 import { getFunnelIdFromEnvOrStorage, parseStepNumberFromStageId } from '../utils/funnelIdentity';
 
+// ✅ IMPORTAR HOOKS DE QUIZ PARA INTEGRAÇÃO
+import { useQuizLogic } from '../hooks/useQuizLogic';
+import { useSupabaseQuiz } from '../hooks/useSupabaseQuiz';
+import { useQuizCRUD } from '../hooks/useQuizCRUD';
+import caktoquizQuestions from '../data/caktoquizQuestions';
+
 interface EditorState {
   state: 'ready' | 'loading' | 'error';
 }
@@ -116,16 +122,31 @@ interface EditorContextType {
     getStats: () => Promise<any>;
   };
 
-  // ✅ NOVO: Sistema de Quiz e Pontuação (com coleta de nome Etapa 1)
+  // ✅ ATUALIZADO: Sistema de Quiz Integrado com Hooks
   quizState: {
-    userAnswers: Record<string, string>;
+    // Estado do quiz
     userName: string;
-    currentScore: ReturnType<typeof calculateQuizScore> | null;
-    setAnswer: (questionId: string, answer: string) => void;
-    setUserNameFromInput: (name: string) => void;
-    calculateCurrentScore: () => void;
-    resetQuiz: () => void;
+    userAnswers: Record<string, string>;
     isQuizCompleted: boolean;
+    currentScore: ReturnType<typeof calculateQuizScore> | null;
+    quizResult: any; // Resultado do useQuizLogic
+    
+    // Ações básicas
+    setUserNameFromInput: (name: string) => void;
+    setAnswer: (questionId: string, answer: string) => void;
+    resetQuiz: () => void;
+    calculateCurrentScore: () => void;
+    
+    // ✅ NOVOS: Métodos dos hooks integrados
+    answerQuestion: (questionId: string, optionId: string) => void;
+    answerStrategicQuestion: (questionId: string, optionId: string, category: string, strategicType: string) => void;
+    completeQuiz: () => void;
+    
+    // Estado avançado dos hooks
+    currentQuestionIndex: number;
+    totalQuestions: number;
+    answers: any[];
+    strategicAnswers: any[];
   };
 }
 
@@ -190,6 +211,66 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       }
     }
   }, []);
+
+  // ✅ INTEGRAÇÃO DOS HOOKS DE QUIZ
+  console.log('🎯 EditorProvider: Integrando hooks de quiz...');
+  
+  // Hook principal de lógica do quiz
+  const quizLogic = useQuizLogic();
+  
+  // Hook de integração com Supabase (inicializar com questões)
+  const supabaseQuiz = useSupabaseQuiz(caktoquizQuestions);
+  
+  // Hook de CRUD operations
+  const quizCRUD = useQuizCRUD();
+
+  console.log('🔗 Quiz Hooks Status:', {
+    quizLogicReady: !!quizLogic,
+    userName: quizLogic.userName,
+    answersCount: quizLogic.answers.length,
+    strategicAnswersCount: quizLogic.strategicAnswers.length,
+    isCompleted: quizLogic.quizCompleted,
+    hasResult: !!quizLogic.quizResult,
+    supabaseReady: !!supabaseQuiz,
+    supabaseStarted: supabaseQuiz.isStarted,
+    crudReady: !!quizCRUD,
+  });
+
+  // ✅ INTEGRAÇÃO: Event Listeners para conectar templates aos hooks
+  useEffect(() => {
+    console.log('🎯 EditorProvider: Configurando event listeners para quiz...');
+
+    const handleQuizFormComplete = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { formData } = customEvent.detail || {};
+      
+      if (formData?.name) {
+        console.log('👤 EditorContext: Capturando nome do usuário via event:', formData.name);
+        quizLogic.setUserNameFromInput(formData.name);
+      }
+    };
+
+    const handleQuizSelectionChange = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      const { selectedOptions, questionId } = customEvent.detail || {};
+      
+      if (selectedOptions && questionId) {
+        console.log('📊 EditorContext: Capturando seleções via event:', { questionId, selectedOptions });
+        selectedOptions.forEach((optionId: string) => {
+          quizLogic.answerQuestion(questionId, optionId);
+        });
+      }
+    };
+
+    // Registrar listeners
+    window.addEventListener('quiz-form-complete', handleQuizFormComplete);
+    window.addEventListener('quiz-selection-change', handleQuizSelectionChange);
+
+    return () => {
+      window.removeEventListener('quiz-form-complete', handleQuizFormComplete);
+      window.removeEventListener('quiz-selection-change', handleQuizSelectionChange);
+    };
+  }, [quizLogic]);
 
   // ✅ INTEGRAÇÃO COM TEMPLATE MANAGER
   const templateManager = useTemplateManager({
@@ -1394,16 +1475,37 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       getStats,
     },
 
-    // ✅ NOVO: Quiz State (com coleta de nome da Etapa 1)
+    // ✅ ATUALIZADO: Quiz State Integrado com Hooks
     quizState: {
+      // Estado básico (compatibilidade)
       userAnswers,
-      userName,
+      userName: quizLogic.userName || userName, // Priorizar hook
       currentScore,
+      isQuizCompleted: quizLogic.quizCompleted || isQuizCompleted,
+      quizResult: quizLogic.quizResult,
+      
+      // Ações básicas (compatibilidade + hooks)
       setAnswer,
-      setUserNameFromInput,
+      setUserNameFromInput: (name: string) => {
+        setUserNameFromInput(name); // Local state para compatibilidade
+        quizLogic.setUserNameFromInput(name); // Hook integrado
+      },
       calculateCurrentScore,
-      resetQuiz,
-      isQuizCompleted,
+      resetQuiz: () => {
+        resetQuiz(); // Local reset
+        quizLogic.restartQuiz(); // Hook reset
+      },
+      
+      // ✅ NOVOS: Métodos dos hooks integrados
+      answerQuestion: quizLogic.answerQuestion,
+      answerStrategicQuestion: quizLogic.answerStrategicQuestion,
+      completeQuiz: quizLogic.completeQuiz,
+      
+      // Estado avançado dos hooks
+      currentQuestionIndex: quizLogic.currentQuestionIndex,
+      totalQuestions: quizLogic.totalQuestions,
+      answers: quizLogic.answers,
+      strategicAnswers: quizLogic.strategicAnswers,
     },
   };
 

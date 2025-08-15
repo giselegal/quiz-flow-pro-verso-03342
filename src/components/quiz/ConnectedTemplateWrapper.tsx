@@ -34,7 +34,7 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
 
   // ✅ HANDLER: Captura de nome (Etapa 1)
   const handleNameCapture = useCallback((event: CustomEvent) => {
-    const { blockId, formData, isValid } = event.detail;
+    const { formData, isValid } = event.detail;
     
     if (stepNumber === 1 && formData?.name && isValid) {
       console.log('👤 ConnectedTemplateWrapper: Capturando nome do usuário', formData.name);
@@ -42,24 +42,29 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
       // Conectar ao useQuizLogic
       quizLogic.setUserNameFromInput(formData.name);
       
-      // TODO: Integrar com useSupabaseQuiz quando necessário
-      // supabaseQuiz.startQuiz({
-      //   name: formData.name,
-      //   email: formData.email || '',
-      //   quizId: sessionId
-      // });
+      // ✅ INTEGRAR COM SUPABASE: Iniciar quiz quando nome for capturado
+      if (formData.email) {
+        supabaseQuiz.startQuiz({
+          name: formData.name,
+          email: formData.email,
+          quizId: sessionId
+        }).then((result) => {
+          console.log('🚀 Quiz iniciado no Supabase:', result);
+        }).catch((error) => {
+          console.error('❌ Erro ao iniciar quiz no Supabase:', error);
+        });
+      }
     }
-  }, [stepNumber, quizLogic, sessionId]);
+  }, [stepNumber, quizLogic, supabaseQuiz, sessionId]);
 
   // ✅ HANDLER: Respostas às questões (Etapas 2-11)
   const handleQuestionAnswer = useCallback((event: CustomEvent) => {
-    const { blockId, selectedOptions, isValid } = event.detail;
+    const { selectedOptions, isValid } = event.detail;
     
     if (stepType === 'question' && stepNumber >= 2 && stepNumber <= 11 && isValid) {
       console.log('📊 ConnectedTemplateWrapper: Processando respostas', {
         stepNumber,
         selectedOptions,
-        blockId
       });
 
       // Mapear step number para question ID
@@ -70,21 +75,24 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
         console.log('✅ Registrando resposta:', { questionId, optionId });
         quizLogic.answerQuestion(questionId, optionId);
         
-        // TODO: Salvar no Supabase
-        // supabaseQuiz.saveAnswer(questionId, optionId);
+        // ✅ SALVAR NO SUPABASE
+        supabaseQuiz.saveAnswer(questionId, optionId).then(() => {
+          console.log('💾 Resposta salva no Supabase:', { questionId, optionId });
+        }).catch((error) => {
+          console.error('❌ Erro ao salvar no Supabase:', error);
+        });
       });
     }
-  }, [stepType, stepNumber, quizLogic]);
+  }, [stepType, stepNumber, quizLogic, supabaseQuiz]);
 
   // ✅ HANDLER: Questões estratégicas (Etapas 12-18)
   const handleStrategicAnswer = useCallback((event: CustomEvent) => {
-    const { blockId, selectedOptions, isValid } = event.detail;
+    const { selectedOptions, isValid } = event.detail;
     
     if (stepType === 'strategic' && stepNumber >= 12 && stepNumber <= 18 && isValid) {
       console.log('🎯 ConnectedTemplateWrapper: Processando resposta estratégica', {
         stepNumber,
         selectedOptions,
-        blockId
       });
 
       // Mapear step number para strategic question ID
@@ -110,10 +118,14 @@ export const ConnectedTemplateWrapper: React.FC<ConnectedTemplateWrapperProps> =
       // Completar quiz e calcular scores
       quizLogic.completeQuiz();
       
-      // TODO: Salvar resultado no Supabase
-      // supabaseQuiz.completeQuiz();
+      // ✅ SALVAR RESULTADO NO SUPABASE
+      supabaseQuiz.completeQuiz().then((result) => {
+        console.log('🎉 Resultado salvo no Supabase:', result);
+      }).catch((error) => {
+        console.error('❌ Erro ao salvar resultado no Supabase:', error);
+      });
     }
-  }, [stepType, stepNumber, quizLogic]);
+  }, [stepType, stepNumber, quizLogic, supabaseQuiz]);
 
   // ✅ REGISTRAR EVENT LISTENERS
   useEffect(() => {

@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { quizResultsService, type QuizResults } from '@/services/quizResultsService';
+import { styleConfig } from '@/config/styleConfig';
 import {
   ChevronRight,
   Download,
@@ -61,37 +62,51 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
           userName: userName || 'Usuário',
           styleProfile: {
             primaryStyle: quizResult.primaryStyle.category,
-            percentage: quizResult.primaryStyle.percentage,
-            description: `Seu estilo predominante é ${quizResult.primaryStyle.category} com ${quizResult.primaryStyle.percentage}% de compatibilidade.`,
-            characteristics: [
-              'Estilo autêntico e personalizado',
-              'Baseado em suas preferências reais',
-              'Calculado a partir de suas respostas'
-            ],
-            colors: ['#B89B7A', '#432818', '#6B4F43'], // Cores padrão
-            keywords: [quizResult.primaryStyle.category.toLowerCase()]
+            primaryStyleConfig: styleConfig[quizResult.primaryStyle.category] || styleConfig['boho-chic'],
+            colorPalette: ['#B89B7A', '#432818', '#6B4F43'], // Cores baseadas no estilo
+            bodyType: 'personalizado', // Pode ser expandido com dados das etapas estratégicas
+            lifestyle: 'moderno', // Pode ser expandido com dados das etapas estratégicas
+            occasionPriorities: ['casual', 'trabalho', 'social'],
+            confidence: quizResult.primaryStyle.percentage,
+            styleScores: quizResult.scores || {},
           },
-          scores: Object.entries(quizResult.scores || {}).map(([style, score]) => ({
-            style,
-            score: score as number,
-            percentage: Math.round(((score as number) / Math.max(1, Object.values(quizResult.scores || {}).reduce((a, b) => Math.max(a as number, b as number), 1) as number)) * 100)
-          })),
-          completedAt: quizResult.completedAt || new Date(),
-          totalQuestions: quizResult.totalQuestions || answers.length,
           recommendations: {
-            wardrobe: [
-              'Peças que refletem seu estilo personal',
-              'Investir em itens-chave do seu perfil',
-              'Combinar com acessórios complementares'
-            ],
-            colors: ['Tons que harmonizam com sua personalidade'],
-            brands: ['Marcas alinhadas ao seu estilo'],
-            tips: ['Dicas personalizadas baseadas no seu resultado']
+            wardrobe: {
+              essentials: [
+                'Peças que refletem seu estilo personal',
+                'Investir em itens-chave do seu perfil',
+              ],
+              colors: ['Tons que harmonizam com sua personalidade'],
+              patterns: ['Padrões adequados ao seu perfil'],
+              accessories: ['Acessórios complementares']
+            },
+            shopping: {
+              priorityItems: ['Itens essenciais para seu guarda-roupa'],
+              budgetSuggestions: ['Dicas de investimento inteligente'],
+              brands: ['Marcas alinhadas ao seu estilo']
+            },
+            styling: {
+              tips: ['Dicas de combinação e styling'],
+              combinations: ['Combinações recomendadas'],
+              occasions: {
+                'trabalho': ['Looks profissionais'],
+                'casual': ['Looks do dia a dia'],
+                'social': ['Looks para eventos']
+              }
+            },
+            guide: {
+              imageUrl: '/images/style-guide-placeholder.jpg',
+              downloadUrl: '/downloads/personal-style-guide.pdf',
+              personalizedTips: ['Dicas personalizadas baseadas no seu resultado']
+            }
           },
+          completionScore: quizResult.primaryStyle.percentage || 85,
+          calculatedAt: new Date().toISOString(),
           metadata: {
-            version: '2.0',
-            algorithm: 'useQuizLogic-integrated',
-            timestamp: new Date(),
+            totalQuestions: quizResult.totalQuestions || answers.length,
+            answeredQuestions: quizResult.totalQuestions || answers.length,
+            timeSpent: 0, // Pode ser implementado com tracking de tempo
+            algorithm: 'useQuizLogic-integrated'
           }
         };
         
