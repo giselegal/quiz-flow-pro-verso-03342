@@ -17,6 +17,7 @@ import { IntegratedPropertiesPanel } from '@/components/universal/IntegratedProp
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import DebugTemplateLoader from '@/components/debug/DebugTemplateLoader';
+import QuizIntegrationTest from '@/components/debug/QuizIntegrationTest';
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';

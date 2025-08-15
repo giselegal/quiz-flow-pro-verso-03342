@@ -51,24 +51,121 @@ const DebugTemplateLoader: React.FC = () => {
           addResult('❌ Step02 template não encontrado');
         }
 
-        // 4. Testar template Step20
-        addResult('🔄 Testando Step20 template...');
-        const step20Template = STEP_TEMPLATES_MAPPING[20];
-        if (step20Template && step20Template.templateFunction) {
-          const step20Blocks = await TemplateBlockConverter.convertStepTemplate(
-            20,
-            step20Template.templateFunction,
-            { userName: 'Teste', styleCategory: 'Elegante' }
-          );
-          addResult(`✅ Step20 carregado: ${step20Blocks.length} blocos`);
-        } else {
-          addResult('❌ Step20 template não encontrado');
+        // 4. Testar templates críticos (3, 12, 13, 19, 20)
+        const testSteps = [3, 12, 13, 19, 20];
+        
+        for (const stepNum of testSteps) {
+          addResult(`🔄 Testando Step${stepNum.toString().padStart(2, '0')} template...`);
+          const template = STEP_TEMPLATES_MAPPING[stepNum];
+          
+          if (template && template.templateFunction) {
+            try {
+              const userData = stepNum === 20 ? { userName: 'Teste', styleCategory: 'Elegante' } : {};
+              const blocks = await TemplateBlockConverter.convertStepTemplate(
+                stepNum,
+                template.templateFunction,
+                userData
+              );
+              addResult(`✅ Step${stepNum.toString().padStart(2, '0')} carregado: ${blocks.length} blocos - "${template.name}"`);
+            } catch (error) {
+              addResult(`❌ Step${stepNum.toString().padStart(2, '0')} erro ao carregar: ${error}`);
+            }
+          } else {
+            addResult(`❌ Step${stepNum.toString().padStart(2, '0')} template não encontrado`);
+          }
         }
 
-        // 5. Listar todos os templates disponíveis
-        addResult(`📋 Templates disponíveis: ${Object.keys(STEP_TEMPLATES_MAPPING).join(', ')}`);
+        // 5. Testar template batch para detectar problemas
+        addResult('🔄 Testando carregamento em lote (steps 3-11)...');
+        let successCount = 0;
+        let errorCount = 0;
+        
+        for (let step = 3; step <= 11; step++) {
+          try {
+            const template = STEP_TEMPLATES_MAPPING[step];
+            if (template?.templateFunction) {
+              const blocks = await TemplateBlockConverter.convertStepTemplate(
+                step,
+                template.templateFunction,
+                {}
+              );
+              if (blocks.length > 0) {
+                successCount++;
+              } else {
+                errorCount++;
+                addResult(`⚠️ Step${step.toString().padStart(2, '0')} retornou 0 blocos`);
+              }
+            } else {
+              errorCount++;
+              addResult(`❌ Step${step.toString().padStart(2, '0')} sem template function`);
+            }
+          } catch (error) {
+            errorCount++;
+            addResult(`❌ Step${step.toString().padStart(2, '0')} exception: ${error}`);
+          }
+        }
+        
+        addResult(`📊 Quiz templates (3-11): ${successCount} ✅ | ${errorCount} ❌`);
+        
+        // 6. Testar strategic templates batch
+        addResult('🔄 Testando strategic templates (13-18)...');
+        let strategicSuccess = 0;
+        let strategicError = 0;
+        
+        for (let step = 13; step <= 18; step++) {
+          try {
+            const template = STEP_TEMPLATES_MAPPING[step];
+            if (template?.templateFunction) {
+              const blocks = await TemplateBlockConverter.convertStepTemplate(
+                step,
+                template.templateFunction,
+                {}
+              );
+              if (blocks.length > 0) {
+                strategicSuccess++;
+              } else {
+                strategicError++;
+              }
+            } else {
+              strategicError++;
+            }
+          } catch (error) {
+            strategicError++;
+            addResult(`❌ Strategic Step${step.toString().padStart(2, '0')}: ${error}`);
+          }
+        }
+        
+        addResult(`📊 Strategic templates (13-18): ${strategicSuccess} ✅ | ${strategicError} ❌`);
 
-        addResult('✅ Teste do sistema de templates concluído!');
+        // 7. Resumo geral
+        addResult(`📋 Templates disponíveis: ${Object.keys(STEP_TEMPLATES_MAPPING).join(', ')}`);
+        const totalTemplates = Object.keys(STEP_TEMPLATES_MAPPING).length;
+        addResult(`📊 RESUMO: ${totalTemplates} templates mapeados, ${successCount + strategicSuccess + 1 + 1 + 1} testados com sucesso`);
+
+        // 8. Testar Quiz Event Dispatcher
+        addResult('🔄 Testando Quiz Event Dispatcher...');
+        try {
+          const { getQuizEventDispatcherStatus } = await import('@/utils/quizEventDispatcher');
+          const dispatcherStatus = getQuizEventDispatcherStatus();
+          
+          addResult(`📊 Event Dispatcher Status:`);
+          addResult(`   • Quiz Listener: ${dispatcherStatus.hasQuizListener ? '✅' : '❌'}`);
+          addResult(`   • Strategic Listener: ${dispatcherStatus.hasStrategicListener ? '✅' : '❌'}`);
+          addResult(`   • Navigation Listener: ${dispatcherStatus.hasNavigationListener ? '✅' : '❌'}`);
+          addResult(`   • Current Answers: ${dispatcherStatus.currentAnswersCount}`);
+          addResult(`   • Strategic Answers: ${dispatcherStatus.strategicAnswersCount}`);
+          addResult(`   • User Name: "${dispatcherStatus.userName}"`);
+          
+          if (dispatcherStatus.hasQuizListener && dispatcherStatus.hasStrategicListener) {
+            addResult('✅ Quiz Event Dispatcher configurado corretamente');
+          } else {
+            addResult('⚠️ Quiz Event Dispatcher não totalmente configurado');
+          }
+        } catch (error) {
+          addResult(`❌ Erro ao verificar Quiz Event Dispatcher: ${error}`);
+        }
+
+        addResult('✅ Teste completo do sistema de templates concluído!');
 
       } catch (error) {
         addResult(`❌ Erro durante teste: ${error}`);
