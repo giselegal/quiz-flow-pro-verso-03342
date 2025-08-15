@@ -3,7 +3,7 @@ import ConnectedLeadForm from '@/components/forms/ConnectedLeadForm';
 import QuizNavigation from '@/components/quiz/QuizNavigation';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface Step01TemplateProps {
   sessionId: string;
