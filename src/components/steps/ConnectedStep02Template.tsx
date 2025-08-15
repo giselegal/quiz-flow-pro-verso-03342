@@ -1,49 +1,26 @@
-// 🔗 CONNECTED STEP 02 TEMPLATE - Integrado com Hooks do Sistema
-// Versão conectada que usa useQuizLogic e useSupabaseQuiz
+// 🔗 STEP 02 TEMPLATE - QUESTÃO 1: QUAL O SEU TIPO DE ROUPA FAVORITA?
+// Template estático que retorna configuração de blocos
 
-import { useCallback } from 'react';
-import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
-export const ConnectedStep02Template = () => {
-  const { answerQuestion, answers } = useQuizLogic();
-  
+export const getConnectedStep02Template = () => {
   // 🎯 Buscar questão real dos dados
   const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q1') || COMPLETE_QUIZ_QUESTIONS[1];
   
-  const handleOptionSelect = useCallback(async (optionIds: string[]) => {
-    try {
-      // 🎯 Usar hook real do sistema - answerQuestion espera 2 argumentos
-      const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
-      if (selectedOption) {
-        await answerQuestion(questionData.id, selectedOption.id);
-        
-        console.log('✅ Connected Step02: Resposta salva via hooks', { 
-          questionId: questionData.id, 
-          selectedOptions: optionIds 
-        });
-      }
-    } catch (error) {
-      console.error('❌ Connected Step02: Erro ao salvar resposta', error);
-    }
-  }, [answerQuestion, questionData]);
-
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
       id: 'step02-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430327/LOGO_DA_MARCA_GISELE_l78gin.webp',
         logoAlt: 'Logo Gisele Galvão',
-        logoWidth: 96,
-        logoHeight: 96,
-        progressValue: 10,
+        logoWidth: 120,
+        logoHeight: 50,
+        progressValue: 15, // 2/21 * 100 ≈ 15%
         progressMax: 100,
-        showBackButton: true,
-        spacing: 'small',
-        marginTop: 0,
-        marginBottom: 0,
+        showBackButton: false,
+        spacing: 'medium',
       },
     },
 
@@ -52,119 +29,125 @@ export const ConnectedStep02Template = () => {
       id: 'step02-question-title',
       type: 'text-inline',
       properties: {
-        content: questionData.text, // 🎯 TEXTO REAL DA QUESTÃO
+        content: questionData?.title || 'QUAL O SEU TIPO DE ROUPA FAVORITA?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',
         color: '#432818',
-        marginBottom: 0,
-        spacing: 'small',
-        marginTop: 0,
+        marginBottom: 24,
+        marginTop: 16,
       },
     },
 
-    // 📊 CONTADOR DE QUESTÃO
+    // 📝 DESCRIÇÃO
     {
-      id: 'step02-question-counter',
-      type: 'text-inline',
+      id: 'step02-description',
+      type: 'text-inline', 
       properties: {
-        content: 'Questão 1 de 10',
-        fontSize: 'text-sm',
+        content: 'Escolha 3 opções que mais combinam com você:',
+        fontSize: 'text-lg',
+        fontWeight: 'font-medium',
         textAlign: 'text-center',
         color: '#6B7280',
-        marginBottom: 24,
-        spacing: 'small',
-        marginTop: 0,
+        marginBottom: 32,
       },
     },
 
-    // 🎯 GRADE DE OPÇÕES CONECTADA (DADOS REAIS)
+    // 🎨 GRID DE OPÇÕES COM IMAGENS (DADOS REAIS)
     {
-      id: 'step02-clothing-options',
+      id: 'step02-options-grid',
       type: 'options-grid',
       properties: {
-        // 🎯 OPÇÕES REAIS DOS DADOS
-        options: questionData.options.map((option: any) => ({
-          id: option.id,
-          text: option.text,
-          description: option.text,
-          imageUrl: option.imageUrl,
-          value: option.id,
-          category: option.styleCategory,
-          points: option.weight,
-        })),
-
-        // 🎨 LAYOUT
-        columns: 2,
-        imageSize: 256,
-        showImages: true,
-
-        // 🎯 VALIDAÇÃO BASEADA NOS DADOS REAIS
-        multipleSelection: (questionData.multiSelect || 1) > 1,
-        maxSelections: questionData.multiSelect || 3,
-        minSelections: questionData.multiSelect || 3,
-        autoAdvanceOnComplete: true,
+        questionId: questionData?.id || 'q1',
+        multiSelect: 3,
+        exactSelections: true,
         autoAdvance: true,
-
-        // 🔗 HANDLER CONECTADO
-        onSelectionChange: handleOptionSelect,
-
-        // 🎨 CORES DO SISTEMA
-        borderColor: '#E5E7EB',
-        selectedBorderColor: '#B89B7A',
-        hoverColor: '#F3E8D3',
-
-        // 📊 STATUS - Usando answers do useQuizLogic
-        currentSelections: answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
-        isLoading: false,
-
-        containerWidth: 'full',
-        spacing: 'small',
-        marginBottom: 16,
+        autoAdvanceDelay: 800,
+        options: questionData?.options || [
+          {
+            id: '1a',
+            text: 'Conforto, leveza e praticidade no vestir',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp',
+            styleCategory: 'Natural',
+            weight: 1,
+          },
+          {
+            id: '1b',
+            text: 'Discrição, caimento clássico e sobriedade',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
+            styleCategory: 'Clássico',
+            weight: 1,
+          },
+          {
+            id: '1c',
+            text: 'Praticidade com um toque de estilo atual',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp',
+            styleCategory: 'Contemporâneo',
+            weight: 1,
+          },
+          {
+            id: '1d',
+            text: 'Elegância refinada, moderna e sem exageros',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp',
+            styleCategory: 'Elegante',
+            weight: 1,
+          },
+          {
+            id: '1e',
+            text: 'Delicadeza em tecidos suaves e fluidos',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp',
+            styleCategory: 'Romântico',
+            weight: 1,
+          },
+          {
+            id: '1f',
+            text: 'Sensualidade com destaque para o corpo',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp',
+            styleCategory: 'Sexy',
+            weight: 1,
+          },
+          {
+            id: '1g',
+            text: 'Impacto visual com peças estruturadas e assimétricas',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp',
+            styleCategory: 'Dramático',
+            weight: 1,
+          },
+          {
+            id: '1h',
+            text: 'Mix criativo com formas ousadas e originais',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp',
+            styleCategory: 'Criativo',
+            weight: 1,
+          },
+        ],
+        gridColumns: 2,
+        spacing: 'medium',
+        showImages: true,
+        allowTextWrapping: true,
       },
     },
 
-    // 🔘 BOTÃO CONECTADO
+    // 🚀 BOTÃO AVANÇAR (ATIVADO APENAS APÓS 3 SELEÇÕES)
     {
-      id: 'step02-continue-button',
+      id: 'step02-advance-button',
       type: 'button-inline',
       properties: {
-        text: 'Continuar →',
-        textWhenDisabled: 'Selecione 3 opções para continuar',
-        textWhenComplete: 'Continuar',
-
+        text: 'Avançar',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',
-        textColor: '#ffffff',
-        disabledBackgroundColor: '#d1d5db',
-        disabledTextColor: '#9ca3af',
-
-        // 🔗 ESTADO CONECTADO - Usando answers do useQuizLogic
-        disabled: answers.filter(a => a.questionId === questionData.id).length < (questionData.multiSelect || 3),
-        requiresValidInput: true,
-        instantActivation: false,
-
-        fullWidth: true,
-        marginTop: 24,
-        textAlign: 'text-center',
-        spacing: 'small',
-        marginBottom: 0,
-
-        // 🔗 HANDLER DE NAVEGAÇÃO CONECTADO
-        onClick: () => {
-          console.log('🎯 Connected Step02: Navegando para próximo step');
-          // Aqui seria integrado com sistema de navegação
-        }
+        textColor: '#FFFFFF',
+        borderRadius: 'rounded-lg',
+        marginTop: 32,
+        marginBottom: 16,
+        disabled: true, // Será habilitado pela lógica do quiz
+        enabledOnlyWhenValid: true,
+        dependsOnQuestion: questionData?.id || 'q1',
+        navigationTarget: 'step-03',
       },
     },
   ];
 };
 
-// 🎯 FUNÇÃO WRAPPER PARA COMPATIBILIDADE
-export const getConnectedStep02Template = () => {
-  const component = ConnectedStep02Template();
-  return component;
-};
-
-export default ConnectedStep02Template;
+export default getConnectedStep02Template;

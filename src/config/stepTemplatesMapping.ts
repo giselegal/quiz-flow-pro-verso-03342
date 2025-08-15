@@ -41,10 +41,12 @@ export interface StepConfig {
 // 🎯 DADOS REAIS DAS QUESTÕES (usados pelos templates conectados)
 // import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
-// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES REAIS DAS QUESTÕES
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS - FLUXO CORRETO BASEADO NOS REQUISITOS
 const STEP_CONFIGS = [
-  { name: 'Quiz de Estilo Pessoal', description: 'Descubra seu estilo único' },
-  { name: 'VAMOS NOS CONHECER?', description: 'Digite seu nome para personalizar' },
+  // ETAPA 1: Coleta do nome
+  { name: 'Coleta do nome', description: 'Descubra seu estilo predominante e transforme seu guarda-roupa' },
+  
+  // ETAPAS 2-11: 10 questões normais com pontuação - 3 seleções obrigatórias
   { name: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', description: 'Primeira questão do quiz' },
   { name: 'RESUMA A SUA PERSONALIDADE:', description: 'Segunda questão do quiz' },
   { name: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', description: 'Terceira questão do quiz' },
@@ -55,16 +57,26 @@ const STEP_CONFIGS = [
   { name: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', description: 'Oitava questão do quiz' },
   { name: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', description: 'Nona questão do quiz' },
   { name: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...', description: 'Décima questão do quiz' },
+  
+  // ETAPA 12: Página de transição p/ questões estratégicas
   { name: 'Enquanto calculamos o seu resultado...', description: 'Transição para questões estratégicas' },
+  
+  // ETAPAS 13-18: 6 Questões Estratégicas
   { name: 'Como você se vê hoje?', description: 'Primeira questão estratégica' },
   { name: 'O que mais te desafia na hora de se vestir?', description: 'Segunda questão estratégica' },
   { name: 'Com que frequência você se pega pensando: "Com que roupa eu vou?"', description: 'Terceira questão estratégica' },
   { name: 'Ter acesso a um material estratégico faria diferença?', description: 'Quarta questão estratégica' },
   { name: 'Você consideraria R$ 97,00 um bom investimento?', description: 'Quinta questão estratégica' },
   { name: 'Qual resultado você mais gostaria de alcançar?', description: 'Sexta questão estratégica' },
+  
+  // ETAPA 19: Página de transição p/ Resultado
   { name: 'Obrigada por compartilhar...', description: 'Transição para resultado' },
-  { name: 'SEU ESTILO PESSOAL É:', description: 'Apresentação do resultado' },
-  { name: 'RECEBA SEU GUIA DE ESTILO COMPLETO', description: 'Página de conversão' },
+  
+  // ETAPA 20: Página de resultado personalizada + ofertas: Teste A
+  { name: 'SEU ESTILO PESSOAL É:', description: 'Resultado personalizado com ofertas (Teste A)' },
+  
+  // ETAPA 21: Teste B (QuizOfferPage)
+  { name: 'RECEBA SEU GUIA DE ESTILO COMPLETO', description: 'Página de oferta direta (Teste B)' },
 ];
 
 // Template padrão para fallback
