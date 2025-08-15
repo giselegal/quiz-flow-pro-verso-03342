@@ -14,6 +14,7 @@ import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
 import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { SmartStepRenderer } from '@/components/templates/SmartStepRenderer';
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
@@ -193,13 +194,22 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
               >
                 <div className={getCanvasClassName()}>
-                  <CanvasDropZone
-                    blocks={currentBlocks}
-                    selectedBlockId={selectedBlockId}
-                    onSelectBlock={setSelectedBlockId}
-                    onUpdateBlock={updateBlock}
-                    onDeleteBlock={handleDeleteBlock}
-                  />
+                  {isPreviewing && activeStageId ? (
+                    // 🎯 MODO PREVIEW: Usa SmartStepRenderer para visualizar as etapas do quiz
+                    <SmartStepRenderer 
+                      stepNumber={getStepNumberFromStageId(activeStageId)}
+                      onContinue={() => console.log('Preview mode - continue disabled')}
+                    />
+                  ) : (
+                    // ✏️ MODO EDIÇÃO: Usa CanvasDropZone para editar blocos
+                    <CanvasDropZone
+                      blocks={currentBlocks}
+                      selectedBlockId={selectedBlockId}
+                      onSelectBlock={setSelectedBlockId}
+                      onUpdateBlock={updateBlock}
+                      onDeleteBlock={handleDeleteBlock}
+                    />
+                  )}
                 </div>
               </div>
             }
