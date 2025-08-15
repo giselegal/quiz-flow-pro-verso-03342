@@ -11,7 +11,6 @@ import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolba
 // 🚀 PREVIEW SYSTEM
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
-import { PreviewProvider } from '@/contexts/PreviewContext';
 // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 
@@ -252,22 +251,20 @@ export const EditorWithPreview: React.FC = () => {
   
   try {
     return (
-      <PreviewProvider totalSteps={21} funnelId="default">
-        <div className="relative h-screen overflow-hidden">
-          {/* Componente de Preview Navigation - Flutuante */}
-          <PreviewNavigation position="floating" />
+      <div className="relative h-screen overflow-hidden">
+        {/* Componente de Preview Navigation - Flutuante */}
+        <PreviewNavigation position="floating" />
 
-          {/* Editor Principal */}
-          <div className="h-full w-full">
-            <EditorFixedPageWithDragDrop />
-          </div>
-
-          {/* Toggle de Preview - Posição fixa no canto */}
-          <div className="fixed bottom-4 right-4 z-50">
-            <PreviewToggleButton variant="full" />
-          </div>
+        {/* Editor Principal */}
+        <div className="h-full w-full">
+          <EditorFixedPageWithDragDrop />
         </div>
-      </PreviewProvider>
+
+        {/* Toggle de Preview - Posição fixa no canto */}
+        <div className="fixed bottom-4 right-4 z-50">
+          <PreviewToggleButton variant="full" />
+        </div>
+      </div>
     );
   } catch (error) {
     console.error('❌ EditorWithPreview: Erro no carregamento:', error);

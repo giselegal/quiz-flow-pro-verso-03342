@@ -9,10 +9,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CORREÇÃO CRÍTICA: Fix para barras de rolagem vertical no editor */
+/* ===== CORREÇÃO CRÍTICA: BARRAS DE ROLAGEM VERTICAIS FUNCIONAIS ===== */
 /* Previne que o cursor de resize interfira com scroll vertical */
 [data-panel-group] * {
   cursor: inherit !important;
+}
+
+/* CORREÇÃO AMPLIADA: Reset de cursor global */
+* {
+  cursor: unset !important;
 }
 
 /* Força barras de rolagem sempre visíveis onde necessário */
@@ -20,6 +25,33 @@
   overflow-y: auto !important;
   scrollbar-gutter: stable !important;
   cursor: default !important;
+  
+  /* Estilos visuais para scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+}
+
+/* Estilos WebKit para scrollbar customizada */
+.editor-scrollable::-webkit-scrollbar {
+  width: 12px;
+  background: transparent;
+}
+
+.editor-scrollable::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.2);
+  border-radius: 6px;
+}
+
+.editor-scrollable::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.4);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.editor-scrollable::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.6);
+  background-clip: content-box;
 }
 
 /* Especificamente para componentes do editor */
@@ -28,6 +60,22 @@
 [data-panel-group] .flex-1.overflow-y-auto {
   overflow-y: auto !important;
   cursor: default !important;
+  scrollbar-gutter: stable !important;
+}
+
+/* Garantir altura e scroll nos painéis */
+[data-panel-group] {
+  overflow: hidden !important;
+}
+
+[data-panel-group] > [data-panel] {
+  overflow: hidden !important;
+}
+
+/* Classes de debug - para identificar problemas */
+.editor-scrollable {
+  min-height: 100px;
+  position: relative;
 }
 
 /* Garante que elementos com scroll mantenham cursor padrão */

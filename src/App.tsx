@@ -85,9 +85,11 @@ function App() {
                         <ErrorBoundary>
                           <EditorProvider>
                             <ScrollSyncProvider>
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
+                              <PreviewProvider totalSteps={21} funnelId="default">
+                                <div className="relative">
+                                  <EditorWithPreview />
+                                </div>
+                              </PreviewProvider>
                             </ScrollSyncProvider>
                           </EditorProvider>
                         </ErrorBoundary>
@@ -124,9 +126,11 @@ function App() {
                         <ErrorBoundary>
                           <EditorProvider>
                             <ScrollSyncProvider>
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
+                              <PreviewProvider totalSteps={21} funnelId="default">
+                                <div className="relative">
+                                  <EditorWithPreview />
+                                </div>
+                              </PreviewProvider>
                             </ScrollSyncProvider>
                           </EditorProvider>
                         </ErrorBoundary>
@@ -180,9 +184,11 @@ function App() {
                       <ErrorBoundary>
                         <EditorProvider>
                           <ScrollSyncProvider>
-                            <div className="relative">
-                              <EditorWithPreview />
-                            </div>
+                            <PreviewProvider totalSteps={21} funnelId="default">
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
+                            </PreviewProvider>
                           </ScrollSyncProvider>
                         </EditorProvider>
                       </ErrorBoundary>

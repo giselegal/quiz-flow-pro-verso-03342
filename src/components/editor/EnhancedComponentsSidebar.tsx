@@ -98,6 +98,13 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
         <div
           ref={scrollRef}
           className="h-full overflow-y-auto editor-scrollable [scrollbar-gutter:stable] overflow-x-hidden"
+          onScroll={(e) => {
+            console.log('🔄 EnhancedComponentsSidebar: Scroll detectado!', {
+              scrollTop: e.currentTarget.scrollTop,
+              scrollHeight: e.currentTarget.scrollHeight,
+              clientHeight: e.currentTarget.clientHeight
+            });
+          }}
         >
           <div className="space-y-1 p-0">
             {orderedCategories.map(category => (
