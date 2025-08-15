@@ -46,12 +46,6 @@ const PlaceholderBlock: React.FC<{ type: string; props: any }> = ({ type, props 
   );
 };
 
-const QuizIntroHeaderBlock: React.FC<any> = props =>
-  React.createElement(HeadingBlock, {
-    ...props,
-    level: 'h1',
-    text: props.title || 'Cabeçalho do Quiz',
-  });
 const DecorativeBarInlineBlock: React.FC<any> = () =>
   React.createElement('hr', { style: { border: '2px solid #ccc', margin: '16px 0' } });
 const FormInputBlock: React.FC<any> = props =>
@@ -80,9 +74,16 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   image: ImageDisplayInlineBlockClean,
   button: ButtonInlineFixed,
 
-  // Quiz Components - Optimized and Consolidated
-  'quiz-intro': React.lazy(() => import('../components/blocks/quiz/QuizIntroOptimizedBlock')),
-  'quiz-intro-header': QuizIntroHeaderBlock, // Legacy support
+  // 🎯 UNIFIED HEADER SYSTEM - Consolidated All Headers
+  'header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'unified-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  
+  // Quiz Headers - All variants unified
+  'quiz-intro': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'quiz-intro-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'quiz-result-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'offer-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'vertical-canvas-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   
   // Form and Layout Components
   'decorative-bar': DecorativeBarInlineBlock,
@@ -108,10 +109,15 @@ const BLOCK_ALIASES: Record<string, string> = {
   'options-grid-inline': 'options-grid', // ✅ Alias para options-grid
   form: 'form-input',
 
-  // Quiz Intro Aliases - Consolidated to single optimized component
+  // 🎯 UNIFIED HEADER ALIASES - All headers point to unified component
   'quiz-intro-optimized': 'quiz-intro',
-  'step01-intro': 'quiz-intro', // Legacy step01 support
-  'quiz-intro-complete': 'quiz-intro', // Alternative naming
+  'step01-intro': 'quiz-intro',
+  'quiz-intro-complete': 'quiz-intro',
+  'header-block': 'header',
+  'result-header': 'quiz-result-header',
+  'offer-hero': 'offer-header',
+  'canvas-header': 'vertical-canvas-header',
+  'intro-header': 'quiz-intro-header',
   
   // Aliases do template JSON em português
   'cabeçalho-introdução-do-questionário': 'quiz-intro-header',

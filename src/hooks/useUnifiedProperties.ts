@@ -340,6 +340,189 @@ export const useUnifiedProperties = (
     if (!blockType) return [];
 
     switch (blockType) {
+      case 'header':
+      case 'quiz-intro':
+      case 'quiz-intro-header':
+      case 'quiz-result-header':
+      case 'unified-header':
+        return [
+          // 🎯 CONTEÚDO E BRANDING
+          createProperty(
+            'showLogo',
+            currentBlock?.properties?.showLogo ?? true,
+            PropertyType.SWITCH,
+            'Mostrar Logo',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'logoUrl',
+            currentBlock?.properties?.logoUrl || currentBlock?.properties?.logo || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            PropertyType.URL,
+            'URL do Logo',
+            PropertyCategory.CONTENT,
+            { placeholder: 'https://...' }
+          ),
+          createProperty(
+            'logoAlt',
+            currentBlock?.properties?.logoAlt || 'Logo',
+            PropertyType.TEXT,
+            'Texto Alternativo do Logo',
+            PropertyCategory.ACCESSIBILITY,
+            { placeholder: 'Descrição do logo' }
+          ),
+          createProperty(
+            'logoWidth',
+            currentBlock?.properties?.logoWidth || 200,
+            PropertyType.RANGE,
+            'Largura do Logo',
+            PropertyCategory.LAYOUT,
+            { min: 50, max: 400, step: 10, unit: 'px' }
+          ),
+          createProperty(
+            'logoHeight',
+            currentBlock?.properties?.logoHeight || 60,
+            PropertyType.RANGE,
+            'Altura do Logo',
+            PropertyCategory.LAYOUT,
+            { min: 30, max: 200, step: 5, unit: 'px' }
+          ),
+          
+          // 🎯 TÍTULOS E CONTEÚDO
+          createProperty(
+            'title',
+            currentBlock?.properties?.title || currentBlock?.properties?.customTitle || 'Título Principal',
+            PropertyType.TEXT,
+            'Título',
+            PropertyCategory.CONTENT,
+            { placeholder: 'Digite o título...' }
+          ),
+          createProperty(
+            'subtitle',
+            currentBlock?.properties?.subtitle || '',
+            PropertyType.TEXT,
+            'Subtítulo',
+            PropertyCategory.CONTENT,
+            { placeholder: 'Subtítulo opcional...' }
+          ),
+          createProperty(
+            'userName',
+            currentBlock?.properties?.userName || 'Usuário',
+            PropertyType.TEXT,
+            'Nome do Usuário',
+            PropertyCategory.CONTENT,
+            { placeholder: 'Nome a ser exibido' }
+          ),
+          
+          // 🎯 CORES E ESTILO
+          createProperty(
+            'backgroundColor',
+            currentBlock?.properties?.backgroundColor || '#ffffff',
+            PropertyType.COLOR,
+            'Cor de Fundo',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'textColor',
+            currentBlock?.properties?.textColor || '#432818',
+            PropertyType.COLOR,
+            'Cor do Texto',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'textAlign',
+            currentBlock?.properties?.textAlign || 'center',
+            PropertyType.SELECT,
+            'Alinhamento do Texto',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'left', label: 'Esquerda' },
+                { value: 'center', label: 'Centro' },
+                { value: 'right', label: 'Direita' }
+              ]
+            }
+          ),
+          
+          // 🎯 LAYOUT E POSICIONAMENTO
+          createProperty(
+            'isSticky',
+            currentBlock?.properties?.isSticky ?? false,
+            PropertyType.SWITCH,
+            'Header Fixo',
+            PropertyCategory.LAYOUT
+          ),
+          createProperty(
+            'marginTop',
+            currentBlock?.properties?.marginTop || 0,
+            PropertyType.RANGE,
+            'Margem Superior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4, unit: 'px' }
+          ),
+          createProperty(
+            'marginBottom',
+            currentBlock?.properties?.marginBottom || 24,
+            PropertyType.RANGE,
+            'Margem Inferior',
+            PropertyCategory.LAYOUT,
+            { min: 0, max: 100, step: 4, unit: 'px' }
+          ),
+          
+          // 🎯 PROGRESSO (Para Quiz Headers)
+          createProperty(
+            'showProgress',
+            currentBlock?.properties?.showProgress ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Progresso',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'progressValue',
+            currentBlock?.properties?.progressValue || 0,
+            PropertyType.RANGE,
+            'Valor do Progresso',
+            PropertyCategory.BEHAVIOR,
+            { min: 0, max: 100, step: 1, unit: '%' }
+          ),
+          createProperty(
+            'progressMax',
+            currentBlock?.properties?.progressMax || 100,
+            PropertyType.NUMBER,
+            'Valor Máximo do Progresso',
+            PropertyCategory.BEHAVIOR,
+            { min: 1, placeholder: '100' }
+          ),
+          
+          // 🎯 NAVEGAÇÃO
+          createProperty(
+            'showBackButton',
+            currentBlock?.properties?.showBackButton ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Botão Voltar',
+            PropertyCategory.BEHAVIOR
+          ),
+          
+          // 🎯 IMAGEM HERO (Para Offer Headers)
+          createProperty(
+            'showImage',
+            currentBlock?.properties?.showImage ?? false,
+            PropertyType.SWITCH,
+            'Mostrar Imagem Hero',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'heroImage',
+            currentBlock?.properties?.heroImage || '',
+            PropertyType.URL,
+            'URL da Imagem Hero',
+            PropertyCategory.CONTENT,
+            { 
+              placeholder: 'https://...',
+              conditional: { key: 'showImage', value: true }
+            }
+          ),
+        ];
+        
       case 'text-inline':
         return [
           // Conteúdo
