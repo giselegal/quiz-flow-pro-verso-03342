@@ -140,7 +140,7 @@ export const ConnectedStep01Template = () => {
           </div>
         </div>
 
-        {/* Título principal modernizado */}
+        {/* Título principal - EXATO conforme requisitos */}
         <h1
           className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display"
           style={{
@@ -152,6 +152,18 @@ export const ConnectedStep01Template = () => {
           <span className="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com{' '}
           <span className="text-[#B89B7A]">Você</span>.
         </h1>
+        
+        {/* Subtítulo principal conforme requisitos */}
+        <h2
+          className="text-xl font-semibold text-center leading-tight px-2 sm:text-2xl md:text-3xl mt-4"
+          style={{
+            fontFamily: '"Playfair Display", serif',
+            fontWeight: 600,
+            color: colors.secondary
+          }}
+        >
+          Descubra seu estilo predominante e transforme seu guarda-roupa
+        </h2>
       </header>
 
       <section className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto">
@@ -184,21 +196,24 @@ export const ConnectedStep01Template = () => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-xs font-semibold mb-1.5"
+                className="block text-lg font-bold mb-2 text-center"
                 style={{ color: colors.secondary }}
               >
-                NOME <span className="text-red-500">*</span>
+                NOME
               </label>
+              <p className="text-sm text-center mb-3" style={{ color: colors.textLight }}>
+                Digite seu nome
+              </p>
               <Input
                 id="name"
-                placeholder="Digite seu nome"
+                placeholder="Por favor, digite seu nome para continuar"
                 value={localName}
                 onChange={(e) => {
                   setLocalName(e.target.value);
                   if (error) setError('');
                 }}
                 className={cn(
-                  "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
+                  "w-full p-3 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE] text-center",
                   error 
                     ? "border-red-500 focus:ring-red-500 focus-visible:ring-red-500" 
                     : "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]"
@@ -213,17 +228,17 @@ export const ConnectedStep01Template = () => {
                 required
               />
               {error && (
-                <p id="name-error" className="mt-1.5 text-sm text-red-500 font-medium">{error}</p>
+                <p id="name-error" className="mt-2 text-sm text-red-500 font-medium text-center">{error}</p>
               )}
             </div>
             
             <button
               type="submit"
               className={cn(
-                'w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300',
+                'w-full py-3 px-4 text-base font-semibold rounded-md shadow-md transition-all duration-300',
                 'focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2',
-                'sm:py-3 sm:px-4 sm:text-base',
-                'md:py-3.5 md:text-lg',
+                'sm:py-4 sm:px-6 sm:text-lg',
+                'md:py-4 md:text-xl',
                 localName.trim() 
                   ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]' 
                   : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
@@ -231,9 +246,14 @@ export const ConnectedStep01Template = () => {
               aria-disabled={!localName.trim()}
             >
               <span className="flex items-center justify-center gap-2">
-                {localName.trim() ? 'Quero Descobrir meu Estilo Agora!' : 'Digite seu nome para continuar'}
+                Quero Descobrir meu Estilo Agora!
               </span>
             </button>
+
+            {/* Texto explicativo adicional conforme requisitos */}
+            <p className="text-sm text-center mt-2" style={{ color: colors.textLight }}>
+              Digite seu nome para continuar
+            </p>
 
             <p className="text-xs text-center pt-1" style={{ color: colors.textLight }}>
               Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa{' '}
@@ -251,7 +271,7 @@ export const ConnectedStep01Template = () => {
       {/* Rodapé */}
       <footer className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto">
         <p className="text-xs" style={{ color: colors.textLight }}>
-          © {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados
+          2025 - Gisele Galvão - Todos os direitos reservados
         </p>
       </footer>
 
