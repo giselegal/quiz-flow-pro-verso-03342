@@ -15,12 +15,20 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   heading: HeadingBlock,
   'image-display-inline': ImageDisplayInlineBlockClean,
   
-  // ✅ Template Wrappers - Conectados aos hooks
+  // ✅ Template Wrappers - Conectados aos hooks  
   "step01-template": Step01TemplateBlock,
+  "quiz-intro": Step01TemplateBlock, // Alias for compatibility
 };
 
-export const getBlockComponent = (type: string): React.ComponentType<any> | null => {
-  return ENHANCED_BLOCK_REGISTRY[type] || null;
+// Fallback component
+const FallbackComponent: React.ComponentType<any> = () => 
+  React.createElement('div', 
+    { className: "p-4 border border-dashed border-gray-300 rounded text-center text-gray-500" },
+    'Component not found'
+  );
+
+export const getBlockComponent = (type: string): React.ComponentType<any> => {
+  return ENHANCED_BLOCK_REGISTRY[type] || FallbackComponent;
 };
 
 export const getAvailableBlockTypes = (): string[] => {
