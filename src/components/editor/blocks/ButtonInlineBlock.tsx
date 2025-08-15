@@ -65,6 +65,13 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   onClick,
   onPropertyChange: _onPropertyChange,
   className = '',
+  // Preview mode props
+  isPreviewMode = false,
+  onNext,
+  onPrevious,
+  onNavigate,
+  sessionData = {},
+  onUpdateSessionData,
 }) => {
   // Verificação de segurança para evitar erro de undefined
   if (!block) {
@@ -360,7 +367,36 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
         onClick={async e => {
           e.stopPropagation();
           if (!isButtonDisabled) {
-            // Ação baseada na configuração
+            // In preview mode, use proper navigation functions
+            if (isPreviewMode && onNext && text && text.includes('Descobrir meu Estilo')) {
+              // For quiz start button in preview mode
+              const userName = sessionData?.userName || 'Preview User';
+              console.log('🚀 Preview Mode: Iniciando quiz para:', userName);
+              
+              if (onUpdateSessionData) {
+                onUpdateSessionData('userName', userName);
+                onUpdateSessionData('startTime', Date.now());
+                onUpdateSessionData('quizStarted', true);
+              }
+              
+              // Navigate to next step using preview context
+              onNext();
+              return;
+            }
+
+            // In preview mode, handle step navigation directly
+            if (isPreviewMode && action === 'next-step' && nextStepId && onNavigate) {
+              onNavigate(nextStepId);
+              return;
+            }
+
+            // In preview mode, handle generic navigation
+            if (isPreviewMode && onNext && (action === 'next-step' || !action || action === 'none')) {
+              onNext();
+              return;
+            }
+
+            // Regular editor mode or production behavior
             if (action === 'next-step' && nextStepId) {
               window.dispatchEvent(
                 new CustomEvent('navigate-to-step', {

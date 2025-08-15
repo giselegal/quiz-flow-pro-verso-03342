@@ -74,7 +74,7 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
   onDelete,
 }) => {
   // 🚀 Usar contexto de preview em vez de prop
-  const { isPreviewing } = usePreview();
+  const { isPreviewing, goToNextStep, goToPreviousStep, updateSessionData, sessionData } = usePreview();
 
   // 🔧 Integrar propriedades de container diretamente
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(
@@ -245,15 +245,81 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
                 >
                   <Component
                     {...componentProps}
+                    // Core preview props
                     isPreviewMode={true}
-                    onNext={() => {
-                      console.log('🚀 Preview: Navegando para próxima etapa');
+                    isPreviewing={true}
+                    previewMode="production"
+                    
+                    // Navigation functions
+                    onNext={goToNextStep}
+                    onPrevious={goToPreviousStep}
+                    onNavigate={(stepId: string) => {
+                      console.log('🚀 SortableBlockWrapper: Navegating to step', stepId);
+                      // Use the preview context navigation
+                      if (stepId) {
+                        const stepNum = stepId.replace(/[^\d]/g, '');
+                        if (stepNum) {
+                          window.dispatchEvent(
+                            new CustomEvent('quiz-navigate-to-step', {
+                              detail: { 
+                                stepId: `step-${stepNum.padStart(2, '0')}`, 
+                                source: `block-${block.id}` 
+                              }
+                            })
+                          );
+                        }
+                      }
                     }}
-                    onPrevious={() => {
-                      console.log('🚀 Preview: Navegando para etapa anterior');
-                    }}
-                    canProceed={true}
+                    
+                    // Session management
+                    onUpdateSessionData={updateSessionData}
+                    sessionData={sessionData}
                     sessionId="preview-session"
+                    
+                    // Quiz flow control
+                    enableQuizFlow={true}
+                    enableNavigation={true}
+                    canProceed={true}
+                    allowNavigation={true}
+                    
+                    // Production-like behavior
+                    trackingEnabled={true}
+                    validationEnabled={true}
+                    autoAdvance={true}
+                    
+                    // Component-specific preview props
+                    showValidationFeedback={true}
+                    enableButtonOnlyWhenValid={false} // Allow clicking in preview
+                    instantActivation={true}
+                    autoAdvanceOnComplete={true}
+                    
+                    // Event handlers for real navigation
+                    onQuizStart={(data: any) => {
+                      console.log('🚀 Preview: Quiz started with data:', data);
+                      if (data?.userName) {
+                        updateSessionData('userName', data.userName);
+                      }
+                      updateSessionData('startTime', Date.now());
+                      goToNextStep();
+                    }}
+                    onQuizComplete={(data: any) => {
+                      console.log('🚀 Preview: Quiz completed with data:', data);
+                      updateSessionData('completed', true);
+                      updateSessionData('completionData', data);
+                    }}
+                    onStepComplete={(data: any) => {
+                      console.log('🚀 Preview: Step completed with data:', data);
+                      if (data?.selections) {
+                        updateSessionData(`step_${data.stepId}_selections`, data.selections);
+                      }
+                      // Auto-advance if configured
+                      if (data?.autoAdvance !== false) {
+                        goToNextStep();
+                      }
+                    }}
+                    onValidationChange={(isValid: boolean) => {
+                      updateSessionData(`step_validation_${block.id}`, isValid);
+                    }}
                   />
                 </React.Suspense>
               );
