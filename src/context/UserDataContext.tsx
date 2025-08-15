@@ -6,8 +6,8 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { QuizUser, QuizSession, InsertQuizUser, InsertQuizSession } from '@/types/unified-schema';
+import { supabase } from '../integrations/supabase/client';
+import { QuizUser, QuizSession, InsertQuizUser, InsertQuizSession } from '../types/unified-schema';
 
 interface UserDataContextType {
   // User information (previously in localStorage as userName, userEmail)
