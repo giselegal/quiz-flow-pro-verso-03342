@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 
 // Editor Components
@@ -41,8 +40,9 @@ import { BookOpen, Eye, Save, Settings } from 'lucide-react';
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // ⚡ EDITOR CONTEXT - Estado centralizado (UMA ÚNICA EXTRAÇÃO)
+  const editorContext = useEditor();
   const {
-    activeStageId,
+    activeStageId: activeStage,
     selectedBlockId,
     stageActions: { setActiveStage },
     blockActions: {
@@ -56,7 +56,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     persistenceActions: { saveFunnel, isSaving },
     computed: { currentBlocks, selectedBlock, totalBlocks },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
-  } = useEditor();
+  } = editorContext;
   
   // Safe scroll sync with try-catch
   let scrollRef;
@@ -80,10 +80,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   // Mostrar notificação quando carregar a etapa 1
   useEffect(() => {
-    if (activeStageId === 'step-1' || activeStageId === 'step-01') {
+    if (activeStage === 'step-1' || activeStage === 'step-01') {
       setShowNotification(true);
     }
-  }, [activeStageId]);
+  }, [activeStage]);
 
   // Converte selectedBlock para UnifiedBlock
   const unifiedSelectedBlock = selectedBlock ? {
@@ -91,8 +91,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     type: selectedBlock.type,
     properties: selectedBlock.properties || {},
     content: selectedBlock.content || {},
-    children: selectedBlock.children,
-    parentId: selectedBlock.parentId
   } : null;
   useEffect(() => {
     const handler = (e: Event) => {
@@ -151,11 +149,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // O EditorContext já gerencia internamente
   };
 
-  const getStepNumberFromStageId = (stageId: string | null): number => {
-    if (!stageId) return 1;
-    const match = stageId.match(/step-(\d+)/);
-    return match ? parseInt(match[1], 10) : 1;
-  };
 
   // Configurar atalhos de teclado
   useKeyboardShortcuts({
@@ -183,13 +176,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           return;
         }
 
-        reorderBlocks(newBlockIds, activeStageId || undefined);
+        reorderBlocks(newBlockIds, activeStage || undefined);
       }}
       onBlockAdd={(blockType, position) => {
         if (position !== undefined && position >= 0) {
-          addBlockAtPosition(blockType, position, activeStageId || undefined);
+          addBlockAtPosition(blockType, position, activeStage || undefined);
         } else {
-          addBlock(blockType, activeStageId || undefined);
+          addBlock(blockType, activeStage || undefined);
         }
       }}
       onBlockSelect={blockId => {
@@ -349,10 +342,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
               componentsPanel={
                 <SmartComponentsPanel
-                  currentStepNumber={funnelNavigation.currentStepNumber}
-                  onComponentSelect={componentType => {
-                    if (activeStageId) {
-                      addBlock(componentType, activeStageId);
+                  onAddComponent={(componentType: string) => {
+                    if (activeStage) {
+                      addBlock(componentType, activeStage);
                     }
                   }}
                 />
@@ -366,7 +358,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     <CanvasDropZone
                       blocks={currentBlocks}
                       selectedBlockId={selectedBlockId}
-                      isPreviewing={isPreviewing}
                       onSelectBlock={setSelectedBlockId}
                       onUpdateBlock={updateBlock}
                       onDeleteBlock={handleDeleteBlock}
@@ -423,7 +414,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         {/* Painel de Configurações do Funil */}
         {showFunnelSettings && (
           <FunnelSettingsPanel
-            funnelId={activeStageId || 'default'}
+            funnelId={activeStage || 'default'}
             isOpen={showFunnelSettings}
             onClose={() => setShowFunnelSettings(false)}
           />
