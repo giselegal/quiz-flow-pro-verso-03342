@@ -82,7 +82,7 @@ export const ConnectedStep12Template = () => {
       id: 'step12-description',
       type: 'text-inline',
       properties: {
-        content: transitionData?.description || 'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
+        content: (transitionData as any)?.description || 'A ideia é simples: te ajudar a enxergar com mais clareza onde você está agora — e para onde pode ir com mais intenção, leveza e autenticidade.',
         fontSize: 'text-lg',
         fontWeight: 'font-normal',
         textAlign: 'text-center',
@@ -99,7 +99,7 @@ export const ConnectedStep12Template = () => {
       id: 'step12-call-to-action',
       type: 'text-inline',
       properties: {
-        content: transitionData?.callToAction || '💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.',
+        content: (transitionData as any)?.callToAction || '💬 Responda com sinceridade. Isso é só entre você e a sua nova versão.',
         fontSize: 'text-lg',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -116,7 +116,7 @@ export const ConnectedStep12Template = () => {
       id: 'step12-continue-button',
       type: 'button-inline',
       properties: {
-        text: transitionData?.buttonText || 'Vamos lá?',
+        text: (transitionData as any)?.buttonText || 'Vamos lá?',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',

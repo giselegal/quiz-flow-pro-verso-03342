@@ -23,7 +23,7 @@ export const ConnectedStep13Template = () => {
         );
         
         console.log('✅ Connected Step13: Resposta estratégica salva', { 
-          questionId: questionData.id, 
+          questionId: questionData?.id || '', 
           selectedOptions: optionIds 
         });
       }
@@ -72,7 +72,7 @@ export const ConnectedStep13Template = () => {
       id: 'step13-question-subtitle',
       type: 'text-inline',
       properties: {
-        content: questionData?.subtitle || 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
+        content: (questionData as any)?.subtitle || 'Quando você se olha no espelho, como se sente com sua imagem pessoal atualmente?',
         fontSize: 'text-lg',
         fontWeight: 'font-medium',
         textAlign: 'text-center',

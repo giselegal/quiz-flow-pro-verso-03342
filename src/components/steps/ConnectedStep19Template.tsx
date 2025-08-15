@@ -66,7 +66,7 @@ export const ConnectedStep19Template = () => {
       id: 'step19-main-description',
       type: 'text-inline',
       properties: {
-        content: transitionData?.description || 'Chegar até aqui já mostra que você está pronta para se olhar com mais amor, se vestir com mais intenção e deixar sua imagem comunicar quem você é de verdade — com leveza e propósito.',
+        content: (transitionData as any)?.description || 'Chegar até aqui já mostra que você está pronta para se olhar com mais amor, se vestir com mais intenção e deixar sua imagem comunicar quem você é de verdade — com leveza e propósito.',
         fontSize: 'text-lg',
         fontWeight: 'font-normal',
         textAlign: 'text-center',
@@ -83,7 +83,7 @@ export const ConnectedStep19Template = () => {
       id: 'step19-result-subtitle',
       type: 'text-inline',
       properties: {
-        content: transitionData?.subtitle || 'Agora, é hora de revelar o seu Estilo Predominante — e os seus Estilos Complementares. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com leveza e confiança — todos os dias.',
+        content: (transitionData as any)?.subtitle || 'Agora, é hora de revelar o seu Estilo Predominante — e os seus Estilos Complementares. E, mais do que isso, uma oportunidade real de aplicar o seu Estilo com leveza e confiança — todos os dias.',
         fontSize: 'text-xl',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -99,7 +99,7 @@ export const ConnectedStep19Template = () => {
       id: 'step19-surprise-cta',
       type: 'text-inline',
       properties: {
-        content: transitionData?.callToAction || 'Ah, e lembra do valor que mencionamos? Prepare-se para uma surpresa: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
+        content: (transitionData as any)?.callToAction || 'Ah, e lembra do valor que mencionamos? Prepare-se para uma surpresa: o que você vai receber vale muito mais do que imagina — e vai custar muito menos do que você esperava.',
         fontSize: 'text-lg',
         fontWeight: 'font-medium',
         textAlign: 'text-center',
@@ -116,7 +116,7 @@ export const ConnectedStep19Template = () => {
       id: 'step19-result-button',
       type: 'button-inline',
       properties: {
-        text: transitionData?.buttonText || 'Vamos ao resultado?',
+        text: (transitionData as any)?.buttonText || 'Vamos ao resultado?',
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',
