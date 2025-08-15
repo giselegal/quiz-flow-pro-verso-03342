@@ -6,7 +6,8 @@ export const getStep21Template = () => {
       id: 'step21-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 120,
         logoHeight: 120,
@@ -27,20 +28,21 @@ export const getStep21Template = () => {
         color: '#B89B7A',
         containerWidth: 'full',
         spacing: 'large',
-        marginBottom: 16
+        marginBottom: 16,
       },
     },
     {
       id: 'step21-confirmation',
       type: 'text-inline',
       properties: {
-        content: 'Seu guia personalizado está sendo preparado e chegará no seu e-mail em instantes!',
+        content:
+          'Seu guia personalizado está sendo preparado e chegará no seu e-mail em instantes!',
         fontSize: 'text-lg',
         textAlign: 'text-center',
         color: '#432818',
         containerWidth: 'full',
         spacing: 'medium',
-        marginBottom: 24
+        marginBottom: 24,
       },
     },
     {
@@ -53,14 +55,15 @@ export const getStep21Template = () => {
         height: 300,
         containerWidth: 'large',
         spacing: 'large',
-        marginBottom: 24
+        marginBottom: 24,
       },
     },
     {
       id: 'step21-next-steps',
       type: 'text-inline',
       properties: {
-        content: '📋 Próximos Passos:\n\n📧 Verifique sua caixa de entrada (e spam também)\n📱 Salve nosso e-mail nos seus contatos\n💬 Aguarde convite para o grupo VIP do WhatsApp\n✨ Comece a transformar seu estilo hoje mesmo!',
+        content:
+          '📋 Próximos Passos:\n\n📧 Verifique sua caixa de entrada (e spam também)\n📱 Salve nosso e-mail nos seus contatos\n💬 Aguarde convite para o grupo VIP do WhatsApp\n✨ Comece a transformar seu estilo hoje mesmo!',
         fontSize: 'text-base',
         fontWeight: 'font-medium',
         textAlign: 'text-left',
@@ -69,14 +72,15 @@ export const getStep21Template = () => {
         borderColor: '#B89B7A',
         containerWidth: 'large',
         spacing: 'large',
-        marginBottom: 24
+        marginBottom: 24,
       },
     },
     {
       id: 'step21-final-message',
       type: 'text-inline',
       properties: {
-        content: '💕 Obrigada por confiar em mim para te ajudar a descobrir seu estilo único!\n\nCom carinho, Gisele Galvão',
+        content:
+          '💕 Obrigada por confiar em mim para te ajudar a descobrir seu estilo único!\n\nCom carinho, Gisele Galvão',
         fontSize: 'text-base',
         fontWeight: 'font-normal',
         fontStyle: 'italic',
@@ -85,7 +89,7 @@ export const getStep21Template = () => {
         backgroundColor: '#FAF9F7',
         containerWidth: 'large',
         spacing: 'large',
-        marginBottom: 0
+        marginBottom: 0,
       },
     },
   ];

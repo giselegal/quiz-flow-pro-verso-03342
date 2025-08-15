@@ -17,10 +17,10 @@ const Step01Simple: React.FC<Props> = ({ onNext }) => {
     // Dispatch custom event for compatibility with existing validation system
     window.dispatchEvent(
       new CustomEvent('quiz-input-change', {
-        detail: { 
-          blockId: 'intro-form-input', 
-          value: name.trim(), 
-          valid: isValid 
+        detail: {
+          blockId: 'intro-form-input',
+          value: name.trim(),
+          valid: isValid,
         },
       })
     );
@@ -164,10 +164,9 @@ const Step01Simple: React.FC<Props> = ({ onNext }) => {
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
                 }`}
               >
-                {isButtonEnabled 
-                  ? 'Quero Descobrir meu Estilo Agora!' 
-                  : 'Digite seu nome para continuar'
-                }
+                {isButtonEnabled
+                  ? 'Quero Descobrir meu Estilo Agora!'
+                  : 'Digite seu nome para continuar'}
               </button>
             </div>
           </div>

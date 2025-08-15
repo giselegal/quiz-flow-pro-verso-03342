@@ -12,7 +12,7 @@ const UrgencyCountdownInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -70,7 +70,7 @@ const UrgencyCountdownInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-full': containerWidth === 'full',
@@ -134,23 +134,14 @@ const UrgencyCountdownInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Countdown Display */}
         <div className="space-y-2">
-          <div 
-            className="text-3xl md:text-4xl font-bold font-mono"
-            style={{ color: accentColor }}
-          >
+          <div className="text-3xl md:text-4xl font-bold font-mono" style={{ color: accentColor }}>
             {formatTime(timeLeft)}
           </div>
-          <div className="text-xs uppercase tracking-wide opacity-75">
-            MM:SS
-          </div>
+          <div className="text-xs uppercase tracking-wide opacity-75">MM:SS</div>
         </div>
 
         {/* Urgency Message */}
-        {urgencyMessage && (
-          <p className="text-sm font-medium opacity-90">
-            {urgencyMessage}
-          </p>
-        )}
+        {urgencyMessage && <p className="text-sm font-medium opacity-90">{urgencyMessage}</p>}
 
         {/* Warning Text */}
         <div className="flex items-center justify-center gap-1 text-xs opacity-75">

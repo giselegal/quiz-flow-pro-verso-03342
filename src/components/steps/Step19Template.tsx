@@ -6,7 +6,8 @@ export const getStep19Template = () => {
       id: 'step19-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -19,7 +20,8 @@ export const getStep19Template = () => {
       id: 'step19-final-title',
       type: 'text-inline',
       properties: {
-        content: 'Quanto você estaria disposta a investir em um guia completo de estilo personalizado?',
+        content:
+          'Quanto você estaria disposta a investir em um guia completo de estilo personalizado?',
         fontSize: 'text-3xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',
@@ -44,7 +46,7 @@ export const getStep19Template = () => {
           '✨ Invista em peças de qualidade em cores neutras',
           '💎 Aposte em acessórios finos e delicados',
           '👠 Prefira saltos médios e sapatos clássicos',
-          '🎯 Combine texturas diferentes para criar interesse visual'
+          '🎯 Combine texturas diferentes para criar interesse visual',
         ],
       },
     },

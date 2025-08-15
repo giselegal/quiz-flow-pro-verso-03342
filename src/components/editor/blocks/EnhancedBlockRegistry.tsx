@@ -1,7 +1,7 @@
 // @ts-nocheck - Legacy property schema types, to be migrated
-import React, { lazy, Suspense } from 'react';
-import { AlertTriangle, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { AlertTriangle, Info } from 'lucide-react';
+import React, { lazy, Suspense } from 'react';
 
 // Note: This file uses legacy PropertySchema with string literal types
 // TODO: Migrate to unified PropertySchema from @/types/propertySchema
@@ -97,6 +97,8 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'quiz-intro-header': lazy(() => import('./QuizIntroHeaderBlock')),
   'vertical-canvas-header': lazy(() => import('./VerticalCanvasHeaderBlock')),
   'options-grid': lazy(() => import('./OptionsGridBlock')),
+  // Alias inline — usado pelo editor para edição em canvas quando necessário
+  'options-grid-inline': lazy(() => import('../../blocks/inline/OptionsGridInlineBlock')),
 
   // 💰 BLOCKS DE VENDAS E OFERTA
   'pricing-inline': lazy(() => import('./PricingInlineBlock')),
@@ -439,7 +441,7 @@ export const BLOCK_DEFINITIONS: Record<string, BlockDefinition> = {
 export function getBlockComponent(type: string): React.ComponentType<any> | null {
   const registry = ENHANCED_BLOCK_REGISTRY as Record<string, React.LazyExoticComponent<any>>;
   const component = registry[type];
-  return component ? component as React.ComponentType<any> : null;
+  return component ? (component as React.ComponentType<any>) : null;
 }
 
 export function getBlockDefinition(type: string): BlockDefinition | null {

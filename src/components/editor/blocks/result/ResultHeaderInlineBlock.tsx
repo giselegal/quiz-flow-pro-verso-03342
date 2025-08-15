@@ -12,7 +12,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -37,7 +37,7 @@ const ResultHeaderInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm': containerWidth === 'small',
-      'max-w-md': containerWidth === 'medium', 
+      'max-w-md': containerWidth === 'medium',
       'max-w-lg': containerWidth === 'large',
       'max-w-full': containerWidth === 'full',
     },

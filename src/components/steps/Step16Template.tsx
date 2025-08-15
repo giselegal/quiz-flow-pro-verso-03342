@@ -6,7 +6,8 @@ export const getStep16Template = () => {
       id: 'step16-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -19,7 +20,8 @@ export const getStep16Template = () => {
       id: 'step16-title',
       type: 'text-inline',
       properties: {
-        content: 'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
+        content:
+          'Se esse conteúdo completo custasse R$ 97,00 — incluindo Guia de Estilo, bônus especiais e um passo a passo prático para transformar sua imagem pessoal — você consideraria um bom investimento?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

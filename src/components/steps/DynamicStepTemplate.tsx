@@ -25,19 +25,22 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
   onPrevious,
   onAnswer,
   currentAnswers = {},
-  className = ''
+  className = '',
 }) => {
   const [localAnswers, setLocalAnswers] = useState<Record<string, any>>(currentAnswers);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const calculatedProgress = progressValue ?? calculateProgress(stepNumber);
 
-  const handleOptionSelect = useCallback((optionId: string, optionValue: any) => {
-    setSelectedOption(optionId);
-    const newAnswers = { ...localAnswers, [questionData.stepId]: optionValue };
-    setLocalAnswers(newAnswers);
-    onAnswer?.(questionData.stepId, optionValue);
-  }, [localAnswers, questionData.stepId, onAnswer]);
+  const handleOptionSelect = useCallback(
+    (optionId: string, optionValue: any) => {
+      setSelectedOption(optionId);
+      const newAnswers = { ...localAnswers, [questionData.stepId]: optionValue };
+      setLocalAnswers(newAnswers);
+      onAnswer?.(questionData.stepId, optionValue);
+    },
+    [localAnswers, questionData.stepId, onAnswer]
+  );
 
   const handleNext = useCallback(() => {
     onNext?.(localAnswers);
@@ -49,18 +52,10 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
         return (
           <div className="text-center space-y-6">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-brand">
-                {questionData.title}
-              </h1>
-              <p className="text-xl text-brand/80 max-w-2xl mx-auto">
-                {questionData.subtitle}
-              </p>
+              <h1 className="text-4xl font-bold text-brand">{questionData.title}</h1>
+              <p className="text-xl text-brand/80 max-w-2xl mx-auto">{questionData.subtitle}</p>
             </div>
-            <Button 
-              onClick={handleNext}
-              size="lg"
-              className="px-8 py-3 text-lg"
-            >
+            <Button onClick={handleNext} size="lg" className="px-8 py-3 text-lg">
               Começar Quiz
             </Button>
           </div>
@@ -70,18 +65,14 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
         return (
           <div className="space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-brand">
-                {questionData.title}
-              </h2>
+              <h2 className="text-3xl font-bold text-brand">{questionData.title}</h2>
               {questionData.subtitle && (
-                <p className="text-lg text-brand/70 max-w-2xl mx-auto">
-                  {questionData.subtitle}
-                </p>
+                <p className="text-lg text-brand/70 max-w-2xl mx-auto">{questionData.subtitle}</p>
               )}
             </div>
-            
+
             <div className="grid gap-4 max-w-2xl mx-auto">
-              {questionData.options?.map((option) => (
+              {questionData.options?.map(option => (
                 <Card
                   key={option.id}
                   className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
@@ -92,9 +83,7 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
                   onClick={() => handleOptionSelect(option.id, option.value)}
                 >
                   <CardContent className="p-6">
-                    <p className="text-lg font-medium text-center">
-                      {option.text}
-                    </p>
+                    <p className="text-lg font-medium text-center">{option.text}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -106,24 +95,18 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
         return (
           <div className="space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-brand">
-                {questionData.title}
-              </h2>
+              <h2 className="text-3xl font-bold text-brand">{questionData.title}</h2>
               {questionData.subtitle && (
-                <p className="text-lg text-brand/70 max-w-2xl mx-auto">
-                  {questionData.subtitle}
-                </p>
+                <p className="text-lg text-brand/70 max-w-2xl mx-auto">{questionData.subtitle}</p>
               )}
             </div>
-            
+
             <Card className="max-w-md mx-auto">
               <CardHeader>
-                <h3 className="text-xl font-semibold text-center">
-                  Suas informações
-                </h3>
+                <h3 className="text-xl font-semibold text-center">Suas informações</h3>
               </CardHeader>
               <CardContent className="space-y-4">
-                {questionData.fields?.map((field) => (
+                {questionData.fields?.map(field => (
                   <div key={field.name}>
                     <label className="text-sm font-medium text-brand">
                       {field.label}
@@ -133,7 +116,7 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
                       type={field.type}
                       placeholder={field.placeholder}
                       value={localAnswers[field.name] || ''}
-                      onChange={(e) => {
+                      onChange={e => {
                         const newAnswers = { ...localAnswers, [field.name]: e.target.value };
                         setLocalAnswers(newAnswers);
                         onAnswer?.(field.name, e.target.value);
@@ -151,21 +134,15 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
         return (
           <div className="text-center space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl font-bold text-brand">
-                {questionData.title}
-              </h1>
-              <p className="text-xl text-brand/80 max-w-2xl mx-auto">
-                {questionData.subtitle}
-              </p>
+              <h1 className="text-4xl font-bold text-brand">{questionData.title}</h1>
+              <p className="text-xl text-brand/80 max-w-2xl mx-auto">{questionData.subtitle}</p>
             </div>
-            
+
             <Card className="max-w-2xl mx-auto">
               <CardContent className="p-8">
                 <div className="space-y-6">
                   <div className="text-6xl">🎉</div>
-                  <h3 className="text-2xl font-bold">
-                    Parabéns! Quiz concluído
-                  </h3>
+                  <h3 className="text-2xl font-bold">Parabéns! Quiz concluído</h3>
                   <p className="text-lg text-muted-foreground">
                     Seus resultados foram processados com sucesso.
                   </p>
@@ -202,48 +179,38 @@ export const DynamicStepTemplate: React.FC<DynamicStepTemplateProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`min-h-screen p-8 ${className}`}
-      style={{ 
+      style={{
         background: questionData.theme.backgroundColor,
-        color: questionData.theme.textColor 
+        color: questionData.theme.textColor,
       }}
     >
       {/* Progress Bar */}
       {questionData.showProgress && (
         <div className="max-w-4xl mx-auto mb-8">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">
-              Etapa {stepNumber} de 21
-            </span>
-            <span className="text-sm">
-              {calculatedProgress}%
-            </span>
+            <span className="text-sm font-medium">Etapa {stepNumber} de 21</span>
+            <span className="text-sm">{calculatedProgress}%</span>
           </div>
           <Progress value={calculatedProgress} className="h-2" />
         </div>
       )}
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto">
-        {renderContent()}
-      </div>
+      <div className="max-w-4xl mx-auto">{renderContent()}</div>
 
       {/* Navigation */}
       {questionData.showNavigation && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2">
           <div className="flex gap-4">
             {stepNumber > 1 && onPrevious && (
-              <Button
-                variant="outline"
-                onClick={onPrevious}
-                className="flex items-center gap-2"
-              >
+              <Button variant="outline" onClick={onPrevious} className="flex items-center gap-2">
                 <ArrowLeft className="w-4 h-4" />
                 Anterior
               </Button>
             )}
-            
+
             {stepNumber < 21 && onNext && (
               <Button
                 onClick={handleNext}

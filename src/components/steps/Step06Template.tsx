@@ -68,7 +68,8 @@ export const getStep06Template = () => {
             category: 'Natural',
             styleCategory: 'Natural',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735396/cores-naturais_yqw7mk.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735396/cores-naturais_yqw7mk.webp',
           },
           {
             id: '5b',
@@ -78,7 +79,8 @@ export const getStep06Template = () => {
             category: 'Clássico',
             styleCategory: 'Clássico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735395/cores-classicas_hx3q8w.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735395/cores-classicas_hx3q8w.webp',
           },
           {
             id: '5c',
@@ -88,7 +90,8 @@ export const getStep06Template = () => {
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735394/cores-contemporaneas_z7pm4n.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735394/cores-contemporaneas_z7pm4n.webp',
           },
           {
             id: '5d',
@@ -98,7 +101,8 @@ export const getStep06Template = () => {
             category: 'Elegante',
             styleCategory: 'Elegante',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735396/cores-elegantes_mfp9xk.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735396/cores-elegantes_mfp9xk.webp',
           },
           {
             id: '5e',
@@ -108,7 +112,8 @@ export const getStep06Template = () => {
             category: 'Romântico',
             styleCategory: 'Romântico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735397/cores-romanticas_k8qm3l.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735397/cores-romanticas_k8qm3l.webp',
           },
           {
             id: '5f',
@@ -118,7 +123,8 @@ export const getStep06Template = () => {
             category: 'Sexy',
             styleCategory: 'Sexy',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735398/cores-sexy_n4jp2r.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735398/cores-sexy_n4jp2r.webp',
           },
           {
             id: '5g',
@@ -128,7 +134,8 @@ export const getStep06Template = () => {
             category: 'Dramático',
             styleCategory: 'Dramático',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735399/cores-dramaticas_x9qn8t.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735399/cores-dramaticas_x9qn8t.webp',
           },
           {
             id: '5h',
@@ -138,7 +145,8 @@ export const getStep06Template = () => {
             category: 'Criativo',
             styleCategory: 'Criativo',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735400/cores-criativas_p5kj7l.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735400/cores-criativas_p5kj7l.webp',
           },
         ],
         columns: 2,

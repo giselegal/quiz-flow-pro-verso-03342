@@ -12,7 +12,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -26,14 +26,15 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         age: 34,
         profession: 'Executiva',
         location: 'São Paulo, SP',
-        avatar: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/avatar_marina_testimonial.webp',
+        avatar:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/avatar_marina_testimonial.webp',
         rating: 5,
         text: 'O guia mudou completamente a minha forma de me vestir. Agora tenho confiança para qualquer ocasião e recebo elogios constantemente!',
         highlight: 'Autoestima transformada',
         beforeAfter: {
           before: 'Não sabia o que me favorecia',
-          after: 'Looks incríveis todos os dias'
-        }
+          after: 'Looks incríveis todos os dias',
+        },
       },
       {
         id: 2,
@@ -41,14 +42,15 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         age: 28,
         profession: 'Empreendedora',
         location: 'Rio de Janeiro, RJ',
-        avatar: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/avatar_carla_testimonial.webp',
+        avatar:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/avatar_carla_testimonial.webp',
         rating: 5,
         text: 'Economizei muito dinheiro parando de comprar peças erradas. O guia me ensinou a fazer escolhas certeiras e montar looks perfeitos.',
         highlight: 'Economia inteligente',
         beforeAfter: {
           before: 'Compras por impulso',
-          after: 'Guarda-roupa funcional'
-        }
+          after: 'Guarda-roupa funcional',
+        },
       },
       {
         id: 3,
@@ -56,15 +58,16 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         age: 41,
         profession: 'Advogada',
         location: 'Brasília, DF',
-        avatar: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/avatar_ana_testimonial.webp',
+        avatar:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/avatar_ana_testimonial.webp',
         rating: 5,
         text: 'Finalmente encontrei meu estilo! O guia é muito detalhado e prático. Uso as dicas todos os dias e me sinto muito mais confiante.',
         highlight: 'Confiança profissional',
         beforeAfter: {
           before: 'Looks sem personalidade',
-          after: 'Estilo autêntico'
-        }
-      }
+          after: 'Estilo autêntico',
+        },
+      },
     ],
     showRatings = true,
     showProfession = true,
@@ -86,7 +89,7 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -139,13 +142,13 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
       <div className="space-y-8">
         {/* Header */}
         <div className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold font-playfair" style={{ color: accentColor }}>
+          <h2
+            className="text-2xl md:text-3xl font-bold font-playfair"
+            style={{ color: accentColor }}
+          >
             {title}
           </h2>
-          <div 
-            className="w-32 h-1 mx-auto rounded-full"
-            style={{ backgroundColor: accentColor }}
-          />
+          <div className="w-32 h-1 mx-auto rounded-full" style={{ backgroundColor: accentColor }} />
           {subtitle && (
             <p className="text-base md:text-lg max-w-2xl mx-auto opacity-90 leading-relaxed">
               {subtitle}
@@ -154,18 +157,23 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
 
         {/* Testimonials */}
-        <div className={cn(
-          'max-w-6xl mx-auto',
-          layout === 'grid' ? 'grid md:grid-cols-3 gap-6' : 'space-y-6'
-        )}>
+        <div
+          className={cn(
+            'max-w-6xl mx-auto',
+            layout === 'grid' ? 'grid md:grid-cols-3 gap-6' : 'space-y-6'
+          )}
+        >
           {testimonials.map((testimonial: any, index: number) => (
-            <div 
+            <div
               key={testimonial.id || index}
               className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-opacity-10 relative"
               style={{ borderColor: accentColor }}
             >
               {/* Quote Icon */}
-              <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor }}>
+              <div
+                className="absolute -top-3 -left-3 w-8 h-8 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: accentColor }}
+              >
                 <Quote className="w-4 h-4 text-white" />
               </div>
 
@@ -173,7 +181,10 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative">
                   <img
-                    src={testimonial.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name)}&background=${accentColor.slice(1)}&color=fff&size=48`}
+                    src={
+                      testimonial.avatar ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name)}&background=${accentColor.slice(1)}&color=fff&size=48`
+                    }
                     alt={testimonial.name}
                     className="w-12 h-12 rounded-full object-cover"
                   />
@@ -201,11 +212,11 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
               {/* Highlight Badge */}
               {showHighlight && testimonial.highlight && (
                 <div className="mb-4">
-                  <span 
+                  <span
                     className="inline-block px-3 py-1 rounded-full text-xs font-medium"
-                    style={{ 
-                      backgroundColor: accentColor + '20', 
-                      color: accentColor 
+                    style={{
+                      backgroundColor: accentColor + '20',
+                      color: accentColor,
                     }}
                   >
                     ✨ {testimonial.highlight}
@@ -239,19 +250,21 @@ const TestimonialsInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="bg-gray-50 p-6 rounded-lg max-w-lg mx-auto">
           <div className="flex items-center justify-center gap-4 text-sm">
             <div className="text-center">
-              <div className="text-2xl font-bold" style={{ color: accentColor }}>500+</div>
+              <div className="text-2xl font-bold" style={{ color: accentColor }}>
+                500+
+              </div>
               <div className="opacity-75">Mulheres transformadas</div>
             </div>
             <div className="w-px h-8 bg-gray-300"></div>
             <div className="text-center">
-              <div className="flex items-center justify-center gap-1">
-                {renderStars(5)}
-              </div>
+              <div className="flex items-center justify-center gap-1">{renderStars(5)}</div>
               <div className="opacity-75">Avaliação média</div>
             </div>
             <div className="w-px h-8 bg-gray-300"></div>
             <div className="text-center">
-              <div className="text-2xl font-bold" style={{ color: accentColor }}>98%</div>
+              <div className="text-2xl font-bold" style={{ color: accentColor }}>
+                98%
+              </div>
               <div className="opacity-75">Satisfação</div>
             </div>
           </div>

@@ -6,15 +6,15 @@ import { Eye, Settings, X } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { ButtonPropertyEditor } from './editors/ButtonPropertyEditor';
 import { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
+import { default as ImagePropertyEditor } from './editors/ImagePropertyEditor';
 import { NavigationPropertyEditor } from './editors/NavigationPropertyEditor';
-import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
 import { OptionsGridPropertyEditor } from './editors/OptionsGridPropertyEditor';
+import { OptionsPropertyEditor } from './editors/OptionsPropertyEditor';
 import { PricingPropertyEditor } from './editors/PricingPropertyEditor';
 import { QuestionPropertyEditor } from './editors/QuestionPropertyEditor';
 import { TestimonialPropertyEditor } from './editors/TestimonialPropertyEditor';
 import { TextPropertyEditor } from './editors/TextPropertyEditor';
 import { getBlockEditorConfig } from './PropertyEditorRegistry';
-import { default as ImagePropertyEditor } from './editors/ImagePropertyEditor';
 
 interface PropertiesPanelProps {
   /** Bloco atualmente selecionado */
@@ -119,13 +119,16 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
         // Mapeamento específico para options-grid
         if (blockType === 'options-grid') {
           console.log('✅ Using OptionsGridPropertyEditor for:', blockType);
-          return (
-            <OptionsGridPropertyEditor
-              block={selectedBlock}
-              onUpdate={handleUpdate}
-              isPreviewMode={isPreviewMode}
-            />
-          );
+          if (blockType === 'options-grid' || blockType === 'options-grid-inline') {
+            console.log('\u2705 Using OptionsGridPropertyEditor for:', blockType);
+            return (
+              <OptionsGridPropertyEditor
+                block={selectedBlock}
+                onUpdate={handleUpdate}
+                isPreviewMode={isPreviewMode}
+              />
+            );
+          }
         }
 
         // Mapeamento flexível para tipos relacionados a opções (outros)

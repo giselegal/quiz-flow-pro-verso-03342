@@ -12,7 +12,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -23,19 +23,23 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
       {
         id: 1,
         title: 'Peças-Chave do Guarda-roupa',
-        description: 'Guia completo com as peças essenciais que toda mulher deve ter, adaptadas ao seu estilo pessoal.',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp',
+        description:
+          'Guia completo com as peças essenciais que toda mulher deve ter, adaptadas ao seu estilo pessoal.',
+        image:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp',
         value: 'R$ 67,00',
-        highlights: ['15 peças essenciais', 'Como combinar', 'Investimentos inteligentes']
+        highlights: ['15 peças essenciais', 'Como combinar', 'Investimentos inteligentes'],
       },
       {
         id: 2,
         title: 'Visagismo e Harmonia Facial',
-        description: 'Descubra as melhores técnicas de maquiagem e cortes de cabelo para realçar sua beleza natural.',
-        image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp',
+        description:
+          'Descubra as melhores técnicas de maquiagem e cortes de cabelo para realçar sua beleza natural.',
+        image:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp',
         value: 'R$ 29,00',
-        highlights: ['Análise facial', 'Maquiagem ideal', 'Cortes que favorecem']
-      }
+        highlights: ['Análise facial', 'Maquiagem ideal', 'Cortes que favorecem'],
+      },
     ],
     showValues = true,
     showHighlights = true,
@@ -54,7 +58,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -98,7 +102,10 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Gift className="w-6 h-6" style={{ color: accentColor }} />
-            <h2 className="text-2xl md:text-3xl font-bold font-playfair" style={{ color: accentColor }}>
+            <h2
+              className="text-2xl md:text-3xl font-bold font-playfair"
+              style={{ color: accentColor }}
+            >
               {title}
             </h2>
             <Gift className="w-6 h-6" style={{ color: accentColor }} />
@@ -108,18 +115,15 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
               {subtitle}
             </p>
           )}
-          <div 
-            className="w-32 h-1 mx-auto rounded-full"
-            style={{ backgroundColor: accentColor }}
-          />
+          <div className="w-32 h-1 mx-auto rounded-full" style={{ backgroundColor: accentColor }} />
         </div>
 
         {/* Bonuses Grid */}
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6">
             {bonuses.map((bonus: any, index: number) => (
-              <div 
-                key={bonus.id || index} 
+              <div
+                key={bonus.id || index}
                 className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] border border-opacity-10 relative overflow-hidden"
                 style={{ borderColor: accentColor }}
               >
@@ -148,9 +152,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm opacity-90 leading-relaxed">
-                    {bonus.description}
-                  </p>
+                  <p className="text-sm opacity-90 leading-relaxed">{bonus.description}</p>
 
                   {/* Highlights */}
                   {showHighlights && bonus.highlights && bonus.highlights.length > 0 && (
@@ -166,7 +168,7 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 </div>
 
                 {/* Exclusive Badge */}
-                <div 
+                <div
                   className="absolute -top-2 -right-2 px-3 py-1 rounded-full text-xs font-bold text-white transform rotate-12 shadow-lg"
                   style={{ background: `linear-gradient(to right, ${accentColor}, #aa6b5d)` }}
                 >
@@ -174,7 +176,10 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 </div>
 
                 {/* Decorative Element */}
-                <div className="absolute bottom-0 left-0 w-full h-1" style={{ backgroundColor: accentColor + '20' }}></div>
+                <div
+                  className="absolute bottom-0 left-0 w-full h-1"
+                  style={{ backgroundColor: accentColor + '20' }}
+                ></div>
               </div>
             ))}
           </div>
@@ -190,7 +195,8 @@ const BonusSectionInlineBlock: React.FC<BlockComponentProps> = ({
             <Sparkles className="w-5 h-5" style={{ color: accentColor }} />
           </div>
           <p className="text-sm opacity-90">
-            Todos estes bônus são <strong>inclusos gratuitamente</strong> quando você adquire seu guia de estilo personalizado hoje.
+            Todos estes bônus são <strong>inclusos gratuitamente</strong> quando você adquire seu
+            guia de estilo personalizado hoje.
           </p>
         </div>
       </div>

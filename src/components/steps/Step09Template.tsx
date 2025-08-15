@@ -67,7 +67,8 @@ export const getStep09Template = () => {
             category: 'Natural',
             styleCategory: 'Natural',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735490/tenis-confortaveis_m8q4kn.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735490/tenis-confortaveis_m8q4kn.webp',
           },
           {
             id: '8b',
@@ -76,7 +77,8 @@ export const getStep09Template = () => {
             category: 'Clássico',
             styleCategory: 'Clássico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735491/sapatos-classicos_p7kj2q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735491/sapatos-classicos_p7kj2q.webp',
           },
           {
             id: '8c',
@@ -85,7 +87,8 @@ export const getStep09Template = () => {
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
             points: 2,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735492/ankle-boots_x9qn7t.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735492/ankle-boots_x9qn7t.webp',
           },
           {
             id: '8d',
@@ -94,7 +97,8 @@ export const getStep09Template = () => {
             category: 'Elegante',
             styleCategory: 'Elegante',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735493/saltos-elegantes_k3lm8p.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735493/saltos-elegantes_k3lm8p.webp',
           },
           {
             id: '8e',
@@ -103,7 +107,8 @@ export const getStep09Template = () => {
             category: 'Romântico',
             styleCategory: 'Romântico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735494/sapatilhas-delicadas_q7pn4k.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735494/sapatilhas-delicadas_q7pn4k.webp',
           },
           {
             id: '8f',
@@ -112,7 +117,8 @@ export const getStep09Template = () => {
             category: 'Sexy',
             styleCategory: 'Sexy',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735495/saltos-sexy_m2kj9l.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735495/saltos-sexy_m2kj9l.webp',
           },
           {
             id: '8g',
@@ -121,7 +127,8 @@ export const getStep09Template = () => {
             category: 'Dramático',
             styleCategory: 'Dramático',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735496/botas-dramaticas_n8qm3x.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735496/botas-dramaticas_n8qm3x.webp',
           },
           {
             id: '8h',
@@ -130,7 +137,8 @@ export const getStep09Template = () => {
             category: 'Criativo',
             styleCategory: 'Criativo',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735497/calcados-criativos_k9pj7q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735497/calcados-criativos_k9pj7q.webp',
           },
         ],
         columns: 2,

@@ -25,6 +25,8 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
   isSelected = false,
   onClick,
   onPropertyChange,
+  // callback opcional para reportar validade da seleção ao editor/painel
+  onValidate,
   className = '',
 }) => {
   // Destructuring das propriedades do bloco
@@ -66,8 +68,18 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
         // Notificar mudança
         if (onPropertyChange) {
-          onPropertyChange('selectedOptions', newSelected);
+          // Atualiza both explicit selectedOptions e o objeto properties para garantir persistência
+          try {
+            onPropertyChange('selectedOptions', newSelected);
+          } finally {
+            // Garantir que a propriedade completa seja mesclada no editor (merge seguro)
+            onPropertyChange('properties', { selectedOptions: newSelected });
+          }
         }
+
+        // Reportar validao ao editor/painel
+        const isValid = newSelected.length >= minSelections;
+        if (onValidate) onValidate(isValid);
 
         return newSelected;
       });
@@ -76,8 +88,15 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
       setSelectedOptions(newSelected);
 
       if (onPropertyChange) {
-        onPropertyChange('selectedOptions', newSelected);
+        try {
+          onPropertyChange('selectedOptions', newSelected);
+        } finally {
+          onPropertyChange('properties', { selectedOptions: newSelected });
+        }
       }
+
+      const isValid = newSelected.length >= minSelections;
+      if (onValidate) onValidate(isValid);
     }
   };
 
@@ -114,8 +133,12 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
               className={cn(
                 'option-card p-4 border-2 cursor-pointer transition-all duration-200',
                 'hover:shadow-lg transform hover:-translate-y-1',
-                layoutOrientation === 'horizontal' && imagePosition === 'left' ? 'flex items-center gap-4' : '',
-                layoutOrientation === 'horizontal' && imagePosition === 'right' ? 'flex items-center gap-4 flex-row-reverse' : '',
+                layoutOrientation === 'horizontal' && imagePosition === 'left'
+                  ? 'flex items-center gap-4'
+                  : '',
+                layoutOrientation === 'horizontal' && imagePosition === 'right'
+                  ? 'flex items-center gap-4 flex-row-reverse'
+                  : '',
                 isSelectedOption
                   ? `border-[${selectedBorderColor}] bg-[${selectedBorderColor}]/10 shadow-lg`
                   : `border-[${borderColor}] hover:border-[${selectedBorderColor}] hover:bg-[${hoverColor}]`
@@ -132,19 +155,31 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
             >
               {/* Imagem da opção */}
               {showImages && option.imageUrl && contentType !== 'text-only' && (
-                <div className={cn(
-                  'option-image',
-                  layoutOrientation === 'vertical' && imagePosition === 'top' && 'mb-3',
-                  layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-2 mt-3',
-                  layoutOrientation === 'horizontal' && (imagePosition === 'left' || imagePosition === 'right') && 'flex-shrink-0'
-                )}>
+                <div
+                  className={cn(
+                    'option-image',
+                    layoutOrientation === 'vertical' && imagePosition === 'top' && 'mb-3',
+                    layoutOrientation === 'vertical' &&
+                      imagePosition === 'bottom' &&
+                      'order-2 mt-3',
+                    layoutOrientation === 'horizontal' &&
+                      (imagePosition === 'left' || imagePosition === 'right') &&
+                      'flex-shrink-0'
+                  )}
+                >
                   <img
                     src={option.imageUrl}
                     alt={option.text}
                     className="w-full rounded-md object-cover"
                     style={{
-                      width: layoutOrientation === 'horizontal' ? `${Math.min(imageSize, 120)}px` : `${imageSize}px`,
-                      height: layoutOrientation === 'horizontal' ? `${Math.min(imageSize, 120)}px` : `${imageSize}px`,
+                      width:
+                        layoutOrientation === 'horizontal'
+                          ? `${Math.min(imageSize, 120)}px`
+                          : `${imageSize}px`,
+                      height:
+                        layoutOrientation === 'horizontal'
+                          ? `${Math.min(imageSize, 120)}px`
+                          : `${imageSize}px`,
                       maxWidth: '100%',
                       aspectRatio: '1/1',
                     }}
@@ -155,11 +190,13 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
 
               {/* Texto da opção */}
               {contentType !== 'image-only' && (
-                <div className={cn(
-                  'option-text',
-                  layoutOrientation === 'horizontal' && 'flex-1',
-                  layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-1'
-                )}>
+                <div
+                  className={cn(
+                    'option-text',
+                    layoutOrientation === 'horizontal' && 'flex-1',
+                    layoutOrientation === 'vertical' && imagePosition === 'bottom' && 'order-1'
+                  )}
+                >
                   {/* Título da opção */}
                   <h4
                     className={cn(
@@ -167,12 +204,12 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                       isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-900'
                     )}
                     style={{
-                      color: isSelectedOption ? selectedBorderColor : '#432818'
+                      color: isSelectedOption ? selectedBorderColor : '#432818',
                     }}
                   >
                     {option.text}
                   </h4>
-                  
+
                   {/* Descrição da opção */}
                   {option.description && (
                     <p
@@ -181,7 +218,7 @@ const OptionsGridInlineBlock: React.FC<BlockComponentProps> = ({
                         isSelectedOption ? `text-[${selectedBorderColor}]` : 'text-gray-600'
                       )}
                       style={{
-                        color: isSelectedOption ? selectedBorderColor : '#6B7280'
+                        color: isSelectedOption ? selectedBorderColor : '#6B7280',
                       }}
                     >
                       {option.description}

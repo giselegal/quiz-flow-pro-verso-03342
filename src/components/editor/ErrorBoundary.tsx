@@ -45,9 +45,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             <AlertTriangle className="h-12 w-12 text-destructive" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-destructive">
-              Algo deu errado
-            </h3>
+            <h3 className="text-lg font-semibold text-destructive">Algo deu errado</h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">
               {this.state.error?.message || 'Ocorreu um erro inesperado neste componente.'}
             </p>

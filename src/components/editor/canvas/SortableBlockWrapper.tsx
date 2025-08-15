@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import * as BlockRegistry from '@/config/enhancedBlockRegistry';
@@ -9,6 +8,7 @@ import { Block } from '@/types/editor';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
+import React from 'react';
 
 interface SortableBlockWrapperProps {
   block: Block;
@@ -230,12 +230,19 @@ const SortableBlockWrapper: React.FC<SortableBlockWrapperProps> = ({
               isSelected: false, // 🎯 Forçar isSelected=false para remover bordas do componente
               onClick: onSelect,
               onPropertyChange: handlePropertyChange,
+              // repassar onValidate para que componentes inline possam reportar validade
+              onValidate: (isValid: boolean) => {
+                // Atualiza estado do bloco com flag de validade para o painel
+                onUpdate({ properties: { __isValid: isValid } });
+              },
             };
 
             // 🎯 MODO PREVIEW: Adicionar props funcionais para comportamento de produção
             if (isPreviewing) {
               return (
-                <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
+                <React.Suspense
+                  fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}
+                >
                   <Component
                     {...componentProps}
                     isPreviewMode={true}

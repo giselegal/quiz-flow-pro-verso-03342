@@ -12,7 +12,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -25,13 +25,13 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
       'Formação em Personal Styling pela ESEEI',
       'Consultora certificada em Coloração Pessoal',
       'Especialista em Visagismo e Harmonia Facial',
-      'Mais de 2.000 mulheres atendidas'
+      'Mais de 2.000 mulheres atendidas',
     ],
     achievements = [
       { icon: 'users', value: '2000+', label: 'Mulheres Transformadas' },
       { icon: 'award', value: '10+', label: 'Anos de Experiência' },
       { icon: 'book', value: '50+', label: 'Cursos e Certificações' },
-      { icon: 'star', value: '98%', label: 'Clientes Satisfeitas' }
+      { icon: 'star', value: '98%', label: 'Clientes Satisfeitas' },
     ],
     testimonialQuote = 'Gisele tem um dom especial para identificar o que realmente funciona para cada pessoa. Ela mudou completamente minha forma de me vestir!',
     testimonialAuthor = 'Maria Helena, Empresária',
@@ -53,7 +53,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -112,13 +112,13 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
       <div className="space-y-8">
         {/* Header */}
         <div className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold font-playfair" style={{ color: accentColor }}>
+          <h2
+            className="text-2xl md:text-3xl font-bold font-playfair"
+            style={{ color: accentColor }}
+          >
             Quem é Sua Mentora
           </h2>
-          <div 
-            className="w-24 h-1 mx-auto rounded-full"
-            style={{ backgroundColor: accentColor }}
-          />
+          <div className="w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: accentColor }} />
         </div>
 
         {/* Main Content */}
@@ -132,7 +132,7 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 className="w-full max-w-[300px] h-auto rounded-lg shadow-lg object-cover"
               />
               {/* Professional Badge */}
-              <div 
+              <div
                 className="absolute -bottom-4 -right-4 px-4 py-2 rounded-full shadow-lg text-white text-sm font-bold transform rotate-12"
                 style={{ background: `linear-gradient(to right, ${accentColor}, #aa6b5d)` }}
               >
@@ -147,12 +147,8 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
               <h3 className="text-2xl font-bold mb-2" style={{ color: accentColor }}>
                 {mentorName}
               </h3>
-              <p className="text-lg font-medium opacity-90 mb-4">
-                {mentorTitle}
-              </p>
-              <p className="leading-relaxed opacity-90">
-                {mentorDescription}
-              </p>
+              <p className="text-lg font-medium opacity-90 mb-4">{mentorTitle}</p>
+              <p className="leading-relaxed opacity-90">{mentorDescription}</p>
             </div>
 
             {/* Credentials */}
@@ -164,7 +160,10 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 <ul className="space-y-2">
                   {credentials.map((credential: string, index: number) => (
                     <li key={index} className="flex items-start gap-2 text-sm">
-                      <Award className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: accentColor }} />
+                      <Award
+                        className="w-4 h-4 flex-shrink-0 mt-0.5"
+                        style={{ color: accentColor }}
+                      />
                       <span>{credential}</span>
                     </li>
                   ))}
@@ -185,15 +184,16 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
                 const IconComponent = getIcon(achievement.icon);
                 return (
                   <div key={index} className="text-center">
-                    <div className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ backgroundColor: accentColor + '20' }}>
+                    <div
+                      className="w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor: accentColor + '20' }}
+                    >
                       <IconComponent className="w-6 h-6" style={{ color: accentColor }} />
                     </div>
                     <div className="text-2xl font-bold mb-1" style={{ color: accentColor }}>
                       {achievement.value}
                     </div>
-                    <div className="text-xs opacity-75">
-                      {achievement.label}
-                    </div>
+                    <div className="text-xs opacity-75">{achievement.label}</div>
                   </div>
                 );
               })}
@@ -203,18 +203,22 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
 
         {/* Client Testimonial */}
         {showTestimonial && testimonialQuote && (
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-opacity-10 max-w-2xl mx-auto" style={{ borderColor: accentColor }}>
+          <div
+            className="bg-white p-6 rounded-lg shadow-sm border border-opacity-10 max-w-2xl mx-auto"
+            style={{ borderColor: accentColor }}
+          >
             <div className="text-center">
-              <blockquote className="text-lg italic mb-4 leading-relaxed" style={{ color: accentColor }}>
+              <blockquote
+                className="text-lg italic mb-4 leading-relaxed"
+                style={{ color: accentColor }}
+              >
                 "{testimonialQuote}"
               </blockquote>
               {testimonialAuthor && (
-                <footer className="text-sm font-medium opacity-75">
-                  — {testimonialAuthor}
-                </footer>
+                <footer className="text-sm font-medium opacity-75">— {testimonialAuthor}</footer>
               )}
             </div>
-            
+
             {/* Stars */}
             <div className="flex justify-center gap-1 mt-3">
               {[...Array(5)].map((_, index) => (
@@ -231,7 +235,8 @@ const MentorSectionInlineBlock: React.FC<BlockComponentProps> = ({
               ✨ Sua Transformação em Mãos Experientes
             </h4>
             <p className="text-sm opacity-90">
-              Quando você escolhe nosso guia, está investindo em conhecimento validado por anos de experiência prática e milhares de transformações reais.
+              Quando você escolhe nosso guia, está investindo em conhecimento validado por anos de
+              experiência prática e milhares de transformações reais.
             </p>
           </div>
         </div>

@@ -98,7 +98,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   if (!Component) {
     // Fallback mais robusto para componentes não encontrados
     return (
-      <SimpleBlockFallback 
+      <SimpleBlockFallback
         blockType={block.type}
         blockId={block.id}
         message={`Componente '${block.type}' não foi encontrado no registry`}
@@ -108,10 +108,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
 
   try {
     return (
-      <ProductionBlockBoundary 
-        blockType={block.type}
-        blockId={block.id}
-      >
+      <ProductionBlockBoundary blockType={block.type} blockId={block.id}>
         <div
           className={cn(
             'block-wrapper transition-all duration-200',
@@ -143,7 +140,7 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
     console.error(`Erro crítico ao renderizar bloco ${block.type}:`, error);
 
     return (
-      <SimpleBlockFallback 
+      <SimpleBlockFallback
         blockType={block.type}
         blockId={block.id}
         message={error instanceof Error ? error.message : 'Erro de renderização crítico'}

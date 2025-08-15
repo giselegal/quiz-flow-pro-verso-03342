@@ -67,7 +67,8 @@ export const getStep08Template = () => {
             category: 'Natural',
             styleCategory: 'Natural',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735460/algodao-linho_m8q4kn.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735460/algodao-linho_m8q4kn.webp',
           },
           {
             id: '7b',
@@ -76,7 +77,8 @@ export const getStep08Template = () => {
             category: 'Clássico',
             styleCategory: 'Clássico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735461/la-tweed_p7kj2q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735461/la-tweed_p7kj2q.webp',
           },
           {
             id: '7c',
@@ -85,7 +87,8 @@ export const getStep08Template = () => {
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
             points: 2,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735462/tecnicos-modernos_x9qn7t.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735462/tecnicos-modernos_x9qn7t.webp',
           },
           {
             id: '7d',
@@ -94,7 +97,8 @@ export const getStep08Template = () => {
             category: 'Elegante',
             styleCategory: 'Elegante',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735463/seda-cashmere_k3lm8p.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735463/seda-cashmere_k3lm8p.webp',
           },
           {
             id: '7e',
@@ -103,7 +107,8 @@ export const getStep08Template = () => {
             category: 'Romântico',
             styleCategory: 'Romântico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735464/chiffon-renda_q7pn4k.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735464/chiffon-renda_q7pn4k.webp',
           },
           {
             id: '7f',
@@ -112,7 +117,8 @@ export const getStep08Template = () => {
             category: 'Sexy',
             styleCategory: 'Sexy',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735465/couro-justos_m2kj9l.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735465/couro-justos_m2kj9l.webp',
           },
           {
             id: '7g',
@@ -121,7 +127,8 @@ export const getStep08Template = () => {
             category: 'Dramático',
             styleCategory: 'Dramático',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735466/estruturados_n8qm3x.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735466/estruturados_n8qm3x.webp',
           },
           {
             id: '7h',
@@ -130,7 +137,8 @@ export const getStep08Template = () => {
             category: 'Criativo',
             styleCategory: 'Criativo',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735467/mix-texturas_k9pj7q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735467/mix-texturas_k9pj7q.webp',
           },
         ],
         columns: 2,

@@ -12,7 +12,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -23,7 +23,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
       'Construir looks com intenção e identidade visual',
       'Utilizar cores, modelagens e tecidos a seu favor',
       'Alinhar sua imagem aos seus objetivos pessoais e profissionais',
-      'Desenvolver um guarda-roupa funcional e inteligente'
+      'Desenvolver um guarda-roupa funcional e inteligente',
     ],
     motivationText = 'Com a orientação certa, você pode transformar completamente a forma como o mundo te vê e, mais importante, como você se vê.',
     showIcons = true,
@@ -43,7 +43,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -89,13 +89,13 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
       <div className="space-y-6">
         {/* Header */}
         <div className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold font-playfair" style={{ color: accentColor }}>
+          <h2
+            className="text-2xl md:text-3xl font-bold font-playfair"
+            style={{ color: accentColor }}
+          >
             {title}
           </h2>
-          <div 
-            className="w-24 h-1 mx-auto rounded-full"
-            style={{ backgroundColor: accentColor }}
-          />
+          <div className="w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: accentColor }} />
           {subtitle && (
             <p className="text-base md:text-lg opacity-90 max-w-2xl mx-auto leading-relaxed">
               {subtitle}
@@ -123,7 +123,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
               return (
                 <li key={index} className="flex items-start gap-3">
                   {showIcons && IconComponent && (
-                    <div 
+                    <div
                       className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-0.5"
                       style={{ backgroundColor: accentColor + '20' }}
                     >
@@ -131,7 +131,7 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
                     </div>
                   )}
                   {!showIcons && (
-                    <div 
+                    <div
                       className="flex-shrink-0 w-2 h-2 rounded-full mt-2.5"
                       style={{ backgroundColor: accentColor }}
                     />
@@ -153,7 +153,8 @@ const MotivationSectionInlineBlock: React.FC<BlockComponentProps> = ({
             <Sparkles className="w-5 h-5" style={{ color: accentColor }} />
           </div>
           <p className="text-sm opacity-90">
-            Descubra como aplicar seu estilo na prática e construa uma imagem que comunica sua verdadeira essência.
+            Descubra como aplicar seu estilo na prática e construa uma imagem que comunica sua
+            verdadeira essência.
           </p>
         </div>
       </div>

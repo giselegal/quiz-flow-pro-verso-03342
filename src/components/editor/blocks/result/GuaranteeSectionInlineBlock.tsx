@@ -12,7 +12,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -26,7 +26,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
       'Suporte especializado incluso',
       'Acesso imediato após a compra',
       'Conteúdo atualizado regularmente',
-      'Compra 100% segura e protegida'
+      'Compra 100% segura e protegida',
     ],
     showSealImage = true,
     sealImage = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/garantia_seal_7dias.webp',
@@ -34,7 +34,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
     trustBadges = [
       { text: 'SSL Seguro', icon: 'lock' },
       { text: 'Pagamento Protegido', icon: 'shield' },
-      { text: 'Suporte 24h', icon: 'check' }
+      { text: 'Suporte 24h', icon: 'check' },
     ],
     backgroundColor = '#f8fffe',
     borderColor = '#10b981',
@@ -52,7 +52,7 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -113,7 +113,10 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Shield className="w-8 h-8" style={{ color: accentColor }} />
-            <h2 className="text-2xl md:text-3xl font-bold font-playfair" style={{ color: accentColor }}>
+            <h2
+              className="text-2xl md:text-3xl font-bold font-playfair"
+              style={{ color: accentColor }}
+            >
               {title}
             </h2>
             <Shield className="w-8 h-8" style={{ color: accentColor }} />
@@ -132,18 +135,17 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
             <div className="flex justify-center">
               <div className="relative">
                 <img
-                  src={sealImage || `https://via.placeholder.com/200x200/${accentColor.slice(1)}/ffffff?text=GARANTIA+${guaranteeDays}+DIAS`}
+                  src={
+                    sealImage ||
+                    `https://via.placeholder.com/200x200/${accentColor.slice(1)}/ffffff?text=GARANTIA+${guaranteeDays}+DIAS`
+                  }
                   alt={`Garantia de ${guaranteeDays} dias`}
                   className="w-48 h-48 object-contain"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-white">
-                      {guaranteeDays} DIAS
-                    </div>
-                    <div className="text-sm text-white font-medium">
-                      GARANTIA
-                    </div>
+                    <div className="text-2xl font-bold text-white">{guaranteeDays} DIAS</div>
+                    <div className="text-sm text-white font-medium">GARANTIA</div>
                   </div>
                 </div>
               </div>
@@ -155,16 +157,17 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
             <h3 className="text-xl font-semibold mb-4" style={{ color: accentColor }}>
               Como Funciona Nossa Garantia:
             </h3>
-            
-            <p className="text-sm leading-relaxed text-left">
-              {processedGuaranteeText}
-            </p>
+
+            <p className="text-sm leading-relaxed text-left">{processedGuaranteeText}</p>
 
             {/* Features List */}
             <ul className="space-y-2 text-left">
               {features.map((feature: string, index: number) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
-                  <CheckCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: accentColor }} />
+                  <CheckCircle
+                    className="w-4 h-4 flex-shrink-0 mt-0.5"
+                    style={{ color: accentColor }}
+                  />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -190,7 +193,10 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
         )}
 
         {/* Money Back Guarantee Statement */}
-        <div className="bg-white bg-opacity-70 p-4 rounded-lg max-w-lg mx-auto border border-opacity-30" style={{ borderColor: accentColor }}>
+        <div
+          className="bg-white bg-opacity-70 p-4 rounded-lg max-w-lg mx-auto border border-opacity-30"
+          style={{ borderColor: accentColor }}
+        >
           <div className="flex items-center justify-center gap-2 mb-2">
             <RefreshCw className="w-5 h-5" style={{ color: accentColor }} />
             <span className="font-semibold" style={{ color: accentColor }}>
@@ -198,13 +204,17 @@ const GuaranteeSectionInlineBlock: React.FC<BlockComponentProps> = ({
             </span>
           </div>
           <p className="text-xs opacity-90">
-            Sua satisfação é nossa prioridade. Se não gostar, devolvemos seu dinheiro integralmente em até 2 dias úteis.
+            Sua satisfação é nossa prioridade. Se não gostar, devolvemos seu dinheiro integralmente
+            em até 2 dias úteis.
           </p>
         </div>
 
         {/* Contact Info for Guarantee */}
         <div className="text-xs opacity-75">
-          <p>Para solicitar reembolso, envie um email para: <strong>garantia@giselegarvao.com.br</strong></p>
+          <p>
+            Para solicitar reembolso, envie um email para:{' '}
+            <strong>garantia@giselegarvao.com.br</strong>
+          </p>
         </div>
       </div>
     </div>

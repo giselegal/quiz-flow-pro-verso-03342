@@ -1,6 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Grid3X3, Settings, ImageIcon } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
@@ -39,6 +45,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
   }
 
   const currentOptions = block.properties?.options || [];
+  const validityFlag = block.properties?.__isValid;
   const columns = block.properties?.columns || 2;
   const layoutOrientation = block.properties?.layoutOrientation || 'vertical';
   const contentType = block.properties?.contentType || 'text-and-image';
@@ -97,7 +104,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                   <Label className="text-xs font-medium">Colunas</Label>
                   <Select
                     value={String(columns)}
-                    onValueChange={(value) => handlePropertyChange('columns', parseInt(value))}
+                    onValueChange={value => handlePropertyChange('columns', parseInt(value))}
                   >
                     <SelectTrigger className="h-8 text-xs">
                       <SelectValue />
@@ -115,7 +122,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                   <Label className="text-xs font-medium">Direção</Label>
                   <Select
                     value={layoutOrientation}
-                    onValueChange={(value) => handlePropertyChange('layoutOrientation', value)}
+                    onValueChange={value => handlePropertyChange('layoutOrientation', value)}
                   >
                     <SelectTrigger className="h-8 text-xs">
                       <SelectValue />
@@ -131,7 +138,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                   <Label className="text-xs font-medium">Tipo</Label>
                   <Select
                     value={contentType}
-                    onValueChange={(value) => handlePropertyChange('contentType', value)}
+                    onValueChange={value => handlePropertyChange('contentType', value)}
                   >
                     <SelectTrigger className="h-8 text-xs">
                       <SelectValue />
@@ -150,7 +157,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
             <PropertyArrayEditor
               label="Lista de Opções"
               value={currentOptions}
-              onChange={(value) => handlePropertyChange('options', value)}
+              onChange={value => handlePropertyChange('options', value)}
               itemLabel="Opção"
               maxItems={12}
               required={true}
@@ -168,7 +175,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 <Label className="text-sm font-medium">Imagem Position</Label>
                 <Select
                   value={block.properties?.imagePosition || 'top'}
-                  onValueChange={(value) => handlePropertyChange('imagePosition', value)}
+                  onValueChange={value => handlePropertyChange('imagePosition', value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -186,7 +193,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 <Label className="text-sm font-medium">Tamanho da Imagem (px)</Label>
                 <Select
                   value={String(block.properties?.imageSize || 256)}
-                  onValueChange={(value) => handlePropertyChange('imageSize', parseInt(value))}
+                  onValueChange={value => handlePropertyChange('imageSize', parseInt(value))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -205,7 +212,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 <Label className="text-sm font-medium">Min. Seleções</Label>
                 <Select
                   value={String(minSelections)}
-                  onValueChange={(value) => handlePropertyChange('minSelections', parseInt(value))}
+                  onValueChange={value => handlePropertyChange('minSelections', parseInt(value))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -224,14 +231,19 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 <Label className="text-sm font-medium">Max. Seleções</Label>
                 <Select
                   value={String(maxSelections)}
-                  onValueChange={(value) => handlePropertyChange('maxSelections', parseInt(value))}
+                  onValueChange={value => handlePropertyChange('maxSelections', parseInt(value))}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {Array.from({ length: Math.max(currentOptions.length, 8) }, (_, i) => i + 1).map((num) => (
-                      <SelectItem key={num} value={String(num)}>{num} Seleções</SelectItem>
+                    {Array.from(
+                      { length: Math.max(currentOptions.length, 8) },
+                      (_, i) => i + 1
+                    ).map(num => (
+                      <SelectItem key={num} value={String(num)}>
+                        {num} Seleções
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -247,7 +259,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 <Label className="text-sm font-medium">Espaçamento (px)</Label>
                 <Select
                   value={String(block.properties?.gap || 16)}
-                  onValueChange={(value) => handlePropertyChange('gap', parseInt(value))}
+                  onValueChange={value => handlePropertyChange('gap', parseInt(value))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -265,7 +277,7 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
                 <Label className="text-sm font-medium">Arredondamento (px)</Label>
                 <Select
                   value={String(block.properties?.cardRadius || 12)}
-                  onValueChange={(value) => handlePropertyChange('cardRadius', parseInt(value))}
+                  onValueChange={value => handlePropertyChange('cardRadius', parseInt(value))}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -287,32 +299,42 @@ export const OptionsGridPropertyEditor: React.FC<PropertyEditorProps> = ({
           <h4 className="text-sm font-medium text-foreground mb-3">Preview:</h4>
 
           <div className="space-y-3">
+            {/* Feedback de Validação vindo do canvas inline */}
+            {validityFlag === false && (
+              <div className="text-xs text-red-700 bg-red-50 p-2 rounded mb-2">
+                ⚠️ Seleção inválida: o número de opções selecionadas não atende ao mínimo exigido.
+              </div>
+            )}
             <div className="text-xs text-muted-foreground space-y-1">
-              <div>• Layout: {columns} colunas, {layoutOrientation}</div>
+              <div>
+                • Layout: {columns} colunas, {layoutOrientation}
+              </div>
               <div>• Conteúdo: {contentType}</div>
-              <div>• Seleção: {minSelections}-{maxSelections} opções</div>
+              <div>
+                • Seleção: {minSelections}-{maxSelections} opções
+              </div>
               <div>• Total de opções: {currentOptions.length}</div>
             </div>
 
             {/* Simulação visual das opções */}
-            <div 
-              className="grid gap-2" 
-              style={{ 
-                gridTemplateColumns: `repeat(${Math.min(columns, 3)}, 1fr)` 
+            <div
+              className="grid gap-2"
+              style={{
+                gridTemplateColumns: `repeat(${Math.min(columns, 3)}, 1fr)`,
               }}
             >
               {currentOptions.length > 0 ? (
                 currentOptions.slice(0, 6).map((item: any, index: number) => (
-                  <div 
-                    key={item.id || index} 
+                  <div
+                    key={item.id || index}
                     className="p-2 border border-border rounded-lg bg-background hover:bg-muted/50 transition-colors text-center"
                   >
                     {showImages && (
                       <div className="w-full h-12 bg-muted rounded mb-1 flex items-center justify-center">
                         {item.imageUrl ? (
-                          <img 
-                            src={item.imageUrl} 
-                            alt="" 
+                          <img
+                            src={item.imageUrl}
+                            alt=""
                             className="w-full h-full object-cover rounded"
                           />
                         ) : (

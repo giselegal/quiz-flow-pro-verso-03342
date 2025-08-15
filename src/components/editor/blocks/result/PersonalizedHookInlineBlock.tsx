@@ -13,7 +13,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -37,15 +37,19 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
   } = block?.properties ?? {};
 
   // Replace placeholders in text
-  const processedTitle = title.replace('{styleCategory}', styleCategory).replace('{userName}', userName);
-  const processedSubtitle = subtitle.replace('{styleCategory}', styleCategory).replace('{userName}', userName);
+  const processedTitle = title
+    .replace('{styleCategory}', styleCategory)
+    .replace('{userName}', userName);
+  const processedSubtitle = subtitle
+    .replace('{styleCategory}', styleCategory)
+    .replace('{userName}', userName);
 
   // Container classes
   const containerClasses = cn(
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-full': containerWidth === 'full',
@@ -86,7 +90,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
         style_category: styleCategory,
       });
     }
-    
+
     if (ctaUrl) {
       window.open(ctaUrl, '_blank');
     }
@@ -114,9 +118,7 @@ const PersonalizedHookInlineBlock: React.FC<BlockComponentProps> = ({
         </h2>
 
         {/* Subtitle */}
-        <p className="text-base md:text-lg leading-relaxed opacity-90">
-          {processedSubtitle}
-        </p>
+        <p className="text-base md:text-lg leading-relaxed opacity-90">{processedSubtitle}</p>
 
         {/* Style Badge */}
         <div className="inline-block">

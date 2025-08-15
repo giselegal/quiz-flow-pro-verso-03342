@@ -74,12 +74,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
     return (
       <div className={cn('transition-all duration-200', containerClasses)} style={inlineStyles}>
         <React.Suspense fallback={<div className="animate-pulse bg-gray-200 h-16 rounded" />}>
-          <Component
-            id={block.id}
-            properties={block.properties}
-            isSelected={false}
-            block={block}
-          />
+          <Component id={block.id} properties={block.properties} isSelected={false} block={block} />
         </React.Suspense>
       </div>
     );

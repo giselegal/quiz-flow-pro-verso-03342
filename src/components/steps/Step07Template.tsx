@@ -67,7 +67,8 @@ export const getStep07Template = () => {
             category: 'Natural',
             styleCategory: 'Natural',
             points: 2,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/brincos-delicados_m8q4kn.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/brincos-delicados_m8q4kn.webp',
           },
           {
             id: '6b',
@@ -76,7 +77,8 @@ export const getStep07Template = () => {
             category: 'Clássico',
             styleCategory: 'Clássico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/relogio-classico_p7kj2q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735431/relogio-classico_p7kj2q.webp',
           },
           {
             id: '6c',
@@ -85,7 +87,8 @@ export const getStep07Template = () => {
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
             points: 2,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/oculos-modernos_x9qn7t.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735432/oculos-modernos_x9qn7t.webp',
           },
           {
             id: '6d',
@@ -94,7 +97,8 @@ export const getStep07Template = () => {
             category: 'Elegante',
             styleCategory: 'Elegante',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/joias-elegantes_k3lm8p.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735433/joias-elegantes_k3lm8p.webp',
           },
           {
             id: '6e',
@@ -103,7 +107,8 @@ export const getStep07Template = () => {
             category: 'Romântico',
             styleCategory: 'Romântico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735434/colares-romanticos_q7pn4k.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735434/colares-romanticos_q7pn4k.webp',
           },
           {
             id: '6f',
@@ -112,7 +117,8 @@ export const getStep07Template = () => {
             category: 'Sexy',
             styleCategory: 'Sexy',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735435/acessorios-sexy_m2kj9l.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735435/acessorios-sexy_m2kj9l.webp',
           },
           {
             id: '6g',
@@ -121,7 +127,8 @@ export const getStep07Template = () => {
             category: 'Dramático',
             styleCategory: 'Dramático',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735436/statement-dramatico_n8qm3x.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735436/statement-dramatico_n8qm3x.webp',
           },
           {
             id: '6h',
@@ -130,7 +137,8 @@ export const getStep07Template = () => {
             category: 'Criativo',
             styleCategory: 'Criativo',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735437/mix-criativo_k9pj7q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735437/mix-criativo_k9pj7q.webp',
           },
         ],
         columns: 2,

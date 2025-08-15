@@ -7,15 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { 
-  BookOpen, 
-  Play, 
-  Save, 
-  Plus, 
-  Eye,
-  Settings,
-  Database 
-} from 'lucide-react';
+import { BookOpen, Play, Save, Plus, Eye, Settings, Database } from 'lucide-react';
 import type { QuizQuestion } from '@/types/quiz';
 
 /**
@@ -28,8 +20,8 @@ const IntegratedQuizEditorSimple: React.FC = () => {
       question: 'Sample question?',
       options: ['Option 1', 'Option 2', 'Option 3'],
       correctAnswers: [0],
-      type: 'single'
-    }
+      type: 'single',
+    },
   ]);
 
   return (
@@ -51,16 +43,12 @@ const IntegratedQuizEditorSimple: React.FC = () => {
                   Add Question
                 </Button>
               </div>
-              
+
               {questions.map((question, index) => (
                 <Card key={question.id} className="p-4">
                   <div className="space-y-2">
                     <Label>Question {index + 1}</Label>
-                    <Input 
-                      value={question.question} 
-                      placeholder="Enter question..."
-                      readOnly
-                    />
+                    <Input value={question.question} placeholder="Enter question..." readOnly />
                     <div className="grid grid-cols-2 gap-2">
                       {question.options.map((option, optIndex) => (
                         <Input

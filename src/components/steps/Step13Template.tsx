@@ -6,7 +6,8 @@ export const getStep13Template = () => {
       id: 'step13-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -32,13 +33,33 @@ export const getStep13Template = () => {
       properties: {
         questionId: 'strategic-2',
         options: [
-          { id: 's2a', text: 'Não sei qual é meu estilo pessoal', category: 'estilo-indefinido', points: 1 },
-          { id: 's2b', text: 'Tenho dificuldade para combinar peças', category: 'combinacao', points: 1 },
-          { id: 's2c', text: 'Não encontro roupas que me favorecem', category: 'favorecimento', points: 1 },
+          {
+            id: 's2a',
+            text: 'Não sei qual é meu estilo pessoal',
+            category: 'estilo-indefinido',
+            points: 1,
+          },
+          {
+            id: 's2b',
+            text: 'Tenho dificuldade para combinar peças',
+            category: 'combinacao',
+            points: 1,
+          },
+          {
+            id: 's2c',
+            text: 'Não encontro roupas que me favorecem',
+            category: 'favorecimento',
+            points: 1,
+          },
           { id: 's2d', text: 'Orçamento limitado para roupas', category: 'orcamento', points: 1 },
           { id: 's2e', text: 'Falta de tempo para me arrumar', category: 'tempo', points: 1 },
           { id: 's2f', text: 'Insegurança com meu corpo', category: 'inseguranca', points: 1 },
-          { id: 's2g', text: 'Não tenho nenhuma dificuldade específica', category: 'nenhuma', points: 1 },
+          {
+            id: 's2g',
+            text: 'Não tenho nenhuma dificuldade específica',
+            category: 'nenhuma',
+            points: 1,
+          },
         ],
         columns: 1,
         showImages: false,

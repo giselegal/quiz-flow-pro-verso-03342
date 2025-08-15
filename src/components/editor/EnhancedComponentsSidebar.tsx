@@ -35,7 +35,6 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   // 🎯 Blocos principais do editor-fixed (limpos do EnhancedBlockRegistry)
   const allBlocks = generateBlockDefinitions() as any[];
 
-
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
@@ -79,7 +78,6 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
 
   // Ordena dinamicamente pelas categorias existentes
   const orderedCategories = Object.keys(groupedBlocks);
-
 
   return (
     <Card className="h-full flex flex-col">

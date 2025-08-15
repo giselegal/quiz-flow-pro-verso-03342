@@ -12,7 +12,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -41,7 +41,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -80,7 +80,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
   };
 
   // Process secondary styles for thumbnails
-  const secondaryThumbnails = Array.isArray(secondaryStyles) 
+  const secondaryThumbnails = Array.isArray(secondaryStyles)
     ? secondaryStyles.slice(0, 2).map((style: any) => ({
         src: style.guideImage || `https://via.placeholder.com/80x120?text=${style.category}`,
         alt: `Guia de Estilo ${style.category}`,
@@ -95,15 +95,10 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
         {showProgress && (
           <div className="max-w-md mx-auto">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-gray-600">
-                Seu estilo predominante
-              </span>
+              <span className="text-sm text-gray-600">Seu estilo predominante</span>
               <span className="text-[#aa6b5d] font-medium">{primaryStylePercentage}%</span>
             </div>
-            <Progress 
-              value={primaryStylePercentage} 
-              className="h-2 bg-gray-200" 
-            />
+            <Progress value={primaryStylePercentage} className="h-2 bg-gray-200" />
           </div>
         )}
 
@@ -116,13 +111,13 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
               alt={`Guia de Estilo ${primaryStyleCategory}`}
               loading="lazy"
               className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-[300px] md:max-w-[400px] flex-shrink-0"
-              width="540" 
+              width="540"
               height="auto"
             />
-            
+
             {/* Exclusive Badge */}
             {showExclusiveBadge && (
-              <div 
+              <div
                 className="absolute -top-4 -right-4 text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium transform rotate-12"
                 style={{
                   background: `linear-gradient(to right, ${badgeColor}, #aa6b5d)`,
@@ -133,8 +128,14 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
             )}
 
             {/* Decorative corners */}
-            <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2" style={{ borderColor: borderColor }}></div>
-            <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2" style={{ borderColor: borderColor }}></div>
+            <div
+              className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2"
+              style={{ borderColor: borderColor }}
+            ></div>
+            <div
+              className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2"
+              style={{ borderColor: borderColor }}
+            ></div>
           </div>
 
           {/* Secondary Style Thumbnails */}
@@ -148,7 +149,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
                   loading="lazy"
                   className="w-[60px] h-auto rounded-md shadow-sm border hover:scale-105 transition-transform duration-300"
                   style={{ borderColor: borderColor + '40' }}
-                  width="80" 
+                  width="80"
                   height="auto"
                 />
               ))}
@@ -157,11 +158,7 @@ const StyleGuidesVisualInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
 
         {/* Description */}
-        {description && (
-          <p className="text-sm text-gray-600 max-w-lg mx-auto">
-            {description}
-          </p>
-        )}
+        {description && <p className="text-sm text-gray-600 max-w-lg mx-auto">{description}</p>}
 
         {/* Style Category Label */}
         <div className="inline-block">

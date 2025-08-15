@@ -1,6 +1,6 @@
 /**
  * 🚀 OptimizedPropertiesPanel - Painel de Propriedades Otimizado v2.0
- * 
+ *
  * Melhorias implementadas:
  * - Performance otimizada com memoização avançada
  * - Loading states e feedback visual aprimorado
@@ -37,14 +37,14 @@ import ColorPicker from '@/components/visual-controls/ColorPicker';
 import SizeSlider from '@/components/visual-controls/SizeSlider';
 
 // Icons
-import { 
-  Settings, 
-  Paintbrush, 
-  Layout, 
-  Type, 
-  Eye, 
-  EyeOff, 
-  RotateCcw, 
+import {
+  Settings,
+  Paintbrush,
+  Layout,
+  Type,
+  Eye,
+  EyeOff,
+  RotateCcw,
   Trash2,
   X,
   Save,
@@ -52,7 +52,7 @@ import {
   CheckCircle,
   Loader2,
   Zap,
-  KeyboardIcon
+  KeyboardIcon,
 } from 'lucide-react';
 
 // Hooks
@@ -60,7 +60,7 @@ import {
   UnifiedBlock,
   UnifiedProperty,
   useUnifiedProperties,
-  PropertyType
+  PropertyType,
 } from '@/hooks/useUnifiedProperties';
 import { useBlockForm } from '@/hooks/useBlockForm';
 
@@ -72,23 +72,15 @@ const EnhancedArrayEditor: React.FC<{
   addButtonText?: string;
   maxItems?: number;
   minItems?: number;
-}> = ({ 
-  items = [], 
-  onChange, 
-  addButtonText = "Adicionar Item",
-  maxItems = 10,
-  minItems = 0
-}) => {
+}> = ({ items = [], onChange, addButtonText = 'Adicionar Item', maxItems = 10, minItems = 0 }) => {
   const [isAdding, setIsAdding] = useState(false);
 
   const addItem = useCallback(async () => {
     if (items.length >= maxItems) return;
-    
+
     setIsAdding(true);
-    const newItem = typeof items[0] === 'string' 
-      ? '' 
-      : { text: '', value: '' };
-    
+    const newItem = typeof items[0] === 'string' ? '' : { text: '', value: '' };
+
     // Simulated delay for smooth UX
     setTimeout(() => {
       onChange([...items, newItem]);
@@ -96,31 +88,36 @@ const EnhancedArrayEditor: React.FC<{
     }, 150);
   }, [items, onChange, maxItems]);
 
-  const updateItem = useCallback((index: number, value: any) => {
-    const newItems = [...items];
-    newItems[index] = value;
-    onChange(newItems);
-  }, [items, onChange]);
+  const updateItem = useCallback(
+    (index: number, value: any) => {
+      const newItems = [...items];
+      newItems[index] = value;
+      onChange(newItems);
+    },
+    [items, onChange]
+  );
 
-  const removeItem = useCallback((index: number) => {
-    if (items.length <= minItems) return;
-    onChange(items.filter((_, i) => i !== index));
-  }, [items, onChange, minItems]);
+  const removeItem = useCallback(
+    (index: number) => {
+      if (items.length <= minItems) return;
+      onChange(items.filter((_, i) => i !== index));
+    },
+    [items, onChange, minItems]
+  );
 
   return (
     <div className="space-y-3">
       {items.map((item, index) => (
-        <div 
-          key={index} 
+        <div
+          key={index}
           className="group flex gap-2 items-center p-2 rounded-lg border border-muted hover:border-primary/30 transition-colors"
         >
           <div className="flex-1 space-y-1">
             <Input
               value={typeof item === 'string' ? item : item.text || ''}
-              onChange={(e) => {
-                const newValue = typeof item === 'string' 
-                  ? e.target.value 
-                  : { ...item, text: e.target.value };
+              onChange={e => {
+                const newValue =
+                  typeof item === 'string' ? e.target.value : { ...item, text: e.target.value };
                 updateItem(index, newValue);
               }}
               placeholder={`Item ${index + 1}`}
@@ -139,7 +136,7 @@ const EnhancedArrayEditor: React.FC<{
           </Button>
         </div>
       ))}
-      
+
       <Button
         type="button"
         variant="outline"
@@ -154,7 +151,7 @@ const EnhancedArrayEditor: React.FC<{
           <span className="text-xs">+ {addButtonText}</span>
         )}
       </Button>
-      
+
       {items.length >= maxItems && (
         <p className="text-xs text-muted-foreground text-center">
           Máximo de {maxItems} itens permitidos
@@ -186,45 +183,40 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   const [isLoading, setIsLoading] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [showKeyboardHints, setShowKeyboardHints] = useState(false);
-  
+
   // Refs para keyboard navigation
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Hook de propriedades unificadas
-  const { 
-    properties, 
-    updateProperty, 
-    resetProperties, 
-    getPropertiesByCategory 
-  } = useUnifiedProperties(
-    selectedBlock?.type || '',
-    selectedBlock?.id,
-    selectedBlock,
-    onUpdate
-  );
+  const { properties, updateProperty, resetProperties, getPropertiesByCategory } =
+    useUnifiedProperties(selectedBlock?.type || '', selectedBlock?.id, selectedBlock, onUpdate);
 
   // Hook de formulário otimizado
-  const { 
-    updateProperty: formUpdateProperty, 
+  const {
+    updateProperty: formUpdateProperty,
     errors,
-    isDirty 
+    isDirty,
   } = useBlockForm(
-    selectedBlock ? {
-      id: selectedBlock.id,
-      type: selectedBlock.type,
-      properties: selectedBlock.properties || {}
-    } : null,
-    {
-      onUpdate: onUpdate ? (updates) => {
-        if (selectedBlock) {
-          setIsLoading(true);
-          onUpdate(selectedBlock.id, updates);
-          setLastSaved(new Date());
-          setTimeout(() => setIsLoading(false), 300);
+    selectedBlock
+      ? {
+          id: selectedBlock.id,
+          type: selectedBlock.type,
+          properties: selectedBlock.properties || {},
         }
-      } : undefined,
+      : null,
+    {
+      onUpdate: onUpdate
+        ? updates => {
+            if (selectedBlock) {
+              setIsLoading(true);
+              onUpdate(selectedBlock.id, updates);
+              setLastSaved(new Date());
+              setTimeout(() => setIsLoading(false), 300);
+            }
+          }
+        : undefined,
       debounceMs: 300,
-      validateOnChange: true
+      validateOnChange: true,
     }
   );
 
@@ -235,7 +227,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
       style: getPropertiesByCategory('style'),
       layout: getPropertiesByCategory('layout'),
       behavior: getPropertiesByCategory('behavior'),
-      advanced: getPropertiesByCategory('advanced')
+      advanced: getPropertiesByCategory('advanced'),
     };
 
     // Remove categorias vazias
@@ -252,7 +244,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target !== document.body) return;
-      
+
       if (e.ctrlKey || e.metaKey) {
         switch (e.key) {
           case 's':
@@ -275,7 +267,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
             break;
         }
       }
-      
+
       if (e.key === 'Escape' && onClose) {
         onClose();
       }
@@ -286,180 +278,180 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
   }, [onUpdate, selectedBlock, isDirty, resetProperties, onClose]);
 
   // Renderizador de campo otimizado com melhorias visuais
-  const renderField = useCallback((property: UnifiedProperty) => {
-    const { key, label, type, value, options, required, min, max, step, placeholder } = property;
+  const renderField = useCallback(
+    (property: UnifiedProperty) => {
+      const { key, label, type, value, options, required, min, max, step, placeholder } = property;
 
-    const fieldId = `field-${key}`;
-    const hasError = key in errors;
-    const errorMessage = errors[key];
+      const fieldId = `field-${key}`;
+      const hasError = key in errors;
+      const errorMessage = errors[key];
 
-    const baseClasses = "transition-all duration-200 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20";
-    const errorClasses = hasError 
-      ? "border-destructive focus:border-destructive focus:ring-destructive/20" 
-      : baseClasses;
+      const baseClasses =
+        'transition-all duration-200 border-border/50 focus:border-primary focus:ring-2 focus:ring-primary/20';
+      const errorClasses = hasError
+        ? 'border-destructive focus:border-destructive focus:ring-destructive/20'
+        : baseClasses;
 
-    const handleChange = (newValue: any) => {
-      updateProperty(key, newValue);
-      formUpdateProperty(key, newValue);
-    };
+      const handleChange = (newValue: any) => {
+        updateProperty(key, newValue);
+        formUpdateProperty(key, newValue);
+      };
 
-    const renderFieldContent = () => {
-      switch (type) {
-        case PropertyType.TEXT:
-          return (
-            <Input
-              id={fieldId}
-              value={value || ''}
-              onChange={(e) => handleChange(e.target.value)}
-              placeholder={placeholder || `Digite ${label.toLowerCase()}`}
-              className={errorClasses}
-              aria-describedby={hasError ? `${fieldId}-error` : undefined}
-            />
-          );
+      const renderFieldContent = () => {
+        switch (type) {
+          case PropertyType.TEXT:
+            return (
+              <Input
+                id={fieldId}
+                value={value || ''}
+                onChange={e => handleChange(e.target.value)}
+                placeholder={placeholder || `Digite ${label.toLowerCase()}`}
+                className={errorClasses}
+                aria-describedby={hasError ? `${fieldId}-error` : undefined}
+              />
+            );
 
-        case PropertyType.TEXTAREA:
-          return (
-            <Textarea
-              id={fieldId}
-              value={value || ''}
-              onChange={(e) => handleChange(e.target.value)}
-              placeholder={placeholder || `Digite ${label.toLowerCase()}`}
-              className={errorClasses}
-              rows={3}
-              aria-describedby={hasError ? `${fieldId}-error` : undefined}
-            />
-          );
+          case PropertyType.TEXTAREA:
+            return (
+              <Textarea
+                id={fieldId}
+                value={value || ''}
+                onChange={e => handleChange(e.target.value)}
+                placeholder={placeholder || `Digite ${label.toLowerCase()}`}
+                className={errorClasses}
+                rows={3}
+                aria-describedby={hasError ? `${fieldId}-error` : undefined}
+              />
+            );
 
-        case PropertyType.NUMBER:
-        case PropertyType.RANGE:
-          return type === PropertyType.RANGE ? (
-            <div className="space-y-2">
-              <SizeSlider
-                value={value || min || 0}
-                onChange={handleChange}
+          case PropertyType.NUMBER:
+          case PropertyType.RANGE:
+            return type === PropertyType.RANGE ? (
+              <div className="space-y-2">
+                <SizeSlider
+                  value={value || min || 0}
+                  onChange={handleChange}
+                  min={min}
+                  max={max}
+                  step={step}
+                  label={label}
+                />
+                <div className="text-xs text-muted-foreground text-center">
+                  Valor atual: {value || min || 0}
+                </div>
+              </div>
+            ) : (
+              <Input
+                id={fieldId}
+                type="number"
+                value={value || ''}
+                onChange={e => handleChange(parseFloat(e.target.value) || 0)}
                 min={min}
                 max={max}
                 step={step}
-                label={label}
-              />
-              <div className="text-xs text-muted-foreground text-center">
-                Valor atual: {value || min || 0}
-              </div>
-            </div>
-          ) : (
-            <Input
-              id={fieldId}
-              type="number"
-              value={value || ''}
-              onChange={(e) => handleChange(parseFloat(e.target.value) || 0)}
-              min={min}
-              max={max}
-              step={step}
-              placeholder={placeholder}
-              className={errorClasses}
-              aria-describedby={hasError ? `${fieldId}-error` : undefined}
-            />
-          );
-
-        case PropertyType.COLOR:
-          return (
-            <div className="space-y-2">
-              <ColorPicker
-                value={value || '#000000'}
-                onChange={handleChange}
-                label={label}
-              />
-              <div className="text-xs text-muted-foreground">
-                Cor atual: {value || '#000000'}
-              </div>
-            </div>
-          );
-
-        case PropertyType.SELECT:
-          return (
-            <Select value={value} onValueChange={handleChange}>
-              <SelectTrigger className={errorClasses}>
-                <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
-              </SelectTrigger>
-              <SelectContent>
-                {options?.map((option) => (
-                  <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-
-        case PropertyType.SWITCH:
-          return (
-            <div className="flex items-center justify-between p-3 border rounded-lg border-border/50 hover:border-border transition-colors">
-              <span className="text-sm text-muted-foreground">
-                {value ? 'Habilitado' : 'Desabilitado'}
-              </span>
-              <Switch
-                checked={Boolean(value)}
-                onCheckedChange={handleChange}
+                placeholder={placeholder}
+                className={errorClasses}
                 aria-describedby={hasError ? `${fieldId}-error` : undefined}
               />
-            </div>
-          );
+            );
 
-        case PropertyType.ARRAY:
-          return (
-            <EnhancedArrayEditor
-              items={Array.isArray(value) ? value : []}
-              onChange={handleChange}
-              addButtonText={`Adicionar ${label.toLowerCase()}`}
-              maxItems={20}
-            />
-          );
+          case PropertyType.COLOR:
+            return (
+              <div className="space-y-2">
+                <ColorPicker value={value || '#000000'} onChange={handleChange} label={label} />
+                <div className="text-xs text-muted-foreground">Cor atual: {value || '#000000'}</div>
+              </div>
+            );
 
-        default:
-          return (
-            <Input
-              id={fieldId}
-              value={String(value || '')}
-              onChange={(e) => handleChange(e.target.value)}
-              placeholder={placeholder}
-              className={errorClasses}
-              aria-describedby={hasError ? `${fieldId}-error` : undefined}
-            />
-          );
-      }
-    };
+          case PropertyType.SELECT:
+            return (
+              <Select value={value} onValueChange={handleChange}>
+                <SelectTrigger className={errorClasses}>
+                  <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
+                </SelectTrigger>
+                <SelectContent>
+                  {options?.map(option => (
+                    <SelectItem key={option.value} value={option.value} disabled={option.disabled}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            );
 
-    return (
-      <div key={key} className="space-y-3">
-        <Label htmlFor={fieldId} className="text-sm font-medium flex items-center gap-2">
-          {label}
-          {required && (
-            <Badge variant="destructive" className="text-xs px-1 py-0">
-              *
-            </Badge>
-          )}
+          case PropertyType.SWITCH:
+            return (
+              <div className="flex items-center justify-between p-3 border rounded-lg border-border/50 hover:border-border transition-colors">
+                <span className="text-sm text-muted-foreground">
+                  {value ? 'Habilitado' : 'Desabilitado'}
+                </span>
+                <Switch
+                  checked={Boolean(value)}
+                  onCheckedChange={handleChange}
+                  aria-describedby={hasError ? `${fieldId}-error` : undefined}
+                />
+              </div>
+            );
+
+          case PropertyType.ARRAY:
+            return (
+              <EnhancedArrayEditor
+                items={Array.isArray(value) ? value : []}
+                onChange={handleChange}
+                addButtonText={`Adicionar ${label.toLowerCase()}`}
+                maxItems={20}
+              />
+            );
+
+          default:
+            return (
+              <Input
+                id={fieldId}
+                value={String(value || '')}
+                onChange={e => handleChange(e.target.value)}
+                placeholder={placeholder}
+                className={errorClasses}
+                aria-describedby={hasError ? `${fieldId}-error` : undefined}
+              />
+            );
+        }
+      };
+
+      return (
+        <div key={key} className="space-y-3">
+          <Label htmlFor={fieldId} className="text-sm font-medium flex items-center gap-2">
+            {label}
+            {required && (
+              <Badge variant="destructive" className="text-xs px-1 py-0">
+                *
+              </Badge>
+            )}
+            {hasError && <AlertCircle className="h-3 w-3 text-destructive" />}
+          </Label>
+
+          {renderFieldContent()}
+
           {hasError && (
-            <AlertCircle className="h-3 w-3 text-destructive" />
+            <p id={`${fieldId}-error`} className="text-xs text-destructive flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              {errorMessage}
+            </p>
           )}
-        </Label>
-        
-        {renderFieldContent()}
-        
-        {hasError && (
-          <p id={`${fieldId}-error`} className="text-xs text-destructive flex items-center gap-1">
-            <AlertCircle className="h-3 w-3" />
-            {errorMessage}
-          </p>
-        )}
-      </div>
-    );
-  }, [updateProperty, formUpdateProperty, errors]);
+        </div>
+      );
+    },
+    [updateProperty, formUpdateProperty, errors]
+  );
 
   // Status de validação
   const validationStatus = useMemo(() => {
     const errorCount = Object.keys(errors).length;
     if (errorCount === 0) return { type: 'success', text: 'Válido', icon: CheckCircle };
-    return { type: 'error', text: `${errorCount} erro${errorCount > 1 ? 's' : ''}`, icon: AlertCircle };
+    return {
+      type: 'error',
+      text: `${errorCount} erro${errorCount > 1 ? 's' : ''}`,
+      icon: AlertCircle,
+    };
   }, [errors]);
 
   // Se nenhum bloco selecionado
@@ -494,7 +486,10 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
 
   return (
     <TooltipProvider>
-      <div ref={panelRef} className="h-full flex flex-col bg-gradient-to-br from-background via-background/95 to-muted/30">
+      <div
+        ref={panelRef}
+        className="h-full flex flex-col bg-gradient-to-br from-background via-background/95 to-muted/30"
+      >
         {/* Enhanced Header */}
         <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur-sm">
           <div className="flex items-center gap-3">
@@ -510,8 +505,8 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
                 <Badge variant="outline" className="text-xs">
                   {selectedBlock.type}
                 </Badge>
-                <Badge 
-                  variant={validationStatus.type === 'success' ? 'default' : 'destructive'} 
+                <Badge
+                  variant={validationStatus.type === 'success' ? 'default' : 'destructive'}
                   className="text-xs"
                 >
                   <validationStatus.icon className="h-3 w-3 mr-1" />
@@ -560,12 +555,7 @@ export const OptimizedPropertiesPanel: React.FC<OptimizedPropertiesPanelProps> =
             {onClose && (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={onClose} 
-                    className="h-8 w-8 p-0"
-                  >
+                  <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
                     <X className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>

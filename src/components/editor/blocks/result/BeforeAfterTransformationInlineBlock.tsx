@@ -12,7 +12,7 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   // Destructure properties with defaults
@@ -22,20 +22,24 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
     transformations = [
       {
         id: 1,
-        beforeImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/ANTES_1_transformation_before.webp',
-        afterImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/DEPOIS_1_transformation_after.webp',
+        beforeImage:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/ANTES_1_transformation_before.webp',
+        afterImage:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/DEPOIS_1_transformation_after.webp',
         name: 'Marina S.',
         category: 'Elegante',
-        testimonial: 'Minha autoestima mudou completamente!'
+        testimonial: 'Minha autoestima mudou completamente!',
       },
       {
         id: 2,
-        beforeImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/ANTES_2_transformation_before.webp',
-        afterImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/DEPOIS_2_transformation_after.webp',
+        beforeImage:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/ANTES_2_transformation_before.webp',
+        afterImage:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/DEPOIS_2_transformation_after.webp',
         name: 'Carla M.',
         category: 'Moderno',
-        testimonial: 'Agora sei exatamente o que me favorece!'
-      }
+        testimonial: 'Agora sei exatamente o que me favorece!',
+      },
     ],
     showTestimonials = true,
     backgroundColor = '#ffffff',
@@ -53,7 +57,7 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -95,18 +99,16 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
       <div className="space-y-8">
         {/* Header */}
         <div className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold font-playfair" style={{ color: accentColor }}>
+          <h2
+            className="text-2xl md:text-3xl font-bold font-playfair"
+            style={{ color: accentColor }}
+          >
             {title}
           </h2>
           {subtitle && (
-            <p className="text-base md:text-lg opacity-90 max-w-3xl mx-auto">
-              {subtitle}
-            </p>
+            <p className="text-base md:text-lg opacity-90 max-w-3xl mx-auto">{subtitle}</p>
           )}
-          <div 
-            className="w-24 h-1 mx-auto rounded-full"
-            style={{ backgroundColor: accentColor }}
-          />
+          <div className="w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: accentColor }} />
         </div>
 
         {/* Transformations Grid */}
@@ -145,7 +147,7 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
 
                 {/* Arrow */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <div 
+                  <div
                     className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
                     style={{ backgroundColor: accentColor }}
                   >
@@ -178,7 +180,8 @@ const BeforeAfterTransformationInlineBlock: React.FC<BlockComponentProps> = ({
             ✨ Sua transformação começa hoje!
           </p>
           <p className="text-sm opacity-90">
-            Cada guia é personalizado para seu estilo único, garantindo que você tenha as ferramentas certas para sua própria transformação.
+            Cada guia é personalizado para seu estilo único, garantindo que você tenha as
+            ferramentas certas para sua própria transformação.
           </p>
         </div>
       </div>

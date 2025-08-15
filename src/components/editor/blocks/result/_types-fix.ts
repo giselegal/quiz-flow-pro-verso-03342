@@ -8,16 +8,10 @@ export interface ResultBlockProps {
   className?: string;
 }
 
-export const removeUnusedParams = (
-  params: any[],
-  ...unusedKeys: string[]
-): any[] => {
+export const removeUnusedParams = (params: any[], ...unusedKeys: string[]): any[] => {
   return params.filter((_, index) => !unusedKeys.includes(index.toString()));
 };
 
-export const typedMap = <T, R>(
-  array: T[],
-  callback: (item: T, index: number) => R
-): R[] => {
+export const typedMap = <T, R>(array: T[], callback: (item: T, index: number) => R): R[] => {
   return array.map(callback);
 };

@@ -1,4 +1,3 @@
-
 /**
  * SIMPLIFIED SMART COMPONENTS PANEL
  */
@@ -18,11 +17,12 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
 
   // Use real block definitions from registry
   const allComponents = generateBlockDefinitions();
-  
+
   // Filter based on search term
-  const components = allComponents.filter(comp => 
-    comp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    comp.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const components = allComponents.filter(
+    comp =>
+      comp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      comp.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -37,18 +37,16 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
           <Input
             placeholder="Search components..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="pl-8"
           />
         </div>
       </CardHeader>
       <CardContent className="space-y-2 max-h-96 overflow-y-auto">
         {components.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            No components found
-          </p>
+          <p className="text-sm text-muted-foreground text-center py-4">No components found</p>
         ) : (
-          components.map((component) => (
+          components.map(component => (
             <Button
               key={component.type}
               variant="outline"

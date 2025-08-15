@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 /**
  * 🚀 LAZY BLOCK LOADER - SISTEMA DE CARREGAMENTO OTIMIZADO
- * 
+ *
  * Carrega componentes sob demanda para otimizar performance
  * - Lazy loading automático
  * - Skeletons durante carregamento
@@ -29,38 +29,42 @@ const componentCache = new Map<string, ComponentType<any>>();
 const LAZY_COMPONENTS = {
   // ACTION COMPONENTS
   'advanced-cta': () => lazy(() => import('@/components/editor/blocks/AdvancedCTABlock')),
-  'advanced-cta-inline': () => lazy(() => import('@/components/editor/blocks/AdvancedCTAInlineBlock')),
-  'button': () => lazy(() => import('@/components/editor/blocks/ButtonBlock')),
+  'advanced-cta-inline': () =>
+    lazy(() => import('@/components/editor/blocks/AdvancedCTAInlineBlock')),
+  button: () => lazy(() => import('@/components/editor/blocks/ButtonBlock')),
   'button-inline': () => lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'cta-inline': () => lazy(() => import('@/components/editor/blocks/CTAInlineBlock')),
-  'cta-section-inline': () => lazy(() => import('@/components/editor/blocks/CTASectionInlineBlock')),
+  'cta-section-inline': () =>
+    lazy(() => import('@/components/editor/blocks/CTASectionInlineBlock')),
   'final-cta': () => lazy(() => import('@/components/editor/blocks/FinalCTABlock')),
-  'final-value-proposition-inline': () => lazy(() => import('@/components/editor/blocks/FinalValuePropositionInlineBlock')),
+  'final-value-proposition-inline': () =>
+    lazy(() => import('@/components/editor/blocks/FinalValuePropositionInlineBlock')),
   'secure-purchase': () => lazy(() => import('@/components/editor/blocks/SecurePurchaseBlock')),
 
   // TEXT COMPONENTS
   'basic-text': () => lazy(() => import('@/components/editor/blocks/BasicTextBlock')),
   'heading-inline': () => lazy(() => import('@/components/editor/blocks/HeadingInlineBlock')),
   'rich-text': () => lazy(() => import('@/components/editor/blocks/RichTextBlock')),
-  'text': () => lazy(() => import('@/components/editor/blocks/TextBlock')),
+  text: () => lazy(() => import('@/components/editor/blocks/TextBlock')),
   'text-inline': () => lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
-  
+
   // QUIZ COMPONENTS
   'quiz-intro-header': () => lazy(() => import('@/components/editor/blocks/QuizIntroHeaderBlock')),
   'quiz-question': () => lazy(() => import('@/components/editor/blocks/QuizQuestionBlock')),
   'quiz-option': () => lazy(() => import('@/components/editor/blocks/QuizOptionBlock')),
   'quiz-progress': () => lazy(() => import('@/components/editor/blocks/QuizProgressBlock')),
-  'quiz-result-header': () => lazy(() => import('@/components/editor/blocks/QuizResultHeaderBlock')),
+  'quiz-result-header': () =>
+    lazy(() => import('@/components/editor/blocks/QuizResultHeaderBlock')),
   'options-grid': () => lazy(() => import('@/components/editor/blocks/OptionsGridBlock')),
 
   // MEDIA COMPONENTS
-  'image': () => lazy(() => import('@/components/editor/blocks/ImageBlock')),
+  image: () => lazy(() => import('@/components/editor/blocks/ImageBlock')),
   'image-inline': () => lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
-  'video': () => lazy(() => import('@/components/editor/blocks/VideoBlock')),
+  video: () => lazy(() => import('@/components/editor/blocks/VideoBlock')),
   'video-player': () => lazy(() => import('@/components/editor/blocks/VideoPlayerBlock')),
 
   // LAYOUT COMPONENTS
-  'spacer': () => lazy(() => import('@/components/editor/blocks/SpacerBlock')),
+  spacer: () => lazy(() => import('@/components/editor/blocks/SpacerBlock')),
   'spacer-inline': () => lazy(() => import('@/components/editor/blocks/SpacerInlineBlock')),
   'section-divider': () => lazy(() => import('@/components/editor/blocks/SectionDividerBlock')),
 
@@ -70,11 +74,12 @@ const LAZY_COMPONENTS = {
   'dynamic-pricing': () => lazy(() => import('@/components/editor/blocks/DynamicPricingBlock')),
 
   // SOCIAL PROOF COMPONENTS
-  'testimonial-inline': () => lazy(() => import('@/components/editor/blocks/TestimonialInlineBlock')),
-  'testimonials': () => lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
-  
+  'testimonial-inline': () =>
+    lazy(() => import('@/components/editor/blocks/TestimonialInlineBlock')),
+  testimonials: () => lazy(() => import('@/components/editor/blocks/TestimonialsBlock')),
+
   // FAQ COMPONENTS
-  'faq': () => lazy(() => import('@/components/editor/blocks/FAQBlock')),
+  faq: () => lazy(() => import('@/components/editor/blocks/FAQBlock')),
   'faq-section': () => lazy(() => import('@/components/editor/blocks/FAQSectionBlock')),
 
   // URGENCY COMPONENTS
@@ -83,7 +88,7 @@ const LAZY_COMPONENTS = {
 
   // FEEDBACK COMPONENTS
   'progress-inline': () => lazy(() => import('@/components/editor/blocks/ProgressInlineBlock')),
-  'loader': () => lazy(() => import('@/components/editor/blocks/LoaderBlock')),
+  loader: () => lazy(() => import('@/components/editor/blocks/LoaderBlock')),
 
   // FORMS COMPONENTS
   'form-input': () => lazy(() => import('@/components/editor/blocks/FormInputBlock')),
@@ -92,7 +97,7 @@ const LAZY_COMPONENTS = {
 
   // ANALYTICS COMPONENTS
   'chart-area': () => lazy(() => import('@/components/editor/blocks/ChartAreaBlock')),
-  'stats-metrics': () => lazy(() => import('@/components/editor/blocks/StatsMetricsBlock'))
+  'stats-metrics': () => lazy(() => import('@/components/editor/blocks/StatsMetricsBlock')),
 } as const;
 
 // Skeleton personalizado para diferentes tipos de componentes
@@ -147,7 +152,9 @@ const getLoadingSkeleton = (blockType: string): ReactNode => {
 /**
  * Carrega componente de forma lazy com cache
  */
-export const loadLazyComponent = async (blockType: string): Promise<ComponentType<LazyBlockProps> | null> => {
+export const loadLazyComponent = async (
+  blockType: string
+): Promise<ComponentType<LazyBlockProps> | null> => {
   // Verificar cache primeiro
   if (componentCache.has(blockType)) {
     return componentCache.get(blockType)!;
@@ -164,10 +171,10 @@ export const loadLazyComponent = async (blockType: string): Promise<ComponentTyp
     const LazyComponent = lazyLoader();
     const LoadedComponent = await LazyComponent;
     const Component = LoadedComponent.default || LoadedComponent;
-    
+
     // Adicionar ao cache
     componentCache.set(blockType, Component);
-    
+
     return Component;
   } catch (error) {
     console.error(`❌ Erro ao carregar componente lazy ${blockType}:`, error);
@@ -178,14 +185,14 @@ export const loadLazyComponent = async (blockType: string): Promise<ComponentTyp
 /**
  * Wrapper para componente lazy com Suspense
  */
-export const LazyBlockWrapper: React.FC<LazyBlockProps> = (props) => {
+export const LazyBlockWrapper: React.FC<LazyBlockProps> = props => {
   const { block } = props;
   const blockType = block.type;
 
   // Se não tem lazy loader, retorna fallback
   if (!LAZY_COMPONENTS[blockType as keyof typeof LAZY_COMPONENTS]) {
     return (
-      <SimpleBlockFallback 
+      <SimpleBlockFallback
         blockType={blockType}
         blockId={block.id}
         message="Componente não disponível para lazy loading"
@@ -214,10 +221,10 @@ export const preloadPopularComponents = () => {
     'image-inline',
     'spacer-inline',
     'quiz-question',
-    'quiz-option'
+    'quiz-option',
   ];
 
-  popularComponents.forEach(async (componentType) => {
+  popularComponents.forEach(async componentType => {
     try {
       await loadLazyComponent(componentType);
       console.log(`✅ Preloaded: ${componentType}`);
@@ -242,9 +249,9 @@ export const useLazyComponent = (blockType: string) => {
       try {
         setLoading(true);
         setError(null);
-        
+
         const comp = await loadLazyComponent(blockType);
-        
+
         if (isMounted) {
           setComponent(comp);
         }

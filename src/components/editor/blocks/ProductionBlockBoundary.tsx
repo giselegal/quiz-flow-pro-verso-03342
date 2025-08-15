@@ -18,7 +18,7 @@ interface State {
 
 /**
  * 🛡️ PRODUCTION BLOCK BOUNDARY
- * 
+ *
  * Error boundary especializado para componentes do editor
  * - Captura erros de renderização de blocos individuais
  * - Permite retry automático
@@ -27,26 +27,26 @@ interface State {
  */
 export class ProductionBlockBoundary extends Component<Props, State> {
   private retryTimeout?: NodeJS.Timeout;
-  
+
   constructor(props: Props) {
     super(props);
     this.state = {
       hasError: false,
-      retryCount: 0
+      retryCount: 0,
     };
   }
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return {
       hasError: true,
-      error
+      error,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
-      errorInfo
+      errorInfo,
     });
 
     // Registrar erro para monitoramento
@@ -61,14 +61,14 @@ export class ProductionBlockBoundary extends Component<Props, State> {
       error: {
         message: error.message,
         stack: error.stack,
-        name: error.name
+        name: error.name,
       },
       errorInfo: {
-        componentStack: errorInfo.componentStack
+        componentStack: errorInfo.componentStack,
       },
       userAgent: navigator.userAgent,
       url: window.location.href,
-      retryCount: this.state.retryCount
+      retryCount: this.state.retryCount,
     };
 
     // Log para console em desenvolvimento
@@ -78,7 +78,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
       console.error('Error Info:', errorInfo);
       console.error('Block Details:', {
         type: this.props.blockType,
-        id: this.props.blockId
+        id: this.props.blockId,
       });
       console.groupEnd();
     }
@@ -89,7 +89,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
       window.gtag?.('event', 'block_error', {
         event_category: 'editor',
         event_label: this.props.blockType || 'unknown',
-        value: this.state.retryCount
+        value: this.state.retryCount,
       });
     }
 
@@ -97,12 +97,12 @@ export class ProductionBlockBoundary extends Component<Props, State> {
     try {
       const existingErrors = JSON.parse(localStorage.getItem('editor_errors') || '[]');
       existingErrors.push(errorData);
-      
+
       // Manter apenas os últimos 10 erros
       if (existingErrors.length > 10) {
         existingErrors.shift();
       }
-      
+
       localStorage.setItem('editor_errors', JSON.stringify(existingErrors));
     } catch (storageError) {
       console.warn('Não foi possível salvar erro no localStorage:', storageError);
@@ -115,7 +115,7 @@ export class ProductionBlockBoundary extends Component<Props, State> {
         hasError: false,
         error: undefined,
         errorInfo: undefined,
-        retryCount: prevState.retryCount + 1
+        retryCount: prevState.retryCount + 1,
       }));
 
       // Retry com delay progressivo
@@ -128,7 +128,9 @@ export class ProductionBlockBoundary extends Component<Props, State> {
   };
 
   private handleReportBug = () => {
-    const subject = encodeURIComponent(`Bug Report: ${this.props.blockType || 'Unknown'} Block Error`);
+    const subject = encodeURIComponent(
+      `Bug Report: ${this.props.blockType || 'Unknown'} Block Error`
+    );
     const body = encodeURIComponent(`
 Block Type: ${this.props.blockType || 'Unknown'}
 Block ID: ${this.props.blockId || 'Unknown'}
@@ -141,7 +143,7 @@ URL: ${window.location.href}
 Please describe what you were doing when this error occurred:
 [Your description here]
     `);
-    
+
     window.open(`mailto:support@example.com?subject=${subject}&body=${body}`, '_blank');
   };
 
@@ -160,11 +162,13 @@ Please describe what you were doing when this error occurred:
 
       // Fallback padrão com informações do erro
       return (
-        <div className={cn(
-          'relative border-2 border-red-200 bg-red-50 rounded-lg p-4',
-          'min-h-[120px] flex flex-col items-center justify-center',
-          'text-red-700'
-        )}>
+        <div
+          className={cn(
+            'relative border-2 border-red-200 bg-red-50 rounded-lg p-4',
+            'min-h-[120px] flex flex-col items-center justify-center',
+            'text-red-700'
+          )}
+        >
           {/* Ícone de erro */}
           <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mb-3">
             <AlertTriangle className="w-6 h-6 text-red-500" />
@@ -237,7 +241,7 @@ Please describe what you were doing when this error occurred:
 
 /**
  * 🎯 FALLBACK SIMPLES PARA COMPONENTES PROBLEMÁTICOS
- * 
+ *
  * Usado quando um componente específico tem problemas conhecidos
  */
 export const SimpleBlockFallback: React.FC<{
@@ -250,12 +254,8 @@ export const SimpleBlockFallback: React.FC<{
       <AlertTriangle className="w-4 h-4 text-gray-400" />
     </div>
     <p className="text-sm font-medium">{blockType}</p>
-    <p className="text-xs mt-1">
-      {message || 'Componente temporariamente indisponível'}
-    </p>
-    {blockId && (
-      <p className="text-xs text-gray-400 mt-2 font-mono">ID: {blockId.slice(-8)}</p>
-    )}
+    <p className="text-xs mt-1">{message || 'Componente temporariamente indisponível'}</p>
+    {blockId && <p className="text-xs text-gray-400 mt-2 font-mono">ID: {blockId.slice(-8)}</p>}
   </div>
 );
 

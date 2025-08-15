@@ -29,6 +29,7 @@ export interface BlockComponentProps {
   isEditing?: boolean;
   onClick?: () => void;
   onPropertyChange?: (key: string, value: any) => void;
+  onValidate?: (isValid: boolean) => void;
   className?: string;
 }
 

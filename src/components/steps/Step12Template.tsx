@@ -6,7 +6,8 @@ export const getStep12Template = () => {
       id: 'step12-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -32,7 +33,12 @@ export const getStep12Template = () => {
       properties: {
         questionId: 'strategic-1',
         options: [
-          { id: 's1a', text: 'Shoppings e lojas físicas tradicionais', category: 'shopping-tradicional', points: 1 },
+          {
+            id: 's1a',
+            text: 'Shoppings e lojas físicas tradicionais',
+            category: 'shopping-tradicional',
+            points: 1,
+          },
           { id: 's1b', text: 'Lojas online e e-commerce', category: 'online', points: 1 },
           { id: 's1c', text: 'Lojas de departamento grandes', category: 'departamento', points: 1 },
           { id: 's1d', text: 'Boutiques especializadas', category: 'boutique', points: 1 },

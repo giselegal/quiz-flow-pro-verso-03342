@@ -6,7 +6,8 @@ export const getStep17Template = () => {
       id: 'step17-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -19,7 +20,8 @@ export const getStep17Template = () => {
       id: 'step17-result-title',
       type: 'text-inline',
       properties: {
-        content: 'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
+        content:
+          'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
         fontSize: 'text-2xl',
         fontWeight: 'font-bold',
         textAlign: 'text-center',

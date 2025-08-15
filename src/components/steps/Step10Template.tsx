@@ -67,7 +67,8 @@ export const getStep10Template = () => {
             category: 'Natural',
             styleCategory: 'Natural',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735520/ocasiao-casual_m8q4kn.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735520/ocasiao-casual_m8q4kn.webp',
           },
           {
             id: '9b',
@@ -76,7 +77,8 @@ export const getStep10Template = () => {
             category: 'Clássico',
             styleCategory: 'Clássico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735521/trabalho-formal_p7kj2q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735521/trabalho-formal_p7kj2q.webp',
           },
           {
             id: '9c',
@@ -85,7 +87,8 @@ export const getStep10Template = () => {
             category: 'Contemporâneo',
             styleCategory: 'Contemporâneo',
             points: 2,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735522/social-descontraido_x9qn7t.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735522/social-descontraido_x9qn7t.webp',
           },
           {
             id: '9d',
@@ -94,7 +97,8 @@ export const getStep10Template = () => {
             category: 'Elegante',
             styleCategory: 'Elegante',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735523/eventos-elegantes_k3lm8p.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735523/eventos-elegantes_k3lm8p.webp',
           },
           {
             id: '9e',
@@ -103,7 +107,8 @@ export const getStep10Template = () => {
             category: 'Romântico',
             styleCategory: 'Romântico',
             points: 3,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735524/encontros-romanticos_q7pn4k.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735524/encontros-romanticos_q7pn4k.webp',
           },
           {
             id: '9f',
@@ -112,7 +117,8 @@ export const getStep10Template = () => {
             category: 'Sexy',
             styleCategory: 'Sexy',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735525/noites-sexy_m2kj9l.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735525/noites-sexy_m2kj9l.webp',
           },
           {
             id: '9g',
@@ -121,7 +127,8 @@ export const getStep10Template = () => {
             category: 'Dramático',
             styleCategory: 'Dramático',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735526/eventos-power_n8qm3x.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735526/eventos-power_n8qm3x.webp',
           },
           {
             id: '9h',
@@ -130,7 +137,8 @@ export const getStep10Template = () => {
             category: 'Criativo',
             styleCategory: 'Criativo',
             points: 4,
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735527/momentos-criativos_k9pj7q.webp',
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735527/momentos-criativos_k9pj7q.webp',
           },
         ],
         columns: 2,

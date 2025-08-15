@@ -19,7 +19,7 @@ export const validateStage = (stage: any) => {
     isValid: true,
     errors: [],
     warnings: [],
-    score: 100
+    score: 100,
   };
 };
 

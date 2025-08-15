@@ -31,31 +31,33 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
   useEffect(() => {
     // ✅ Lista de IDs de botão possíveis no Step-01
     const possibleButtonIds = [
-      'intro-cta-button',     // ✅ ID principal do template Step01
-      'step01-cta-button',    // ✅ ID alternativo
-      'step01-start-button',  // ✅ ID alternativo
-      'cta-button-modular',   // ✅ ID genérico
-      (properties as any)?.targetButtonId // ✅ ID configurável via properties
+      'intro-cta-button', // ✅ ID principal do template Step01
+      'step01-cta-button', // ✅ ID alternativo
+      'step01-start-button', // ✅ ID alternativo
+      'cta-button-modular', // ✅ ID genérico
+      (properties as any)?.targetButtonId, // ✅ ID configurável via properties
     ].filter(Boolean);
 
     // Estado inicial: desabilitar visualmente todos os botões possíveis
     const applyDisabled = (disabled: boolean, targetId?: string) => {
       const idsToCheck = targetId ? [targetId] : possibleButtonIds;
-      
+
       idsToCheck.forEach(buttonId => {
         const btn = document.getElementById(buttonId) as HTMLButtonElement | null;
         if (!btn) return;
-        
+
         btn.disabled = disabled;
         if ((properties as any)?.visuallyDisableButton) {
           btn.classList.toggle('opacity-50', disabled);
           btn.classList.toggle('pointer-events-none', disabled);
           btn.classList.toggle('cursor-not-allowed', disabled);
         }
-        
+
         // Log apenas quando encontrar o botão
         if (btn) {
-          console.log(`🔘 [FormContainerBlock] Button ${buttonId} ${disabled ? 'DISABLED' : 'ENABLED'}`);
+          console.log(
+            `🔘 [FormContainerBlock] Button ${buttonId} ${disabled ? 'DISABLED' : 'ENABLED'}`
+          );
         }
       });
     };
@@ -69,14 +71,14 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
         enabled: boolean;
         disabled: boolean;
       };
-      
+
       if (!detail || !possibleButtonIds.includes(detail.buttonId)) return;
-      
+
       // Log apenas mudanças de estado importantes
       if (detail.enabled) {
         console.log(`✅ [FormContainerBlock] Button ${detail.buttonId} ENABLED`);
       }
-      
+
       applyDisabled(!detail.enabled, detail.buttonId);
     };
 
@@ -100,9 +102,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
           };
 
           // Renderizamos o componente filho passando o bloco completo
-          return (
-            <Component key={childBlock.id} {...childBlock} />
-          );
+          return <Component key={childBlock.id} {...childBlock} />;
         })}
     </div>
   );

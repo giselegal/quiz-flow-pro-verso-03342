@@ -19,95 +19,110 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
   className,
   size = 60,
   disabled = false,
-  placeholder = "Adicionar imagem"
+  placeholder = 'Adicionar imagem',
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
 
-  const handleFileSelect = useCallback(async (file: File) => {
-    if (disabled) return;
+  const handleFileSelect = useCallback(
+    async (file: File) => {
+      if (disabled) return;
 
-    // Validar tipo de arquivo
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error('Tipo de arquivo não suportado. Use JPG, PNG, GIF ou WebP.');
-      return;
-    }
+      // Validar tipo de arquivo
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('Tipo de arquivo não suportado. Use JPG, PNG, GIF ou WebP.');
+        return;
+      }
 
-    // Validar tamanho (max 5MB)
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      toast.error('Arquivo muito grande. Máximo: 5MB');
-      return;
-    }
+      // Validar tamanho (max 5MB)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast.error('Arquivo muito grande. Máximo: 5MB');
+        return;
+      }
 
-    setIsUploading(true);
+      setIsUploading(true);
 
-    try {
-      // Criar URL temporária para preview
-      const temporaryUrl = URL.createObjectURL(file);
-      onImageChange(temporaryUrl, file);
-      toast.success('Imagem carregada com sucesso!');
-    } catch (error) {
-      console.error('Erro ao processar imagem:', error);
-      toast.error('Erro ao carregar imagem');
-    } finally {
-      setIsUploading(false);
-    }
-  }, [disabled, onImageChange]);
+      try {
+        // Criar URL temporária para preview
+        const temporaryUrl = URL.createObjectURL(file);
+        onImageChange(temporaryUrl, file);
+        toast.success('Imagem carregada com sucesso!');
+      } catch (error) {
+        console.error('Erro ao processar imagem:', error);
+        toast.error('Erro ao carregar imagem');
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [disabled, onImageChange]
+  );
 
   const handleClick = useCallback(() => {
     if (disabled || isUploading) return;
     fileInputRef.current?.click();
   }, [disabled, isUploading]);
 
-  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileSelect(file);
-    }
-    // Limpar input para permitir reusar o mesmo arquivo
-    e.target.value = '';
-  }, [handleFileSelect]);
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        handleFileSelect(file);
+      }
+      // Limpar input para permitir reusar o mesmo arquivo
+      e.target.value = '';
+    },
+    [handleFileSelect]
+  );
 
-  const handleRemoveImage = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    onImageChange('');
-  }, [onImageChange]);
+  const handleRemoveImage = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      onImageChange('');
+    },
+    [onImageChange]
+  );
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    if (!disabled) {
-      setDragOver(true);
-    }
-  }, [disabled]);
+  const handleDragOver = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      if (!disabled) {
+        setDragOver(true);
+      }
+    },
+    [disabled]
+  );
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
 
-    if (disabled) return;
+      if (disabled) return;
 
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFileSelect(file);
-    }
-  }, [disabled, handleFileSelect]);
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        handleFileSelect(file);
+      }
+    },
+    [disabled, handleFileSelect]
+  );
 
   return (
     <div
       className={cn(
-        "relative flex items-center justify-center rounded-lg border-2 border-dashed transition-colors cursor-pointer group",
-        dragOver && "border-primary bg-primary/5",
-        !dragOver && imageUrl && "border-border",
-        !dragOver && !imageUrl && "border-border hover:border-primary/50",
-        disabled && "cursor-not-allowed opacity-50",
+        'relative flex items-center justify-center rounded-lg border-2 border-dashed transition-colors cursor-pointer group',
+        dragOver && 'border-primary bg-primary/5',
+        !dragOver && imageUrl && 'border-border',
+        !dragOver && !imageUrl && 'border-border hover:border-primary/50',
+        disabled && 'cursor-not-allowed opacity-50',
         className
       )}
       style={{ width: size, height: size }}
@@ -127,11 +142,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
 
       {imageUrl ? (
         <>
-          <img
-            src={imageUrl}
-            alt="Preview"
-            className="w-full h-full object-cover rounded-lg"
-          />
+          <img src={imageUrl} alt="Preview" className="w-full h-full object-cover rounded-lg" />
           {!disabled && (
             <Button
               variant="destructive"
@@ -150,9 +161,7 @@ export const ImageUploadCell: React.FC<ImageUploadCellProps> = ({
           ) : (
             <>
               <ImageIcon className="h-6 w-6 text-muted-foreground mb-1" />
-              <span className="text-xs text-muted-foreground leading-tight">
-                {placeholder}
-              </span>
+              <span className="text-xs text-muted-foreground leading-tight">{placeholder}</span>
             </>
           )}
         </div>

@@ -64,7 +64,7 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
           loadedResults = await quizResultsService.calculateResults(mockSession);
         } catch (calcError) {
           console.log('💫 Modo offline detectado, gerando resultados demo...');
-          
+
           // Fallback para modo offline/demo com dados simulados
           loadedResults = {
             sessionId,
@@ -74,19 +74,25 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
               primaryStyleConfig: {
                 name: 'Natural',
                 category: 'Estilo Autêntico',
-                description: 'Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico que reflete sua personalidade genuína.',
-                image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
-                guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
-                keywords: ['natural', 'conforto', 'autêntico']
+                description:
+                  'Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico que reflete sua personalidade genuína.',
+                image:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp',
+                guideImage:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+                keywords: ['natural', 'conforto', 'autêntico'],
               },
               secondaryStyle: 'Clássico',
               secondaryStyleConfig: {
                 name: 'Clássico',
                 category: 'Elegância Atemporal',
-                description: 'Com toques clássicos que adicionam sofisticação ao seu estilo natural.',
+                description:
+                  'Com toques clássicos que adicionam sofisticação ao seu estilo natural.',
                 keywords: ['clássico', 'elegância', 'sofisticação'],
-                image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
-                guideImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp',
+                image:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp',
+                guideImage:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp',
               },
               colorPalette: ['Verde', 'Bege', 'Marrom', 'Branco'],
               bodyType: 'Equilibrado',
@@ -106,7 +112,12 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
             },
             recommendations: {
               wardrobe: {
-                essentials: ['Camisetas de qualidade', 'Jeans bem cortados', 'Blazer estruturado', 'Vestido midi'],
+                essentials: [
+                  'Camisetas de qualidade',
+                  'Jeans bem cortados',
+                  'Blazer estruturado',
+                  'Vestido midi',
+                ],
                 colors: ['Verde Oliva', 'Bege', 'Marrom Claro', 'Branco'],
                 patterns: ['Listras sutis', 'Xadrez pequeno', 'Florais discretos'],
                 accessories: ['Bolsa de couro', 'Relógio clássico', 'Lenço de seda'],
@@ -120,13 +131,17 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
                 tips: ['Aposte em layering', 'Misture texturas naturais', 'Mantenha simplicidade'],
                 combinations: ['Jeans + camiseta + blazer', 'Vestido + cardigan + sapatilha'],
                 occasions: {
-                  'Casual': ['Jeans + camiseta básica + tênis', 'Vestido midi + sandália'],
-                  'Trabalho': ['Calça social + blusa + blazer', 'Vestido estruturado + sapato fechado'],
-                  'Social': ['Vestido elegante + salto', 'Conjunto coordenado + acessórios'],
+                  Casual: ['Jeans + camiseta básica + tênis', 'Vestido midi + sandália'],
+                  Trabalho: [
+                    'Calça social + blusa + blazer',
+                    'Vestido estruturado + sapato fechado',
+                  ],
+                  Social: ['Vestido elegante + salto', 'Conjunto coordenado + acessórios'],
                 },
               },
               guide: {
-                imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
+                imageUrl:
+                  'https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp',
                 personalizedTips: [
                   'Aposte em tecidos naturais como algodão e linho',
                   'Escolha cores terrosas que complementam sua personalidade',
@@ -208,10 +223,9 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
             <div className="inline-flex items-center space-x-2 bg-white/20 rounded-full px-4 py-2">
               <Sparkles className="h-5 w-5" />
               <span className="text-sm font-medium">
-                {results.userName 
+                {results.userName
                   ? `Resultado Personalizado para ${results.userName}`
-                  : 'Seu Resultado Personalizado'
-                }
+                  : 'Seu Resultado Personalizado'}
               </span>
             </div>
 
@@ -229,10 +243,9 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
             </h1>
 
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-              {results.userName 
+              {results.userName
                 ? `${results.userName}, ${styleProfile.primaryStyleConfig.description.toLowerCase()}`
-                : styleProfile.primaryStyleConfig.description
-              }
+                : styleProfile.primaryStyleConfig.description}
             </p>
 
             <div className="flex flex-wrap justify-center gap-3">
@@ -484,22 +497,23 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recommendations.styling.occasions && Object.entries(recommendations.styling.occasions).map(
-                      ([occasion, outfits]) => (
-                        <div key={occasion} className="border-l-4 border-[#B89B7A] pl-4">
-                          <h4 className="font-semibold text-[#432818] mb-2 capitalize">
-                            {occasion}
-                          </h4>
-                          <ul className="space-y-1">
-                            {outfits.map((outfit, index) => (
-                              <li key={index} className="text-sm text-[#6B4F43]">
-                                {outfit}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )
-                    )}
+                    {recommendations.styling.occasions &&
+                      Object.entries(recommendations.styling.occasions).map(
+                        ([occasion, outfits]) => (
+                          <div key={occasion} className="border-l-4 border-[#B89B7A] pl-4">
+                            <h4 className="font-semibold text-[#432818] mb-2 capitalize">
+                              {occasion}
+                            </h4>
+                            <ul className="space-y-1">
+                              {outfits.map((outfit, index) => (
+                                <li key={index} className="text-sm text-[#6B4F43]">
+                                  {outfit}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )
+                      )}
                   </div>
                 </CardContent>
               </Card>
@@ -516,33 +530,37 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
                   <div>
                     <h4 className="font-semibold text-[#432818] mb-4">Scores por Estilo</h4>
                     <div className="space-y-3">
-                      {styleProfile.styleScores && Object.entries(styleProfile.styleScores)
-                        .sort(([, a], [, b]) => b - a)
-                        .map(([style, score]) => (
-                          <div key={style} className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className={score > 0 ? 'font-medium' : 'text-gray-500'}>
-                                {style}
-                              </span>
-                              <span
-                                className={score > 0 ? 'font-bold text-[#432818]' : 'text-gray-400'}
-                              >
-                                {score > 0
-                                  ? `${Math.round((score / Math.max(...Object.values(styleProfile.styleScores))) * 100)}%`
-                                  : '0%'}
-                              </span>
+                      {styleProfile.styleScores &&
+                        Object.entries(styleProfile.styleScores)
+                          .sort(([, a], [, b]) => b - a)
+                          .map(([style, score]) => (
+                            <div key={style} className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span className={score > 0 ? 'font-medium' : 'text-gray-500'}>
+                                  {style}
+                                </span>
+                                <span
+                                  className={
+                                    score > 0 ? 'font-bold text-[#432818]' : 'text-gray-400'
+                                  }
+                                >
+                                  {score > 0
+                                    ? `${Math.round((score / Math.max(...Object.values(styleProfile.styleScores))) * 100)}%`
+                                    : '0%'}
+                                </span>
+                              </div>
+                              <Progress
+                                value={
+                                  score > 0
+                                    ? (score /
+                                        Math.max(...Object.values(styleProfile.styleScores))) *
+                                      100
+                                    : 0
+                                }
+                                className="h-2"
+                              />
                             </div>
-                            <Progress
-                              value={
-                                score > 0
-                                  ? (score / Math.max(...Object.values(styleProfile.styleScores))) *
-                                    100
-                                  : 0
-                              }
-                              className="h-2"
-                            />
-                          </div>
-                        ))}
+                          ))}
                     </div>
                   </div>
 

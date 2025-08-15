@@ -6,7 +6,8 @@ export const getStep18Template = () => {
       id: 'step18-header',
       type: 'quiz-intro-header',
       properties: {
-        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        logoUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
         logoAlt: 'Logo Gisele Galvão',
         logoWidth: 96,
         logoHeight: 96,
@@ -31,7 +32,8 @@ export const getStep18Template = () => {
       type: 'result-style-card',
       properties: {
         styleName: 'ESTILO CONTEMPORÂNEO',
-        styleDescription: 'Você também tem características do estilo contemporâneo, misturando o clássico com toques modernos.',
+        styleDescription:
+          'Você também tem características do estilo contemporâneo, misturando o clássico com toques modernos.',
         styleImage: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp',
         backgroundColor: '#F8F6F4',
         borderColor: '#D4C2A8',

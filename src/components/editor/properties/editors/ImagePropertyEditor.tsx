@@ -30,7 +30,8 @@ export const ImagePropertyEditor: React.FC<ImagePropertyEditorProps> = ({
   const alt = (block.properties as any)?.alt || (block.content as any)?.alt || '';
   const width = (block.properties as any)?.width || (block.content as any)?.width || 0;
   const height = (block.properties as any)?.height || (block.content as any)?.height || 0;
-  const objectFit = (block.properties as any)?.objectFit || (block.content as any)?.objectFit || 'cover';
+  const objectFit =
+    (block.properties as any)?.objectFit || (block.content as any)?.objectFit || 'cover';
   const borderRadius =
     (block.properties as any)?.borderRadius || (block.content as any)?.borderRadius || 8;
 

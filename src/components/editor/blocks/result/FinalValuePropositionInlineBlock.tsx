@@ -13,7 +13,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
   block,
   isSelected = false,
   onClick,
-  
+
   className = '',
 }) => {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -23,33 +23,33 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
     title = 'Vista-se de Você — na Prática',
     subtitle = 'Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.',
     description = 'O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir com autenticidade e transformar sua imagem em ferramenta de poder.',
-    
+
     // Pricing
     originalPrice = 175,
     currentPrice = 39,
     discount = 78,
     installments = '5x de R$ 8,83',
-    
+
     // Benefits
     benefits = [
       'Looks com intenção e identidade',
-      'Cores, modelagens e tecidos a seu favor', 
+      'Cores, modelagens e tecidos a seu favor',
       'Imagem alinhada aos seus objetivos',
-      'Guarda-roupa funcional, sem compras por impulso'
+      'Guarda-roupa funcional, sem compras por impulso',
     ],
-    
+
     // Value Stack
     valueStack = [
       { item: 'Guia Principal', value: 79 },
       { item: 'Bônus - Peças-chave', value: 67 },
-      { item: 'Bônus - Visagismo Facial', value: 29 }
+      { item: 'Bônus - Visagismo Facial', value: 29 },
     ],
-    
+
     // CTA
     ctaText = 'GARANTIR MEU GUIA AGORA',
     ctaUrl = 'https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912',
     urgencyMessage = '⚡ Esta oferta expira ao sair desta página',
-    
+
     // Styling
     backgroundColor = '#ffffff',
     accentColor = '#458B74',
@@ -67,7 +67,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
     'w-full',
     {
       'max-w-sm mx-auto': containerWidth === 'small',
-      'max-w-md mx-auto': containerWidth === 'medium', 
+      'max-w-md mx-auto': containerWidth === 'medium',
       'max-w-lg mx-auto': containerWidth === 'large',
       'max-w-2xl mx-auto': containerWidth === 'xlarge',
       'max-w-4xl mx-auto': containerWidth === 'xxlarge',
@@ -108,7 +108,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         value: currentPrice,
       });
     }
-    
+
     if (ctaUrl) {
       window.open(ctaUrl, '_blank');
     }
@@ -124,23 +124,20 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
       <div className="space-y-8">
         {/* Header */}
         <div className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-playfair font-bold" style={{ color: primaryColor }}>
+          <h2
+            className="text-2xl md:text-3xl font-playfair font-bold"
+            style={{ color: primaryColor }}
+          >
             {title}
           </h2>
-          <div 
+          <div
             className="w-24 h-1 mx-auto rounded-full"
             style={{ backgroundColor: primaryColor }}
           />
           {subtitle && (
-            <p className="text-base md:text-lg max-w-xl mx-auto opacity-90">
-              {subtitle}
-            </p>
+            <p className="text-base md:text-lg max-w-xl mx-auto opacity-90">{subtitle}</p>
           )}
-          {description && (
-            <p className="max-w-xl mx-auto opacity-80">
-              {description}
-            </p>
-          )}
+          {description && <p className="max-w-xl mx-auto opacity-80">{description}</p>}
         </div>
 
         {/* Benefits List */}
@@ -151,7 +148,7 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
           <ul className="space-y-3 text-left">
             {benefits.map((benefit: string, index: number) => (
               <li key={index} className="flex items-start">
-                <div 
+                <div
                   className="flex-shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-white mr-2 mt-0.5"
                   style={{ background: `linear-gradient(to right, ${primaryColor}, #aa6b5d)` }}
                 >
@@ -164,14 +161,21 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
         </div>
 
         {/* Price Anchoring */}
-        <div className="bg-white p-6 rounded-lg shadow-md border max-w-md mx-auto" style={{ borderColor: primaryColor + '20' }}>
+        <div
+          className="bg-white p-6 rounded-lg shadow-md border max-w-md mx-auto"
+          style={{ borderColor: primaryColor + '20' }}
+        >
           <h3 className="text-xl font-medium text-center mb-4" style={{ color: primaryColor }}>
             O Que Você Recebe Hoje
           </h3>
-          
+
           <div className="space-y-3 mb-6">
             {valueStack.map((item: { item: string; value: number }, index: number) => (
-              <div key={index} className="flex justify-between items-center p-2 border-b" style={{ borderColor: primaryColor + '10' }}>
+              <div
+                key={index}
+                className="flex justify-between items-center p-2 border-b"
+                style={{ borderColor: primaryColor + '10' }}
+              >
                 <span>{item.item}</span>
                 <span className="font-medium">R$ {item.value},00</span>
               </div>
@@ -184,44 +188,48 @@ const FinalValuePropositionInlineBlock: React.FC<BlockComponentProps> = ({
               </div>
             </div>
           </div>
-          
+
           <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-            <p className="text-sm text-green-600 uppercase font-medium">Especial: -{discount}% HOJE</p>
+            <p className="text-sm text-green-600 uppercase font-medium">
+              Especial: -{discount}% HOJE
+            </p>
             <p className="text-4xl font-bold text-green-600">R$ {currentPrice},00</p>
             <p className="text-xs text-gray-600 mt-1">ou {installments}</p>
             <div className="mt-2 bg-red-50 rounded-full px-3 py-1 inline-block">
-              <p className="text-xs text-red-600 font-medium">💥 Preço volta para R$ {originalPrice} em breve</p>
+              <p className="text-xs text-red-600 font-medium">
+                💥 Preço volta para R$ {originalPrice} em breve
+              </p>
             </div>
           </div>
         </div>
 
         {/* Final CTA */}
         <div className="space-y-4">
-          <Button 
-            onClick={handleCTAClick} 
+          <Button
+            onClick={handleCTAClick}
             className="text-white py-6 px-8 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95 text-lg font-semibold"
             style={{
               background: `linear-gradient(to right, ${accentColor}, #3D7A65)`,
-              boxShadow: `0 4px 14px ${accentColor}40`
+              boxShadow: `0 4px 14px ${accentColor}40`,
             }}
-            onMouseEnter={() => setIsButtonHovered(true)} 
+            onMouseEnter={() => setIsButtonHovered(true)}
             onMouseLeave={() => setIsButtonHovered(false)}
           >
             <span className="flex items-center justify-center gap-3">
-              <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
+              <ShoppingCart
+                className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`}
+              />
               <span>{ctaText}</span>
             </span>
           </Button>
-          
+
           {/* Urgency Message */}
           {urgencyMessage && (
             <div className="bg-yellow-50 rounded-full px-4 py-2 inline-block border border-yellow-200">
-              <p className="text-sm text-yellow-700 font-medium animate-pulse">
-                {urgencyMessage}
-              </p>
+              <p className="text-sm text-yellow-700 font-medium animate-pulse">{urgencyMessage}</p>
             </div>
           )}
-          
+
           {/* Security */}
           <p className="text-sm opacity-75 flex items-center justify-center gap-1">
             <Lock className="w-3 h-3" />

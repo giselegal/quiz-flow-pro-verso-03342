@@ -57,7 +57,7 @@ export const CanvasDropZone: React.FC<CanvasDropZoneProps> = ({
   onDeleteBlock,
   className,
 }) => {
-  // Safe preview context usage with fallback  
+  // Safe preview context usage with fallback
   const { isPreviewing } = usePreview();
   const { setNodeRef, isOver, active } = useDroppable({
     id: 'canvas-drop-zone',

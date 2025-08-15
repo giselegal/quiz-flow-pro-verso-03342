@@ -7,11 +7,7 @@ interface SafeHookWrapperProps {
   fallback?: React.ReactNode;
 }
 
-const SafeHookWrapper: React.FC<SafeHookWrapperProps> = ({ 
-  children, 
-  hookName, 
-  fallback 
-}) => {
+const SafeHookWrapper: React.FC<SafeHookWrapperProps> = ({ children, hookName, fallback }) => {
   const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
     console.error(`🚨 Error in hook ${hookName}:`, error, errorInfo);
   };
@@ -21,11 +17,9 @@ const SafeHookWrapper: React.FC<SafeHookWrapperProps> = ({
       <p className="text-sm text-destructive mb-2">
         Hook <code>{hookName}</code> failed to initialize
       </p>
-      <p className="text-xs text-muted-foreground mb-3">
-        {error?.message || 'Unknown error'}
-      </p>
+      <p className="text-xs text-muted-foreground mb-3">{error?.message || 'Unknown error'}</p>
       {fallback || (
-        <button 
+        <button
           onClick={resetError}
           className="px-3 py-1 text-xs bg-background border rounded hover:bg-muted"
         >
@@ -36,10 +30,7 @@ const SafeHookWrapper: React.FC<SafeHookWrapperProps> = ({
   );
 
   return (
-    <ErrorBoundary
-      fallback={ErrorFallback}
-      onError={handleError}
-    >
+    <ErrorBoundary fallback={ErrorFallback} onError={handleError}>
       {children}
     </ErrorBoundary>
   );
