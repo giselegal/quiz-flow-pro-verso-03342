@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -69,7 +69,7 @@ const ConsolidatedBlockRenderer: React.FC<ConsolidatedBlockRendererProps> = ({
   onPropertyChange,
 }) => {
   // Buscar componente no registry consolidado
-  const Component = getBlockComponent(block.type);
+  const Component = getOptimizedBlockComponent(block.type);
 
   // Processar propriedades de container usando o hook
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(

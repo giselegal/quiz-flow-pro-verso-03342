@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -61,7 +61,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
   // 🎯 Componente simplificado para preview (2 containers apenas)
   const PreviewBlock: React.FC<{ block: Block }> = ({ block }) => {
     const { containerClasses, inlineStyles } = useContainerProperties(block.properties);
-    const Component = getBlockComponent(block.type);
+    const Component = getOptimizedBlockComponent(block.type);
 
     if (!Component) {
       return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { getOptimizedBlockComponent } from '@/utils/optimizedRegistry';
 import { useContainerProperties } from '@/hooks/useContainerProperties';
 import { cn } from '@/lib/utils';
 import { Block } from '@/types/editor';
@@ -74,8 +74,8 @@ const UniversalBlockRenderer: React.FC<UniversalBlockRendererProps> = ({
   onClick,
   onPropertyChange,
 }) => {
-  // Buscar componente no registry
-  const Component = getBlockComponent(block.type);
+  // ✅ Buscar componente otimizado com cache
+  const Component = getOptimizedBlockComponent(block.type);
 
   // Processar propriedades de container usando o hook
   const { containerClasses, inlineStyles, processedProperties } = useContainerProperties(

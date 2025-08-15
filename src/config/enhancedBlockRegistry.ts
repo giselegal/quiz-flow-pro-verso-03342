@@ -5,8 +5,9 @@ import React from 'react';
 // === COMPONENTES BÁSICOS FUNCIONAIS ===
 import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
 import HeadingBlock from '../components/blocks/inline/HeadingBlock';
-import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean';
+import OptionsGridInlineBlock from '../components/blocks/inline/OptionsGridInlineBlock';
 import TextInline from '../components/blocks/inline/TextInline';
+import ImageDisplayInlineBlockClean from '../components/blocks/inline/ImageDisplayInlineBlock.clean';
 
 // === CRIAÇÃO DE COMPONENTES PLACEHOLDER (OS ARQUIVOS NÃO EXISTIAM) ===
 // Estes componentes são criados aqui para evitar erros de importação.
@@ -85,6 +86,10 @@ export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> =
   'form-container': FormContainerBlock,
   'form-input': FormInputBlock,
 
+  // Quiz e interação  
+  'options-grid': OptionsGridInlineBlock, // ✅ Componente faltante adicionado
+  'options-grid-inline': OptionsGridInlineBlock,
+
   // Variações e componentes avançados
   'text-advanced': TextInlineBlock,
   'heading-advanced': HeadingInlineBlock,
@@ -97,13 +102,14 @@ const BLOCK_ALIASES: Record<string, string> = {
   'image-display-inline': 'image',
   'button-inline': 'button',
   'decorative-bar-inline': 'decorative-bar',
+  'options-grid-inline': 'options-grid', // ✅ Alias para options-grid
   form: 'form-input',
 
   // Aliases do template JSON em português
   'cabeçalho-introdução-do-questionário': 'quiz-intro-header',
   'texto-embutido': 'text',
   'imagem-em-linha': 'image',
-  'formulário-de-chumbo': 'form-container', // Mapeado para container
+  'formulário-de-chumbo': 'form-container',
 };
 
 /**
@@ -119,7 +125,7 @@ export function getBlockComponent(type: string): React.ComponentType<any> {
   // 1. Tenta encontrar o tipo diretamente no registry
   let component = ENHANCED_BLOCK_REGISTRY[type];
   if (component) {
-    console.log(`✅ Componente encontrado: ${type}`);
+    // ✅ Removido log excessivo para melhorar performance
     return component;
   }
 
@@ -128,13 +134,18 @@ export function getBlockComponent(type: string): React.ComponentType<any> {
   if (alias) {
     component = ENHANCED_BLOCK_REGISTRY[alias];
     if (component) {
-      console.log(`🔄 Mapeado via alias: "${type}" → "${alias}"`);
+      // ✅ Log apenas quando usa alias para debug específico
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`🔄 Mapeado via alias: "${type}" → "${alias}"`);
+      }
       return component;
     }
   }
 
-  // 3. Se ainda não encontrar, retorna um placeholder para não quebrar a UI
-  console.warn(`❗️ Componente para o tipo "${type}" não foi encontrado. Renderizando placeholder.`);
+  // 3. Se nada foi encontrado, retorna placeholder com log de warning apenas em desenvolvimento
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(`❗️ Componente para o tipo "${type}" não foi encontrado. Renderizando placeholder.`);
+  }
   return props => React.createElement(PlaceholderBlock, { type, props });
 }
 
