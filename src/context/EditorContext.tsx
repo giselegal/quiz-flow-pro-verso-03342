@@ -390,62 +390,68 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     return initialBlocks;
   });
 
-  // ✅ EFEITO OTIMIZADO - LAZY LOADING COM REQUESTIDLECALLBACK
+  // ✅ NOVO SISTEMA: Carregamento via TemplateBlockConverter
   useEffect(() => {
-    const loadInitialTemplates = async () => {
-      console.log('🔄 EditorProvider: Lazy loading otimizado iniciado');
+    const loadInitialTemplatesWithConverter = async () => {
+      console.log('🔄 EditorProvider: Carregando templates via TemplateBlockConverter');
 
-      // Usar requestIdleCallback para não bloquear UI
-      if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(async () => {
-          try {
-            // Carregar apenas a primeira etapa imediatamente
-            const stageId = 'step-01';
-            console.log(`🔄 Carregando template prioritário: ${stageId}`);
-            
-            const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
-            
-            if (loadedBlocks && loadedBlocks.length > 0) {
-              setStageBlocks(prev => ({
-                ...prev,
-                [stageId]: loadedBlocks,
-              }));
-              console.log(`✅ Template ${stageId} carregado: ${loadedBlocks.length} blocos`);
-            }
+      try {
+        // Importar o sistema de mapeamento
+        const { STEP_TEMPLATES_MAPPING } = await import('../config/stepTemplatesMapping');
+        const { TemplateBlockConverter } = await import('../utils/templateBlockConverter');
 
-            // Carregar outras etapas com delay progressivo
-            setTimeout(() => {
-              for (let i = 2; i <= 5; i++) {
-                const nextStageId = `step-${String(i).padStart(2, '0')}`;
-                setTimeout(async () => {
-                  try {
-                    const nextBlocks = await TemplateManager.loadStepBlocks(nextStageId);
-                    if (nextBlocks && nextBlocks.length > 0) {
-                      setStageBlocks(prev => ({
-                        ...prev,
-                        [nextStageId]: nextBlocks,
-                      }));
-                    }
-                  } catch (error) {
-                    console.warn(`⚠️ Erro ao carregar ${nextStageId}:`, error);
-                  }
-                }, i * 100); // Delay de 100ms entre etapas
-              }
-            }, 1000); // Aguardar 1s antes de carregar demais
-            
-          } catch (error) {
-            console.error('❌ Erro no carregamento otimizado:', error);
+        // Carregar template da primeira etapa
+        const step1Template = STEP_TEMPLATES_MAPPING[1];
+        if (step1Template) {
+          console.log('🔄 Convertendo template da etapa 1...');
+          const step1Blocks = await TemplateBlockConverter.convertStepTemplate(
+            1,
+            step1Template.templateFunction,
+            { userName: quizLogic.userName }
+          );
+          
+          if (step1Blocks.length > 0) {
+            setStageBlocks(prev => ({
+              ...prev,
+              'step-01': step1Blocks,
+            }));
+            console.log(`✅ Etapa 1 carregada: ${step1Blocks.length} blocos`);
           }
-        });
-      } else {
-        // Fallback para browsers sem requestIdleCallback
-        setTimeout(() => {
-          loadInitialTemplates();
-        }, 100);
+        }
+
+        // Carregar mais algumas etapas progressivamente
+        setTimeout(async () => {
+          for (let stepNum = 2; stepNum <= 5; stepNum++) {
+            const stepTemplate = STEP_TEMPLATES_MAPPING[stepNum];
+            if (stepTemplate) {
+              try {
+                const blocks = await TemplateBlockConverter.convertStepTemplate(
+                  stepNum,
+                  stepTemplate.templateFunction,
+                  { userName: quizLogic.userName }
+                );
+                
+                if (blocks.length > 0) {
+                  const stageId = `step-${String(stepNum).padStart(2, '0')}`;
+                  setStageBlocks(prev => ({
+                    ...prev,
+                    [stageId]: blocks,
+                  }));
+                  console.log(`✅ Etapa ${stepNum} carregada: ${blocks.length} blocos`);
+                }
+              } catch (error) {
+                console.warn(`⚠️ Erro ao carregar etapa ${stepNum}:`, error);
+              }
+            }
+          }
+        }, 500);
+
+      } catch (error) {
+        console.error('❌ Erro no carregamento com converter:', error);
       }
     };
 
-    loadInitialTemplates();
+    loadInitialTemplatesWithConverter();
   }, []); // Executar apenas uma vez na inicialização
 
   // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO

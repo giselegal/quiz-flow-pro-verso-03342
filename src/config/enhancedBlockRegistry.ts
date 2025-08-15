@@ -70,29 +70,43 @@ const HeadingInlineBlock: React.FC<any> = props => React.createElement(HeadingBl
 export const ENHANCED_BLOCK_REGISTRY: Record<string, React.ComponentType<any>> = {
   // Componentes básicos
   text: TextInline,
+  'text-inline': TextInline,
   heading: HeadingBlock,
+  'heading-inline': HeadingBlock,
   image: ImageDisplayInlineBlockClean,
+  'image-display-inline': ImageDisplayInlineBlockClean,
   button: ButtonInlineFixed,
+  'button-inline': ButtonInlineFixed,
 
   // 🎯 UNIFIED HEADER SYSTEM - Consolidated All Headers
   'header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   'unified-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   
-  // Quiz Headers - All variants unified
+  // Quiz Headers - All variants unified to UnifiedHeaderBlock
   'quiz-intro': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   'quiz-intro-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
+  'quiz-intro-optimized': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   'quiz-result-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   'offer-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   'vertical-canvas-header': React.lazy(() => import('../components/blocks/unified/UnifiedHeaderBlock')),
   
   // Form and Layout Components
   'decorative-bar': DecorativeBarInlineBlock,
+  'decorative-bar-inline': DecorativeBarInlineBlock,
   'form-container': FormContainerBlock,
   'form-input': FormInputBlock,
+  'form-input-inline': FormInputBlock,
 
   // Quiz e interação  
-  'options-grid': OptionsGridInlineBlock, // ✅ Componente faltante adicionado
+  'options-grid': OptionsGridInlineBlock,
   'options-grid-inline': OptionsGridInlineBlock,
+  
+  // ✅ MISSING COMPONENTS - Create lazy-loaded placeholders
+  'loading-animation': React.lazy(() => import('../components/blocks/inline/LoadingAnimationBlock')),
+  'progress-bar': React.lazy(() => import('../components/blocks/inline/ProgressBarBlock')),
+  'lead-form': React.lazy(() => import('../components/blocks/inline/LeadFormBlock')),
+  'countdown-timer': React.lazy(() => import('../components/blocks/inline/CountdownTimerBlock')),
+  'result-display': React.lazy(() => import('../components/blocks/inline/ResultDisplayBlock')),
 
   // Variações e componentes avançados
   'text-advanced': TextInlineBlock,
