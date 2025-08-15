@@ -267,4 +267,19 @@ export const ConnectedStep01Template = () => {
   );
 };
 
+export const getConnectedStep01Template = () => {
+  // Para compatibilidade com o sistema de mapeamento, retorna um array de blocos
+  return [
+    {
+      id: 'step01-quiz-intro-connected',
+      type: 'quiz-intro',
+      properties: {
+        // Usar o componente ConnectedStep01Template diretamente
+        component: ConnectedStep01Template,
+        variant: 'modern',
+      },
+    },
+  ];
+};
+
 export default ConnectedStep01Template;

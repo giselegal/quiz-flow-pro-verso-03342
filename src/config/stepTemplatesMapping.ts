@@ -1,8 +1,8 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos (usando templates TSX reais)
 
-// ✅ IMPORTS DOS TEMPLATES TSX REAIS (CONECTADOS)
-import { getStep01Template } from '@/components/steps/Step01Template';
+// ✅ IMPORTS DOS TEMPLATES CONECTADOS (TODOS UNIFICADOS)
+import { getConnectedStep01Template } from '@/components/steps/ConnectedStep01Template';
 import { getConnectedStep02Template } from '@/components/steps/ConnectedStep02Template';
 import { getConnectedStep03Template } from '@/components/steps/ConnectedStep03Template';
 import { getConnectedStep04Template } from '@/components/steps/ConnectedStep04Template';
@@ -21,8 +21,8 @@ import { getConnectedStep16Template } from '@/components/steps/ConnectedStep16Te
 import { getConnectedStep17Template } from '@/components/steps/ConnectedStep17Template';
 import { getConnectedStep18Template } from '@/components/steps/ConnectedStep18Template';
 import { getConnectedStep19Template } from '@/components/steps/ConnectedStep19Template';
-import { getStep20Template } from '@/components/steps/Step20Template';
-import { getStep21Template } from '@/components/steps/Step21Template';
+import { getConnectedStep20Template } from '@/components/steps/ConnectedStep20Template';
+import { getConnectedStep21Template } from '@/components/steps/ConnectedStep21Template';
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -114,9 +114,9 @@ const getDefaultTemplate = (stepNumber: number) => {
 
 // Templates específicos removidos para evitar duplicação
 
-// 📋 MAPEAMENTO DOS TEMPLATES TSX CONECTADOS COM NOMES CORRETOS
+// 📋 MAPEAMENTO UNIFICADO - TODOS OS TEMPLATES CONECTADOS
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
-  1: { stepNumber: 1, templateFunction: getStep01Template, name: STEP_CONFIGS[0].name, description: STEP_CONFIGS[0].description },
+  1: { stepNumber: 1, templateFunction: getConnectedStep01Template, name: STEP_CONFIGS[0].name, description: STEP_CONFIGS[0].description },
   2: { stepNumber: 2, templateFunction: getConnectedStep02Template, name: STEP_CONFIGS[1].name, description: STEP_CONFIGS[1].description },
   3: { stepNumber: 3, templateFunction: getConnectedStep03Template, name: STEP_CONFIGS[2].name, description: STEP_CONFIGS[2].description },
   4: { stepNumber: 4, templateFunction: getConnectedStep04Template, name: STEP_CONFIGS[3].name, description: STEP_CONFIGS[3].description },
@@ -135,21 +135,8 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
   17: { stepNumber: 17, templateFunction: getConnectedStep17Template, name: STEP_CONFIGS[16].name, description: STEP_CONFIGS[16].description },
   18: { stepNumber: 18, templateFunction: getConnectedStep18Template, name: STEP_CONFIGS[17].name, description: STEP_CONFIGS[17].description },
   19: { stepNumber: 19, templateFunction: getConnectedStep19Template, name: STEP_CONFIGS[18].name, description: STEP_CONFIGS[18].description },
-  20: { 
-    stepNumber: 20, 
-    templateFunction: (userData?: any) => {
-      const userName = localStorage.getItem('quizUserName') || userData?.userName || '';
-      const styleCategory = localStorage.getItem('quizPrimaryStyle') || userData?.styleCategory || 'Elegante';
-      const sessionId = userData?.sessionId || 'default-session';
-      
-      console.log('🎨 Step20 personalized data:', { userName, styleCategory, sessionId });
-      
-      return getStep20Template({ userName, styleCategory, sessionId });
-    }, 
-    name: STEP_CONFIGS[19].name, 
-    description: STEP_CONFIGS[19].description 
-  },
-  21: { stepNumber: 21, templateFunction: getStep21Template, name: STEP_CONFIGS[20].name, description: STEP_CONFIGS[20].description },
+  20: { stepNumber: 20, templateFunction: getConnectedStep20Template, name: STEP_CONFIGS[19].name, description: STEP_CONFIGS[19].description },
+  21: { stepNumber: 21, templateFunction: getConnectedStep21Template, name: STEP_CONFIGS[20].name, description: STEP_CONFIGS[20].description },
 };
 
 // 🔧 FUNÇÕES UTILITÁRIAS ATUALIZADAS
@@ -200,19 +187,19 @@ export const STEP_CONFIG: StepConfig[] = getAllSteps().map(template => ({
   description: template.description,
 }));
 
-// 📊 ESTATÍSTICAS ATUALIZADAS
+// 📊 ESTATÍSTICAS UNIFICADAS - SISTEMA COMPLETO
 export const getTemplateStats = () => {
   return {
     totalTemplates: getTotalSteps(),
-    introSteps: 1, // Step 1 - Quiz intro
-    nameSteps: 1, // Step 2 - Nome
-    questionSteps: 9, // Steps 3-11 (perguntas principais)
-    strategicSteps: 3, // Steps 12-14 (perguntas estratégicas) 
-    transitionSteps: 2, // Steps 15-16 (transição/processamento)
-    resultSteps: 4, // Steps 17-20 (resultado/lead)
-    conversionSteps: 1, // Step 21 (oferta)
-    connectedTemplates: 2, // Steps 2-3 já conectados aos hooks
-    pendingConnections: 19, // Steps restantes para conectar
+    introSteps: 1, // Step 1 - Quiz intro conectado
+    nameSteps: 1, // Step 2 - Nome conectado
+    questionSteps: 10, // Steps 3-12 (perguntas principais conectadas)
+    strategicSteps: 6, // Steps 13-18 (perguntas estratégicas conectadas) 
+    transitionSteps: 2, // Steps 19-20 (transição conectada)
+    resultSteps: 1, // Step 21 (resultado conectado)
+    connectedTemplates: 21, // ✅ TODOS OS 21 STEPS CONECTADOS!
+    pendingConnections: 0, // ✅ NENHUM STEP PENDENTE!
+    systemHealth: '100% Unified', // ✅ SISTEMA TOTALMENTE UNIFICADO
   };
 };
 

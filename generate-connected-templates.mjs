@@ -11,25 +11,30 @@ import path from 'path';
 
 const baseDir = process.cwd();
 
-// Configuração dos steps
+// ✅ CONFIGURAÇÃO COMPLETA DOS STEPS (1-21)
 const stepConfigs = {
-  3: { title: 'Questão 2 - Qual seu tipo físico?', type: 'question', minSelections: 1 },
-  4: { title: 'Questão 3 - Qual seu estilo de vida?', type: 'question', minSelections: 2 },
-  5: { title: 'Questão 4 - Que ocasiões você mais veste?', type: 'question', minSelections: 3 },
-  6: { title: 'Questão 5 - Qual seu orçamento?', type: 'question', minSelections: 1 },
-  7: { title: 'Questão 6 - Onde você compra?', type: 'question', minSelections: 2 },
-  8: { title: 'Questão 7 - Qual sua inspiração?', type: 'question', minSelections: 1 },
-  9: { title: 'Questão 8 - Seu maior desafio?', type: 'question', minSelections: 1 },
-  10: { title: 'Questão 9 - Suas prioridades?', type: 'question', minSelections: 2 },
-  11: { title: 'Questão 10 - Seu objetivo?', type: 'question', minSelections: 1 },
-  12: { title: 'Estratégica 1 - Perfil Detalhado', type: 'strategic', minSelections: 1 },
-  13: { title: 'Estratégica 2 - Preferências Avançadas', type: 'strategic', minSelections: 1 },
-  14: { title: 'Estratégica 3 - Estilo de Vida', type: 'strategic', minSelections: 1 },
-  15: { title: 'Estratégica 4 - Ocasiões Especiais', type: 'strategic', minSelections: 1 },
-  16: { title: 'Estratégica 5 - Investimento', type: 'strategic', minSelections: 1 },
-  17: { title: 'Estratégica 6 - Marcas e Referências', type: 'strategic', minSelections: 1 },
-  18: { title: 'Estratégica 7 - Objetivos Finais', type: 'strategic', minSelections: 1 },
-  19: { title: 'Preparando seu Resultado...', type: 'result', minSelections: 0 }
+  1: { title: 'Descubra Seu Estilo Único e Autêntico', type: 'intro', minSelections: 0 },
+  2: { title: 'VAMOS NOS CONHECER?', type: 'name', minSelections: 1 },
+  3: { title: 'QUAL O SEU TIPO DE ROUPA FAVORITA?', type: 'question', minSelections: 1 },
+  4: { title: 'RESUMA A SUA PERSONALIDADE:', type: 'question', minSelections: 2 },
+  5: { title: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', type: 'question', minSelections: 3 },
+  6: { title: 'QUAIS DETALHES VOCÊ GOSTA?', type: 'question', minSelections: 1 },
+  7: { title: 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', type: 'question', minSelections: 2 },
+  8: { title: 'QUAL CASACO É SEU FAVORITO?', type: 'question', minSelections: 1 },
+  9: { title: 'QUAL SUA CALÇA FAVORITA?', type: 'question', minSelections: 1 },
+  10: { title: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', type: 'question', minSelections: 2 },
+  11: { title: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', type: 'question', minSelections: 1 },
+  12: { title: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...', type: 'question', minSelections: 1 },
+  13: { title: 'Enquanto calculamos o seu resultado...', type: 'transition', minSelections: 0 },
+  14: { title: 'Como você se vê hoje?', type: 'strategic', minSelections: 1 },
+  15: { title: 'O que mais te desafia na hora de se vestir?', type: 'strategic', minSelections: 1 },
+  16: { title: 'Com que frequência você se pega pensando: "Com que roupa eu vou?"', type: 'strategic', minSelections: 1 },
+  17: { title: 'Ter acesso a um material estratégico faria diferença?', type: 'strategic', minSelections: 1 },
+  18: { title: 'Você consideraria R$ 97,00 um bom investimento?', type: 'strategic', minSelections: 1 },
+  19: { title: 'Qual resultado você mais gostaria de alcançar?', type: 'strategic', minSelections: 1 },
+  20: { title: 'Obrigada por compartilhar...', type: 'transition', minSelections: 0 },
+  21: { title: 'SEU ESTILO PESSOAL É:', type: 'result', minSelections: 0 },
+  22: { title: 'RECEBA SEU GUIA DE ESTILO COMPLETO', type: 'conversion', minSelections: 0 }
 };
 
 // Template base para gerar os componentes
