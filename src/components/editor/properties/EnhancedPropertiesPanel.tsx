@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { BlockData } from '@/types/blocks';
+import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import {
   Copy,
   Eye,
@@ -139,6 +140,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
   previewMode = 'desktop',
   onPreviewModeChange,
 }) => {
+  const { scrollRef } = useSyncedScroll({ source: 'properties' });
   const [activeTab, setActiveTab] = useState('visual');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -437,7 +439,11 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
           </div>
         </CardHeader>
 
-        <CardContent className="flex-1 overflow-auto">
+        <CardContent className="flex-1 overflow-hidden">
+          <div
+            ref={scrollRef}
+            className="h-full overflow-y-auto [scrollbar-gutter:stable] overflow-x-hidden"
+          >
           {filteredProperties ? (
             // Modo de busca
             <div className="space-y-4">
@@ -513,6 +519,7 @@ const EnhancedPropertiesPanel: React.FC<EnhancedPropertiesPanelProps> = ({
               )}
             </Tabs>
           )}
+          </div>
         </CardContent>
       </Card>
     </TooltipProvider>
