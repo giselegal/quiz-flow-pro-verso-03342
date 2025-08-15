@@ -487,10 +487,10 @@ export const useUnifiedProperties = (
           createProperty(
             'progressValue',
             currentBlock?.properties?.progressValue || 0,
-            PropertyType.RANGE,
+            PropertyType.NUMBER,
             'Valor do Progresso',
             PropertyCategory.BEHAVIOR,
-            { min: 0, max: 100, step: 1, unit: '%' }
+            { min: 0, max: 100 }
           ),
           createProperty(
             'progressMax',
@@ -901,14 +901,6 @@ export const useUnifiedProperties = (
             PropertyType.SWITCH,
             'Mostrar Progresso',
             PropertyCategory.LAYOUT
-          ),
-          createProperty(
-            'progressValue',
-            currentBlock?.properties?.progressValue || 4.76,
-            PropertyType.RANGE,
-            'Valor do Progresso (%)',
-            PropertyCategory.LAYOUT,
-            { min: 0, max: 100, step: 0.1 }
           ),
           createProperty(
             'showStylePreviews',

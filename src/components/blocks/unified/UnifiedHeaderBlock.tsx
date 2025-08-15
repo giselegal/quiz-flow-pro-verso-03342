@@ -73,8 +73,8 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       
       // Progresso
       enableProgressBar: properties.enableProgressBar ?? false,
-      progressValue: properties.progressValue || 0,
-      progressMax: properties.progressMax || 100,
+      progressValue: Number(properties.progressValue) || 0,
+      progressMax: Number(properties.progressMax) || 100,
       
       // Navegação
       showBackButton: properties.showBackButton ?? false,
@@ -126,7 +126,10 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
       <div className="p-4">
         <div className="relative w-full min-h-[120px] flex items-center justify-center">
           {props.showBackButton && (
-            <button className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100/50 transition-colors">
+            <button 
+              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100/50 transition-colors"
+              onClick={() => console.log('Back button clicked')}
+            >
               <ArrowLeft className="w-6 h-6" style={{ color: '#6B4F43' }} />
             </button>
           )}
@@ -147,14 +150,14 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
           )}
         </div>
 
-        {props.enableProgressBar && (
+        {(props.enableProgressBar && props.progressMax > 0) && (
           <div className="mt-4">
             <div className="flex justify-between text-sm text-muted-foreground mb-2">
               <span>Progresso</span>
               <span>{Math.round((props.progressValue / props.progressMax) * 100)}%</span>
             </div>
             <Progress
-              value={Math.min(props.progressValue, props.progressMax)}
+              value={Math.min((props.progressValue / props.progressMax) * 100, 100)}
               className="h-1 bg-muted/30"
               indicatorClassName="bg-primary transition-all duration-300"
             />
@@ -240,14 +243,14 @@ const UnifiedHeaderBlock: React.FC<UnifiedHeaderProps> = memo(({
             )}
           </div>
 
-          {props.enableProgressBar && (
+          {(props.enableProgressBar && props.progressMax > 0) && (
             <div className="flex-1 max-w-md mx-4">
               <div className="flex justify-between text-sm text-muted-foreground mb-1">
                 <span>Progresso</span>
                 <span>{Math.round((props.progressValue / props.progressMax) * 100)}%</span>
               </div>
               <Progress 
-                value={(props.progressValue / props.progressMax) * 100} 
+                value={Math.min((props.progressValue / props.progressMax) * 100, 100)} 
                 className="h-1 bg-muted/30" 
                 indicatorClassName="bg-primary"
               />
