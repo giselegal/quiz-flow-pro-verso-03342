@@ -48,6 +48,9 @@ const EditorWithPreview = lazy(() =>
 
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));
+const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
+const TestBasico = lazy(() => import('./pages/test-basico'));
+const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
 
 // Loading component
 const PageLoading = () => (
@@ -84,6 +87,20 @@ function App() {
                     return null;
                   }}
                 </Route>
+
+                {/* Editor Fixed Simples - Versão Garantida */}
+                <ProtectedRoute
+                  path="/editor-simples"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <EditorFixedSimples />
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                />
 
                 {/* Editor Fixed Route - Editor 4 Colunas com Drag & Drop + Painel de Propriedades Otimizado */}
                 <ProtectedRoute
@@ -171,6 +188,29 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
+                
+                {/* Editor Debug Minimal */}
+                <Route path="/debug/editor-minimal">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <EditorDebugMinimal />
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
+                
+                {/* Test Básico */}
+                <Route path="/test/basico">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestBasico />
+                    </Suspense>
+                  )}
+                </Route>
+                
                 <Route path="/test/components">
                   {() => (
                     <Suspense fallback={<PageLoading />}>
