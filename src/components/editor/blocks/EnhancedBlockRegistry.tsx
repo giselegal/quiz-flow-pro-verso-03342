@@ -1,7 +1,10 @@
-// @ts-nocheck
+// @ts-nocheck - Legacy property schema types, to be migrated
 import React, { lazy, Suspense } from 'react';
 import { AlertTriangle, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+// Note: This file uses legacy PropertySchema with string literal types
+// TODO: Migrate to unified PropertySchema from @/types/propertySchema
 
 // Skeleton simples inline
 const BlockLoadingSkeleton: React.FC = () => (
@@ -215,7 +218,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   'enhanced-fallback': lazy(() => import('./EnhancedFallbackBlock')),
 } as const;
 
-// 📋 DEFINIÇÕES DE SCHEMA PARA PROPRIEDADES
+// Legacy PropertySchema for this file (maintains compatibility)
 export interface PropertySchema {
   key: string;
   type:

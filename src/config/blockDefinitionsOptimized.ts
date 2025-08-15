@@ -3,7 +3,10 @@
 // Configuração das 21 etapas do funil com componentes mais organizados
 // =====================================================================
 
-// Tipos base para o schema de propriedades
+// Import the unified PropertySchema for future migration
+import { PropertySchema as UnifiedPropertySchema, optimizedToUnified } from '@/types/propertySchema';
+
+// Keep original types for this file to maintain compatibility
 export type PropertyInputType =
   | 'text-input'
   | 'textarea'
@@ -21,6 +24,7 @@ export interface PropertyOption {
   value: string;
 }
 
+// Use legacy PropertySchema interface for now (to maintain compatibility)
 export interface PropertySchema {
   key: string;
   label: string;
@@ -34,6 +38,11 @@ export interface PropertySchema {
   description?: string;
   nestedPath?: string;
   itemSchema?: PropertySchema[];
+}
+
+// Migration utility to convert to unified schema when needed
+export function convertToUnifiedSchema(schema: PropertySchema): UnifiedPropertySchema {
+  return optimizedToUnified(schema);
 }
 
 export interface BlockDefinition {
