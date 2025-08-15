@@ -1,8 +1,8 @@
-// @ts-nocheck
 import { toast } from '@/components/ui/use-toast';
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
+import { Funnel, FunnelPage } from '../types/unified-schema';
 import { useEffect, useState } from 'react';
 
 export interface QuizMetadata {
@@ -20,18 +20,10 @@ export interface QuizMetadata {
   };
 }
 
-export interface SavedQuiz {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  author_id: string;
+// Use Funnel from unified schema instead of custom SavedQuiz
+export interface SavedQuiz extends Omit<Funnel, 'settings'> {
   questions: QuizQuestion[];
   settings: any;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
 }
 
 /**
@@ -50,68 +42,83 @@ export const useQuizCRUD = () => {
   const [error, setError] = useState<string | null>(null);
 
   // ===== CARREGAR QUIZZES DO USUÁRIO =====
-  const loadUserQuizzes = async () => {
+  const loadUserQuizzes = async (): Promise<void> => {
     if (!user) return;
 
     setLoading(true);
     setError(null);
 
     try {
+      // Use funnels table from unified schema instead of quizzes table
       const { data, error } = await supabase
-        .from('quizzes')
-        .select(
-          `
+        .from('funnels')
+        .select(`
           id,
-          title,
+          name,
           description,
-          category,
-          difficulty,
-          author_id,
-          settings,
+          user_id,
           is_published,
+          settings,
           created_at,
           updated_at,
-          questions (
+          funnel_pages (
             id,
-            question_text,
-            question_type,
-            options,
-            correct_answers,
-            points,
-            order_index
+            page_type,
+            title,
+            blocks,
+            page_order
           )
-        `
-        )
-        .eq('author_id', user.id)
+        `)
+        .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
 
-      // Converter formato Supabase para formato interno
-      const formattedQuizzes = data.map(quiz => ({
-        ...quiz,
-        questions: quiz.questions.map((q: any) => ({
-          id: q.id,
-          title: q.question_text,
-          question: q.question_text,
-          text: q.question_text,
-          type: q.question_type === 'multiple_choice' ? 'normal' : q.question_type,
-          options: q.options || [],
-          multiSelect: q.correct_answers?.length || 1,
-          order: q.order_index,
-          points: q.points || 1,
-        })),
-      }));
+      // Convert funnel format to quiz format for backward compatibility
+      const formattedQuizzes: SavedQuiz[] = (data || []).map(funnel => {
+        // Extract questions from funnel pages
+        const questions: QuizQuestion[] = [];
+        
+        funnel.funnel_pages?.forEach(page => {
+          if (page.page_type === 'question' && page.blocks) {
+            const blocks = Array.isArray(page.blocks) ? page.blocks : [];
+            blocks.forEach((block: any) => {
+              if (block.type === 'question' || block.type === 'quiz-question') {
+                questions.push({
+                  id: block.id || `q_${page.id}`,
+                  title: block.properties?.question || page.title || '',
+                  question: block.properties?.question || page.title || '',
+                  text: block.properties?.question || page.title || '',
+                  type: block.properties?.questionType || 'normal',
+                  options: block.properties?.options || [],
+                  multiSelect: block.properties?.multiSelect || 1,
+                  order: page.page_order || 0,
+                  points: block.properties?.points || 1,
+                });
+              }
+            });
+          }
+        });
+
+        return {
+          id: funnel.id,
+          name: funnel.name,
+          description: funnel.description || '',
+          user_id: funnel.user_id || '',
+          is_published: funnel.is_published || false,
+          version: funnel.version || 1,
+          settings: funnel.settings || {},
+          created_at: funnel.created_at || new Date().toISOString(),
+          updated_at: funnel.updated_at || new Date().toISOString(),
+          questions,
+        };
+      });
 
       setQuizzes(formattedQuizzes);
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar quizzes';
+      setError(errorMessage);
       console.error('Erro ao carregar quizzes:', err);
-      setError('Erro ao carregar seus quizzes');
-      toast({
-        title: 'Erro',
-        description: 'Não foi possível carregar seus quizzes',
-        variant: 'destructive',
-      });
     } finally {
       setLoading(false);
     }

@@ -1,45 +1,12 @@
-// TODO: Fix import path for shared schema
-// import type {
-//   Funnel,
-//   InsertFunnel,
-//   FunnelPage,
-//   InsertFunnelPage,
-//   FunnelVersion,
-//   InsertFunnelVersion,
-// } from "@shared/schema";
+import type {
+  Funnel,
+  InsertFunnel,
+  FunnelPage,
+  InsertFunnelPage,
+  FunnelVersion,
+} from "@/types/unified-schema";
 
-// Temporary interface definitions until schema is fixed
-interface Funnel {
-  id: string;
-  name: string;
-  description?: string;
-  settings?: any;
-  userId?: number;
-  version?: number;
-}
-
-interface InsertFunnel extends Omit<Funnel, 'id'> {}
-
-interface FunnelPage {
-  id: string;
-  funnel_id: string;
-  name: string;
-  path: string;
-  pageType?: string;
-  title?: string;
-  pageOrder?: number;
-  blocks?: any;
-  metadata?: any;
-}
-
-interface InsertFunnelPage extends Omit<FunnelPage, 'id'> {}
-
-interface FunnelVersion {
-  id: string;
-  funnel_id: string;
-  version: number;
-}
-
+// Additional interfaces for backward compatibility
 interface InsertFunnelVersion extends Omit<FunnelVersion, 'id'> {}
 
 export interface FunnelData {
