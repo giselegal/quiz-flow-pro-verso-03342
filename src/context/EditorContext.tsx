@@ -17,6 +17,9 @@ import { performanceAnalyzer } from '../utils/performanceAnalyzer';
 import { useFunnelComponents } from '../hooks/useFunnelComponents';
 import { getFunnelIdFromEnvOrStorage, parseStepNumberFromStageId } from '../utils/funnelIdentity';
 
+// ✅ IMPORTAR SISTEMA DE MAPEAMENTO REAL DAS ETAPAS
+import { getAllSteps } from '../config/stepTemplatesMapping';
+
 // ✅ IMPORTAR HOOKS DE QUIZ PARA INTEGRAÇÃO
 import { useQuizLogic } from '../hooks/useQuizLogic';
 import { useSupabaseQuiz } from '../hooks/useSupabaseQuiz';
@@ -309,76 +312,68 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [currentQuizId, setCurrentQuizId] = useState('quiz-demo-id');
 
   // ═══════════════════════════════════════════════
-  // 🏗️ ESTADO PRINCIPAL CENTRALIZADO - FIXO PARA 21 ETAPAS
+  // 🏗️ ESTADO PRINCIPAL CENTRALIZADO - USANDO DADOS REAIS DO MAPEAMENTO
   // ═══════════════════════════════════════════════
   const [stages, setStages] = useState<FunnelStage[]>(() => {
-    console.log('🚀 EditorProvider: Inicializando diretamente 21 etapas');
+    console.log('🚀 EditorProvider: Inicializando etapas com dados REAIS do stepTemplatesMapping');
 
-    // ✅ DEFINIÇÃO DIRETA DAS 21 ETAPAS (EVITAR PROBLEMAS DE IMPORT)
-    const directStages: FunnelStage[] = [];
+    // ✅ USAR DADOS REAIS DO SISTEMA DE MAPEAMENTO
+    const realStepTemplates = getAllSteps();
+    console.log('📋 Templates reais carregados:', realStepTemplates.length);
 
-    for (let i = 1; i <= 21; i++) {
-      const stepId = `step-${String(i).padStart(2, '0')}`;
-      let name = '';
-      let type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' =
-        'question';
-      let description = '';
-
-      // Definir nomes e tipos das etapas
-      if (i === 1) {
-        name = 'Introdução';
-        type = 'intro';
-        description = 'Página inicial do quiz';
-      } else if (i >= 2 && i <= 14) {
-        name = `Q${i - 1} - Pergunta ${i - 1}`;
-        type = 'question';
-        description = `Pergunta ${i - 1} do quiz`;
-      } else if (i === 15) {
-        name = 'Nome';
-        type = 'lead';
-        description = 'Coleta de nome do usuário';
-      } else if (i === 16) {
-        name = 'Processamento';
-        type = 'processing';
-        description = 'Calculando resultado...';
-      } else if (i === 17) {
-        name = 'Resultado';
-        type = 'result';
-        description = 'Exibição do resultado';
-      } else if (i >= 18 && i <= 20) {
-        name = `Transição ${i - 17}`;
-        type = 'transition';
-        description = `Transição para oferta ${i - 17}`;
-      } else if (i === 21) {
-        name = 'Oferta Final';
-        type = 'offer';
-        description = 'Página de oferta e conversão';
+    const realStages: FunnelStage[] = realStepTemplates.map((stepTemplate) => {
+      const stepNumber = stepTemplate.stepNumber;
+      const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
+      
+      // Determinar tipo da etapa baseado no conteúdo real
+      let type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' = 'question';
+      
+      if (stepNumber === 1) {
+        type = 'intro'; // Introdução
+      } else if (stepNumber === 2) {
+        type = 'lead'; // Nome (captura de lead)
+      } else if (stepNumber >= 3 && stepNumber <= 13) {
+        type = 'question'; // Perguntas principais do quiz
+      } else if (stepNumber === 14) {
+        type = 'question'; // Última pergunta estratégica
+      } else if (stepNumber === 15) {
+        type = 'transition'; // Transição
+      } else if (stepNumber === 16) {
+        type = 'processing'; // Processamento
+      } else if (stepNumber >= 17 && stepNumber <= 19) {
+        type = 'result'; // Resultados
+      } else if (stepNumber === 20) {
+        type = 'offer'; // Oferta/Conversão
+      } else if (stepNumber === 21) {
+        type = 'offer'; // Thank you page
       }
 
-      directStages.push({
+      return {
         id: stepId,
-        name,
-        order: i,
+        name: stepTemplate.name, // ✅ NOME REAL DO TEMPLATE
+        order: stepNumber,
         type,
-        description,
-        isActive: i === 1,
+        description: stepTemplate.description, // ✅ DESCRIÇÃO REAL DO TEMPLATE
+        isActive: stepNumber === 1,
         metadata: {
           blocksCount: 0,
           lastModified: new Date(),
           isCustom: false,
           templateBlocks: [],
         },
-      });
-    }
+      };
+    });
 
-    console.log('✅ EditorProvider: 21 etapas criadas diretamente:', directStages.length);
-    console.log('✅ EditorProvider: Primeira etapa:', directStages[0]);
-    console.log('✅ EditorProvider: Última etapa:', directStages[directStages.length - 1]);
+    console.log('✅ EditorProvider: Etapas REAIS sincronizadas:', realStages.length);
+    console.log('✅ EditorProvider: Primeira etapa REAL:', realStages[0]);
+    console.log('✅ EditorProvider: Segunda etapa REAL (Nome):', realStages[1]);
+    console.log('✅ EditorProvider: Terceira etapa REAL (Roupa Favorita):', realStages[2]);
+    console.log('✅ EditorProvider: Última etapa REAL:', realStages[realStages.length - 1]);
     console.log(
-      '✅ EditorProvider: Lista das etapas:',
-      directStages.map(s => `${s.order}: ${s.name}`)
+      '✅ EditorProvider: Lista das etapas REAIS:',
+      realStages.map(s => `${s.order}: ${s.name}`)
     );
-    return directStages;
+    return realStages;
   });
 
   const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
