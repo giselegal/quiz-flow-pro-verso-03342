@@ -1,33 +1,12 @@
-// 🔗 CONNECTED STEP 02 TEMPLATE - Integrado com Hooks do Sistema
-// Versão conectada que usa useQuizLogic e useSupabaseQuiz
+// 🔗 CONNECTED STEP 02 TEMPLATE - Versão Corrigida sem Hooks
+// Template que retorna array de blocos JSON puro, sem dependência de React hooks
 
-import { useCallback } from 'react';
-import { useQuizLogic } from '@/hooks/useQuizLogic';
 import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
 export const ConnectedStep02Template = () => {
-  const { answerQuestion, answers } = useQuizLogic();
-  
-  // 🎯 Buscar questão real dos dados
+  // 🎯 Buscar questão real dos dados (SEM HOOKS)
   const questionData = COMPLETE_QUIZ_QUESTIONS.find(q => q.id === 'q1') || COMPLETE_QUIZ_QUESTIONS[1];
   
-  const handleOptionSelect = useCallback(async (optionIds: string[]) => {
-    try {
-      // 🎯 Usar hook real do sistema - answerQuestion espera 2 argumentos
-      const selectedOption = questionData.options.find((opt: any) => optionIds.includes(opt.id));
-      if (selectedOption) {
-        await answerQuestion(questionData.id, selectedOption.id);
-        
-        console.log('✅ Connected Step02: Resposta salva via hooks', { 
-          questionId: questionData.id, 
-          selectedOptions: optionIds 
-        });
-      }
-    } catch (error) {
-      console.error('❌ Connected Step02: Erro ao salvar resposta', error);
-    }
-  }, [answerQuestion, questionData]);
-
   return [
     // 📱 CABEÇALHO COM LOGO E PROGRESSO
     {
@@ -95,29 +74,18 @@ export const ConnectedStep02Template = () => {
         })),
 
         // 🎨 LAYOUT
+        layout: 'grid',
         columns: 2,
-        imageSize: 256,
-        showImages: true,
-
-        // 🎯 VALIDAÇÃO BASEADA NOS DADOS REAIS
-        multipleSelection: (questionData.multiSelect || 1) > 1,
-        maxSelections: questionData.multiSelect || 3,
-        minSelections: questionData.multiSelect || 3,
-        autoAdvanceOnComplete: true,
+        gap: 16,
+        
+        // 🔗 Integração via eventos (sem hooks diretos)
+        questionId: questionData.id,
+        
+        // Comportamento
+        allowMultiple: false,
+        maxSelection: questionData.multiSelect || 1,
         autoAdvance: true,
-
-        // 🔗 HANDLER CONECTADO
-        onSelectionChange: handleOptionSelect,
-
-        // 🎨 CORES DO SISTEMA
-        borderColor: '#E5E7EB',
-        selectedBorderColor: '#B89B7A',
-        hoverColor: '#F3E8D3',
-
-        // 📊 STATUS - Usando answers do useQuizLogic
-        currentSelections: answers.filter(a => a.questionId === questionData.id).map(a => a.optionId) || [],
-        isLoading: false,
-
+        
         containerWidth: 'full',
         spacing: 'small',
         marginBottom: 16,
@@ -130,32 +98,19 @@ export const ConnectedStep02Template = () => {
       type: 'button-inline',
       properties: {
         text: 'Continuar →',
-        textWhenDisabled: 'Selecione 3 opções para continuar',
-        textWhenComplete: 'Continuar',
-
         variant: 'primary',
         size: 'large',
         backgroundColor: '#B89B7A',
         textColor: '#ffffff',
-        disabledBackgroundColor: '#d1d5db',
-        disabledTextColor: '#9ca3af',
-
-        // 🔗 ESTADO CONECTADO - Usando answers do useQuizLogic
-        disabled: answers.filter(a => a.questionId === questionData.id).length < (questionData.multiSelect || 3),
-        requiresValidInput: true,
-        instantActivation: false,
-
         fullWidth: true,
         marginTop: 24,
         textAlign: 'text-center',
         spacing: 'small',
         marginBottom: 0,
-
-        // 🔗 HANDLER DE NAVEGAÇÃO CONECTADO
-        onClick: () => {
-          console.log('🎯 Connected Step02: Navegando para próximo step');
-          // Aqui seria integrado com sistema de navegação
-        }
+        
+        // 🎯 Integração via evento de navegação
+        onClick: 'navigate-next-step',
+        stepId: 'step-02'
       },
     },
   ];
@@ -163,8 +118,7 @@ export const ConnectedStep02Template = () => {
 
 // 🎯 FUNÇÃO WRAPPER PARA COMPATIBILIDADE
 export const getConnectedStep02Template = () => {
-  const component = ConnectedStep02Template();
-  return component;
+  return ConnectedStep02Template();
 };
 
 export default ConnectedStep02Template;

@@ -1,26 +1,28 @@
 // src/config/stepTemplatesMapping.ts
 // Mapeamento das 21 etapas para seus templates específicos (usando templates TSX reais)
 
-// ✅ IMPORTS DOS TEMPLATES TSX REAIS (CONECTADOS)
+// ✅ IMPORTS DOS TEMPLATES CORRIGIDOS
 import { getStep01Template } from '@/components/steps/Step01Template';
 import { getConnectedStep02Template } from '@/components/steps/ConnectedStep02Template';
-import { getConnectedStep03Template } from '@/components/steps/ConnectedStep03Template';
-import { getConnectedStep04Template } from '@/components/steps/ConnectedStep04Template';
-import { getConnectedStep05Template } from '@/components/steps/ConnectedStep05Template';
-import { getConnectedStep06Template } from '@/components/steps/ConnectedStep06Template';
-import { getConnectedStep07Template } from '@/components/steps/ConnectedStep07Template';
-import { getConnectedStep08Template } from '@/components/steps/ConnectedStep08Template';
-import { getConnectedStep09Template } from '@/components/steps/ConnectedStep09Template';
-import { getConnectedStep10Template } from '@/components/steps/ConnectedStep10Template';
-import { getConnectedStep11Template } from '@/components/steps/ConnectedStep11Template';
-import { getConnectedStep12Template } from '@/components/steps/ConnectedStep12Template';
-import { getConnectedStep13Template } from '@/components/steps/ConnectedStep13Template';
-import { getConnectedStep14Template } from '@/components/steps/ConnectedStep14Template';
-import { getConnectedStep15Template } from '@/components/steps/ConnectedStep15Template';
-import { getConnectedStep16Template } from '@/components/steps/ConnectedStep16Template';
-import { getConnectedStep17Template } from '@/components/steps/ConnectedStep17Template';
-import { getConnectedStep18Template } from '@/components/steps/ConnectedStep18Template';
-import { getConnectedStep19Template } from '@/components/steps/ConnectedStep19Template';
+import { 
+  getConnectedStep03Template,
+  getConnectedStep04Template,
+  getConnectedStep05Template,
+  getConnectedStep06Template,
+  getConnectedStep07Template,
+  getConnectedStep08Template,
+  getConnectedStep09Template,
+  getConnectedStep10Template,
+  getConnectedStep11Template,
+  getConnectedStep12Template,
+  getConnectedStep13Template,
+  getConnectedStep14Template,
+  getConnectedStep15Template,
+  getConnectedStep16Template,
+  getConnectedStep17Template,
+  getConnectedStep18Template,
+  getConnectedStep19Template,
+} from '@/components/steps/ConnectedStepsFixed';
 import { getStep20Template } from '@/components/steps/Step20Template';
 import { getStep21Template } from '@/components/steps/Step21Template';
 
