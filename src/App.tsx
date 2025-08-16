@@ -52,7 +52,7 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
-const EditorFixedSimple = lazy(() => import('./pages/EditorFixedSimple'));
+
 
 // Loading component
 const PageLoading = () => (
@@ -85,11 +85,13 @@ function App() {
                       <Suspense fallback={<PageLoading />}>
                         <ErrorBoundary>
                           <EditorProvider>
-                            <ScrollSyncProvider>
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
-                            </ScrollSyncProvider>
+                            <FunnelsProvider debug={true}>
+                              <ScrollSyncProvider>
+                                <div className="relative">
+                                  <EditorWithPreview />
+                                </div>
+                              </ScrollSyncProvider>
+                            </FunnelsProvider>
                           </EditorProvider>
                         </ErrorBoundary>
                       </Suspense>
@@ -106,11 +108,13 @@ function App() {
                       <Suspense fallback={<PageLoading />}>
                         <ErrorBoundary>
                           <EditorProvider>
-                            <ScrollSyncProvider>
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
-                            </ScrollSyncProvider>
+                            <FunnelsProvider debug={true}>
+                              <ScrollSyncProvider>
+                                <div className="relative">
+                                  <EditorWithPreview />
+                                </div>
+                              </ScrollSyncProvider>
+                            </FunnelsProvider>
                           </EditorProvider>
                         </ErrorBoundary>
                       </Suspense>
