@@ -52,12 +52,13 @@ export const getMarginClass = (value, type) => {
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
-    { type: 'text', label: 'Texto' },
-    { type: 'header', label: 'Cabeçalho' },
-    { type: 'image', label: 'Imagem' },
-    { type: 'button', label: 'Botão' },
-    { type: 'rich-text', label: 'Texto Rico' },
+    { type: 'text-inline', label: 'Texto' },
+    { type: 'heading', label: 'Cabeçalho' },
+    { type: 'image-display-inline', label: 'Imagem' },
+    { type: 'button-inline', label: 'Botão' },
     { type: 'lead-form', label: 'Formulário Lead' },
+    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz' },
+    { type: 'form-input', label: 'Campo de Entrada' },
   ];
 
   return (

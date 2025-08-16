@@ -1,107 +1,69 @@
+import React from 'react';
+import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+
 /**
- * OPTIMIZED REGISTRY WRAPPER - Wrapper otimizado para o Enhanced Block Registry
- * ✅ Cache de componentes para melhor performance
- * ✅ Logs controlados
- * ✅ Fallback inteligente
+ * Registry otimizado para busca rápida de componentes
  */
 
-import { perfLogger } from '@/utils/performanceLogger';
-import { getBlockComponent as originalGetBlockComponent } from '@/config/enhancedBlockRegistry';
-import React from 'react';
-
-// Fallback component para casos de erro
-const FallbackComponent: React.FC<any> = ({ type, ...props }) => {
-  return React.createElement('div', { 
-    className: "p-4 border-2 border-dashed border-gray-300 rounded bg-gray-50" 
+// Fallback component para tipos não encontrados
+const FallbackComponent: React.FC<any> = ({ block }) => {
+  return React.createElement('div', {
+    className: 'p-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 text-center'
   }, [
-    React.createElement('h4', { 
-      key: 'title',
-      className: "font-medium text-gray-600 mb-2" 
-    }, `Componente não encontrado: ${type || 'unknown'}`),
-    React.createElement('pre', { 
-      key: 'props',
-      className: "text-xs text-gray-500 overflow-auto" 
-    }, JSON.stringify(props, null, 2))
+    React.createElement('p', { 
+      key: 'message',
+      className: 'text-gray-600 font-medium' 
+    }, `Componente não encontrado: ${block?.type || 'unknown'}`),
+    React.createElement('p', { 
+      key: 'instruction',
+      className: 'text-xs text-gray-500 mt-1' 
+    }, 'Verifique se o componente está registrado')
   ]);
 };
 
-// Cache de componentes para evitar re-lookups
-const componentCache = new Map<string, React.ComponentType<any>>();
-const failureCache = new Set<string>();
-
 /**
- * Wrapper otimizado do getBlockComponent com cache e logs controlados
+ * Buscar componente otimizado no registry
  */
 export const getOptimizedBlockComponent = (type: string): React.ComponentType<any> => {
-  if (!type) {
-    perfLogger.warn('Block type not provided, using fallback');
-    return FallbackComponent;
-  }
-
-  // Cache hit - melhor performance
-  if (componentCache.has(type)) {
-    return componentCache.get(type)!;
-  }
-
-  // Se já sabemos que falha, não tenta novamente
-  if (failureCache.has(type)) {
-    perfLogger.debug(`Using cached failure for type: ${type}`);
-    return FallbackComponent;
-  }
-
-  perfLogger.startMeasure(`get-component-${type}`);
+  // Buscar no registry principal
+  const component = ENHANCED_BLOCK_REGISTRY[type];
   
-  try {
-    const component = originalGetBlockComponent(type);
-    
-    if (!component) {
-      // Cache a falha e retorna fallback
-      failureCache.add(type);
-      perfLogger.endMeasure(`get-component-${type}`);
-      perfLogger.debug(`Component not found, using fallback: ${type}`);
-      return FallbackComponent;
-    }
-    
-    // Cache o resultado para próximas chamadas
-    componentCache.set(type, component);
-    
-    perfLogger.endMeasure(`get-component-${type}`);
-    perfLogger.debug(`Component cached: ${type}`);
-    
+  if (component) {
+    console.log(`✅ Componente encontrado: ${type}`);
     return component;
-  } catch (error) {
-    perfLogger.error(`Failed to get component for type: ${type}`, error);
-    
-    // Cache a falha para evitar tentativas repetidas
-    failureCache.add(type);
-    
-    perfLogger.endMeasure(`get-component-${type}`);
-    
-    return FallbackComponent;
   }
+  
+  // Log para debug
+  console.warn(`⚠️ Componente não encontrado: ${type}`);
+  console.log('Componentes disponíveis:', Object.keys(ENHANCED_BLOCK_REGISTRY));
+  
+  // Retornar fallback
+  return FallbackComponent;
 };
 
 /**
- * Limpa o cache de componentes (útil em desenvolvimento)
+ * Verificar se componente existe
  */
-export const clearComponentCache = () => {
-  componentCache.clear();
-  failureCache.clear();
-  perfLogger.info('Component cache cleared');
+export const hasOptimizedBlockComponent = (type: string): boolean => {
+  return type in ENHANCED_BLOCK_REGISTRY;
 };
 
 /**
- * Estatísticas do cache para debugging
+ * Listar todos os componentes disponíveis
  */
-export const getCacheStats = () => {
+export const getAvailableOptimizedComponents = (): string[] => {
+  return Object.keys(ENHANCED_BLOCK_REGISTRY);
+};
+
+/**
+ * Estatísticas do registry otimizado
+ */
+export const getOptimizedRegistryStats = () => {
+  const totalComponents = Object.keys(ENHANCED_BLOCK_REGISTRY).length;
+  
   return {
-    cached: componentCache.size,
-    failures: failureCache.size,
-    hitRate: componentCache.size / (componentCache.size + failureCache.size) || 0
+    totalComponents,
+    components: Object.keys(ENHANCED_BLOCK_REGISTRY),
+    hasFallback: true,
   };
 };
-
-// Exportar o getBlockComponent otimizado como padrão
-export { getOptimizedBlockComponent as getBlockComponent };
-
-export default getOptimizedBlockComponent;
