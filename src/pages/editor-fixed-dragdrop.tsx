@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ErrorBoundary from '@/components/editor/ErrorBoundary';
 import { PreviewProvider } from '@/contexts/PreviewContext';
 import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
+import { FunnelsProvider, useFunnels } from '@/context/FunnelsContext';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
