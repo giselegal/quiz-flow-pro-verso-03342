@@ -6,7 +6,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
-// Removed useEditor dependency to work outside editor context
+import { useEditor } from '@/context/EditorContext';
 import { quizResultsService, type QuizResults } from '@/services/quizResultsService';
 import { styleConfig } from '@/config/styleConfig';
 import {
