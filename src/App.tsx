@@ -127,9 +127,11 @@ function App() {
                         <ErrorBoundary>
                           <EditorProvider>
                             <ScrollSyncProvider>
-                              <div className="relative">
-                                <LiveEditorPage />
-                              </div>
+                              <PreviewProvider totalSteps={21} funnelId="live-editor">
+                                <div className="relative">
+                                  <LiveEditorPage />
+                                </div>
+                              </PreviewProvider>
                             </ScrollSyncProvider>
                           </EditorProvider>
                         </ErrorBoundary>
