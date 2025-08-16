@@ -1,6 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
+import {
+  QUIZ_QUESTIONS_COMPLETE,
+  QUIZ_STYLE_21_STEPS_TEMPLATE,
+} from '../templates/quiz21StepsComplete';
 
 interface FunnelStep {
   id: string;
@@ -55,23 +58,32 @@ const FUNNEL_TEMPLATES: Record<
     defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
       const stepNumber = parseInt(stepNum);
       const stepId = `step-${stepNumber}`;
-      const questionText = QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
-      
+      const questionText =
+        QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+
       return {
         id: stepId,
         name: `Etapa ${stepNumber}`,
         order: stepNumber,
         blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
         isActive: true,
-        type: stepNumber === 1 ? 'lead-collection' :
-              stepNumber >= 2 && stepNumber <= 11 ? 'scored-question' :
-              stepNumber === 12 ? 'transition' :
-              stepNumber >= 13 && stepNumber <= 18 ? 'strategic-question' :
-              stepNumber === 19 ? 'transition' :
-              stepNumber === 20 ? 'result' : 'offer',
-        description: questionText
+        type:
+          stepNumber === 1
+            ? 'lead-collection'
+            : stepNumber >= 2 && stepNumber <= 11
+              ? 'scored-question'
+              : stepNumber === 12
+                ? 'transition'
+                : stepNumber >= 13 && stepNumber <= 18
+                  ? 'strategic-question'
+                  : stepNumber === 19
+                    ? 'transition'
+                    : stepNumber === 20
+                      ? 'result'
+                      : 'offer',
+        description: questionText,
       };
-    })
+    }),
   },
   'quiz-estilo': {
     name: 'Quiz de Estilo',
