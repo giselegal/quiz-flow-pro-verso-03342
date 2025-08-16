@@ -105,7 +105,7 @@ const FormContainerBlock: React.FC<BlockComponentProps> = ({ block }) => {
           return <Component 
             key={childBlock.id} 
             block={childBlock}
-            properties={childBlock.properties}
+            properties={childBlock.properties as any}
             {...childBlock.properties}
           />;
         })}
