@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Simplified Quiz Data Adapter
 // Placeholder service to avoid complex type issues
 

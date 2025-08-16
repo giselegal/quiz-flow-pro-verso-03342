@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { QuizBuilderState } from '@/types/quizBuilder';
 import { generateId } from '@/utils/idGenerator';
 

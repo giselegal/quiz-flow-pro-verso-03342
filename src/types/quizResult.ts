@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { StyleResult } from './quiz';
 
 export interface ResultPageBlock {

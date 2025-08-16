@@ -1,4 +1,3 @@
-// @ts-nocheck
 export const giseleStyleTemplate = {
   styleType: 'Natural',
   header: {

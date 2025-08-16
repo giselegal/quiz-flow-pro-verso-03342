@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { QuizQuestion } from './quiz';
 
 export const QUIZ_CATEGORIES = [
