@@ -52,19 +52,17 @@ export const getMarginClass = (value, type) => {
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
-    { type: 'text-inline', label: 'Texto' },
-    { type: 'heading', label: 'Título' },
-    { type: 'image-display-inline', label: 'Imagem' },
-    { type: 'button-inline', label: 'Botão' },
-    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz' },
-    { type: 'form-input', label: 'Campo de Entrada' },
+    { type: 'text', label: 'Texto' },
+    { type: 'header', label: 'Cabeçalho' },
+    { type: 'image', label: 'Imagem' },
+    { type: 'button', label: 'Botão' },
+    { type: 'rich-text', label: 'Texto Rico' },
     { type: 'lead-form', label: 'Formulário Lead' },
-    { type: 'decorative-bar-inline', label: 'Barra Decorativa' },
   ];
 
   return (
-    <div style={{ backgroundColor: '#FAF9F7' }}>
-      <h3 className="text-lg font-semibold mb-4">Components</h3>
+    <div className="h-full p-4" style={{ backgroundColor: '#FAF9F7' }}>
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">Componentes</h3>
       <div className="space-y-2">
         {components.map(component => (
           <Button

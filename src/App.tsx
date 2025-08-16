@@ -124,17 +124,11 @@ function App() {
                     console.log('🚀 App: Carregando LiveEditorPage');
                     return (
                       <Suspense fallback={<PageLoading />}>
-                        <ErrorBoundary>
-                          <EditorProvider>
-                            <ScrollSyncProvider>
-                              <PreviewProvider totalSteps={21} funnelId="live-editor">
-                                <div className="relative">
-                                  <LiveEditorPage />
-                                </div>
-                              </PreviewProvider>
-                            </ScrollSyncProvider>
-                          </EditorProvider>
-                        </ErrorBoundary>
+                       <ErrorBoundary>
+                           <div className="relative">
+                             <LiveEditorPage />
+                           </div>
+                         </ErrorBoundary>
                       </Suspense>
                     );
                   }}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useEditor } from '@/context/EditorContext';
-import { usePropertyHistory } from '@/hooks/usePropertyHistory';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { CanvasDropZone } from './canvas/CanvasDropZone';
-import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
-import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
+import { useEditor } from '@/context/EditorContext.simple';
+import { usePropertyHistory } from '@/hooks/usePropertyHistory.simple';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts.simple';
+import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
+import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel.simple';
+import FunnelStagesPanel from './funnel/FunnelStagesPanel.simple';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
 import FunnelNavbar from '../live-editor/navbar/FunnelNavbar';
 
