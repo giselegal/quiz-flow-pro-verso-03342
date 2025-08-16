@@ -1,5 +1,5 @@
-import { DragEndEvent } from '@dnd-kit/core';
 import { EditorBlock } from '@/types/editor';
+import { DragEndEvent } from '@dnd-kit/core';
 
 interface EditorContentProps {
   blocks: EditorBlock[];
@@ -10,14 +10,7 @@ interface EditorContentProps {
   isPreviewing: boolean;
 }
 
-export const EditorContent: React.FC<EditorContentProps> = ({
-  blocks,
-  onDragEnd: _onDragEnd,
-  onAddBlock: _onAddBlock,
-  onUpdateBlock: _onUpdateBlock,
-  onDeleteBlock: _onDeleteBlock,
-  isPreviewing: _isPreviewing,
-}) => {
+export const EditorContent: React.FC<EditorContentProps> = ({ blocks }) => {
   const renderBlock = (block: EditorBlock) => {
     const isSelected = false;
 

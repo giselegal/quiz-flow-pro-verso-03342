@@ -1,8 +1,7 @@
 
-import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react';
 import { Block, BlockType } from '@/types/editor';
 import { EditorState, EditorAction } from '@/types/editorTypes';
-import { stepTemplatesMapping } from '@/config/stepTemplatesMapping';
 
 // Extended interface with all expected properties
 interface EditorContextType {
@@ -15,6 +14,9 @@ interface EditorContextType {
   updateBlock: (id: string, content: any) => Promise<void>;
   deleteBlock: (id: string) => Promise<void>;
   reorderBlocks: (startIndex: number, endIndex: number) => void;
+  selectBlock: (id: string | null) => void;
+  togglePreview: (preview?: boolean) => void;
+  save: () => Promise<void>;
   
   // Selection
   selectedBlock: Block | null;
@@ -180,6 +182,18 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     dispatch({ type: 'SET_GLOBAL_STYLES_OPEN', payload: open });
   }, []);
 
+  const selectBlock = useCallback((id: string | null) => {
+    setSelectedBlockId(id);
+  }, [setSelectedBlockId]);
+
+  const togglePreview = useCallback((preview?: boolean) => {
+    setIsPreviewing(preview !== undefined ? preview : !state.isPreviewing);
+  }, [state.isPreviewing, setIsPreviewing]);
+
+  const save = useCallback(async () => {
+    console.log('Saving editor state');
+  }, []);
+
   // Mock data for stages (21 stages)
   const stages = useMemo(() => {
     return Array.from({ length: 21 }, (_, i) => ({
@@ -262,6 +276,9 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     updateBlock,
     deleteBlock,
     reorderBlocks,
+    selectBlock,
+    togglePreview,
+    save,
     
     // Selection
     selectedBlock: computed.selectedBlock,
