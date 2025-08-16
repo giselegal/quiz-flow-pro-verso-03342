@@ -140,16 +140,19 @@ const TextBlock: React.FC<{ block: Block; isPreviewMode: boolean }> = ({ block }
 };
 
 const QuizHeaderBlock: React.FC<{ block: Block; stepNumber?: number }> = ({ block, stepNumber }) => {
+  const properties = block.properties || {};
   const { 
     logoUrl = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
     logoAlt = 'Logo Gisele Galvão',
-    logoWidth = 96,
-    logoHeight = 96,
     progressValue,
     showProgress = true,
     progressColor = '#B89B7A',
     backgroundColor = '#FAF9F7'
-  } = block.properties || {};
+  } = properties;
+  
+  // Safe numeric values with fallbacks
+  const logoWidth = typeof properties.logoWidth === 'number' ? properties.logoWidth : 96;
+  const logoHeight = typeof properties.logoHeight === 'number' ? properties.logoHeight : 96;
 
   const calculatedProgress = progressValue || ((stepNumber || 1) / 21) * 100;
 

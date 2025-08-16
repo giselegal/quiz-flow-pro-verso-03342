@@ -68,6 +68,12 @@ const EditorFixed21Stages: React.FC = () => {
           title: templateBlock.properties?.title || '',
           subtitle: templateBlock.properties?.subtitle || ''
         };
+        // Ensure numeric properties are properly set
+        baseBlock.properties = {
+          ...templateBlock.properties,
+          logoWidth: typeof templateBlock.properties?.logoWidth === 'number' ? templateBlock.properties.logoWidth : 96,
+          logoHeight: typeof templateBlock.properties?.logoHeight === 'number' ? templateBlock.properties.logoHeight : 96
+        };
         break;
         
       case 'lead-form':
