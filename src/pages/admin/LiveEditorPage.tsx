@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import LiveQuizEditor from '@/components/live-editor/LiveQuizEditor';
+// LiveQuizEditor removed during cleanup
 import { useLiveEditor } from '@/hooks/useLiveEditor';
 
 const LiveEditorPage: React.FC = () => {
@@ -49,8 +49,9 @@ const LiveEditorPage: React.FC = () => {
       </div>
 
       {/* Editor */}
-      <div className="flex-1">
-        <LiveQuizEditor />
+      <div className="flex-1 p-8 text-center">
+        <h2 className="text-xl font-bold mb-4">Live Quiz Editor</h2>
+        <p className="text-gray-600">Component removed during cleanup. Please use /editor or /editor-fixed instead.</p>
       </div>
     </div>
   );
