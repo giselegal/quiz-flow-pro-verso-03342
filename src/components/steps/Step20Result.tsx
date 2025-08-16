@@ -6,7 +6,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useQuizLogic } from '@/hooks/useQuizLogic';
-import { useEditor } from '@/context/EditorContext';
+// Removed useEditor dependency to work outside editor context
 import { quizResultsService, type QuizResults } from '@/services/quizResultsService';
 import { styleConfig } from '@/config/styleConfig';
 import {
@@ -55,16 +55,15 @@ export default function Step20Result({ sessionId, onContinue }: Step20ResultProp
       setLoading(true);
       setError(null);
 
-      // ✅ PRIORIDADE 1: Usar resultado REAL do useQuizLogic integrado com EditorContext
+      // ✅ PRIORIDADE 1: Usar resultado REAL do useQuizLogic
       if (quizResult && quizResult.primaryStyle) {
         console.log('✅ Step20: Usando resultado REAL do quiz:', {
           primaryStyle: quizResult.primaryStyle,
-          userName: quizState.userName || userName,
-          totalAnswers: quizState.answers.length,
-          strategicAnswers: quizState.strategicAnswers.length
+          userName: userName,
+          totalAnswers: answers.length
         });
         
-        const realUserName = quizState.userName || userName || 'Usuário';
+        const realUserName = userName || 'Usuário';
         const primaryStyleName = quizResult.primaryStyle.category;
         
         const mappedResults: QuizResults = {
