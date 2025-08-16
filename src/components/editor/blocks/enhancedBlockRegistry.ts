@@ -4,7 +4,7 @@ import { lazy } from 'react';
 // Mapeamento de tipos de blocos para componentes específicos do quiz
 export const ENHANCED_BLOCK_REGISTRY = {
   // ✅ Componentes principais do quiz (com identidade visual da marca)
-  'quiz-intro-header': lazy(() => import('@/components/blocks/unified/UnifiedHeaderVariant').then(module => ({ default: module.QuizIntroHeaderBlock }))),
+  'quiz-intro-header': lazy(() => import('@/components/editor/blocks/TextInlineBlock')), // Fallback temporário
   'text-inline': lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
   'options-grid': lazy(() => import('@/components/editor/blocks/OptionsGridBlock')), 
   'button-inline': lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),

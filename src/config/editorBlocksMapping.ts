@@ -7,8 +7,8 @@
 
 import { ComponentType } from 'react';
 import {
-  getBlockComponent as getEnhancedComponent,
-} from './enhancedBlockRegistry';
+  getEnhancedBlockComponent as getEnhancedComponent,
+} from '@/components/editor/blocks/enhancedBlockRegistry';
 
 // Import the new LeadFormBlock for direct mapping
 import LeadFormBlock from '../components/editor/blocks/LeadFormBlock';

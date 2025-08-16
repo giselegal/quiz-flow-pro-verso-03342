@@ -6,7 +6,7 @@ import { Search, Layout } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
 
 interface SmartComponentsPanelProps {
   onAddComponent?: (type: string) => void;
@@ -16,11 +16,16 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
   const [searchTerm, setSearchTerm] = useState('');
 
   // Use real block definitions from registry
-  const allComponents = generateBlockDefinitions();
+  const allComponents = AVAILABLE_COMPONENTS.map(comp => ({
+    type: comp.type,
+    name: comp.label,
+    category: comp.category,
+    description: `Componente ${comp.label}`
+  }));
 
   // Filter based on search term
   const components = allComponents.filter(
-    comp =>
+    (comp: any) =>
       comp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       comp.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -46,7 +51,7 @@ const SmartComponentsPanel: React.FC<SmartComponentsPanelProps> = ({ onAddCompon
         {components.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">No components found</p>
         ) : (
-          components.map(component => (
+          components.map((component: any) => (
             <Button
               key={component.type}
               variant="outline"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ENHANCED_BLOCK_REGISTRY } from '@/config/enhancedBlockRegistry';
+import { ENHANCED_BLOCK_REGISTRY } from '@/components/editor/blocks/enhancedBlockRegistry';
 
 /**
  * Registry otimizado para busca rápida de componentes
@@ -26,7 +26,7 @@ const FallbackComponent: React.FC<any> = ({ block }) => {
  */
 export const getOptimizedBlockComponent = (type: string): React.ComponentType<any> => {
   // Buscar no registry principal
-  const component = ENHANCED_BLOCK_REGISTRY[type];
+  const component = ENHANCED_BLOCK_REGISTRY[type as keyof typeof ENHANCED_BLOCK_REGISTRY];
   
   if (component) {
     console.log(`✅ Componente encontrado: ${type}`);

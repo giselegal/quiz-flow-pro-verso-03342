@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { cn } from '@/lib/utils';
 import type { BlockData } from '@/types/blocks';
 import {
@@ -179,7 +179,7 @@ const DraggableBlock: React.FC<DraggableBlockProps> = ({
               </Badge>
 
               {/* Block Status */}
-              {getBlockComponent(block.type) ? (
+              {getEnhancedBlockComponent(block.type) ? (
                 <div className="w-2 h-2 bg-green-500 rounded-full" title="Componente disponível" />
               ) : (
                 <div style={{ backgroundColor: '#FAF9F7' }} title="Componente não encontrado" />
@@ -395,7 +395,7 @@ const DragAndDropEditor: React.FC<DragAndDropEditorProps> = ({
             <div className="flex items-center gap-1">
               <Eye className="w-3 h-3" />
               <span>
-                {blocks.filter(b => getBlockComponent(b.type)).length} de {blocks.length} funcionais
+                {blocks.filter(b => getEnhancedBlockComponent(b.type)).length} de {blocks.length} funcionais
               </span>
             </div>
           </div>

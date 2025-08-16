@@ -2,7 +2,7 @@ import { DraggableComponentItem } from '@/components/editor/dnd/DraggableCompone
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { generateBlockDefinitions } from '@/config/enhancedBlockRegistry';
+import { AVAILABLE_COMPONENTS } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 
 import {
@@ -33,7 +33,12 @@ const EnhancedComponentsSidebar: React.FC<EnhancedComponentsSidebarProps> = () =
   });
 
   // 🎯 Blocos principais do editor-fixed (limpos do EnhancedBlockRegistry)
-  const allBlocks = generateBlockDefinitions() as any[];
+  const allBlocks = AVAILABLE_COMPONENTS.map(comp => ({
+    type: comp.type,
+    name: comp.label,
+    category: comp.category,
+    description: `Componente ${comp.label}`
+  }));
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);

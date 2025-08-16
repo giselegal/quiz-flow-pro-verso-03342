@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { getBlockComponent } from '@/config/enhancedBlockRegistry';
+import { getEnhancedBlockComponent } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { cn } from '@/lib/utils';
 import {
   BarChart3,
@@ -204,7 +204,7 @@ const ComponentsLibrary: React.FC<ComponentsLibraryProps> = ({ onAddBlock, class
 
   const renderComponentCard = (component: any, showCategory: boolean = false) => {
     const Icon = component.icon;
-    const isAvailable = getBlockComponent(component.type) !== null;
+    const isAvailable = getEnhancedBlockComponent(component.type) !== null;
 
     return (
       <TooltipProvider key={component.type}>
