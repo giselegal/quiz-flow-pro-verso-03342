@@ -17,7 +17,7 @@
  * - Type safety
  */
 
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { UnifiedBlock, UnifiedStage, UnifiedFunnel } from '../../types/master-schema';
 
 // =============================================================================
@@ -166,7 +166,9 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
         id,
         name: 'Mock Funnel',
         stages: [],
-        settings: {}
+        settings: {},
+        status: 'draft' as const,
+        version: '1.0'
       };
 
       setState(prev => ({
@@ -490,7 +492,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       return addBlock(state.activeStageId, type);
     },
     updateBlock,
-    deleteBlock: async (id: string) => {
+    deleteBlock: async (_blockId: string) => {
       // Implementation for delete block
       console.warn('Legacy deleteBlock called - implement as needed');
     }

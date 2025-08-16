@@ -12,7 +12,7 @@
  * - Memory leak prevention
  */
 
-import { UnifiedFunnel, ValidationService, UnifiedFunnelSchema } from '../types/master-schema';
+import { ValidationService, UnifiedFunnelSchema } from '../types/master-schema';
 
 export interface PersistenceOptions {
   immediate?: boolean;
@@ -84,7 +84,7 @@ export class UnifiedPersistenceService {
   }
 
   private async performSave(data: any, options: { validate: boolean; backup: boolean; timeout: number }): Promise<PersistenceResult> {
-    const startTime = Date.now();
+    // const _startTime = Date.now();
 
     try {
       // Validation
@@ -136,7 +136,7 @@ export class UnifiedPersistenceService {
     }
   }
 
-  private async saveToSupabase(data: any, timeout: number): Promise<PersistenceResult> {
+  private async saveToSupabase(data: any, _timeout: number): Promise<PersistenceResult> {
     try {
       // Mock Supabase implementation
       // TODO: Replace with actual Supabase integration
@@ -264,7 +264,7 @@ export class UnifiedPersistenceService {
     }
   }
 
-  private async loadFromSupabase(id: string, timeout: number): Promise<PersistenceResult> {
+  private async loadFromSupabase(_id: string, _timeout: number): Promise<PersistenceResult> {
     try {
       // Mock Supabase implementation
       // TODO: Replace with actual Supabase integration

@@ -268,7 +268,12 @@ export class SchemaMigration {
         type: legacy.type || 'text',
         label: legacy.label || legacy.title || legacy.key || 'Unknown',
         defaultValue: legacy.defaultValue ?? legacy.default ?? '',
-        category: legacy.category || 'content'
+        category: legacy.category || 'content',
+        version: '1.0',
+        hidden: false,
+        order: 0,
+        required: false,
+        readonly: false
       };
 
       // Add optional fields if they exist
@@ -288,7 +293,12 @@ export class SchemaMigration {
         type: 'text',
         label: 'Migration Error',
         defaultValue: '',
-        category: 'content'
+        category: 'content',
+        version: '1.0',
+        hidden: false,
+        order: 0,
+        required: false,
+        readonly: false
       };
     }
   }
@@ -364,7 +374,12 @@ export class ValidationService {
       type: 'text',
       label: key.charAt(0).toUpperCase() + key.slice(1),
       defaultValue: '',
-      category: 'content'
+      category: 'content',
+      version: '1.0',
+      hidden: false,
+      order: 0,
+      required: false,
+      readonly: false
     };
   }
 
@@ -375,7 +390,10 @@ export class ValidationService {
       properties: {},
       children: [],
       order: 0,
-      events: {}
+      events: {},
+      version: '1.0',
+      visible: true,
+      locked: false
     };
   }
 }

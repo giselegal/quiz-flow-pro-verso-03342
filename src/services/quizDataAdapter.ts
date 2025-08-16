@@ -8,15 +8,15 @@ interface SchemaDrivenFunnelData {
   pages: any[];
 }
 
-interface SchemaDrivenPageData {
-  id: string;
-  name: string;
-  title: string;
-  type: string;
-  order: number;
-  blocks: any[];
-  settings?: any;
-}
+// interface SchemaDrivenPageData {
+  // id: string;
+  // name: string;
+  // title: string;
+  // type: string;
+  // order: number;
+  // blocks: any[];
+  // settings?: any;
+// }
 
 export class QuizDataAdapter {
   static createSchemaFunnelFromRealData(): SchemaDrivenFunnelData {
@@ -28,9 +28,9 @@ export class QuizDataAdapter {
     };
   }
 
-  private static createAllPages(): SchemaDrivenPageData[] {
-    return [];
-  }
+  // private static _createAllPages(): SchemaDrivenPageData[] {
+  //   return [];
+  // }
 
   static validateFunnelStructure(funnel: SchemaDrivenFunnelData): boolean {
     return funnel.pages.every((page: any) => page.blocks && page.blocks.length > 0);

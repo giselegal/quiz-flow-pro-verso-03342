@@ -1,4 +1,4 @@
-import { EditorBlock, EditableContent, EditorConfig } from './editor';
+import { EditorBlock, EditableContent } from './editor';
 
 export interface EditorActions {
   addBlock: (type: EditorBlock['type']) => string;

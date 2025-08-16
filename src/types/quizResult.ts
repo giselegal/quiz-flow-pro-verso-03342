@@ -1,4 +1,4 @@
-import { StyleResult } from './quiz';
+// import { StyleResult } from './quiz';
 
 export interface ResultPageBlock {
   id: string;

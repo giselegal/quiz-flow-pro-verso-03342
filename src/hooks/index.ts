@@ -18,8 +18,7 @@
 // 🔥 NEW: Unified Core System (single source of truth)
 export { 
   useUnifiedEditor,
-  useEditor,           // Legacy compatibility
-  useUnifiedEditor // Legacy compatibility
+  useEditor           // Legacy compatibility
 } from './core/useUnifiedEditor';
 
 // 🔥 NEW: Optimized Data Management
