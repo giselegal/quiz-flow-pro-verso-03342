@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useReducer, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useMemo, useCallback, useState } from 'react';
 import { Block, BlockType } from '@/types/editor';
 import { EditorState, EditorAction } from '@/types/editorTypes';
 
@@ -8,6 +8,10 @@ interface EditorContextType {
   // Core state
   state: EditorState;
   dispatch: React.Dispatch<EditorAction>;
+  
+  // Funnel management
+  funnelId: string;
+  setFunnelId: (id: string) => void;
   
   // Block actions
   addBlock: (type: BlockType) => Promise<string>;
@@ -47,6 +51,8 @@ interface EditorContextType {
     addBlock: (type: BlockType) => Promise<string>;
     updateBlock: (id: string, content: any) => Promise<void>;
     deleteBlock: (id: string) => Promise<void>;
+    addBlockAtPosition: (type: BlockType, stageId?: string) => Promise<string>;
+    reorderBlocks: (startIndex: number, endIndex: number) => void;
   };
   
   // Computed properties
@@ -54,12 +60,16 @@ interface EditorContextType {
     currentBlocks: Block[];
     selectedBlock: Block | null;
     stageCount: number;
+    totalBlocks: number;
   };
   
   // UI state object
   uiState: {
     isPreviewing: boolean;
     isGlobalStylesOpen: boolean;
+    setIsPreviewing: (preview: boolean) => void;
+    viewportSize: string;
+    setViewportSize: (size: string) => void;
   };
   
   // Quiz state
@@ -67,6 +77,9 @@ interface EditorContextType {
     userName: string;
     answers: any[];
     isQuizCompleted: boolean;
+    strategicAnswers: any[];
+    setUserNameFromInput: (name: string) => void;
+    answerStrategicQuestion: (questionId: string, optionId: string, category: string, type: string) => void;
   };
   
   // Database mode
@@ -76,6 +89,8 @@ interface EditorContextType {
   templateActions: {
     loadTemplate: (templateId: string) => void;
     saveTemplate: () => void;
+    loadTemplateByStep: (step: number) => void;
+    isLoadingTemplate: boolean;
   };
   
   // Funnel ID
@@ -88,6 +103,7 @@ interface EditorContextType {
   persistenceActions: {
     save: () => Promise<void>;
     load: () => Promise<void>;
+    saveFunnel: () => Promise<void>;
   };
 }
 
@@ -132,8 +148,12 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
   }
 }
 
-export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: string }> = ({ 
+  children, 
+  funnelId: initialFunnelId = 'default-funnel' 
+}) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);
+  const [currentFunnelId, setCurrentFunnelId] = useState<string>(initialFunnelId);
 
   // Block management functions
   const addBlock = useCallback(async (type: BlockType): Promise<string> => {
@@ -141,13 +161,17 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type,
       content: {},
-      properties: {},
+      properties: {
+        funnelId: currentFunnelId,
+        stageId: 'step-1', // Default stage
+      },
       order: state.blocks.length,
     };
     
     dispatch({ type: 'ADD_BLOCK', payload: newBlock });
+    console.log('🔗 Block created with funnelId:', currentFunnelId);
     return newBlock.id;
-  }, [state.blocks.length]);
+  }, [state.blocks.length, currentFunnelId]);
 
   const updateBlock = useCallback(async (id: string, content: any): Promise<void> => {
     dispatch({ type: 'UPDATE_BLOCK', payload: { id, updates: content } });
@@ -191,8 +215,11 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [state.isPreviewing, setIsPreviewing]);
 
   const save = useCallback(async () => {
-    console.log('Saving editor state');
-  }, []);
+    console.log('💾 Saving funnel with ID:', currentFunnelId);
+    console.log('📊 Blocks to save:', state.blocks.length);
+    // Here you would integrate with Supabase or your backend
+    // await saveFunnelToSupabase(currentFunnelId, state.blocks);
+  }, [currentFunnelId, state.blocks]);
 
   // Mock data for stages (21 stages)
   const stages = useMemo(() => {
@@ -224,7 +251,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     addBlock,
     updateBlock,
     deleteBlock,
-    addBlockAtPosition: async (type: BlockType, stageId?: string) => {
+    addBlockAtPosition: async (type: BlockType, _stageId?: string) => {
       return await addBlock(type);
     },
     reorderBlocks,
@@ -280,17 +307,25 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Persistence actions
   const persistenceActions = useMemo(() => ({
     save: async () => {
-      console.log('Saving editor state');
+      await save();
     },
     load: async () => {
-      console.log('Loading editor state');
+      console.log('🔄 Loading funnel with ID:', currentFunnelId);
+      // Here you would load funnel data from backend
     },
-  }), []);
+    saveFunnel: async () => {
+      await save();
+    },
+  }), [save, currentFunnelId]);
 
   const contextValue: EditorContextType = {
     // Core state
     state,
     dispatch,
+    
+    // Funnel management
+    funnelId: currentFunnelId,
+    setFunnelId: setCurrentFunnelId,
     
     // Block actions
     addBlock,
@@ -337,9 +372,6 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     
     // Template actions
     templateActions,
-    
-    // Funnel ID
-    funnelId: 'default-funnel',
     
     // Supabase enabled
     isSupabaseEnabled: false,
