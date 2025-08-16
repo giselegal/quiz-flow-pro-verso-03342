@@ -7,7 +7,7 @@ import './index.css';
 import { cleanupConsoleWarnings } from './utils/development';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
-// 🧹 Inicializar limpeza de avisos do console em desenvolvimento
+// 🧹 DEVELOPMENT: Ativa limpeza de avisos apenas em desenvolvimento
 if (import.meta.env.DEV) {
   cleanupConsoleWarnings();
 }
