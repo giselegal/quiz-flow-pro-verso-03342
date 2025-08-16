@@ -171,9 +171,6 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
           // Also save locally as fallback
           userResponseService.saveUserName(sessionId, newValue.trim());
-          
-          // ✅ INTEGRAÇÃO: Salvar também na chave esperada pelo useQuizLogic
-          localStorage.setItem('quizUserName', newValue.trim());
         }
 
         console.log('📝 [FormInputBlock] Input change processed:', {

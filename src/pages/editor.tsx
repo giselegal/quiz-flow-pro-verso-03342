@@ -1,327 +1,267 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState } from 'react';
+
+// Editor Components
+import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
+import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
+import { DndProvider } from '@/components/editor/dnd/DndProvider';
+import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
+import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
+import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
+import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
+// 🚀 PREVIEW SYSTEM
+import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
+import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
+import { PreviewProvider } from '@/contexts/PreviewContext';
+// 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+
+// Context & Hooks
 import { useEditor } from '@/context/EditorContext';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import BlockRenderer from '@/components/editor/BlockRenderer';
-import { EDITOR_BLOCKS_MAP } from '@/config/editorBlocksMapping';
-import { BlockType } from '@/types/BlockType';
-import { cn } from '@/lib/utils';
-import { 
-  Plus, 
-  Settings, 
-  Eye, 
-  Save, 
-  Trash2,
-  Layout,
-  Layers,
-  FileText,
-  MousePointer,
-  Move,
-  Palette
-} from 'lucide-react';
 
-const EditorPage: React.FC = () => {
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'blocks' | 'properties'>('blocks');
+/**
+ * Editor Fixed - Versão Corrigida do Editor Principal
+ *
+ * Editor de funil com drag & drop completo, incluindo:
+ * - Layout de 4 colunas responsivo
+ * - Sistema avançado de drag & drop
+ * - Painel universal de propriedades
+ * - Atalhos de teclado e histórico de mudanças
+ * - Preview mode e viewport responsivo
+ * - Sistema de ativação automática de 21 etapas
+ * 🚀 SISTEMA DE PREVIEW INTEGRADO
+ */
+const EditorFixedPageWithDragDrop: React.FC = () => {
+  // Hooks para funcionalidades avançadas
+  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
+  const propertyHistory = usePropertyHistory();
 
+  // Estado local
+  const [showFunnelSettings, setShowFunnelSettings] = useState(false);
+
+  // Editor Context - Estado centralizado do editor
   const {
-    state,
-    addBlock,
-    deleteBlock,
-    selectBlock,
+    activeStageId,
+    selectedBlockId,
+    blockActions: {
+      addBlock,
+      addBlockAtPosition,
+      setSelectedBlockId,
+      deleteBlock,
+      updateBlock,
+      reorderBlocks,
+    },
+    persistenceActions: { saveFunnel },
+    uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
+    computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
 
-  const blocks = state.blocks;
-  const selectedBlock = state.blocks.find(b => b.id === selectedBlockId);
+  // Configuração de viewport responsivo
+  const getCanvasClassName = () => {
+    const baseClasses =
+      'transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20';
 
-  const { scrollRef: canvasScrollRef } = useSyncedScroll({ 
-    source: 'canvas',
-    enabled: true 
+    switch (viewportSize) {
+      case 'sm':
+        return `${baseClasses} w-[375px] min-h-[600px]`;
+      case 'md':
+        return `${baseClasses} w-[768px] min-h-[800px]`;
+      case 'lg':
+      case 'xl':
+      default:
+        return `${baseClasses} w-full max-w-4xl min-h-[900px]`;
+    }
+  };
+
+  // Handlers de eventos
+  const handleSave = async () => {
+    try {
+      console.log('💾 Iniciando salvamento do editor...');
+      const result = await saveFunnel();
+      if (result.success) {
+        console.log('✅ Editor salvo com sucesso!');
+      } else {
+        console.error('❌ Erro no salvamento:', result.error);
+      }
+    } catch (error) {
+      console.error('❌ Erro inesperado ao salvar:', error);
+    }
+  };
+
+  const handleDeleteBlock = (blockId: string) => {
+    if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
+      deleteBlock(blockId);
+      setSelectedBlockId(null);
+    }
+  };
+
+  const handleStageSelect = (_stageId: string) => {
+    // O EditorContext já gerencia internamente
+  };
+
+  const getStepNumberFromStageId = (stageId: string | null): number => {
+    if (!stageId) return 1;
+    const match = stageId.match(/step-(\d+)/);
+    return match ? parseInt(match[1], 10) : 1;
+  };
+
+  // Configurar atalhos de teclado
+  useKeyboardShortcuts({
+    onUndo: propertyHistory.undo,
+    onRedo: propertyHistory.redo,
+    onDelete: selectedBlockId ? () => handleDeleteBlock(selectedBlockId) : undefined,
+    canUndo: propertyHistory.canUndo,
+    canRedo: propertyHistory.canRedo,
+    hasSelectedBlock: !!selectedBlockId,
   });
 
-  const availableBlockTypes = useMemo(() => {
-    return Object.keys(EDITOR_BLOCKS_MAP).map(type => ({
-      type: type as BlockType,
-      name: type.charAt(0).toUpperCase() + type.slice(1),
-      icon: getBlockIcon(type),
-    }));
-  }, []);
-
-  const handleAddBlock = useCallback((blockType: string) => {
-    addBlock(blockType as BlockType);
-  }, [addBlock]);
-
-  const handleSelectBlock = useCallback((blockId: string) => {
-    setSelectedBlockId(blockId);
-    selectBlock(blockId);
-    setActiveTab('properties');
-  }, [selectBlock]);
-
-  // Handle duplications by creating a new block of the same type
-  const handleDuplicateBlock = useCallback((blockId: string) => {
-    const blockToDuplicate = blocks.find(b => b.id === blockId);
-    if (blockToDuplicate) {
-      addBlock(blockToDuplicate.type);
-    }
-  }, [blocks, addBlock]);
-
-  const handleDeleteBlock = useCallback((blockId: string) => {
-    deleteBlock(blockId);
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
-      selectBlock(null);
-      setActiveTab('blocks');
-    }
-  }, [deleteBlock, selectedBlockId, selectBlock]);
-
-  const handleCloseProperties = useCallback(() => {
-    setSelectedBlockId(null);
-    selectBlock(null);
-    setActiveTab('blocks');
-  }, [selectBlock]);
-
   return (
-    <div className="h-screen flex bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center gap-2 mb-4">
-            <Layout className="w-5 h-5 text-indigo-600" />
-            <h2 className="font-semibold text-gray-900">Editor Principal</h2>
-          </div>
-          
-          <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
-            <Button
-              variant={activeTab === 'blocks' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('blocks')}
-              className="flex-1"
-            >
-              <Layers className="w-4 h-4 mr-1" />
-              Blocos
-            </Button>
-            <Button
-              variant={activeTab === 'properties' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setActiveTab('properties')}
-              className="flex-1"
-            >
-              <Settings className="w-4 h-4 mr-1" />
-              Propriedades
-            </Button>
-          </div>
-        </div>
+    <DndProvider
+      blocks={(currentBlocks || []).map(block => ({
+        id: block.id,
+        type: block.type,
+        properties: block.properties || {},
+      }))}
+      onBlocksReorder={newBlocksData => {
+        const newBlockIds = newBlocksData.map(b => b.id);
+        const oldBlockIds = (currentBlocks || []).map(b => b.id);
 
-        <ScrollArea className="flex-1 p-4">
-          {activeTab === 'blocks' && (
-            <div className="space-y-4">
-              {/* Add Block Section */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Plus className="w-4 h-4" />
-                    Adicionar Componente
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {availableBlockTypes.map(({ type, name, icon }) => (
-                    <Button
-                      key={type}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleAddBlock(type)}
-                      className="w-full justify-start"
-                    >
-                      {icon}
-                      {name}
-                    </Button>
-                  ))}
-                </CardContent>
-              </Card>
+        if (oldBlockIds.length !== newBlockIds.length) {
+          console.warn('⚠️ Reordenação abortada: quantidade de blocos não confere');
+          return;
+        }
 
-              {/* Blocks List */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Layers className="w-4 h-4" />
-                    Componentes ({blocks.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {blocks.map((block: any) => (
-                      <div
-                        key={block.id}
-                        className={cn(
-                          "p-3 border rounded-lg cursor-pointer transition-all hover:border-indigo-300",
-                          selectedBlockId === block.id 
-                            ? "border-indigo-500 bg-indigo-50" 
-                            : "border-gray-200"
-                        )}
-                        onClick={() => handleSelectBlock(block.id)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-medium text-sm">{block.type}</div>
-                            <div className="text-xs text-gray-500 truncate">
-                              {block.id}
-                            </div>
-                          </div>
-                          <div className="flex gap-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDuplicateBlock(block.id);
-                              }}
-                              className="h-6 w-6 p-0"
-                            >
-                              <Move className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteBlock(block.id);
-                              }}
-                              className="h-6 w-6 p-0 text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {blocks.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      <Layers className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Nenhum componente adicionado</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          )}
+        reorderBlocks(newBlockIds, activeStageId || undefined);
+      }}
+      onBlockAdd={(blockType, position) => {
+        if (position !== undefined && position >= 0) {
+          addBlockAtPosition(blockType, position, activeStageId || undefined);
+        } else {
+          addBlock(blockType, activeStageId || undefined);
+        }
+      }}
+      onBlockSelect={blockId => {
+        setSelectedBlockId(blockId);
+      }}
+      selectedBlockId={selectedBlockId || undefined}
+      onBlockUpdate={(blockId, updates) => {
+        updateBlock(blockId, updates as any);
+      }}
+    >
+      <div className="h-screen flex flex-col bg-gradient-to-br from-stone-50/80 via-stone-100/60 to-stone-150/40 relative">
+        {/* Overlay sutil para mais elegância */}
+        <div className="absolute inset-0 bg-gradient-to-br from-brand/[0.02] via-transparent to-brand-dark/[0.01] pointer-events-none"></div>
 
-          {activeTab === 'properties' && (
-            <div>
-              {selectedBlock ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-medium">Propriedades</h3>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleCloseProperties}
-                    >
-                      ×
-                    </Button>
-                  </div>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium">ID</label>
-                      <input 
-                        className="w-full p-2 border rounded text-sm"
-                        value={selectedBlock.id} 
-                        disabled 
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Tipo</label>
-                      <input 
-                        className="w-full p-2 border rounded text-sm"
-                        value={selectedBlock.type} 
-                        disabled 
-                      />
-                    </div>
-                  </div>
+        <div className="relative z-10">
+          <EditorToolbar
+            isPreviewing={isPreviewing}
+            onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+            onSave={handleSave}
+            viewportSize={viewportSize}
+            onViewportSizeChange={setViewportSize}
+            onShowFunnelSettings={() => setShowFunnelSettings(true)}
+          />
+
+          {/* Top Bar - Otimizado */}
+          <div style={{ borderColor: '#E5DDD5' }}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <h1 className="text-lg font-semibold text-stone-700">
+                  Editor de Funil - Etapa {activeStageId}
+                </h1>
+
+                <div className="text-sm text-stone-500">
+                  {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
+                  {stageCount !== 1 ? 's' : ''} • Novo Painel Ativo
                 </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Settings className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Selecione um componente</p>
-                </div>
-              )}
-            </div>
-          )}
-        </ScrollArea>
-      </div>
-
-      {/* Canvas */}
-      <div className="flex-1 flex flex-col">
-        <div className="bg-white border-b border-gray-200 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Eye className="w-5 h-5 text-gray-600" />
-              <span className="font-medium text-gray-900">Preview</span>
-              <Badge variant="secondary">{blocks.length} componentes</Badge>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <Save className="w-4 h-4 mr-1" />
-                Salvar
-              </Button>
-              <Button variant="outline" size="sm">
-                <Eye className="w-4 h-4 mr-1" />
-                Visualizar
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <div 
-          ref={canvasScrollRef}
-          className="flex-1 overflow-y-auto bg-gray-50 p-6"
-        >
-          <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[600px]">
-              <div className="p-6 space-y-4">
-                {blocks.map((block: any) => (
-                  <div
-                    key={block.id}
-                    className={cn(
-                      "relative group transition-all duration-200 rounded-lg p-2",
-                      selectedBlockId === block.id && "ring-2 ring-indigo-500 ring-offset-2"
-                    )}
-                    onClick={() => handleSelectBlock(block.id)}
-                  >
-                    <BlockRenderer block={block} />
-                  </div>
-                ))}
-
-                {blocks.length === 0 && (
-                  <div className="text-center py-16 text-gray-500">
-                    <MousePointer className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <h3 className="text-lg font-medium mb-2">Canvas Vazio</h3>
-                    <p className="text-sm">Adicione componentes da barra lateral</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
+
+          <FourColumnLayout
+            stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
+            componentsPanel={
+              <CombinedComponentsPanel
+                currentStepNumber={getStepNumberFromStageId(activeStageId)}
+              />
+            }
+            canvas={
+              <div
+                ref={scrollRef}
+                className="p-2 overflow-auto h-full bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
+              >
+                <div className={getCanvasClassName()}>
+                  <CanvasDropZone
+                    blocks={currentBlocks}
+                    selectedBlockId={selectedBlockId}
+                    onSelectBlock={setSelectedBlockId}
+                    onUpdateBlock={updateBlock}
+                    onDeleteBlock={handleDeleteBlock}
+                  />
+                </div>
+              </div>
+            }
+            propertiesPanel={
+              !isPreviewing && selectedBlock ? (
+                // 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
+                <PropertiesPanel
+                  selectedBlock={selectedBlock}
+                  onUpdate={(blockId: string, updates: Record<string, any>) => {
+                    updateBlock(blockId, updates);
+                  }}
+                  onClose={() => setSelectedBlockId(null)}
+                  onDelete={(blockId: string) => {
+                    deleteBlock(blockId);
+                    setSelectedBlockId(null);
+                  }}
+                />
+              ) : !isPreviewing ? (
+                <div className="h-full p-4 flex items-center justify-center text-stone-500">
+                  <div className="text-center">
+                    <p className="text-sm">Selecione um bloco para editar propriedades</p>
+                    <p className="text-xs text-stone-400 mt-1">
+                      Novo Painel de Propriedades • Editores Específicos
+                    </p>
+                  </div>
+                </div>
+              ) : null
+            }
+          />
         </div>
+
+        {/* Painel de Configurações do Funil */}
+        {showFunnelSettings && (
+          <FunnelSettingsPanel
+            funnelId={activeStageId || 'default'}
+            isOpen={showFunnelSettings}
+            onClose={() => setShowFunnelSettings(false)}
+          />
+        )}
       </div>
-    </div>
+    </DndProvider>
   );
 };
 
-function getBlockIcon(type: string) {
-  const icons: Record<string, React.ReactNode> = {
-    text: <FileText className="w-4 h-4 mr-2" />,
-    header: <Layout className="w-4 h-4 mr-2" />,
-    button: <MousePointer className="w-4 h-4 mr-2" />,
-    image: <Palette className="w-4 h-4 mr-2" />,
-  };
-  
-  return icons[type] || <Layout className="w-4 h-4 mr-2" />;
-}
+export default EditorFixedPageWithDragDrop;
 
-export default EditorPage;
+// 🚀 WRAPPER COM SISTEMA DE PREVIEW COMPLETO
+export const EditorWithPreview: React.FC = () => {
+  return (
+    <PreviewProvider totalSteps={21} funnelId="default">
+      <div className="relative h-screen">
+        {/* Componente de Preview Navigation - Flutuante */}
+        <PreviewNavigation position="floating" />
+
+        {/* Editor Principal */}
+        <EditorFixedPageWithDragDrop />
+
+        {/* Toggle de Preview - Posição fixa no canto */}
+        <div className="fixed bottom-4 right-4 z-50">
+          <PreviewToggleButton variant="full" />
+        </div>
+      </div>
+    </PreviewProvider>
+  );
+};

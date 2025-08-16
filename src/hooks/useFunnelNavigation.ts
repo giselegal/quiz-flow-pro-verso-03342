@@ -27,7 +27,7 @@ export const useFunnelNavigation = () => {
   const [navigationHistory, setNavigationHistory] = useState<string[]>([]);
 
   // Estado atual da navegação
-  const currentStepNumber = stageIdToNumber(activeStageId || 'step-1');
+  const currentStepNumber = stageIdToNumber(activeStageId);
   const totalSteps = 21;
   const progressValue = calculateProgress(currentStepNumber, totalSteps);
   const stepName = getStepName(currentStepNumber);
@@ -38,20 +38,16 @@ export const useFunnelNavigation = () => {
 
   // Persistir etapa atual no localStorage
   useEffect(() => {
-    if (activeStageId) {
-      localStorage.setItem('funnel-current-step', activeStageId);
-      console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`);
-    }
+    localStorage.setItem('funnel-current-step', activeStageId);
+    console.log(`📌 Etapa persistida: ${activeStageId} (${stepName})`);
   }, [activeStageId, stepName]);
 
   // Adicionar ao histórico de navegação
   useEffect(() => {
-    if (activeStageId) {
-      setNavigationHistory(prev => {
-        const newHistory = [...prev, activeStageId];
-        return newHistory.slice(-10); // Manter apenas últimas 10
-      });
-    }
+    setNavigationHistory(prev => {
+      const newHistory = [...prev, activeStageId];
+      return newHistory.slice(-10); // Manter apenas últimas 10
+    });
   }, [activeStageId]);
 
   // Validar conteúdo da etapa

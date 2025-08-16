@@ -1,9 +1,8 @@
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo, useState } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
 import { generateSemanticId } from '@/utils/semanticIdGenerator';
-import { getAllSteps, getStepTemplate } from '@/config/stepTemplatesMapping';
 
 // Define the types for the editor state
 export interface EditorState {
@@ -93,42 +92,10 @@ export const EditorContext = createContext<{
   toggleSupabase: (enabled: boolean) => void;
   reorderBlocks: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   isSaving: boolean;
-  connectionStatus: string;
+  connectionStatus: 'connected' | 'disconnected' | 'connecting';
   lastSync: string | null;
   isGlobalStylesOpen: boolean;
   setGlobalStylesOpen: (open: boolean) => void;
-  // Missing properties needed by components
-  stages: any[];
-  activeStageId: string | null;
-  selectedBlockId: string | null;
-  stageActions: {
-    setActiveStage: (stageId: string) => void;
-    addStage: () => void;
-    removeStage: (stageId: string) => void;
-  };
-  blockActions: {
-    getBlocksForStage: (stageId: string) => Block[];
-    addBlock: (type: Block['type']) => Promise<string>;
-    updateBlock: (id: string, content: any) => Promise<void>;
-    deleteBlock: (id: string) => Promise<void>;
-    setSelectedBlockId: (id: string | null) => void;
-    addBlockAtPosition: (type: Block['type']) => Promise<string>;
-    reorderBlocks: (sourceIndex: number, destinationIndex: number) => Promise<void>;
-  };
-  computed: {
-    stageCount: number;
-    selectedBlock: Block | null;
-    currentBlocks: Block[];
-    totalBlocks: number;
-  };
-  quizState: any;
-  uiState: any;
-  databaseMode: any;
-  // Legacy properties for compatibility
-  funnelId: string;
-  isSupabaseEnabled: boolean;
-  persistenceActions: any;
-  templateActions: any;
 }>({
   state: initialState,
   dispatch: () => null,
@@ -145,38 +112,6 @@ export const EditorContext = createContext<{
   lastSync: null,
   isGlobalStylesOpen: false,
   setGlobalStylesOpen: () => null,
-  // Default values for missing properties
-  stages: [],
-  activeStageId: null,
-  selectedBlockId: null,
-  stageActions: {
-    setActiveStage: () => null,
-    addStage: () => null,
-    removeStage: () => null,
-  },
-  blockActions: {
-    getBlocksForStage: () => [],
-    addBlock: () => Promise.resolve(''),
-    updateBlock: () => Promise.resolve(),
-    deleteBlock: () => Promise.resolve(),
-    setSelectedBlockId: () => null,
-    addBlockAtPosition: () => Promise.resolve(''),
-    reorderBlocks: () => Promise.resolve(),
-  },
-  computed: {
-    stageCount: 0,
-    selectedBlock: null,
-    currentBlocks: [],
-    totalBlocks: 0,
-  },
-  quizState: {},
-  uiState: {},
-  databaseMode: 'local',
-  // Legacy properties for compatibility
-  funnelId: 'default-funnel-id',
-  isSupabaseEnabled: false,
-  persistenceActions: { save: () => console.log('save') },
-  templateActions: { loadTemplate: () => console.log('loadTemplate') },
 });
 
 // Create a custom hook to use the editor context
@@ -205,15 +140,17 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   
   const {
     components: supabaseComponents,
+    isLoading: supabaseLoading,
     error: supabaseError,
     loadComponents,
     addComponent: addSupabaseComponent,
     updateComponent: updateSupabaseComponent,
     deleteComponent: deleteSupabaseComponent,
     reorderComponents,
-    connectionStatus,
-    isSaving,
-    lastSync
+    // Add missing properties with default values
+    connectionStatus = 'disconnected',
+    isSaving = false,
+    lastSync = null
   } = supabaseHook;
 
   useEffect(() => {
@@ -303,7 +240,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const [removed] = reorderedIds.splice(sourceIndex, 1);
         reorderedIds.splice(destinationIndex, 0, removed);
         
-        await reorderComponents(sourceIndex, destinationIndex);
+        await reorderComponents(reorderedIds);
       } catch (error) {
         console.error('Failed to reorder blocks in Supabase:', error);
       }
@@ -341,107 +278,6 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }));
   }, []);
 
-  // Real 21-stage implementation using imported functions
-  const [currentActiveStageId, setCurrentActiveStageId] = useState<string>('step-1');
-  
-  const stages = useMemo(() => {
-    const allSteps = getAllSteps();
-    return allSteps.map((template: any) => ({
-      id: `step-${template.stepNumber}`,
-      name: template.name,
-      order: template.stepNumber,
-      description: template.description,
-      metadata: { 
-        blocksCount: state.blocks.filter((block: any) => block.stageId === `step-${template.stepNumber}`).length 
-      }
-    }));
-  }, [state.blocks]);
-
-  const activeStageId = currentActiveStageId;
-
-  const stageActions = useMemo(() => ({
-    setActiveStage: (stageId: string) => {
-      console.log('🎯 EditorContext: setActiveStage:', stageId);
-      setCurrentActiveStageId(stageId);
-      
-      // Auto-load template blocks for the stage if empty
-      const stageBlocks = state.blocks.filter((block: any) => block.stageId === stageId);
-      if (stageBlocks.length === 0) {
-        const stepNumber = parseInt(stageId.replace('step-', ''));
-        const templateBlocks = getStepTemplate(stepNumber);
-        
-        console.log('🎯 Loading template blocks for step:', stepNumber, templateBlocks.length);
-        
-        const convertedBlocks = templateBlocks.map((template: any, index: number) => ({
-          id: template.id || `${stageId}-block-${index}`,
-          type: template.type,
-          content: template.properties || template.content || {},
-          properties: template.properties || {},
-          order: index,
-          stageId: stageId
-        }));
-        
-        dispatch({ type: 'SET_BLOCKS', payload: [...state.blocks, ...convertedBlocks] });
-      }
-    },
-    addStage: () => {
-      const newStageNumber = stages.length + 1;
-      const newStageId = `step-${newStageNumber}`;
-      console.log('addStage:', newStageId);
-      return newStageId;
-    },
-    removeStage: (stageId: string) => {
-      console.log('removeStage:', stageId);
-      // Remove all blocks from this stage
-      const filteredBlocks = state.blocks.filter((block: any) => block.stageId !== stageId);
-      dispatch({ type: 'SET_BLOCKS', payload: filteredBlocks });
-    },
-  }), [stages.length, state.blocks]);
-
-  const blockActions = useMemo(() => ({
-    getBlocksForStage: (stageId: string) => state.blocks.filter((block: any) => block.stageId === stageId),
-    addBlock: async (type: Block['type']) => {
-      const blockId = await addBlock(type);
-      // Update the new block to belong to current stage
-      const newBlock = state.blocks.find(b => b.id === blockId);
-      if (newBlock) {
-        updateBlock(blockId, { ...newBlock.content, stageId: currentActiveStageId });
-      }
-      return blockId;
-    },
-    updateBlock, 
-    deleteBlock,
-    setSelectedBlockId: selectBlock,
-    addBlockAtPosition: addBlock,
-    reorderBlocks,
-  }), [state.blocks, addBlock, updateBlock, deleteBlock, selectBlock, reorderBlocks, currentActiveStageId]);
-
-  const computed = useMemo(() => ({
-    stageCount: stages.length,
-    selectedBlock: state.blocks.find(b => b.id === state.selectedBlockId) || null,
-    currentBlocks: state.blocks.filter((block: any) => block.stageId === currentActiveStageId),
-    totalBlocks: state.blocks.length,
-  }), [stages.length, state.blocks, state.selectedBlockId, currentActiveStageId]);
-
-  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
-  
-  const quizState = useMemo(() => ({}), []);
-  const uiState = useMemo(() => ({
-    isPreviewing: state.isPreviewing,
-    setIsPreviewing: () => dispatch({ type: 'TOGGLE_PREVIEW' }),
-    viewportSize,
-    setViewportSize,
-  }), [state.isPreviewing, viewportSize]);
-  
-  const databaseMode = useMemo(() => ({
-    isEnabled: state.supabaseEnabled,
-    getStats: () => ({ components: state.blocks.length }),
-    setDatabaseMode: (mode: string) => console.log('setDatabaseMode:', mode),
-    migrateToDatabase: () => console.log('migrateToDatabase'),
-    setQuizId: (id: string) => console.log('setQuizId:', id),
-    quizId: state.funnelId,
-  }), [state.supabaseEnabled, state.blocks.length, state.funnelId]);
-
   const value = useMemo(
     () => ({
       state,
@@ -459,27 +295,6 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       lastSync,
       isGlobalStylesOpen: state.isGlobalStylesOpen,
       setGlobalStylesOpen,
-      // New properties
-      stages,
-      activeStageId,
-      selectedBlockId: state.selectedBlockId,
-      stageActions,
-      blockActions,
-      computed,
-      quizState,
-      uiState,
-      databaseMode,
-      // Legacy properties for compatibility
-      funnelId: state.funnelId,
-      isSupabaseEnabled: state.supabaseEnabled,
-      persistenceActions: { 
-        save: () => console.log('save'),
-        saveFunnel: async () => {
-          console.log('saveFunnel called');
-          return { success: true, message: 'Funnel saved locally' };
-        }
-      },
-      templateActions: { loadTemplate: () => console.log('loadTemplate') },
     }),
     [
       state,
@@ -497,14 +312,6 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       lastSync,
       state.isGlobalStylesOpen,
       setGlobalStylesOpen,
-      stages,
-      activeStageId,
-      stageActions,
-      blockActions,
-      computed,
-      quizState,
-      uiState,
-      databaseMode,
     ]
   );
 

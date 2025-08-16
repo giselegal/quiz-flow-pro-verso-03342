@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ENHANCED_BLOCK_REGISTRY } from '@/components/editor/blocks/enhancedBlockRegistry';
 import { useEditor } from '../context/EditorContext';
-import { BlockType } from '@/types/editor';
 
 // ============================================================================
 // HOOK SIMPLIFICADO: useEditorReusableComponents (Sem Supabase)
@@ -59,7 +58,7 @@ export const useEditorReusableComponents = () => {
     (componentType: string, stepNumber?: number) => {
       console.log('🎯 Adicionando componente ao editor:', componentType, 'step:', stepNumber);
       if (addBlock) {
-        addBlock(componentType as BlockType);
+        addBlock(componentType);
       }
     },
     [addBlock]

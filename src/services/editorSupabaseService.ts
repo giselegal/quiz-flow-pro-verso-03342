@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { 
-  validateComponentInstance
+  validateComponentInstance,
+  ComponentInstance
 } from '@/lib/schema-validation';
 
 // Remove unused imports and simplify types
@@ -240,28 +241,15 @@ export const reorderComponents = async (
       order_index: index,
     }));
 
-    // Execute individual updates
-    const updatedComponents: SupabaseComponent[] = [];
-    
-    for (const update of updates) {
-      const { data, error: updateError } = await supabase
-        .from('component_instances')
-        .update({ order_index: update.order_index })
-        .eq('id', update.id)
-        .select()
-        .single();
-      
-      if (updateError) {
-        console.error('Failed to update component order:', updateError);
-        continue;
-      }
-      
-      if (data) {
-        updatedComponents.push(data as SupabaseComponent);
-      }
-    }
+    // Execute batch updates
+    const { data: updatedComponents, error: updateError } = await supabase
+      .from('component_instances')
+      .upsert(updates)
+      .select();
 
-    console.log('✅ Component reordering completed successfully');
+    if (updateError) {
+      handleSupabaseError(updateError, 'Failed to update component order');
+    }
 
     return updatedComponents as SupabaseComponent[];
   } catch (error) {
