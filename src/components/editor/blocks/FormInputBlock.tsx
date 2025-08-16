@@ -99,10 +99,19 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
 
   const [value, setValue] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [sessionId] = useState<string>(() => {
+    // Get or create session ID
+    const existing = localStorage.getItem('quiz_session_id');
+    if (existing) return existing;
+    
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('quiz_session_id', newSessionId);
+    return newSessionId;
+  });
 
   // Carregar valor salvo se existir
   useEffect(() => {
-    const savedValue = userResponseService.getResponse(block?.id || '');
+    const savedValue = localStorage.getItem(`quiz_step_${block?.id}`);
     if (savedValue) {
       setValue(savedValue);
       setIsValid(true);
@@ -129,24 +138,47 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
     // Salvar automaticamente se válido
     if (valid && newValue.trim()) {
       try {
-        // Salvar resposta específica
+        // Salvar resposta específica localmente
         userResponseService.saveStepResponse(block?.id || '', newValue.trim());
 
-        // Se for o campo de nome, salvar também como nome do usuário (IDs alinhados)
+        // Se for o campo de nome, salvar no Supabase
         if (
           name === 'userName' ||
+          block?.id === 'step01-name-input' ||
           block?.id === 'intro-form-input' ||
           block?.id === 'intro-name-input'
         ) {
-          userResponseService.saveUserName('userId', newValue.trim());
-          console.log('✅ [FormInputBlock] Nome do usuário salvo:', newValue.trim());
+          // Save to Supabase
+          try {
+            await userResponseService.createQuizUser({
+              sessionId: sessionId,
+              name: newValue.trim(),
+            });
+
+            // Also save response data
+            await userResponseService.saveResponse({
+              userId: sessionId,
+              sessionId: sessionId,
+              step: 'step-01',
+              data: { name: newValue.trim(), fieldName: name },
+              timestamp: new Date().toISOString(),
+            });
+
+            console.log('✅ [FormInputBlock] Nome salvo no Supabase:', newValue.trim());
+          } catch (error) {
+            console.error('❌ [FormInputBlock] Erro ao salvar no Supabase:', error);
+          }
+
+          // Also save locally as fallback
+          userResponseService.saveUserName(sessionId, newValue.trim());
         }
 
         console.log('📝 [FormInputBlock] Input change processed:', {
           blockId: block?.id,
+          sessionId: sessionId,
           value: newValue.trim(),
           valid,
-          isNameField: name === 'userName' || block?.id === 'intro-form-input',
+          isNameField: name === 'userName' || block?.id?.includes('name'),
         });
 
         // Notificar componente pai
