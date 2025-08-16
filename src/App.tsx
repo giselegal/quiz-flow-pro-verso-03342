@@ -1,4 +1,4 @@
-import { lazy, Suspense, createElement } from 'react';
+import { lazy, Suspense } from 'react';
 import { Route, Router, Switch } from 'wouter';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import ErrorBoundary from './components/common/ErrorBoundary';
@@ -41,196 +41,7 @@ const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'
 const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
 const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
 const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
-// Simple working editor-fixed component - inline to avoid import issues
-const EditorFixedSimpleInline = () => {
-  return createElement(
-    'div',
-    {
-      className: 'min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8 font-sans',
-    },
-    createElement(
-      'div',
-      {
-        className: 'max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8',
-      },
-      [
-        createElement(
-          'div',
-          {
-            key: 'header',
-            className: 'mb-8',
-          },
-          [
-            createElement(
-              'h1',
-              {
-                key: 'title',
-                className: 'text-4xl font-bold text-gray-800 mb-2',
-              },
-              'Editor de Quiz - 21 Etapas - CORRIGIDO!'
-            ),
-            createElement(
-              'p',
-              {
-                key: 'subtitle',
-                className: 'text-gray-600',
-              },
-              'Sistema de criação de quiz personalizado - Funcionando perfeitamente!'
-            ),
-          ]
-        ),
-
-        createElement(
-          'div',
-          {
-            key: 'grid',
-            className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6',
-          },
-          Array.from({ length: 21 }, (_, i) => {
-            const stepNum = i + 1;
-            const isIntro = stepNum === 1;
-            const isResult = stepNum === 21;
-
-            return createElement(
-              'div',
-              {
-                key: stepNum,
-                className:
-                  'group bg-gray-50 border-2 border-gray-200 rounded-lg p-6 hover:bg-gray-100 hover:border-gray-300 transition-all duration-200 cursor-pointer',
-              },
-              [
-                createElement(
-                  'div',
-                  {
-                    key: 'header',
-                    className: 'flex items-center justify-between mb-3',
-                  },
-                  [
-                    createElement(
-                      'div',
-                      {
-                        key: 'number',
-                        className:
-                          'w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-semibold',
-                      },
-                      stepNum
-                    ),
-                    createElement('div', {
-                      key: 'indicator',
-                      className: `w-3 h-3 rounded-full ${isIntro ? 'bg-green-500' : isResult ? 'bg-blue-500' : 'bg-yellow-500'}`,
-                    }),
-                  ]
-                ),
-
-                createElement(
-                  'h3',
-                  {
-                    key: 'title',
-                    className: 'font-semibold text-gray-800 mb-2',
-                  },
-                  isIntro ? 'Introdução' : isResult ? 'Resultado Final' : `Pergunta ${stepNum - 1}`
-                ),
-
-                createElement(
-                  'p',
-                  {
-                    key: 'description',
-                    className: 'text-sm text-gray-600 leading-relaxed',
-                  },
-                  isIntro
-                    ? 'Página inicial do quiz com captura do nome'
-                    : isResult
-                      ? 'Exibição dos resultados e call-to-action'
-                      : 'Questão de múltipla escolha do quiz'
-                ),
-
-                createElement(
-                  'div',
-                  {
-                    key: 'footer',
-                    className: 'mt-4 pt-4 border-t border-gray-200 group-hover:border-gray-300',
-                  },
-                  createElement(
-                    'span',
-                    {
-                      className: 'text-xs font-medium text-gray-500 uppercase tracking-wider',
-                    },
-                    isIntro ? 'Capture' : isResult ? 'Conversão' : 'Engajamento'
-                  )
-                ),
-              ]
-            );
-          })
-        ),
-
-        createElement(
-          'div',
-          {
-            key: 'status',
-            className: 'mt-8 pt-8 border-t border-gray-200',
-          },
-          createElement(
-            'div',
-            {
-              className: 'flex items-center justify-between',
-            },
-            [
-              createElement(
-                'div',
-                {
-                  key: 'info',
-                },
-                [
-                  createElement(
-                    'h3',
-                    {
-                      key: 'status-title',
-                      className: 'font-semibold text-green-800 mb-1',
-                    },
-                    '✅ Status do Projeto - CORRIGIDO!'
-                  ),
-                  createElement(
-                    'p',
-                    {
-                      key: 'status-desc',
-                      className: 'text-sm text-gray-600',
-                    },
-                    '21 etapas configuradas e prontas para edição - Sistema funcionando!'
-                  ),
-                ]
-              ),
-              createElement(
-                'div',
-                {
-                  key: 'counter',
-                  className: 'text-right',
-                },
-                [
-                  createElement(
-                    'div',
-                    {
-                      key: 'number',
-                      className: 'text-2xl font-bold text-green-800',
-                    },
-                    '21/21'
-                  ),
-                  createElement(
-                    'div',
-                    {
-                      key: 'label',
-                      className: 'text-xs text-gray-500 uppercase tracking-wide',
-                    },
-                    'Etapas'
-                  ),
-                ]
-              ),
-            ]
-          )
-        ),
-      ]
-    )
-  );
-};
+const EditorFixedDebug = lazy(() => import('./pages/editor-fixed-debug'));
 // 🚀 EDITOR COM SISTEMA DE PREVIEW INTEGRADO
 const EditorWithPreview = lazy(() =>
   import('./pages/editor').then(module => ({ default: module.EditorWithPreview }))
@@ -241,7 +52,6 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
-
 
 // Loading component
 const PageLoading = () => (
@@ -285,7 +95,7 @@ function App() {
                     );
                   }}
                 />
-                
+
                 {/* Editor com ID - também carrega EditorWithPreview */}
                 <ProtectedRoute
                   path="/editor/:id"
@@ -307,7 +117,6 @@ function App() {
                   }}
                 />
 
-
                 {/* Editor Fixed Simples - Versão Garantida */}
                 <ProtectedRoute
                   path="/editor-simples"
@@ -322,34 +131,87 @@ function App() {
                   )}
                 />
 
-                {/* Editor Fixed Route - Simple Working Version */}
+                {/* Editor Fixed Route - Full Featured 4-Column Editor */}
                 <ProtectedRoute
                   path="/editor-fixed"
                   component={() => {
-                    console.log('🚀 App: Carregando EditorFixedSimpleInline (working version)');
+                    console.log('🚀 App: Carregando EditorFixedPageWithDragDrop (full featured)');
                     return (
                       <Suspense fallback={<PageLoading />}>
                         <ErrorBoundary>
-                          <EditorFixedSimpleInline />
+                          <EditorProvider>
+                            <ScrollSyncProvider>
+                              <PreviewProvider totalSteps={21} funnelId="editor-fixed">
+                                <div className="relative">
+                                  <EditorFixedPageWithDragDrop />
+                                </div>
+                              </PreviewProvider>
+                            </ScrollSyncProvider>
+                          </EditorProvider>
                         </ErrorBoundary>
                       </Suspense>
                     );
                   }}
                 />
 
-                {/* Rota alternativa com Preview System */}
+                {/* Editor Fixed Debug Route */}
                 <ProtectedRoute
-                  path="/editor-preview"
+                  path="/editor-fixed-debug"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
-                          <ScrollSyncProvider>
-                            <div className="relative">
-                              <EditorWithPreview />
-                            </div>
-                          </ScrollSyncProvider>
+                          <EditorFixedDebug />
                         </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                />
+
+                {/* Editor Fixed Simple Fallback Route */}
+                <ProtectedRoute
+                  path="/editor-fixed-simple"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+                          <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8">
+                            <h1 className="text-4xl font-bold text-gray-800 mb-2">
+                              Editor de Quiz - 21 Etapas - FALLBACK
+                            </h1>
+                            <p className="text-gray-600 mb-8">
+                              Sistema de criação de quiz personalizado - Modo simplificado
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                              {Array.from({ length: 21 }, (_, i) => (
+                                <div
+                                  key={i + 1}
+                                  className="bg-gray-50 border-2 border-gray-200 rounded-lg p-6 hover:bg-gray-100 transition-all"
+                                >
+                                  <div className="flex items-center justify-between mb-3">
+                                    <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                                      {i + 1}
+                                    </div>
+                                  </div>
+                                  <h3 className="font-semibold text-gray-800 mb-2">
+                                    {i === 0
+                                      ? 'Introdução'
+                                      : i === 20
+                                        ? 'Resultado Final'
+                                        : `Pergunta ${i}`}
+                                  </h3>
+                                  <p className="text-sm text-gray-600">
+                                    {i === 0
+                                      ? 'Página inicial do quiz'
+                                      : i === 20
+                                        ? 'Exibição dos resultados'
+                                        : 'Questão de múltipla escolha'}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
                       </ErrorBoundary>
                     </Suspense>
                   )}
@@ -426,7 +288,7 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
-                
+
                 {/* Editor Debug Minimal */}
                 <Route path="/debug/editor-minimal">
                   {() => (
@@ -439,7 +301,7 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
-                
+
                 {/* Test Básico */}
                 <Route path="/test/basico">
                   {() => (
@@ -448,7 +310,7 @@ function App() {
                     </Suspense>
                   )}
                 </Route>
-                
+
                 <Route path="/test/components">
                   {() => (
                     <Suspense fallback={<PageLoading />}>

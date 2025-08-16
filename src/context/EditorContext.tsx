@@ -104,9 +104,6 @@ interface EditorContextType {
     isLoadingTemplate: boolean;
   };
 
-  // Funnel ID
-  funnelId: string;
-
   // Supabase enabled
   isSupabaseEnabled: boolean;
 
