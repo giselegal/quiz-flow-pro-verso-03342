@@ -396,12 +396,15 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       console.log('🔄 EditorProvider: Carregando templates via TemplateBlockConverter');
 
       try {
-        // Importar o sistema de mapeamento
-        const { STEP_TEMPLATES_MAPPING } = await import('../config/stepTemplatesMapping');
+        // Usar setTimeout para quebrar a dependência circular
+        await new Promise(resolve => setTimeout(resolve, 0));
+        
+        // Importar o sistema de mapeamento APÓS a inicialização
+        const stepTemplatesModule = await import('../config/stepTemplatesMapping');
         const { TemplateBlockConverter } = await import('../utils/templateBlockConverter');
 
         // Carregar template da primeira etapa
-        const step1Template = STEP_TEMPLATES_MAPPING[1];
+        const step1Template = stepTemplatesModule.STEP_TEMPLATES_MAPPING[1];
         if (step1Template) {
           console.log('🔄 Convertendo template da etapa 1...');
           const step1Blocks = await TemplateBlockConverter.convertStepTemplate(
@@ -422,7 +425,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         // Carregar mais algumas etapas progressivamente
         setTimeout(async () => {
           for (let stepNum = 2; stepNum <= 5; stepNum++) {
-            const stepTemplate = STEP_TEMPLATES_MAPPING[stepNum];
+            const stepTemplate = stepTemplatesModule.STEP_TEMPLATES_MAPPING[stepNum];
             if (stepTemplate) {
               try {
                 const blocks = await TemplateBlockConverter.convertStepTemplate(

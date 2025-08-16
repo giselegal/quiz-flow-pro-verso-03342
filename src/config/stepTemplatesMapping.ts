@@ -118,25 +118,25 @@ const getDefaultTemplate = (stepNumber: number) => {
 
 // 📋 MAPEAMENTO DOS TEMPLATES TSX CONECTADOS COM NOMES CORRETOS
 export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
-  1: { stepNumber: 1, templateFunction: getStep01Template, name: STEP_CONFIGS[0].name, description: STEP_CONFIGS[0].description },
-  2: { stepNumber: 2, templateFunction: getConnectedStep02Template, name: STEP_CONFIGS[1].name, description: STEP_CONFIGS[1].description },
-  3: { stepNumber: 3, templateFunction: getConnectedStep03Template, name: STEP_CONFIGS[2].name, description: STEP_CONFIGS[2].description },
-  4: { stepNumber: 4, templateFunction: getConnectedStep04Template, name: STEP_CONFIGS[3].name, description: STEP_CONFIGS[3].description },
-  5: { stepNumber: 5, templateFunction: getConnectedStep05Template, name: STEP_CONFIGS[4].name, description: STEP_CONFIGS[4].description },
-  6: { stepNumber: 6, templateFunction: getConnectedStep06Template, name: STEP_CONFIGS[5].name, description: STEP_CONFIGS[5].description },
-  7: { stepNumber: 7, templateFunction: getConnectedStep07Template, name: STEP_CONFIGS[6].name, description: STEP_CONFIGS[6].description },
-  8: { stepNumber: 8, templateFunction: getConnectedStep08Template, name: STEP_CONFIGS[7].name, description: STEP_CONFIGS[7].description },
-  9: { stepNumber: 9, templateFunction: getConnectedStep09Template, name: STEP_CONFIGS[8].name, description: STEP_CONFIGS[8].description },
-  10: { stepNumber: 10, templateFunction: getConnectedStep10Template, name: STEP_CONFIGS[9].name, description: STEP_CONFIGS[9].description },
-  11: { stepNumber: 11, templateFunction: getConnectedStep11Template, name: STEP_CONFIGS[10].name, description: STEP_CONFIGS[10].description },
-  12: { stepNumber: 12, templateFunction: getConnectedStep12Template, name: STEP_CONFIGS[11].name, description: STEP_CONFIGS[11].description },
-  13: { stepNumber: 13, templateFunction: getConnectedStep13Template, name: STEP_CONFIGS[12].name, description: STEP_CONFIGS[12].description },
-  14: { stepNumber: 14, templateFunction: getConnectedStep14Template, name: STEP_CONFIGS[13].name, description: STEP_CONFIGS[13].description },
-  15: { stepNumber: 15, templateFunction: getConnectedStep15Template, name: STEP_CONFIGS[14].name, description: STEP_CONFIGS[14].description },
-  16: { stepNumber: 16, templateFunction: getConnectedStep16Template, name: STEP_CONFIGS[15].name, description: STEP_CONFIGS[15].description },
-  17: { stepNumber: 17, templateFunction: getConnectedStep17Template, name: STEP_CONFIGS[16].name, description: STEP_CONFIGS[16].description },
-  18: { stepNumber: 18, templateFunction: getConnectedStep18Template, name: STEP_CONFIGS[17].name, description: STEP_CONFIGS[17].description },
-  19: { stepNumber: 19, templateFunction: getConnectedStep19Template, name: STEP_CONFIGS[18].name, description: STEP_CONFIGS[18].description },
+  1: { stepNumber: 1, templateFunction: getStep01Template, name: STEP_CONFIGS[0]?.name || 'Quiz de Estilo Pessoal', description: STEP_CONFIGS[0]?.description || 'Descubra seu estilo único' },
+  2: { stepNumber: 2, templateFunction: getConnectedStep02Template, name: STEP_CONFIGS[1]?.name || 'VAMOS NOS CONHECER?', description: STEP_CONFIGS[1]?.description || 'Digite seu nome para personalizar' },
+  3: { stepNumber: 3, templateFunction: getConnectedStep03Template, name: STEP_CONFIGS[2]?.name || 'QUAL O SEU TIPO DE ROUPA FAVORITA?', description: STEP_CONFIGS[2]?.description || 'Primeira questão do quiz' },
+  4: { stepNumber: 4, templateFunction: getConnectedStep04Template, name: STEP_CONFIGS[3]?.name || 'RESUMA A SUA PERSONALIDADE:', description: STEP_CONFIGS[3]?.description || 'Segunda questão do quiz' },
+  5: { stepNumber: 5, templateFunction: getConnectedStep05Template, name: STEP_CONFIGS[4]?.name || 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?', description: STEP_CONFIGS[4]?.description || 'Terceira questão do quiz' },
+  6: { stepNumber: 6, templateFunction: getConnectedStep06Template, name: STEP_CONFIGS[5]?.name || 'QUAIS DETALHES VOCÊ GOSTA?', description: STEP_CONFIGS[5]?.description || 'Quarta questão do quiz' },
+  7: { stepNumber: 7, templateFunction: getConnectedStep07Template, name: STEP_CONFIGS[6]?.name || 'QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?', description: STEP_CONFIGS[6]?.description || 'Quinta questão do quiz' },
+  8: { stepNumber: 8, templateFunction: getConnectedStep08Template, name: STEP_CONFIGS[7]?.name || 'QUAL CASACO É SEU FAVORITO?', description: STEP_CONFIGS[7]?.description || 'Sexta questão do quiz' },
+  9: { stepNumber: 9, templateFunction: getConnectedStep09Template, name: STEP_CONFIGS[8]?.name || 'QUAL SUA CALÇA FAVORITA?', description: STEP_CONFIGS[8]?.description || 'Sétima questão do quiz' },
+  10: { stepNumber: 10, templateFunction: getConnectedStep10Template, name: STEP_CONFIGS[9]?.name || 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?', description: STEP_CONFIGS[9]?.description || 'Oitava questão do quiz' },
+  11: { stepNumber: 11, templateFunction: getConnectedStep11Template, name: STEP_CONFIGS[10]?.name || 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?', description: STEP_CONFIGS[10]?.description || 'Nona questão do quiz' },
+  12: { stepNumber: 12, templateFunction: getConnectedStep12Template, name: STEP_CONFIGS[11]?.name || 'VOCÊ ESCOLHE CERTOS TECIDOS...', description: STEP_CONFIGS[11]?.description || 'Décima questão do quiz' },
+  13: { stepNumber: 13, templateFunction: getConnectedStep13Template, name: STEP_CONFIGS[12]?.name || 'Enquanto calculamos...', description: STEP_CONFIGS[12]?.description || 'Transição para questões estratégicas' },
+  14: { stepNumber: 14, templateFunction: getConnectedStep14Template, name: STEP_CONFIGS[13]?.name || 'Como você se vê hoje?', description: STEP_CONFIGS[13]?.description || 'Primeira questão estratégica' },
+  15: { stepNumber: 15, templateFunction: getConnectedStep15Template, name: STEP_CONFIGS[14]?.name || 'O que mais te desafia?', description: STEP_CONFIGS[14]?.description || 'Segunda questão estratégica' },
+  16: { stepNumber: 16, templateFunction: getConnectedStep16Template, name: STEP_CONFIGS[15]?.name || 'Com que frequência...', description: STEP_CONFIGS[15]?.description || 'Terceira questão estratégica' },
+  17: { stepNumber: 17, templateFunction: getConnectedStep17Template, name: STEP_CONFIGS[16]?.name || 'Ter acesso a material estratégico?', description: STEP_CONFIGS[16]?.description || 'Quarta questão estratégica' },
+  18: { stepNumber: 18, templateFunction: getConnectedStep18Template, name: STEP_CONFIGS[17]?.name || 'R$ 97,00 um bom investimento?', description: STEP_CONFIGS[17]?.description || 'Quinta questão estratégica' },
+  19: { stepNumber: 19, templateFunction: getConnectedStep19Template, name: STEP_CONFIGS[18]?.name || 'Qual resultado gostaria?', description: STEP_CONFIGS[18]?.description || 'Sexta questão estratégica' },
   20: { 
     stepNumber: 20, 
     templateFunction: (userData?: any) => {
@@ -148,10 +148,10 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
       
       return getStep20Template({ userName, styleCategory, sessionId });
     }, 
-    name: STEP_CONFIGS[19].name, 
-    description: STEP_CONFIGS[19].description 
+    name: STEP_CONFIGS[19]?.name || 'SEU ESTILO PESSOAL É:', 
+    description: STEP_CONFIGS[19]?.description || 'Apresentação do resultado'
   },
-  21: { stepNumber: 21, templateFunction: getStep21Template, name: STEP_CONFIGS[20].name, description: STEP_CONFIGS[20].description },
+  21: { stepNumber: 21, templateFunction: getStep21Template, name: STEP_CONFIGS[20]?.name || 'RECEBA SEU GUIA COMPLETO', description: STEP_CONFIGS[20]?.description || 'Página de conversão' },
 };
 
 // 🔧 FUNÇÕES UTILITÁRIAS ATUALIZADAS
