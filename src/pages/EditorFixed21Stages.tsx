@@ -1,21 +1,15 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import { useFunnels } from '@/context/FunnelsContext';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
-import { getStepTemplate } from '@/config/stepTemplatesMapping';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { 
   LayoutGrid, 
   Eye, 
   Settings, 
   Save, 
   Play, 
-  Palette,
   Component,
   MousePointer,
   Trash2,
@@ -24,81 +18,65 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable-panels';
+
+// Componentes otimizados
+import { useEditorState } from '@/hooks/useEditorState';
+import { BlockLoadingStates } from '@/components/editor/LoadingStates';
+import { PropertiesPanel } from '@/components/editor/PropertiesPanel';
+import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import BlockRenderer from '@/components/editor/blocks/BlockRenderer';
 
-interface Block {
-  id: string;
-  type: string;
-  properties: Record<string, any>;
-  content: Record<string, any>;
-  position: number;
-}
+// Tipos otimizados - removendo interface duplicada pois já existe em @/types/editor
 
+/**
+ * 🚀 EDITOR REFATORADO: Versão otimizada com hooks especializados
+ */
 const EditorFixed21Stages: React.FC = () => {
-  const { steps, currentFunnelId } = useFunnels();
-  const [selectedStep, setSelectedStep] = useState<string>('step-1');
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
-  const [currentBlocks, setCurrentBlocks] = useState<Block[]>([]);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const [userResponses, setUserResponses] = useState<Record<string, any>>({});
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const { steps } = useFunnels();
+  
+  // Hook centralizado para todo o estado do editor
+  const {
+    selectedStep,
+    setSelectedStep,
+    blocks,
+    selectedBlock,
+    selectBlock,
+    updateBlock,
+    deleteBlock,
+    getSelectedBlockData,
+    isPreviewMode,
+    togglePreviewMode,
+    isDragOver,
+    setIsDragOver,
+    userResponses,
+    setUserResponses,
+    isLoading,
+    error
+  } = useEditorState();
 
-  // Function to adapt template blocks to BlockRenderer format
-  const adaptBlockTemplate = (templateBlock: any): Block => {
-    const baseBlock = {
-      id: templateBlock.id || `block-${Date.now()}`,
-      type: templateBlock.type,
-      properties: templateBlock.properties || {},
-      content: {},
-      position: templateBlock.position || 0
-    };
+  const currentStepNumber = parseInt(selectedStep.replace('step-', ''));
+  const selectedBlockData = getSelectedBlockData();
 
-    // Map properties to content based on block type
-    switch (templateBlock.type) {
-      case 'text':
-      case 'text-inline':
-        baseBlock.content = {
-          text: templateBlock.properties?.content || 'Novo texto'
-        };
-        break;
-        
-      case 'quiz-intro-header':
-      case 'quiz-header':
-        baseBlock.content = {
-          title: templateBlock.properties?.title || '',
-          subtitle: templateBlock.properties?.subtitle || ''
-        };
-        // Ensure numeric properties are properly set
-        baseBlock.properties = {
-          ...templateBlock.properties,
-          logoWidth: typeof templateBlock.properties?.logoWidth === 'number' ? templateBlock.properties.logoWidth : 96,
-          logoHeight: typeof templateBlock.properties?.logoHeight === 'number' ? templateBlock.properties.logoHeight : 96
-        };
-        break;
-        
-      case 'lead-form':
-        baseBlock.content = {
-          title: templateBlock.properties?.title || 'Digite seu nome',
-          placeholder: templateBlock.properties?.placeholder || 'Nome',
-          buttonText: templateBlock.properties?.submitText || 'Continuar',
-          validationMessage: templateBlock.properties?.validationMessage || 'Por favor, preencha este campo'
-        };
-        break;
-        
-      case 'options-grid':
-        baseBlock.content = {
-          title: templateBlock.properties?.title || 'Selecione suas opções',
-          options: templateBlock.properties?.options || []
-        };
-        break;
-        
-      case 'button':
-      case 'button-inline':
-        baseBlock.content = {
-          text: templateBlock.properties?.text || 'Clique aqui',
-          url: templateBlock.properties?.url || '#'
-        };
-        break;
+  // Estados de carregamento
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <BlockLoadingStates.Template />
+      </div>
+    );
+  }
+
+  // Estados de erro
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <BlockLoadingStates.Error 
+          error={error}
+          onRetry={() => window.location.reload()}
+        />
+      </div>
+    );
+  }
         
       case 'image':
       case 'image-inline':
@@ -293,18 +271,18 @@ const EditorFixed21Stages: React.FC = () => {
                     onDragLeave={handleDragLeave}
                   >
                     <div className="p-6 space-y-4">
-                      {currentBlocks.length > 0 ? (
-                        currentBlocks.map((block) => (
+                      {blocks.length > 0 ? (
+                        blocks.map((block) => (
                           <div
                             key={block.id}
                             className={cn(
                               "relative group transition-all",
                               !isPreviewMode && "border-2 border-dashed border-transparent rounded-lg p-2",
                               !isPreviewMode && selectedBlock === block.id 
-                                ? "border-primary bg-primary/5" 
+                                 ? "border-primary bg-primary/5" 
                                 : !isPreviewMode && "hover:border-muted-foreground/30 hover:bg-muted/20"
                             )}
-                            onClick={() => !isPreviewMode && handleBlockSelect(block.id)}
+                            onClick={() => !isPreviewMode && selectBlock(block.id)}
                           >
                             {!isPreviewMode && (
                               <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -328,8 +306,8 @@ const EditorFixed21Stages: React.FC = () => {
                                   className="h-6 w-6 p-0"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleBlockDelete(block.id);
-                                  }}
+                                     deleteBlock(block.id);
+                                   }}
                                 >
                                   <Trash2 className="w-3 h-3" />
                                 </Button>
@@ -362,9 +340,8 @@ const EditorFixed21Stages: React.FC = () => {
                 <ResizableHandle withHandle />
                 <ResizablePanel defaultSize={20} minSize={15} maxSize={35}>
                   <PropertiesPanel
-                    selectedBlock={selectedBlockData}
-                    onUpdate={handleBlockUpdate}
-                    onDelete={handleBlockDelete}
+                    block={selectedBlockData}
+                    onUpdate={updateBlock}
                   />
                 </ResizablePanel>
               </>

@@ -1,59 +1,140 @@
-import React from 'react';
+import React, { Component, ReactNode } from 'react';
+import { AlertTriangle, RefreshCw, Bug } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle } from 'lucide-react';
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-}
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ComponentType<{ error?: Error; resetError: () => void }>;
+  children: ReactNode;
+  fallback?: ReactNode;
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
+}
+
+/**
+ * 🛡️ ERROR BOUNDARY: Captura erros de renderização
+ * 
+ * Funcionalidades:
+ * ✅ Captura erros de componentes filhos
+ * ✅ UI de fallback amigável
+ * ✅ Botão de recuperação
+ * ✅ Logging detalhado para debug
+ * ✅ Fallback customizável
+ */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
+    return {
+      hasError: true,
+      error,
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('🚨 ErrorBoundary caught error:', error, errorInfo);
+    console.group('🚨 ErrorBoundary - Erro Capturado');
+    console.error('Error:', error);
+    console.error('Error Info:', errorInfo);
+    console.error('Component Stack:', errorInfo.componentStack);
+    console.groupEnd();
+
+    this.setState({
+      error,
+      errorInfo,
+    });
+
+    // Callback personalizado para logging
     this.props.onError?.(error, errorInfo);
   }
 
-  resetError = () => {
-    this.setState({ hasError: false, error: undefined });
+  handleReset = () => {
+    this.setState({
+      hasError: false,
+      error: null,
+      errorInfo: null,
+    });
   };
 
   render() {
     if (this.state.hasError) {
+      // Fallback customizado se fornecido
       if (this.props.fallback) {
-        const Fallback = this.props.fallback;
-        return <Fallback error={this.state.error} resetError={this.resetError} />;
+        return this.props.fallback;
       }
 
+      // UI de erro padrão
       return (
-        <div className="p-8 text-center space-y-4 border border-destructive/20 rounded-lg bg-destructive/5">
-          <div className="flex justify-center">
-            <AlertTriangle className="h-12 w-12 text-destructive" />
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-destructive">Algo deu errado</h3>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              {this.state.error?.message || 'Ocorreu um erro inesperado neste componente.'}
+        <Card className="border-destructive bg-destructive/5">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle size={20} />
+              Ops! Algo deu errado
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Ocorreu um erro inesperado ao renderizar este componente.
             </p>
-          </div>
-          <Button onClick={this.resetError} variant="outline" size="sm">
-            Tentar novamente
-          </Button>
-        </div>
+            
+            {process.env.NODE_ENV === 'development' && this.state.error && (
+              <details className="bg-muted p-3 rounded-md text-xs">
+                <summary className="cursor-pointer font-mono font-medium mb-2 flex items-center gap-2">
+                  <Bug size={14} />
+                  Detalhes do erro (desenvolvimento)
+                </summary>
+                <div className="space-y-2">
+                  <div>
+                    <strong>Erro:</strong>
+                    <pre className="mt-1 overflow-auto">{this.state.error.message}</pre>
+                  </div>
+                  <div>
+                    <strong>Stack:</strong>
+                    <pre className="mt-1 overflow-auto">{this.state.error.stack}</pre>
+                  </div>
+                  {this.state.errorInfo?.componentStack && (
+                    <div>
+                      <strong>Component Stack:</strong>
+                      <pre className="mt-1 overflow-auto">{this.state.errorInfo.componentStack}</pre>
+                    </div>
+                  )}
+                </div>
+              </details>
+            )}
+            
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={this.handleReset}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw size={14} />
+                Tentar Novamente
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.location.reload()}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw size={14} />
+                Recarregar Página
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       );
     }
 
@@ -61,21 +142,23 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
   }
 }
 
-// Hook para usar error boundary funcionalmente
-export const useErrorBoundary = () => {
-  const [error, setError] = React.useState<Error | null>(null);
-
-  const captureError = React.useCallback((error: Error) => {
-    setError(error);
-  }, []);
-
-  React.useEffect(() => {
-    if (error) {
-      throw error;
-    }
-  }, [error]);
-
-  return { captureError };
+/**
+ * 🔧 WRAPPER FUNCIONAL: Para uso em componentes funcionais
+ */
+export const withErrorBoundary = <P extends object>(
+  Component: React.ComponentType<P>,
+  fallback?: ReactNode,
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+) => {
+  const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
+    <ErrorBoundary fallback={fallback} onError={onError}>
+      <Component {...(props as any)} ref={ref} />
+    </ErrorBoundary>
+  ));
+  
+  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
+  
+  return WrappedComponent;
 };
 
 export default ErrorBoundary;
