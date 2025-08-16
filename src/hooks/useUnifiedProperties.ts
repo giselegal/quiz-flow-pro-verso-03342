@@ -1035,20 +1035,33 @@ export const useUnifiedProperties = (
       case 'form-input':
         return [
           ...getUniversalProperties(),
+          // 🎯 CONTENT PROPERTIES
           createProperty(
             'label',
             currentBlock?.properties?.label || 'Campo de Input',
             PropertyType.TEXT,
             'Rótulo do Campo',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
+            { placeholder: 'Texto que aparece acima do campo...' }
           ),
           createProperty(
             'placeholder',
             currentBlock?.properties?.placeholder || 'Digite aqui...',
             PropertyType.TEXT,
             'Texto de Placeholder',
-            PropertyCategory.CONTENT
+            PropertyCategory.CONTENT,
+            { placeholder: 'Texto que aparece dentro do campo vazio...' }
           ),
+          createProperty(
+            'name',
+            currentBlock?.properties?.name || 'input',
+            PropertyType.TEXT,
+            'Nome do Campo (Supabase)',
+            PropertyCategory.BEHAVIOR,
+            { placeholder: 'userName, email, phone - usado para salvamento' }
+          ),
+          
+          // 🎯 VALIDATION PROPERTIES
           createProperty(
             'inputType',
             currentBlock?.properties?.inputType || 'text',
@@ -1062,6 +1075,7 @@ export const useUnifiedProperties = (
                 { value: 'tel', label: 'Telefone' },
                 { value: 'number', label: 'Número' },
                 { value: 'password', label: 'Senha' },
+                { value: 'url', label: 'URL' },
               ],
             }
           ),
@@ -1073,56 +1087,151 @@ export const useUnifiedProperties = (
             PropertyCategory.BEHAVIOR
           ),
           createProperty(
+            'minLength',
+            currentBlock?.properties?.minLength || 2,
+            PropertyType.RANGE,
+            'Mínimo de Caracteres',
+            PropertyCategory.BEHAVIOR,
+            { min: 0, max: 50, step: 1 }
+          ),
+          createProperty(
+            'maxLength',
+            currentBlock?.properties?.maxLength || 100,
+            PropertyType.RANGE,
+            'Máximo de Caracteres',
+            PropertyCategory.BEHAVIOR,
+            { min: 10, max: 500, step: 10 }
+          ),
+          createProperty(
+            'validationPattern',
+            currentBlock?.properties?.validationPattern || '',
+            PropertyType.TEXT,
+            'Padrão de Validação (RegEx)',
+            PropertyCategory.ADVANCED,
+            { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' }
+          ),
+          
+          // 🎯 SUPABASE INTEGRATION
+          createProperty(
+            'saveToSupabase',
+            currentBlock?.properties?.saveToSupabase ?? true,
+            PropertyType.SWITCH,
+            'Salvar no Supabase',
+            PropertyCategory.BEHAVIOR
+          ),
+          createProperty(
+            'supabaseTable',
+            currentBlock?.properties?.supabaseTable || 'quiz_users',
+            PropertyType.SELECT,
+            'Tabela do Supabase',
+            PropertyCategory.BEHAVIOR,
+            {
+              options: [
+                { value: 'quiz_users', label: 'Usuários do Quiz' },
+                { value: 'quiz_step_responses', label: 'Respostas das Etapas' },
+                { value: 'profiles', label: 'Perfis de Usuário' },
+              ]
+            }
+          ),
+          createProperty(
+            'supabaseColumn',
+            currentBlock?.properties?.supabaseColumn || 'name',
+            PropertyType.SELECT,
+            'Coluna do Supabase',
+            PropertyCategory.BEHAVIOR,
+            {
+              options: [
+                { value: 'name', label: 'Nome' },
+                { value: 'email', label: 'E-mail' },
+                { value: 'phone', label: 'Telefone' },
+                { value: 'session_id', label: 'ID da Sessão' },
+              ]
+            }
+          ),
+          
+          // 🎯 STYLE PROPERTIES  
+          createProperty(
+            'backgroundColor',
+            currentBlock?.properties?.backgroundColor || '#FFFFFF',
+            PropertyType.COLOR,
+            'Cor de Fundo',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
             'borderColor',
             currentBlock?.properties?.borderColor || BRAND_COLORS.primary,
             PropertyType.COLOR,
             'Cor da Borda',
             PropertyCategory.STYLE
           ),
-          // 🔹 CONFIGURAÇÕES DO BOTÃO ASSOCIADO
           createProperty(
-            'buttonText',
-            currentBlock?.properties?.buttonText || 'Continuar',
-            PropertyType.TEXT,
-            'Texto do Botão',
-            PropertyCategory.CONTENT
+            'textColor',
+            currentBlock?.properties?.textColor || '#432818',
+            PropertyType.COLOR,
+            'Cor do Texto',
+            PropertyCategory.STYLE
           ),
           createProperty(
-            'buttonStyle',
-            currentBlock?.properties?.buttonStyle || 'primary',
+            'labelColor',
+            currentBlock?.properties?.labelColor || '#432818',
+            PropertyType.COLOR,
+            'Cor do Rótulo',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'fontSize',
+            currentBlock?.properties?.fontSize || '16',
+            PropertyType.RANGE,
+            'Tamanho da Fonte',
+            PropertyCategory.STYLE,
+            { min: 12, max: 24, step: 1, unit: 'px' }
+          ),
+          createProperty(
+            'fontFamily',
+            currentBlock?.properties?.fontFamily || 'inherit',
             PropertyType.SELECT,
-            'Estilo do Botão',
+            'Família da Fonte',
             PropertyCategory.STYLE,
             {
               options: [
-                { value: 'primary', label: 'Primário' },
-                { value: 'secondary', label: 'Secundário' },
-                { value: 'outline', label: 'Contorno' },
-                { value: 'ghost', label: 'Fantasma' },
-              ],
+                { value: 'inherit', label: 'Herdar' },
+                { value: 'Inter', label: 'Inter' },
+                { value: 'Playfair Display', label: 'Playfair Display' },
+                { value: 'Arial', label: 'Arial' },
+                { value: 'Georgia', label: 'Georgia' },
+              ]
             }
           ),
           createProperty(
-            'buttonSize',
-            currentBlock?.properties?.buttonSize || 'medium',
+            'fontWeight',
+            currentBlock?.properties?.fontWeight || '400',
             PropertyType.SELECT,
-            'Tamanho do Botão',
+            'Peso da Fonte',
             PropertyCategory.STYLE,
             {
               options: [
-                { value: 'small', label: 'Pequeno' },
-                { value: 'medium', label: 'Médio' },
-                { value: 'large', label: 'Grande' },
-                { value: 'full', label: 'Largura Total (Responsivo)' },
-              ],
+                { value: '300', label: 'Leve (300)' },
+                { value: '400', label: 'Normal (400)' },
+                { value: '500', label: 'Médio (500)' },
+                { value: '600', label: 'Semi-Bold (600)' },
+                { value: '700', label: 'Bold (700)' },
+              ]
             }
           ),
           createProperty(
-            'enableButtonWhenFilled',
-            currentBlock?.properties?.enableButtonWhenFilled !== false,
+            'borderRadius',
+            currentBlock?.properties?.borderRadius || 8,
+            PropertyType.RANGE,
+            'Bordas Arredondadas',
+            PropertyCategory.STYLE,
+            { min: 0, max: 25, step: 1, unit: 'px' }
+          ),
+          createProperty(
+            'fullWidth',
+            currentBlock?.properties?.fullWidth ?? true,
             PropertyType.SWITCH,
-            'Ativar Botão Apenas Quando Preenchido',
-            PropertyCategory.BEHAVIOR
+            'Largura Total',
+            PropertyCategory.LAYOUT
           ),
           // 🔹 CONFIGURAÇÕES DE NAVEGAÇÃO
           createProperty(
@@ -1172,27 +1281,12 @@ export const useUnifiedProperties = (
           ),
           // 🔹 CONFIGURAÇÕES AVANÇADAS
           createProperty(
-            'minLength',
-            currentBlock?.properties?.minLength || 1,
-            PropertyType.RANGE,
-            'Mínimo de Caracteres',
-            PropertyCategory.BEHAVIOR,
-            { min: 0, max: 50, step: 1 }
-          ),
-          createProperty(
-            'maxLength',
-            currentBlock?.properties?.maxLength || 255,
-            PropertyType.RANGE,
-            'Máximo de Caracteres',
-            PropertyCategory.BEHAVIOR,
-            { min: 1, max: 1000, step: 10 }
-          ),
-          createProperty(
             'validationPattern',
             currentBlock?.properties?.validationPattern || '',
             PropertyType.TEXT,
             'Padrão de Validação (RegEx)',
-            PropertyCategory.ADVANCED
+            PropertyCategory.ADVANCED,
+            { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' }
           ),
           createProperty(
             'errorMessage',
@@ -1967,6 +2061,300 @@ export const useUnifiedProperties = (
             PropertyType.COLOR,
             'Cor de Destaque',
             PropertyCategory.STYLE
+          ),
+        ];
+
+      // ✅ STEP 1 SPECIFIC COMPONENTS - Enhanced properties for all Step 1 components
+      case 'decorative-bar':
+        return [
+          ...getUniversalProperties(),
+          // 🎯 VISUAL PROPERTIES
+          createProperty(
+            'height',
+            currentBlock?.properties?.height || 4,
+            PropertyType.RANGE,
+            'Altura da Barra',
+            PropertyCategory.STYLE,
+            { min: 1, max: 20, step: 1, unit: 'px' }
+          ),
+          createProperty(
+            'backgroundColor',
+            currentBlock?.properties?.backgroundColor || '#B89B7A',
+            PropertyType.COLOR,
+            'Cor de Fundo',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'gradientFrom',
+            currentBlock?.properties?.gradientFrom || '#B89B7A',
+            PropertyType.COLOR,
+            'Cor Inicial do Gradiente',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'gradientTo',
+            currentBlock?.properties?.gradientTo || '#D4C2A8',
+            PropertyType.COLOR,
+            'Cor Final do Gradiente',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'borderRadius',
+            currentBlock?.properties?.borderRadius || 2,
+            PropertyType.RANGE,
+            'Bordas Arredondadas',
+            PropertyCategory.STYLE,
+            { min: 0, max: 20, step: 1, unit: 'px' }
+          ),
+          createProperty(
+            'width',
+            currentBlock?.properties?.width || '100%',
+            PropertyType.SELECT,
+            'Largura',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: '25%', label: '25%' },
+                { value: '50%', label: '50%' },
+                { value: '75%', label: '75%' },
+                { value: '100%', label: '100%' },
+              ]
+            }
+          ),
+          createProperty(
+            'opacity',
+            currentBlock?.properties?.opacity || 1,
+            PropertyType.RANGE,
+            'Opacidade',
+            PropertyCategory.STYLE,
+            { min: 0.1, max: 1, step: 0.1 }
+          ),
+        ];
+
+      case 'legal-notice':
+        return [
+          ...getUniversalProperties(),
+          // 🎯 CONTENT PROPERTIES
+          createProperty(
+            'content',
+            currentBlock?.properties?.content || '© 2025 - Todos os direitos reservados',
+            PropertyType.TEXTAREA,
+            'Conteúdo do Aviso',
+            PropertyCategory.CONTENT,
+            { placeholder: 'Digite o texto do aviso legal...' }
+          ),
+          createProperty(
+            'showPrivacyLink',
+            currentBlock?.properties?.showPrivacyLink ?? true,
+            PropertyType.SWITCH,
+            'Mostrar Link de Privacidade',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'showTermsLink',
+            currentBlock?.properties?.showTermsLink ?? true,
+            PropertyType.SWITCH,
+            'Mostrar Link de Termos',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'privacyUrl',
+            currentBlock?.properties?.privacyUrl || '/privacidade',
+            PropertyType.URL,
+            'URL da Política de Privacidade',
+            PropertyCategory.CONTENT
+          ),
+          createProperty(
+            'termsUrl',
+            currentBlock?.properties?.termsUrl || '/termos',
+            PropertyType.URL,
+            'URL dos Termos de Uso',
+            PropertyCategory.CONTENT
+          ),
+          // 🎯 STYLE PROPERTIES
+          createProperty(
+            'fontSize',
+            currentBlock?.properties?.fontSize || 'text-xs',
+            PropertyType.SELECT,
+            'Tamanho da Fonte',
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: 'text-xs', label: 'Extra Pequeno' },
+                { value: 'text-sm', label: 'Pequeno' },
+                { value: 'text-base', label: 'Médio' },
+                { value: 'text-lg', label: 'Grande' },
+              ]
+            }
+          ),
+          createProperty(
+            'textAlign',
+            currentBlock?.properties?.textAlign || 'text-center',
+            PropertyType.SELECT,
+            'Alinhamento do Texto',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'text-left', label: 'Esquerda' },
+                { value: 'text-center', label: 'Centro' },
+                { value: 'text-right', label: 'Direita' },
+              ]
+            }
+          ),
+          createProperty(
+            'color',
+            currentBlock?.properties?.color || '#9CA3AF',
+            PropertyType.COLOR,
+            'Cor do Texto',
+            PropertyCategory.STYLE
+          ),
+          createProperty(
+            'linkColor',
+            currentBlock?.properties?.linkColor || '#B89B7A',
+            PropertyType.COLOR,
+            'Cor dos Links',
+            PropertyCategory.STYLE
+          ),
+        ];
+
+      case 'accessibility-skip-link':
+        return [
+          ...getUniversalProperties(),
+          // 🎯 ACCESSIBILITY PROPERTIES
+          createProperty(
+            'target',
+            currentBlock?.properties?.target || '#main',
+            PropertyType.TEXT,
+            'Seletor do Destino',
+            PropertyCategory.ACCESSIBILITY,
+            { placeholder: '#main, #content, .quiz-form' }
+          ),
+          createProperty(
+            'text',
+            currentBlock?.properties?.text || 'Pular para o conteúdo principal',
+            PropertyType.TEXT,
+            'Texto do Link',
+            PropertyCategory.ACCESSIBILITY,
+            { placeholder: 'Texto que aparece quando focado...' }
+          ),
+          createProperty(
+            'className',
+            currentBlock?.properties?.className || 'sr-only focus:not-sr-only',
+            PropertyType.TEXT,
+            'Classes CSS',
+            PropertyCategory.ADVANCED,
+            { placeholder: 'Classes de estilo e acessibilidade...' }
+          ),
+          createProperty(
+            'position',
+            currentBlock?.properties?.position || 'top-left',
+            PropertyType.SELECT,
+            'Posição na Tela',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'top-left', label: 'Superior Esquerda' },
+                { value: 'top-center', label: 'Superior Centro' },
+                { value: 'top-right', label: 'Superior Direita' },
+              ]
+            }
+          ),
+        ];
+
+      case 'image-inline':
+        return [
+          ...getUniversalProperties(),
+          // 🎯 IMAGE PROPERTIES
+          createProperty(
+            'src',
+            currentBlock?.properties?.src || '',
+            PropertyType.URL,
+            'URL da Imagem',
+            PropertyCategory.CONTENT,
+            { placeholder: 'https://exemplo.com/imagem.jpg' }
+          ),
+          createProperty(
+            'alt',
+            currentBlock?.properties?.alt || 'Imagem',
+            PropertyType.TEXT,
+            'Texto Alternativo',
+            PropertyCategory.ACCESSIBILITY,
+            { placeholder: 'Descrição da imagem para acessibilidade...' }
+          ),
+          createProperty(
+            'width',
+            currentBlock?.properties?.width || 'auto',
+            PropertyType.TEXT,
+            'Largura',
+            PropertyCategory.LAYOUT,
+            { placeholder: 'auto, 400px, 100%' }
+          ),
+          createProperty(
+            'height',
+            currentBlock?.properties?.height || 'auto',
+            PropertyType.TEXT,
+            'Altura',
+            PropertyCategory.LAYOUT,
+            { placeholder: 'auto, 300px, 100%' }
+          ),
+          createProperty(
+            'aspectRatio',
+            currentBlock?.properties?.aspectRatio || 'auto',
+            PropertyType.SELECT,
+            'Proporção da Imagem',
+            PropertyCategory.LAYOUT,
+            {
+              options: [
+                { value: 'auto', label: 'Automático' },
+                { value: '1/1', label: 'Quadrado (1:1)' },
+                { value: '4/3', label: 'Padrão (4:3)' },
+                { value: '16/9', label: 'Widescreen (16:9)' },
+                { value: '3/2', label: 'Fotografia (3:2)' },
+              ]
+            }
+          ),
+          createProperty(
+            'objectFit',
+            currentBlock?.properties?.objectFit || 'cover',
+            PropertyType.SELECT,
+            'Ajuste da Imagem',
+            PropertyCategory.STYLE,
+            {
+              options: [
+                { value: 'cover', label: 'Cobrir (Cover)' },
+                { value: 'contain', label: 'Conter (Contain)' },
+                { value: 'fill', label: 'Preencher (Fill)' },
+                { value: 'scale-down', label: 'Reduzir (Scale Down)' },
+              ]
+            }
+          ),
+          createProperty(
+            'borderRadius',
+            currentBlock?.properties?.borderRadius || 8,
+            PropertyType.RANGE,
+            'Bordas Arredondadas',
+            PropertyCategory.STYLE,
+            { min: 0, max: 50, step: 2, unit: 'px' }
+          ),
+          createProperty(
+            'priority',
+            currentBlock?.properties?.priority ?? false,
+            PropertyType.SWITCH,
+            'Carregamento Prioritário',
+            PropertyCategory.ADVANCED
+          ),
+          createProperty(
+            'loading',
+            currentBlock?.properties?.loading || 'lazy',
+            PropertyType.SELECT,
+            'Tipo de Carregamento',
+            PropertyCategory.ADVANCED,
+            {
+              options: [
+                { value: 'lazy', label: 'Lazy (Sob demanda)' },
+                { value: 'eager', label: 'Eager (Imediato)' },
+              ]
+            }
           ),
         ];
 
