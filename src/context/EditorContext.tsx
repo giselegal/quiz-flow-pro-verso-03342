@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { EditorState, EditorAction, EditorContextType } from '@/types/editorTypes';
+
+import React, { createContext, useContext, useReducer } from 'react';
 import { Block, BlockType } from '@/types/editor';
-import { STEP_TEMPLATES_MAPPING } from '@/config/stepTemplatesMapping';
-import { useEffect } from 'react';
+import { EditorContextType, EditorState, EditorAction } from '@/types/editorTypes';
+
+const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
 const initialState: EditorState = {
   selectedBlockId: null,
@@ -10,8 +11,6 @@ const initialState: EditorState = {
   blocks: [],
   isGlobalStylesOpen: false,
 };
-
-const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
 const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
   switch (action.type) {
@@ -23,11 +22,14 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
       return {
         ...state,
         blocks: state.blocks.map(block =>
-          block.id === action.payload.id ? { ...block, content: action.payload.content } : block
+          block.id === action.payload.id ? { ...block, content: { ...block.content, ...action.payload.content } } : block
         ),
       };
     case 'DELETE_BLOCK':
-      return { ...state, blocks: state.blocks.filter(block => block.id !== action.payload) };
+      return {
+        ...state,
+        blocks: state.blocks.filter(block => block.id !== action.payload),
+      };
     case 'SET_SELECTED_BLOCK':
       return { ...state, selectedBlockId: action.payload };
     case 'SET_PREVIEW_MODE':
@@ -39,109 +41,62 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
   }
 };
 
-const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);
 
-  // Block Actions
+  // Basic block operations
   const addBlock = async (type: BlockType): Promise<string> => {
-    const newId = `block_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newBlock: Block = {
-      id: newId,
+      id: `block-${Date.now()}-${Math.random()}`,
       type,
       content: {},
       order: state.blocks.length,
-      properties: {}
+      properties: {},
     };
-
-    dispatch({
-      type: 'ADD_BLOCK',
-      payload: newBlock
-    });
-
-    return newId;
+    dispatch({ type: 'ADD_BLOCK', payload: newBlock });
+    return newBlock.id;
   };
 
   const updateBlock = async (id: string, content: any): Promise<void> => {
-    dispatch({
-      type: 'UPDATE_BLOCK',
-      payload: { id, content }
-    });
+    dispatch({ type: 'UPDATE_BLOCK', payload: { id, content } });
   };
 
   const deleteBlock = async (id: string): Promise<void> => {
-    dispatch({
-      type: 'DELETE_BLOCK',
-      payload: id
-    });
-  };
-
-  const setSelectedBlockId = (id: string | null) => {
-    dispatch({
-      type: 'SET_SELECTED_BLOCK',
-      payload: id
-    });
+    dispatch({ type: 'DELETE_BLOCK', payload: id });
   };
 
   const reorderBlocks = async (startIndex: number, endIndex: number): Promise<void> => {
-    // Implementation for reordering blocks
-    console.log('Reordering blocks:', startIndex, endIndex);
+    const newBlocks = Array.from(state.blocks);
+    const [removed] = newBlocks.splice(startIndex, 1);
+    newBlocks.splice(endIndex, 0, removed);
+    dispatch({ type: 'SET_BLOCKS', payload: newBlocks });
   };
 
-  const addBlockAtPosition = async (type: BlockType, position: number): Promise<string> => {
+  const addBlockAtPosition = async (type: BlockType): Promise<string> => {
     return addBlock(type);
   };
 
-  // Stage Actions
-  const setActiveStage = (stageId: string) => {
-    console.log('Setting active stage:', stageId);
+  const setSelectedBlockId = (id: string | null): void => {
+    dispatch({ type: 'SET_SELECTED_BLOCK', payload: id });
   };
 
-  // UI Actions
-  const setIsPreviewing = (isPreviewing: boolean) => {
-    dispatch({
-      type: 'SET_PREVIEW_MODE',
-      payload: isPreviewing
-    });
+  const setGlobalStylesOpen = (open: boolean): void => {
+    dispatch({ type: 'SET_GLOBAL_STYLES_OPEN', payload: open });
   };
 
-  const setViewportSize = (size: 'desktop' | 'tablet' | 'mobile') => {
-    console.log('Setting viewport size:', size);
-  };
-
-  // Template Actions
-  const loadTemplateByStep = async (stepNumber: number) => {
-    console.log('Loading template for step:', stepNumber);
-  };
-
-  const isLoadingTemplate = false;
-
-  // Persistence Actions
-  const saveFunnel = async (): Promise<void> => {
-    console.log('Saving funnel');
-  };
-
-  const save = async (): Promise<void> => {
-    console.log('Saving editor state');
-  };
-
-  const load = async (): Promise<void> => {
-    console.log('Loading editor state');
-  };
-
-  // Quiz State Actions
-  const setUserNameFromInput = (name: string) => {
-    console.log('Setting user name:', name);
-  };
-
-  const answerStrategicQuestion = (questionId: string, answer: any) => {
-    console.log('Answering strategic question:', questionId, answer);
-  };
-
-  // Computed Values
-  const currentBlocks = state.blocks;
-  const selectedBlock = state.blocks.find(block => block.id === state.selectedBlockId) || null;
-  const stageCount = 21;
-  const totalBlocks = state.blocks.length;
+  // Mock stages data
+  const mockStages = Array.from({ length: 21 }, (_, i) => ({
+    id: `stage-${i + 1}`,
+    name: i === 0 ? 'Introdução' : i === 20 ? 'Resultado' : `Pergunta ${i}`,
+    type: i === 0 ? 'intro' : i === 20 ? 'result' : 'question',
+    order: i + 1,
+    blocks: [],
+    metadata: {
+      description: i === 0 ? 'Página de introdução' : i === 20 ? 'Página de resultado' : `Pergunta ${i}`,
+      isActive: i === 0,
+      blocksCount: 0,
+    },
+  }));
 
   const contextValue: EditorContextType = {
     // Core State
@@ -155,26 +110,18 @@ const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     reorderBlocks,
     setSelectedBlockId,
     addBlockAtPosition,
-
-    // UI State
-    selectedBlockId: state.selectedBlockId,
-    setGlobalStylesOpen: (open: boolean) => {
-      dispatch({ type: 'SET_GLOBAL_STYLES_OPEN', payload: open });
-    },
+    setGlobalStylesOpen,
 
     // Extended Properties
-    stages: Array.from({ length: 21 }, (_, i) => ({
-      id: `step-${i + 1}`,
-      name: `Etapa ${i + 1}`,
-      type: i === 0 ? 'intro' : i === 20 ? 'result' : 'question',
-      order: i + 1,
-      blocks: []
-    })),
-    activeStageId: 'step-1',
+    selectedBlockId: state.selectedBlockId,
+    stages: mockStages,
+    activeStageId: 'stage-1',
     stageActions: {
-      setActiveStage,
-      loadTemplateByStep,
-      isLoadingTemplate
+      setActiveStage: () => {},
+      loadTemplateByStep: async () => {},
+      isLoadingTemplate: false,
+      addStage: () => {},
+      removeStage: () => {},
     },
     blockActions: {
       setSelectedBlockId,
@@ -182,59 +129,57 @@ const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       updateBlock,
       deleteBlock,
       reorderBlocks,
-      addBlockAtPosition
+      addBlockAtPosition,
     },
     computed: {
-      currentBlocks,
-      selectedBlock,
-      stageCount,
-      totalBlocks
+      currentBlocks: state.blocks,
+      selectedBlock: state.blocks.find(b => b.id === state.selectedBlockId) || null,
+      stageCount: 21,
+      totalBlocks: state.blocks.length,
     },
     uiState: {
       isPreviewing: state.isPreviewing,
       isGlobalStylesOpen: state.isGlobalStylesOpen,
-      setIsPreviewing,
+      setIsPreviewing: (isPreviewing: boolean) => dispatch({ type: 'SET_PREVIEW_MODE', payload: isPreviewing }),
       viewportSize: 'desktop' as const,
-      setViewportSize
+      setViewportSize: () => {},
     },
     quizState: {
       userName: '',
       answers: [],
       isQuizCompleted: false,
       strategicAnswers: {},
-      setUserNameFromInput,
-      answerStrategicQuestion
+      setUserNameFromInput: () => {},
+      answerStrategicQuestion: () => {},
     },
     databaseMode: 'memory' as const,
     templateActions: {
-      loadTemplate: (templateId: string) => console.log('Loading template:', templateId),
-      saveTemplate: () => console.log('Saving template'),
-      loadTemplateByStep,
-      isLoadingTemplate
+      loadTemplate: () => {},
+      saveTemplate: () => {},
+      loadTemplateByStep: async () => {},
+      isLoadingTemplate: false,
     },
-    funnelId: 'default-funnel',
+    funnelId: 'default',
     isSupabaseEnabled: false,
     persistenceActions: {
-      save,
-      load,
-      saveFunnel
+      save: async () => {},
+      load: async () => {},
+      saveFunnel: async () => {},
     },
-    connectionStatus: 'disconnected' as const
+    connectionStatus: 'connected' as const,
+    
+    // Additional methods
+    selectBlock: setSelectedBlockId,
+    togglePreview: () => dispatch({ type: 'SET_PREVIEW_MODE', payload: !state.isPreviewing }),
   };
 
-  return (
-    <EditorContext.Provider value={contextValue}>
-      {children}
-    </EditorContext.Provider>
-  );
+  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
 };
 
-const useEditor = (): EditorContextType => {
+export const useEditor = (): EditorContextType => {
   const context = useContext(EditorContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useEditor must be used within an EditorProvider');
   }
   return context;
 };
-
-export { EditorProvider, useEditor };

@@ -1,342 +1,165 @@
-import React, { useEffect, useState } from 'react';
-
-// Editor Components
-import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
-import CombinedComponentsPanel from '@/components/editor/CombinedComponentsPanel';
-import { DndProvider } from '@/components/editor/dnd/DndProvider';
-import { EditorNotification } from '@/components/editor/EditorNotification';
-import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
-import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
-import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
-
-// Context & Hooks
+import React, { useState, useEffect, useCallback } from 'react';
+import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
 import { useEditor } from '@/context/EditorContext';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { usePropertyHistory } from '@/hooks/usePropertyHistory';
-import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { Settings } from 'lucide-react';
+import { EditorCanvas } from '@/components/enhanced-editor/canvas/EditorCanvas';
+import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
+import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 
-/**
- * Editor Fixed Enhanced - Versão com integração Supabase
- *
- * Editor de funil com drag & drop completo, incluindo:
- * - Layout de 4 colunas responsivo
- * - Sistema avançado de drag & drop
- * - Painel universal de propriedades
- * - Atalhos de teclado e histórico de mudanças
- * - Preview mode e viewport responsivo
- * - ✅ NOVO: Persistência no Supabase
- * - ✅ NOVO: Sistema híbrido local/Supabase
- */
-const EditorFixedEnhancedPage: React.FC = () => {
-  // Hooks para funcionalidades avançadas
-  const { scrollRef } = useSyncedScroll({ source: 'canvas' });
-  const propertyHistory = usePropertyHistory();
-
-  // Estado local
-  const [showFunnelSettings, setShowFunnelSettings] = useState(false);
-  const [showNotification, setShowNotification] = useState(false);
-
-  // Editor Context - Estado centralizado do editor
+const EditorFixedDragDropEnhanced: React.FC = () => {
   const {
+    state,
+    dispatch,
+    stages,
     activeStageId,
+    computed,
+    uiState,
+    blockActions,
+    stageActions,
+    persistenceActions,
     selectedBlockId,
-    funnelId,
-    isSupabaseEnabled,
-    stageActions: { setActiveStage },
-    blockActions: {
-      addBlock,
-      addBlockAtPosition,
-      setSelectedBlockId,
-      deleteBlock,
-      updateBlock,
-      reorderBlocks,
-    },
-    persistenceActions: { saveFunnel },
-    uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
-    computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
   } = useEditor();
+  const { toast } = useToast();
 
-  // Mostrar notificação quando carregar a etapa 1 (apenas uma vez por sessão)
-  useEffect(() => {
-    const hasShown = sessionStorage.getItem('editor-onboarding-shown');
-    if ((activeStageId === 'step-1' || activeStageId === 'step-01') && !hasShown) {
-      setShowNotification(true);
-      sessionStorage.setItem('editor-onboarding-shown', 'true');
-    }
-  }, [activeStageId]);
+  const [funnelName, setFunnelName] = useState('Novo Funil');
+  const [funnelDescription, setFunnelDescription] = useState('Descrição do funil');
 
-  // Listener global: navegação entre etapas disparada por botões
-  useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { stepId?: string };
-      if (detail?.stepId) {
-        setActiveStage(detail.stepId);
-      }
-    };
-    window.addEventListener('quiz-navigate-to-step', handler as EventListener);
-    return () => window.removeEventListener('quiz-navigate-to-step', handler as EventListener);
-  }, [setActiveStage]);
-
-  // Configuração de viewport responsivo
-  const getCanvasClassName = () => {
-    const baseClasses =
-      'transition-all duration-500 ease-out mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl shadow-stone-200/40 border border-stone-200/30 ring-1 ring-stone-100/20';
-
-    switch (viewportSize) {
+  // Map viewport sizes
+  const mapViewportSize = (size: string): 'desktop' | 'tablet' | 'mobile' => {
+    switch (size) {
       case 'sm':
-        return `${baseClasses} w-[375px] min-h-[600px]`;
       case 'md':
-        return `${baseClasses} w-[768px] min-h-[800px]`;
+        return 'mobile';
       case 'lg':
+        return 'tablet';
       case 'xl':
       default:
-        return `${baseClasses} w-full max-w-4xl min-h-[900px]`;
+        return 'desktop';
     }
   };
 
-  // Handlers de eventos
-  const handleSave = async () => {
+  const handleViewportChange = (size: 'sm' | 'md' | 'lg' | 'xl') => {
+    const mappedSize = mapViewportSize(size);
+    if (uiState.setViewportSize) {
+      uiState.setViewportSize(mappedSize);
+    }
+  };
+
+  const handleComponentSelect = async (type: string) => {
     try {
-      console.log(
-        '💾 Iniciando salvamento do editor... (Supabase:',
-        isSupabaseEnabled ? 'enabled' : 'disabled',
-        ')'
-      );
-      const result = await saveFunnel();
-      if (result.success) {
-        console.log('✅ Editor salvo com sucesso no Supabase:', funnelId);
-      } else {
-        console.error('❌ Erro no salvamento:', result.error);
+      const blockId = await blockActions.addBlock(type);
+      if (blockId) {
+        blockActions.setSelectedBlockId(blockId);
+        toast({
+          title: 'Bloco adicionado',
+          description: `Bloco ${type} adicionado com sucesso.`,
+        });
       }
     } catch (error) {
-      console.error('❌ Erro inesperado ao salvar:', error);
+      console.error('Erro ao adicionar bloco:', error);
+      toast({
+        title: 'Erro ao adicionar bloco',
+        description: 'Ocorreu um erro ao adicionar o bloco. Por favor, tente novamente.',
+        variant: 'destructive',
+      });
     }
   };
 
-  const handleDeleteBlock = (blockId: string) => {
-    if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
-      deleteBlock(blockId);
-      setSelectedBlockId(null);
+  const handleFunnelNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFunnelName(e.target.value);
+  };
+
+  const handleFunnelDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFunnelDescription(e.target.value);
+  };
+
+  const handleTogglePreview = () => {
+    dispatch({ type: 'SET_PREVIEW_MODE', payload: !state.isPreviewing });
+  };
+
+  const handleSave = async () => {
+    try {
+      await persistenceActions.save();
+      console.log('✅ Funnel saved successfully');
+    } catch (error) {
+      console.error('❌ Error saving funnel:', error);
     }
   };
-
-  const handleStageSelect = (_stageId: string) => {
-    // O EditorContext já gerencia internamente
-  };
-
-  const getStepNumberFromStageId = (stageId: string | null): number => {
-    if (!stageId) return 1;
-    const match = stageId.match(/step-(\d+)/);
-    return match ? parseInt(match[1], 10) : 1;
-  };
-
-  // Configurar atalhos de teclado
-  useKeyboardShortcuts({
-    onUndo: propertyHistory.undo,
-    onRedo: propertyHistory.redo,
-    onDelete: selectedBlockId ? () => handleDeleteBlock(selectedBlockId) : undefined,
-    canUndo: propertyHistory.canUndo,
-    canRedo: propertyHistory.canRedo,
-    hasSelectedBlock: !!selectedBlockId,
-  });
 
   return (
-    <DndProvider
-      // TODO: Implementar disabled prop no DndProvider
-      blocks={(currentBlocks || []).map(block => ({
-        id: block.id,
-        type: block.type,
-        properties: block.properties || {},
-      }))}
-      onBlocksReorder={newBlocksData => {
-        if (isPreviewing) {
-          console.warn('⚠️ Reordenação bloqueada em modo preview');
-          return;
-        }
-
-        const newBlockIds = newBlocksData.map(b => b.id);
-        const oldBlockIds = (currentBlocks || []).map(b => b.id);
-
-        // ✅ VALIDAÇÃO RIGOROSA: Validar conjunto exato de IDs
-        if (oldBlockIds.length !== newBlockIds.length) {
-          console.warn('⚠️ Reordenação abortada: quantidade de blocos não confere');
-          return;
-        }
-
-        const oldSet = new Set(oldBlockIds);
-        const newSet = new Set(newBlockIds);
-
-        if (oldSet.size !== newSet.size) {
-          console.warn('⚠️ Reordenação abortada: IDs duplicados detectados');
-          return;
-        }
-
-        for (const id of newBlockIds) {
-          if (!oldSet.has(id)) {
-            console.warn('⚠️ Reordenação abortada: ID desconhecido:', id);
-            return;
-          }
-        }
-
-        console.log('✅ Reordenação válida, aplicando...');
-        reorderBlocks(newBlockIds, activeStageId || undefined);
-      }}
-      onBlockAdd={(blockType, position) => {
-        if (isPreviewing) {
-          console.warn('⚠️ Adição de bloco bloqueada em modo preview');
-          return;
-        }
-
-        if (position !== undefined && position >= 0) {
-          addBlockAtPosition(blockType, position, activeStageId || undefined);
-        } else {
-          addBlock(blockType, activeStageId || undefined);
-        }
-      }}
-      onBlockSelect={blockId => {
-        if (!isPreviewing) {
-          setSelectedBlockId(blockId);
-        }
-      }}
-      selectedBlockId={isPreviewing ? undefined : selectedBlockId || undefined}
-      onBlockUpdate={(blockId, updates) => {
-        if (!isPreviewing) {
-          updateBlock(blockId, updates as any);
-        }
-      }}
-    >
-      {/* Notificação de onboarding (apenas uma vez por sessão) */}
-      {showNotification && (
-        <EditorNotification
-          message={`🎉 Editor Enhanced ativo! Persistência ${isSupabaseEnabled ? 'Supabase' : 'Local'} • Propriedades inteligentes • Funil: ${funnelId}`}
-          type="success"
-          duration={8000}
-          onClose={() => setShowNotification(false)}
-        />
-      )}
-
-      <div className="flex flex-col h-screen">
-        <div className="flex-none">
-          <div className="sticky top-0 bg-white z-20">
-            <EditorToolbar
-              isPreviewing={isPreviewing}
-              onTogglePreview={() => {
-                setIsPreviewing(!isPreviewing);
-                if (!isPreviewing) {
-                  setSelectedBlockId(null); // Limpar seleção ao entrar em preview
-                }
-              }}
-              onSave={handleSave}
-              viewportSize={viewportSize}
-              onViewportSizeChange={setViewportSize}
-              onShowFunnelSettings={() => setShowFunnelSettings(true)}
+    <div className="h-screen flex flex-col bg-background">
+      <div className="border-b">
+        <div className="container flex items-center h-16 space-x-4">
+          <div className="flex-1 flex items-center space-x-2">
+            <Label htmlFor="funnel-name" className="text-sm font-medium">
+              Nome do Funil:
+            </Label>
+            <Input
+              type="text"
+              id="funnel-name"
+              value={funnelName}
+              onChange={handleFunnelNameChange}
+              className="max-w-xs text-sm"
             />
-
-            <div style={{ borderColor: '#E5DDD5' }} className="border-b bg-white">
-              <div className="flex items-center justify-between p-2">
-                <div className="flex items-center space-x-4">
-                  <h1 className="text-lg font-semibold text-stone-700">
-                    Editor Enhanced - Etapa {activeStageId}
-                    {isSupabaseEnabled && (
-                      <span className="text-xs text-green-600 ml-2">[Supabase]</span>
-                    )}
-                  </h1>
-                  <div className="text-sm text-stone-500">
-                    {totalBlocks} componente{totalBlocks !== 1 ? 's' : ''} • {stageCount} etapa
-                    {stageCount !== 1 ? 's' : ''} • Funil: {funnelId}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="flex-1 overflow-hidden">
-            <FourColumnLayout
-              className="h-full"
-              stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
-              componentsPanel={
-                <CombinedComponentsPanel
-                  currentStepNumber={getStepNumberFromStageId(activeStageId)}
-                />
-              }
-              canvas={
-                <div
-                  ref={scrollRef}
-                  className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
-                >
-                  <div className={getCanvasClassName()}>
-                    <CanvasDropZone
-                      blocks={currentBlocks}
-                      selectedBlockId={isPreviewing ? null : selectedBlockId}
-                      onSelectBlock={isPreviewing ? () => {} : setSelectedBlockId}
-                      onUpdateBlock={isPreviewing ? () => {} : updateBlock}
-                      onDeleteBlock={isPreviewing ? () => {} : handleDeleteBlock}
-                    />
-                  </div>
-                </div>
-              }
-              propertiesPanel={
-                !isPreviewing && selectedBlock ? (
-                  // 🆕 PAINEL DE PROPRIEDADES ENHANCED
-                  <PropertiesPanel
-                    selectedBlock={selectedBlock}
-                    onUpdate={(blockId: string, updates: Record<string, any>) => {
-                      updateBlock(blockId, updates);
-                    }}
-                    onClose={() => setSelectedBlockId(null)}
-                    onDelete={(blockId: string) => {
-                      deleteBlock(blockId);
-                      setSelectedBlockId(null);
-                    }}
-                  />
-                ) : !isPreviewing ? (
-                  <div className="h-full p-4 flex items-center justify-center text-stone-500">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
-                        <Settings className="w-8 h-8 text-stone-400" />
-                      </div>
-                      <p className="text-sm font-medium">
-                        Selecione um bloco para editar propriedades
-                      </p>
-                      <p className="text-xs text-stone-400 mt-2">
-                        Editor Enhanced • Persistência {isSupabaseEnabled ? 'Supabase' : 'Local'}
-                        <br />
-                        Propriedades específicas por tipo aparecem aqui
-                      </p>
-                      <div className="mt-4 text-xs text-stone-400 space-y-1">
-                        <div className="flex items-center justify-center space-x-2">
-                          <div
-                            className={`w-2 h-2 rounded-full ${isSupabaseEnabled ? 'bg-green-400' : 'bg-blue-400'}`}
-                          ></div>
-                          <span>{isSupabaseEnabled ? 'Supabase Online' : 'Modo Local'}</span>
-                        </div>
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                          <span>Funil: {funnelId}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : null
-              }
+          <div className="flex-1 flex items-center space-x-2">
+            <Label htmlFor="funnel-description" className="text-sm font-medium">
+              Descrição:
+            </Label>
+            <Textarea
+              id="funnel-description"
+              value={funnelDescription}
+              onChange={handleFunnelDescriptionChange}
+              className="max-w-md text-sm"
+              rows={1}
             />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="sm" onClick={handleTogglePreview}>
+              {uiState.isPreviewing ? 'Esconder Preview' : 'Mostrar Preview'}
+            </Button>
+            <Button size="sm" onClick={handleSave}>
+              Salvar
+            </Button>
           </div>
         </div>
-
-        {/* Painel de Configurações do Funil */}
-        {showFunnelSettings && (
-          <FunnelSettingsPanel
-            funnelId={funnelId}
-            isOpen={showFunnelSettings}
-            onClose={() => setShowFunnelSettings(false)}
-          />
-        )}
       </div>
-    </DndProvider>
+      
+      <ResizablePanelGroup direction="horizontal" className="flex-1">
+        
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <ComponentsSidebar onComponentSelect={handleComponentSelect} />
+        </ResizablePanel>
+
+        
+        <ResizablePanel defaultSize={60} minSize={40}>
+          <EditorCanvas
+            blocks={computed.currentBlocks}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={blockActions.setSelectedBlockId}
+            onUpdateBlock={blockActions.updateBlock}
+            onDeleteBlock={blockActions.deleteBlock}
+            onReorderBlocks={blockActions.reorderBlocks}
+            isPreviewing={uiState.isPreviewing}
+            viewportSize={mapViewportSize('xl')}
+          />
+        </ResizablePanel>
+
+        
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+          <EnhancedUniversalPropertiesPanel selectedBlock={computed.selectedBlock || null} onUpdate={blockActions.updateBlock} />
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 };
 
-export default EditorFixedEnhancedPage;
+export default EditorFixedDragDropEnhanced;
