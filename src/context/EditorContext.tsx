@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
 import { generateSemanticId } from '@/utils/semanticIdGenerator';
+import { getAllSteps, getStepTemplate } from '@/config/stepTemplatesMapping';
 
 // Define the types for the editor state
 export interface EditorState {
@@ -340,10 +341,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }));
   }, []);
 
-  // Import and integrate the 21-stage system from stepTemplatesMapping
-  const { getAllSteps, getStepTemplate } = require('@/config/stepTemplatesMapping');
-  
-  // Real 21-stage implementation
+  // Real 21-stage implementation using imported functions
   const [currentActiveStageId, setCurrentActiveStageId] = useState<string>('step-1');
   
   const stages = useMemo(() => {
