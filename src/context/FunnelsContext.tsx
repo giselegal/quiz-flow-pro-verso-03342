@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE, QUIZ_QUESTIONS_COMPLETE } from '../templates/quiz21StepsComplete';
 
 interface FunnelStep {
   id: string;
@@ -17,6 +18,7 @@ interface FunnelsContextType {
   steps: FunnelStep[];
   setSteps: React.Dispatch<React.SetStateAction<FunnelStep[]>>;
   getTemplate: (templateId: string) => any;
+  getTemplateBlocks: (templateId: string, stepId: string) => any[];
   updateFunnelStep: (stepId: string, updates: any) => void;
   addStepBlock: (stepId: string, blockData: any) => void;
   saveFunnelToDatabase: (funnelData: any) => Promise<void>;
@@ -47,6 +49,30 @@ const FUNNEL_TEMPLATES: Record<
     }>;
   }
 > = {
+  'quiz-estilo-completo': {
+    name: 'Quiz de Estilo Completo (21 Etapas)',
+    description: 'Quiz completo de estilo pessoal com 21 etapas configuradas',
+    defaultSteps: Object.keys(QUIZ_QUESTIONS_COMPLETE).map(stepNum => {
+      const stepNumber = parseInt(stepNum);
+      const stepId = `step-${stepNumber}`;
+      const questionText = QUIZ_QUESTIONS_COMPLETE[stepNumber as keyof typeof QUIZ_QUESTIONS_COMPLETE];
+      
+      return {
+        id: stepId,
+        name: `Etapa ${stepNumber}`,
+        order: stepNumber,
+        blocksCount: QUIZ_STYLE_21_STEPS_TEMPLATE[stepId]?.length || 1,
+        isActive: true,
+        type: stepNumber === 1 ? 'lead-collection' :
+              stepNumber >= 2 && stepNumber <= 11 ? 'scored-question' :
+              stepNumber === 12 ? 'transition' :
+              stepNumber >= 13 && stepNumber <= 18 ? 'strategic-question' :
+              stepNumber === 19 ? 'transition' :
+              stepNumber === 20 ? 'result' : 'offer',
+        description: questionText
+      };
+    })
+  },
   'quiz-estilo': {
     name: 'Quiz de Estilo',
     description: 'Quiz para descobrir o estilo pessoal',
@@ -364,6 +390,15 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     return template;
   }, []);
 
+  // Função para obter blocos de um template específico
+  const getTemplateBlocks = useCallback((templateId: string, stepId: string) => {
+    if (templateId === 'quiz-estilo-completo') {
+      return QUIZ_STYLE_21_STEPS_TEMPLATE[stepId] || [];
+    }
+    // Para outros templates, retorna array vazio (implementação futura)
+    return [];
+  }, []);
+
   // ✅ FASE 2: Debug visual melhorado + controle de re-renders
   useEffect(() => {
     const timestamp = new Date().toLocaleTimeString();
@@ -469,6 +504,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
     steps,
     setSteps,
     getTemplate,
+    getTemplateBlocks,
     updateFunnelStep,
     addStepBlock,
     saveFunnelToDatabase,
