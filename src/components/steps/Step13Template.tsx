@@ -1,41 +1,65 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Block } from '@/types/editor';
 import { useEditor } from '@/context/EditorContext';
+import LeadFormBlock from '@/components/blocks/LeadFormBlock';
 
-export const Step13Template: React.FC = () => {
+const Step13Template: React.FC = () => {
   const { quizState } = useEditor();
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-
-  const handleAnswer = (answer: string) => {
+  
+  const handleAnswerQuestion = (questionId: string, answer: any) => {
     if (quizState.answerStrategicQuestion) {
-      quizState.answerStrategicQuestion('strategic-question-13', answer);
+      quizState.answerStrategicQuestion(questionId, answer);
     }
-    setSelectedAnswer(answer);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <h2 className="text-2xl font-bold mb-4">Qual peça de roupa te deixa mais confiante?</h2>
-      <div className="space-y-4">
-        <Button
-          variant={selectedAnswer === 'opcao1' ? 'default' : 'outline'}
-          onClick={() => handleAnswer('opcao1')}
-        >
-          Opção 1: Blazer estruturado
-        </Button>
-        <Button
-          variant={selectedAnswer === 'opcao2' ? 'default' : 'outline'}
-          onClick={() => handleAnswer('opcao2')}
-        >
-          Opção 2: Vestido elegante
-        </Button>
-        <Button
-          variant={selectedAnswer === 'opcao3' ? 'default' : 'outline'}
-          onClick={() => handleAnswer('opcao3')}
-        >
-          Opção 3: Jeans e camiseta básica
-        </Button>
-      </div>
+    <div className="step13-template">
+      <LeadFormBlock
+        id="step13-lead-form"
+        properties={{
+          title: "Vamos Personalizar Sua Experiência",
+          fields: ['name', 'email'],
+          submitText: "Continuar",
+          backgroundColor: '#FFFFFF',
+          borderColor: '#B89B7A',
+          textColor: '#432818'
+        }}
+        onPropertyChange={() => {}}
+      />
     </div>
   );
 };
+
+export const getStep13Template = (): Block[] => {
+  return [
+    {
+      id: 'step13-header',
+      type: 'quiz-intro-header',
+      properties: {
+        logoUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+        progressValue: 65,
+        showProgress: true,
+      },
+      content: {},
+      order: 0,
+    },
+    {
+      id: 'step13-lead-form',
+      type: 'lead-form',
+      properties: {
+        title: "Vamos Personalizar Sua Experiência",
+        fields: ['name', 'email'],
+        submitText: "Continuar",
+        backgroundColor: '#FFFFFF',
+        borderColor: '#B89B7A',
+        textColor: '#432818'
+      },
+      content: {},
+      order: 1,
+    }
+  ];
+};
+
+// Export both the component and the template function
+export { Step13Template };
+export default Step13Template;

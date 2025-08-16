@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,7 +10,6 @@ export const FunnelStagesPanelUnified: React.FC = () => {
     stages,
     activeStageId,
     stageActions: { setActiveStage },
-    computed,
   } = useEditor();
 
   return (

@@ -79,6 +79,8 @@ export interface PropertySchema {
   label: string;
   type: 'string' | 'number' | 'boolean' | 'select' | 'color' | 'richtext';
   default?: any;
+  defaultValue?: any;
+  description?: string;
   options?: string[];
   min?: number;
   max?: number;

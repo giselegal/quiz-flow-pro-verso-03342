@@ -1,165 +1,127 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+
+import React from 'react';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
 import { useEditor } from '@/context/EditorContext';
-import { EditorCanvas } from '@/components/enhanced-editor/canvas/EditorCanvas';
-import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
-import { ComponentsSidebar } from '@/components/editor/sidebar/ComponentsSidebar';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
+import { BlockType } from '@/types/editor';
 
-const EditorFixedDragDropEnhanced: React.FC = () => {
+const EditorPage: React.FC = () => {
   const {
-    state,
-    dispatch,
-    stages,
-    activeStageId,
-    computed,
-    uiState,
-    blockActions,
-    stageActions,
-    persistenceActions,
+    computed: { currentBlocks },
     selectedBlockId,
+    blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
+    uiState: { isPreviewing, setIsPreviewing },
+    persistenceActions: { save },
   } = useEditor();
-  const { toast } = useToast();
-
-  const [funnelName, setFunnelName] = useState('Novo Funil');
-  const [funnelDescription, setFunnelDescription] = useState('Descrição do funil');
-
-  // Map viewport sizes
-  const mapViewportSize = (size: string): 'desktop' | 'tablet' | 'mobile' => {
-    switch (size) {
-      case 'sm':
-      case 'md':
-        return 'mobile';
-      case 'lg':
-        return 'tablet';
-      case 'xl':
-      default:
-        return 'desktop';
-    }
-  };
-
-  const handleViewportChange = (size: 'sm' | 'md' | 'lg' | 'xl') => {
-    const mappedSize = mapViewportSize(size);
-    if (uiState.setViewportSize) {
-      uiState.setViewportSize(mappedSize);
-    }
-  };
-
-  const handleComponentSelect = async (type: string) => {
-    try {
-      const blockId = await blockActions.addBlock(type);
-      if (blockId) {
-        blockActions.setSelectedBlockId(blockId);
-        toast({
-          title: 'Bloco adicionado',
-          description: `Bloco ${type} adicionado com sucesso.`,
-        });
-      }
-    } catch (error) {
-      console.error('Erro ao adicionar bloco:', error);
-      toast({
-        title: 'Erro ao adicionar bloco',
-        description: 'Ocorreu um erro ao adicionar o bloco. Por favor, tente novamente.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleFunnelNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFunnelName(e.target.value);
-  };
-
-  const handleFunnelDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFunnelDescription(e.target.value);
-  };
-
-  const handleTogglePreview = () => {
-    dispatch({ type: 'SET_PREVIEW_MODE', payload: !state.isPreviewing });
-  };
 
   const handleSave = async () => {
     try {
-      await persistenceActions.save();
+      await save();
       console.log('✅ Funnel saved successfully');
     } catch (error) {
       console.error('❌ Error saving funnel:', error);
     }
   };
 
+  const handleAddBlock = async (type: string) => {
+    try {
+      const blockId = await addBlock(type as BlockType);
+      setSelectedBlockId(blockId);
+    } catch (error) {
+      console.error('Error adding block:', error);
+    }
+  };
+
   return (
-    <div className="h-screen flex flex-col bg-background">
-      <div className="border-b">
-        <div className="container flex items-center h-16 space-x-4">
-          <div className="flex-1 flex items-center space-x-2">
-            <Label htmlFor="funnel-name" className="text-sm font-medium">
-              Nome do Funil:
-            </Label>
-            <Input
-              type="text"
-              id="funnel-name"
-              value={funnelName}
-              onChange={handleFunnelNameChange}
-              className="max-w-xs text-sm"
-            />
-          </div>
-
-          <div className="flex-1 flex items-center space-x-2">
-            <Label htmlFor="funnel-description" className="text-sm font-medium">
-              Descrição:
-            </Label>
-            <Textarea
-              id="funnel-description"
-              value={funnelDescription}
-              onChange={handleFunnelDescriptionChange}
-              className="max-w-md text-sm"
-              rows={1}
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm" onClick={handleTogglePreview}>
-              {uiState.isPreviewing ? 'Esconder Preview' : 'Mostrar Preview'}
-            </Button>
-            <Button size="sm" onClick={handleSave}>
-              Salvar
-            </Button>
-          </div>
+    <div className="h-screen w-full bg-gray-50">
+      <div className="h-16 border-b bg-white flex items-center justify-between px-4">
+        <h1 className="text-xl font-semibold">Quiz Editor</h1>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={() => setIsPreviewing(!isPreviewing)}>
+            {isPreviewing ? 'Edit' : 'Preview'}
+          </Button>
+          <Button onClick={handleSave}>
+            Save
+          </Button>
         </div>
       </div>
-      
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        
+
+      <ResizablePanelGroup direction="horizontal" className="h-[calc(100%-4rem)]">
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <ComponentsSidebar onComponentSelect={handleComponentSelect} />
+          <div className="h-full p-4">
+            <h3 className="font-medium mb-4">Components</h3>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => handleAddBlock('text')}
+              >
+                Add Text Block
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => handleAddBlock('heading')}
+              >
+                Add Heading Block
+              </Button>
+            </div>
+          </div>
         </ResizablePanel>
 
-        
-        <ResizablePanel defaultSize={60} minSize={40}>
-          <EditorCanvas
-            blocks={computed.currentBlocks}
-            selectedBlockId={selectedBlockId}
-            onSelectBlock={blockActions.setSelectedBlockId}
-            onUpdateBlock={blockActions.updateBlock}
-            onDeleteBlock={blockActions.deleteBlock}
-            onReorderBlocks={blockActions.reorderBlocks}
-            isPreviewing={uiState.isPreviewing}
-            viewportSize={mapViewportSize('xl')}
-          />
+        <ResizableHandle withHandle />
+
+        <ResizablePanel defaultSize={60}>
+          <div className="h-full p-4">
+            <div className="bg-white rounded-lg border min-h-96 p-6">
+              {currentBlocks.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  <p>No blocks yet. Add your first block!</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {currentBlocks.map(block => (
+                    <div
+                      key={block.id}
+                      className={`p-4 border rounded cursor-pointer ${
+                        selectedBlockId === block.id
+                          ? 'border-blue-500 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => setSelectedBlockId(block.id)}
+                    >
+                      <div className="font-medium">{block.type}</div>
+                      <div className="text-sm text-gray-500">ID: {block.id}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </ResizablePanel>
 
-        
+        <ResizableHandle withHandle />
+
         <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <EnhancedUniversalPropertiesPanel selectedBlock={computed.selectedBlock || null} onUpdate={blockActions.updateBlock} />
+          <div className="h-full p-4">
+            <h3 className="font-medium mb-4">Properties</h3>
+            {selectedBlockId ? (
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">
+                  Selected: {selectedBlockId}
+                </p>
+                {/* Properties panel would go here */}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">
+                Select a block to edit properties
+              </p>
+            )}
+          </div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
   );
 };
 
-export default EditorFixedDragDropEnhanced;
+export default EditorPage;
