@@ -19,11 +19,17 @@ import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { BookOpen } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { BookOpen, Settings } from 'lucide-react';
 
 /**
- * Component that uses useEditor hook - must be inside EditorProvider
+ * Editor Fixed - 4-Colunas (versão consolidada)
+ * - Usa `FourColumnLayout` para stages | components | canvas | properties
+ * - Mantém integração com `useEditor` (add/update/delete/reorder/select)
+ * - Suporte a parâmetros URL: ?funnelId=xxx&template=xxx&stage=xxx&preview=true
  */
+
+// Component that uses useEditor hook - must be inside EditorProvider
 const EditorContent: React.FC<{
   urlFunnelId: string;
   urlStage: string;
@@ -65,18 +71,11 @@ const EditorContent: React.FC<{
   const synced = useSyncedScroll({ source: 'canvas' });
   const scrollRef = synced?.scrollRef ?? { current: null };
 
+  // Keyboard shortcuts
+  useKeyboardShortcuts();
+
   // Property history
   const { history } = usePropertyHistory();
-
-  // Keyboard shortcuts
-  useKeyboardShortcuts({
-    onUndo: history.undo,
-    onRedo: history.redo,
-    onDelete: selectedBlockId ? () => deleteBlock(selectedBlockId) : undefined,
-    canUndo: history.canUndo,
-    canRedo: history.canRedo,
-    hasSelectedBlock: !!selectedBlockId,
-  });
 
   return (
     <ScrollSyncProvider>
@@ -87,42 +86,17 @@ const EditorContent: React.FC<{
             console.error('🔍 Error Info:', errorInfo);
           }}
         >
-          <DndProvider
-            blocks={currentBlocks.map(b => ({
-              id: b.id,
-              type: b.type,
-              properties: b.properties || {},
-            }))}
-            onBlocksReorder={newBlocks => {
-              const oldIds = currentBlocks.map(b => b.id);
-              const newIds = newBlocks.map((b: any) => b.id);
-              if (oldIds.length !== newIds.length) return;
-              
-              for (let i = 0; i < oldIds.length; i++) {
-                if (oldIds[i] !== newIds[i]) {
-                  const moved = newIds[i];
-                  const from = oldIds.indexOf(moved);
-                  const to = i;
-                  reorderBlocks(from, to);
-                  break;
-                }
-              }
-            }}
-            onBlockAdd={(type: string) => addBlock(type as any)}
-            onBlockSelect={(id: string) => selectBlock(id)}
-            selectedBlockId={selectedBlockId ?? undefined}
-            onBlockUpdate={(id: string, updates: any) => updateBlock(id, updates as any)}
-          >
+          <DndProvider>
             <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
               {/* Toolbar */}
               <EditorToolbar
                 onSave={save}
                 onTogglePreview={togglePreview}
-                onShowFunnelSettings={() => setShowFunnelSettings(!showFunnelSettings)}
-                onShowQuizEditor={() => setShowQuizEditor(!showQuizEditor)}
-                onShowMonitoring={() => setShowMonitoringDashboard(!showMonitoringDashboard)}
+                onToggleFunnelSettings={() => setShowFunnelSettings(!showFunnelSettings)}
+                onToggleQuizEditor={() => setShowQuizEditor(!showQuizEditor)}
+                onToggleMonitoring={() => setShowMonitoringDashboard(!showMonitoringDashboard)}
                 viewportSize={viewportSize}
-                onViewportSizeChange={setViewportSize}
+                onViewportChange={setViewportSize}
                 activeStage={activeStage}
                 isPreviewing={isPreviewing}
               />
@@ -130,27 +104,15 @@ const EditorContent: React.FC<{
               {/* Main 4-Column Layout */}
               <FourColumnLayout
                 // Column 1: Stages
-                stagesPanel={
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-4">Etapas</h3>
-                    {Array.from({ length: 21 }, (_, i) => (
-                      <button
-                        key={i + 1}
-                        onClick={() => setActiveStage(`step-${i + 1}`)}
-                        className={`w-full p-2 mb-2 text-left rounded ${
-                          activeStage === `step-${i + 1}`
-                            ? 'bg-blue-100 text-blue-700'
-                            : 'bg-gray-50 hover:bg-gray-100'
-                        }`}
-                      >
-                        Etapa {i + 1}
-                      </button>
-                    ))}
-                  </div>
-                }
+                stagesPanel={{
+                  activeStageId: activeStage,
+                  onStageSelect: setActiveStage,
+                  totalStages: 21,
+                }}
                 // Column 2: Components
                 componentsPanel={
                   <SmartComponentsPanel
+                    onAddBlock={addBlock}
                     selectedBlockId={selectedBlockId}
                     activeStageId={activeStage}
                   />
@@ -163,6 +125,7 @@ const EditorContent: React.FC<{
                     onSelectBlock={selectBlock}
                     onUpdateBlock={updateBlock}
                     onDeleteBlock={deleteBlock}
+                    onReorderBlocks={reorderBlocks}
                     scrollRef={scrollRef}
                     viewportSize={viewportSize}
                     isPreviewing={isPreviewing}
@@ -171,7 +134,7 @@ const EditorContent: React.FC<{
                 // Column 4: Properties
                 propertiesPanel={
                   <IntegratedPropertiesPanel
-                    selectedBlock={currentBlocks.find(block => block.id === selectedBlockId)}
+                    selectedBlockId={selectedBlockId}
                     onUpdateBlock={updateBlock}
                     propertyHistory={history}
                   />
@@ -233,12 +196,6 @@ const EditorContent: React.FC<{
   );
 };
 
-/**
- * Editor Fixed - 4-Colunas (versão consolidada)
- * - Usa `FourColumnLayout` para stages | components | canvas | properties
- * - Mantém integração com `useEditor` (add/update/delete/reorder/select)
- * - Suporte a parâmetros URL: ?funnelId=xxx&template=xxx&stage=xxx&preview=true
- */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Parse URL parameters
   const urlParams = new URLSearchParams(window.location.search);
@@ -267,5 +224,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     </FunnelsProvider>
   );
 };
+
 
 export default EditorFixedPageWithDragDrop;
