@@ -136,19 +136,21 @@ const EditorContent: React.FC<{
                     </button>
                   ))}
                 </div>
-                
+
                 {/* Coluna 2: Componentes */}
                 <div className="w-1/5 p-4 bg-green-100 border-2 border-green-500">
                   <h3 className="text-lg font-semibold mb-4 text-green-600">🧱 Componentes</h3>
                   <p className="text-xs text-green-500 mb-2">DEBUG: Coluna 2 funcionando</p>
                   <SmartComponentsPanel />
                 </div>
-                
+
                 {/* Coluna 3: Canvas */}
                 <div className="w-2/5 bg-red-100 border-2 border-red-500">
                   <div className="h-full flex flex-col">
                     <div className="bg-white border-b p-3">
-                      <h3 className="text-lg font-semibold text-red-600">🎨 Canvas - {activeStage}</h3>
+                      <h3 className="text-lg font-semibold text-red-600">
+                        🎨 Canvas - {activeStage}
+                      </h3>
                       <p className="text-sm text-gray-600">
                         {currentBlocks.length} bloco(s) • Viewport: {viewportSize}
                       </p>
@@ -168,13 +170,15 @@ const EditorContent: React.FC<{
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Coluna 4: Propriedades */}
                 <div className="w-1/5 p-4 bg-purple-100 border-2 border-purple-500">
                   <h3 className="text-lg font-semibold mb-4 text-purple-600">⚙️ Propriedades</h3>
                   <p className="text-xs text-purple-500 mb-2">DEBUG: Coluna 4 funcionando</p>
                   <IntegratedPropertiesPanel
-                    selectedBlock={currentBlocks.find(block => block.id === selectedBlockId) || null}
+                    selectedBlock={
+                      currentBlocks.find(block => block.id === selectedBlockId) || null
+                    }
                   />
                 </div>
               </div>

@@ -52,8 +52,6 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
-
 
 // Loading component
 const PageLoading = () => (
@@ -137,22 +135,28 @@ function App() {
                   )}
                 />
 
-                 {/* Editor Fixed Route - Full 4 Columns Version */}
-                 <ProtectedRoute
-                   path="/editor-fixed"
-                   component={() => {
-                     console.log('🚀 App: Carregando EditorFixedPageWithDragDrop (4-column version)');
-                     return (
-                       <Suspense fallback={<PageLoading />}>
-                         <ErrorBoundary>
-                           <EditorProvider>
-                             <EditorFixedPageWithDragDrop />
-                           </EditorProvider>
-                         </ErrorBoundary>
-                       </Suspense>
-                     );
-                   }}
-                 />
+                {/* Editor Fixed Route - Using Best Available Editor */}
+                <ProtectedRoute
+                  path="/editor-fixed"
+                  component={() => {
+                    console.log(
+                      '🚀 App: Carregando EditorWithPreview (BEST VERSION) na rota /editor-fixed'
+                    );
+                    return (
+                      <Suspense fallback={<PageLoading />}>
+                        <ErrorBoundary>
+                          <EditorProvider>
+                            <FunnelsProvider debug={true}>
+                              <ScrollSyncProvider>
+                                <EditorWithPreview />
+                              </ScrollSyncProvider>
+                            </FunnelsProvider>
+                          </EditorProvider>
+                        </ErrorBoundary>
+                      </Suspense>
+                    );
+                  }}
+                />
 
                 {/* Editor Fixed Debug Route */}
                 <ProtectedRoute
@@ -228,7 +232,8 @@ function App() {
                             🚧 Route Temporarily Disabled
                           </h1>
                           <p className="text-red-600">
-                            The drag-and-drop editor component has been removed. Use /editor-fixed instead.
+                            The drag-and-drop editor component has been removed. Use /editor-fixed
+                            instead.
                           </p>
                         </div>
                       </ErrorBoundary>
