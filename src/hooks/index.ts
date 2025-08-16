@@ -31,7 +31,7 @@ export { useUnifiedProperties } from './useUnifiedProperties';
 export { useInlineEdit } from './useInlineEdit';
 export { useBlockForm } from './useBlockForm';
 export { usePropertyHistory } from './usePropertyHistory';
-export { useLiveEditor } from './useLiveEditor';
+
 
 // Hooks compostos e avançados
 export { useStepWithContainer, useQuizStepContainer } from './useStepWithContainer';
@@ -84,7 +84,7 @@ export const HOOKS_STATS = {
     data: 3,     // Unified persistence + Supabase
   },
   consolidations: {
-    'useEditor + useUnifiedEditor + useEditorReusableComponents + useLiveEditor': 'useUnifiedEditor',
+    'useEditor + useUnifiedEditor + useEditorReusableComponents': 'useUnifiedEditor',
     'Multiple property hooks': 'Integrated into useUnifiedEditor',
     'Fragmented schemas': 'Master unified schema',
     'Multiple persistence systems': 'UnifiedPersistenceService',

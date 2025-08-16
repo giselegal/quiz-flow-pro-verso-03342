@@ -51,7 +51,7 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
-const LiveEditorPage = lazy(() => import('./pages/LiveEditorPage'));
+
 
 // Loading component
 const PageLoading = () => (
@@ -117,22 +117,6 @@ function App() {
                   }}
                 />
 
-                {/* Live Editor Route - Modern Professional Interface */}
-                <ProtectedRoute
-                  path="/live-editor"
-                  component={() => {
-                    console.log('🚀 App: Carregando LiveEditorPage');
-                    return (
-                      <Suspense fallback={<PageLoading />}>
-                       <ErrorBoundary>
-                           <div className="relative">
-                             <LiveEditorPage />
-                           </div>
-                         </ErrorBoundary>
-                      </Suspense>
-                    );
-                  }}
-                />
 
                 {/* Editor Fixed Simples - Versão Garantida */}
                 <ProtectedRoute

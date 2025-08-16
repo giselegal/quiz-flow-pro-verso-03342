@@ -7,7 +7,7 @@ import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel.simple';
 import FunnelStagesPanel from './funnel/FunnelStagesPanel.simple';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
-import FunnelNavbar from '@/components/live-editor/navbar/FunnelNavbar';
+import FunnelNavbar from '@/components/funnel/FunnelNavbar';
 
 interface EnhancedLiveEditorProps {
   funnelId?: string;
@@ -22,15 +22,12 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
     computed: { currentBlocks, selectedBlock },
     selectedBlockId,
     blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
-    uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
-    persistenceActions: { saveFunnel },
+    uiState: { isPreviewing, viewportSize },
+    
   } = useEditor();
 
   const propertyHistory = usePropertyHistory();
 
-  // State for advanced features
-  const [publishLoading, setPublishLoading] = React.useState(false);
-  const [saveLoading, setSaveLoading] = React.useState(false);
 
   const handleComponentSelect = async (type: string) => {
     try {
@@ -55,38 +52,6 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
     }
   };
 
-  const handleSave = async () => {
-    setSaveLoading(true);
-    try {
-      console.log('💾 Iniciando salvamento...');
-      const result = await saveFunnel();
-      if (result.success) {
-        console.log('✅ Projeto salvo com sucesso!');
-        // You could add a toast notification here
-      } else {
-        console.error('❌ Erro no salvamento:', result.error);
-      }
-    } catch (error) {
-      console.error('❌ Erro inesperado ao salvar:', error);
-    } finally {
-      setSaveLoading(false);
-    }
-  };
-
-  const handlePublish = async () => {
-    setPublishLoading(true);
-    try {
-      console.log('🚀 Iniciando publicação...');
-      // Add your publish logic here
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-      console.log('✅ Projeto publicado com sucesso!');
-      // You could add a toast notification here
-    } catch (error) {
-      console.error('❌ Erro ao publicar:', error);
-    } finally {
-      setPublishLoading(false);
-    }
-  };
 
   const handleDeleteBlock = (blockId: string) => {
     if (window.confirm('Tem certeza que deseja deletar este bloco?')) {
@@ -123,19 +88,8 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
 
   return (
     <div className={`h-screen w-full bg-gray-50 flex flex-col ${className}`}>
-      {/* Enhanced Funnel Navbar */}
-      <FunnelNavbar
-        onSave={handleSave}
-        onPublish={handlePublish}
-        onUndo={propertyHistory.undo}
-        onRedo={propertyHistory.redo}
-        canUndo={propertyHistory.canUndo}
-        canRedo={propertyHistory.canRedo}
-        isPreviewing={isPreviewing}
-        onTogglePreview={() => setIsPreviewing(!isPreviewing)}
-        viewportSize={viewportSize}
-        onViewportSizeChange={setViewportSize}
-      />
+      {/* Navigation Toolbar */}
+      <FunnelNavbar />
 
       {/* Main Editor Layout - 4 Columns */}
       <ResizablePanelGroup direction="horizontal" className="flex-1 bg-gray-50">
@@ -215,19 +169,6 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      {/* Loading states (optional) */}
-      {(saveLoading || publishLoading) && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg">
-            <div className="flex items-center space-x-3">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-              <span>
-                {saveLoading ? 'Salvando projeto...' : 'Publicando projeto...'}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
