@@ -354,7 +354,6 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [renderCount, setRenderCount] = useState(0);
 
   const getTemplate = useCallback((templateId: string) => {
     const template = FUNNEL_TEMPLATES[templateId as keyof typeof FUNNEL_TEMPLATES];
@@ -368,7 +367,6 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
   // ✅ FASE 2: Debug visual melhorado + controle de re-renders
   useEffect(() => {
     const timestamp = new Date().toLocaleTimeString();
-    setRenderCount(prev => prev + 1);
 
     if (FUNNEL_TEMPLATES[currentFunnelId]) {
       const template = FUNNEL_TEMPLATES[currentFunnelId];
@@ -382,7 +380,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       }
 
       console.log(
-        `📊 [${timestamp}] Re-render #${renderCount + 1} - Steps disponíveis:`,
+        `📊 [${timestamp}] Steps disponíveis:`,
         template.defaultSteps.length
       );
       console.log(
@@ -398,7 +396,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
       setSteps(fallbackTemplate.defaultSteps);
       console.log(`🔄 [${timestamp}] Aplicando fallback para template padrão`);
     }
-  }, [currentFunnelId, debug, renderCount]);
+  }, [currentFunnelId, debug]);
 
   const updateFunnelStep = useCallback(
     (stepId: string, updates: any) => {
