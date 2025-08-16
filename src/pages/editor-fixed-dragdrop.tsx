@@ -236,83 +236,83 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
               onShowMonitoring={() => setShowMonitoringDashboard(true)}
             />
           </div>
+        </div>
 
-          <div className="flex-1 overflow-hidden">
-            <FourColumnLayout
-              className="h-full"
-              stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
-              componentsPanel={
-                <SmartComponentsPanel
-                  onAddComponent={(componentType: string) => {
-                    if (activeStage) {
-                      addBlock(componentType, activeStage);
-                    }
+        <div className="flex-1 overflow-hidden">
+          <FourColumnLayout
+            className="h-full"
+            stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
+            componentsPanel={
+              <SmartComponentsPanel
+                onAddComponent={(componentType: string) => {
+                  if (activeStage) {
+                    addBlock(componentType, activeStage);
+                  }
+                }}
+              />
+            }
+            canvas={
+              <div
+                ref={scrollRef}
+                className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
+              >
+                <div className={getCanvasClassName()}>
+                  <CanvasDropZone
+                    blocks={currentBlocks}
+                    selectedBlockId={selectedBlockId}
+                    onSelectBlock={setSelectedBlockId}
+                    onUpdateBlock={updateBlock}
+                    onDeleteBlock={handleDeleteBlock}
+                  />
+                </div>
+              </div>
+            }
+            propertiesPanel={
+              !isPreviewing && unifiedSelectedBlock ? (
+                // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
+                <IntegratedPropertiesPanel
+                  selectedBlock={unifiedSelectedBlock}
+                   onUpdate={(blockId: string, updates: Partial<any>) => {
+                     console.log('🔥 EDITOR onUpdate CHAMADO:', { blockId, updates });
+                     updateBlock(blockId, updates);
+                     console.log('🔥 EDITOR updateBlock executado');
+                   }}
+                  onClose={() => setSelectedBlockId(null)}
+                  onDelete={(blockId: string) => {
+                    deleteBlock(blockId);
+                    setSelectedBlockId(null);
                   }}
                 />
-              }
-              canvas={
-                <div
-                  ref={scrollRef}
-                  className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
-                >
-                  <div className={getCanvasClassName()}>
-                    <CanvasDropZone
-                      blocks={currentBlocks}
-                      selectedBlockId={selectedBlockId}
-                      onSelectBlock={setSelectedBlockId}
-                      onUpdateBlock={updateBlock}
-                      onDeleteBlock={handleDeleteBlock}
-                    />
-                  </div>
-                </div>
-              }
-              propertiesPanel={
-                !isPreviewing && unifiedSelectedBlock ? (
-                  // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
-                  <IntegratedPropertiesPanel
-                    selectedBlock={unifiedSelectedBlock}
-                     onUpdate={(blockId: string, updates: Partial<any>) => {
-                       console.log('🔥 EDITOR onUpdate CHAMADO:', { blockId, updates });
-                       updateBlock(blockId, updates);
-                       console.log('🔥 EDITOR updateBlock executado');
-                     }}
-                    onClose={() => setSelectedBlockId(null)}
-                    onDelete={(blockId: string) => {
-                      deleteBlock(blockId);
-                      setSelectedBlockId(null);
-                    }}
-                  />
-                ) : !isPreviewing ? (
-                  <div className="h-full p-4 flex items-center justify-center text-stone-500">
-                    <div className="text-center">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
-                        <Settings className="w-8 h-8 text-stone-400" />
+              ) : !isPreviewing ? (
+                <div className="h-full p-4 flex items-center justify-center text-stone-500">
+                  <div className="text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
+                      <Settings className="w-8 h-8 text-stone-400" />
+                    </div>
+                    <p className="text-sm font-medium">
+                      Selecione um bloco para editar propriedades
+                    </p>
+                    <p className="text-xs text-stone-400 mt-2">
+                      Novo Painel de Propriedades • Editores Específicos
+                      <br />
+                      aparecerão aqui quando selecionado
+                    </p>
+                    <div className="mt-4 text-xs text-stone-400 space-y-1">
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                        <span>Texto, Botão, Imagem</span>
                       </div>
-                      <p className="text-sm font-medium">
-                        Selecione um bloco para editar propriedades
-                      </p>
-                      <p className="text-xs text-stone-400 mt-2">
-                        Novo Painel de Propriedades • Editores Específicos
-                        <br />
-                        aparecerão aqui quando selecionado
-                      </p>
-                      <div className="mt-4 text-xs text-stone-400 space-y-1">
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                          <span>Texto, Botão, Imagem</span>
-                        </div>
-                        <div className="flex items-center justify-center space-x-2">
-                          <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                          <span>Propriedades específicas por tipo</span>
-                        </div>
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span>Propriedades específicas por tipo</span>
                       </div>
                     </div>
                   </div>
-                  ) : null
-               }
-            />
-           </div>
-        </div>
+                </div>
+                ) : null
+             }
+          />
+         </div>
 
 
         {/* Painel de Configurações do Funil */}

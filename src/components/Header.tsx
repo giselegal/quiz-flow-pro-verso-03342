@@ -1,10 +1,13 @@
 import { Card } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
 import { StyleResult } from '@/types/quiz';
+import { supabase } from '@/integrations/supabase/client';
+import React, { useEffect, useState } from 'react';
 
 interface HeaderProps {
   primaryStyle?: StyleResult;
   logoHeight?: number;
+  logoWidth?: number | string;
   logo?: string;
   logoAlt?: string;
   userName?: string;
@@ -17,13 +20,45 @@ export const Header: React.FC<HeaderProps> = ({
   logoHeight = 50,
   logo,
   logoAlt = 'Logo',
+  logoWidth = 'auto',
   userName,
   isScrolled: _isScrolled,
   className = '',
 }) => {
   const { user } = useAuth();
+  const [fetchedName, setFetchedName] = useState<string | null>(null);
+
+  // Try to fetch profile name directly from Supabase as a fallback when
+  // the Auth context doesn't include a friendly name.
+  useEffect(() => {
+    let mounted = true;
+
+    const tryFetchProfile = async () => {
+      try {
+        const id = (user as any)?.id;
+        if (!id) return;
+
+        const { data, error } = await supabase.from('profiles').select('name').eq('id', id).maybeSingle();
+        if (!error && data && mounted) {
+          setFetchedName((data as any).name || null);
+        }
+      } catch (err) {
+        // ignore
+      }
+    };
+
+    if (!userName && user && !((user as any)?.userName || (user as any)?.user_metadata?.full_name)) {
+      tryFetchProfile();
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [user, userName]);
+
   const displayName =
     userName ||
+    fetchedName ||
     (user as any)?.userName ||
     (user as any)?.user_metadata?.full_name ||
     (user as any)?.email ||
@@ -37,7 +72,7 @@ export const Header: React.FC<HeaderProps> = ({
             src={logo}
             alt={logoAlt}
             className="h-auto mx-auto"
-            style={{ height: `${logoHeight}px`, maxWidth: '100%' }}
+            style={{ height: `${logoHeight}px`, width: typeof logoWidth === 'number' ? `${logoWidth}px` : logoWidth, maxWidth: '100%' }}
           />
         </div>
 
@@ -50,3 +85,5 @@ export const Header: React.FC<HeaderProps> = ({
     </Card>
   );
 };
+
+export default Header;
