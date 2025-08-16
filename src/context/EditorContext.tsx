@@ -1,1613 +1,319 @@
-import { calculateQuizScore } from '@/data/correctQuizQuestions';
-import React, {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from 'react';
-import { useTemplateManager } from '../hooks/useTemplateManager';
-import { useEditorPersistence } from '../hooks/editor/useEditorPersistence';
-import type { Block } from '../types/editor';
-import { EditorBlock, FunnelStage } from '../types/editor';
-import { TemplateManager } from '../utils/TemplateManager';
-import { performanceAnalyzer } from '../utils/performanceAnalyzer';
-import { useEditorSupabase } from '../hooks/useEditorSupabase';
-import { getFunnelIdFromEnvOrStorage, parseStepNumberFromStageId } from '../utils/funnelIdentity';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
+import { toast } from 'sonner';
+import { useEditorSupabase } from '@/hooks/useEditorSupabase';
+import { Block } from '@/types/editor';
+import { generateSemanticId } from '@/utils/semanticIdGenerator';
 
-// ✅ IMPORTAR SISTEMA DE MAPEAMENTO REAL DAS ETAPAS
-import { getAllSteps } from '../config/stepTemplatesMapping';
-
-// ✅ IMPORTAR HOOKS DE QUIZ PARA INTEGRAÇÃO
-import { useQuizLogic } from '../hooks/useQuizLogic';
-import { useSupabaseQuiz } from '../hooks/useSupabaseQuiz';
-import { useQuizCRUD } from '../hooks/useQuizCRUD';
-import caktoquizQuestions from '../data/caktoquizQuestions';
-
-interface EditorState {
-  state: 'ready' | 'loading' | 'error';
+// Define the types for the editor state
+export interface EditorState {
+  blocks: Block[];
+  selectedBlockId: string | null;
+  isPreviewing: boolean;
+  funnelId: string;
+  supabaseEnabled: boolean;
+  isGlobalStylesOpen: boolean;
 }
 
-const initialState: EditorState = {
-  state: 'ready',
-};
+// Define the actions that can be dispatched to the reducer
+export type EditorAction =
+  | { type: 'SET_BLOCKS'; payload: Block[] }
+  | { type: 'ADD_BLOCK'; payload: Block }
+  | { type: 'UPDATE_BLOCK'; payload: { id: string; content: any } }
+  | { type: 'DELETE_BLOCK'; payload: string }
+  | { type: 'SELECT_BLOCK'; payload: string | null }
+  | { type: 'TOGGLE_PREVIEW' }
+  | { type: 'SET_FUNNEL_ID'; payload: string }
+  | { type: 'TOGGLE_SUPABASE'; payload: boolean }
+  | { type: 'REORDER_BLOCKS'; payload: { sourceIndex: number; destinationIndex: number } }
+  | { type: 'SET_GLOBAL_STYLES_OPEN'; payload: boolean };
 
-type EditorAction =
-  | { type: 'SET_STATE'; payload: 'ready' | 'loading' | 'error' }
-  | { type: 'RESET' };
-
-const reducer = (state: EditorState, action: EditorAction): EditorState => {
+// Define the reducer function that will update the state
+export const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
   switch (action.type) {
-    case 'SET_STATE':
-      return { ...state, state: action.payload };
-    case 'RESET':
-      return { ...initialState };
+    case 'SET_BLOCKS':
+      return { ...state, blocks: action.payload };
+    case 'ADD_BLOCK':
+      return { ...state, blocks: [...state.blocks, action.payload] };
+    case 'UPDATE_BLOCK':
+      return {
+        ...state,
+        blocks: state.blocks.map(block =>
+          block.id === action.payload.id ? { ...block, content: action.payload.content } : block
+        ),
+      };
+    case 'DELETE_BLOCK':
+      return {
+        ...state,
+        blocks: state.blocks.filter(block => block.id !== action.payload),
+        selectedBlockId: state.selectedBlockId === action.payload ? null : state.selectedBlockId,
+      };
+    case 'SELECT_BLOCK':
+      return { ...state, selectedBlockId: action.payload };
+    case 'TOGGLE_PREVIEW':
+      return { ...state, isPreviewing: !state.isPreviewing };
+    case 'SET_FUNNEL_ID':
+      return { ...state, funnelId: action.payload };
+    case 'TOGGLE_SUPABASE':
+      return { ...state, supabaseEnabled: action.payload };
+    case 'REORDER_BLOCKS': {
+      const { sourceIndex, destinationIndex } = action.payload;
+      const blocks = [...state.blocks];
+      const [removed] = blocks.splice(sourceIndex, 1);
+      blocks.splice(destinationIndex, 0, removed);
+      return { ...state, blocks };
+    }
+    case 'SET_GLOBAL_STYLES_OPEN':
+      return { ...state, isGlobalStylesOpen: action.payload };
     default:
       return state;
   }
 };
 
-// ✅ INTERFACE UNIFICADA DO CONTEXTO
-interface EditorContextType {
-  // ═══════════════════════════════════════════════
-  // 🏗️ ESTADO CENTRALIZADO (ÚNICA FONTE DE VERDADE)
-  // ═══════════════════════════════════════════════
-  stages: FunnelStage[]; // ✅ ETAPAS INTEGRADAS NO EDITOR
-  activeStageId: string; // ✅ ETAPA ATIVA ATUAL
-  selectedBlockId: string | null; // ✅ BLOCO SELECIONADO
-  editorState: EditorState; // ✅ ESTADO DO EDITOR
-
-  // ✅ NOVO: Sistema de persistência Supabase
-  funnelId: string; // ✅ ID DO FUNIL ATUAL
-  isSupabaseEnabled: boolean; // ✅ PERSISTÊNCIA HABILITADA
-
-  // ═══════════════════════════════════════════════
-  // 🔧 ACTIONS ORGANIZADAS POR CATEGORIA
-  // ═══════════════════════════════════════════════
-  stageActions: {
-    setActiveStage: (stageId: string) => void;
-    addStage: (stage?: Partial<FunnelStage>) => string;
-    removeStage: (stageId: string) => void;
-    updateStage: (stageId: string, updates: Partial<FunnelStage>) => void;
-  };
-
-  blockActions: {
-    addBlock: (type: string, stageId?: string) => Promise<string>;
-    addBlockAtPosition: (type: string, position: number, stageId?: string) => Promise<string>;
-    duplicateBlock: (blockId: string, stageId?: string) => string;
-    deleteBlock: (blockId: string) => Promise<void>;
-    updateBlock: (blockId: string, updates: Partial<EditorBlock>) => Promise<void>;
-    reorderBlocks: (blockIds: string[], stageId?: string) => Promise<void>;
-    setSelectedBlockId: (blockId: string | null) => void;
-    getBlocksForStage: (stageId: string) => EditorBlock[];
-  };
-
-  templateActions: {
-    loadTemplate: (templateId: string) => Promise<void>;
-    loadTemplateByStep: (step: number) => Promise<void>;
-    applyCurrentTemplate: () => Promise<void>;
-    isLoadingTemplate: boolean;
-  };
-
-  persistenceActions: {
-    saveFunnel: () => Promise<{ success: boolean; error?: string }>;
-    isSaving: boolean;
-  };
-
-  uiState: {
-    isPreviewing: boolean;
-    setIsPreviewing: (value: boolean) => void;
-    viewportSize: 'sm' | 'md' | 'lg' | 'xl';
-    setViewportSize: (size: 'sm' | 'md' | 'lg' | 'xl') => void;
-  };
-
-  // ═══════════════════════════════════════════════
-  // 📊 COMPUTED VALUES (OTIMIZADOS)
-  // ═══════════════════════════════════════════════
-  computed: {
-    currentBlocks: EditorBlock[];
-    selectedBlock: EditorBlock | undefined;
-    totalBlocks: number;
-    stageCount: number;
-  };
-
-  // ═══════════════════════════════════════════════
-  // 🔌 SISTEMA DE COMPONENTES REUTILIZÁVEIS
-  // ═══════════════════════════════════════════════
-  databaseMode: {
-    isEnabled: boolean;
-    quizId: string;
-    setDatabaseMode: (enabled: boolean) => void;
-    setQuizId: (quizId: string) => void;
-    migrateToDatabase: () => Promise<boolean>;
-    getStats: () => Promise<any>;
-  };
-
-  // ✅ ATUALIZADO: Sistema de Quiz Integrado com Hooks
-  quizState: {
-    // Estado do quiz
-    userName: string;
-    userAnswers: Record<string, string>;
-    isQuizCompleted: boolean;
-    currentScore: ReturnType<typeof calculateQuizScore> | null;
-    quizResult: any; // Resultado do useQuizLogic
-    
-    // Ações básicas
-    setUserNameFromInput: (name: string) => void;
-    setAnswer: (questionId: string, answer: string) => void;
-    resetQuiz: () => void;
-    calculateCurrentScore: () => void;
-    
-    // ✅ NOVOS: Métodos dos hooks integrados
-    answerQuestion: (questionId: string, optionId: string) => void;
-    answerStrategicQuestion: (questionId: string, optionId: string, category: string, strategicType: string) => void;
-    completeQuiz: () => void;
-    
-    // Estado avançado dos hooks
-    currentQuestionIndex: number;
-    totalQuestions: number;
-    answers: any[];
-    strategicAnswers: any[];
-  };
-}
-
-const EditorContext = createContext<EditorContextType | undefined>(undefined);
-
-export const useEditor = () => {
-  const context = useContext(EditorContext);
-  if (context === undefined) {
-    throw new Error('useEditor must be used within an EditorProvider');
-  }
-  return context;
+// Define the initial state for the editor
+const initialState: EditorState = {
+  blocks: [],
+  selectedBlockId: null,
+  isPreviewing: false,
+  funnelId: 'default-funnel-id',
+  supabaseEnabled: false,
+  isGlobalStylesOpen: false,
 };
 
-export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  console.log('🔥 EditorProvider: INICIANDO PROVIDER!');
+// Create the editor context
+export const EditorContext = createContext<{
+  state: EditorState;
+  dispatch: React.Dispatch<EditorAction>;
+  addBlock: (type: Block['type']) => Promise<string>;
+  updateBlock: (id: string, content: any) => Promise<void>;
+  deleteBlock: (id: string) => Promise<void>;
+  selectBlock: (id: string | null) => void;
+  togglePreview: () => void;
+  setFunnelId: (funnelId: string) => void;
+  toggleSupabase: (enabled: boolean) => void;
+  reorderBlocks: (sourceIndex: number, destinationIndex: number) => Promise<void>;
+  isSaving: boolean;
+  connectionStatus: 'connected' | 'disconnected' | 'connecting';
+  lastSync: string | null;
+  isGlobalStylesOpen: boolean;
+  setGlobalStylesOpen: (open: boolean) => void;
+}>({
+  state: initialState,
+  dispatch: () => null,
+  addBlock: () => Promise.resolve(''),
+  updateBlock: () => Promise.resolve(),
+  deleteBlock: () => Promise.resolve(),
+  selectBlock: () => null,
+  togglePreview: () => null,
+  setFunnelId: () => null,
+  toggleSupabase: () => null,
+  reorderBlocks: () => Promise.resolve(),
+  isSaving: false,
+  connectionStatus: 'disconnected',
+  lastSync: null,
+  isGlobalStylesOpen: false,
+  setGlobalStylesOpen: () => null,
+});
 
-  // Estado principal do editor
-  const [state, dispatch] = useReducer(reducer, initialState);
+// Create a custom hook to use the editor context
+export const useEditor = () => useContext(EditorContext);
 
-  // ✅ NOVO: Sistema de persistência Supabase
-  const funnelId = getFunnelIdFromEnvOrStorage() || 'default-funnel';
-  console.log('🔍 EditorProvider: FunnelId inicializado:', funnelId);
+const getDefaultContent = (type: Block['type']) => {
+  switch (type) {
+    case 'headline':
+      return { title: 'Novo Título', subtitle: '' };
+    case 'text':
+      return { text: 'Novo texto' };
+    case 'image':
+      return { imageUrl: '', imageAlt: '', caption: '' };
+    case 'benefits':
+      return { title: 'Benefícios', items: [] };
+    default:
+      return {};
+  }
+};
 
-  const [activeStageId, setActiveStageId] = useState<string>('step-01');
-  const currentStepNumber = parseStepNumberFromStageId(activeStageId);
+export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [state, dispatch] = useReducer(editorReducer, initialState);
+  
+  // Fix the hook call - pass just the funnelId string
+  const supabaseHook = useEditorSupabase(state.funnelId);
+  
+  const {
+    components: supabaseComponents,
+    isLoading: supabaseLoading,
+    error: supabaseError,
+    loadComponents,
+    addComponent: addSupabaseComponent,
+    updateComponent: updateSupabaseComponent,
+    deleteComponent: deleteSupabaseComponent,
+    reorderComponents,
+    // Add missing properties with default values
+    connectionStatus = 'disconnected',
+    isSaving = false,
+    lastSync = null
+  } = supabaseHook;
 
-  // Configuração de persistência
-  const isSupabaseEnabled = import.meta.env.VITE_EDITOR_SUPABASE_ENABLED === 'true';
-
-  // ✅ NOVO: Hook unificado para integração sólida com Supabase
-  const editorSupabase = useEditorSupabase({
-    funnelId,
-    stepNumber: currentStepNumber,
-    enableAutoSync: true,
-    enableOptimisticUpdates: true,
-    retryAttempts: 3,
-    syncInterval: 30000,
-  });
-
-  // ✅ MANTIDO: Hook legacy para compatibilidade gradual (desabilitado)
-  // Mantido para evitar breaking changes durante migração
-  const legacyHookActive = false;
-  console.log('📋 Legacy hook status:', { active: legacyHookActive });
-
-  console.log('📊 Supabase Integration Status:', {
-    // ✅ NOVO: Hook unificado
-    unifiedHook: {
-      enabled: isSupabaseEnabled,
-      connectionStatus: editorSupabase.connectionStatus,
-      componentsCount: editorSupabase.components.length,
-      isLoading: editorSupabase.isLoading,
-      isSaving: editorSupabase.isSaving,
-      lastSync: editorSupabase.lastSync,
-      hasError: !!editorSupabase.error,
-    },
-    // 🔧 CONFIGURAÇÃO
-    config: {
-      funnelId,
-      stepNumber: currentStepNumber,
-      autoSyncEnabled: true,
-      optimisticUpdatesEnabled: true,
-      legacyHookActive: false,
-    },
-  });
-
-  // 📊 PERFORMANCE MONITORING OTIMIZADO
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      // Usar requestIdleCallback para não impactar inicialização
-      if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(() => {
-          console.log('🚀 EditorProvider: Análise de performance (baixa prioridade)');
-          performanceAnalyzer.startMonitoring();
-        });
-      }
+    if (state.supabaseEnabled) {
+      loadComponents();
     }
-  }, []);
+  }, [state.supabaseEnabled, loadComponents]);
 
-  // ✅ INTEGRAÇÃO DOS HOOKS DE QUIZ
-  console.log('🎯 EditorProvider: Integrando hooks de quiz...');
-  
-  // Hook principal de lógica do quiz
-  const quizLogic = useQuizLogic();
-  
-  // Hook de integração com Supabase (inicializar com questões)
-  const supabaseQuiz = useSupabaseQuiz(caktoquizQuestions);
-  
-  // Hook de CRUD operations
-  const quizCRUD = useQuizCRUD();
-
-  console.log('🔗 Quiz Hooks Status:', {
-    quizLogicReady: !!quizLogic,
-    userName: quizLogic.userName,
-    answersCount: quizLogic.answers.length,
-    strategicAnswersCount: quizLogic.strategicAnswers.length,
-    isCompleted: quizLogic.quizCompleted,
-    hasResult: !!quizLogic.quizResult,
-    supabaseReady: !!supabaseQuiz,
-    supabaseStarted: supabaseQuiz.isStarted,
-    crudReady: !!quizCRUD,
-  });
-
-  // ✅ INTEGRAÇÃO: Event Listeners para conectar templates aos hooks
   useEffect(() => {
-    console.log('🎯 EditorProvider: Configurando event listeners para quiz...');
+    if (supabaseError) {
+      toast.error(`Supabase Error: ${supabaseError}`);
+    }
+  }, [supabaseError]);
 
-    const handleQuizFormComplete = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      const { formData } = customEvent.detail || {};
-      
-      if (formData?.name) {
-        console.log('👤 EditorContext: Capturando nome do usuário via event:', formData.name);
-        quizLogic.setUserNameFromInput(formData.name);
-      }
-    };
+  useEffect(() => {
+    // Convert Supabase components to blocks when they load
+    if (supabaseComponents && supabaseComponents.length > 0) {
+      const blocks = convertSupabaseToBlocks(supabaseComponents);
+      dispatch({ type: 'SET_BLOCKS', payload: blocks });
+    }
+  }, [supabaseComponents]);
 
-    const handleQuizSelectionChange = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      const { selectedOptions, questionId } = customEvent.detail || {};
-      
-      if (selectedOptions && questionId) {
-        console.log('📊 EditorContext: Capturando seleções via event:', { questionId, selectedOptions });
-        selectedOptions.forEach((optionId: string) => {
-          quizLogic.answerQuestion(questionId, optionId);
-        });
-      }
-    };
-
-    // Registrar listeners
-    window.addEventListener('quiz-form-complete', handleQuizFormComplete);
-    window.addEventListener('quiz-selection-change', handleQuizSelectionChange);
-
-    return () => {
-      window.removeEventListener('quiz-form-complete', handleQuizFormComplete);
-      window.removeEventListener('quiz-selection-change', handleQuizSelectionChange);
-    };
-  }, [quizLogic]);
-
-  // ✅ INTEGRAÇÃO COM TEMPLATE MANAGER
-  const templateManager = useTemplateManager({
-    onAddBlock: async (blockData: Block) => {
-      const stageId = activeStageId;
-      const blockId = await addBlock(blockData.type, stageId);
-      if (blockId) {
-        await updateBlock(blockId, {
-          content: blockData.content,
-          order: blockData.order,
-        });
-      }
-    },
-    onUpdateBlock: async (blockId: string, updates: Partial<Block>) => {
-      await updateBlock(blockId, updates);
-    },
-  });
-
-  // ✅ INTEGRAÇÃO COM SISTEMA DE PERSISTÊNCIA
-  const { saveFunnel: saveFunnelToPersistence, isSaving: isPersistenceSaving } =
-    useEditorPersistence();
-
-  // ═══════════════════════════════════════════════
-  // 🔌 INICIALIZAR ADAPTER DO BANCO DE DADOS
-  // ═══════════════════════════════════════════════
-  // Database adapter removed - using direct state management only
-  const adapter = {
-    setDatabaseMode: (_enabled: boolean) => {},
-    setQuizId: (_quizId: string) => {},
-    migrateLocalToDatabase: () => Promise.resolve(false),
-    getQuizStats: () => Promise.resolve({ error: 'Database adapter not available' }),
-  };
-
-  // Estado do modo banco
-  const [databaseModeEnabled, setDatabaseModeEnabled] = useState(false);
-  const [currentQuizId, setCurrentQuizId] = useState('quiz-demo-id');
-
-  // ═══════════════════════════════════════════════
-  // 🏗️ ESTADO PRINCIPAL CENTRALIZADO - USANDO DADOS REAIS DO MAPEAMENTO
-  // ═══════════════════════════════════════════════
-  const [stages, setStages] = useState<FunnelStage[]>(() => {
-    console.log('🚀 EditorProvider: Inicializando etapas com dados REAIS do stepTemplatesMapping');
-
-    // ✅ USAR DADOS REAIS DO SISTEMA DE MAPEAMENTO
-    const realStepTemplates = getAllSteps();
-    console.log('📋 Templates reais carregados:', realStepTemplates.length);
-
-    const realStages: FunnelStage[] = realStepTemplates.map((stepTemplate) => {
-      const stepNumber = stepTemplate.stepNumber;
-      const stepId = `step-${String(stepNumber).padStart(2, '0')}`;
-      
-      // Determinar tipo da etapa baseado no conteúdo real
-      let type: 'intro' | 'question' | 'transition' | 'processing' | 'result' | 'lead' | 'offer' = 'question';
-      
-      if (stepNumber === 1) {
-        type = 'intro'; // Introdução
-      } else if (stepNumber === 2) {
-        type = 'lead'; // Nome (captura de lead)
-      } else if (stepNumber >= 3 && stepNumber <= 13) {
-        type = 'question'; // Perguntas principais do quiz
-      } else if (stepNumber === 14) {
-        type = 'question'; // Última pergunta estratégica
-      } else if (stepNumber === 15) {
-        type = 'transition'; // Transição
-      } else if (stepNumber === 16) {
-        type = 'processing'; // Processamento
-      } else if (stepNumber >= 17 && stepNumber <= 19) {
-        type = 'result'; // Resultados
-      } else if (stepNumber === 20) {
-        type = 'offer'; // Oferta/Conversão
-      } else if (stepNumber === 21) {
-        type = 'offer'; // Thank you page
-      }
-
-      return {
-        id: stepId,
-        name: stepTemplate.name, // ✅ NOME REAL DO TEMPLATE
-        order: stepNumber,
-        type,
-        description: stepTemplate.description, // ✅ DESCRIÇÃO REAL DO TEMPLATE
-        isActive: stepNumber === 1,
-        metadata: {
-          blocksCount: 0,
-          lastModified: new Date(),
-          isCustom: false,
-          templateBlocks: [],
-        },
-      };
+  const addBlock = useCallback(async (type: Block['type']) => {
+    const blockId = generateSemanticId({
+      context: 'editor',
+      type: 'block',
+      identifier: type,
+      index: Math.floor(Math.random() * 1000),
     });
 
-    console.log('✅ EditorProvider: Etapas REAIS sincronizadas:', realStages.length);
-    console.log('✅ EditorProvider: Primeira etapa REAL:', realStages[0]);
-    console.log('✅ EditorProvider: Segunda etapa REAL (Nome):', realStages[1]);
-    console.log('✅ EditorProvider: Terceira etapa REAL (Roupa Favorita):', realStages[2]);
-    console.log('✅ EditorProvider: Última etapa REAL:', realStages[realStages.length - 1]);
-    console.log(
-      '✅ EditorProvider: Lista das etapas REAIS:',
-      realStages.map(s => `${s.order}: ${s.name}`)
-    );
-    return realStages;
-  });
+    const newBlock: Block = {
+      id: blockId,
+      type,
+      content: getDefaultContent(type),
+      properties: {},
+      order: state.blocks.length,
+    };
 
-  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
-    // ✅ INICIALIZAR BLOCOS VAZIOS - CARREGAR TEMPLATES JSON ASSÍNCRONO
-    const initialBlocks: Record<string, EditorBlock[]> = {};
+    dispatch({ type: 'ADD_BLOCK', payload: newBlock });
 
-    // Inicializar todas as etapas com arrays vazios
-    for (let i = 1; i <= 21; i++) {
-      const stageId = `step-${String(i).padStart(2, '0')}`;
-      initialBlocks[stageId] = [];
+    // Add to Supabase if enabled and connected
+    if (state.supabaseEnabled && connectionStatus === 'connected') {
+      try {
+        await addSupabaseComponent(type, 1, newBlock.content, state.blocks.length);
+      } catch (error) {
+        console.error('Failed to sync block to Supabase:', error);
+      }
     }
 
-    console.log('✅ EditorProvider: Inicialização com arrays vazios para carregamento assíncrono');
-    return initialBlocks;
-  });
+    return blockId;
+  }, [state.blocks.length, state.supabaseEnabled, connectionStatus, addSupabaseComponent]);
 
-  // ✅ NOVO SISTEMA: Carregamento via TemplateBlockConverter
-  useEffect(() => {
-    const loadInitialTemplatesWithConverter = async () => {
-      console.log('🔄 EditorProvider: Carregando templates via TemplateBlockConverter');
+  const updateBlock = useCallback(async (id: string, content: any) => {
+    dispatch({ type: 'UPDATE_BLOCK', payload: { id, content } });
 
+    // Update in Supabase if enabled and connected
+    if (state.supabaseEnabled && connectionStatus === 'connected') {
       try {
-        // Usar setTimeout para quebrar a dependência circular
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await updateSupabaseComponent(id, { properties: content });
+      } catch (error) {
+        console.error('Failed to sync block update to Supabase:', error);
+      }
+    }
+  }, [state.supabaseEnabled, connectionStatus, updateSupabaseComponent]);
+
+  const deleteBlock = useCallback(async (id: string) => {
+    dispatch({ type: 'DELETE_BLOCK', payload: id });
+
+    // Delete from Supabase if enabled and connected
+    if (state.supabaseEnabled && connectionStatus === 'connected') {
+      try {
+        await deleteSupabaseComponent(id);
+      } catch (error) {
+        console.error('Failed to delete block from Supabase:', error);
+      }
+    }
+  }, [state.supabaseEnabled, connectionStatus, deleteSupabaseComponent]);
+
+  const reorderBlocks = useCallback(async (sourceIndex: number, destinationIndex: number) => {
+    dispatch({ type: 'REORDER_BLOCKS', payload: { sourceIndex, destinationIndex } });
+
+    // Reorder in Supabase if enabled and connected
+    if (state.supabaseEnabled && connectionStatus === 'connected') {
+      try {
+        const blockIds = state.blocks.map(block => block.id);
+        const reorderedIds = [...blockIds];
+        const [removed] = reorderedIds.splice(sourceIndex, 1);
+        reorderedIds.splice(destinationIndex, 0, removed);
         
-        // Importar o sistema de mapeamento APÓS a inicialização
-        const stepTemplatesModule = await import('../config/stepTemplatesMapping');
-        const { TemplateBlockConverter } = await import('../utils/templateBlockConverter');
-
-        // Carregar template da primeira etapa
-        const step1Template = stepTemplatesModule.STEP_TEMPLATES_MAPPING[1];
-        if (step1Template) {
-          console.log('🔄 Convertendo template da etapa 1...');
-          const step1Blocks = await TemplateBlockConverter.convertStepTemplate(
-            1,
-            step1Template.templateFunction,
-            { userName: quizLogic.userName }
-          );
-          
-          if (step1Blocks.length > 0) {
-            setStageBlocks(prev => ({
-              ...prev,
-              'step-01': step1Blocks,
-            }));
-            console.log(`✅ Etapa 1 carregada: ${step1Blocks.length} blocos`);
-          }
-        }
-
-        // Carregar mais algumas etapas progressivamente
-        setTimeout(async () => {
-          for (let stepNum = 2; stepNum <= 5; stepNum++) {
-            const stepTemplate = stepTemplatesModule.STEP_TEMPLATES_MAPPING[stepNum];
-            if (stepTemplate) {
-              try {
-                const blocks = await TemplateBlockConverter.convertStepTemplate(
-                  stepNum,
-                  stepTemplate.templateFunction,
-                  { userName: quizLogic.userName }
-                );
-                
-                if (blocks.length > 0) {
-                  const stageId = `step-${String(stepNum).padStart(2, '0')}`;
-                  setStageBlocks(prev => ({
-                    ...prev,
-                    [stageId]: blocks,
-                  }));
-                  console.log(`✅ Etapa ${stepNum} carregada: ${blocks.length} blocos`);
-                }
-              } catch (error) {
-                console.warn(`⚠️ Erro ao carregar etapa ${stepNum}:`, error);
-              }
-            }
-          }
-        }, 500);
-
+        await reorderComponents(reorderedIds);
       } catch (error) {
-        console.error('❌ Erro no carregamento com converter:', error);
+        console.error('Failed to reorder blocks in Supabase:', error);
       }
-    };
-
-    loadInitialTemplatesWithConverter();
-  }, []); // Executar apenas uma vez na inicialização
-
-  // ✅ SISTEMA LEGACY REMOVIDO - APENAS CLEAN_21_STEPS CONFIG USADO
-
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-
-  // ✅ FUNÇÃO PARA SALVAR O ESTADO ATUAL DO EDITOR
-  const saveFunnel = useCallback(async () => {
-    try {
-      console.log('💾 [EditorContext] Iniciando salvamento do funil...');
-
-      // Converter o estado atual do editor para o formato de persistência
-      const funnelData = {
-        id: funnelId,
-        name: `Quiz Funil - ${new Date().toLocaleDateString()}`,
-        description: 'Funil criado com Editor Visual',
-        isPublished: false,
-        version: 1,
-        settings: {
-          theme: 'default',
-          primaryColor: '#B89B7A',
-          secondaryColor: '#432818',
-        },
-        pages: stages.map((stage, index) => ({
-          id: stage.id,
-          pageType: stage.type,
-          pageOrder: index,
-          title: stage.name,
-          blocks: stageBlocks[stage.id] || [],
-          metadata: stage.metadata || {},
-        })),
-      };
-
-      console.log('📊 [EditorContext] Dados a serem salvos:', {
-        funnelId,
-        stagesCount: stages.length,
-        pagesCount: funnelData.pages.length,
-        totalBlocks: Object.values(stageBlocks).reduce((acc, blocks) => acc + blocks.length, 0),
-      });
-
-      const result = await saveFunnelToPersistence(funnelData);
-
-      if (result.success) {
-        console.log('✅ [EditorContext] Funil salvo com sucesso!');
-      } else {
-        console.error('❌ [EditorContext] Falha no salvamento:', result.error);
-      }
-
-      return result;
-    } catch (error) {
-      console.error('❌ [EditorContext] Erro inesperado ao salvar:', error);
-      return { success: false, error: 'Erro inesperado' };
     }
-  }, [funnelId, stages, stageBlocks, saveFunnelToPersistence]);
+  }, [state.blocks, state.supabaseEnabled, connectionStatus, reorderComponents]);
 
-  // ✅ PRÉ-CARREGAMENTO DE TEMPLATES JSON
-  useEffect(() => {
-    console.log('🚀 EditorProvider: Iniciando pré-carregamento de templates JSON');
-    TemplateManager.preloadCommonTemplates()
-      .then(() => {
-        console.log('✅ Templates JSON pré-carregados com sucesso');
-      })
-      .catch(error => {
-        console.warn('⚠️ Erro no pré-carregamento de templates JSON:', error);
-      });
+  const selectBlock = useCallback((id: string | null) => {
+    dispatch({ type: 'SELECT_BLOCK', payload: id });
   }, []);
 
-  // ═══════════════════════════════════════════════
-  // 🎨 UI STATE
-  // ═══════════════════════════════════════════════
-  const [isPreviewing, setIsPreviewing] = useState(false);
-  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
-
-  // ═══════════════════════════════════════════════
-  // 🎯 QUIZ STATE (INTEGRADO COM ETAPA 1 - NOME)
-  // ═══════════════════════════════════════════════
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
-  const [userName, setUserName] = useState<string>('');
-  const [currentScore, setCurrentScore] = useState<ReturnType<typeof calculateQuizScore> | null>(
-    null
-  );
-  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
-
-  // ✅ FUNÇÃO ESPECÍFICA PARA COLETA DE NOME (ETAPA 1)
-  const setUserNameFromInput = useCallback((name: string) => {
-    const cleanName = name.trim();
-    setUserName(cleanName);
-
-    // Também salvar como resposta do quiz para compatibilidade
-    setUserAnswers(prev => ({
-      ...prev,
-      'user-name': cleanName,
-      'step-01-name': cleanName,
-    }));
-
-    // Persistir no localStorage
-    if (cleanName && typeof window !== 'undefined') {
-      localStorage.setItem('quizUserName', cleanName);
-    }
-
-    console.log('👤 EditorContext: Nome coletado na Etapa 1:', {
-      name: cleanName,
-      timestamp: new Date().toISOString(),
-    });
+  const togglePreview = useCallback(() => {
+    dispatch({ type: 'TOGGLE_PREVIEW' });
   }, []);
 
-  const setAnswer = useCallback((questionId: string, answer: string) => {
-    setUserAnswers(prev => ({
-      ...prev,
-      [questionId]: answer,
+  const setFunnelId = useCallback((funnelId: string) => {
+    dispatch({ type: 'SET_FUNNEL_ID', payload: funnelId });
+  }, []);
+
+  const toggleSupabase = useCallback((enabled: boolean) => {
+    dispatch({ type: 'TOGGLE_SUPABASE', payload: enabled });
+  }, []);
+
+  const setGlobalStylesOpen = useCallback((open: boolean) => {
+    dispatch({ type: 'SET_GLOBAL_STYLES_OPEN', payload: open });
+  }, []);
+
+  // Fix the conversion from Supabase components to blocks
+  const convertSupabaseToBlocks = useCallback((components: any[]) => {
+    return components.map((component: any) => ({
+      id: component.id,
+      type: component.component_type_key,
+      content: component.properties || {},
+      properties: component.properties || {},
+      order: component.order_index || 0
     }));
   }, []);
 
-  const calculateCurrentScore = useCallback(() => {
-    try {
-      const score = calculateQuizScore(userAnswers);
-      setCurrentScore(score);
-    } catch (error) {
-      console.error('Erro ao calcular score:', error);
-      setCurrentScore(null);
-    }
-  }, [userAnswers]);
-
-  const resetQuiz = useCallback(() => {
-    setUserAnswers({});
-    setUserName('');
-    setCurrentScore(null);
-    setIsQuizCompleted(false);
-
-    // Limpar localStorage também
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('quizUserName');
-    }
-
-    console.log('🔄 EditorContext: Quiz resetado, incluindo nome de usuário');
-  }, []);
-
-  // ✅ DEBUG LOGGING
-  console.log('📊 EditorProvider: Estado atual:', {
-    stagesCount: stages.length,
-    activeStageId,
-    blocksKeys: Object.keys(stageBlocks).length,
-  });
-
-  // ═══════════════════════════════════════════════
-  // 🔍 VALIDAÇÃO E UTILITÁRIOS
-  // ═══════════════════════════════════════════════
-  const validateStageId = useCallback(
-    (stageId: string): boolean => {
-      const isValid = stages.some(stage => stage.id === stageId);
-      console.log(`🔍 EditorContext: Validando stage ${stageId}:`, isValid);
-      return isValid;
-    },
-    [stages]
-  );
-
-  const getStageById = useCallback(
-    (stageId: string): FunnelStage | undefined => {
-      return stages.find(stage => stage.id === stageId);
-    },
-    [stages]
-  );
-
-  // ═══════════════════════════════════════════════
-  // 🎯 STAGE ACTIONS (GERENCIAMENTO DE ETAPAS)
-  // ═══════════════════════════════════════════════
-
-  // ✅ FUNÇÃO PARA CARREGAR BLOCOS DE TEMPLATE JSON (SISTEMA HÍBRIDO)
-  const loadStageTemplate = useCallback(
-    async (stageId: string) => {
-      const stage = stages.find(s => s.id === stageId);
-      if (!stage) return;
-
-      const stepNumber = parseInt(stageId.replace('step-', ''));
-
-      console.log(`🎨 EditorContext: Carregando template para etapa ${stepNumber}`);
-      dispatch({ type: 'SET_STATE', payload: 'loading' });
-
-      try {
-        // Carregar blocos do template JSON e aplicar no estado
-        const loadedBlocks = await TemplateManager.loadStepBlocks(stageId);
-
-        // ✅ Garantir Header padrão no topo para todas as etapas
-        const hasHeader = (loadedBlocks || []).some(
-          b => b.type === 'quiz-intro-header' || b.type === 'header'
-        );
-
-        const headerBlock: EditorBlock = {
-          id: `${stageId}-block-quiz-intro-header-1`,
-          type: 'quiz-intro-header' as any,
-          content: {
-            title: 'Título do Header',
-            subtitle: 'Subtítulo opcional',
-            type: 'hero',
-            alignment: 'center',
-          } as any,
-          order: 1,
-          properties: {
-            title: 'Título do Header',
-            subtitle: 'Subtítulo opcional',
-            type: 'hero',
-            alignment: 'center',
-          },
-        };
-
-        const adjustedLoaded: EditorBlock[] = (loadedBlocks || []).map((b, idx) => ({
-          ...b,
-          order: hasHeader ? (b.order ?? idx + 1) : idx + 2,
-        }));
-
-        const withHeader: EditorBlock[] = hasHeader
-          ? adjustedLoaded
-          : [headerBlock, ...adjustedLoaded];
-
-        if (withHeader && withHeader.length > 0) {
-          setStageBlocks(prev => ({
-            ...prev,
-            [stageId]: withHeader, // ✅ Usar blocos com Header garantido
-          }));
-
-          console.log(
-            `✅ Template ${stageId} carregado dinamicamente: ${withHeader.length} blocos`
-          );
-          console.log(`📦 Tipos de blocos: ${withHeader.map(b => b.type).join(', ')}`);
-
-          // Atualizar metadados da etapa
-          setStages(prev =>
-            prev.map(s =>
-              s.id === stageId
-                ? {
-                    ...s,
-                    metadata: {
-                      ...s.metadata,
-                      blocksCount: withHeader.length,
-                      lastModified: new Date(),
-                    },
-                  }
-                : s
-            )
-          );
-        } else {
-          // Fallback: inserir somente header
-          setStageBlocks(prev => ({
-            ...prev,
-            [stageId]: [headerBlock],
-          }));
-        }
-
-        console.log(`✅ EditorContext: Template carregado para etapa ${stepNumber}`);
-        dispatch({ type: 'SET_STATE', payload: 'ready' });
-      } catch (error) {
-        console.error(
-          `❌ EditorContext: Erro ao carregar template para etapa ${stepNumber}:`,
-          error
-        );
-        dispatch({ type: 'SET_STATE', payload: 'error' });
-      }
-    },
-    [stages, dispatch]
-  );
-
-  const setActiveStage = useCallback(
-    (stageId: string) => {
-      console.log('🔄 EditorContext: Mudando etapa ativa para:', stageId);
-
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Etapa inválida:', stageId);
-        return;
-      }
-
-      setActiveStageId(stageId);
-      setSelectedBlockId(null);
-
-      // ✅ CARREGAR TEMPLATE SE A ETAPA ESTIVER VAZIA
-      const currentBlocks = stageBlocks[stageId] || [];
-      console.log(`🔍 EditorContext: Etapa ${stageId} tem ${currentBlocks.length} blocos`);
-
-      if (currentBlocks.length === 0) {
-        console.log(`🎨 EditorContext: Etapa ${stageId} vazia, carregando template JSON...`);
-        // Executar carregamento assíncrono do template JSON
-        loadStageTemplate(stageId).catch(error => {
-          console.error(`❌ Erro ao carregar template para ${stageId}:`, error);
-        });
-      } else {
-        console.log(
-          `📋 EditorContext: Etapa ${stageId} já tem blocos:`,
-          currentBlocks.map(b => b.type)
-        );
-      }
-
-      console.log('✅ EditorContext: Etapa ativa alterada para:', stageId);
-    },
-    [validateStageId, stageBlocks, loadStageTemplate]
-  );
-
-  const addStage = useCallback(
-    (stageData?: Partial<FunnelStage>): string => {
-      const newStageId = `step-${String(stages.length + 1).padStart(2, '0')}`;
-      const newStage: FunnelStage = {
-        id: newStageId,
-        name: stageData?.name || `Nova Etapa ${stages.length + 1}`,
-        order: stages.length + 1,
-        type: stageData?.type || 'question',
-        description: stageData?.description || 'Nova etapa personalizada',
-        isActive: false,
-        metadata: {
-          blocksCount: 0,
-          lastModified: new Date(),
-          isCustom: true,
-        },
-      };
-
-      setStages(prev => [...prev, newStage]);
-      setStageBlocks(prev => ({ ...prev, [newStageId]: [] }));
-
-      console.log('➕ EditorContext: Nova etapa adicionada:', newStageId);
-      return newStageId;
-    },
-    [stages.length]
-  );
-
-  const removeStage = useCallback(
-    (stageId: string) => {
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Tentativa de remover etapa inválida:', stageId);
-        return;
-      }
-
-      setStages(prev => prev.filter(stage => stage.id !== stageId));
-      setStageBlocks(prev => {
-        const updated = { ...prev };
-        delete updated[stageId];
-        return updated;
-      });
-
-      if (activeStageId === stageId) {
-        const remainingStages = stages.filter(stage => stage.id !== stageId);
-        if (remainingStages.length > 0) {
-          setActiveStageId(remainingStages[0].id);
-        }
-      }
-
-      console.log('🗑️ EditorContext: Etapa removida:', stageId);
-    },
-    [validateStageId, activeStageId, stages]
-  );
-
-  const updateStage = useCallback(
-    (stageId: string, updates: Partial<FunnelStage>) => {
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Tentativa de atualizar etapa inválida:', stageId);
-        return;
-      }
-
-      setStages(prev =>
-        prev.map(stage =>
-          stage.id === stageId
-            ? {
-                ...stage,
-                ...updates,
-                metadata: { ...stage.metadata, lastModified: new Date() },
-              }
-            : stage
-        )
-      );
-
-      console.log('📝 EditorContext: Etapa atualizada:', stageId, updates);
-    },
-    [validateStageId]
-  );
-
-  // 🧩 BLOCK ACTIONS (GERENCIAMENTO DE BLOCOS)
-  // ═══════════════════════════════════════════════
-  // ✅ ENHANCED: addBlock com integração Supabase UNIFICADA
-  const addBlock = useCallback(
-    async (type: string, targetStageId?: string): Promise<string> => {
-      const stageId = targetStageId || activeStageId;
-
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:', stageId);
-        return '';
-      }
-
-      // ID Semântico para o bloco
-      const currentStageBlocks = stageBlocks[stageId] || [];
-      const blockOrder = currentStageBlocks.length + 1;
-      const blockId = `${stageId}-block-${type}-${blockOrder}`;
-
-      const newBlock: EditorBlock = {
-        id: blockId,
-        type: type as any,
-        content: { text: `Novo ${type}`, title: `Título do ${type}` },
-        order: blockOrder,
-        properties: {},
-      };
-
-      // ✅ INTEGRAÇÃO SUPABASE UNIFICADA: Usar novo hook se habilitado e na etapa ativa
-      if (isSupabaseEnabled && stageId === activeStageId && editorSupabase.connectionStatus === 'connected') {
-        try {
-          console.log('🔄 [EditorContext] Persistindo bloco via hook unificado...');
-          
-          const supabaseComponent = await editorSupabase.addComponent({
-            instance_key: `${type}-${blockOrder}-${Date.now()}`,
-            component_type_key: type,
-            funnel_id: funnelId,
-            step_number: currentStepNumber,
-            order_index: blockOrder - 1,
-            properties: newBlock.properties || {},
-          });
-
-          if (supabaseComponent) {
-            console.log('✅ [EditorContext] Bloco persistido via hook unificado:', supabaseComponent.id);
-            // Atualizar ID local para usar o ID do Supabase
-            newBlock.id = supabaseComponent.id;
-            
-            // ✅ SINCRONIZAÇÃO: Atualizar estado local com dados do Supabase
-            setStageBlocks(prev => ({
-              ...prev,
-              [stageId]: [...(prev[stageId] || []), {
-                ...newBlock,
-                id: supabaseComponent.id,
-                properties: supabaseComponent.properties as Record<string, any> || {},
-              }],
-            }));
-
-            updateStage(stageId, {
-              metadata: {
-                ...getStageById(stageId)?.metadata,
-                blocksCount: currentStageBlocks.length + 1,
-                lastModified: new Date(),
-                // ✅ NOVO: Adicionar info de sync
-                lastSyncedAt: new Date(),
-              } as any,
-            });
-
-            console.log('✅ [EditorContext] Bloco adicionado via hook unificado:', supabaseComponent.id);
-            return supabaseComponent.id;
-          }
-        } catch (error) {
-          console.error('❌ [EditorContext] Erro no hook unificado, fallback para estado local:', error);
-          // Continuar com estado local em caso de erro
-        }
-      }
-
-      // ✅ FALLBACK: Atualizar apenas estado local se Supabase não disponível
-      setStageBlocks(prev => ({
-        ...prev,
-        [stageId]: [...(prev[stageId] || []), newBlock],
-      }));
-
-      updateStage(stageId, {
-        metadata: {
-          ...getStageById(stageId)?.metadata,
-          blocksCount: currentStageBlocks.length + 1,
-          lastModified: new Date(),
-        },
-      });
-
-      console.log(
-        `➕ [EditorContext] Bloco adicionado ${isSupabaseEnabled ? '(Local Fallback)' : '(Local)'}:`,
-        newBlock.id,
-        'tipo:',
-        type,
-        'etapa:',
-        stageId
-      );
-      return newBlock.id;
-    },
-    [
-      activeStageId,
-      validateStageId,
-      stageBlocks,
-      updateStage,
-      getStageById,
-      isSupabaseEnabled,
-      editorSupabase,
-      funnelId,
-      currentStepNumber,
-    ]
-  );
-
-  const addBlockAtPosition = useCallback(
-    async (type: string, position: number, targetStageId?: string): Promise<string> => {
-      const stageId = targetStageId || activeStageId;
-
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Tentativa de adicionar bloco em etapa inválida:', stageId);
-        return '';
-      }
-
-      // ID Semântico com posição
-      const blockId = `${stageId}-block-${type}-pos-${position + 1}`;
-      const currentStageBlocks = stageBlocks[stageId] || [];
-
-      const newBlock: EditorBlock = {
-        id: blockId,
-        type: type as any,
-        content: { text: `Novo ${type}`, title: `Título do ${type}` },
-        order: position + 1, // order baseado na posição
-        properties: {},
-      };
-
-      // ✅ INTEGRAÇÃO SUPABASE UNIFICADA: Usar novo hook se habilitado e na etapa ativa
-      if (isSupabaseEnabled && stageId === activeStageId && editorSupabase.connectionStatus === 'connected') {
-        try {
-          console.log('🔄 [EditorContext] Persistindo bloco na posição via hook unificado...');
-          const supabaseComponent = await editorSupabase.addComponent({
-            instance_key: `${type}-pos-${position}-${Date.now()}`,
-            component_type_key: type,
-            funnel_id: funnelId,
-            step_number: currentStepNumber,
-            order_index: position,
-            properties: newBlock.properties || {},
-          });
-
-          if (supabaseComponent) {
-            console.log('✅ [EditorContext] Bloco na posição persistido via hook unificado:', supabaseComponent.id);
-            newBlock.id = supabaseComponent.id;
-          }
-        } catch (error) {
-          console.error('❌ [EditorContext] Erro no hook unificado para posição, usando estado local:', error);
-          // Continuar com estado local
-        }
-      }
-
-      // Inserir o bloco na posição específica
-      const updatedBlocks = [...currentStageBlocks];
-      updatedBlocks.splice(position, 0, newBlock);
-
-      // Reordenar os outros blocos
-      const reorderedBlocks = updatedBlocks.map((block, index) => ({
-        ...block,
-        order: index + 1,
-      }));
-
-      setStageBlocks(prev => ({
-        ...prev,
-        [stageId]: reorderedBlocks,
-      }));
-
-      updateStage(stageId, {
-        metadata: {
-          ...getStageById(stageId)?.metadata,
-          blocksCount: reorderedBlocks.length,
-        },
-      });
-
-      console.log(
-        `➕ [EditorContext] Bloco adicionado na posição ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`,
-        position,
-        'blockId:',
-        newBlock.id,
-        'tipo:',
-        type,
-        'etapa:',
-        stageId
-      );
-      return newBlock.id;
-    },
-    [
-      activeStageId,
-      validateStageId,
-      stageBlocks,
-      updateStage,
-      getStageById,
-      isSupabaseEnabled,
-      editorSupabase,
-      funnelId,
-      currentStepNumber,
-    ]
-  );
-
-  // 🎯 SISTEMA 1: FUNÇÃO DE DUPLICAÇÃO SEMÂNTICA
-  const duplicateBlock = useCallback(
-    (blockId: string, targetStageId?: string): string => {
-      const stageId = targetStageId || activeStageId;
-
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Tentativa de duplicar bloco em etapa inválida:', stageId);
-        return '';
-      }
-
-      const currentStageBlocks = stageBlocks[stageId] || [];
-      const blockToDuplicate = currentStageBlocks.find(b => b.id === blockId);
-
-      if (!blockToDuplicate) {
-        console.warn('⚠️ EditorContext: Bloco para duplicar não encontrado:', blockId);
-        return '';
-      }
-
-      // Gerar ID semântico para duplicação
-      const duplicateNumber =
-        currentStageBlocks.filter(b => b.type === blockToDuplicate.type).length + 1;
-
-      const duplicatedBlockId = `${stageId}-block-${blockToDuplicate.type}-copy-${duplicateNumber}`;
-
-      const duplicatedBlock: EditorBlock = {
-        ...JSON.parse(JSON.stringify(blockToDuplicate)), // Deep clone
-        id: duplicatedBlockId,
-        order: currentStageBlocks.length + 1,
-      };
-
-      setStageBlocks(prev => ({
-        ...prev,
-        [stageId]: [...(prev[stageId] || []), duplicatedBlock],
-      }));
-
-      updateStage(stageId, {
-        metadata: {
-          ...getStageById(stageId)?.metadata,
-          blocksCount: currentStageBlocks.length + 1,
-        },
-      });
-
-      console.log(
-        '🔄 EditorContext: Bloco duplicado (Sistema Semântico):',
-        duplicatedBlockId,
-        'original:',
-        blockId
-      );
-      return duplicatedBlockId;
-    },
-    [activeStageId, validateStageId, stageBlocks, updateStage, getStageById]
-  );
-
-  // ✅ ENHANCED: reorderBlocks com integração Supabase UNIFICADA
-  const reorderBlocks = useCallback(
-    async (blockIds: string[], targetStageId?: string) => {
-      const stageId = targetStageId || activeStageId;
-
-      if (!validateStageId(stageId)) {
-        console.warn('⚠️ EditorContext: Tentativa de reordenar blocos em etapa inválida:', stageId);
-        return;
-      }
-
-      const currentStageBlocks = stageBlocks[stageId] || [];
-
-      // ✅ VALIDAÇÃO RIGOROSA: Verificar conjunto exato de IDs
-      if (blockIds.length !== currentStageBlocks.length) {
-        console.warn(
-          '⚠️ EditorContext: Reordenação inválida - quantidade:',
-          blockIds.length,
-          'vs',
-          currentStageBlocks.length
-        );
-        return;
-      }
-
-      const currentIds = new Set(currentStageBlocks.map(b => b.id));
-      const newIds = new Set(blockIds);
-
-      if (currentIds.size !== newIds.size) {
-        console.warn('⚠️ EditorContext: Reordenação inválida - IDs duplicados');
-        return;
-      }
-
-      for (const id of blockIds) {
-        if (!currentIds.has(id)) {
-          console.warn('⚠️ EditorContext: Reordenação inválida - ID desconhecido:', id);
-          return;
-        }
-      }
-
-      // ✅ INTEGRAÇÃO SUPABASE UNIFICADA: Usar novo hook se habilitado
-      if (isSupabaseEnabled && stageId === activeStageId && editorSupabase.connectionStatus === 'connected') {
-        try {
-          console.log('🔄 [EditorContext] Reordenando blocos via hook unificado...');
-          await editorSupabase.reorderComponents(blockIds);
-          console.log('✅ [EditorContext] Blocos reordenados via hook unificado');
-        } catch (error) {
-          console.error('❌ [EditorContext] Erro no hook unificado para reordenação, usando estado local:', error);
-          // Continuar com reordenação local
-        }
-      }
-
-      // Reordenar blocos baseado na ordem dos IDs
-      const reorderedBlocks = blockIds
-        .map((blockId, index) => {
-          const block = currentStageBlocks.find(b => b.id === blockId);
-          if (!block) {
-            console.warn('⚠️ EditorContext: Bloco não encontrado:', blockId);
-            return null;
-          }
-          return {
-            ...block,
-            order: index + 1,
-          };
-        })
-        .filter(Boolean) as EditorBlock[];
-
-      setStageBlocks(prev => ({
-        ...prev,
-        [stageId]: reorderedBlocks,
-      }));
-
-      console.log(
-        `🔄 [EditorContext] Blocos reordenados ${isSupabaseEnabled ? '(Supabase)' : '(Local)'} na etapa:`,
-        stageId,
-        'nova ordem:',
-        blockIds
-      );
-    },
-    [activeStageId, validateStageId, stageBlocks, isSupabaseEnabled, editorSupabase]
-  );
-
-  // ✅ ENHANCED: deleteBlock com integração Supabase UNIFICADA
-  const deleteBlock = useCallback(
-    async (blockId: string) => {
-      // ✅ INTEGRAÇÃO SUPABASE UNIFICADA: Usar novo hook se habilitado
-      if (isSupabaseEnabled && editorSupabase.connectionStatus === 'connected') {
-        try {
-          // Verificar se é um bloco da etapa ativa
-          const currentStageBlocks = stageBlocks[activeStageId] || [];
-          const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
-
-          if (isActiveStageBlock) {
-            console.log('🔄 [EditorContext] Removendo bloco via hook unificado...');
-            await editorSupabase.deleteComponent(blockId);
-            console.log('✅ [EditorContext] Bloco removido via hook unificado');
-          }
-        } catch (error) {
-          console.error('❌ [EditorContext] Erro no hook unificado para remoção, usando estado local:', error);
-          // Continuar com remoção local
-        }
-      }
-
-      let deletedFromStage = '';
-
-      setStageBlocks(prev => {
-        const updated = { ...prev };
-
-        for (const stageId in updated) {
-          const blocks = updated[stageId];
-          const blockIndex = blocks.findIndex(block => block.id === blockId);
-
-          if (blockIndex !== -1) {
-            updated[stageId] = blocks.filter(block => block.id !== blockId);
-            deletedFromStage = stageId;
-            break;
-          }
-        }
-
-        return updated;
-      });
-
-      if (deletedFromStage) {
-        const stage = getStageById(deletedFromStage);
-        if (stage) {
-          updateStage(deletedFromStage, {
-            metadata: {
-              ...stage.metadata,
-              blocksCount: Math.max(0, (stage.metadata?.blocksCount || 1) - 1),
-            },
-          });
-        }
-      }
-
-      if (selectedBlockId === blockId) {
-        setSelectedBlockId(null);
-      }
-
-      console.log(
-        `🗑️ [EditorContext] Bloco removido ${isSupabaseEnabled ? '(Supabase)' : '(Local)'}:`,
-        blockId,
-        'da etapa:',
-        deletedFromStage
-      );
-    },
-    [
-      selectedBlockId,
-      getStageById,
-      updateStage,
-      isSupabaseEnabled,
-      editorSupabase,
-      stageBlocks,
-      activeStageId,
-    ]
-  );
-
-  // ✅ ENHANCED: updateBlock com integração Supabase UNIFICADA
-  const updateBlock = useCallback(
-    async (blockId: string, updates: Partial<EditorBlock>) => {
-      console.log('🔧 [EditorContext] updateBlock chamado:', { blockId, updates });
-
-      // ✅ INTEGRAÇÃO SUPABASE UNIFICADA: Usar novo hook se disponível
-      if (isSupabaseEnabled && editorSupabase.connectionStatus === 'connected') {
-        try {
-          // Verificar se é um bloco da etapa ativa (Supabase só gerencia etapa ativa)
-          const currentStageBlocks = stageBlocks[activeStageId] || [];
-          const isActiveStageBlock = currentStageBlocks.some(b => b.id === blockId);
-
-          if (isActiveStageBlock && updates.properties) {
-            console.log('🔄 [EditorContext] Atualizando bloco via hook unificado...');
-            
-            const updatedComponent = await editorSupabase.updateComponent(blockId, {
-              properties: updates.properties,
-              // Remove styling reference since it doesn't exist in the EditorBlock type
-              order_index: updates.order !== undefined ? updates.order - 1 : undefined,
-            });
-
-            if (updatedComponent) {
-              console.log('✅ [EditorContext] Bloco atualizado via hook unificado:', blockId);
-              
-              // ✅ SINCRONIZAÇÃO: Atualizar estado local com dados do Supabase
-              setStageBlocks(prev => {
-                const updated = { ...prev };
-
-                for (const stageId in updated) {
-                  const blocks = updated[stageId];
-                  const blockIndex = blocks.findIndex(block => block.id === blockId);
-
-                  if (blockIndex !== -1) {
-                    updated[stageId] = blocks.map(block => {
-                      if (block.id === blockId) {
-                        return {
-                          ...block,
-                          properties: updatedComponent.properties as Record<string, any> || {},
-                          content: updatedComponent.properties as Record<string, any> || {},
-                          order: (updatedComponent.order_index || 0) + 1,
-                          // Remove updated_at as it's not in EditorBlock type
-                        };
-                      }
-                      return block;
-                    });
-                    break;
-                  }
-                }
-
-                return updated;
-              });
-
-              console.log('✅ [EditorContext] Estado local sincronizado com Supabase');
-              return;
-            }
-          }
-        } catch (error) {
-          console.error('❌ [EditorContext] Erro no hook unificado, fallback para estado local:', error);
-          // Continuar com atualização local
-        }
-      }
-
-      // ✅ FALLBACK: Atualizar estado local (método original melhorado)
-      setStageBlocks(prev => {
-        const updated = { ...prev };
-
-        for (const stageId in updated) {
-          const blocks = updated[stageId];
-          const blockIndex = blocks.findIndex(block => block.id === blockId);
-
-          if (blockIndex !== -1) {
-            updated[stageId] = blocks.map(block => {
-              if (block.id === blockId) {
-                console.log('🔧 [EditorContext] Bloco encontrado, estado atual:', block);
-
-                // Criar uma nova cópia do bloco
-                const updatedBlock = { ...block };
-
-                // Processar cada propriedade de atualização separadamente
-                Object.entries(updates).forEach(([key, value]) => {
-                  console.log(`🔧 [EditorContext] Processando update: ${key} =`, value);
-
-                  if (key === 'properties') {
-                    // ✅ CORREÇÃO CRÍTICA: Para properties, fazer merge completo
-                    updatedBlock.properties = {
-                      ...block.properties,
-                      ...(value as Record<string, any>),
-                    };
-                    console.log('🔧 [EditorContext] Properties merged:', updatedBlock.properties);
-
-                    // ✅ TAMBÉM SINCRONIZAR COM CONTENT para compatibilidade
-                    updatedBlock.content = {
-                      ...block.content,
-                      ...(value as Record<string, any>),
-                    };
-                    console.log('🔧 [EditorContext] Content também sincronizado:', updatedBlock.content);
-                  } else if (key === 'content') {
-                    // Para content, fazer um merge profundo preservando imutabilidade
-                    updatedBlock.content = {
-                      ...block.content,
-                      ...(value as Record<string, any>),
-                    };
-                    console.log('🔧 [EditorContext] Content atualizado:', updatedBlock.content);
-                  } else {
-                    // ✅ CORREÇÃO: Para campos individuais, atualizar tanto properties quanto content
-                    if (block.content && typeof value !== 'object') {
-                      updatedBlock.content = {
-                        ...block.content,
-                        [key]: value,
-                      };
-                      console.log('🔧 [EditorContext] Content direto atualizado:', updatedBlock.content);
-                    }
-
-                    if (block.properties) {
-                      updatedBlock.properties = {
-                        ...block.properties,
-                        [key]: value,
-                      };
-                      console.log('🔧 [EditorContext] Properties direto atualizada:', updatedBlock.properties);
-                    } else {
-                      // Para outras propriedades, atualização direta com casting seguro
-                      (updatedBlock as any)[key] = value;
-                      console.log(`🔧 [EditorContext] Propriedade direta ${key} atualizada:`, value);
-                    }
-                  }
-                });
-
-                console.log('🔧 [EditorContext] Bloco final atualizado:', updatedBlock);
-                return updatedBlock;
-              }
-              return block;
-            });
-            break;
-          }
-        }
-
-        return updated;
-      });
-
-      console.log(
-        `📝 [EditorContext] Bloco atualizado ${isSupabaseEnabled ? '(Local Fallback)' : '(Local)'}:`,
-        blockId,
-        updates
-      );
-    },
-    [isSupabaseEnabled, editorSupabase, stageBlocks, activeStageId]
-  );
-
-  const getBlocksForStage = useCallback(
-    (stageId: string): EditorBlock[] => {
-      const blocks = stageBlocks[stageId] || [];
-      console.log(`📦 EditorContext: Obtendo blocos para etapa ${stageId}:`, blocks.length);
-      return blocks;
-    },
-    [stageBlocks]
-  );
-
-  // ═══════════════════════════════════════════════
-  // 📊 COMPUTED VALUES (PERFORMANCE OTIMIZADA)
-  // ═══════════════════════════════════════════════
-  const currentBlocks = getBlocksForStage(activeStageId);
-  const selectedBlock = selectedBlockId
-    ? currentBlocks.find(block => block.id === selectedBlockId)
-    : undefined;
-
-  const totalBlocks = Object.values(stageBlocks).reduce(
-    (total, blocks) => total + blocks.length,
-    0
-  );
-  const stageCount = stages.length;
-
-  // ═══════════════════════════════════════════════
-  // 🔌 FUNÇÕES DO MODO BANCO DE DADOS
-  // ═══════════════════════════════════════════════
-
-  const setDatabaseMode = useCallback(
-    (enabled: boolean) => {
-      console.log(`🔧 EditorContext: Modo banco ${enabled ? 'ativado' : 'desativado'}`);
-      setDatabaseModeEnabled(enabled);
-      adapter.setDatabaseMode(enabled);
-    },
-    [adapter]
-  );
-
-  const setQuizId = useCallback(
-    (quizId: string) => {
-      console.log(`🔧 EditorContext: Quiz ID alterado para: ${quizId}`);
-      setCurrentQuizId(quizId);
-      adapter.setQuizId(quizId);
-    },
-    [adapter]
-  );
-
-  const migrateToDatabase = useCallback(async (): Promise<boolean> => {
-    console.log('🚀 EditorContext: Iniciando migração para banco...');
-    try {
-      const success = await adapter.migrateLocalToDatabase();
-      if (success) {
-        setDatabaseModeEnabled(true);
-        adapter.setDatabaseMode(true);
-        console.log('✅ EditorContext: Migração concluída, modo banco ativado');
-      }
-      return success;
-    } catch (error) {
-      console.error('❌ EditorContext: Erro na migração:', error);
-      return false;
-    }
-  }, [adapter]);
-
-  const getStats = useCallback(async () => {
-    try {
-      return await adapter.getQuizStats();
-    } catch (error) {
-      console.error('❌ EditorContext: Erro ao obter estatísticas:', error);
-      return { error: String(error) };
-    }
-  }, [adapter]);
-
-  // Debug logging para computed values
-  console.log('📊 EditorContext: Computed values:', {
-    activeStageId,
-    currentBlocks: currentBlocks.length,
-    selectedBlock: selectedBlock?.id || 'none',
-    totalBlocks,
-    stageCount,
-    databaseMode: databaseModeEnabled,
-    quizId: currentQuizId,
-  });
-
-  // ✅ INICIALIZAÇÃO AUTOMÁTICA - CARREGAR TEMPLATE DA ETAPA ATIVA
-  useEffect(() => {
-    console.log('🚀 EditorContext: useEffect de inicialização executado');
-    console.log('📋 EditorContext: activeStageId:', activeStageId);
-    console.log('📋 EditorContext: currentBlocks.length:', currentBlocks.length);
-
-    // Só carregar se a etapa ativa não tiver blocos (evitar sobrescrever blocos já carregados)
-    if (activeStageId && currentBlocks.length === 0) {
-      console.log(`🎨 EditorContext: Carregando template automaticamente para ${activeStageId}`);
-      loadStageTemplate(activeStageId);
-    } else if (currentBlocks.length > 0) {
-      console.log(
-        `📋 EditorContext: Etapa ${activeStageId} já tem ${currentBlocks.length} blocos carregados - mantendo dados`
-      );
-    } else {
-      console.log(`📋 EditorContext: Etapa ${activeStageId} inválida ou sem dados para carregar`);
-    }
-  }, [activeStageId]); // ✅ Remover currentBlocks.length das dependências para evitar loops
-
-  // ═══════════════════════════════════════════════
-  // 🎯 CONTEXT VALUE (INTERFACE COMPLETA)
-  // ═══════════════════════════════════════════════
-  const contextValue: EditorContextType = {
-    stages,
-    activeStageId,
-    selectedBlockId,
-    editorState: state,
-
-    // ✅ NOVO: Sistema de persistência Supabase
-    funnelId,
-    isSupabaseEnabled,
-
-    stageActions: {
-      setActiveStage,
-      addStage,
-      removeStage,
-      updateStage,
-    },
-
-    blockActions: {
+  const value = useMemo(
+    () => ({
+      state,
+      dispatch,
       addBlock,
-      addBlockAtPosition,
-      duplicateBlock,
-      deleteBlock,
       updateBlock,
+      deleteBlock,
+      selectBlock,
+      togglePreview,
+      setFunnelId,
+      toggleSupabase,
       reorderBlocks,
-      setSelectedBlockId,
-      getBlocksForStage,
-    },
+      isSaving,
+      connectionStatus,
+      lastSync,
+      isGlobalStylesOpen: state.isGlobalStylesOpen,
+      setGlobalStylesOpen,
+    }),
+    [
+      state,
+      dispatch,
+      addBlock,
+      updateBlock,
+      deleteBlock,
+      selectBlock,
+      togglePreview,
+      setFunnelId,
+      toggleSupabase,
+      reorderBlocks,
+      isSaving,
+      connectionStatus,
+      lastSync,
+      state.isGlobalStylesOpen,
+      setGlobalStylesOpen,
+    ]
+  );
 
-    templateActions: {
-      loadTemplate: async templateId => {
-        const template = await templateManager.loadTemplate(templateId);
-        if (template) {
-          await templateManager.applyTemplate(template);
-        }
-      },
-      loadTemplateByStep: async step => {
-        const template = await templateManager.loadTemplateByStep(step);
-        if (template) {
-          await templateManager.applyTemplate(template);
-        }
-      },
-      applyCurrentTemplate: async () => {
-        await templateManager.applyCurrentTemplate();
-      },
-      isLoadingTemplate: templateManager.isLoading,
-    },
-
-    persistenceActions: {
-      saveFunnel,
-      isSaving: isPersistenceSaving,
-    },
-
-    uiState: {
-      isPreviewing,
-      setIsPreviewing,
-      viewportSize,
-      setViewportSize,
-    },
-
-    computed: {
-      currentBlocks,
-      selectedBlock,
-      totalBlocks,
-      stageCount,
-    },
-
-    databaseMode: {
-      isEnabled: databaseModeEnabled,
-      quizId: currentQuizId,
-      setDatabaseMode,
-      setQuizId,
-      migrateToDatabase,
-      getStats,
-    },
-
-    // ✅ ATUALIZADO: Quiz State Integrado com Hooks
-    quizState: {
-      // Estado básico (compatibilidade)
-      userAnswers,
-      userName: quizLogic.userName || userName, // Priorizar hook
-      currentScore,
-      isQuizCompleted: quizLogic.quizCompleted || isQuizCompleted,
-      quizResult: quizLogic.quizResult,
-      
-      // Ações básicas (compatibilidade + hooks)
-      setAnswer,
-      setUserNameFromInput: (name: string) => {
-        setUserNameFromInput(name); // Local state para compatibilidade
-        quizLogic.setUserNameFromInput(name); // Hook integrado
-      },
-      calculateCurrentScore,
-      resetQuiz: () => {
-        resetQuiz(); // Local reset
-        quizLogic.restartQuiz(); // Hook reset
-      },
-      
-      // ✅ NOVOS: Métodos dos hooks integrados
-      answerQuestion: quizLogic.answerQuestion,
-      answerStrategicQuestion: quizLogic.answerStrategicQuestion,
-      completeQuiz: quizLogic.completeQuiz,
-      
-      // Estado avançado dos hooks
-      currentQuestionIndex: quizLogic.currentQuestionIndex,
-      totalQuestions: quizLogic.totalQuestions,
-      answers: quizLogic.answers,
-      strategicAnswers: quizLogic.strategicAnswers,
-    },
-  };
-
-  console.log('🎯 EditorContext: Providing context value com', stages.length, 'etapas');
-
-  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
+  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
 };

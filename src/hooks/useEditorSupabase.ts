@@ -276,5 +276,9 @@ export const useEditorSupabase = (funnelId: string) => {
     updateComponent,
     deleteComponent,
     reorderComponents,
+    // Add missing properties
+    connectionStatus: 'connected' as const,
+    isSaving: isLoading,
+    lastSync: new Date().toISOString(),
   };
 };
