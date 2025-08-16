@@ -1,636 +1,280 @@
-/**
- * UNIFIED EDITOR-SUPABASE HOOK
- * 
- * Centralized hook that provides solid alignment between editor operations
- * and Supabase data persistence, addressing fragmentation issues.
- * 
- * Features:
- * - Unified state management for editor + Supabase
- * - Robust error handling and recovery mechanisms
- * - Optimistic updates with rollback
- * - Comprehensive loading states
- * - Type-safe operations with proper validation
- * - Automatic retry logic for failed operations
- */
 
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { toast } from '@/components/ui/use-toast';
+import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { 
-  ComponentInstance, 
-  InsertComponentInstance, 
-  UpdateComponentInstance,
-  Funnel,
-  FunnelPage
-} from '@/types/unified-schema';
+import { toast } from '@/hooks/use-toast';
 
-// =============================================================================
-// TYPES & INTERFACES
-// =============================================================================
-
-export interface EditorSupabaseState {
-  components: ComponentInstance[];
-  funnels: Funnel[];
-  currentFunnel: Funnel | null;
-  currentPage: FunnelPage | null;
-  isLoading: boolean;
-  isSaving: boolean;
-  error: string | null;
-  connectionStatus: 'checking' | 'connected' | 'error' | 'offline';
-  lastSync: Date | null;
+export interface SupabaseComponent {
+  id: string;
+  component_type_key: string;
+  created_at: string | null;
+  created_by: string | null;
+  custom_styling: any;
+  funnel_id: string;
+  instance_key: string;
+  is_active: boolean | null;
+  is_locked: boolean | null;
+  is_template: boolean | null;
+  order_index: number;
+  properties: any;
+  stage_id: string | null;
+  step_number: number;
+  updated_at: string | null;
 }
 
-export interface EditorSupabaseOperations {
-  // Connection Management
-  testConnection: () => Promise<boolean>;
-  reconnect: () => Promise<boolean>;
-  
-  // Component Operations
-  addComponent: (input: Omit<InsertComponentInstance, 'id'>) => Promise<ComponentInstance | null>;
-  updateComponent: (id: string, updates: Partial<UpdateComponentInstance>) => Promise<ComponentInstance | null>;
-  deleteComponent: (id: string) => Promise<boolean>;
-  reorderComponents: (componentIds: string[]) => Promise<boolean>;
-  
-  // Funnel Operations
-  createFunnel: (name: string, description?: string) => Promise<Funnel | null>;
-  loadFunnel: (funnelId: string) => Promise<boolean>;
-  saveFunnel: () => Promise<boolean>;
-  
-  // Batch Operations
-  batchUpdateComponents: (updates: Array<{ id: string; updates: Partial<UpdateComponentInstance> }>) => Promise<boolean>;
-  syncLocalToSupabase: () => Promise<boolean>;
-  
-  // Utility
-  clearError: () => void;
-  forceRefresh: () => Promise<void>;
-}
+export const useEditorSupabase = (funnelId: string) => {
+  const [components, setComponents] = useState<SupabaseComponent[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export interface UseEditorSupabaseConfig {
-  funnelId?: string;
-  stepNumber?: number;
-  enableAutoSync?: boolean;
-  enableOptimisticUpdates?: boolean;
-  retryAttempts?: number;
-  syncInterval?: number; // in milliseconds
-}
+  // Load components from Supabase
+  const loadComponents = useCallback(async () => {
+    if (!funnelId) return;
 
-// =============================================================================
-// HOOK IMPLEMENTATION
-// =============================================================================
+    setIsLoading(true);
+    setError(null);
 
-export const useEditorSupabase = (config: UseEditorSupabaseConfig = {}) => {
-  const {
-    funnelId,
-    stepNumber = 1,
-    enableAutoSync = true,
-    enableOptimisticUpdates = true,
-    retryAttempts = 3,
-    syncInterval = 30000, // 30 seconds
-  } = config;
-
-  // =============================================================================
-  // STATE MANAGEMENT
-  // =============================================================================
-
-  const [state, setState] = useState<EditorSupabaseState>({
-    components: [],
-    funnels: [],
-    currentFunnel: null,
-    currentPage: null,
-    isLoading: false,
-    isSaving: false,
-    error: null,
-    connectionStatus: 'checking',
-    lastSync: null,
-  });
-
-  // Refs for cleanup and state management
-  const syncIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const optimisticUpdatesRef = useRef<Map<string, any>>(new Map());
-
-  // =============================================================================
-  // UTILITY FUNCTIONS
-  // =============================================================================
-
-  const updateState = useCallback((updates: Partial<EditorSupabaseState>) => {
-    setState(prev => ({ ...prev, ...updates }));
-  }, []);
-
-  const clearError = useCallback(() => {
-    updateState({ error: null });
-  }, [updateState]);
-
-  const handleError = useCallback((error: any, context: string) => {
-    const errorMessage = error?.message || 'Erro desconhecido';
-    console.error(`❌ [useEditorSupabase] ${context}:`, error);
-    
-    updateState({ 
-      error: errorMessage,
-      connectionStatus: error?.code === 'PGRST301' ? 'offline' : 'error'
-    });
-
-    toast({
-      title: `Erro: ${context}`,
-      description: errorMessage,
-      variant: 'destructive',
-    });
-  }, [updateState]);
-
-  // =============================================================================
-  // CONNECTION MANAGEMENT
-  // =============================================================================
-
-  const testConnection = useCallback(async (): Promise<boolean> => {
     try {
-      updateState({ connectionStatus: 'checking' });
-      
-      const { error } = await supabase
-        .from('component_types')
-        .select('count')
-        .limit(1);
+      const { data, error: fetchError } = await supabase
+        .from('component_instances')
+        .select('*')
+        .eq('funnel_id', funnelId)
+        .order('order_index', { ascending: true });
 
-      if (error) throw error;
+      if (fetchError) {
+        throw fetchError;
+      }
 
-      updateState({ 
-        connectionStatus: 'connected',
-        lastSync: new Date(),
-        error: null
+      setComponents(data || []);
+      console.log('✅ Componentes carregados do Supabase:', data?.length || 0);
+    } catch (err: any) {
+      const errorMessage = `Erro ao carregar componentes: ${err.message}`;
+      setError(errorMessage);
+      console.error('❌', errorMessage);
+      toast({
+        title: 'Erro',
+        description: errorMessage,
+        variant: 'destructive',
       });
-      
-      console.log('✅ [useEditorSupabase] Conexão Supabase validada');
-      return true;
-    } catch (error) {
-      handleError(error, 'Teste de Conexão');
-      return false;
+    } finally {
+      setIsLoading(false);
     }
-  }, [updateState, handleError]);
+  }, [funnelId]);
 
-  const reconnect = useCallback(async (): Promise<boolean> => {
-    console.log('🔄 [useEditorSupabase] Tentando reconectar...');
-    
-    for (let attempt = 1; attempt <= retryAttempts; attempt++) {
-      console.log(`🔄 Tentativa ${attempt}/${retryAttempts}`);
-      
-      const success = await testConnection();
-      if (success) {
-        console.log('✅ [useEditorSupabase] Reconexão bem-sucedida');
-        return true;
-      }
-      
-      if (attempt < retryAttempts) {
-        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-    
-    console.log('❌ [useEditorSupabase] Falha na reconexão após todas as tentativas');
-    return false;
-  }, [testConnection, retryAttempts]);
-
-  // =============================================================================
-  // COMPONENT OPERATIONS
-  // =============================================================================
-
+  // Add component to Supabase
   const addComponent = useCallback(async (
-    input: Omit<InsertComponentInstance, 'id'>
-  ): Promise<ComponentInstance | null> => {
+    componentTypeKey: string,
+    stepNumber: number,
+    properties: any = {},
+    orderIndex?: number
+  ) => {
+    if (!funnelId) return null;
+
+    setIsLoading(true);
     try {
-      updateState({ isSaving: true, error: null });
+      const newComponent = {
+        component_type_key: componentTypeKey,
+        funnel_id: funnelId,
+        instance_key: `${componentTypeKey}_${Date.now()}`,
+        step_number: stepNumber,
+        order_index: orderIndex ?? components.length,
+        properties: properties || {},
+        custom_styling: {},
+        is_active: true,
+        is_locked: false,
+        is_template: false,
+        stage_id: null,
+      };
 
-      // Optimistic update
-      if (enableOptimisticUpdates) {
-        const optimisticComponent: ComponentInstance = {
-          id: `temp-${Date.now()}`,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          created_by: null,
-          custom_styling: null,
-          is_active: true,
-          is_locked: false,
-          is_template: false,
-          stage_id: null,
-          ...input,
-        };
-
-        setState(prev => ({
-          ...prev,
-          components: [...prev.components, optimisticComponent].sort((a, b) => a.order_index - b.order_index)
-        }));
-
-        optimisticUpdatesRef.current.set(optimisticComponent.id, optimisticComponent);
-      }
-
-      const { data, error } = await supabase
+      const { data, error: insertError } = await supabase
         .from('component_instances')
-        .insert(input)
+        .insert([newComponent])
         .select()
         .single();
 
-      if (error) throw error;
-
-      // Replace optimistic update with real data
-      if (enableOptimisticUpdates && data) {
-        const tempId = Array.from(optimisticUpdatesRef.current.keys())[0];
-        if (tempId) {
-          optimisticUpdatesRef.current.delete(tempId);
-          setState(prev => ({
-            ...prev,
-            components: prev.components.map(c => 
-              c.id === tempId ? data : c
-            )
-          }));
-        }
-      } else if (data) {
-        setState(prev => ({
-          ...prev,
-          components: [...prev.components, data].sort((a, b) => a.order_index - b.order_index)
-        }));
+      if (insertError) {
+        throw insertError;
       }
 
-      updateState({ lastSync: new Date() });
-      
-      console.log('✅ [useEditorSupabase] Componente adicionado:', data?.id);
-      return data;
-    } catch (error) {
-      // Rollback optimistic update
-      if (enableOptimisticUpdates) {
-        const tempIds = Array.from(optimisticUpdatesRef.current.keys());
-        setState(prev => ({
-          ...prev,
-          components: prev.components.filter(c => !tempIds.includes(c.id))
-        }));
-        optimisticUpdatesRef.current.clear();
-      }
+      const componentWithDefaults: SupabaseComponent = {
+        ...data,
+        order_index: data.order_index ?? 0,
+      };
 
-      handleError(error, 'Adicionar Componente');
+      setComponents(prev => [...prev, componentWithDefaults]);
+      console.log('✅ Componente adicionado ao Supabase:', componentWithDefaults.id);
+
+      toast({
+        title: 'Sucesso',
+        description: 'Componente adicionado com sucesso',
+      });
+
+      return componentWithDefaults;
+    } catch (err: any) {
+      const errorMessage = `Erro ao adicionar componente: ${err.message}`;
+      setError(errorMessage);
+      console.error('❌', errorMessage);
+      toast({
+        title: 'Erro',
+        description: errorMessage,
+        variant: 'destructive',
+      });
       return null;
     } finally {
-      updateState({ isSaving: false });
+      setIsLoading(false);
     }
-  }, [updateState, handleError, enableOptimisticUpdates]);
+  }, [funnelId, components.length]);
 
+  // Update component in Supabase
   const updateComponent = useCallback(async (
-    id: string, 
-    updates: Partial<UpdateComponentInstance>
-  ): Promise<ComponentInstance | null> => {
+    componentId: string,
+    updates: Partial<SupabaseComponent>
+  ) => {
+    if (!componentId) return false;
+
+    setIsLoading(true);
     try {
-      updateState({ isSaving: true, error: null });
-
-      // Optimistic update
-      let originalComponent: ComponentInstance | null = null;
-      if (enableOptimisticUpdates) {
-        setState(prev => {
-          const componentIndex = prev.components.findIndex(c => c.id === id);
-          if (componentIndex === -1) return prev;
-
-          originalComponent = prev.components[componentIndex];
-          const updatedComponents = [...prev.components];
-          updatedComponents[componentIndex] = {
-            ...originalComponent,
-            ...updates,
-            updated_at: new Date().toISOString()
-          };
-
-          return {
-            ...prev,
-            components: updatedComponents
-          };
-        });
-      }
-
-      const { data, error } = await supabase
+      const { data, error: updateError } = await supabase
         .from('component_instances')
-        .update(updates)
-        .eq('id', id)
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', componentId)
         .select()
         .single();
 
-      if (error) throw error;
-
-      // Update with real data
-      if (data) {
-        setState(prev => ({
-          ...prev,
-          components: prev.components.map(c => 
-            c.id === id ? data : c
-          )
-        }));
+      if (updateError) {
+        throw updateError;
       }
 
-      updateState({ lastSync: new Date() });
-      
-      console.log('✅ [useEditorSupabase] Componente atualizado:', id);
-      return data;
-    } catch (error) {
-      // Rollback optimistic update
-      if (enableOptimisticUpdates && originalComponent) {
-        setState(prev => ({
-          ...prev,
-          components: prev.components.map(c => 
-            c.id === id ? originalComponent! : c
-          )
-        }));
-      }
+      const updatedComponent: SupabaseComponent = {
+        ...data,
+        order_index: data.order_index ?? 0,
+      };
 
-      handleError(error, 'Atualizar Componente');
-      return null;
-    } finally {
-      updateState({ isSaving: false });
-    }
-  }, [updateState, handleError, enableOptimisticUpdates]);
-
-  const deleteComponent = useCallback(async (id: string): Promise<boolean> => {
-    try {
-      updateState({ isSaving: true, error: null });
-
-      // Optimistic update
-      let originalComponent: ComponentInstance | null = null;
-      if (enableOptimisticUpdates) {
-        setState(prev => {
-          const component = prev.components.find(c => c.id === id);
-          if (component) originalComponent = component;
-          
-          return {
-            ...prev,
-            components: prev.components.filter(c => c.id !== id)
-          };
-        });
-      }
-
-      const { error } = await supabase
-        .from('component_instances')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      updateState({ lastSync: new Date() });
-      
-      console.log('✅ [useEditorSupabase] Componente removido:', id);
-      return true;
-    } catch (error) {
-      // Rollback optimistic update
-      if (enableOptimisticUpdates && originalComponent) {
-        setState(prev => ({
-          ...prev,
-          components: [...prev.components, originalComponent!].sort((a, b) => a.order_index - b.order_index)
-        }));
-      }
-
-      handleError(error, 'Remover Componente');
-      return false;
-    } finally {
-      updateState({ isSaving: false });
-    }
-  }, [updateState, handleError, enableOptimisticUpdates]);
-
-  const reorderComponents = useCallback(async (componentIds: string[]): Promise<boolean> => {
-    try {
-      updateState({ isSaving: true, error: null });
-
-      // Optimistic update
-      let originalComponents: ComponentInstance[] = [];
-      if (enableOptimisticUpdates) {
-        setState(prev => {
-          originalComponents = [...prev.components];
-          
-          const reorderedComponents = componentIds.map((id, index) => {
-            const component = prev.components.find(c => c.id === id);
-            if (!component) return null;
-            
-            return {
-              ...component,
-              order_index: index,
-              updated_at: new Date().toISOString()
-            };
-          }).filter(Boolean) as ComponentInstance[];
-
-          return {
-            ...prev,
-            components: reorderedComponents
-          };
-        });
-      }
-
-      // Batch update order_index for all components
-      const updates = componentIds.map((id, index) => ({
-        id,
-        order_index: index
-      }));
-
-      const { error } = await supabase.rpc('batch_update_component_order', {
-        updates: updates
-      });
-
-      if (error) throw error;
-
-      updateState({ lastSync: new Date() });
-      
-      console.log('✅ [useEditorSupabase] Componentes reordenados');
-      return true;
-    } catch (error) {
-      // Rollback optimistic update
-      if (enableOptimisticUpdates && originalComponents.length > 0) {
-        setState(prev => ({
-          ...prev,
-          components: originalComponents
-        }));
-      }
-
-      handleError(error, 'Reordenar Componentes');
-      return false;
-    } finally {
-      updateState({ isSaving: false });
-    }
-  }, [updateState, handleError, enableOptimisticUpdates]);
-
-  // =============================================================================
-  // DATA LOADING
-  // =============================================================================
-
-  const loadComponents = useCallback(async (targetFunnelId?: string, targetStepNumber?: number) => {
-    const effectiveFunnelId = targetFunnelId || funnelId;
-    const effectiveStepNumber = targetStepNumber || stepNumber;
-
-    if (!effectiveFunnelId) {
-      console.warn('⚠️ [useEditorSupabase] FunnelId não fornecido para carregar componentes');
-      return;
-    }
-
-    try {
-      updateState({ isLoading: true, error: null });
-
-      const { data, error } = await supabase
-        .from('component_instances')
-        .select(`
-          *,
-          component_types (
-            type_key,
-            display_name,
-            category,
-            default_properties
-          )
-        `)
-        .eq('funnel_id', effectiveFunnelId)
-        .eq('step_number', effectiveStepNumber)
-        .order('order_index');
-
-      if (error) throw error;
-
-      updateState({ 
-        components: data || [],
-        lastSync: new Date()
-      });
-
-      console.log(`✅ [useEditorSupabase] Componentes carregados: ${data?.length || 0}`);
-    } catch (error) {
-      handleError(error, 'Carregar Componentes');
-    } finally {
-      updateState({ isLoading: false });
-    }
-  }, [funnelId, stepNumber, updateState, handleError]);
-
-  const forceRefresh = useCallback(async () => {
-    console.log('🔄 [useEditorSupabase] Forçando atualização...');
-    await Promise.all([
-      testConnection(),
-      loadComponents()
-    ]);
-  }, [testConnection, loadComponents]);
-
-  // =============================================================================
-  // BATCH OPERATIONS
-  // =============================================================================
-
-  const batchUpdateComponents = useCallback(async (
-    updates: Array<{ id: string; updates: Partial<UpdateComponentInstance> }>
-  ): Promise<boolean> => {
-    try {
-      updateState({ isSaving: true, error: null });
-
-      // Execute all updates in parallel
-      const promises = updates.map(({ id, updates: componentUpdates }) =>
-        supabase
-          .from('component_instances')
-          .update(componentUpdates)
-          .eq('id', id)
-          .select()
-          .single()
+      setComponents(prev =>
+        prev.map(comp =>
+          comp.id === componentId ? updatedComponent : comp
+        )
       );
 
-      const results = await Promise.allSettled(promises);
-      
-      // Check for any failures
-      const failures = results.filter(result => result.status === 'rejected');
-      if (failures.length > 0) {
-        throw new Error(`${failures.length} atualizações falharam de ${updates.length}`);
-      }
-
-      // Update local state with successful results
-      const successfulResults = results
-        .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
-        .map(result => result.value.data)
-        .filter(Boolean);
-
-      setState(prev => ({
-        ...prev,
-        components: prev.components.map(component => {
-          const updatedComponent = successfulResults.find(updated => updated.id === component.id);
-          return updatedComponent || component;
-        })
-      }));
-
-      updateState({ lastSync: new Date() });
-      
-      console.log(`✅ [useEditorSupabase] Batch update concluído: ${successfulResults.length} componentes`);
+      console.log('✅ Componente atualizado no Supabase:', componentId);
       return true;
-    } catch (error) {
-      handleError(error, 'Atualização em Lote');
+    } catch (err: any) {
+      const errorMessage = `Erro ao atualizar componente: ${err.message}`;
+      setError(errorMessage);
+      console.error('❌', errorMessage);
+      toast({
+        title: 'Erro',
+        description: errorMessage,
+        variant: 'destructive',
+      });
       return false;
     } finally {
-      updateState({ isSaving: false });
+      setIsLoading(false);
     }
-  }, [updateState, handleError]);
-
-  // =============================================================================
-  // AUTO-SYNC & LIFECYCLE
-  // =============================================================================
-
-  // Initial connection test and data loading
-  useEffect(() => {
-    console.log('🚀 [useEditorSupabase] Inicializando...');
-    
-    const initialize = async () => {
-      const connected = await testConnection();
-      if (connected) {
-        await loadComponents();
-      }
-    };
-
-    initialize();
-
-    // Setup auto-sync interval
-    if (enableAutoSync && syncInterval > 0) {
-      syncIntervalRef.current = setInterval(() => {
-        if (state.connectionStatus === 'connected') {
-          console.log('🔄 [useEditorSupabase] Auto-sync executando...');
-          loadComponents();
-        }
-      }, syncInterval);
-    }
-
-    // Cleanup
-    return () => {
-      if (syncIntervalRef.current) {
-        clearInterval(syncIntervalRef.current);
-      }
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, [funnelId, stepNumber]); // Re-run when funnel or step changes
-
-  // Cleanup optimistic updates on unmount
-  useEffect(() => {
-    return () => {
-      optimisticUpdatesRef.current.clear();
-    };
   }, []);
 
-  // =============================================================================
-  // RETURN INTERFACE
-  // =============================================================================
+  // Delete component from Supabase
+  const deleteComponent = useCallback(async (componentId: string) => {
+    if (!componentId) return false;
 
-  const operations: EditorSupabaseOperations = {
-    // Connection
-    testConnection,
-    reconnect,
-    
-    // Components
+    setIsLoading(true);
+    try {
+      const { error: deleteError } = await supabase
+        .from('component_instances')
+        .delete()
+        .eq('id', componentId);
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      setComponents(prev => prev.filter(comp => comp.id !== componentId));
+      console.log('✅ Componente removido do Supabase:', componentId);
+
+      toast({
+        title: 'Sucesso',
+        description: 'Componente removido com sucesso',
+      });
+
+      return true;
+    } catch (err: any) {
+      const errorMessage = `Erro ao remover componente: ${err.message}`;
+      setError(errorMessage);
+      console.error('❌', errorMessage);
+      toast({
+        title: 'Erro',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Reorder components in Supabase
+  const reorderComponents = useCallback(async (
+    sourceIndex: number,
+    destinationIndex: number
+  ) => {
+    if (sourceIndex === destinationIndex) return false;
+
+    const reorderedComponents = [...components];
+    const [movedComponent] = reorderedComponents.splice(sourceIndex, 1);
+    reorderedComponents.splice(destinationIndex, 0, movedComponent);
+
+    // Update order_index for all affected components
+    const updates = reorderedComponents.map((comp, index) => ({
+      id: comp.id,
+      order_index: index,
+    }));
+
+    setIsLoading(true);
+    try {
+      for (const update of updates) {
+        const { error: updateError } = await supabase
+          .from('component_instances')
+          .update({ order_index: update.order_index })
+          .eq('id', update.id);
+
+        if (updateError) {
+          throw updateError;
+        }
+      }
+
+      setComponents(reorderedComponents);
+      console.log('✅ Componentes reordenados no Supabase');
+      return true;
+    } catch (err: any) {
+      const errorMessage = `Erro ao reordenar componentes: ${err.message}`;
+      setError(errorMessage);
+      console.error('❌', errorMessage);
+      toast({
+        title: 'Erro',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [components]);
+
+  // Initialize component loading
+  useEffect(() => {
+    loadComponents();
+  }, [loadComponents]);
+
+  return {
+    components,
+    isLoading,
+    error,
+    loadComponents,
     addComponent,
     updateComponent,
     deleteComponent,
     reorderComponents,
-    
-    // Funnel operations (placeholder for future implementation)
-    createFunnel: async () => null,
-    loadFunnel: async () => false,
-    saveFunnel: async () => false,
-    
-    // Batch operations
-    batchUpdateComponents,
-    syncLocalToSupabase: async () => false, // TODO: Implement
-    
-    // Utility
-    clearError,
-    forceRefresh,
-  };
-
-  return {
-    ...state,
-    ...operations,
   };
 };
-
-export type UseEditorSupabaseReturn = ReturnType<typeof useEditorSupabase>;
