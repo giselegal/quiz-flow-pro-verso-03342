@@ -1,3 +1,4 @@
+
 import { useEditor } from '@/context/EditorContext';
 
 interface PropertiesPanelDebugProps {
@@ -9,14 +10,18 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
 }) => {
   const {
     selectedBlockId,
-    computed: { selectedBlock, currentBlocks },
-    uiState: { isPreviewing },
+    computed,
+    uiState,
   } = useEditor();
+
+  const selectedBlock = computed?.selectedBlock;
+  const currentBlocks = computed?.currentBlocks || [];
+  const isPreviewing = uiState?.isPreviewing || false;
 
   console.log('🔍 PropertiesPanelDebug - Estado atual:', {
     selectedBlockId,
     selectedBlock,
-    currentBlocks: currentBlocks?.length || 0,
+    currentBlocks: currentBlocks.length,
     isPreviewing,
     shouldShowPanel: !isPreviewing && selectedBlock,
     selectedBlockDetails: selectedBlock
@@ -53,7 +58,7 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
         </div>
 
         <div>
-          <strong>Current Blocks Count:</strong> {currentBlocks?.length || 0}
+          <strong>Current Blocks Count:</strong> {currentBlocks.length}
         </div>
 
         {selectedBlock && (
@@ -74,11 +79,11 @@ export const PropertiesPanelDebug: React.FC<PropertiesPanelDebugProps> = ({
           </div>
         )}
 
-        {currentBlocks && currentBlocks.length > 0 && (
+        {currentBlocks.length > 0 && (
           <div className="bg-white p-2 rounded border">
             <strong>Available Blocks:</strong>
             <ul className="text-xs mt-1">
-              {currentBlocks.map(block => (
+              {currentBlocks.map((block: any) => (
                 <li
                   key={block.id}
                   className={block.id === selectedBlockId ? 'font-bold text-blue-600' : ''}

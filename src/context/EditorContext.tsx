@@ -1,34 +1,106 @@
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
-import { toast } from 'sonner';
-import { useEditorSupabase } from '@/hooks/useEditorSupabase';
-import { Block } from '@/types/editor';
-import { generateSemanticId } from '@/utils/semanticIdGenerator';
 
-// Define the types for the editor state
-export interface EditorState {
-  blocks: Block[];
+import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback } from 'react';
+import { Block, BlockType } from '@/types/editor';
+import { EditorState, EditorAction } from '@/types/editorTypes';
+import { stepTemplatesMapping } from '@/config/stepTemplatesMapping';
+
+// Extended interface with all expected properties
+interface EditorContextType {
+  // Core state
+  state: EditorState;
+  dispatch: React.Dispatch<EditorAction>;
+  
+  // Block actions
+  addBlock: (type: BlockType) => Promise<string>;
+  updateBlock: (id: string, content: any) => Promise<void>;
+  deleteBlock: (id: string) => Promise<void>;
+  reorderBlocks: (startIndex: number, endIndex: number) => void;
+  
+  // Selection
+  selectedBlock: Block | null;
   selectedBlockId: string | null;
+  setSelectedBlockId: (id: string | null) => void;
+  
+  // UI state
   isPreviewing: boolean;
-  funnelId: string;
-  supabaseEnabled: boolean;
+  setIsPreviewing: (preview: boolean) => void;
   isGlobalStylesOpen: boolean;
+  setGlobalStylesOpen: (open: boolean) => void;
+  
+  // Connection status
+  connectionStatus: 'connected' | 'disconnected' | 'connecting';
+  
+  // Stage management
+  stages: any[];
+  activeStageId: string;
+  stageActions: {
+    setActiveStage: (id: string) => void;
+    addStage: () => void;
+    removeStage: (id: string) => void;
+  };
+  
+  // Block actions object
+  blockActions: {
+    setSelectedBlockId: (id: string | null) => void;
+    addBlock: (type: BlockType) => Promise<string>;
+    updateBlock: (id: string, content: any) => Promise<void>;
+    deleteBlock: (id: string) => Promise<void>;
+  };
+  
+  // Computed properties
+  computed: {
+    currentBlocks: Block[];
+    selectedBlock: Block | null;
+    stageCount: number;
+  };
+  
+  // UI state object
+  uiState: {
+    isPreviewing: boolean;
+    isGlobalStylesOpen: boolean;
+  };
+  
+  // Quiz state
+  quizState: {
+    userName: string;
+    answers: any[];
+    isQuizCompleted: boolean;
+  };
+  
+  // Database mode
+  databaseMode: 'local' | 'supabase';
+  
+  // Template actions
+  templateActions: {
+    loadTemplate: (templateId: string) => void;
+    saveTemplate: () => void;
+  };
+  
+  // Funnel ID
+  funnelId: string;
+  
+  // Supabase enabled
+  isSupabaseEnabled: boolean;
+  
+  // Persistence actions
+  persistenceActions: {
+    save: () => Promise<void>;
+    load: () => Promise<void>;
+  };
 }
 
-// Define the actions that can be dispatched to the reducer
-export type EditorAction =
-  | { type: 'SET_BLOCKS'; payload: Block[] }
-  | { type: 'ADD_BLOCK'; payload: Block }
-  | { type: 'UPDATE_BLOCK'; payload: { id: string; content: any } }
-  | { type: 'DELETE_BLOCK'; payload: string }
-  | { type: 'SELECT_BLOCK'; payload: string | null }
-  | { type: 'TOGGLE_PREVIEW' }
-  | { type: 'SET_FUNNEL_ID'; payload: string }
-  | { type: 'TOGGLE_SUPABASE'; payload: boolean }
-  | { type: 'REORDER_BLOCKS'; payload: { sourceIndex: number; destinationIndex: number } }
-  | { type: 'SET_GLOBAL_STYLES_OPEN'; payload: boolean };
+const EditorContext = createContext<EditorContextType | null>(null);
 
-// Define the reducer function that will update the state
-export const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
+// Initial state
+const initialState: EditorState = {
+  blocks: [],
+  selectedBlockId: null,
+  isPreviewing: false,
+  isGlobalStylesOpen: false,
+};
+
+// Reducer
+function editorReducer(state: EditorState, action: EditorAction): EditorState {
   switch (action.type) {
     case 'SET_BLOCKS':
       return { ...state, blocks: action.payload };
@@ -38,7 +110,7 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
       return {
         ...state,
         blocks: state.blocks.map(block =>
-          block.id === action.payload.id ? { ...block, content: action.payload.content } : block
+          block.id === action.payload.id ? { ...block, ...action.payload.updates } : block
         ),
       };
     case 'DELETE_BLOCK':
@@ -47,273 +119,204 @@ export const editorReducer = (state: EditorState, action: EditorAction): EditorS
         blocks: state.blocks.filter(block => block.id !== action.payload),
         selectedBlockId: state.selectedBlockId === action.payload ? null : state.selectedBlockId,
       };
-    case 'SELECT_BLOCK':
+    case 'SET_SELECTED_BLOCK':
       return { ...state, selectedBlockId: action.payload };
-    case 'TOGGLE_PREVIEW':
-      return { ...state, isPreviewing: !state.isPreviewing };
-    case 'SET_FUNNEL_ID':
-      return { ...state, funnelId: action.payload };
-    case 'TOGGLE_SUPABASE':
-      return { ...state, supabaseEnabled: action.payload };
-    case 'REORDER_BLOCKS': {
-      const { sourceIndex, destinationIndex } = action.payload;
-      const blocks = [...state.blocks];
-      const [removed] = blocks.splice(sourceIndex, 1);
-      blocks.splice(destinationIndex, 0, removed);
-      return { ...state, blocks };
-    }
+    case 'SET_PREVIEW_MODE':
+      return { ...state, isPreviewing: action.payload };
     case 'SET_GLOBAL_STYLES_OPEN':
       return { ...state, isGlobalStylesOpen: action.payload };
     default:
       return state;
   }
-};
-
-// Define the initial state for the editor
-const initialState: EditorState = {
-  blocks: [],
-  selectedBlockId: null,
-  isPreviewing: false,
-  funnelId: 'default-funnel-id',
-  supabaseEnabled: false,
-  isGlobalStylesOpen: false,
-};
-
-// Create the editor context
-export const EditorContext = createContext<{
-  state: EditorState;
-  dispatch: React.Dispatch<EditorAction>;
-  addBlock: (type: Block['type']) => Promise<string>;
-  updateBlock: (id: string, content: any) => Promise<void>;
-  deleteBlock: (id: string) => Promise<void>;
-  selectBlock: (id: string | null) => void;
-  togglePreview: () => void;
-  setFunnelId: (funnelId: string) => void;
-  toggleSupabase: (enabled: boolean) => void;
-  reorderBlocks: (sourceIndex: number, destinationIndex: number) => Promise<void>;
-  isSaving: boolean;
-  connectionStatus: 'connected' | 'disconnected' | 'connecting';
-  lastSync: string | null;
-  isGlobalStylesOpen: boolean;
-  setGlobalStylesOpen: (open: boolean) => void;
-}>({
-  state: initialState,
-  dispatch: () => null,
-  addBlock: () => Promise.resolve(''),
-  updateBlock: () => Promise.resolve(),
-  deleteBlock: () => Promise.resolve(),
-  selectBlock: () => null,
-  togglePreview: () => null,
-  setFunnelId: () => null,
-  toggleSupabase: () => null,
-  reorderBlocks: () => Promise.resolve(),
-  isSaving: false,
-  connectionStatus: 'disconnected',
-  lastSync: null,
-  isGlobalStylesOpen: false,
-  setGlobalStylesOpen: () => null,
-});
-
-// Create a custom hook to use the editor context
-export const useEditor = () => useContext(EditorContext);
-
-const getDefaultContent = (type: Block['type']) => {
-  switch (type) {
-    case 'headline':
-      return { title: 'Novo Título', subtitle: '' };
-    case 'text':
-      return { text: 'Novo texto' };
-    case 'image':
-      return { imageUrl: '', imageAlt: '', caption: '' };
-    case 'benefits':
-      return { title: 'Benefícios', items: [] };
-    default:
-      return {};
-  }
-};
+}
 
 export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);
-  
-  // Fix the hook call - pass just the funnelId string
-  const supabaseHook = useEditorSupabase(state.funnelId);
-  
-  const {
-    components: supabaseComponents,
-    isLoading: supabaseLoading,
-    error: supabaseError,
-    loadComponents,
-    addComponent: addSupabaseComponent,
-    updateComponent: updateSupabaseComponent,
-    deleteComponent: deleteSupabaseComponent,
-    reorderComponents,
-    // Add missing properties with default values
-    connectionStatus = 'disconnected',
-    isSaving = false,
-    lastSync = null
-  } = supabaseHook;
 
-  useEffect(() => {
-    if (state.supabaseEnabled) {
-      loadComponents();
-    }
-  }, [state.supabaseEnabled, loadComponents]);
-
-  useEffect(() => {
-    if (supabaseError) {
-      toast.error(`Supabase Error: ${supabaseError}`);
-    }
-  }, [supabaseError]);
-
-  useEffect(() => {
-    // Convert Supabase components to blocks when they load
-    if (supabaseComponents && supabaseComponents.length > 0) {
-      const blocks = convertSupabaseToBlocks(supabaseComponents);
-      dispatch({ type: 'SET_BLOCKS', payload: blocks });
-    }
-  }, [supabaseComponents]);
-
-  const addBlock = useCallback(async (type: Block['type']) => {
-    const blockId = generateSemanticId({
-      context: 'editor',
-      type: 'block',
-      identifier: type,
-      index: Math.floor(Math.random() * 1000),
-    });
-
+  // Block management functions
+  const addBlock = useCallback(async (type: BlockType): Promise<string> => {
     const newBlock: Block = {
-      id: blockId,
+      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type,
-      content: getDefaultContent(type),
+      content: {},
       properties: {},
       order: state.blocks.length,
     };
-
+    
     dispatch({ type: 'ADD_BLOCK', payload: newBlock });
+    return newBlock.id;
+  }, [state.blocks.length]);
 
-    // Add to Supabase if enabled and connected
-    if (state.supabaseEnabled && connectionStatus === 'connected') {
-      try {
-        await addSupabaseComponent(type, 1, newBlock.content, state.blocks.length);
-      } catch (error) {
-        console.error('Failed to sync block to Supabase:', error);
-      }
-    }
+  const updateBlock = useCallback(async (id: string, content: any): Promise<void> => {
+    dispatch({ type: 'UPDATE_BLOCK', payload: { id, updates: content } });
+  }, []);
 
-    return blockId;
-  }, [state.blocks.length, state.supabaseEnabled, connectionStatus, addSupabaseComponent]);
-
-  const updateBlock = useCallback(async (id: string, content: any) => {
-    dispatch({ type: 'UPDATE_BLOCK', payload: { id, content } });
-
-    // Update in Supabase if enabled and connected
-    if (state.supabaseEnabled && connectionStatus === 'connected') {
-      try {
-        await updateSupabaseComponent(id, { properties: content });
-      } catch (error) {
-        console.error('Failed to sync block update to Supabase:', error);
-      }
-    }
-  }, [state.supabaseEnabled, connectionStatus, updateSupabaseComponent]);
-
-  const deleteBlock = useCallback(async (id: string) => {
+  const deleteBlock = useCallback(async (id: string): Promise<void> => {
     dispatch({ type: 'DELETE_BLOCK', payload: id });
-
-    // Delete from Supabase if enabled and connected
-    if (state.supabaseEnabled && connectionStatus === 'connected') {
-      try {
-        await deleteSupabaseComponent(id);
-      } catch (error) {
-        console.error('Failed to delete block from Supabase:', error);
-      }
-    }
-  }, [state.supabaseEnabled, connectionStatus, deleteSupabaseComponent]);
-
-  const reorderBlocks = useCallback(async (sourceIndex: number, destinationIndex: number) => {
-    dispatch({ type: 'REORDER_BLOCKS', payload: { sourceIndex, destinationIndex } });
-
-    // Reorder in Supabase if enabled and connected
-    if (state.supabaseEnabled && connectionStatus === 'connected') {
-      try {
-        const blockIds = state.blocks.map(block => block.id);
-        const reorderedIds = [...blockIds];
-        const [removed] = reorderedIds.splice(sourceIndex, 1);
-        reorderedIds.splice(destinationIndex, 0, removed);
-        
-        await reorderComponents(reorderedIds);
-      } catch (error) {
-        console.error('Failed to reorder blocks in Supabase:', error);
-      }
-    }
-  }, [state.blocks, state.supabaseEnabled, connectionStatus, reorderComponents]);
-
-  const selectBlock = useCallback((id: string | null) => {
-    dispatch({ type: 'SELECT_BLOCK', payload: id });
   }, []);
 
-  const togglePreview = useCallback(() => {
-    dispatch({ type: 'TOGGLE_PREVIEW' });
+  const reorderBlocks = useCallback((startIndex: number, endIndex: number) => {
+    const newBlocks = Array.from(state.blocks);
+    const [reorderedItem] = newBlocks.splice(startIndex, 1);
+    newBlocks.splice(endIndex, 0, reorderedItem);
+    
+    const reorderedBlocks = newBlocks.map((block, index) => ({
+      ...block,
+      order: index,
+    }));
+    
+    dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
+  }, [state.blocks]);
+
+  const setSelectedBlockId = useCallback((id: string | null) => {
+    dispatch({ type: 'SET_SELECTED_BLOCK', payload: id });
   }, []);
 
-  const setFunnelId = useCallback((funnelId: string) => {
-    dispatch({ type: 'SET_FUNNEL_ID', payload: funnelId });
-  }, []);
-
-  const toggleSupabase = useCallback((enabled: boolean) => {
-    dispatch({ type: 'TOGGLE_SUPABASE', payload: enabled });
+  const setIsPreviewing = useCallback((preview: boolean) => {
+    dispatch({ type: 'SET_PREVIEW_MODE', payload: preview });
   }, []);
 
   const setGlobalStylesOpen = useCallback((open: boolean) => {
     dispatch({ type: 'SET_GLOBAL_STYLES_OPEN', payload: open });
   }, []);
 
-  // Fix the conversion from Supabase components to blocks
-  const convertSupabaseToBlocks = useCallback((components: any[]) => {
-    return components.map((component: any) => ({
-      id: component.id,
-      type: component.component_type_key,
-      content: component.properties || {},
-      properties: component.properties || {},
-      order: component.order_index || 0
+  // Mock data for stages (21 stages)
+  const stages = useMemo(() => {
+    return Array.from({ length: 21 }, (_, i) => ({
+      id: `step-${i + 1}`,
+      name: `Etapa ${i + 1}`,
+      order: i + 1,
+      blocksCount: 0,
+      metadata: { blocksCount: 0 },
     }));
   }, []);
 
-  const value = useMemo(
-    () => ({
-      state,
-      dispatch,
-      addBlock,
-      updateBlock,
-      deleteBlock,
-      selectBlock,
-      togglePreview,
-      setFunnelId,
-      toggleSupabase,
-      reorderBlocks,
-      isSaving,
-      connectionStatus,
-      lastSync,
-      isGlobalStylesOpen: state.isGlobalStylesOpen,
-      setGlobalStylesOpen,
-    }),
-    [
-      state,
-      dispatch,
-      addBlock,
-      updateBlock,
-      deleteBlock,
-      selectBlock,
-      togglePreview,
-      setFunnelId,
-      toggleSupabase,
-      reorderBlocks,
-      isSaving,
-      connectionStatus,
-      lastSync,
-      state.isGlobalStylesOpen,
-      setGlobalStylesOpen,
-    ]
-  );
+  // Stage actions
+  const stageActions = useMemo(() => ({
+    setActiveStage: (id: string) => {
+      console.log('Setting active stage:', id);
+    },
+    addStage: () => {
+      console.log('Add stage not implemented');
+    },
+    removeStage: (id: string) => {
+      console.log('Remove stage not implemented:', id);
+    },
+  }), []);
 
-  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
+  // Block actions object
+  const blockActions = useMemo(() => ({
+    setSelectedBlockId,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+  }), [setSelectedBlockId, addBlock, updateBlock, deleteBlock]);
+
+  // Computed properties
+  const computed = useMemo(() => ({
+    currentBlocks: state.blocks,
+    selectedBlock: state.blocks.find(block => block.id === state.selectedBlockId) || null,
+    stageCount: stages.length,
+  }), [state.blocks, state.selectedBlockId, stages.length]);
+
+  // UI state object
+  const uiState = useMemo(() => ({
+    isPreviewing: state.isPreviewing,
+    isGlobalStylesOpen: state.isGlobalStylesOpen,
+  }), [state.isPreviewing, state.isGlobalStylesOpen]);
+
+  // Quiz state
+  const quizState = useMemo(() => ({
+    userName: '',
+    answers: [],
+    isQuizCompleted: false,
+  }), []);
+
+  // Template actions
+  const templateActions = useMemo(() => ({
+    loadTemplate: (templateId: string) => {
+      console.log('Loading template:', templateId);
+    },
+    saveTemplate: () => {
+      console.log('Saving template');
+    },
+  }), []);
+
+  // Persistence actions
+  const persistenceActions = useMemo(() => ({
+    save: async () => {
+      console.log('Saving editor state');
+    },
+    load: async () => {
+      console.log('Loading editor state');
+    },
+  }), []);
+
+  const contextValue: EditorContextType = {
+    // Core state
+    state,
+    dispatch,
+    
+    // Block actions
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    reorderBlocks,
+    
+    // Selection
+    selectedBlock: computed.selectedBlock,
+    selectedBlockId: state.selectedBlockId,
+    setSelectedBlockId,
+    
+    // UI state
+    isPreviewing: state.isPreviewing,
+    setIsPreviewing,
+    isGlobalStylesOpen: state.isGlobalStylesOpen,
+    setGlobalStylesOpen,
+    
+    // Connection status
+    connectionStatus: 'connected' as const,
+    
+    // Stage management
+    stages,
+    activeStageId: 'step-1',
+    stageActions,
+    
+    // Block actions object
+    blockActions,
+    
+    // Computed properties
+    computed,
+    
+    // UI state object
+    uiState,
+    
+    // Quiz state
+    quizState,
+    
+    // Database mode
+    databaseMode: 'local' as const,
+    
+    // Template actions
+    templateActions,
+    
+    // Funnel ID
+    funnelId: 'default-funnel',
+    
+    // Supabase enabled
+    isSupabaseEnabled: false,
+    
+    // Persistence actions
+    persistenceActions,
+  };
+
+  return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
+};
+
+export const useEditor = (): EditorContextType => {
+  const context = useContext(EditorContext);
+  if (!context) {
+    throw new Error('useEditor must be used within an EditorProvider');
+  }
+  return context;
 };

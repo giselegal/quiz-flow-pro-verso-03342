@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useEditor } from '@/context/EditorContext';
+import { useFunnels } from '@/context/FunnelsContext';
 import { cn } from '@/lib/utils';
 import { Copy, Eye, GripVertical, Plus, Settings, Trash2 } from 'lucide-react';
 
@@ -14,19 +15,19 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
   className,
   onStageSelect,
 }) => {
-  const {
-    stages,
-    activeStageId,
-    stageActions: { setActiveStage, addStage, removeStage },
-    computed: { stageCount },
-    // ✅ NOVO: Estado do quiz para mostrar progresso
-    quizState,
-  } = useEditor();
+  // Get stages from FunnelsContext (21 stages system)
+  const { steps: stages } = useFunnels();
+  
+  // Get editor functionality for blocks and UI (optional properties)
+  const editorContext = useEditor();
+  const activeStageId = editorContext.activeStageId || 'step-1';
+  const setActiveStage = editorContext.stageActions?.setActiveStage || (() => console.log('setActiveStage not available'));
+  const quizState = editorContext.quizState || { userName: '', answers: [], isQuizCompleted: false };
 
   const handleAddStage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addStage();
+    console.log('Add stage not implemented for FunnelsContext');
   };
 
   const handleStageClick = (stageId: string, e?: React.MouseEvent) => {
@@ -50,7 +51,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
         break;
       case 'delete':
         if (confirm(`Deseja excluir a etapa "${stageId}"?`)) {
-          removeStage(stageId);
+          console.log('Remove stage not implemented for FunnelsContext:', stageId);
         }
         break;
     }
@@ -67,7 +68,6 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
           <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
             <p className="font-bold">Debug Info:</p>
             <p>stages: {stages ? `Array com ${stages.length} itens` : 'null/undefined'}</p>
-            <p>stageCount: {stageCount}</p>
             <p>activeStageId: {activeStageId}</p>
           </div>
         </CardContent>
@@ -82,7 +82,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
           Etapas do Funil
           <div className="ml-auto flex items-center gap-2">
             <Badge variant="secondary">
-              {stageCount}/21
+              {stages.length}/21
             </Badge>
             {/* ✅ NOVO: Indicador de progresso do quiz */}
             {quizState.userName && (
@@ -136,7 +136,7 @@ export const FunnelStagesPanel: React.FC<FunnelStagesPanelProps> = ({
 
                 <div className="flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
                   <Badge variant="outline" className="text-xs">
-                    {stage.metadata?.blocksCount || 0} blocos
+                    {stage.blocksCount} componentes
                   </Badge>
                   <div className="flex gap-1">
                     <Button
