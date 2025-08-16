@@ -7,7 +7,7 @@ import { CanvasDropZone } from './canvas/CanvasDropZone.simple';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel.simple';
 import FunnelStagesPanel from './funnel/FunnelStagesPanel.simple';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
-import FunnelNavbar from '../live-editor/navbar/FunnelNavbar';
+import FunnelNavbar from '@/components/live-editor/navbar/FunnelNavbar';
 
 interface EnhancedLiveEditorProps {
   funnelId?: string;

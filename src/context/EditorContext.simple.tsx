@@ -53,7 +53,8 @@ export const useEditor = () => {
 };
 
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  console.log('✅ SimpleEditorProvider: Iniciando provider simplificado');
+  console.log('🚀 SimpleEditorProvider: Iniciando provider simplificado');
+  console.log('🎯 SimpleEditorProvider: Children recebidos:', !!children);
 
   // Estados básicos
   const [activeStageId, setActiveStageId] = useState('step-01');
@@ -256,6 +257,12 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       saveFunnel,
     },
   };
+
+  console.log('✅ SimpleEditorProvider: Context value criado:', {
+    stagesCount: stages.length,
+    activeStageId,
+    blocksCount: currentBlocks.length,
+  });
 
   return (
     <SimpleEditorContext.Provider value={contextValue}>

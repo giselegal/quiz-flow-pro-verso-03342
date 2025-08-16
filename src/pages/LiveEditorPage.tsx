@@ -18,6 +18,8 @@ import { EditorProvider, useEditor } from '@/context/EditorContext.simple';
  * Based on the sophisticated editor interface provided in the HTML snippet.
  */
 const LiveEditorContent: React.FC = () => {
+  console.log('🎭 LiveEditorContent: Iniciando renderização');
+
   const {
     computed: { currentBlocks },
     activeStageId,
@@ -30,6 +32,12 @@ const LiveEditorContent: React.FC = () => {
       reorderBlocks 
     },
   } = useEditor();
+
+  console.log('🎯 LiveEditorContent: Estado atual:', {
+    activeStageId,
+    selectedBlockId,
+    blocksCount: currentBlocks?.length || 0,
+  });
 
   return (
     <DndProvider
