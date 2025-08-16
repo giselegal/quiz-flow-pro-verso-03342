@@ -48,6 +48,8 @@ const EditorWithPreview = lazy(() =>
 
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));
+const QuizIntegrationTest = lazy(() => import('./test/QuizIntegrationTest'));
+const EndToEndQuizTest = lazy(() => import('./test/EndToEndQuizTest'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
@@ -428,6 +430,32 @@ function App() {
                     </Suspense>
                   )}
                 />
+
+                {/* Quiz Integration Test Route */}
+                <Route path="/test-quiz-integration">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <AuthProvider>
+                          <QuizIntegrationTest />
+                        </AuthProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
+
+                {/* End-to-End Quiz Test Route */}
+                <Route path="/test-quiz-end-to-end">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <AuthProvider>
+                          <EndToEndQuizTest />
+                        </AuthProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
 
                 {/* Protected Routes */}
                 <ProtectedRoute
