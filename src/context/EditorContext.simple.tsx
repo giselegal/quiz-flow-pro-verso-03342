@@ -1,5 +1,6 @@
-import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useCallback, useContext, useState, useMemo } from 'react';
 import { EditorBlock, FunnelStage } from '../types/editor';
+import { getAllSteps, getStepTemplate } from '../config/stepTemplatesMapping';
 
 // ✅ CONTEXTO SIMPLIFICADO - APENAS O ESSENCIAL PARA FUNCIONAR
 interface SimpleEditorContextType {
@@ -62,26 +63,55 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
 
-  // Estados de dados
-  const [stages] = useState<FunnelStage[]>([
-    {
-      id: 'step-01',
-      name: 'Introdução',
-      order: 1,
-      type: 'intro',
-      description: 'Etapa de introdução do funil',
-      isActive: true,
-      metadata: {
-        blocksCount: 0,
-        lastModified: new Date(),
-        isCustom: false,
-        templateBlocks: [],
-      },
-    },
-  ]);
+  // Estados de dados - Carregando as 21 etapas reais
+  const stages = useMemo<FunnelStage[]>(() => {
+    const allSteps = getAllSteps();
+    console.log('🎯 EditorContext: Carregando', allSteps.length, 'etapas reais');
+    
+    return allSteps.map((template) => {
+      const templateBlocks = getStepTemplate(template.stepNumber);
+      const stageId = `step-${String(template.stepNumber).padStart(2, '0')}`;
+      
+      // Mapear tipo conforme enum do FunnelStage
+      let stageType: FunnelStage['type'] = 'question';
+      if (template.stepNumber === 1) stageType = 'intro';
+      else if (template.stepNumber >= 17 && template.stepNumber <= 20) stageType = 'result';
+      else if (template.stepNumber === 21) stageType = 'offer';
+      else if ([15, 16].includes(template.stepNumber)) stageType = 'processing';
+      
+      return {
+        id: stageId,
+        name: template.name,
+        order: template.stepNumber,
+        type: stageType,
+        description: template.description,
+        isActive: template.stepNumber === 1,
+        metadata: {
+          blocksCount: templateBlocks.length,
+          lastModified: new Date(),
+          isCustom: false,
+          templateBlocks: templateBlocks.map((block: any, blockIndex: number) => ({
+            id: block.id || `${stageId}-block-${blockIndex}`,
+            type: block.type,
+            content: block.content || { text: '' },
+            properties: block.properties || {},
+            order: blockIndex,
+          })),
+        },
+      };
+    });
+  }, []);
 
-  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>({
-    'step-01': [],
+  // Inicializar stageBlocks com template blocks das 21 etapas
+  const [stageBlocks, setStageBlocks] = useState<Record<string, EditorBlock[]>>(() => {
+    const initialBlocks: Record<string, EditorBlock[]> = {};
+    
+    stages.forEach(stage => {
+      initialBlocks[stage.id] = stage.metadata?.templateBlocks || [];
+    });
+    
+    console.log('🎯 EditorContext: Inicializando stageBlocks para', Object.keys(initialBlocks).length, 'etapas');
+    return initialBlocks;
   });
 
   // ✅ COMPUTED VALUES

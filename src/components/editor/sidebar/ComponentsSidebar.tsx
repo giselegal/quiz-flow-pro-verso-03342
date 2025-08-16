@@ -51,14 +51,18 @@ export const getMarginClass = (value, type) => {
 };
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
+  // Componentes específicos do quiz com identidade visual da marca
   const components = [
-    { type: 'text-inline', label: 'Texto' },
-    { type: 'heading', label: 'Cabeçalho' },
-    { type: 'image-display-inline', label: 'Imagem' },
-    { type: 'button-inline', label: 'Botão' },
-    { type: 'lead-form', label: 'Formulário Lead' },
-    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz' },
-    { type: 'form-input', label: 'Campo de Entrada' },
+    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz', category: '🧩 Quiz' },
+    { type: 'text-inline', label: 'Texto', category: '📝 Conteúdo' },
+    { type: 'options-grid', label: 'Opções em Grid', category: '🧩 Quiz' },
+    { type: 'button-inline', label: 'Botão', category: '🎯 Ação' },
+    { type: 'lead-form', label: 'Formulário Lead', category: '📧 Conversão' },
+    { type: 'image-display-inline', label: 'Imagem', category: '📝 Conteúdo' },
+    { type: 'result-card', label: 'Card de Resultado', category: '🧩 Quiz' },
+    { type: 'loading-animation', label: 'Animação Loading', category: '⚡ UI' },
+    { type: 'progress-bar', label: 'Barra de Progresso', category: '⚡ UI' },
+    { type: 'decorative-bar', label: 'Barra Decorativa', category: '⚡ UI' },
   ];
 
   return (
@@ -76,7 +80,8 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
           >
             <div className="w-full">
               <div className="font-medium text-sm">{component.label}</div>
-              <div className="text-xs text-gray-500 mt-1">{component.type}</div>
+              <div className="text-xs text-gray-500 mt-1">{component.category}</div>
+              <div className="text-xs text-gray-400 mt-1">{component.type}</div>
             </div>
           </Button>
         ))}
