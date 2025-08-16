@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Editor 21 Etapas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .test-button:hover {
+            background: #005a9e;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste do Editor - 21 Etapas</h1>
+        
+        <div class="status info">
+            <strong>📍 Status do Servidor:</strong>
+            <span id="server-status">Verificando...</span>
+        </div>
+
+        <h2>🔗 Links de Teste</h2>
+        <div>
+            <a href="/editor-fixed" class="test-button" target="_blank">
+                🎯 Editor Básico
+            </a>
+            <a href="/editor-fixed?template=funil-21-etapas" class="test-button" target="_blank">
+                📋 Com Template
+            </a>
+            <a href="/editor-fixed?funnelId=funnel-1752057778408" class="test-button" target="_blank">
+                🆔 Com Funnel ID
+            </a>
+            <a href="/editor-fixed?funnelId=test&stage=step-10&preview=true" class="test-button" target="_blank">
+                ⚙️ Configuração Completa
+            </a>
+        </div>
+
+        <h2>🧪 Testes Automatizados</h2>
+        <button onclick="testEditorAccess()" class="test-button">
+            🌐 Testar Acesso
+        </button>
+        <button onclick="testURLParameters()" class="test-button">
+            🔗 Testar Parâmetros URL
+        </button>
+        <button onclick="runFullTest()" class="test-button">
+            🚀 Teste Completo
+        </button>
+
+        <div id="test-results">
+            <h3>📊 Resultados dos Testes</h3>
+            <div id="results-content">
+                <p>Clique em um botão de teste para começar...</p>
+            </div>
+        </div>
+
+        <h2>✅ Checklist Manual</h2>
+        <div class="checklist">
+            <label><input type="checkbox" id="check-page-loads"> Página carrega sem erros</label><br>
+            <label><input type="checkbox" id="check-21-stages"> 21 etapas visíveis no painel esquerdo</label><br>
+            <label><input type="checkbox" id="check-stage-click"> Clique em etapa funciona</label><br>
+            <label><input type="checkbox" id="check-components"> Painel de componentes visível</label><br>
+            <label><input type="checkbox" id="check-canvas"> Canvas/área de edição visível</label><br>
+            <label><input type="checkbox" id="check-properties"> Painel de propriedades visível</label><br>
+            <label><input type="checkbox" id="check-toolbar"> Toolbar superior visível</label><br>
+        </div>
+
+        <div class="status warning" style="margin-top: 20px;">
+            <strong>💡 Instruções:</strong><br>
+            1. Clique nos links de teste acima para abrir o editor<br>
+            2. Verifique se as 21 etapas aparecem no painel esquerdo<br>
+            3. Teste clicando em diferentes etapas<br>
+            4. Marque os itens do checklist conforme testa
+        </div>
+    </div>
+
+    <script>
+        // Verificar status do servidor
+        fetch('/editor-fixed')
+            .then(response => {
+                document.getElementById('server-status').innerHTML = 
+                    `<span style="color: green;">✅ Online (${response.status})</span>`;
+            })
+            .catch(error => {
+                document.getElementById('server-status').innerHTML = 
+                    `<span style="color: red;">❌ Offline</span>`;
+            });
+
+        function updateResults(content) {
+            document.getElementById('results-content').innerHTML = content;
+        }
+
+        function testEditorAccess() {
+            updateResults('<p>🔄 Testando acesso ao editor...</p>');
+            
+            fetch('/editor-fixed')
+                .then(response => {
+                    if (response.ok) {
+                        updateResults(`
+                            <div class="status success">
+                                ✅ <strong>Editor acessível!</strong><br>
+                                Status: ${response.status}<br>
+                                Content-Type: ${response.headers.get('content-type')}<br>
+                                <a href="/editor-fixed" target="_blank">🔗 Abrir Editor</a>
+                            </div>
+                        `);
+                    } else {
+                        updateResults(`
+                            <div class="status error">
+                                ❌ <strong>Erro de acesso!</strong><br>
+                                Status: ${response.status}
+                            </div>
+                        `);
+                    }
+                })
+                .catch(error => {
+                    updateResults(`
+                        <div class="status error">
+                            ❌ <strong>Erro de conexão!</strong><br>
+                            ${error.message}
+                        </div>
+                    `);
+                });
+        }
+
+        function testURLParameters() {
+            updateResults('<p>🔄 Testando parâmetros URL...</p>');
+            
+            const testUrls = [
+                '/editor-fixed',
+                '/editor-fixed?template=funil-21-etapas',
+                '/editor-fixed?funnelId=test',
+                '/editor-fixed?funnelId=test&stage=step-5'
+            ];
+            
+            let results = '<h4>Teste de URLs:</h4>';
+            let completedTests = 0;
+            
+            testUrls.forEach((url, index) => {
+                fetch(url)
+                    .then(response => {
+                        const status = response.ok ? '✅' : '❌';
+                        results += `<p>${status} ${url} (${response.status})</p>`;
+                        completedTests++;
+                        
+                        if (completedTests === testUrls.length) {
+                            updateResults(`<div class="status info">${results}</div>`);
+                        }
+                    })
+                    .catch(error => {
+                        results += `<p>❌ ${url} (Erro: ${error.message})</p>`;
+                        completedTests++;
+                        
+                        if (completedTests === testUrls.length) {
+                            updateResults(`<div class="status warning">${results}</div>`);
+                        }
+                    });
+            });
+        }
+
+        function runFullTest() {
+            updateResults('<p>🔄 Executando teste completo...</p>');
+            
+            // Abrir editor em nova janela para análise
+            const editorWindow = window.open('/editor-fixed', 'editor-test');
+            
+            setTimeout(() => {
+                updateResults(`
+                    <div class="status info">
+                        <h4>🚀 Teste Completo Iniciado</h4>
+                        <p>✅ Editor aberto em nova janela</p>
+                        <p>🔍 Verifique manualmente:</p>
+                        <ul>
+                            <li>21 etapas no painel esquerdo</li>
+                            <li>4 colunas visíveis</li>
+                            <li>Navegação entre etapas</li>
+                            <li>Toolbar superior</li>
+                        </ul>
+                        <p><strong>💡 Use F12 para abrir DevTools e verificar erros no console</strong></p>
+                    </div>
+                `);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

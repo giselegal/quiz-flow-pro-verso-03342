@@ -379,10 +379,7 @@ export const FunnelsProvider: React.FC<FunnelsProviderProps> = ({ children, debu
         console.log(`✅ [${timestamp}] FunnelsContext: Template já carregado:`, currentFunnelId);
       }
 
-      console.log(
-        `📊 [${timestamp}] Steps disponíveis:`,
-        template.defaultSteps.length
-      );
+      console.log(`📊 [${timestamp}] Steps disponíveis:`, template.defaultSteps.length);
       console.log(
         `🎯 [${timestamp}] Dados das steps:`,
         template.defaultSteps.map(s => s.name)
