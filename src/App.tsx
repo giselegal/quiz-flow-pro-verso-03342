@@ -53,6 +53,7 @@ const EndToEndQuizTest = lazy(() => import('./test/EndToEndQuizTest'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
+const EditorMinimalWorking = lazy(() => import('./pages/EditorMinimalWorking'));
 
 
 // Loading component
@@ -77,21 +78,15 @@ function App() {
             <div className="min-h-screen bg-background">
               <PixelInitializer pageType="other" />
               <Switch>
-                {/* Editor Route - Carrega EditorWithPreview com sistema de preview integrado */}
+                {/* Editor Route - Minimal Working Editor */}
                 <ProtectedRoute
                   path="/editor"
                   component={() => {
-                    console.log('🚀 App: Carregando EditorWithPreview na rota /editor');
+                    console.log('🚀 App: Carregando EditorMinimalWorking na rota /editor');
                     return (
                       <Suspense fallback={<PageLoading />}>
                         <ErrorBoundary>
-                          <EditorProvider>
-                            <ScrollSyncProvider>
-                              <div className="relative">
-                                <EditorWithPreview />
-                              </div>
-                            </ScrollSyncProvider>
-                          </EditorProvider>
+                          <EditorMinimalWorking />
                         </ErrorBoundary>
                       </Suspense>
                     );

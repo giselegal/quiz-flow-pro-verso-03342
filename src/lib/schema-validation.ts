@@ -105,6 +105,28 @@ export const ComponentInstanceSchema = SchemaValidator.validateFunnelPage;
 export const InsertComponentInstanceSchema = SchemaValidator.validateFunnelPage;
 export const UpdateComponentInstanceSchema = SchemaValidator.validateFunnelPage;
 
+// Component instance interface
+export interface ComponentInstance {
+  id: string;
+  component_type_key: string;
+  funnel_id: string;
+  instance_key: string;
+  step_number: number;
+  order_index: number;
+  properties: any;
+  is_active: boolean | null;
+  is_locked: boolean | null;
+  is_template: boolean | null;
+  custom_styling: any;
+  created_at: string | null;
+  updated_at: string | null;
+  created_by: string | null;
+  stage_id?: string | null;
+}
+
+// Add missing exports
+export const validateComponentInstance = validateComponentInstanceInsert;
+
 // Type aliases for backward compatibility  
 export type InsertComponentInstance = any;
 export type UpdateComponentInstance = any;

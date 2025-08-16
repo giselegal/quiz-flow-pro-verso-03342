@@ -92,10 +92,42 @@ export const EditorContext = createContext<{
   toggleSupabase: (enabled: boolean) => void;
   reorderBlocks: (sourceIndex: number, destinationIndex: number) => Promise<void>;
   isSaving: boolean;
-  connectionStatus: 'connected' | 'disconnected' | 'connecting';
+  connectionStatus: string;
   lastSync: string | null;
   isGlobalStylesOpen: boolean;
   setGlobalStylesOpen: (open: boolean) => void;
+  // Missing properties needed by components
+  stages: any[];
+  activeStageId: string | null;
+  selectedBlockId: string | null;
+  stageActions: {
+    setActiveStage: (stageId: string) => void;
+    addStage: () => void;
+    removeStage: (stageId: string) => void;
+  };
+  blockActions: {
+    getBlocksForStage: (stageId: string) => Block[];
+    addBlock: (type: Block['type']) => Promise<string>;
+    updateBlock: (id: string, content: any) => Promise<void>;
+    deleteBlock: (id: string) => Promise<void>;
+    setSelectedBlockId: (id: string | null) => void;
+    addBlockAtPosition: (type: Block['type']) => Promise<string>;
+    reorderBlocks: (sourceIndex: number, destinationIndex: number) => Promise<void>;
+  };
+  computed: {
+    stageCount: number;
+    selectedBlock: Block | null;
+    currentBlocks: Block[];
+    totalBlocks: number;
+  };
+  quizState: any;
+  uiState: any;
+  databaseMode: any;
+  // Legacy properties for compatibility
+  funnelId: string;
+  isSupabaseEnabled: boolean;
+  persistenceActions: any;
+  templateActions: any;
 }>({
   state: initialState,
   dispatch: () => null,
@@ -112,6 +144,38 @@ export const EditorContext = createContext<{
   lastSync: null,
   isGlobalStylesOpen: false,
   setGlobalStylesOpen: () => null,
+  // Default values for missing properties
+  stages: [],
+  activeStageId: null,
+  selectedBlockId: null,
+  stageActions: {
+    setActiveStage: () => null,
+    addStage: () => null,
+    removeStage: () => null,
+  },
+  blockActions: {
+    getBlocksForStage: () => [],
+    addBlock: () => Promise.resolve(''),
+    updateBlock: () => Promise.resolve(),
+    deleteBlock: () => Promise.resolve(),
+    setSelectedBlockId: () => null,
+    addBlockAtPosition: () => Promise.resolve(''),
+    reorderBlocks: () => Promise.resolve(),
+  },
+  computed: {
+    stageCount: 0,
+    selectedBlock: null,
+    currentBlocks: [],
+    totalBlocks: 0,
+  },
+  quizState: {},
+  uiState: {},
+  databaseMode: 'local',
+  // Legacy properties for compatibility
+  funnelId: 'default-funnel-id',
+  isSupabaseEnabled: false,
+  persistenceActions: { save: () => console.log('save') },
+  templateActions: { loadTemplate: () => console.log('loadTemplate') },
 });
 
 // Create a custom hook to use the editor context
@@ -278,6 +342,48 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }));
   }, []);
 
+  // Mock implementations for missing properties
+  const stages = useMemo(() => [
+    { id: 'step-1', name: 'Etapa 1', order: 1, description: 'Introdução', metadata: { blocksCount: state.blocks.length } }
+  ], [state.blocks.length]);
+
+  const activeStageId = 'step-1';
+
+  const stageActions = useMemo(() => ({
+    setActiveStage: (stageId: string) => console.log('setActiveStage:', stageId),
+    addStage: () => console.log('addStage'),
+    removeStage: (stageId: string) => console.log('removeStage:', stageId),
+  }), []);
+
+  const blockActions = useMemo(() => ({
+    getBlocksForStage: (stageId: string) => state.blocks,
+    addBlock,
+    updateBlock, 
+    deleteBlock,
+    setSelectedBlockId: selectBlock,
+    addBlockAtPosition: addBlock,
+    reorderBlocks,
+  }), [state.blocks, addBlock, updateBlock, deleteBlock, selectBlock, reorderBlocks]);
+
+  const computed = useMemo(() => ({
+    stageCount: stages.length,
+    selectedBlock: state.blocks.find(b => b.id === state.selectedBlockId) || null,
+    currentBlocks: state.blocks,
+    totalBlocks: state.blocks.length,
+  }), [stages.length, state.blocks, state.selectedBlockId]);
+
+  const quizState = useMemo(() => ({}), []);
+  const uiState = useMemo(() => ({}), []);
+  
+  const databaseMode = useMemo(() => ({
+    isEnabled: state.supabaseEnabled,
+    getStats: () => ({ components: state.blocks.length }),
+    setDatabaseMode: (mode: string) => console.log('setDatabaseMode:', mode),
+    migrateToDatabase: () => console.log('migrateToDatabase'),
+    setQuizId: (id: string) => console.log('setQuizId:', id),
+    quizId: state.funnelId,
+  }), [state.supabaseEnabled, state.blocks.length, state.funnelId]);
+
   const value = useMemo(
     () => ({
       state,
@@ -295,6 +401,21 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       lastSync,
       isGlobalStylesOpen: state.isGlobalStylesOpen,
       setGlobalStylesOpen,
+      // New properties
+      stages,
+      activeStageId,
+      selectedBlockId: state.selectedBlockId,
+      stageActions,
+      blockActions,
+      computed,
+      quizState,
+      uiState,
+      databaseMode,
+      // Legacy properties for compatibility
+      funnelId: state.funnelId,
+      isSupabaseEnabled: state.supabaseEnabled,
+      persistenceActions: { save: () => console.log('save') },
+      templateActions: { loadTemplate: () => console.log('loadTemplate') },
     }),
     [
       state,
@@ -312,6 +433,14 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       lastSync,
       state.isGlobalStylesOpen,
       setGlobalStylesOpen,
+      stages,
+      activeStageId,
+      stageActions,
+      blockActions,
+      computed,
+      quizState,
+      uiState,
+      databaseMode,
     ]
   );
 
