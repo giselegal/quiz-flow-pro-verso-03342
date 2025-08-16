@@ -54,6 +54,7 @@ const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
 const EditorMinimalWorking = lazy(() => import('./pages/EditorMinimalWorking'));
+const EditorFixedDragDropMinimal = lazy(() => import('./pages/editor-fixed-dragdrop-minimal'));
 
 
 // Loading component
@@ -129,22 +130,16 @@ function App() {
                   )}
                 />
 
-                {/* Editor Fixed Route - Editor 4 Colunas com Drag & Drop + Painel de Propriedades Otimizado */}
+                {/* Editor Fixed Route - Working Minimal Editor */}
                 <ProtectedRoute
                   path="/editor-fixed"
                   component={() => {
-                    console.log('🚀 App: Carregando EditorFixedPageWithDragDrop');
+                    console.log('🚀 App: Carregando EditorFixedDragDropMinimal (working version)');
                     return (
                       <Suspense fallback={<PageLoading />}>
                         <ErrorBoundary>
                           <EditorProvider>
-                            <ScrollSyncProvider>
-                              <PreviewProvider totalSteps={21} funnelId="editor-fixed">
-                                <div className="relative">
-                                  <EditorFixedPageWithDragDrop />
-                                </div>
-                              </PreviewProvider>
-                            </ScrollSyncProvider>
+                            <EditorFixedDragDropMinimal />
                           </EditorProvider>
                         </ErrorBoundary>
                       </Suspense>

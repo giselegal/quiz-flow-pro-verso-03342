@@ -66,11 +66,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     quizState,
   } = editorContext;
 
-  // ✅ DEBUG: Log do estado do quiz
+  // ✅ DEBUG: Log do estado do quiz com null check
   console.log('🎯 Editor Quiz State:', {
-    userName: quizState.userName,
-    answersCount: quizState.answers.length,
-    isCompleted: quizState.isQuizCompleted,
+    userName: quizState?.userName || 'N/A',
+    answersCount: quizState?.answers?.length || 0,
+    isCompleted: quizState?.isQuizCompleted || false,
   });
 
   // Safe scroll sync with try-catch
