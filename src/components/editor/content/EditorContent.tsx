@@ -11,7 +11,6 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -34,8 +33,6 @@ export const EditorContent: React.FC<EditorContentProps> = ({
   blocks,
   onDragEnd,
   onAddBlock,
-  onUpdateBlock,
-  onDeleteBlock,
   isPreviewing = false,
 }) => {
   const sensors = useSensors(
@@ -51,15 +48,11 @@ export const EditorContent: React.FC<EditorContentProps> = ({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = items.indexOf(active.id as string);
-      const newIndex = items.indexOf(over.id as string);
-      
-      // Let parent handle the actual reordering
       onDragEnd(event);
     }
   };
 
-  const renderBlock = (item: Block, index: number) => {
+  const renderBlock = (item: Block) => {
     return (
       <div key={item.id} className="block-wrapper">
         <div className="block-content">
@@ -76,7 +69,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
   if (isPreviewing) {
     return (
       <div className="preview-mode">
-        {blocks.map((item, index) => renderBlock(item, index))}
+        {blocks.map((item) => renderBlock(item))}
       </div>
     );
   }
@@ -90,7 +83,7 @@ export const EditorContent: React.FC<EditorContentProps> = ({
     >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         <div className="editor-content space-y-4">
-          {blocks.map((item, index) => renderBlock(item, index))}
+          {blocks.map((item) => renderBlock(item))}
           
           {blocks.length === 0 && (
             <div className="empty-state text-center py-8">

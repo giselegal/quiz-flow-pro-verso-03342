@@ -9,7 +9,7 @@ const EditorPage: React.FC = () => {
   const {
     computed: { currentBlocks },
     selectedBlockId,
-    blockActions: { setSelectedBlockId, addBlock, updateBlock, deleteBlock },
+    blockActions: { setSelectedBlockId, addBlock },
     uiState: { isPreviewing, setIsPreviewing },
     persistenceActions: { save },
   } = useEditor();

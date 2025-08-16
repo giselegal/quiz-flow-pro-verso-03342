@@ -1,30 +1,17 @@
 import React from 'react';
 import { Block } from '@/types/editor';
-import { useEditor } from '@/context/EditorContext';
+// Step13Template component
 import LeadFormBlock from '@/components/blocks/LeadFormBlock';
 
 const Step13Template: React.FC = () => {
-  const { quizState } = useEditor();
-  
-  const handleAnswerQuestion = (questionId: string, answer: any) => {
-    if (quizState.answerStrategicQuestion) {
-      quizState.answerStrategicQuestion(questionId, answer);
-    }
-  };
 
   return (
     <div className="step13-template">
       <LeadFormBlock
-        id="step13-lead-form"
-        properties={{
-          title: "Vamos Personalizar Sua Experiência",
-          fields: ['name', 'email'],
-          submitText: "Continuar",
-          backgroundColor: '#FFFFFF',
-          borderColor: '#B89B7A',
-          textColor: '#432818'
-        }}
-        onPropertyChange={() => {}}
+        title="Vamos Personalizar Sua Experiência"
+        fields={['name', 'email']}
+        buttonText="Continuar"
+        onSubmit={() => {}}
       />
     </div>
   );
@@ -62,4 +49,5 @@ export const getStep13Template = (): Block[] => {
 
 // Export both the component and the template function
 export { Step13Template };
+export const ConnectedStep13Template = Step13Template;
 export default Step13Template;

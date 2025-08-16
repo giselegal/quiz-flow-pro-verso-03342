@@ -85,18 +85,17 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         order: template.stepNumber,
         type: stageType,
         description: template.description,
-        isActive: template.stepNumber === 1,
+        blocks: templateBlocks.map((block: any, blockIndex: number) => ({
+          id: block.id || `${stageId}-block-${blockIndex}`,
+          type: block.type,
+          content: block.content || { text: '' },
+          properties: block.properties || {},
+          order: blockIndex,
+        })),
         metadata: {
           blocksCount: templateBlocks.length,
           lastModified: new Date(),
           isCustom: false,
-          templateBlocks: templateBlocks.map((block: any, blockIndex: number) => ({
-            id: block.id || `${stageId}-block-${blockIndex}`,
-            type: block.type,
-            content: block.content || { text: '' },
-            properties: block.properties || {},
-            order: blockIndex,
-          })),
         },
       };
     });
@@ -107,7 +106,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const initialBlocks: Record<string, EditorBlock[]> = {};
     
     stages.forEach(stage => {
-      initialBlocks[stage.id] = stage.metadata?.templateBlocks || [];
+      initialBlocks[stage.id] = stage.blocks || [];
     });
     
     console.log('🎯 EditorContext: Inicializando stageBlocks para', Object.keys(initialBlocks).length, 'etapas');

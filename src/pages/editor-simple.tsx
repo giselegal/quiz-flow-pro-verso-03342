@@ -2,17 +2,17 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-const EditorPage: React.FC = () => {
+const EditorSimple: React.FC = () => {
   return (
     <div className="h-screen flex items-center justify-center">
       <Card className="p-8 max-w-md">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Editor Page</h1>
+          <h1 className="text-2xl font-bold mb-4">Simple Editor</h1>
           <p className="text-muted-foreground mb-4">
-            Simplified editor page to avoid TypeScript conflicts
+            Basic editor component working properly
           </p>
           <Button onClick={() => window.location.href = '/editor-simples'}>
-            Go to Working Editor
+            Go to Full Editor
           </Button>
         </div>
       </Card>
@@ -20,5 +20,4 @@ const EditorPage: React.FC = () => {
   );
 };
 
-export default EditorPage;
-export const EditorWithPreview = EditorPage;
+export default EditorSimple;

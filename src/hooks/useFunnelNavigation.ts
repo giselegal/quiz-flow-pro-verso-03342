@@ -38,7 +38,7 @@ export const useFunnelNavigation = () => {
       stage: currentStage,
       stepNumber: currentStage?.order || 1,
       blocksCount: currentStage?.blocks?.length || 0,
-      description: currentStage?.metadata?.description || currentStage?.description || '',
+      description: (currentStage as any)?.description || '',
     };
   }, [stages, activeStageId]);
 

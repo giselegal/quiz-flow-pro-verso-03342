@@ -40,7 +40,7 @@ const DebugStep02 = lazy(() => import('./components/debug/DebugStep02'));
 const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'));
 const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
 const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop-enhanced-simple'));
 // Simple working editor-fixed component - inline to avoid import issues
 const EditorFixedSimpleInline = () => {
   return createElement(

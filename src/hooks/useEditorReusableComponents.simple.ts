@@ -58,7 +58,7 @@ export const useEditorReusableComponents = () => {
     (componentType: string, stepNumber?: number) => {
       console.log('🎯 Adicionando componente ao editor:', componentType, 'step:', stepNumber);
       if (addBlock) {
-        addBlock(componentType);
+        addBlock(componentType as any);
       }
     },
     [addBlock]
