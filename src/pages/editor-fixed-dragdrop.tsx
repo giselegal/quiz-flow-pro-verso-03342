@@ -16,7 +16,7 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { IntegratedPropertiesPanel } from '@/components/universal/IntegratedPropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-import DebugTemplateLoader from '@/components/debug/DebugTemplateLoader';
+
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
@@ -314,10 +314,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
            </div>
         </div>
 
-        {/* Debug Template Loader */}
-        <div className="fixed bottom-4 right-4 z-50 max-w-md">
-          <DebugTemplateLoader />
-        </div>
 
         {/* Painel de Configurações do Funil */}
         {showFunnelSettings && (
