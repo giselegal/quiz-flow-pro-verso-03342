@@ -316,18 +316,20 @@ const EnhancedUniversalPropertiesPanel: React.FC<EnhancedUniversalPropertiesPane
         return (
           <PropertyChangeIndicator key={`${key}-${idx}`}>
             <Select
-              value={value || options?.[0]?.value}
+              value={value || (options?.find(opt => opt.value !== "")?.value) || ""}
               onValueChange={newValue => updateProperty(key, newValue)}
             >
               <SelectTrigger className="border-[#B89B7A]/30 focus:border-[#B89B7A] focus:ring-[#B89B7A]/20">
                 <SelectValue placeholder={`Selecione ${label.toLowerCase()}`} />
               </SelectTrigger>
               <SelectContent>
-                {options?.map((option, optionIdx) => (
-                  <SelectItem key={`${option.value}-${optionIdx}`} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
+                {options?.map((option, optionIdx) => 
+                  option.value !== "" ? (
+                    <SelectItem key={`${option.value}-${optionIdx}`} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ) : null
+                )}
               </SelectContent>
             </Select>
           </PropertyChangeIndicator>
