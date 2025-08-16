@@ -1,7 +1,7 @@
-import EditorFixedPageWithDragDrop from '../editor-fixed-dragdrop';
+import EditorFixedSimple from '../EditorFixedSimple';
 
 const EditorPage: React.FC = () => {
-  return <EditorFixedPageWithDragDrop />;
+  return <EditorFixedSimple />;
 };
 
 export default EditorPage;

@@ -5,6 +5,7 @@
 
 import { useEditor } from '@/context/EditorContext';
 import React, { useEffect } from 'react';
+import { BlockType } from '@/types/editor';
 
 const EditorFixedDebug: React.FC = () => {
   const editor = useEditor();
@@ -40,12 +41,12 @@ const EditorFixedDebug: React.FC = () => {
           <div className="bg-gray-50 p-4 rounded-lg">
             <h3 className="font-semibold text-gray-800 mb-2">Available Methods</h3>
             <div className="space-y-2 text-sm">
-              <div>{editor?.addBlock ? '✅' : '❌'} addBlock</div>
-              <div>{editor?.updateBlock ? '✅' : '❌'} updateBlock</div>
-              <div>{editor?.deleteBlock ? '✅' : '❌'} deleteBlock</div>
-              <div>{editor?.selectBlock ? '✅' : '❌'} selectBlock</div>
-              <div>{editor?.save ? '✅' : '❌'} save</div>
-              <div>{editor?.togglePreview ? '✅' : '❌'} togglePreview</div>
+              <div>{!!editor?.blockActions?.addBlock ? '✅' : '❌'} addBlock</div>
+              <div>{!!editor?.blockActions?.updateBlock ? '✅' : '❌'} updateBlock</div>
+              <div>{!!editor?.blockActions?.deleteBlock ? '✅' : '❌'} deleteBlock</div>
+              <div>{!!editor?.blockActions?.setSelectedBlockId ? '✅' : '❌'} selectBlock</div>
+              <div>{!!editor?.save ? '✅' : '❌'} save</div>
+              <div>{!!editor?.uiState?.setIsPreviewing ? '✅' : '❌'} togglePreview</div>
             </div>
           </div>
 
@@ -76,8 +77,8 @@ const EditorFixedDebug: React.FC = () => {
             <div className="space-y-2">
               <button
                 onClick={() => {
-                  if (editor?.addBlock) {
-                    editor.addBlock('text' as any);
+                  if (editor?.blockActions?.addBlock) {
+                    editor.blockActions.addBlock('text' as BlockType);
                     console.log('🆕 Added text block');
                   } else {
                     console.error('❌ addBlock not available');
@@ -113,7 +114,7 @@ const EditorFixedDebug: React.FC = () => {
             {editor && editor.state && !editor.addBlock && '❌ Editor methods are missing'}
             {editor &&
               editor.state &&
-              editor.addBlock &&
+              !!editor.blockActions?.addBlock &&
               '✅ Editor appears to be working correctly'}
           </div>
         </div>

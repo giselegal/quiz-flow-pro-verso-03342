@@ -3,6 +3,7 @@ import { useEditor } from '@/context/EditorContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { BlockType } from '@/types/editor';
 
 /**
  * Editor Fixed Simples - Versão Funcional Garantida
@@ -125,7 +126,7 @@ export default function EditorFixedSimples() {
               ].map((comp) => (
                 <button
                   key={comp.type}
-                  onClick={() => activeStageId && addBlock(comp.type, activeStageId)}
+                  onClick={() => activeStageId && addBlock(comp.type as BlockType)}
                   className={`w-full p-2 text-left text-xs rounded-lg border transition-colors ${comp.color}`}
                   disabled={!activeStageId}
                 >

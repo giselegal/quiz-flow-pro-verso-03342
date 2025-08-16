@@ -5,13 +5,11 @@ import './index.css';
 // 🚀 SUPABASE: Inicialização do serviço de dados
 // 🧹 DEVELOPMENT: Sistema de limpeza de avisos do console
 import { cleanupConsoleWarnings } from './utils/development';
-import { cleanupBrowserWarnings } from './utils/browserWarningsCleanup';
 // import "./utils/hotmartWebhookSimulator"; // Carregar simulador de webhook - temporariamente desabilitado
 
 // 🧹 Inicializar limpeza de avisos do console em desenvolvimento
 if (import.meta.env.DEV) {
   cleanupConsoleWarnings();
-  initBrowserCleanup(); // Limpa warnings do navegador
 }
 
 // 🚀 SUPABASE: Configuração inicial do serviço
