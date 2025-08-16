@@ -77,9 +77,7 @@ export const fetchComponents = async (
   try {
     const { filters = {}, sort = { field: 'order_index', direction: 'asc' }, pagination } = options;
 
-    let query = supabase
-      .from('component_instances')
-      .select('*', { count: 'exact' });
+    let query = supabase.from('component_instances').select('*', { count: 'exact' });
 
     // Apply filters
     if (filters.funnelId) {
@@ -112,7 +110,7 @@ export const fetchComponents = async (
     }
 
     const total = count || 0;
-    const hasMore = pagination ? (pagination.page * pagination.limit) < total : false;
+    const hasMore = pagination ? pagination.page * pagination.limit < total : false;
 
     return {
       components: data || [],

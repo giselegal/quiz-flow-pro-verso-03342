@@ -2,7 +2,7 @@ import ErrorBoundary from '@/components/editor/ErrorBoundary';
 import { FunnelsProvider } from '@/context/FunnelsContext';
 import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
 import { PreviewProvider } from '@/contexts/PreviewContext';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
@@ -26,9 +26,25 @@ import { BookOpen, Settings } from 'lucide-react';
  * Editor Fixed - 4-Colunas (versão consolidada)
  * - Usa `FourColumnLayout` para stages | components | canvas | properties
  * - Mantém integração com `useEditor` (add/update/delete/reorder/select)
- * - Minimiza variáveis não utilizadas para evitar TS warnings
+ * - Suporte a parâmetros URL: ?funnelId=xxx&template=xxx&stage=xxx&preview=true
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
+  // Parse URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlFunnelId = urlParams.get('funnelId') || 'default-funnel';
+  const urlTemplate = urlParams.get('template') || 'funil-21-etapas';
+  const urlStage = urlParams.get('stage') || 'step-1';
+  const urlPreview = urlParams.get('preview') === 'true';
+  const urlViewport = (urlParams.get('viewport') || 'xl') as 'sm' | 'md' | 'lg' | 'xl';
+
+  console.log('🌐 Editor URL Params:', {
+    funnelId: urlFunnelId,
+    template: urlTemplate,
+    stage: urlStage,
+    preview: urlPreview,
+    viewport: urlViewport,
+  });
+
   const editor = useEditor();
 
   const {
@@ -44,13 +60,21 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
   const selectedBlockId = state?.selectedBlockId || null;
   const currentBlocks = state?.blocks || [];
-  const isPreviewing = !!state?.isPreviewing;
+  const isPreviewing = urlPreview || !!state?.isPreviewing;
 
-  const [activeStage, setActiveStage] = useState<string>('step-1');
-  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('xl');
+  const [activeStage, setActiveStage] = useState<string>(urlStage);
+  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>(urlViewport);
   const [showFunnelSettings, setShowFunnelSettings] = useState(false);
   const [showQuizEditor, setShowQuizEditor] = useState(false);
   const [showMonitoringDashboard, setShowMonitoringDashboard] = useState(false);
+
+  // Set funnelId from URL on mount
+  useEffect(() => {
+    if (editor.setFunnelId && urlFunnelId !== editor.funnelId) {
+      editor.setFunnelId(urlFunnelId);
+      console.log('🔗 FunnelId set from URL:', urlFunnelId);
+    }
+  }, [urlFunnelId, editor.setFunnelId, editor.funnelId]);
 
   // Scroll sync
   const synced = useSyncedScroll({ source: 'canvas' });
