@@ -47,8 +47,8 @@ export const userResponseService = {
       return {
         id: data.id,
         session_id: data.session_id,
-        name: data.name,
-        email: data.email,
+        name: data.name || undefined,
+        email: data.email || undefined,
         created_at: new Date(data.created_at),
       };
     } catch (error) {
@@ -72,7 +72,10 @@ export const userResponseService = {
         .insert([{
           session_id: response.sessionId,
           step_number: parseInt(response.step.replace('step-', '')) || 1,
-          response_data: response.data,
+          question_id: response.step,
+          answer_text: typeof response.data === 'string' ? response.data : JSON.stringify(response.data),
+          answer_value: typeof response.data === 'object' ? JSON.stringify(response.data) : response.data,
+          metadata: { timestamp: response.timestamp, userId: response.userId },
           responded_at: response.timestamp,
         }])
         .select()
@@ -117,11 +120,11 @@ export const userResponseService = {
       const { data, error } = await supabase
         .from('quiz_step_responses')
         .select('*')
-        .eq('id', id)
+        .eq('question_id', id)
         .single();
 
       if (error) throw error;
-      return data?.response_data || '';
+      return data?.answer_text || data?.answer_value || '';
     } catch (error) {
       console.error('❌ Failed to get response:', error);
       // Fallback to localStorage
@@ -145,7 +148,7 @@ export const userResponseService = {
         userId: userId,
         sessionId: item.session_id,
         step: `step-${item.step_number}`,
-        data: item.response_data,
+        data: item.answer_text || item.answer_value || '',
         timestamp: item.responded_at,
         created_at: new Date(item.responded_at),
       }));

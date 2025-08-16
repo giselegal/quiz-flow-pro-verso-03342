@@ -125,8 +125,11 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
   useEffect(() => {
     if (requiresValidInput) {
       // Verificar se há input válido (exemplo: nome preenchido)
-      const nameValue = userResponseService.getResponse('intro-name-input');
-      setIsValidated(!!nameValue && nameValue.trim().length > 0);
+      userResponseService.getResponse('intro-name-input').then(nameValue => {
+        setIsValidated(!!nameValue && nameValue.trim().length > 0);
+      }).catch(() => {
+        setIsValidated(false);
+      });
     } else {
       setIsValidated(true);
     }
@@ -396,7 +399,7 @@ const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
 
             // Handle quiz start button
             if (text && text.includes('Descobrir meu Estilo')) {
-              const userName = userResponseService.getResponse('intro-name-input') || 'Anônimo';
+              const userName = await userResponseService.getResponse('intro-name-input') || 'Anônimo';
               console.log('🚀 Iniciando tracking do quiz para:', userName);
 
               // Initialize quiz with Supabase
