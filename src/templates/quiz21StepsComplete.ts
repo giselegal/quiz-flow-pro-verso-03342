@@ -30,6 +30,12 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         backgroundColor: '#F8F9FA',
         textAlign: 'center',
         showBackground: true,
+        padding: '24px',
+        borderRadius: '8px',
+        marginBottom: '16px',
+        boxShadow: 'sm',
+        animation: 'fadeIn',
+        animationDuration: '0.8s'
       },
     },
     {
@@ -392,44 +398,52 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'natural_q5',
             text: 'Estampas clean, com poucas informações',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp',
           },
           {
             id: 'classico_q5',
             text: 'Estampas clássicas e atemporais',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp',
           },
           {
             id: 'contemporaneo_q5',
             text: 'Atemporais, mas que tenham uma pegada atual e moderna',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp',
           },
           {
             id: 'elegante_q5',
             text: 'Estampas clássicas e atemporais, mas sofisticadas',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp',
           },
           {
             id: 'romantico_q5',
             text: 'Estampas florais e/ou delicadas como bolinhas, borboletas e corações',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp',
           },
           {
             id: 'sexy_q5',
             text: 'Estampas de animal print, como onça, zebra e cobra',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp',
           },
           {
             id: 'dramatico_q5',
             text: 'Estampas geométricas, abstratas e exageradas como grandes poás',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp',
           },
           {
             id: 'criativo_q5',
             text: 'Estampas diferentes do usual, como africanas, xadrez grandes',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp'
-          }
-        ]
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp',
+          },
+        ],
       },
       properties: {
         questionId: 'q5_estampas',
@@ -453,9 +467,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         selectedColor: '#3B82F6',
         hoverColor: '#EBF5FF',
         gridGap: 16,
-        responsiveColumns: true
-      }
-    }
+        responsiveColumns: true,
+      },
+    },
   ],
 
   // 🎯 ETAPA 7: QUESTÃO 6 - QUAL CASACO É SEU FAVORITO?
@@ -470,44 +484,52 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
           {
             id: 'natural_q6',
             text: 'Cardigã bege confortável e casual',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp',
           },
           {
             id: 'classico_q6',
             text: 'Blazer verde estruturado',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp',
           },
           {
             id: 'contemporaneo_q6',
             text: 'Trench coat bege tradicional',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp',
           },
           {
             id: 'elegante_q6',
             text: 'Blazer branco refinado',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp',
           },
           {
             id: 'romantico_q6',
             text: 'Casaco pink vibrante e moderno',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp',
           },
           {
             id: 'sexy_q6',
             text: 'Jaqueta vinho de couro estilosa',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp',
           },
           {
             id: 'dramatico_q6',
             text: 'Jaqueta preta estilo rocker',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp'
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp',
           },
           {
             id: 'criativo_q6',
             text: 'Casaco estampado criativo e colorido',
-            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp'
-          }
-        ]
+            imageUrl:
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp',
+          },
+        ],
       },
       properties: {
         questionId: 'q6_casaco',
@@ -531,13 +553,1021 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         selectedColor: '#3B82F6',
         hoverColor: '#EBF5FF',
         gridGap: 16,
-        responsiveColumns: true
+        responsiveColumns: true,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 8: QUESTÃO 7 - QUAL ESTILO DE CALÇA MAIS COMBINA COM VOCÊ?
+  'step-8': [
+    {
+      id: 'step8-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'QUAL SUA CALÇA FAVORITA?',
+        options: [
+          {
+            id: 'natural_q7',
+            text: 'Calça fluida acetinada bege',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp'
+          },
+          {
+            id: 'classico_q7',
+            text: 'Calça de alfaiataria cinza',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp'
+          },
+          {
+            id: 'contemporaneo_q7',
+            text: 'Jeans reto e básico',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp'
+          },
+          {
+            id: 'elegante_q7',
+            text: 'Calça reta bege de tecido',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp'
+          },
+          {
+            id: 'romantico_q7',
+            text: 'Calça ampla rosa alfaiatada',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp'
+          },
+          {
+            id: 'sexy_q7',
+            text: 'Legging preta de couro',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp'
+          },
+          {
+            id: 'dramatico_q7',
+            text: 'Calça reta preta de couro',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp'
+          },
+          {
+            id: 'criativo_q7',
+            text: 'Calça estampada floral leve e ampla',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp'
+          }
+        ]
+      },
+      properties: {
+        questionId: 'q7_calca',
+        showImages: true,
+        imageSize: 'custom',
+        imageWidth: 300,
+        imageHeight: 300,
+        columns: 2,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'border',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 16,
+        responsiveColumns: true,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 9: QUESTÃO 8 - QUAL SAIA OU VESTIDO MAIS COMBINA COM VOCÊ?
+  'step-9': [
+    {
+      id: 'step9-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?',
+        options: [
+          {
+            id: 'natural_q8',
+            text: 'Tênis nude casual e confortável',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp'
+          },
+          {
+            id: 'classico_q8',
+            text: 'Scarpin nude de salto baixo',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp'
+          },
+          {
+            id: 'contemporaneo_q8',
+            text: 'Sandália dourada com salto bloco',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp'
+          },
+          {
+            id: 'elegante_q8',
+            text: 'Scarpin nude salto alto e fino',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp'
+          },
+          {
+            id: 'romantico_q8',
+            text: 'Sandália anabela off white',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp'
+          },
+          {
+            id: 'sexy_q8',
+            text: 'Sandália rosa de tiras finas',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp'
+          },
+          {
+            id: 'dramatico_q8',
+            text: 'Scarpin preto moderno com vinil transparente',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp'
+          },
+          {
+            id: 'criativo_q8',
+            text: 'Scarpin colorido estampado',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp'
+          }
+        ]
+      },
+      properties: {
+        questionId: 'q8_vestido',
+        showImages: true,
+        imageSize: 'custom',
+        imageWidth: 300,
+        imageHeight: 300,
+        columns: 2,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'border',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 16,
+        responsiveColumns: true,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 10: QUESTÃO 9 - QUAL SAPATO MAIS COMBINA COM VOCÊ?
+  'step-10': [
+    {
+      id: 'step10-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
+        options: [
+          {
+            id: 'natural_q9',
+            text: 'Pequenos e discretos, às vezes nem uso',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430351/Q9_-_A_cffjcw.webp'
+          },
+          {
+            id: 'classico_q9',
+            text: 'Brincos pequenos e discretos. Corrente fininha',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752431503/Q9_B.webp'
+          },
+          {
+            id: 'contemporaneo_q9',
+            text: 'Acessórios que elevem meu look com um toque moderno',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752431483/Q9_C_fr3bxa.webp'
+          },
+          {
+            id: 'elegante_q9',
+            text: 'Acessórios sofisticados, joias ou semijoias',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430353/Q9_-_D_e1flwe.webp'
+          },
+          {
+            id: 'romantico_q9',
+            text: 'Peças delicadas e com um toque feminino',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430363/Q9_-_E_f9thcb.webp'
+          },
+          {
+            id: 'sexy_q9',
+            text: 'Brincos longos, colares que valorizem minha beleza',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430351/Q9_-_F_gtxs9r.webp'
+          },
+          {
+            id: 'dramatico_q9',
+            text: 'Acessórios pesados, que causem um impacto',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430352/Q9_-_G_bihqmg.webp'
+          },
+          {
+            id: 'criativo_q9',
+            text: 'Acessórios diferentes, grandes e marcantes',
+            imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430352/Q9_-_H_bddztd.webp'
+          }
+        ]
+      },
+      properties: {
+        questionId: 'q9_sapato',
+        showImages: true,
+        imageSize: 'custom',
+        imageWidth: 300,
+        imageHeight: 300,
+        columns: 2,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'border',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 16,
+        responsiveColumns: true,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 11: QUESTÃO 10 - TECIDOS
+  'step-11': [
+    {
+      id: 'step11-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
+        options: [
+          {
+            id: 'natural_q10',
+            text: 'São fáceis de cuidar'
+          },
+          {
+            id: 'classico_q10',
+            text: 'São de excelente qualidade'
+          },
+          {
+            id: 'contemporaneo_q10',
+            text: 'São fáceis de cuidar e modernos'
+          },
+          {
+            id: 'elegante_q10',
+            text: 'São sofisticados'
+          },
+          {
+            id: 'romantico_q10',
+            text: 'São delicados'
+          },
+          {
+            id: 'sexy_q10',
+            text: 'São perfeitos ao meu corpo'
+          },
+          {
+            id: 'dramatico_q10',
+            text: 'São diferentes, e trazem um efeito para minha roupa'
+          },
+          {
+            id: 'criativo_q10',
+            text: 'São exclusivos, criam identidade no look'
+          }
+        ]
+      },
+      properties: {
+        questionId: 'q10_tecidos',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+        scoreValues: {
+          'natural_q10': 1,
+          'classico_q10': 1,
+          'contemporaneo_q10': 1,
+          'elegante_q10': 1,
+          'romantico_q10': 1,
+          'sexy_q10': 1,
+          'dramatico_q10': 1,
+          'criativo_q10': 1
+        }
       }
     }
   ],
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+        scoreValues: {
+          'natural_q10': 1,
+          'classico_q10': 1,
+          'contemporaneo_q10': 1,
+          'elegante_q10': 1,
+          'romantico_q10': 1,
+          'sexy_q10': 1,
+          'dramatico_q10': 1,
+          'criativo_q10': 1
+        }
+      }
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'border',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 16,
+        responsiveColumns: true,
+      },
+    },
+  ],
 
-  // 🎯 CONTINUA... (implementarei todas as 21 etapas)
+  // 🎯 ETAPA 12: TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
+  'step-12': [
+    {
+      id: 'step12-transition',
+      type: 'hero',
+      order: 0,
+      content: {
+        title: 'AGUARDE UM MOMENTO...',
+        subtitle: 'Estamos analisando suas respostas!',
+        description:
+          'Nosso algoritmo está processando suas preferências para identificar seu estilo predominante. Para finalizar a análise, precisamos conhecer um pouco mais sobre seus desafios atuais.',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/transition_analysis_dkqmpw.webp',
+      },
+      properties: {
+        backgroundColor: '#F0F9FF',
+        textAlign: 'center',
+        imageWidth: 250,
+        imageHeight: 250,
+        showButton: true,
+        buttonText: 'Continuar',
+        buttonColor: '#3B82F6',
+        buttonTextColor: '#FFFFFF',
+        autoAdvanceDelay: 5000,
+        autoAdvance: true,
+        animation: 'pulse',
+        borderRadius: 16,
+        boxShadow: 'md',
+        padding: 24,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 13: QUESTÃO ESTRATÉGICA 1 - COMO VOCÊ SE VÊ HOJE?
+  'step-13': [
+    {
+      id: 'step13-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'COMO VOCÊ SE VÊ HOJE?',
+        options: [
+          {
+            id: 'opcao_q11_1',
+            text: 'Sei exatamente qual é meu estilo e me visto de acordo com ele',
+          },
+          {
+            id: 'opcao_q11_2',
+            text: 'Tenho uma ideia do meu estilo, mas ainda tenho dúvidas em alguns momentos',
+          },
+          {
+            id: 'opcao_q11_3',
+            text: 'Não tenho certeza do meu estilo e isso reflete no meu guarda-roupa',
+          },
+          {
+            id: 'opcao_q11_4',
+            text: 'Estou completamente perdida e não sei qual é meu estilo',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q11_autoavaliacao',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1000,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 14: QUESTÃO ESTRATÉGICA 2 - O QUE MAIS TE DESAFIA?
+  'step-14': [
+    {
+      id: 'step14-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'O QUE MAIS TE DESAFIA NA HORA DE SE VESTIR?',
+        options: [
+          {
+            id: 'opcao_q12_1',
+            text: 'Não sei quais peças combinam entre si',
+          },
+          {
+            id: 'opcao_q12_2',
+            text: 'Tenho muitas roupas, mas não sei como usar',
+          },
+          {
+            id: 'opcao_q12_3',
+            text: 'Não tenho certeza de quais cores me favorecem',
+          },
+          {
+            id: 'opcao_q12_4',
+            text: 'Não consigo montar looks que reflitam minha personalidade',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q12_desafio',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1000,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 15: QUESTÃO ESTRATÉGICA 3 - FREQUÊNCIA DE INDECISÃO
+  'step-15': [
+    {
+      id: 'step15-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'COM QUE FREQUÊNCIA VOCÊ SE PEGA PENSANDO: "COM QUE ROUPA EU VOU?"',
+        options: [
+          {
+            id: 'opcao_q13_1',
+            text: 'Quase nunca, sempre sei o que usar',
+          },
+          {
+            id: 'opcao_q13_2',
+            text: 'Algumas vezes, principalmente em ocasiões especiais',
+          },
+          {
+            id: 'opcao_q13_3',
+            text: 'Frequentemente, pelo menos 1-2 vezes por semana',
+          },
+          {
+            id: 'opcao_q13_4',
+            text: 'Todos os dias, é uma batalha constante',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q13_frequencia',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1000,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 16: QUESTÃO ESTRATÉGICA 4 - INVESTIMENTO EM ROUPAS NÃO USADAS
+  'step-16': [
+    {
+      id: 'step16-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'PENSE NO QUANTO VOCÊ JÁ GASTOU COM ROUPAS QUE NÃO USA...',
+        options: [
+          {
+            id: 'opcao_q14_1',
+            text: 'Quase nada, uso praticamente tudo que compro',
+          },
+          {
+            id: 'opcao_q14_2',
+            text: 'Menos de R$ 1.000 nos últimos anos',
+          },
+          {
+            id: 'opcao_q14_3',
+            text: 'Entre R$ 1.000 e R$ 3.000 nos últimos anos',
+          },
+          {
+            id: 'opcao_q14_4',
+            text: 'Mais de R$ 3.000 em roupas que raramente ou nunca usei',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q14_investimento',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1000,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 17: QUESTÃO ESTRATÉGICA 5 - VALOR PERCEBIDO
+  'step-17': [
+    {
+      id: 'step17-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'SE ESSE CONTEÚDO COMPLETO CUSTASSE R$ 97,00...',
+        options: [
+          {
+            id: 'opcao_q15_1',
+            text: 'Não compraria, prefiro descobrir sozinho(a)',
+          },
+          {
+            id: 'opcao_q15_2',
+            text: 'Talvez compraria, mas teria que pensar bastante',
+          },
+          {
+            id: 'opcao_q15_3',
+            text: 'Provavelmente compraria, parece valer a pena',
+          },
+          {
+            id: 'opcao_q15_4',
+            text: 'Compraria com certeza, seria um ótimo investimento',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q15_valor',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1000,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 18: QUESTÃO ESTRATÉGICA 6 - OBJETIVO PRINCIPAL
+  'step-18': [
+    {
+      id: 'step18-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'QUAL DESSES RESULTADOS VOCÊ MAIS GOSTARIA DE ALCANÇAR?',
+        options: [
+          {
+            id: 'opcao_q16_1',
+            text: 'Montar um guarda-roupa funcional com menos peças',
+          },
+          {
+            id: 'opcao_q16_2',
+            text: 'Expressar minha personalidade através das roupas',
+          },
+          {
+            id: 'opcao_q16_3',
+            text: 'Economizar dinheiro e parar de comprar roupas erradas',
+          },
+          {
+            id: 'opcao_q16_4',
+            text: 'Sentir mais confiança e segurança com meus looks',
+          },
+        ],
+      },
+      properties: {
+        questionId: 'q16_objetivo',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 1,
+        maxSelections: 1,
+        minSelections: 1,
+        multipleSelection: false,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1000,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 1 opção para continuar',
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 19: TRANSIÇÃO PARA RESULTADO
+  'step-19': [
+    {
+      id: 'step19-transition',
+      type: 'hero',
+      order: 0,
+      content: {
+        title: 'ESTAMOS QUASE LÁ!',
+        subtitle: 'Preparando seu resultado personalizado...',
+        description:
+          'Nosso sistema está calculando seu estilo predominante e preparando recomendações exclusivas para você. Este processo leva apenas alguns segundos.',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/calculating_result_jksldq.webp',
+      },
+      properties: {
+        backgroundColor: '#F0F9FF',
+        textAlign: 'center',
+        imageWidth: 300,
+        imageHeight: 300,
+        showButton: true,
+        buttonText: 'Ver Meu Resultado',
+        buttonColor: '#3B82F6',
+        buttonTextColor: '#FFFFFF',
+        autoAdvanceDelay: 3000,
+        autoAdvance: true,
+        animation: 'pulse',
+        borderRadius: 16,
+        boxShadow: 'md',
+        padding: 24,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 20: PÁGINA DE RESULTADO PERSONALIZADA
+  'step-20': [
+    {
+      id: 'step20-result-header',
+      type: 'result-header-inline',
+      order: 0,
+      content: {
+        title: '{userName}, seu estilo predominante é:',
+        subtitle: 'ESTILO {resultStyle}',
+        description:
+          'Com base nas suas respostas, identificamos que seu estilo predominante é o {resultStyle}. Isso significa que você se conecta mais com looks que expressam {resultDescription}',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/result_style_photo_kjsdlq.webp',
+      },
+      properties: {
+        backgroundColor: '#F0F9FF',
+        textAlign: 'center',
+        imageWidth: 400,
+        imageHeight: 400,
+        borderRadius: 16,
+        boxShadow: 'md',
+        padding: 24,
+        marginBottom: 24,
+      },
+    },
+    {
+      id: 'step20-style-card',
+      type: 'style-card-inline',
+      order: 1,
+      content: {
+        title: 'CARACTERÍSTICAS DO SEU ESTILO',
+        description: 'Seu estilo {resultStyle} se caracteriza pelos seguintes elementos:',
+        features: [
+          'Personalidade: {resultPersonality}',
+          'Cores: {resultColors}',
+          'Tecidos: {resultFabrics}',
+          'Estampas: {resultPrints}',
+          'Acessórios: {resultAccessories}',
+        ],
+      },
+      properties: {
+        backgroundColor: '#FFFFFF',
+        textAlign: 'left',
+        borderRadius: 16,
+        boxShadow: 'sm',
+        padding: 24,
+        marginBottom: 24,
+        showIcon: true,
+        iconName: 'check-circle',
+        iconColor: '#3B82F6',
+      },
+    },
+    {
+      id: 'step20-secondary-styles',
+      type: 'secondary-styles',
+      order: 2,
+      content: {
+        title: 'SEUS ESTILOS SECUNDÁRIOS',
+        subtitle: 'Você também apresenta elementos destes estilos:',
+        secondaryStyles: [
+          {
+            name: '{secondaryStyle1}',
+            percentage: '{secondaryPercentage1}%',
+            description: '{secondaryDescription1}',
+          },
+          {
+            name: '{secondaryStyle2}',
+            percentage: '{secondaryPercentage2}%',
+            description: '{secondaryDescription2}',
+          },
+        ],
+      },
+      properties: {
+        backgroundColor: '#F0F9FF',
+        textAlign: 'center',
+        borderRadius: 16,
+        boxShadow: 'sm',
+        padding: 24,
+        marginBottom: 24,
+      },
+    },
+    {
+      id: 'step20-cta',
+      type: 'button',
+      order: 3,
+      content: {
+        buttonText: 'QUERO SABER MAIS SOBRE MEU ESTILO',
+        buttonUrl: '#next-step',
+      },
+      properties: {
+        backgroundColor: '#3B82F6',
+        textColor: '#FFFFFF',
+        borderRadius: 8,
+        width: '100%',
+        padding: '16px 24px',
+        fontSize: '18px',
+        fontWeight: 'bold',
+        marginTop: 24,
+        marginBottom: 16,
+        showShadow: true,
+      },
+    },
+  ],
+
+  // 🎯 ETAPA 21: PÁGINA DE OFERTA
+  'step-21': [
+    {
+      id: 'step21-offer-header',
+      type: 'quiz-offer-cta-inline',
+      order: 0,
+      content: {
+        title: 'LIBERE TODO O POTENCIAL DO SEU ESTILO PESSOAL',
+        subtitle:
+          'Descubra como montar looks que realçam sua beleza natural e expressam sua personalidade!',
+        description:
+          'Parabéns por descobrir seu estilo predominante! Este é apenas o primeiro passo na sua jornada de autoconhecimento e expressão através da moda. Que tal aprofundar este conhecimento e transformar seu guarda-roupa e sua relação com as roupas?',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/offer_image_main_jkldsd.webp',
+        buttonText: 'QUERO TRANSFORMAR MEU ESTILO AGORA',
+        buttonUrl: 'https://checkout.stylequest.com.br/oferta-especial',
+      },
+      properties: {
+        backgroundColor: '#F0F9FF',
+        textAlign: 'center',
+        imageWidth: 500,
+        imageHeight: 300,
+        buttonColor: '#3B82F6',
+        buttonTextColor: '#FFFFFF',
+        borderRadius: 16,
+        boxShadow: 'lg',
+        padding: 32,
+        marginBottom: 32,
+        highlightColor: '#F59E0B',
+        showPrice: true,
+        regularPrice: 'R$ 197,00',
+        salePrice: 'R$ 97,00',
+        showTimer: true,
+        timerDuration: 900, // 15 minutos em segundos
+        timerLabel: 'Esta oferta expira em:',
+      },
+    },
+    {
+      id: 'step21-benefits',
+      type: 'benefits',
+      order: 1,
+      content: {
+        title: 'O QUE VOCÊ VAI RECEBER',
+        benefits: [
+          {
+            id: 'benefit1',
+            title: 'E-book Completo de Estilo Pessoal',
+            description:
+              'Guia detalhado com todas as características do seu estilo e como aplicá-las no dia a dia.',
+            icon: 'book',
+          },
+          {
+            id: 'benefit2',
+            title: 'Paleta de Cores Personalizada',
+            description:
+              'Descubra exatamente quais cores valorizam seu tom de pele, cabelo e olhos.',
+            icon: 'palette',
+          },
+          {
+            id: 'benefit3',
+            title: 'Guia de Compras Inteligentes',
+            description: 'Aprenda a investir nas peças certas e economizar dinheiro.',
+            icon: 'shopping-bag',
+          },
+          {
+            id: 'benefit4',
+            title: 'Acesso ao Grupo VIP',
+            description: 'Participe da nossa comunidade exclusiva com dicas semanais e suporte.',
+            icon: 'users',
+          },
+        ],
+      },
+      properties: {
+        backgroundColor: '#FFFFFF',
+        textAlign: 'left',
+        showIcons: true,
+        iconColor: '#3B82F6',
+        layout: 'cards',
+        borderRadius: 12,
+        boxShadow: 'sm',
+        padding: 24,
+        marginBottom: 32,
+      },
+    },
+    {
+      id: 'step21-testimonials',
+      type: 'testimonials',
+      order: 2,
+      content: {
+        title: 'O QUE DIZEM NOSSAS CLIENTES',
+        testimonials: [
+          {
+            id: 'testimonial1',
+            quote:
+              'Finalmente entendi meu estilo e parei de gastar dinheiro com roupas que não combinavam comigo. Meu guarda-roupa agora tem menos peças, mas muito mais possibilidades!',
+            author: 'Márcia Silva',
+            authorTitle: '38 anos, Advogada',
+            rating: 5,
+          },
+          {
+            id: 'testimonial2',
+            quote:
+              'Economizei muito dinheiro depois que aprendi a comprar apenas o que realmente combina com meu estilo. Me sinto mais confiante e recebo elogios todos os dias.',
+            author: 'Carolina Mendes',
+            authorTitle: '42 anos, Empresária',
+            rating: 5,
+          },
+          {
+            id: 'testimonial3',
+            quote:
+              'Transformei completamente minha relação com as roupas. Hoje me visto com mais confiança e praticidade, sem perder tempo pensando no que vestir.',
+            author: 'Juliana Costa',
+            authorTitle: '35 anos, Professora',
+            rating: 5,
+          },
+        ],
+      },
+      properties: {
+        backgroundColor: '#F0F9FF',
+        textAlign: 'center',
+        layout: 'card',
+        showQuotes: true,
+        borderRadius: 16,
+        boxShadow: 'sm',
+        padding: 24,
+        marginBottom: 32,
+      },
+    },
+    {
+      id: 'step21-guarantee',
+      type: 'guarantee',
+      order: 3,
+      content: {
+        title: 'GARANTIA INCONDICIONAL DE 7 DIAS',
+        description:
+          'Se por qualquer motivo você não ficar satisfeita com o conteúdo, devolvemos 100% do seu dinheiro, sem perguntas e sem burocracia.',
+        imageUrl:
+          'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735378/guarantee_seal_klsjda.webp',
+      },
+      properties: {
+        backgroundColor: '#FFFFFF',
+        textAlign: 'center',
+        imageWidth: 150,
+        imageHeight: 150,
+        borderRadius: 16,
+        boxShadow: 'sm',
+        padding: 24,
+        marginBottom: 32,
+        borderColor: '#3B82F6',
+        borderWidth: '2px',
+        borderStyle: 'dashed',
+      },
+    },
+    {
+      id: 'step21-final-cta',
+      type: 'button',
+      order: 4,
+      content: {
+        buttonText: 'QUERO TRANSFORMAR MEU ESTILO AGORA',
+        buttonUrl: 'https://checkout.stylequest.com.br/oferta-especial',
+      },
+      properties: {
+        backgroundColor: '#3B82F6',
+        textColor: '#FFFFFF',
+        borderRadius: 8,
+        width: '100%',
+        padding: '16px 24px',
+        fontSize: '20px',
+        fontWeight: 'bold',
+        marginTop: 16,
+        marginBottom: 32,
+        showShadow: true,
+      },
+    },
+    {
+      id: 'step21-footer',
+      type: 'text',
+      order: 5,
+      content: {
+        text: '© 2025 Gisele Galvão - Todos os direitos reservados',
+      },
+      properties: {
+        fontSize: '12px',
+        color: '#9CA3AF',
+        textAlign: 'center',
+        marginTop: 16,
+        marginBottom: 32,
+      },
+    },
+  ],
 };
+
+// Lista completa das questões do quiz
 
 // Lista completa das questões do quiz
 export const QUIZ_QUESTIONS_COMPLETE = {
