@@ -138,19 +138,25 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
       />
 
       {/* Main Editor Layout - 4 Columns */}
-      <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* Column 1: Stages Panel */}
-        <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[200px]">
-          <div className="h-full border-r border-gray-200 bg-card/50">
+      <ResizablePanelGroup direction="horizontal" className="flex-1 bg-gray-50">
+        {/* Column 1: Stages Panel - MAIS VISÍVEL */}
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="min-w-[220px]">
+          <div className="h-full bg-white border-r-2 border-gray-300 shadow-sm">
+            <div className="p-2 border-b bg-blue-50">
+              <h4 className="font-semibold text-blue-800 text-sm">📊 PAINEL DE ETAPAS</h4>
+            </div>
             <FunnelStagesPanel />
           </div>
         </ResizablePanel>
 
-        <ResizableHandle withHandle />
+        <ResizableHandle withHandle className="w-1 bg-gray-300 hover:bg-blue-400" />
 
         {/* Column 2: Components Sidebar */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="min-w-[250px]">
-          <div className="h-full border-r border-gray-200 bg-card/30">
+        <ResizablePanel defaultSize={22} minSize={18} maxSize={32} className="min-w-[270px]">
+          <div className="h-full bg-gray-50 border-r-2 border-gray-300 shadow-sm">
+            <div className="p-2 border-b bg-green-50">
+              <h4 className="font-semibold text-green-800 text-sm">🧩 COMPONENTES</h4>
+            </div>
             <ComponentsSidebar onComponentSelect={handleComponentSelect} />
           </div>
         </ResizablePanel>

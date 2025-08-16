@@ -62,17 +62,22 @@ export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponen
   ];
 
   return (
-    <div className="h-full p-4" style={{ backgroundColor: '#FAF9F7' }}>
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">Componentes</h3>
-      <div className="space-y-2">
+    <div className="h-full">
+      <div className="p-4 space-y-2">
         {components.map(component => (
           <Button
             key={component.type}
             variant="outline"
-            className="w-full justify-start"
-            onClick={() => onComponentSelect(component.type)}
+            className="w-full justify-start text-left h-auto p-3 hover:bg-green-50 border-green-200"
+            onClick={() => {
+              console.log('🎯 ComponentsSidebar: Selecionando componente:', component.type);
+              onComponentSelect(component.type);
+            }}
           >
-            {component.label}
+            <div className="w-full">
+              <div className="font-medium text-sm">{component.label}</div>
+              <div className="text-xs text-gray-500 mt-1">{component.type}</div>
+            </div>
           </Button>
         ))}
       </div>
