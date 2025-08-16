@@ -159,6 +159,151 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
     }
   ],
 
+  // 🎯 ETAPA 4: QUESTÃO 3 - QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?
+  'step-4': [
+    {
+      id: 'step4-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?',
+        options: [
+          {
+            id: 'natural_q3',
+            text: 'Visual leve, despojado e natural',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/2_ziffwx.webp'
+          },
+          {
+            id: 'classico_q3',
+            text: 'Visual clássico e tradicional',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/3_asaunw.webp'
+          },
+          {
+            id: 'contemporaneo_q3',
+            text: 'Visual casual com toque atual',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/13_uvbciq.webp'
+          },
+          {
+            id: 'elegante_q3',
+            text: 'Visual refinado e imponente',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/5_dhrgpf.webp'
+          },
+          {
+            id: 'romantico_q3',
+            text: 'Visual romântico, feminino e delicado',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/6_gnoxfg.webp'
+          },
+          {
+            id: 'sexy_q3',
+            text: 'Visual sensual, com saia justa e decote',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735327/7_ynez1z.webp'
+          },
+          {
+            id: 'dramatico_q3',
+            text: 'Visual marcante e urbano (jeans + jaqueta)',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/8_yqu3hw.webp'
+          },
+          {
+            id: 'criativo_q3',
+            text: 'Visual criativo, colorido e ousado',
+            imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/9_x6so6a.webp'
+          }
+        ]
+      },
+      properties: {
+        questionId: 'q3_visual_identificacao',
+        showImages: true,
+        imageSize: 'custom',
+        imageWidth: 300,
+        imageHeight: 300,
+        columns: 2,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'border',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 16,
+        responsiveColumns: true
+      }
+    }
+  ],
+
+  // 🎯 ETAPA 5: QUESTÃO 4 - QUAIS DETALHES VOCÊ GOSTA?
+  'step-5': [
+    {
+      id: 'step5-question',
+      type: 'options-grid',
+      order: 0,
+      content: {
+        question: 'QUAIS DETALHES VOCÊ GOSTA?',
+        options: [
+          {
+            id: 'natural_q4',
+            text: 'Poucos detalhes, básico e prático'
+          },
+          {
+            id: 'classico_q4',
+            text: 'Bem discretos e sutis, clean e clássico'
+          },
+          {
+            id: 'contemporaneo_q4',
+            text: 'Básico, mas com um toque de estilo'
+          },
+          {
+            id: 'elegante_q4',
+            text: 'Detalhes refinados, chic e que deem status'
+          },
+          {
+            id: 'romantico_q4',
+            text: 'Detalhes delicados, laços, babados'
+          },
+          {
+            id: 'sexy_q4',
+            text: 'Roupas que valorizem meu corpo: couro, zíper, fendas'
+          },
+          {
+            id: 'dramatico_q4',
+            text: 'Detalhes marcantes, firmeza e peso'
+          },
+          {
+            id: 'criativo_q4',
+            text: 'Detalhes diferentes do convencional, produções ousadas'
+          }
+        ]
+      },
+      properties: {
+        questionId: 'q4_detalhes',
+        showImages: false,
+        columns: 1,
+        requiredSelections: 3,
+        maxSelections: 3,
+        minSelections: 3,
+        multipleSelection: true,
+        autoAdvanceOnComplete: true,
+        autoAdvanceDelay: 1500,
+        enableButtonOnlyWhenValid: true,
+        showValidationFeedback: true,
+        validationMessage: 'Selecione 3 opções para continuar',
+        progressMessage: 'Você selecionou {count} de {required} opções',
+        showSelectionCount: true,
+        selectionStyle: 'background',
+        selectedColor: '#3B82F6',
+        hoverColor: '#EBF5FF',
+        gridGap: 12,
+        responsiveColumns: false
+      }
+    }
+  ],
+
   // 🎯 ETAPA 3: QUESTÃO 2 - PERSONALIDADE
   'step-3': [
     {
