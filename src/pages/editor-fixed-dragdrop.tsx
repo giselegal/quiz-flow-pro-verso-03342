@@ -16,8 +16,7 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { IntegratedPropertiesPanel } from '@/components/universal/IntegratedPropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-// Debug components removed during cleanup
-import { SmartStepRenderer } from '@/components/templates/SmartStepRenderer';
+import DebugTemplateLoader from '@/components/debug/DebugTemplateLoader';
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
@@ -257,22 +256,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                   className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
                 >
                   <div className={getCanvasClassName()}>
-                    {isPreviewing && activeStage ? (
-                      // 🎯 MODO PREVIEW: Usa SmartStepRenderer para visualizar as etapas do quiz
-                      <SmartStepRenderer 
-                        stepNumber={parseInt(activeStage.replace(/[^\d]/g, '')) || 1}
-                        onContinue={() => console.log('Preview mode - continue disabled')}
-                      />
-                    ) : (
-                      // ✏️ MODO EDIÇÃO: Usa CanvasDropZone para editar blocos
-                      <CanvasDropZone
-                        blocks={currentBlocks}
-                        selectedBlockId={selectedBlockId}
-                        onSelectBlock={setSelectedBlockId}
-                        onUpdateBlock={updateBlock}
-                        onDeleteBlock={handleDeleteBlock}
-                      />
-                    )}
+                    <CanvasDropZone
+                      blocks={currentBlocks}
+                      selectedBlockId={selectedBlockId}
+                      onSelectBlock={setSelectedBlockId}
+                      onUpdateBlock={updateBlock}
+                      onDeleteBlock={handleDeleteBlock}
+                    />
                   </div>
                 </div>
               }
@@ -324,6 +314,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
            </div>
         </div>
 
+        {/* Debug Template Loader */}
+        <div className="fixed bottom-4 right-4 z-50 max-w-md">
+          <DebugTemplateLoader />
+        </div>
 
         {/* Painel de Configurações do Funil */}
         {showFunnelSettings && (

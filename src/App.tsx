@@ -34,7 +34,12 @@ const IntegratedQuizEditor = lazy(
 
 // Lazy load das páginas de debug (apenas em desenvolvimento)
 const DebugEditorContext = lazy(() => import('./pages/debug-editor'));
+const TestButton = lazy(() => import('./pages/test-button'));
 const TestPropertiesPanel = lazy(() => import('./pages/test-properties'));
+const DebugStep02 = lazy(() => import('./components/debug/DebugStep02'));
+const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'));
+const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
+const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
 const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
 // 🚀 EDITOR COM SISTEMA DE PREVIEW INTEGRADO
 const EditorWithPreview = lazy(() =>
@@ -44,7 +49,7 @@ const EditorWithPreview = lazy(() =>
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
-
+const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
 
 // Loading component
@@ -251,6 +256,14 @@ function App() {
                   )}
                 </Route>
                 
+                {/* Test Básico */}
+                <Route path="/test/basico">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestBasico />
+                    </Suspense>
+                  )}
+                </Route>
                 
                 <Route path="/test/components">
                   {() => (
@@ -267,6 +280,45 @@ function App() {
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <TestPropertiesPanel />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/button">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestButton />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/options">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestOptionsRendering />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/debug/step02">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <EditorProvider>
+                          <DebugStep02 />
+                        </EditorProvider>
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/step02-direct">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestStep02Direct />
+                    </Suspense>
+                  )}
+                </Route>
+                <Route path="/test/all-templates">
+                  {() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <TestAllTemplates />
                     </Suspense>
                   )}
                 </Route>

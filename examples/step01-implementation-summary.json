@@ -1,0 +1,41 @@
+{
+  "step": 1,
+  "name": "Introdução",
+  "blocksCount": 8,
+  "blocks": [
+    {
+      "id": "step01-header-logo",
+      "type": "quiz-intro-header"
+    },
+    {
+      "id": "step01-decorative-bar",
+      "type": "decorative-bar"
+    },
+    {
+      "id": "step01-main-title",
+      "type": "text"
+    },
+    {
+      "id": "step01-hero-image",
+      "type": "image"
+    },
+    {
+      "id": "step01-motivation-text",
+      "type": "text"
+    },
+    {
+      "id": "step01-name-input",
+      "type": "form-input"
+    },
+    {
+      "id": "step01-cta-button",
+      "type": "button"
+    },
+    {
+      "id": "step01-legal-notice",
+      "type": "legal-notice"
+    }
+  ],
+  "implemented": true,
+  "timestamp": "2025-08-05T13:35:05.275Z"
+}

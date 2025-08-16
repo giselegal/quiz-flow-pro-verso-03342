@@ -1,0 +1,1806 @@
+{
+  "analysis": {
+    "use-mobile": {
+      "totalLines": 57,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 3,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 2,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "performance",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.596Z"
+    },
+    "use-toast": {
+      "totalLines": 187,
+      "patterns": {
+        "useState": 1,
+        "useEffect": 1,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 4,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.614Z"
+    },
+    "useABTest": {
+      "totalLines": 149,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 3,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "result",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.626Z"
+    },
+    "useAutoAnimate": {
+      "totalLines": 67,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 3,
+        "typescript": false,
+        "hasTests": false
+      },
+      "functionality": "editor",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-06T14:11:10.243Z"
+    },
+    "useAutoSaveDebounce": {
+      "totalLines": 147,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 2,
+        "useCallback": 5,
+        "useMemo": 0,
+        "customHooks": 20,
+        "exports": 2,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.655Z"
+    },
+    "useAutosave": {
+      "totalLines": 52,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 2,
+        "useCallback": 2,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:22.517Z"
+    },
+    "useBackgroundRemoval": {
+      "totalLines": 19,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 1,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:22.943Z"
+    },
+    "useBlockForm": {
+      "totalLines": 346,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 4,
+        "useCallback": 9,
+        "useMemo": 0,
+        "customHooks": 19,
+        "exports": 5,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.676Z"
+    },
+    "useCanvasConfiguration": {
+      "totalLines": 85,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 0,
+        "useCallback": 9,
+        "useMemo": 0,
+        "customHooks": 18,
+        "exports": 4,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "result",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.683Z"
+    },
+    "useContainerProperties": {
+      "totalLines": 214,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 2,
+        "exports": 3,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-07T13:13:20.377Z"
+    },
+    "useDebounce": {
+      "totalLines": 44,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 2,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.689Z"
+    },
+    "useDynamicData": {
+      "totalLines": 219,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 4,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 12,
+        "exports": 6,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.701Z"
+    },
+    "useDynamicEditorData": {
+      "totalLines": 90,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 0,
+        "useCallback": 6,
+        "useMemo": 0,
+        "customHooks": 10,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "editor",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:23.201Z"
+    },
+    "useEditor": {
+      "totalLines": 73,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 3,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "editor",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T17:03:47.663Z"
+    },
+    "useGlobalLoading": {
+      "totalLines": 63,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 4,
+        "useMemo": 0,
+        "customHooks": 10,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.719Z"
+    },
+    "useGlobalStyles": {
+      "totalLines": 80,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 5,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:22.595Z"
+    },
+    "useHistory": {
+      "totalLines": 76,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 5,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.731Z"
+    },
+    "useImageBank": {
+      "totalLines": 53,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:22.181Z"
+    },
+    "useInlineBlock": {
+      "totalLines": 65,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 4,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "editor",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.741Z"
+    },
+    "useInlineEdit": {
+      "totalLines": 112,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 4,
+        "useCallback": 7,
+        "useMemo": 0,
+        "customHooks": 19,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.749Z"
+    },
+    "useKeyboardShortcuts": {
+      "totalLines": 85,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 4,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.755Z"
+    },
+    "useLiveEditor": {
+      "totalLines": 33,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 3,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "editor",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.760Z"
+    },
+    "useLoadingState": {
+      "totalLines": 48,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 0,
+        "useCallback": 4,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.765Z"
+    },
+    "useMediaQuery": {
+      "totalLines": 18,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 5,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "responsive",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:23.233Z"
+    },
+    "useOptimizedTimer": {
+      "totalLines": 1,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 0,
+        "exports": 0,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": false,
+      "lastModified": "2025-08-04T22:17:22.579Z"
+    },
+    "usePageConfig": {
+      "totalLines": 38,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 6,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.778Z"
+    },
+    "usePerformanceOptimization": {
+      "totalLines": 112,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 3,
+        "useCallback": 7,
+        "useMemo": 0,
+        "customHooks": 16,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "performance",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.789Z"
+    },
+    "usePropertyHistory": {
+      "totalLines": 113,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 0,
+        "useCallback": 6,
+        "useMemo": 0,
+        "customHooks": 13,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.800Z"
+    },
+    "useQuestionScroll": {
+      "totalLines": 18,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 3,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:23.164Z"
+    },
+    "useQuiz": {
+      "totalLines": 126,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 2,
+        "useCallback": 4,
+        "useMemo": 0,
+        "customHooks": 24,
+        "exports": 2,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.811Z"
+    },
+    "useQuizBuilder": {
+      "totalLines": 145,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 4,
+        "useCallback": 2,
+        "useMemo": 0,
+        "customHooks": 16,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.819Z"
+    },
+    "useQuizComponents": {
+      "totalLines": 51,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 6,
+        "useMemo": 0,
+        "customHooks": 9,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-07T01:25:41.910Z"
+    },
+    "useQuizConfig": {
+      "totalLines": 142,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 5,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.836Z"
+    },
+    "useQuizHooks": {
+      "totalLines": 52,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 0,
+        "useCallback": 4,
+        "useMemo": 0,
+        "customHooks": 9,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.844Z"
+    },
+    "useQuizLogic": {
+      "totalLines": 119,
+      "patterns": {
+        "useState": 6,
+        "useEffect": 0,
+        "useCallback": 7,
+        "useMemo": 0,
+        "customHooks": 14,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.852Z"
+    },
+    "useQuizResult": {
+      "totalLines": 26,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 6,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:22.912Z"
+    },
+    "useQuizResultConfig": {
+      "totalLines": 146,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 0,
+        "useCallback": 4,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.861Z"
+    },
+    "useQuizResults": {
+      "totalLines": 148,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 1,
+        "exports": 5,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T23:31:33.064Z"
+    },
+    "useQuizStages": {
+      "totalLines": 145,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 0,
+        "useCallback": 7,
+        "useMemo": 0,
+        "customHooks": 11,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.870Z"
+    },
+    "useQuizTracking": {
+      "totalLines": 250,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 4,
+        "useCallback": 10,
+        "useMemo": 0,
+        "customHooks": 27,
+        "exports": 3,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.894Z"
+    },
+    "useResultPageConfig": {
+      "totalLines": 159,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 0,
+        "useCallback": 5,
+        "useMemo": 0,
+        "customHooks": 9,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "result",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.909Z"
+    },
+    "useResultPageEditor": {
+      "totalLines": 58,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 0,
+        "useCallback": 5,
+        "useMemo": 0,
+        "customHooks": 12,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "editor",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.925Z"
+    },
+    "useReusableComponents": {
+      "totalLines": 411,
+      "patterns": {
+        "useState": 5,
+        "useEffect": 3,
+        "useCallback": 9,
+        "useMemo": 0,
+        "customHooks": 19,
+        "exports": 5,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:22.547Z"
+    },
+    "useScrollTracking": {
+      "totalLines": 44,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 1,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-04T22:17:23.216Z"
+    },
+    "useStyleQuizResults": {
+      "totalLines": 64,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T23:49:27.929Z"
+    },
+    "useSupabase": {
+      "totalLines": 1,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 0,
+        "exports": 0,
+        "typescript": false,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": false,
+      "lastModified": "2025-08-04T22:17:22.425Z"
+    },
+    "useSupabaseQuiz": {
+      "totalLines": 373,
+      "patterns": {
+        "useState": 4,
+        "useEffect": 2,
+        "useCallback": 7,
+        "useMemo": 0,
+        "customHooks": 17,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-06T00:29:36.550Z"
+    },
+    "useSyncedScroll": {
+      "totalLines": 54,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 2,
+        "useCallback": 2,
+        "useMemo": 0,
+        "customHooks": 7,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "medium",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:47.975Z"
+    },
+    "useUnifiedProperties": {
+      "totalLines": 1951,
+      "patterns": {
+        "useState": 2,
+        "useEffect": 3,
+        "useCallback": 9,
+        "useMemo": 0,
+        "customHooks": 20,
+        "exports": 12,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "quiz",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-07T19:28:42.634Z"
+    },
+    "useUniversalNavigation": {
+      "totalLines": 47,
+      "patterns": {
+        "useState": 0,
+        "useEffect": 0,
+        "useCallback": 5,
+        "useMemo": 0,
+        "customHooks": 8,
+        "exports": 1,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "utility",
+      "complexity": "low",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:48.000Z"
+    },
+    "useUtmParameters": {
+      "totalLines": 204,
+      "patterns": {
+        "useState": 3,
+        "useEffect": 2,
+        "useCallback": 0,
+        "useMemo": 0,
+        "customHooks": 6,
+        "exports": 2,
+        "typescript": true,
+        "hasTests": true
+      },
+      "functionality": "result",
+      "complexity": "high",
+      "isUsed": true,
+      "lastModified": "2025-08-05T19:04:48.021Z"
+    }
+  },
+  "categories": {
+    "quiz": [
+      {
+        "name": "useAutoSaveDebounce",
+        "totalLines": 147,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 2,
+          "useCallback": 5,
+          "useMemo": 0,
+          "customHooks": 20,
+          "exports": 2,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.655Z"
+      },
+      {
+        "name": "useBlockForm",
+        "totalLines": 346,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 4,
+          "useCallback": 9,
+          "useMemo": 0,
+          "customHooks": 19,
+          "exports": 5,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.676Z"
+      },
+      {
+        "name": "useDynamicData",
+        "totalLines": 219,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 4,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 12,
+          "exports": 6,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.701Z"
+      },
+      {
+        "name": "useQuiz",
+        "totalLines": 126,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 2,
+          "useCallback": 4,
+          "useMemo": 0,
+          "customHooks": 24,
+          "exports": 2,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.811Z"
+      },
+      {
+        "name": "useQuizBuilder",
+        "totalLines": 145,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 4,
+          "useCallback": 2,
+          "useMemo": 0,
+          "customHooks": 16,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.819Z"
+      },
+      {
+        "name": "useQuizComponents",
+        "totalLines": 51,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 6,
+          "useMemo": 0,
+          "customHooks": 9,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-07T01:25:41.910Z"
+      },
+      {
+        "name": "useQuizConfig",
+        "totalLines": 142,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 5,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.836Z"
+      },
+      {
+        "name": "useQuizHooks",
+        "totalLines": 52,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 0,
+          "useCallback": 4,
+          "useMemo": 0,
+          "customHooks": 9,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.844Z"
+      },
+      {
+        "name": "useQuizLogic",
+        "totalLines": 119,
+        "patterns": {
+          "useState": 6,
+          "useEffect": 0,
+          "useCallback": 7,
+          "useMemo": 0,
+          "customHooks": 14,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.852Z"
+      },
+      {
+        "name": "useQuizResult",
+        "totalLines": 26,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 6,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:22.912Z"
+      },
+      {
+        "name": "useQuizResultConfig",
+        "totalLines": 146,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 4,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.861Z"
+      },
+      {
+        "name": "useQuizResults",
+        "totalLines": 148,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 1,
+          "exports": 5,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T23:31:33.064Z"
+      },
+      {
+        "name": "useQuizStages",
+        "totalLines": 145,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 0,
+          "useCallback": 7,
+          "useMemo": 0,
+          "customHooks": 11,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.870Z"
+      },
+      {
+        "name": "useQuizTracking",
+        "totalLines": 250,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 4,
+          "useCallback": 10,
+          "useMemo": 0,
+          "customHooks": 27,
+          "exports": 3,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.894Z"
+      },
+      {
+        "name": "useReusableComponents",
+        "totalLines": 411,
+        "patterns": {
+          "useState": 5,
+          "useEffect": 3,
+          "useCallback": 9,
+          "useMemo": 0,
+          "customHooks": 19,
+          "exports": 5,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:22.547Z"
+      },
+      {
+        "name": "useStyleQuizResults",
+        "totalLines": 64,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T23:49:27.929Z"
+      },
+      {
+        "name": "useSupabaseQuiz",
+        "totalLines": 373,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 2,
+          "useCallback": 7,
+          "useMemo": 0,
+          "customHooks": 17,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-06T00:29:36.550Z"
+      },
+      {
+        "name": "useUnifiedProperties",
+        "totalLines": 1951,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 3,
+          "useCallback": 9,
+          "useMemo": 0,
+          "customHooks": 20,
+          "exports": 12,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "quiz",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-07T19:28:42.634Z"
+      }
+    ],
+    "editor": [
+      {
+        "name": "useAutoAnimate",
+        "totalLines": 67,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 3,
+          "typescript": false,
+          "hasTests": false
+        },
+        "functionality": "editor",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-06T14:11:10.243Z"
+      },
+      {
+        "name": "useDynamicEditorData",
+        "totalLines": 90,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 0,
+          "useCallback": 6,
+          "useMemo": 0,
+          "customHooks": 10,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "editor",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:23.201Z"
+      },
+      {
+        "name": "useEditor",
+        "totalLines": 73,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 3,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "editor",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T17:03:47.663Z"
+      },
+      {
+        "name": "useInlineBlock",
+        "totalLines": 65,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 4,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "editor",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.741Z"
+      },
+      {
+        "name": "useLiveEditor",
+        "totalLines": 33,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 3,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "editor",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.760Z"
+      },
+      {
+        "name": "useResultPageEditor",
+        "totalLines": 58,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 0,
+          "useCallback": 5,
+          "useMemo": 0,
+          "customHooks": 12,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "editor",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.925Z"
+      }
+    ],
+    "result": [
+      {
+        "name": "useABTest",
+        "totalLines": 149,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 3,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "result",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.626Z"
+      },
+      {
+        "name": "useCanvasConfiguration",
+        "totalLines": 85,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 0,
+          "useCallback": 9,
+          "useMemo": 0,
+          "customHooks": 18,
+          "exports": 4,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "result",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.683Z"
+      },
+      {
+        "name": "useResultPageConfig",
+        "totalLines": 159,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 0,
+          "useCallback": 5,
+          "useMemo": 0,
+          "customHooks": 9,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "result",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.909Z"
+      },
+      {
+        "name": "useUtmParameters",
+        "totalLines": 204,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 6,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "result",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:48.021Z"
+      }
+    ],
+    "database": [],
+    "performance": [
+      {
+        "name": "use-mobile",
+        "totalLines": 57,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 3,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 2,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "performance",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.596Z"
+      },
+      {
+        "name": "usePerformanceOptimization",
+        "totalLines": 112,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 3,
+          "useCallback": 7,
+          "useMemo": 0,
+          "customHooks": 16,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "performance",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.789Z"
+      }
+    ],
+    "animation": [],
+    "responsive": [
+      {
+        "name": "useMediaQuery",
+        "totalLines": 18,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 5,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "responsive",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:23.233Z"
+      }
+    ],
+    "utility": [
+      {
+        "name": "use-toast",
+        "totalLines": 187,
+        "patterns": {
+          "useState": 1,
+          "useEffect": 1,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 4,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.614Z"
+      },
+      {
+        "name": "useAutosave",
+        "totalLines": 52,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 2,
+          "useCallback": 2,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:22.517Z"
+      },
+      {
+        "name": "useBackgroundRemoval",
+        "totalLines": 19,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 1,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:22.943Z"
+      },
+      {
+        "name": "useContainerProperties",
+        "totalLines": 214,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 2,
+          "exports": 3,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-07T13:13:20.377Z"
+      },
+      {
+        "name": "useDebounce",
+        "totalLines": 44,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 2,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.689Z"
+      },
+      {
+        "name": "useGlobalLoading",
+        "totalLines": 63,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 4,
+          "useMemo": 0,
+          "customHooks": 10,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.719Z"
+      },
+      {
+        "name": "useGlobalStyles",
+        "totalLines": 80,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 5,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:22.595Z"
+      },
+      {
+        "name": "useHistory",
+        "totalLines": 76,
+        "patterns": {
+          "useState": 2,
+          "useEffect": 0,
+          "useCallback": 5,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 2,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.731Z"
+      },
+      {
+        "name": "useImageBank",
+        "totalLines": 53,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:22.181Z"
+      },
+      {
+        "name": "useInlineEdit",
+        "totalLines": 112,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 4,
+          "useCallback": 7,
+          "useMemo": 0,
+          "customHooks": 19,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.749Z"
+      },
+      {
+        "name": "useKeyboardShortcuts",
+        "totalLines": 85,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 4,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.755Z"
+      },
+      {
+        "name": "useLoadingState",
+        "totalLines": 48,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 0,
+          "useCallback": 4,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.765Z"
+      },
+      {
+        "name": "useOptimizedTimer",
+        "totalLines": 1,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 0,
+          "exports": 0,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": false,
+        "lastModified": "2025-08-04T22:17:22.579Z"
+      },
+      {
+        "name": "usePageConfig",
+        "totalLines": 38,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 6,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.778Z"
+      },
+      {
+        "name": "usePropertyHistory",
+        "totalLines": 113,
+        "patterns": {
+          "useState": 3,
+          "useEffect": 0,
+          "useCallback": 6,
+          "useMemo": 0,
+          "customHooks": 13,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "high",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.800Z"
+      },
+      {
+        "name": "useQuestionScroll",
+        "totalLines": 18,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 3,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:23.164Z"
+      },
+      {
+        "name": "useScrollTracking",
+        "totalLines": 44,
+        "patterns": {
+          "useState": 4,
+          "useEffect": 2,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 1,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-04T22:17:23.216Z"
+      },
+      {
+        "name": "useSupabase",
+        "totalLines": 1,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 0,
+          "useMemo": 0,
+          "customHooks": 0,
+          "exports": 0,
+          "typescript": false,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": false,
+        "lastModified": "2025-08-04T22:17:22.425Z"
+      },
+      {
+        "name": "useSyncedScroll",
+        "totalLines": 54,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 2,
+          "useCallback": 2,
+          "useMemo": 0,
+          "customHooks": 7,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "medium",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:47.975Z"
+      },
+      {
+        "name": "useUniversalNavigation",
+        "totalLines": 47,
+        "patterns": {
+          "useState": 0,
+          "useEffect": 0,
+          "useCallback": 5,
+          "useMemo": 0,
+          "customHooks": 8,
+          "exports": 1,
+          "typescript": true,
+          "hasTests": true
+        },
+        "functionality": "utility",
+        "complexity": "low",
+        "isUsed": true,
+        "lastModified": "2025-08-05T19:04:48.000Z"
+      }
+    ]
+  },
+  "totalHooks": 51
+}

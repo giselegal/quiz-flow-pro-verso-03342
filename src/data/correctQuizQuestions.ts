@@ -6,6 +6,15 @@
 import { QuizQuestion } from '@/types/quiz';
 
 export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
+  // ETAPA 0: COLETA DE NOME (NÃO PONTUA)
+  {
+    id: 'q0',
+    text: 'VAMOS NOS CONHECER?',
+    order: 0,
+    title: 'VAMOS NOS CONHECER?',
+    type: 'name-input',
+    options: [], // Input de texto para nome
+  },
 
   // ✅ ETAPAS 1-10: QUESTÕES PRINCIPAIS QUE PONTUAM (10 questões)
 
@@ -537,73 +546,65 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
     id: 'q9',
     text: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
     title: 'QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?',
-    type: 'both' as const,
+    type: 'text' as const,
     multiSelect: 3,
     options: [
       {
         id: '9a',
-        text: 'Pequenos e discretos, às vezes nem uso',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430351/Q9_-_A_cffjcw.webp',
+        text: 'Poucos e básicos',
         styleCategory: 'Natural',
         weight: 1,
       },
       {
         id: '9b',
-        text: 'Brincos pequenos e discretos. Corrente fininha',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752431503/Q9_B.webp',
+        text: 'Clássicos e atemporais',
         styleCategory: 'Clássico',
         weight: 1,
       },
       {
         id: '9c',
-        text: 'Acessórios que elevem meu look com um toque moderno',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752431483/Q9_C_fr3bxa.webp',
+        text: 'Práticos e atuais',
         styleCategory: 'Contemporâneo',
         weight: 1,
       },
       {
         id: '9d',
-        text: 'Acessórios sofisticados, joias ou semijoias',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430353/Q9_-_D_e1flwe.webp',
+        text: 'Sofisticados',
         styleCategory: 'Elegante',
         weight: 1,
       },
       {
         id: '9e',
-        text: 'Peças delicadas e com um toque feminino',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430363/Q9_-_E_f9thcb.webp',
+        text: 'Delicados',
         styleCategory: 'Romântico',
         weight: 1,
       },
       {
         id: '9f',
-        text: 'Brincos longos, colares que valorizem minha beleza',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430351/Q9_-_F_gtxs9r.webp',
+        text: 'Perfeitos ao meu corpo',
         styleCategory: 'Sexy',
         weight: 1,
       },
       {
         id: '9g',
-        text: 'Acessórios pesados, que causem um impacto',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430352/Q9_-_G_bihqmg.webp',
+        text: 'Diferentes, e trazem um efeito para minha roupa',
         styleCategory: 'Dramático',
         weight: 1,
       },
       {
         id: '9h',
-        text: 'Acessórios diferentes, grandes e marcantes',
-        imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430352/Q9_-_H_bddztd.webp',
+        text: 'Exclusivos, criam identidade no look',
         styleCategory: 'Criativo',
         weight: 1,
       },
     ],
   },
 
-  // QUESTÃO 10: VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...
+  // QUESTÃO 10: O QUE MAIS VALORIZAS NOS ACESSÓRIOS?
   {
     id: 'q10',
-    text: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
-    title: 'VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...',
+    text: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?',
+    title: 'O QUE MAIS VALORIZAS NOS ACESSÓRIOS?',
     type: 'text' as const,
     multiSelect: 3,
     options: [
@@ -658,7 +659,7 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
     ],
   },
 
-  // ✅ ETAPA 12: PÁGINA DE TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
+  // ✅ ETAPA 11: PÁGINA DE TRANSIÇÃO PARA QUESTÕES ESTRATÉGICAS
   {
     id: 'transition1',
     text: 'Enquanto calculamos o seu resultado...',
@@ -892,7 +893,7 @@ export const COMPLETE_QUIZ_QUESTIONS: QuizQuestion[] = [
     ],
   },
 
-  // ✅ ETAPA 19: PÁGINA DE TRANSIÇÃO PARA RESULTADO
+  // ✅ ETAPA 18: PÁGINA DE TRANSIÇÃO PARA RESULTADO
   {
     id: 'transition2',
     text: 'Obrigada por compartilhar...',

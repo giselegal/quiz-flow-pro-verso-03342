@@ -1,0 +1,95 @@
+{
+  "name": "Quiz Teste - Descubra Seu Estilo",
+  "description": "Quiz para descobrir seu estilo pessoal único",
+  "userId": 1,
+  "settings": JSON.stringify({
+    "tracking_enabled": true,
+    "utm_tracking": true,
+    "quiz_config": {
+      "intro": {
+        "title": "Descubra Seu Estilo Único",
+        "subtitle": "Quiz Personalizado",
+        "description": "Descubra qual estilo combina mais com você através deste quiz personalizado",
+        "buttonText": "Começar Quiz"
+      },
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Qual cor você mais gosta?",
+          "type": "single",
+          "options": [
+            {
+              "id": "o1",
+              "text": "Azul",
+              "points": {
+                "elegante": 2,
+                "casual": 1
+              }
+            },
+            {
+              "id": "o2", 
+              "text": "Vermelho",
+              "points": {
+                "elegante": 1,
+                "casual": 2
+              }
+            },
+            {
+              "id": "o3",
+              "text": "Verde",
+              "points": {
+                "elegante": 1,
+                "casual": 2
+              }
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "text": "Qual seu ambiente favorito?",
+          "type": "single",
+          "options": [
+            {
+              "id": "o4",
+              "text": "Escritório moderno",
+              "points": {
+                "elegante": 2,
+                "casual": 0
+              }
+            },
+            {
+              "id": "o5",
+              "text": "Café aconchegante",
+              "points": {
+                "elegante": 0,
+                "casual": 2
+              }
+            },
+            {
+              "id": "o6",
+              "text": "Parque ao ar livre",
+              "points": {
+                "elegante": 1,
+                "casual": 1
+              }
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "id": "elegante",
+          "title": "Estilo Elegante",
+          "description": "Você tem um estilo refinado e sofisticado. Prefere looks mais formais e bem estruturados.",
+          "imageUrl": "https://via.placeholder.com/300x200/b89b7a/ffffff?text=Elegante"
+        },
+        {
+          "id": "casual",
+          "title": "Estilo Casual",
+          "description": "Você prefere conforto e praticidade. Seu estilo é mais descontraído e funcional.",
+          "imageUrl": "https://via.placeholder.com/300x200/432818/ffffff?text=Casual"
+        }
+      ]
+    }
+  }
+}

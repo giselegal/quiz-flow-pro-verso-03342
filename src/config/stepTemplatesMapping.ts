@@ -1,14 +1,9 @@
 // src/config/stepTemplatesMapping.ts
-// Mapeamento das 21 etapas para seus templates específicos
+// Mapeamento das 21 etapas para seus templates específicos (usando templates TSX reais)
 
-// ✅ IMPORTS CORRIGIDOS E ORGANIZADOS
-// Step 1: Introdução (TSX Component)
+// ✅ IMPORTS DOS TEMPLATES CORRIGIDOS
 import { getStep01Template } from '@/components/steps/Step01Template';
-
-// Step 2: Nome (JSON Template corrigido)
 import { getConnectedStep02Template } from '@/components/steps/ConnectedStep02Template';
-
-// Steps 3-19: Templates JSON dinâmicos (ConnectedStepsFixed)
 import { 
   getConnectedStep03Template,
   getConnectedStep04Template,
@@ -28,11 +23,7 @@ import {
   getConnectedStep18Template,
   getConnectedStep19Template,
 } from '@/components/steps/ConnectedStepsFixed';
-
-// Step 20: Resultado personalizado (TSX Component)
 import { getStep20Template } from '@/components/steps/Step20Template';
-
-// Step 21: Lead form/conversão (JSON Template)
 import { getStep21Template } from '@/components/steps/Step21Template';
 
 // Interface para o template de etapa
@@ -49,8 +40,10 @@ export interface StepConfig {
   description: string;
 }
 
+// 🎯 DADOS REAIS DAS QUESTÕES (usados pelos templates conectados)
+// import { COMPLETE_QUIZ_QUESTIONS } from '@/data/correctQuizQuestions';
 
-// ✅ CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES E DESCRIÇÕES REAIS
+// 🎯 CONFIGURAÇÃO DAS 21 ETAPAS COM NOMES REAIS DAS QUESTÕES
 const STEP_CONFIGS = [
   { name: 'Quiz de Estilo Pessoal', description: 'Descubra seu estilo único' },
   { name: 'VAMOS NOS CONHECER?', description: 'Digite seu nome para personalizar' },

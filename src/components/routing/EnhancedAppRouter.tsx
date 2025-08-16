@@ -50,12 +50,7 @@ const EnhancedEditor = lazy(() =>
   }))
 );
 
-const SystemIntegrationTest = () => (
-  <div className="p-8 text-center">
-    <h2 className="text-xl font-bold mb-4">System Integration Test</h2>
-    <p className="text-gray-600">Test component removed during cleanup.</p>
-  </div>
-);
+const SystemIntegrationTest = lazy(() => import('../../components/testing/SystemIntegrationTest'));
 
 const FunnelManagementPage = lazy(() =>
   import('../../pages/examples/EnhancedEditorIntegration').then(module => ({

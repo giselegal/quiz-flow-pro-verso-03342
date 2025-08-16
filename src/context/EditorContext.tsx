@@ -26,10 +26,6 @@ import { useSupabaseQuiz } from '../hooks/useSupabaseQuiz';
 import { useQuizCRUD } from '../hooks/useQuizCRUD';
 import caktoquizQuestions from '../data/caktoquizQuestions';
 
-// ✅ NOVO: Importar Quiz Event Dispatcher
-import { quizEventDispatcher } from '../utils/quizEventDispatcher';
-import type { QuizEventData } from '../utils/quizEventDispatcher';
-
 interface EditorState {
   state: 'ready' | 'loading' | 'error';
 }
@@ -243,7 +239,7 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     crudReady: !!quizCRUD,
   });
 
-  // ✅ INTEGRAÇÃO: Event Listeners para conectar templates aos hooks + Quiz Event Dispatcher
+  // ✅ INTEGRAÇÃO: Event Listeners para conectar templates aos hooks
   useEffect(() => {
     console.log('🎯 EditorProvider: Configurando event listeners para quiz...');
 
@@ -278,57 +274,6 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       window.removeEventListener('quiz-selection-change', handleQuizSelectionChange);
     };
   }, [quizLogic]);
-
-  // ✅ NOVO: Configurar Quiz Event Dispatcher para conectar templates JSON aos hooks
-  useEffect(() => {
-    console.log('🔧 EditorProvider: Configurando Quiz Event Dispatcher...');
-    
-    // Configurar listeners no dispatcher
-    quizEventDispatcher.setupListeners({
-      onQuizAnswer: async (data: QuizEventData) => {
-        console.log('📤 EditorContext: Quiz answer via dispatcher', data);
-        await quizLogic.answerQuestion(data.questionId, data.optionId);
-      },
-      onStrategicAnswer: async (data: QuizEventData) => {
-        console.log('📤 EditorContext: Strategic answer via dispatcher', data);
-        await quizLogic.answerStrategicQuestion(
-          data.questionId,
-          data.optionId, 
-          data.category || 'Strategic',
-          data.strategicType || 'general'
-        );
-      },
-      onStepNavigation: (stepNumber: number) => {
-        console.log('📤 EditorContext: Step navigation via dispatcher', stepNumber);
-        const stageId = `step-${String(stepNumber).padStart(2, '0')}`;
-        setActiveStageId(stageId);
-      },
-    });
-
-    // Sincronizar state atual com o dispatcher
-    quizEventDispatcher.setCurrentAnswers(quizLogic.answers);
-    quizEventDispatcher.setStrategicAnswers(quizLogic.strategicAnswers);
-    quizEventDispatcher.setUserName(quizLogic.userName);
-
-    console.log('✅ EditorProvider: Quiz Event Dispatcher configurado com sucesso');
-
-    return () => {
-      quizEventDispatcher.cleanup();
-    };
-  }, [quizLogic, setActiveStageId]);
-
-  // ✅ SINCRONIZAÇÃO: Manter dispatcher atualizado com mudanças do quiz
-  useEffect(() => {
-    quizEventDispatcher.setCurrentAnswers(quizLogic.answers);
-  }, [quizLogic.answers]);
-
-  useEffect(() => {
-    quizEventDispatcher.setStrategicAnswers(quizLogic.strategicAnswers);
-  }, [quizLogic.strategicAnswers]);
-
-  useEffect(() => {
-    quizEventDispatcher.setUserName(quizLogic.userName);
-  }, [quizLogic.userName]);
 
   // ✅ INTEGRAÇÃO COM TEMPLATE MANAGER
   const templateManager = useTemplateManager({
