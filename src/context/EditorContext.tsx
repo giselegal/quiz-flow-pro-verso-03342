@@ -224,26 +224,43 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     addBlock,
     updateBlock,
     deleteBlock,
-  }), [setSelectedBlockId, addBlock, updateBlock, deleteBlock]);
+    addBlockAtPosition: async (type: BlockType, stageId?: string) => {
+      return await addBlock(type);
+    },
+    reorderBlocks,
+  }), [setSelectedBlockId, addBlock, updateBlock, deleteBlock, reorderBlocks]);
 
   // Computed properties
   const computed = useMemo(() => ({
     currentBlocks: state.blocks,
     selectedBlock: state.blocks.find(block => block.id === state.selectedBlockId) || null,
     stageCount: stages.length,
+    totalBlocks: state.blocks.length,
   }), [state.blocks, state.selectedBlockId, stages.length]);
 
   // UI state object
   const uiState = useMemo(() => ({
     isPreviewing: state.isPreviewing,
     isGlobalStylesOpen: state.isGlobalStylesOpen,
-  }), [state.isPreviewing, state.isGlobalStylesOpen]);
+    setIsPreviewing,
+    viewportSize: 'xl' as const,
+    setViewportSize: (size: string) => {
+      console.log('Setting viewport size:', size);
+    },
+  }), [state.isPreviewing, state.isGlobalStylesOpen, setIsPreviewing]);
 
   // Quiz state
   const quizState = useMemo(() => ({
     userName: '',
     answers: [],
     isQuizCompleted: false,
+    strategicAnswers: [],
+    setUserNameFromInput: (name: string) => {
+      console.log('Setting username:', name);
+    },
+    answerStrategicQuestion: (questionId: string, optionId: string, category: string, type: string) => {
+      console.log('Strategic answer:', { questionId, optionId, category, type });
+    },
   }), []);
 
   // Template actions
@@ -254,6 +271,10 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     saveTemplate: () => {
       console.log('Saving template');
     },
+    loadTemplateByStep: (step: number) => {
+      console.log('Loading template by step:', step);
+    },
+    isLoadingTemplate: false,
   }), []);
 
   // Persistence actions
