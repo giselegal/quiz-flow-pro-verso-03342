@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/card';
 import { useAuth } from '@/context/AuthContext';
-import { StyleResult } from '@/types/quiz';
 import { supabase } from '@/integrations/supabase/client';
+import { StyleResult } from '@/types/quiz';
 import React, { useEffect, useState } from 'react';
 
 interface HeaderProps {
@@ -38,7 +38,11 @@ export const Header: React.FC<HeaderProps> = ({
         const id = (user as any)?.id;
         if (!id) return;
 
-        const { data, error } = await supabase.from('profiles').select('name').eq('id', id).maybeSingle();
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('name')
+          .eq('id', id)
+          .maybeSingle();
         if (!error && data && mounted) {
           setFetchedName((data as any).name || null);
         }
@@ -47,7 +51,11 @@ export const Header: React.FC<HeaderProps> = ({
       }
     };
 
-    if (!userName && user && !((user as any)?.userName || (user as any)?.user_metadata?.full_name)) {
+    if (
+      !userName &&
+      user &&
+      !((user as any)?.userName || (user as any)?.user_metadata?.full_name)
+    ) {
       tryFetchProfile();
     }
 
@@ -72,7 +80,11 @@ export const Header: React.FC<HeaderProps> = ({
             src={logo}
             alt={logoAlt}
             className="h-auto mx-auto"
-            style={{ height: `${logoHeight}px`, width: typeof logoWidth === 'number' ? `${logoWidth}px` : logoWidth, maxWidth: '100%' }}
+            style={{
+              height: `${logoHeight}px`,
+              width: typeof logoWidth === 'number' ? `${logoWidth}px` : logoWidth,
+              maxWidth: '100%',
+            }}
           />
         </div>
 

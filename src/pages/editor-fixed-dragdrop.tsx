@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import ErrorBoundary from '@/components/editor/ErrorBoundary';
-import { PreviewProvider } from '@/contexts/PreviewContext';
 import { ScrollSyncProvider } from '@/context/ScrollSyncContext';
+import { PreviewProvider } from '@/contexts/PreviewContext';
+import React, { useEffect, useState } from 'react';
 
 // Editor Components
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
@@ -13,10 +13,9 @@ import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 
 // FunnelNavigation removido durante limpeza de conflitos
 // import { FunnelNavigation } from '@/components/editor-fixed/FunnelNavigation';
-import { IntegratedPropertiesPanel } from '@/components/universal/IntegratedPropertiesPanel';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
-
+import { IntegratedPropertiesPanel } from '@/components/universal/IntegratedPropertiesPanel';
 
 // Quiz Editor Integration
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
@@ -42,12 +41,12 @@ import { BookOpen, Settings } from 'lucide-react';
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
   console.log('🚀 EditorFixedPageWithDragDrop: COMPONENTE INICIANDO');
-  
+
   // ⚡ EDITOR CONTEXT - Estado centralizado (UMA ÚNICA EXTRAÇÃO)
   console.log('🚀 EditorFixedPageWithDragDrop: Tentando obter EditorContext...');
   const editorContext = useEditor();
   console.log('✅ EditorFixedPageWithDragDrop: EditorContext obtido com sucesso');
-  
+
   const {
     activeStageId: activeStage,
     selectedBlockId,
@@ -66,14 +65,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // ✅ NOVO: Estado do quiz integrado
     quizState,
   } = editorContext;
-  
+
   // ✅ DEBUG: Log do estado do quiz
   console.log('🎯 Editor Quiz State:', {
     userName: quizState.userName,
     answersCount: quizState.answers.length,
     isCompleted: quizState.isQuizCompleted,
   });
-  
+
   // Safe scroll sync with try-catch
   let scrollRef;
   try {
@@ -83,7 +82,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     console.warn('ScrollSync not available, using fallback:', error);
     scrollRef = { current: null };
   }
-  
+
   // ✅ SAFE FUNNEL NAVIGATION - Hook principal unificado
   const funnelNavigation = useFunnelNavigation();
   const propertyHistory = usePropertyHistory();
@@ -102,12 +101,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   }, [activeStage]);
 
   // Converte selectedBlock para UnifiedBlock
-  const unifiedSelectedBlock = selectedBlock ? {
-    id: selectedBlock.id,
-    type: selectedBlock.type,
-    properties: selectedBlock.properties || {},
-    content: selectedBlock.content || {},
-  } : null;
+  const unifiedSelectedBlock = selectedBlock
+    ? {
+        id: selectedBlock.id,
+        type: selectedBlock.type,
+        properties: selectedBlock.properties || {},
+        content: selectedBlock.content || {},
+      }
+    : null;
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as { stepId?: string };
@@ -165,7 +166,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     // O EditorContext já gerencia internamente
   };
 
-
   // Configurar atalhos de teclado
   useKeyboardShortcuts({
     onUndo: propertyHistory.undo,
@@ -181,192 +181,191 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       <PreviewProvider totalSteps={21}>
         <ScrollSyncProvider>
           <DndProvider
-      blocks={(currentBlocks || []).map(block => ({
-        id: block.id,
-        type: block.type,
-        properties: block.properties || {},
-      }))}
-      onBlocksReorder={newBlocksData => {
-        const newBlockIds = newBlocksData.map(b => b.id);
-        const oldBlockIds = (currentBlocks || []).map(b => b.id);
+            blocks={(currentBlocks || []).map(block => ({
+              id: block.id,
+              type: block.type,
+              properties: block.properties || {},
+            }))}
+            onBlocksReorder={newBlocksData => {
+              const newBlockIds = newBlocksData.map(b => b.id);
+              const oldBlockIds = (currentBlocks || []).map(b => b.id);
 
-        if (oldBlockIds.length !== newBlockIds.length) {
-          console.warn('⚠️ Reordenação abortada: quantidade de blocos não confere');
-          return;
-        }
+              if (oldBlockIds.length !== newBlockIds.length) {
+                console.warn('⚠️ Reordenação abortada: quantidade de blocos não confere');
+                return;
+              }
 
-        reorderBlocks(newBlockIds, activeStage || undefined);
-      }}
-      onBlockAdd={(blockType, position) => {
-        if (position !== undefined && position >= 0) {
-          addBlockAtPosition(blockType, position, activeStage || undefined);
-        } else {
-          addBlock(blockType, activeStage || undefined);
-        }
-      }}
-      onBlockSelect={blockId => {
-        setSelectedBlockId(blockId);
-      }}
-      selectedBlockId={selectedBlockId || undefined}
-      onBlockUpdate={(blockId, updates) => {
-        updateBlock(blockId, updates as any);
-      }}
-    >
-      {/* Notificação de propriedades ativadas */}
-      {showNotification && (
-        <EditorNotification
-          message="Propriedades de edição ativadas na Etapa 1! Clique em qualquer componente para editá-lo diretamente."
-          type="success"
-          duration={8000}
-          onClose={() => setShowNotification(false)}
-        />
-      )}
-
-      <div className="flex flex-col h-screen">
-        {/* NAVEGAÇÃO E TOOLBARS */}
-        <div className="flex-none">
-          <div className="sticky top-0 bg-white z-20">
-            <EditorToolbar
-              isPreviewing={isPreviewing}
-              onTogglePreview={() => setIsPreviewing(!isPreviewing)}
-              onSave={handleSave}
-              viewportSize={viewportSize}
-              onViewportSizeChange={setViewportSize}
-              onShowFunnelSettings={() => setShowFunnelSettings(true)}
-              onShowMonitoring={() => setShowMonitoringDashboard(true)}
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-hidden">
-          <FourColumnLayout
-            className="h-full"
-            stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
-            componentsPanel={
-              <SmartComponentsPanel
-                onAddComponent={(componentType: string) => {
-                  if (activeStage) {
-                    addBlock(componentType, activeStage);
-                  }
-                }}
+              reorderBlocks(newBlockIds, activeStage || undefined);
+            }}
+            onBlockAdd={(blockType, position) => {
+              if (position !== undefined && position >= 0) {
+                addBlockAtPosition(blockType, position, activeStage || undefined);
+              } else {
+                addBlock(blockType, activeStage || undefined);
+              }
+            }}
+            onBlockSelect={blockId => {
+              setSelectedBlockId(blockId);
+            }}
+            selectedBlockId={selectedBlockId || undefined}
+            onBlockUpdate={(blockId, updates) => {
+              updateBlock(blockId, updates as any);
+            }}
+          >
+            {/* Notificação de propriedades ativadas */}
+            {showNotification && (
+              <EditorNotification
+                message="Propriedades de edição ativadas na Etapa 1! Clique em qualquer componente para editá-lo diretamente."
+                type="success"
+                duration={8000}
+                onClose={() => setShowNotification(false)}
               />
-            }
-            canvas={
-              <div
-                ref={scrollRef}
-                className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
-              >
-                <div className={getCanvasClassName()}>
-                  <CanvasDropZone
-                    blocks={currentBlocks}
-                    selectedBlockId={selectedBlockId}
-                    onSelectBlock={setSelectedBlockId}
-                    onUpdateBlock={updateBlock}
-                    onDeleteBlock={handleDeleteBlock}
+            )}
+
+            <div className="flex flex-col h-screen">
+              {/* NAVEGAÇÃO E TOOLBARS */}
+              <div className="flex-none">
+                <div className="sticky top-0 bg-white z-20">
+                  <EditorToolbar
+                    isPreviewing={isPreviewing}
+                    onTogglePreview={() => setIsPreviewing(!isPreviewing)}
+                    onSave={handleSave}
+                    viewportSize={viewportSize}
+                    onViewportSizeChange={setViewportSize}
+                    onShowFunnelSettings={() => setShowFunnelSettings(true)}
+                    onShowMonitoring={() => setShowMonitoringDashboard(true)}
                   />
                 </div>
               </div>
-            }
-            propertiesPanel={
-              !isPreviewing && unifiedSelectedBlock ? (
-                // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
-                <IntegratedPropertiesPanel
-                  selectedBlock={unifiedSelectedBlock}
-                   onUpdate={(blockId: string, updates: Partial<any>) => {
-                     console.log('🔥 EDITOR onUpdate CHAMADO:', { blockId, updates });
-                     updateBlock(blockId, updates);
-                     console.log('🔥 EDITOR updateBlock executado');
-                   }}
-                  onClose={() => setSelectedBlockId(null)}
-                  onDelete={(blockId: string) => {
-                    deleteBlock(blockId);
-                    setSelectedBlockId(null);
-                  }}
-                />
-              ) : !isPreviewing ? (
-                <div className="h-full p-4 flex items-center justify-center text-stone-500">
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
-                      <Settings className="w-8 h-8 text-stone-400" />
+
+              <div className="flex-1 min-h-0 overflow-hidden">
+                <FourColumnLayout
+                  className="h-full"
+                  stagesPanel={<FunnelStagesPanel onStageSelect={handleStageSelect} />}
+                  componentsPanel={
+                    <SmartComponentsPanel
+                      onAddComponent={(componentType: string) => {
+                        if (activeStage) {
+                          addBlock(componentType, activeStage);
+                        }
+                      }}
+                    />
+                  }
+                  canvas={
+                    <div
+                      ref={scrollRef}
+                      className="p-2 h-full overflow-y-auto [scrollbar-gutter:stable] bg-gradient-to-br from-stone-50/50 via-white/30 to-stone-100/40 backdrop-blur-sm"
+                    >
+                      <div className={getCanvasClassName()}>
+                        <CanvasDropZone
+                          blocks={currentBlocks}
+                          selectedBlockId={selectedBlockId}
+                          onSelectBlock={setSelectedBlockId}
+                          onUpdateBlock={updateBlock}
+                          onDeleteBlock={handleDeleteBlock}
+                        />
+                      </div>
                     </div>
-                    <p className="text-sm font-medium">
-                      Selecione um bloco para editar propriedades
-                    </p>
-                    <p className="text-xs text-stone-400 mt-2">
-                      Novo Painel de Propriedades • Editores Específicos
-                      <br />
-                      aparecerão aqui quando selecionado
-                    </p>
-                    <div className="mt-4 text-xs text-stone-400 space-y-1">
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                        <span>Texto, Botão, Imagem</span>
+                  }
+                  propertiesPanel={
+                    !isPreviewing && unifiedSelectedBlock ? (
+                      // 🆕 NOVO PAINEL DE PROPRIEDADES OTIMIZADO (SISTEMA ATUALIZADO)
+                      <IntegratedPropertiesPanel
+                        selectedBlock={unifiedSelectedBlock}
+                        onUpdate={(blockId: string, updates: Partial<any>) => {
+                          console.log('🔥 EDITOR onUpdate CHAMADO:', { blockId, updates });
+                          updateBlock(blockId, updates);
+                          console.log('🔥 EDITOR updateBlock executado');
+                        }}
+                        onClose={() => setSelectedBlockId(null)}
+                        onDelete={(blockId: string) => {
+                          deleteBlock(blockId);
+                          setSelectedBlockId(null);
+                        }}
+                      />
+                    ) : !isPreviewing ? (
+                      <div className="h-full p-4 flex items-center justify-center text-stone-500">
+                        <div className="text-center">
+                          <div className="w-16 h-16 mx-auto mb-4 bg-stone-100 rounded-full flex items-center justify-center">
+                            <Settings className="w-8 h-8 text-stone-400" />
+                          </div>
+                          <p className="text-sm font-medium">
+                            Selecione um bloco para editar propriedades
+                          </p>
+                          <p className="text-xs text-stone-400 mt-2">
+                            Novo Painel de Propriedades • Editores Específicos
+                            <br />
+                            aparecerão aqui quando selecionado
+                          </p>
+                          <div className="mt-4 text-xs text-stone-400 space-y-1">
+                            <div className="flex items-center justify-center space-x-2">
+                              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                              <span>Texto, Botão, Imagem</span>
+                            </div>
+                            <div className="flex items-center justify-center space-x-2">
+                              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                              <span>Propriedades específicas por tipo</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                        <span>Propriedades específicas por tipo</span>
-                      </div>
+                    ) : null
+                  }
+                />
+              </div>
+
+              {/* Painel de Configurações do Funil */}
+              {showFunnelSettings && (
+                <FunnelSettingsPanel
+                  funnelId={activeStage || 'default'}
+                  isOpen={showFunnelSettings}
+                  onClose={() => setShowFunnelSettings(false)}
+                />
+              )}
+
+              {/* Modal do Quiz Editor */}
+              {showQuizEditor && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                  <div className="bg-white rounded-lg shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col">
+                    <div className="flex items-center justify-between p-4 border-b">
+                      <h2 className="text-xl font-semibold flex items-center gap-2">
+                        <BookOpen className="w-5 h-5" />
+                        Quiz Editor Integrado
+                      </h2>
+                      <button
+                        onClick={() => setShowQuizEditor(false)}
+                        className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 border rounded"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-hidden p-4">
+                      <IntegratedQuizEditor />
                     </div>
                   </div>
                 </div>
-                ) : null
-             }
-          />
-         </div>
+              )}
 
-
-        {/* Painel de Configurações do Funil */}
-        {showFunnelSettings && (
-          <FunnelSettingsPanel
-            funnelId={activeStage || 'default'}
-            isOpen={showFunnelSettings}
-            onClose={() => setShowFunnelSettings(false)}
-          />
-        )}
-
-        {/* Modal do Quiz Editor */}
-        {showQuizEditor && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col">
-              <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-xl font-semibold flex items-center gap-2">
-                  <BookOpen className="w-5 h-5" />
-                  Quiz Editor Integrado
-                </h2>
-                <button
-                  onClick={() => setShowQuizEditor(false)}
-                  className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 border rounded"
-                >
-                  Fechar
-                </button>
-              </div>
-              <div className="flex-1 overflow-hidden p-4">
-                <IntegratedQuizEditor />
-              </div>
+              {/* Dashboard de Monitoramento */}
+              {showMonitoringDashboard && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                  <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col">
+                    <div className="flex items-center justify-between p-4 border-b">
+                      <h2 className="text-xl font-semibold">Production Monitoring</h2>
+                      <button
+                        onClick={() => setShowMonitoringDashboard(false)}
+                        className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 border rounded"
+                      >
+                        Fechar
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-auto p-4">
+                      <p>Dashboard de monitoramento removido</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-
-        {/* Dashboard de Monitoramento */}
-        {showMonitoringDashboard && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl h-[80vh] flex flex-col">
-              <div className="flex items-center justify-between p-4 border-b">
-                <h2 className="text-xl font-semibold">Production Monitoring</h2>
-                <button
-                  onClick={() => setShowMonitoringDashboard(false)}
-                  className="px-3 py-1 text-sm text-gray-500 hover:text-gray-700 border rounded"
-                >
-                  Fechar
-                </button>
-              </div>
-              <div className="flex-1 overflow-auto p-4">
-                <p>Dashboard de monitoramento removido</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
           </DndProvider>
         </ScrollSyncProvider>
       </PreviewProvider>

@@ -1,3 +1,2 @@
-a// Re-export the consolidated Header component from the shared location.
-export { default as Header } from '@/components/Header';
-export { default } from '@/components/Header';
+// Re-export the consolidated Header component from the shared location.
+export { default, default as Header } from '@/components/Header';
