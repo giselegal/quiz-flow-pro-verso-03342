@@ -7,6 +7,7 @@ import { Toaster } from './components/ui/toaster';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import { AuthProvider } from './context/AuthContext';
 import { EditorProvider } from './context/EditorContext';
+import { FunnelsProvider } from './context/FunnelsContext';
 import { ScrollSyncProvider } from './context/ScrollSyncContext';
 
 // Lazy load das páginas principais para code splitting
@@ -131,16 +132,20 @@ function App() {
                   )}
                 />
 
-                {/* Editor Fixed Route - Simple Working Version */}
+                {/* Editor Fixed Route - Full Featured Version */}
                 <ProtectedRoute
                   path="/editor-fixed"
                   component={() => {
-                    console.log('🚀 App: Carregando EditorFixed (simple version)');
+                    console.log('🚀 App: Carregando EditorFixed (full version)');
                     return (
                       <Suspense fallback={<PageLoading />}>
                         <ErrorBoundary>
                           <EditorProvider>
-                            <EditorFixedSimple />
+                            <FunnelsProvider debug={true}>
+                              <ScrollSyncProvider>
+                                <EditorWithPreview />
+                              </ScrollSyncProvider>
+                            </FunnelsProvider>
                           </EditorProvider>
                         </ErrorBoundary>
                       </Suspense>
