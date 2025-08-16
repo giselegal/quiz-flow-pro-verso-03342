@@ -1,16 +1,16 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useEditor } from '@/context/EditorContext';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+
 import SortableBlockItem from '@/components/editor/SortableBlockItem';
 import UniversalPropertiesPanel from '@/components/universal/SimplifiedUniversalPropertiesPanel';
-import { BlockRenderer } from '@/components/editor/BlockRenderer';
+import BlockRenderer from '@/components/editor/BlockRenderer';
 import { EDITOR_BLOCKS_MAP } from '@/config/editorBlocksMapping';
 import { BlockType } from '@/types/BlockType';
 import { cn } from '@/lib/utils';
@@ -32,19 +32,18 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'blocks' | 'properties'>('blocks');
 
-  const editorContext = useEditor();
   const {
-    blocks,
-    selectedBlock,
+    state,
     addBlock,
     updateBlock,
     deleteBlock,
     reorderBlocks,
     selectBlock,
-    duplicateBlock,
-    clearSelection,
     quizState,
-  } = editorContext;
+  } = useEditor();
+
+  const blocks = state.blocks;
+  const selectedBlock = state.blocks.find(b => b.id === selectedBlockId);
 
   // ✅ DEBUG: Log do estado do quiz com null check
   console.log('🎯 Editor Quiz State:', {
@@ -74,8 +73,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       const newIndex = blocks.findIndex(block => block.id === over.id);
       
       if (oldIndex !== -1 && newIndex !== -1) {
-        const reorderedBlocks = arrayMove(blocks, oldIndex, newIndex);
-        reorderBlocks(reorderedBlocks);
+        reorderBlocks(oldIndex, newIndex);
       }
     }
   }, [blocks, reorderBlocks]);
@@ -111,31 +109,25 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     deleteBlock(blockId);
     if (selectedBlockId === blockId) {
       setSelectedBlockId(null);
-      clearSelection();
+      selectBlock(null);
       setActiveTab('blocks');
     }
-  }, [deleteBlock, selectedBlockId, clearSelection]);
+  }, [deleteBlock, selectedBlockId, selectBlock]);
 
   const handleDuplicateBlock = useCallback((blockId: string) => {
-    duplicateBlock(blockId);
-  }, [duplicateBlock]);
+    // Simple duplication by creating a new block of the same type
+    const blockToDuplicate = blocks.find(b => b.id === blockId);
+    if (blockToDuplicate) {
+      addBlock(blockToDuplicate.type);
+    }
+  }, [blocks, addBlock]);
 
   const handleCloseProperties = useCallback(() => {
     setSelectedBlockId(null);
-    clearSelection();
+    selectBlock(null);
     setActiveTab('blocks');
-  }, [clearSelection]);
+  }, [selectBlock]);
 
-  // ✅ SAFE BLOCK CREATION: Fixed BlockType conversion
-  const createNewBlock = (type: string): any => {
-    return {
-      id: `block-${Date.now()}`,
-      type: type as BlockType,
-      properties: {},
-      content: { text: `Novo ${type}` },
-      order: blocks.length,
-    };
-  };
 
   return (
     <div className="h-screen flex bg-gray-50">
@@ -215,14 +207,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                       strategy={verticalListSortingStrategy}
                     >
                       <div className="space-y-2">
-                        {blocks.map((block) => (
+            {blocks.map((block: any) => (
                           <SortableBlockItem
                             key={block.id}
                             block={block}
                             isSelected={selectedBlockId === block.id}
                             onSelect={() => handleSelectBlock(block.id)}
                             onDelete={() => handleDeleteBlock(block.id)}
-                            onDuplicate={() => handleDuplicateBlock(block.id)}
+                            
                           />
                         ))}
                       </div>

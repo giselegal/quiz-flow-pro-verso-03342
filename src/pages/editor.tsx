@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { BlockRenderer } from '@/components/editor/BlockRenderer';
+import BlockRenderer from '@/components/editor/BlockRenderer';
 import { EDITOR_BLOCKS_MAP } from '@/config/editorBlocksMapping';
 import { BlockType } from '@/types/BlockType';
 import { cn } from '@/lib/utils';
@@ -28,15 +28,14 @@ const EditorPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'blocks' | 'properties'>('blocks');
 
   const {
-    blocks,
-    selectedBlock,
+    state,
     addBlock,
-    updateBlock,
     deleteBlock,
     selectBlock,
-    duplicateBlock,
-    clearSelection,
   } = useEditor();
+
+  const blocks = state.blocks;
+  const selectedBlock = state.blocks.find(b => b.id === selectedBlockId);
 
   const { scrollRef: canvasScrollRef } = useSyncedScroll({ 
     source: 'canvas',
@@ -61,28 +60,28 @@ const EditorPage: React.FC = () => {
     setActiveTab('properties');
   }, [selectBlock]);
 
-  const handleUpdateBlock = useCallback((blockId: string, updates: any) => {
-    updateBlock(blockId, updates);
-  }, [updateBlock]);
+  // Handle duplications by creating a new block of the same type
+  const handleDuplicateBlock = useCallback((blockId: string) => {
+    const blockToDuplicate = blocks.find(b => b.id === blockId);
+    if (blockToDuplicate) {
+      addBlock(blockToDuplicate.type);
+    }
+  }, [blocks, addBlock]);
 
   const handleDeleteBlock = useCallback((blockId: string) => {
     deleteBlock(blockId);
     if (selectedBlockId === blockId) {
       setSelectedBlockId(null);
-      clearSelection();
+      selectBlock(null);
       setActiveTab('blocks');
     }
-  }, [deleteBlock, selectedBlockId, clearSelection]);
-
-  const handleDuplicateBlock = useCallback((blockId: string) => {
-    duplicateBlock(blockId);
-  }, [duplicateBlock]);
+  }, [deleteBlock, selectedBlockId, selectBlock]);
 
   const handleCloseProperties = useCallback(() => {
     setSelectedBlockId(null);
-    clearSelection();
+    selectBlock(null);
     setActiveTab('blocks');
-  }, [clearSelection]);
+  }, [selectBlock]);
 
   return (
     <div className="h-screen flex bg-gray-50">
@@ -153,7 +152,7 @@ const EditorPage: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    {blocks.map((block) => (
+                    {blocks.map((block: any) => (
                       <div
                         key={block.id}
                         className={cn(
@@ -285,7 +284,7 @@ const EditorPage: React.FC = () => {
           <div className="max-w-2xl mx-auto">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-[600px]">
               <div className="p-6 space-y-4">
-                {blocks.map((block) => (
+                {blocks.map((block: any) => (
                   <div
                     key={block.id}
                     className={cn(
