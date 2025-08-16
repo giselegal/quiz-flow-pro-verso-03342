@@ -52,6 +52,7 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
+const EditorFixed21Stages = lazy(() => import('./pages/EditorFixed21Stages'));
 
 
 // Loading component
@@ -136,26 +137,26 @@ function App() {
                   )}
                 />
 
-                {/* Editor Fixed Route - Full Featured Version */}
-                <ProtectedRoute
-                  path="/editor-fixed"
-                  component={() => {
-                    console.log('🚀 App: Carregando EditorFixed (full version)');
-                    return (
-                      <Suspense fallback={<PageLoading />}>
-                        <ErrorBoundary>
-                          <EditorProvider>
-                            <FunnelsProvider debug={true}>
-                              <ScrollSyncProvider>
-                                <EditorWithPreview />
-                              </ScrollSyncProvider>
-                            </FunnelsProvider>
-                          </EditorProvider>
-                        </ErrorBoundary>
-                      </Suspense>
-                    );
-                  }}
-                />
+                 {/* Editor Fixed Route - Full 21 Stages Version */}
+                 <ProtectedRoute
+                   path="/editor-fixed"
+                   component={() => {
+                     console.log('🚀 App: Carregando EditorFixed21Stages (21 stages version)');
+                     return (
+                       <Suspense fallback={<PageLoading />}>
+                         <ErrorBoundary>
+                           <EditorProvider>
+                             <FunnelsProvider debug={true}>
+                               <ScrollSyncProvider>
+                                 <EditorFixed21Stages />
+                               </ScrollSyncProvider>
+                             </FunnelsProvider>
+                           </EditorProvider>
+                         </ErrorBoundary>
+                       </Suspense>
+                     );
+                   }}
+                 />
 
                 {/* Editor Fixed Debug Route */}
                 <ProtectedRoute
