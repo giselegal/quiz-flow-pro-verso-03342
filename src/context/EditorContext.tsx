@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useEditorSupabase } from '@/hooks/useEditorSupabase';
 import { Block } from '@/types/editor';
@@ -340,38 +340,100 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }));
   }, []);
 
-  // Mock implementations for missing properties
-  const stages = useMemo(() => [
-    { id: 'step-1', name: 'Etapa 1', order: 1, description: 'Introdução', metadata: { blocksCount: state.blocks.length } }
-  ], [state.blocks.length]);
+  // Import and integrate the 21-stage system from stepTemplatesMapping
+  const { getAllSteps, getStepTemplate } = require('@/config/stepTemplatesMapping');
+  
+  // Real 21-stage implementation
+  const [currentActiveStageId, setCurrentActiveStageId] = useState<string>('step-1');
+  
+  const stages = useMemo(() => {
+    const allSteps = getAllSteps();
+    return allSteps.map((template: any) => ({
+      id: `step-${template.stepNumber}`,
+      name: template.name,
+      order: template.stepNumber,
+      description: template.description,
+      metadata: { 
+        blocksCount: state.blocks.filter((block: any) => block.stageId === `step-${template.stepNumber}`).length 
+      }
+    }));
+  }, [state.blocks]);
 
-  const activeStageId = 'step-1';
+  const activeStageId = currentActiveStageId;
 
   const stageActions = useMemo(() => ({
-    setActiveStage: (stageId: string) => console.log('setActiveStage:', stageId),
-    addStage: () => console.log('addStage'),
-    removeStage: (stageId: string) => console.log('removeStage:', stageId),
-  }), []);
+    setActiveStage: (stageId: string) => {
+      console.log('🎯 EditorContext: setActiveStage:', stageId);
+      setCurrentActiveStageId(stageId);
+      
+      // Auto-load template blocks for the stage if empty
+      const stageBlocks = state.blocks.filter((block: any) => block.stageId === stageId);
+      if (stageBlocks.length === 0) {
+        const stepNumber = parseInt(stageId.replace('step-', ''));
+        const templateBlocks = getStepTemplate(stepNumber);
+        
+        console.log('🎯 Loading template blocks for step:', stepNumber, templateBlocks.length);
+        
+        const convertedBlocks = templateBlocks.map((template: any, index: number) => ({
+          id: template.id || `${stageId}-block-${index}`,
+          type: template.type,
+          content: template.properties || template.content || {},
+          properties: template.properties || {},
+          order: index,
+          stageId: stageId
+        }));
+        
+        dispatch({ type: 'SET_BLOCKS', payload: [...state.blocks, ...convertedBlocks] });
+      }
+    },
+    addStage: () => {
+      const newStageNumber = stages.length + 1;
+      const newStageId = `step-${newStageNumber}`;
+      console.log('addStage:', newStageId);
+      return newStageId;
+    },
+    removeStage: (stageId: string) => {
+      console.log('removeStage:', stageId);
+      // Remove all blocks from this stage
+      const filteredBlocks = state.blocks.filter((block: any) => block.stageId !== stageId);
+      dispatch({ type: 'SET_BLOCKS', payload: filteredBlocks });
+    },
+  }), [stages.length, state.blocks]);
 
   const blockActions = useMemo(() => ({
-    getBlocksForStage: (_stageId: string) => state.blocks,
-    addBlock,
+    getBlocksForStage: (stageId: string) => state.blocks.filter((block: any) => block.stageId === stageId),
+    addBlock: async (type: Block['type']) => {
+      const blockId = await addBlock(type);
+      // Update the new block to belong to current stage
+      const newBlock = state.blocks.find(b => b.id === blockId);
+      if (newBlock) {
+        updateBlock(blockId, { ...newBlock.content, stageId: currentActiveStageId });
+      }
+      return blockId;
+    },
     updateBlock, 
     deleteBlock,
     setSelectedBlockId: selectBlock,
     addBlockAtPosition: addBlock,
     reorderBlocks,
-  }), [state.blocks, addBlock, updateBlock, deleteBlock, selectBlock, reorderBlocks]);
+  }), [state.blocks, addBlock, updateBlock, deleteBlock, selectBlock, reorderBlocks, currentActiveStageId]);
 
   const computed = useMemo(() => ({
     stageCount: stages.length,
     selectedBlock: state.blocks.find(b => b.id === state.selectedBlockId) || null,
-    currentBlocks: state.blocks,
+    currentBlocks: state.blocks.filter((block: any) => block.stageId === currentActiveStageId),
     totalBlocks: state.blocks.length,
-  }), [stages.length, state.blocks, state.selectedBlockId]);
+  }), [stages.length, state.blocks, state.selectedBlockId, currentActiveStageId]);
 
+  const [viewportSize, setViewportSize] = useState<'sm' | 'md' | 'lg' | 'xl'>('lg');
+  
   const quizState = useMemo(() => ({}), []);
-  const uiState = useMemo(() => ({}), []);
+  const uiState = useMemo(() => ({
+    isPreviewing: state.isPreviewing,
+    setIsPreviewing: () => dispatch({ type: 'TOGGLE_PREVIEW' }),
+    viewportSize,
+    setViewportSize,
+  }), [state.isPreviewing, viewportSize]);
   
   const databaseMode = useMemo(() => ({
     isEnabled: state.supabaseEnabled,
@@ -412,7 +474,13 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Legacy properties for compatibility
       funnelId: state.funnelId,
       isSupabaseEnabled: state.supabaseEnabled,
-      persistenceActions: { save: () => console.log('save') },
+      persistenceActions: { 
+        save: () => console.log('save'),
+        saveFunnel: async () => {
+          console.log('saveFunnel called');
+          return { success: true, message: 'Funnel saved locally' };
+        }
+      },
       templateActions: { loadTemplate: () => console.log('loadTemplate') },
     }),
     [

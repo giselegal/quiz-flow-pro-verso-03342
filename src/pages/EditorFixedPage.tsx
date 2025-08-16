@@ -1,8 +1,8 @@
 import React from 'react';
-import EditorFixedMinimal from '@/components/editor-fixed/EditorFixedMinimal';
+import EditorFixedEnhancedPage from './editor-fixed-dragdrop-enhanced';
 
 const EditorFixedPage: React.FC = () => {
-  return <EditorFixedMinimal />;
+  return <EditorFixedEnhancedPage />;
 };
 
 export default EditorFixedPage;
