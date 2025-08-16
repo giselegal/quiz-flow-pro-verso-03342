@@ -1,226 +1,216 @@
-import React, { useState, useCallback } from 'react';
-import { useEditor } from '@/context/EditorContext';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { BlockRenderer } from '@/components/editor/BlockRenderer';
-import { EDITOR_BLOCKS_MAP } from '@/config/editorBlocksMapping';
+import { useEditor } from '@/context/EditorContext.simple';
+import FunnelStagesPanel from '@/components/editor/funnel/FunnelStagesPanel.simple';
 import { BlockType } from '@/types/BlockType';
-import { Plus, Save, Eye, Trash2, Copy, Settings } from 'lucide-react';
 
-const EditorFixedSimples: React.FC = () => {
-  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  
-  const {
-    blocks,
-    selectedBlock,
-    addBlock,
-    updateBlock,
-    deleteBlock,
-    selectBlock,
-    duplicateBlock,
-    clearSelection,
-  } = useEditor();
+interface Block {
+  id: string;
+  type: string;
+  stageId: string;
+  order: number;
+  properties?: any;
+}
 
-  const availableBlockTypes = Object.keys(EDITOR_BLOCKS_MAP);
+interface Stage {
+  id: string;
+  name: string;
+  description: string;
+}
 
-  const handleAddBlock = useCallback((blockType: string) => {
-    console.log('Adding block:', blockType);
-    addBlock(blockType as BlockType);
-  }, [addBlock]);
+interface EditorContextType {
+  stages: Stage[];
+  blocks: Block[];
+  selectedBlock: Block | null;
+  stageActions: {
+    addStage: (stage: Stage) => void;
+    updateStage: (id: string, updates: Partial<Stage>) => void;
+    deleteStage: (id: string) => void;
+    setActiveStage: (id: string) => void;
+    activeStageId: string | null;
+  };
+  blockActions: {
+    addBlock: (block: Block) => void;
+    updateBlock: (id: string, updates: Partial<Block>) => void;
+    deleteBlock: (id: string) => void;
+    selectBlock: (id: string) => void;
+  };
+}
 
-  const handleSelectBlock = useCallback((blockId: string) => {
-    setSelectedBlockId(blockId);
-    selectBlock(blockId);
-  }, [selectBlock]);
+const EditorFixedSimplePage: React.FC = () => {
+  const { stages, blocks, selectedBlock, stageActions, blockActions } = useEditor();
 
-  const handleUpdateBlock = useCallback((blockId: string, updates: any) => {
-    updateBlock(blockId, updates);
-  }, [updateBlock]);
+  const currentStage = stages.find(stage => stage.id === stageActions.activeStageId);
+  const currentBlocks = blocks.filter((block: any) => block.stageId === stageActions.activeStageId);
 
-  const handleDeleteBlock = useCallback((blockId: string) => {
-    deleteBlock(blockId);
-    if (selectedBlockId === blockId) {
-      setSelectedBlockId(null);
-      clearSelection();
+  const handleAddBlock = (type: BlockType) => {
+    if (!stageActions.activeStageId) return;
+
+    const newBlock = {
+      id: `block-${Date.now()}`,
+      type,
+      stageId: stageActions.activeStageId,
+      order: currentBlocks.length,
+      properties: getDefaultProperties(type),
+    };
+
+    blockActions.addBlock(newBlock);
+  };
+
+  const getDefaultProperties = (type: BlockType) => {
+    switch (type) {
+      case 'text':
+        return { content: 'Digite seu texto aqui...', fontSize: 16, color: '#000000' };
+      case 'image':
+        return { src: '', alt: 'Imagem', width: 400, height: 300 };
+      case 'button':
+        return { text: 'Clique aqui', variant: 'primary' };
+      default:
+        return {};
     }
-  }, [deleteBlock, selectedBlockId, clearSelection]);
+  };
 
   return (
     <div className="h-screen flex bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-80 bg-white border-r flex flex-col">
-        <div className="p-4 border-b">
-          <h2 className="font-semibold text-gray-900 mb-4">Editor Simples</h2>
-          
-          {/* Add Block Buttons */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Adicionar Componente</Label>
-            <div className="grid grid-cols-2 gap-2">
-              {availableBlockTypes.map((type) => (
-                <Button
-                  key={type}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleAddBlock(type)}
-                  className="text-xs"
-                >
-                  <Plus className="w-3 h-3 mr-1" />
-                  {type}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Blocks List */}
-        <ScrollArea className="flex-1 p-4">
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Componentes ({blocks.length})</Label>
-            
-            {blocks.map((block) => (
-              <Card 
-                key={block.id}
-                className={`cursor-pointer transition-colors ${
-                  selectedBlockId === block.id ? 'ring-2 ring-blue-500' : ''
-                }`}
-                onClick={() => handleSelectBlock(block.id)}
-              >
-                <CardContent className="p-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-sm">{block.type}</div>
-                      <div className="text-xs text-gray-500">ID: {block.id}</div>
-                    </div>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          duplicateBlock(block.id);
-                        }}
-                        className="h-6 w-6 p-0"
-                      >
-                        <Copy className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteBlock(block.id);
-                        }}
-                        className="h-6 w-6 p-0 text-red-600"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-
-            {blocks.length === 0 && (
-              <div className="text-center py-8 text-gray-500">
-                <div className="text-sm">Nenhum componente</div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-
-        {/* Properties Panel */}
-        {selectedBlock && (
-          <div className="p-4 border-t bg-gray-50">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                <Label className="font-medium">Propriedades</Label>
-              </div>
-              
-              <div className="space-y-2">
-                <div>
-                  <Label className="text-xs">ID</Label>
-                  <Input 
-                    value={selectedBlock.id} 
-                    disabled 
-                    className="h-8 text-xs"
-                  />
-                </div>
-                
-                <div>
-                  <Label className="text-xs">Tipo</Label>
-                  <Input 
-                    value={selectedBlock.type} 
-                    disabled 
-                    className="h-8 text-xs"
-                  />
-                </div>
-
-                {selectedBlock.content?.text && (
-                  <div>
-                    <Label className="text-xs">Texto</Label>
-                    <Input
-                      value={selectedBlock.content.text}
-                      onChange={(e) => handleUpdateBlock(selectedBlock.id, {
-                        content: { ...selectedBlock.content, text: e.target.value }
-                      })}
-                      className="h-8 text-xs"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+      {/* Left Panel - Stages */}
+      <div className="w-80 bg-white border-r border-gray-200">
+        <FunnelStagesPanel />
       </div>
 
-      {/* Canvas */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Toolbar */}
-        <div className="bg-white border-b p-4">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200 p-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Eye className="w-5 h-5" />
-              <span className="font-medium">Preview</span>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-800">
+                {currentStage?.name || 'Editor de Quiz'}
+              </h1>
+              <p className="text-sm text-gray-600 mt-1">
+                {currentStage?.description || 'Selecione uma etapa para começar'}
+              </p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm">
-                <Save className="w-4 h-4 mr-1" />
-                Salvar
+                Preview
+              </Button>
+              <Button size="sm">
+                Save
               </Button>
             </div>
           </div>
         </div>
 
         {/* Canvas Area */}
-        <div className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border min-h-[600px] p-6">
-            <div className="space-y-4">
-              {blocks.map((block) => (
-                <div
-                  key={block.id}
-                  className={`relative group rounded p-2 transition-all ${
-                    selectedBlockId === block.id 
-                      ? 'ring-2 ring-blue-500 bg-blue-50' 
-                      : 'hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleSelectBlock(block.id)}
-                >
-                  <BlockRenderer block={block} />
-                </div>
-              ))}
-
-              {blocks.length === 0 && (
-                <div className="text-center py-16 text-gray-500">
-                  <div className="text-lg font-medium mb-2">Canvas Vazio</div>
-                  <div className="text-sm">Adicione componentes para começar</div>
-                </div>
-              ))}
+        <div className="flex-1 flex">
+          {/* Component Library */}
+          <div className="w-64 bg-white border-r border-gray-200 p-4">
+            <h3 className="text-sm font-medium text-gray-800 mb-4">Componentes</h3>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => handleAddBlock('text' as BlockType)}
+              >
+                📝 Texto
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => handleAddBlock('image' as BlockType)}
+              >
+                🖼️ Imagem
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start"
+                onClick={() => handleAddBlock('button' as BlockType)}
+              >
+                🔘 Botão
+              </Button>
             </div>
+          </div>
+
+          {/* Canvas */}
+          <div className="flex-1 p-8 overflow-auto">
+            <div className="max-w-2xl mx-auto">
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {currentStage?.name || 'Selecione uma etapa'}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {currentBlocks.length === 0 ? (
+                      <div className="text-center py-12 text-gray-500">
+                        <p>Nenhum componente adicionado ainda.</p>
+                        <p className="text-sm mt-1">
+                          Use a biblioteca de componentes para adicionar elementos.
+                        </p>
+                      </div>
+                    ) : (
+                      currentBlocks.map((block: any) => (
+                        <div
+                          key={block.id}
+                          className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                            selectedBlock?.id === block.id
+                              ? 'border-blue-500 bg-blue-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                          onClick={() => blockActions.selectBlock(block.id)}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-sm font-medium text-gray-600">
+                              {block.type}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                blockActions.deleteBlock(block.id);
+                              }}
+                            >
+                              ❌
+                            </Button>
+                          </div>
+                          <div className="preview-content">
+                            {renderBlockPreview(block)}
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Properties Panel */}
+          <div className="w-80 bg-white border-l border-gray-200 p-4">
+            <h3 className="text-sm font-medium text-gray-800 mb-4">Propriedades</h3>
+            {selectedBlock ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm text-gray-600">Tipo</label>
+                  <p className="font-medium">{selectedBlock.type}</p>
+                </div>
+                <div>
+                  <label className="text-sm text-gray-600">ID</label>
+                  <p className="text-xs text-gray-500">{selectedBlock.id}</p>
+                </div>
+                {/* Add more property editors based on block type */}
+              </div>
+            ) : (
+              <p className="text-gray-500 text-sm">
+                Selecione um componente para editar suas propriedades.
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -228,4 +218,37 @@ const EditorFixedSimples: React.FC = () => {
   );
 };
 
-export default EditorFixedSimples;
+const renderBlockPreview = (block: any) => {
+  switch (block.type) {
+    case 'text':
+      return (
+        <p style={{ fontSize: block.properties?.fontSize, color: block.properties?.color }}>
+          {block.properties?.content || 'Texto exemplo'}
+        </p>
+      );
+    case 'image':
+      return (
+        <div className="bg-gray-100 rounded p-4 text-center">
+          {block.properties?.src ? (
+            <img
+              src={block.properties.src}
+              alt={block.properties?.alt}
+              className="max-w-full h-auto"
+            />
+          ) : (
+            <span className="text-gray-500">🖼️ Imagem</span>
+          )}
+        </div>
+      );
+    case 'button':
+      return (
+        <Button variant={block.properties?.variant || 'default'}>
+          {block.properties?.text || 'Botão'}
+        </Button>
+      );
+    default:
+      return <div className="text-gray-500">Componente desconhecido</div>;
+  }
+};
+
+export default EditorFixedSimplePage;
