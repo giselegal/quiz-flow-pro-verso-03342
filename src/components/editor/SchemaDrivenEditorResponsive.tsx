@@ -26,7 +26,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   const handleComponentSelect = async (type: string) => {
     try {
-      const blockId = await addBlock(type as any); // Type assertion for compatibility
+      const blockId = await addBlock(type);
       if (blockId) {
         setSelectedBlockId(blockId);
         console.log(`➕ Bloco ${type} adicionado via editor responsivo`);

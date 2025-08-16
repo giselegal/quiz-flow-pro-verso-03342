@@ -1,103 +1,64 @@
-
-import React from 'react';
-import { Block } from '@/types/editor';
 import { DragEndEvent } from '@dnd-kit/core';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from '@dnd-kit/modifiers';
+import { EditorBlock } from '@/types/editor';
 
 interface EditorContentProps {
-  blocks: Block[];
+  blocks: EditorBlock[];
   onDragEnd: (event: DragEndEvent) => void;
-  onAddBlock: (type: string) => void;
+  onAddBlock: (type: EditorBlock['type']) => void;
   onUpdateBlock: (id: string, content: any) => void;
   onDeleteBlock: (id: string) => void;
-  isPreviewing?: boolean;
+  isPreviewing: boolean;
 }
 
 export const EditorContent: React.FC<EditorContentProps> = ({
   blocks,
-  onDragEnd,
-  onAddBlock,
-  isPreviewing = false,
+  onDragEnd: _onDragEnd,
+  onAddBlock: _onAddBlock,
+  onUpdateBlock: _onUpdateBlock,
+  onDeleteBlock: _onDeleteBlock,
+  isPreviewing: _isPreviewing,
 }) => {
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const renderBlock = (block: EditorBlock) => {
+    const isSelected = false;
 
-  const items = blocks.map((item: Block) => item.id);
+    switch (block.type) {
+      case 'benefits':
+        const items = Array.isArray(block.content?.items)
+          ? block.content.items.filter((item): item is string => typeof item === 'string')
+          : [];
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+        return (
+          <div
+            key={block.id}
+            className={`p-4 border rounded-lg cursor-pointer ${
+              isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-200'
+            }`}
+            onClick={() => {}}
+          >
+            <h3 className="font-medium mb-2">{block.content?.title || 'Benefícios'}</h3>
+            <ul className="list-disc list-inside">
+              {items.map((item, index) => (
+                <li key={index} style={{ color: '#6B4F43' }}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
 
-    if (over && active.id !== over.id) {
-      onDragEnd(event);
+      default:
+        return (
+          <div
+            key={block.id}
+            className={`p-4 border rounded-lg cursor-pointer ${
+              isSelected ? 'border-[#B89B7A] bg-[#B89B7A]/10' : 'border-gray-200'
+            }`}
+          >
+            <p style={{ color: '#6B4F43' }}>Tipo de bloco: {block.type}</p>
+          </div>
+        );
     }
   };
 
-  const renderBlock = (item: Block) => {
-    return (
-      <div key={item.id} className="block-wrapper">
-        <div className="block-content">
-          {/* Block content would be rendered here */}
-          <div className="p-4 border rounded">
-            <div className="text-sm text-gray-500">Block: {item.type}</div>
-            <div className="text-xs text-gray-400">ID: {item.id}</div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  if (isPreviewing) {
-    return (
-      <div className="preview-mode">
-        {blocks.map((item) => renderBlock(item))}
-      </div>
-    );
-  }
-
-  return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-    >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        <div className="editor-content space-y-4">
-          {blocks.map((item) => renderBlock(item))}
-          
-          {blocks.length === 0 && (
-            <div className="empty-state text-center py-8">
-              <p className="text-gray-500 mb-4">No blocks yet. Add your first block!</p>
-              <button
-                onClick={() => onAddBlock('text')}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Add Text Block
-              </button>
-            </div>
-          )}
-        </div>
-      </SortableContext>
-    </DndContext>
-  );
+  return <div className="space-y-4">{blocks.map(renderBlock)}</div>;
 };

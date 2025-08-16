@@ -1,4 +1,3 @@
-
 // Mapeamento padrão para propriedades do cabeçalho
 import { Block, EditableContent } from '@/types/editor';
 
@@ -58,7 +57,8 @@ export const createHeaderBlock = (
     type: 'quiz-intro-header',
     properties: defaultHeaderProperties,
     content: {
-      content: '',
+      type: 'doc',
+      content: [],
     } as EditableContent,
     order: 0,
     stageId,

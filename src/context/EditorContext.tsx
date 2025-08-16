@@ -1,15 +1,106 @@
-import React, { createContext, useContext, useReducer, useMemo } from 'react';
-import { Block, BlockType, FunnelStage } from '@/types/editor';
-import { EditorContextType, EditorState, EditorAction } from '@/types/editorTypes';
 
+import React, { createContext, useContext, useReducer, useEffect, useMemo, useCallback } from 'react';
+import { Block, BlockType } from '@/types/editor';
+import { EditorState, EditorAction } from '@/types/editorTypes';
+import { stepTemplatesMapping } from '@/config/stepTemplatesMapping';
+
+// Extended interface with all expected properties
+interface EditorContextType {
+  // Core state
+  state: EditorState;
+  dispatch: React.Dispatch<EditorAction>;
+  
+  // Block actions
+  addBlock: (type: BlockType) => Promise<string>;
+  updateBlock: (id: string, content: any) => Promise<void>;
+  deleteBlock: (id: string) => Promise<void>;
+  reorderBlocks: (startIndex: number, endIndex: number) => void;
+  
+  // Selection
+  selectedBlock: Block | null;
+  selectedBlockId: string | null;
+  setSelectedBlockId: (id: string | null) => void;
+  
+  // UI state
+  isPreviewing: boolean;
+  setIsPreviewing: (preview: boolean) => void;
+  isGlobalStylesOpen: boolean;
+  setGlobalStylesOpen: (open: boolean) => void;
+  
+  // Connection status
+  connectionStatus: 'connected' | 'disconnected' | 'connecting';
+  
+  // Stage management
+  stages: any[];
+  activeStageId: string;
+  stageActions: {
+    setActiveStage: (id: string) => void;
+    addStage: () => void;
+    removeStage: (id: string) => void;
+  };
+  
+  // Block actions object
+  blockActions: {
+    setSelectedBlockId: (id: string | null) => void;
+    addBlock: (type: BlockType) => Promise<string>;
+    updateBlock: (id: string, content: any) => Promise<void>;
+    deleteBlock: (id: string) => Promise<void>;
+  };
+  
+  // Computed properties
+  computed: {
+    currentBlocks: Block[];
+    selectedBlock: Block | null;
+    stageCount: number;
+  };
+  
+  // UI state object
+  uiState: {
+    isPreviewing: boolean;
+    isGlobalStylesOpen: boolean;
+  };
+  
+  // Quiz state
+  quizState: {
+    userName: string;
+    answers: any[];
+    isQuizCompleted: boolean;
+  };
+  
+  // Database mode
+  databaseMode: 'local' | 'supabase';
+  
+  // Template actions
+  templateActions: {
+    loadTemplate: (templateId: string) => void;
+    saveTemplate: () => void;
+  };
+  
+  // Funnel ID
+  funnelId: string;
+  
+  // Supabase enabled
+  isSupabaseEnabled: boolean;
+  
+  // Persistence actions
+  persistenceActions: {
+    save: () => Promise<void>;
+    load: () => Promise<void>;
+  };
+}
+
+const EditorContext = createContext<EditorContextType | null>(null);
+
+// Initial state
 const initialState: EditorState = {
+  blocks: [],
   selectedBlockId: null,
   isPreviewing: false,
-  blocks: [],
   isGlobalStylesOpen: false,
 };
 
-const editorReducer = (state: EditorState, action: EditorAction): EditorState => {
+// Reducer
+function editorReducer(state: EditorState, action: EditorAction): EditorState {
   switch (action.type) {
     case 'SET_BLOCKS':
       return { ...state, blocks: action.payload };
@@ -37,68 +128,37 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
     default:
       return state;
   }
-};
-
-const EditorContext = createContext<EditorContextType | undefined>(undefined);
+}
 
 export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);
 
-  // Mock stages data
-  const stages: FunnelStage[] = useMemo(() => [
-    {
-      id: 'stage-1',
-      name: 'Introduction',
-      type: 'intro',
-      order: 1,
-      blocks: [],
-      metadata: { description: 'Quiz introduction stage' }
-    },
-    {
-      id: 'stage-2', 
-      name: 'Questions',
-      type: 'questions',
-      order: 2,
-      blocks: [],
-      metadata: { description: 'Quiz questions stage' }
-    },
-    {
-      id: 'stage-3',
-      name: 'Results',
-      type: 'results',
-      order: 3,
-      blocks: [],
-      metadata: { description: 'Quiz results stage' }
-    }
-  ], []);
-
-  const activeStageId = 'stage-1';
-
-  // Basic block operations
-  const addBlock = async (type: BlockType): Promise<string> => {
+  // Block management functions
+  const addBlock = useCallback(async (type: BlockType): Promise<string> => {
     const newBlock: Block = {
-      id: `block-${Date.now()}-${Math.random()}`,
+      id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type,
       content: {},
-      order: state.blocks.length,
       properties: {},
+      order: state.blocks.length,
     };
+    
     dispatch({ type: 'ADD_BLOCK', payload: newBlock });
     return newBlock.id;
-  };
+  }, [state.blocks.length]);
 
-  const updateBlock = async (id: string, content: any): Promise<void> => {
-    dispatch({ type: 'UPDATE_BLOCK', payload: { id, updates: { content } } });
-  };
+  const updateBlock = useCallback(async (id: string, content: any): Promise<void> => {
+    dispatch({ type: 'UPDATE_BLOCK', payload: { id, updates: content } });
+  }, []);
 
-  const deleteBlock = async (id: string): Promise<void> => {
+  const deleteBlock = useCallback(async (id: string): Promise<void> => {
     dispatch({ type: 'DELETE_BLOCK', payload: id });
-  };
+  }, []);
 
-  const reorderBlocks = async (startIndex: number, endIndex: number): Promise<void> => {
-    const newBlocks = [...state.blocks];
-    const [removed] = newBlocks.splice(startIndex, 1);
-    newBlocks.splice(endIndex, 0, removed);
+  const reorderBlocks = useCallback((startIndex: number, endIndex: number) => {
+    const newBlocks = Array.from(state.blocks);
+    const [reorderedItem] = newBlocks.splice(startIndex, 1);
+    newBlocks.splice(endIndex, 0, reorderedItem);
     
     const reorderedBlocks = newBlocks.map((block, index) => ({
       ...block,
@@ -106,103 +166,148 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }));
     
     dispatch({ type: 'SET_BLOCKS', payload: reorderedBlocks });
-  };
+  }, [state.blocks]);
 
-  const addBlockAtPosition = async (type: BlockType): Promise<string> => {
-    return addBlock(type);
-  };
-
-  const setSelectedBlockId = (id: string | null) => {
+  const setSelectedBlockId = useCallback((id: string | null) => {
     dispatch({ type: 'SET_SELECTED_BLOCK', payload: id });
-  };
+  }, []);
 
-  const setGlobalStylesOpen = (open: boolean) => {
+  const setIsPreviewing = useCallback((preview: boolean) => {
+    dispatch({ type: 'SET_PREVIEW_MODE', payload: preview });
+  }, []);
+
+  const setGlobalStylesOpen = useCallback((open: boolean) => {
     dispatch({ type: 'SET_GLOBAL_STYLES_OPEN', payload: open });
-  };
+  }, []);
+
+  // Mock data for stages (21 stages)
+  const stages = useMemo(() => {
+    return Array.from({ length: 21 }, (_, i) => ({
+      id: `step-${i + 1}`,
+      name: `Etapa ${i + 1}`,
+      order: i + 1,
+      blocksCount: 0,
+      metadata: { blocksCount: 0 },
+    }));
+  }, []);
 
   // Stage actions
-  const stageActions = {
-    setActiveStage: (stageId: string) => void console.log('Set active stage:', stageId),
-    loadTemplateByStep: async (stepNumber: number) => void console.log('Load template:', stepNumber),
-    isLoadingTemplate: false,
-  };
+  const stageActions = useMemo(() => ({
+    setActiveStage: (id: string) => {
+      console.log('Setting active stage:', id);
+    },
+    addStage: () => {
+      console.log('Add stage not implemented');
+    },
+    removeStage: (id: string) => {
+      console.log('Remove stage not implemented:', id);
+    },
+  }), []);
 
-  // Block actions
-  const blockActions = {
+  // Block actions object
+  const blockActions = useMemo(() => ({
     setSelectedBlockId,
     addBlock,
     updateBlock,
     deleteBlock,
-    reorderBlocks,
-    addBlockAtPosition,
-  };
+  }), [setSelectedBlockId, addBlock, updateBlock, deleteBlock]);
 
-  // Computed values
-  const computed = {
+  // Computed properties
+  const computed = useMemo(() => ({
     currentBlocks: state.blocks,
     selectedBlock: state.blocks.find(block => block.id === state.selectedBlockId) || null,
     stageCount: stages.length,
-    totalBlocks: state.blocks.length,
-  };
+  }), [state.blocks, state.selectedBlockId, stages.length]);
 
-  // UI state
-  const uiState = {
+  // UI state object
+  const uiState = useMemo(() => ({
     isPreviewing: state.isPreviewing,
     isGlobalStylesOpen: state.isGlobalStylesOpen,
-    setIsPreviewing: (isPreviewing: boolean) => dispatch({ type: 'SET_PREVIEW_MODE', payload: isPreviewing }),
-    viewportSize: 'desktop' as const,
-    setViewportSize: (size: 'desktop' | 'tablet' | 'mobile') => void console.log('Set viewport:', size),
-  };
+  }), [state.isPreviewing, state.isGlobalStylesOpen]);
 
   // Quiz state
-  const quizState = {
+  const quizState = useMemo(() => ({
     userName: '',
     answers: [],
     isQuizCompleted: false,
-    strategicAnswers: {},
-    setUserNameFromInput: (name: string) => void console.log('Set username:', name),
-    answerStrategicQuestion: (questionId: string, answer: any) => void console.log('Answer:', questionId, answer),
-  };
+  }), []);
 
   // Template actions
-  const templateActions = {
-    loadTemplate: (templateId: string) => void console.log('Load template:', templateId),
-    saveTemplate: () => void console.log('Save template'),
-    loadTemplateByStep: async (stepNumber: number) => void console.log('Load template by step:', stepNumber),
-    isLoadingTemplate: false,
-  };
+  const templateActions = useMemo(() => ({
+    loadTemplate: (templateId: string) => {
+      console.log('Loading template:', templateId);
+    },
+    saveTemplate: () => {
+      console.log('Saving template');
+    },
+  }), []);
 
   // Persistence actions
-  const persistenceActions = {
-    save: async () => void console.log('Save'),
-    load: async () => void console.log('Load'),
-    saveFunnel: async () => void console.log('Save funnel'),
-  };
+  const persistenceActions = useMemo(() => ({
+    save: async () => {
+      console.log('Saving editor state');
+    },
+    load: async () => {
+      console.log('Loading editor state');
+    },
+  }), []);
 
   const contextValue: EditorContextType = {
+    // Core state
     state,
     dispatch,
+    
+    // Block actions
     addBlock,
     updateBlock,
     deleteBlock,
     reorderBlocks,
-    setSelectedBlockId,
-    addBlockAtPosition,
-    setGlobalStylesOpen,
+    
+    // Selection
+    selectedBlock: computed.selectedBlock,
     selectedBlockId: state.selectedBlockId,
-    stages,
-    activeStageId,
-    stageActions,
-    blockActions,
-    computed,
-    uiState,
-    quizState,
-    databaseMode: 'memory' as const,
-    templateActions,
-    funnelId: 'default-funnel',
-    isSupabaseEnabled: false,
-    persistenceActions,
+    setSelectedBlockId,
+    
+    // UI state
+    isPreviewing: state.isPreviewing,
+    setIsPreviewing,
+    isGlobalStylesOpen: state.isGlobalStylesOpen,
+    setGlobalStylesOpen,
+    
+    // Connection status
     connectionStatus: 'connected' as const,
+    
+    // Stage management
+    stages,
+    activeStageId: 'step-1',
+    stageActions,
+    
+    // Block actions object
+    blockActions,
+    
+    // Computed properties
+    computed,
+    
+    // UI state object
+    uiState,
+    
+    // Quiz state
+    quizState,
+    
+    // Database mode
+    databaseMode: 'local' as const,
+    
+    // Template actions
+    templateActions,
+    
+    // Funnel ID
+    funnelId: 'default-funnel',
+    
+    // Supabase enabled
+    isSupabaseEnabled: false,
+    
+    // Persistence actions
+    persistenceActions,
   };
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;
@@ -210,7 +315,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 export const useEditor = (): EditorContextType => {
   const context = useContext(EditorContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useEditor must be used within an EditorProvider');
   }
   return context;

@@ -1,6 +1,5 @@
-
 import { useCallback } from 'react';
-import { Block, EditorConfig, EditableContent } from '@/types/editor';
+import { EditorBlock, EditorConfig, EditableContent } from '@/types/editor';
 import { EditorActions } from '@/types/editorActions';
 import { getDefaultContentForType } from '@/utils/editorDefaults';
 import { generateId } from '@/utils/idGenerator';
@@ -10,14 +9,13 @@ export const useEditorBlocks = (
   setConfig: (config: EditorConfig) => void
 ): EditorActions => {
   const addBlock = useCallback(
-    (type: Block['type']) => {
+    (type: EditorBlock['type']) => {
       const blocksLength = config.blocks.length;
-      const newBlock: Block = {
+      const newBlock: EditorBlock = {
         id: generateId(),
         type,
         content: getDefaultContentForType(type),
         order: blocksLength,
-        properties: {},
       };
 
       setConfig({
@@ -34,7 +32,7 @@ export const useEditorBlocks = (
     (id: string, content: Partial<EditableContent>) => {
       setConfig({
         ...config,
-        blocks: (config.blocks.map((block: Block) =>
+        blocks: (config.blocks.map((block: EditorBlock) =>
           block.id === id ? { ...block, content: { ...block.content, ...content } } : block
         ) as any),
       });
@@ -47,8 +45,8 @@ export const useEditorBlocks = (
       setConfig({
         ...config,
         blocks: (config.blocks
-          .filter((block: Block) => block.id !== id)
-          .map((block: Block, index: number) => ({
+          .filter((block: EditorBlock) => block.id !== id)
+          .map((block: EditorBlock, index: number) => ({
             ...block,
             order: index,
           })) as any),
@@ -65,7 +63,7 @@ export const useEditorBlocks = (
 
       setConfig({
         ...config,
-        blocks: (newBlocks.map((block: Block, index: number) => ({
+        blocks: (newBlocks.map((block: EditorBlock, index: number) => ({
           ...block,
           order: index,
         })) as any),

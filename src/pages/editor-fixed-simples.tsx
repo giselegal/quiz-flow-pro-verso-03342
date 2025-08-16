@@ -125,7 +125,7 @@ export default function EditorFixedSimples() {
               ].map((comp) => (
                 <button
                   key={comp.type}
-                  onClick={() => activeStageId && addBlock(comp.type as any)}
+                  onClick={() => activeStageId && addBlock(comp.type, activeStageId)}
                   className={`w-full p-2 text-left text-xs rounded-lg border transition-colors ${comp.color}`}
                   disabled={!activeStageId}
                 >
