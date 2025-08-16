@@ -1,8 +1,8 @@
 import React from 'react';
-import EditorFixedMinimal from '@/components/editor-fixed/EditorFixedMinimal';
+import { EditorWithPreview } from './editor';
 
 const EditorFixedPage: React.FC = () => {
-  return <EditorFixedMinimal />;
+  return <EditorWithPreview />;
 };
 
 export default EditorFixedPage;
