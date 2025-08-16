@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Simplified Strategic Questions Template
 export const strategicQuestionsTemplate = {
   id: 'strategic-questions',

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { QuizQuestion } from './quiz';
 import { ResultPageConfig } from './resultPageConfig';
 

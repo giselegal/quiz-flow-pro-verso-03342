@@ -51,11 +51,11 @@ export interface ConsolidatedEditorReturn {
 /**
  * Consolidated editor hook that replaces both useEditor and direct EditorContext usage
  */
-export const useConsolidatedEditor = (): ConsolidatedEditorReturn => {
+export const useUnifiedEditor = (): ConsolidatedEditorReturn => {
   const context = useContext(EditorContext);
   
   if (!context) {
-    throw new Error('useConsolidatedEditor must be used within EditorProvider');
+    throw new Error('useUnifiedEditor must be used within EditorProvider');
   }
 
   const {
@@ -160,14 +160,14 @@ export const useConsolidatedEditor = (): ConsolidatedEditorReturn => {
 };
 
 /**
- * @deprecated Use useConsolidatedEditor instead
+ * @deprecated Use useUnifiedEditor instead
  * This is kept for backward compatibility during migration
  */
 export const useEditor = (): Partial<ConsolidatedEditorReturn> => {
-  console.warn('useEditor is deprecated. Use useConsolidatedEditor instead.');
+  console.warn('useEditor is deprecated. Use useUnifiedEditor instead.');
   
   try {
-    return useConsolidatedEditor();
+    return useUnifiedEditor();
   } catch (error) {
     // Fallback to simple editor if EditorContext is not available
     console.warn('EditorContext not available, using fallback editor');
@@ -201,4 +201,4 @@ export const useEditor = (): Partial<ConsolidatedEditorReturn> => {
   }
 };
 
-export default useConsolidatedEditor;
+export default useUnifiedEditor;
