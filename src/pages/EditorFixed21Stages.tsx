@@ -43,18 +43,113 @@ const EditorFixed21Stages: React.FC = () => {
   const [userResponses, setUserResponses] = useState<Record<string, any>>({});
   const [isPreviewMode, setIsPreviewMode] = useState(false);
 
+  // Function to adapt template blocks to BlockRenderer format
+  const adaptBlockTemplate = (templateBlock: any): Block => {
+    const baseBlock = {
+      id: templateBlock.id || `block-${Date.now()}`,
+      type: templateBlock.type,
+      properties: templateBlock.properties || {},
+      content: {},
+      position: templateBlock.position || 0
+    };
+
+    // Map properties to content based on block type
+    switch (templateBlock.type) {
+      case 'text':
+      case 'text-inline':
+        baseBlock.content = {
+          text: templateBlock.properties?.content || 'Novo texto'
+        };
+        break;
+        
+      case 'quiz-intro-header':
+      case 'quiz-header':
+        baseBlock.content = {
+          title: templateBlock.properties?.title || '',
+          subtitle: templateBlock.properties?.subtitle || ''
+        };
+        break;
+        
+      case 'lead-form':
+        baseBlock.content = {
+          title: templateBlock.properties?.title || 'Digite seu nome',
+          placeholder: templateBlock.properties?.placeholder || 'Nome',
+          buttonText: templateBlock.properties?.submitText || 'Continuar',
+          validationMessage: templateBlock.properties?.validationMessage || 'Por favor, preencha este campo'
+        };
+        break;
+        
+      case 'options-grid':
+        baseBlock.content = {
+          title: templateBlock.properties?.title || 'Selecione suas opções',
+          options: templateBlock.properties?.options || []
+        };
+        break;
+        
+      case 'button':
+      case 'button-inline':
+        baseBlock.content = {
+          text: templateBlock.properties?.text || 'Clique aqui',
+          url: templateBlock.properties?.url || '#'
+        };
+        break;
+        
+      case 'image':
+      case 'image-inline':
+      case 'image-display-inline':
+        baseBlock.content = {
+          url: templateBlock.properties?.src || templateBlock.properties?.imageUrl || '',
+          alt: templateBlock.properties?.alt || 'Imagem',
+          caption: templateBlock.properties?.caption || ''
+        };
+        break;
+        
+      case 'result-display':
+        baseBlock.content = {
+          title: templateBlock.properties?.title || 'Seu Resultado',
+          description: templateBlock.properties?.description || 'Resultado personalizado'
+        };
+        break;
+        
+      case 'offer-cta':
+        baseBlock.content = {
+          title: templateBlock.properties?.title || 'Oferta Especial',
+          description: templateBlock.properties?.description || 'Não perca esta oportunidade',
+          buttonText: templateBlock.properties?.buttonText || 'Aproveitar Oferta'
+        };
+        break;
+        
+      default:
+        baseBlock.content = {
+          text: templateBlock.properties?.content || templateBlock.properties?.text || 'Conteúdo padrão'
+        };
+        break;
+    }
+
+    return baseBlock;
+  };
+
   // Load template when step changes
   useEffect(() => {
     const stepNumber = parseInt(selectedStep.replace('step-', ''));
     if (stepNumber && stepNumber >= 1 && stepNumber <= 21) {
-      const template = getStepTemplate(stepNumber);
-      const blocksWithIds = template.map((block, index) => ({
-        ...block,
-        id: block.id || `block-${stepNumber}-${index}`,
-        position: index
-      }));
-      setCurrentBlocks(blocksWithIds);
-      console.log(`📋 Carregando template da etapa ${stepNumber}:`, blocksWithIds);
+      try {
+        const template = getStepTemplate(stepNumber);
+        const adaptedBlocks = template.map((block, index) => {
+          const adaptedBlock = adaptBlockTemplate({
+            ...block,
+            id: block.id || `block-${stepNumber}-${index}`,
+            position: index
+          });
+          return adaptedBlock;
+        });
+        
+        setCurrentBlocks(adaptedBlocks);
+        console.log(`📋 Carregando template adaptado da etapa ${stepNumber}:`, adaptedBlocks);
+      } catch (error) {
+        console.error(`❌ Erro ao carregar template da etapa ${stepNumber}:`, error);
+        setCurrentBlocks([]);
+      }
     }
   }, [selectedStep]);
 

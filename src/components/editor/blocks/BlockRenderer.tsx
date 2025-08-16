@@ -115,14 +115,14 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({
 // Individual Block Components
 
 const TextBlock: React.FC<{ block: Block; isPreviewMode: boolean }> = ({ block }) => {
-  const { text = 'Novo texto' } = block.content;
+  const { text = 'Novo texto' } = block.content || {};
   const { 
     fontSize = 'text-base', 
     fontWeight = 'font-normal',
     textAlign = 'text-left',
     textColor = '#000000',
     backgroundColor = 'transparent'
-  } = block.properties;
+  } = block.properties || {};
 
   return (
     <div 
@@ -149,7 +149,7 @@ const QuizHeaderBlock: React.FC<{ block: Block; stepNumber?: number }> = ({ bloc
     showProgress = true,
     progressColor = '#B89B7A',
     backgroundColor = '#FAF9F7'
-  } = block.properties;
+  } = block.properties || {};
 
   const calculatedProgress = progressValue || ((stepNumber || 1) / 21) * 100;
 
@@ -195,13 +195,13 @@ const LeadFormBlock: React.FC<{
     placeholder = 'Nome',
     buttonText = 'Continuar',
     validationMessage = 'Por favor, digite seu nome para continuar'
-  } = block.content;
+  } = block.content || {};
   
   const { 
     required = true,
     backgroundColor = '#ffffff',
     textColor = '#432818'
-  } = block.properties;
+  } = block.properties || {};
 
   const [inputValue, setInputValue] = useState(userResponses['userName'] || '');
   const [showValidation, setShowValidation] = useState(false);
@@ -283,7 +283,7 @@ const OptionsGridBlock: React.FC<{
   const { 
     title = 'Selecione suas opções',
     options = []
-  } = block.content;
+  } = block.content || {};
   
   const { 
     requiredSelections = 3,
@@ -292,7 +292,7 @@ const OptionsGridBlock: React.FC<{
     columns = 2,
     showBorders = true,
     borderRadius = 8
-  } = block.properties;
+  } = block.properties || {};
 
   const responseKey = `step_${stepNumber}_selections`;
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
@@ -403,12 +403,12 @@ const OptionsGridBlock: React.FC<{
 };
 
 const ButtonBlock: React.FC<{ block: Block; isPreviewMode: boolean }> = ({ block, isPreviewMode }) => {
-  const { text = 'Clique aqui', url = '#' } = block.content;
+  const { text = 'Clique aqui', url = '#' } = block.content || {};
   const { 
     disabled = false,
     backgroundColor = 'hsl(var(--primary))',
     textColor = 'hsl(var(--primary-foreground))'
-  } = block.properties;
+  } = block.properties || {};
 
   return (
     <div className="p-2">
@@ -432,12 +432,12 @@ const ImageBlock: React.FC<{ block: Block }> = ({ block }) => {
     url = '', 
     alt = 'Imagem',
     caption = ''
-  } = block.content;
+  } = block.content || {};
   
   const { 
     borderRadius = 8,
     maxWidth = '100%'
-  } = block.properties;
+  } = block.properties || {};
 
   if (!url) {
     return (
@@ -469,7 +469,7 @@ const ImageBlock: React.FC<{ block: Block }> = ({ block }) => {
 };
 
 const SpacerBlock: React.FC<{ block: Block }> = ({ block }) => {
-  const { height = 40 } = block.properties;
+  const { height = 40 } = block.properties || {};
   
   return (
     <div 
