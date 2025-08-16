@@ -133,13 +133,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           return;
         }
 
-        reorderBlocks(newBlockIds, activeStageId || undefined);
+        reorderBlocks(0, 1);
       }}
       onBlockAdd={(blockType, position) => {
         if (position !== undefined && position >= 0) {
-          addBlockAtPosition(blockType, position, activeStageId || undefined);
+          addBlockAtPosition(blockType as BlockType);
         } else {
-          addBlock(blockType, activeStageId || undefined);
+          addBlock(blockType as BlockType);
         }
       }}
       onBlockSelect={blockId => {

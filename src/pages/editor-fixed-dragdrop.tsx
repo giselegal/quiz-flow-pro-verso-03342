@@ -195,13 +195,13 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                 return;
               }
 
-              reorderBlocks(newBlockIds, activeStage || undefined);
+              reorderBlocks(0, 1);
             }}
             onBlockAdd={(blockType, position) => {
               if (position !== undefined && position >= 0) {
-                addBlockAtPosition(blockType, position, activeStage || undefined);
+                addBlockAtPosition(blockType as BlockType);
               } else {
-                addBlock(blockType, activeStage || undefined);
+                addBlock(blockType as BlockType);
               }
             }}
             onBlockSelect={blockId => {
@@ -246,7 +246,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
                     <SmartComponentsPanel
                       onAddComponent={(componentType: string) => {
                         if (activeStage) {
-                          addBlock(componentType, activeStage);
+                          addBlock(componentType as BlockType);
                         }
                       }}
                     />

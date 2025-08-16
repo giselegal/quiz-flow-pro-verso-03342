@@ -204,17 +204,15 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   
   const {
     components: supabaseComponents,
-    isLoading: supabaseLoading,
     error: supabaseError,
     loadComponents,
     addComponent: addSupabaseComponent,
     updateComponent: updateSupabaseComponent,
     deleteComponent: deleteSupabaseComponent,
     reorderComponents,
-    // Add missing properties with default values
-    connectionStatus = 'disconnected',
-    isSaving = false,
-    lastSync = null
+    connectionStatus,
+    isSaving,
+    lastSync
   } = supabaseHook;
 
   useEffect(() => {
@@ -304,7 +302,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const [removed] = reorderedIds.splice(sourceIndex, 1);
         reorderedIds.splice(destinationIndex, 0, removed);
         
-        await reorderComponents(reorderedIds);
+        await reorderComponents(sourceIndex, destinationIndex);
       } catch (error) {
         console.error('Failed to reorder blocks in Supabase:', error);
       }
@@ -356,7 +354,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }), []);
 
   const blockActions = useMemo(() => ({
-    getBlocksForStage: (stageId: string) => state.blocks,
+    getBlocksForStage: (_stageId: string) => state.blocks,
     addBlock,
     updateBlock, 
     deleteBlock,

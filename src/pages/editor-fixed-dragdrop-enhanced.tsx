@@ -10,6 +10,7 @@ import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel'
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
+import { BlockType } from '@/types/editor';
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
@@ -182,7 +183,7 @@ const EditorFixedEnhancedPage: React.FC = () => {
         }
 
         console.log('✅ Reordenação válida, aplicando...');
-        reorderBlocks(newBlockIds, activeStageId || undefined);
+        reorderBlocks(0, 1);
       }}
       onBlockAdd={(blockType, position) => {
         if (isPreviewing) {
@@ -191,9 +192,9 @@ const EditorFixedEnhancedPage: React.FC = () => {
         }
 
         if (position !== undefined && position >= 0) {
-          addBlockAtPosition(blockType, position, activeStageId || undefined);
+          addBlockAtPosition(blockType as BlockType);
         } else {
-          addBlock(blockType, activeStageId || undefined);
+          addBlock(blockType as BlockType);
         }
       }}
       onBlockSelect={blockId => {

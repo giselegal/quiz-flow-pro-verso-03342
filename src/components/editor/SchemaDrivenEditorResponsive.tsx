@@ -4,6 +4,7 @@ import { useFunnelNavigation } from '@/hooks/useFunnelNavigation';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
+import { BlockType } from '@/types/editor';
 // FunnelNavigation removido - componente não mais disponível
 // import { FunnelNavigation } from '../editor-fixed/FunnelNavigation';
 
@@ -26,7 +27,7 @@ const SchemaDrivenEditorResponsive: React.FC<SchemaDrivenEditorResponsiveProps> 
 
   const handleComponentSelect = async (type: string) => {
     try {
-      const blockId = await addBlock(type);
+      const blockId = await addBlock(type as BlockType);
       if (blockId) {
         setSelectedBlockId(blockId);
         console.log(`➕ Bloco ${type} adicionado via editor responsivo`);
