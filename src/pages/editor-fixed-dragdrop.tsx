@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react';
 import { CanvasDropZone } from '@/components/editor/canvas/CanvasDropZone';
 import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
-import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
 import IntegratedQuizEditor from '@/components/editor/quiz-specific/IntegratedQuizEditor';
 import SmartComponentsPanel from '@/components/editor/smart-panel/SmartComponentsPanel';
 import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
@@ -112,72 +111,73 @@ const EditorContent: React.FC<{
                 isPreviewing={isPreviewing}
               />
 
-              {/* Main 4-Column Layout - ORDEM CORRETA */}
-              <FourColumnLayout
-                // Coluna 1: Etapas (esquerda)
-                stagesPanel={
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-4">🎯 Etapas do Funil</h3>
-                    {Array.from({ length: 21 }, (_, i) => (
-                      <button
-                        key={i + 1}
-                        onClick={() => setActiveStage(`step-${i + 1}`)}
-                        className={`w-full p-2 mb-2 text-left rounded transition-colors ${
-                          activeStage === `step-${i + 1}`
-                            ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                            : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span>Etapa {i + 1}</span>
-                          {activeStage === `step-${i + 1}` && (
-                            <span className="text-xs bg-blue-200 px-2 py-1 rounded">Ativa</span>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                }
+              {/* DEBUG: Layout simples sem Resizable */}
+              <div className="flex-1 flex">
+                {/* Coluna 1: Etapas */}
+                <div className="w-1/5 p-4 bg-blue-100 border-2 border-blue-500">
+                  <h3 className="text-lg font-semibold mb-4 text-blue-600">🎯 Etapas do Funil</h3>
+                  <p className="text-xs text-blue-500 mb-2">DEBUG: Coluna 1 funcionando</p>
+                  {Array.from({ length: 21 }, (_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => setActiveStage(`step-${i + 1}`)}
+                      className={`w-full p-2 mb-2 text-left rounded transition-colors ${
+                        activeStage === `step-${i + 1}`
+                          ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                          : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span>Etapa {i + 1}</span>
+                        {activeStage === `step-${i + 1}` && (
+                          <span className="text-xs bg-blue-200 px-2 py-1 rounded">Ativa</span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
                 
-                // Coluna 2: Componentes (centro-esquerda)
-                componentsPanel={
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-4">🧱 Componentes</h3>
-                    <SmartComponentsPanel />
-                  </div>
-                }
+                {/* Coluna 2: Componentes */}
+                <div className="w-1/5 p-4 bg-green-100 border-2 border-green-500">
+                  <h3 className="text-lg font-semibold mb-4 text-green-600">🧱 Componentes</h3>
+                  <p className="text-xs text-green-500 mb-2">DEBUG: Coluna 2 funcionando</p>
+                  <SmartComponentsPanel />
+                </div>
                 
-                // Coluna 3: Canvas Principal (centro-direita) - IMPORTANTE!
-                canvas={
+                {/* Coluna 3: Canvas */}
+                <div className="w-2/5 bg-red-100 border-2 border-red-500">
                   <div className="h-full flex flex-col">
                     <div className="bg-white border-b p-3">
-                      <h3 className="text-lg font-semibold">🎨 Canvas - {activeStage}</h3>
+                      <h3 className="text-lg font-semibold text-red-600">🎨 Canvas - {activeStage}</h3>
                       <p className="text-sm text-gray-600">
                         {currentBlocks.length} bloco(s) • Viewport: {viewportSize}
                       </p>
+                      <p className="text-xs text-red-500">DEBUG: Canvas está renderizando!</p>
                     </div>
                     <div className="flex-1 overflow-auto bg-gray-100 p-4">
-                      <CanvasDropZone
-                        blocks={currentBlocks}
-                        selectedBlockId={selectedBlockId}
-                        onSelectBlock={selectBlock}
-                        onUpdateBlock={updateBlock}
-                        onDeleteBlock={deleteBlock}
-                      />
+                      <div className="bg-yellow-200 p-4 border-2 border-yellow-500 rounded">
+                        <p className="text-yellow-800 font-bold">DEBUG: Canvas Drop Zone Wrapper</p>
+                        <CanvasDropZone
+                          blocks={currentBlocks}
+                          selectedBlockId={selectedBlockId}
+                          onSelectBlock={selectBlock}
+                          onUpdateBlock={updateBlock}
+                          onDeleteBlock={deleteBlock}
+                        />
+                      </div>
                     </div>
                   </div>
-                }
+                </div>
                 
-                // Coluna 4: Propriedades (direita)
-                propertiesPanel={
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-4">⚙️ Propriedades</h3>
-                    <IntegratedPropertiesPanel
-                      selectedBlock={currentBlocks.find(block => block.id === selectedBlockId) || null}
-                    />
-                  </div>
-                }
-              />
+                {/* Coluna 4: Propriedades */}
+                <div className="w-1/5 p-4 bg-purple-100 border-2 border-purple-500">
+                  <h3 className="text-lg font-semibold mb-4 text-purple-600">⚙️ Propriedades</h3>
+                  <p className="text-xs text-purple-500 mb-2">DEBUG: Coluna 4 funcionando</p>
+                  <IntegratedPropertiesPanel
+                    selectedBlock={currentBlocks.find(block => block.id === selectedBlockId) || null}
+                  />
+                </div>
+              </div>
 
               {/* Modal Overlays */}
               {showFunnelSettings && (

@@ -52,7 +52,7 @@ const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
-const EditorFixed21Stages = lazy(() => import('./pages/EditorFixed21Stages'));
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed-dragdrop'));
 
 
 // Loading component
@@ -137,20 +137,16 @@ function App() {
                   )}
                 />
 
-                 {/* Editor Fixed Route - Full 21 Stages Version */}
+                 {/* Editor Fixed Route - Full 4 Columns Version */}
                  <ProtectedRoute
                    path="/editor-fixed"
                    component={() => {
-                     console.log('🚀 App: Carregando EditorFixed21Stages (21 stages version)');
+                     console.log('🚀 App: Carregando EditorFixedPageWithDragDrop (4-column version)');
                      return (
                        <Suspense fallback={<PageLoading />}>
                          <ErrorBoundary>
                            <EditorProvider>
-                             <FunnelsProvider debug={true}>
-                               <ScrollSyncProvider>
-                                 <EditorFixed21Stages />
-                               </ScrollSyncProvider>
-                             </FunnelsProvider>
+                             <EditorFixedPageWithDragDrop />
                            </EditorProvider>
                          </ErrorBoundary>
                        </Suspense>

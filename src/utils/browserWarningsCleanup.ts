@@ -16,40 +16,42 @@ export interface BrowserWarning {
 const KNOWN_WARNINGS: BrowserWarning[] = [
   {
     type: 'feature',
-    message: 'Unrecognized feature: \'vr\'',
+    message: "Unrecognized feature: 'vr'",
     severity: 'low',
-    solution: 'Remove feature from permissions policy'
-  },
-  {
-    type: 'feature', 
-    message: 'Unrecognized feature: \'ambient-light-sensor\'',
-    severity: 'low',
-    solution: 'Remove feature from permissions policy'
+    solution: 'Remove feature from permissions policy',
   },
   {
     type: 'feature',
-    message: 'Unrecognized feature: \'battery\'',
+    message: "Unrecognized feature: 'ambient-light-sensor'",
     severity: 'low',
-    solution: 'Remove feature from permissions policy'
+    solution: 'Remove feature from permissions policy',
+  },
+  {
+    type: 'feature',
+    message: "Unrecognized feature: 'battery'",
+    severity: 'low',
+    solution: 'Remove feature from permissions policy',
   },
   {
     type: 'iframe',
-    message: 'An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing',
+    message:
+      'An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing',
     severity: 'medium',
-    solution: 'Review iframe sandbox configuration'
+    solution: 'Review iframe sandbox configuration',
   },
   {
     type: 'pixel',
     message: '[Meta Pixel] - Multiple pixels with conflicting versions were detected',
     severity: 'low',
-    solution: 'Consolidate Facebook Pixel instances'
+    solution: 'Consolidate Facebook Pixel instances',
   },
   {
     type: 'preload',
-    message: 'The resource <URL> was preloaded using link preload but not used within a few seconds',
+    message:
+      'The resource <URL> was preloaded using link preload but not used within a few seconds',
     severity: 'low',
-    solution: 'Review preload strategy'
-  }
+    solution: 'Review preload strategy',
+  },
 ];
 
 /**
@@ -67,7 +69,7 @@ export const cleanUnrecognizedFeatures = (): void => {
         .replace(/battery=\(\)[,\s]*/g, '')
         .replace(/,\s*$/, '') // Remove trailing comma
         .replace(/^\s*,/, ''); // Remove leading comma
-      
+
       if (cleanContent !== content) {
         meta.setAttribute('content', cleanContent);
         console.log('🧹 Cleaned unrecognized features from Permissions-Policy');
@@ -86,11 +88,11 @@ export const cleanIframeSandbox = (): void => {
     const iframes = document.querySelectorAll('iframe[sandbox]');
     iframes.forEach(iframe => {
       const sandbox = iframe.getAttribute('sandbox') || '';
-      
+
       // Se tem tanto allow-scripts quanto allow-same-origin, é potencialmente inseguro
       if (sandbox.includes('allow-scripts') && sandbox.includes('allow-same-origin')) {
         console.warn('🔒 Iframe with potentially unsafe sandbox detected:', iframe);
-        
+
         // Opcional: remover allow-same-origin se não for crítico
         // const safeSandbox = sandbox.replace(/allow-same-origin\s*/g, '').trim();
         // iframe.setAttribute('sandbox', safeSandbox);
@@ -109,14 +111,14 @@ export const cleanFacebookPixels = (): void => {
     // Verifica se há múltiplas instâncias do fbq
     if (typeof window !== 'undefined' && (window as any).fbq) {
       const fbq = (window as any).fbq;
-      
+
       // Log do status do pixel
       console.log('📊 Facebook Pixel status:', {
         loaded: fbq.loaded,
         version: fbq.version,
-        queueLength: fbq.queue?.length || 0
+        queueLength: fbq.queue?.length || 0,
       });
-      
+
       // Não há muito que possamos fazer aqui além de logar
       // O warning geralmente vem de scripts externos carregando o pixel
     }
@@ -131,18 +133,19 @@ export const cleanFacebookPixels = (): void => {
 export const optimizePreloadStrategy = (): void => {
   try {
     const preloadLinks = document.querySelectorAll('link[rel="preload"]');
-    
+
     preloadLinks.forEach(link => {
       const href = link.getAttribute('href');
       const as = link.getAttribute('as');
-      
+
       // Adiciona timeout para preloads não críticos
       if (as === 'image' && href) {
         // Verifica se a imagem foi usada após um delay
         setTimeout(() => {
-          const isUsed = document.querySelector(`img[src="${href}"]`) || 
-                        document.querySelector(`[style*="${href}"]`);
-          
+          const isUsed =
+            document.querySelector(`img[src="${href}"]`) ||
+            document.querySelector(`[style*="${href}"]`);
+
           if (!isUsed) {
             console.log('📱 Preloaded resource not used quickly:', href);
             // Opcional: remover o preload se não for usado
@@ -164,19 +167,19 @@ export const suppressKnownWarnings = (): void => {
     // Backup dos métodos originais
     const originalWarn = console.warn;
     const originalError = console.error;
-    
+
     // Lista de padrões de warning para suprimir
     const suppressPatterns = [
       /Unrecognized feature: '(vr|ambient-light-sensor|battery)'/,
       /Multiple pixels with conflicting versions/,
-      /preloaded using link preload but not used/
+      /preloaded using link preload but not used/,
     ];
-    
+
     // Override console.warn
     console.warn = (...args) => {
       const message = args.join(' ');
       const shouldSuppress = suppressPatterns.some(pattern => pattern.test(message));
-      
+
       if (!shouldSuppress) {
         originalWarn.apply(console, args);
       } else {
@@ -186,12 +189,12 @@ export const suppressKnownWarnings = (): void => {
         }
       }
     };
-    
+
     // Override console.error para warnings específicos
     console.error = (...args) => {
       const message = args.join(' ');
       const shouldSuppress = suppressPatterns.some(pattern => pattern.test(message));
-      
+
       if (!shouldSuppress) {
         originalError.apply(console, args);
       }
@@ -206,24 +209,24 @@ export const suppressKnownWarnings = (): void => {
  */
 export const cleanupBrowserWarnings = (): void => {
   console.log('🧹 Starting browser warnings cleanup...');
-  
+
   // Executa limpezas imediatamente
   cleanUnrecognizedFeatures();
   cleanIframeSandbox();
   cleanFacebookPixels();
-  
+
   // Suprimir warnings conhecidos (apenas em desenvolvimento)
   if (process.env.NODE_ENV === 'development') {
     suppressKnownWarnings();
   }
-  
+
   // Otimizar preloads após DOM carregar
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', optimizePreloadStrategy);
   } else {
     optimizePreloadStrategy();
   }
-  
+
   console.log('✅ Browser warnings cleanup completed');
 };
 
