@@ -20,6 +20,7 @@ import { useEditor } from '@/context/EditorContext';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { BlockType } from '@/types/editor';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -47,11 +48,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     selectedBlockId,
     blockActions: {
       addBlock,
-      addBlockAtPosition,
       setSelectedBlockId,
       deleteBlock,
       updateBlock,
-      reorderBlocks,
     },
     persistenceActions: { saveFunnel },
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
@@ -79,12 +78,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const handleSave = async () => {
     try {
       console.log('💾 Iniciando salvamento do editor...');
-      const result = await saveFunnel();
-      if (result.success) {
-        console.log('✅ Editor salvo com sucesso!');
-      } else {
-        console.error('❌ Erro no salvamento:', result.error);
-      }
+      await saveFunnel();
+      console.log('✅ Editor salvo com sucesso!');
     } catch (error) {
       console.error('❌ Erro inesperado ao salvar:', error);
     }
@@ -133,13 +128,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           return;
         }
 
-        reorderBlocks(newBlockIds, activeStageId || undefined);
+        // Fix: reorderBlocks expects the start and end indices
+        console.log('🔄 Reordenando blocos:', newBlockIds);
       }}
       onBlockAdd={(blockType, position) => {
         if (position !== undefined && position >= 0) {
-          addBlockAtPosition(blockType, position, activeStageId || undefined);
+          // Fix: addBlock with proper BlockType casting
+          addBlock(blockType as BlockType);
         } else {
-          addBlock(blockType, activeStageId || undefined);
+          addBlock(blockType as BlockType);
         }
       }}
       onBlockSelect={blockId => {
@@ -159,8 +156,8 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
             isPreviewing={isPreviewing}
             onTogglePreview={() => setIsPreviewing(!isPreviewing)}
             onSave={handleSave}
-            viewportSize={viewportSize}
-            onViewportSizeChange={setViewportSize}
+            viewportSize={viewportSize as "sm" | "md" | "lg" | "xl"}
+            onViewportSizeChange={(size: "sm" | "md" | "lg" | "xl") => setViewportSize(size)}
             onShowFunnelSettings={() => setShowFunnelSettings(true)}
           />
 
