@@ -7,6 +7,23 @@
 
 import { perfLogger } from '@/utils/performanceLogger';
 import { getBlockComponent as originalGetBlockComponent } from '@/config/enhancedBlockRegistry';
+import React from 'react';
+
+// Fallback component para casos de erro
+const FallbackComponent: React.FC<any> = ({ type, ...props }) => {
+  return React.createElement('div', { 
+    className: "p-4 border-2 border-dashed border-gray-300 rounded bg-gray-50" 
+  }, [
+    React.createElement('h4', { 
+      key: 'title',
+      className: "font-medium text-gray-600 mb-2" 
+    }, `Componente não encontrado: ${type || 'unknown'}`),
+    React.createElement('pre', { 
+      key: 'props',
+      className: "text-xs text-gray-500 overflow-auto" 
+    }, JSON.stringify(props, null, 2))
+  ]);
+};
 
 // Cache de componentes para evitar re-lookups
 const componentCache = new Map<string, React.ComponentType<any>>();
@@ -18,7 +35,7 @@ const failureCache = new Set<string>();
 export const getOptimizedBlockComponent = (type: string): React.ComponentType<any> => {
   if (!type) {
     perfLogger.warn('Block type not provided, using fallback');
-    return originalGetBlockComponent('');
+    return FallbackComponent;
   }
 
   // Cache hit - melhor performance
@@ -29,13 +46,21 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
   // Se já sabemos que falha, não tenta novamente
   if (failureCache.has(type)) {
     perfLogger.debug(`Using cached failure for type: ${type}`);
-    return originalGetBlockComponent('');
+    return FallbackComponent;
   }
 
   perfLogger.startMeasure(`get-component-${type}`);
   
   try {
     const component = originalGetBlockComponent(type);
+    
+    if (!component) {
+      // Cache a falha e retorna fallback
+      failureCache.add(type);
+      perfLogger.endMeasure(`get-component-${type}`);
+      perfLogger.debug(`Component not found, using fallback: ${type}`);
+      return FallbackComponent;
+    }
     
     // Cache o resultado para próximas chamadas
     componentCache.set(type, component);
@@ -52,7 +77,7 @@ export const getOptimizedBlockComponent = (type: string): React.ComponentType<an
     
     perfLogger.endMeasure(`get-component-${type}`);
     
-    return originalGetBlockComponent('');
+    return FallbackComponent;
   }
 };
 

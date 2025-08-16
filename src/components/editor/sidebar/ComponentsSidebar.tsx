@@ -52,18 +52,14 @@ export const getMarginClass = (value, type) => {
 
 export const ComponentsSidebar: React.FC<ComponentsSidebarProps> = ({ onComponentSelect }) => {
   const components = [
-    { type: 'header', label: 'Header' },
-    { type: 'text', label: 'Text' },
-    { type: 'image', label: 'Image' },
-    { type: 'cta', label: 'Call to Action' },
-    { type: 'question', label: 'Question' },
-    { type: 'choice-single', label: 'Single Choice' },
-    { type: 'choice-multiple', label: 'Multiple Choice' },
-    { type: 'input-text', label: 'Text Input' },
-    { type: 'input-email', label: 'Email Input' },
-    { type: 'input-phone', label: 'Phone Input' },
-    { type: 'progress-bar', label: 'Progress Bar' },
-    { type: 'navigation', label: 'Navigation' },
+    { type: 'text-inline', label: 'Texto' },
+    { type: 'heading', label: 'Título' },
+    { type: 'image-display-inline', label: 'Imagem' },
+    { type: 'button-inline', label: 'Botão' },
+    { type: 'quiz-intro-header', label: 'Cabeçalho Quiz' },
+    { type: 'form-input', label: 'Campo de Entrada' },
+    { type: 'lead-form', label: 'Formulário Lead' },
+    { type: 'decorative-bar-inline', label: 'Barra Decorativa' },
   ];
 
   return (
