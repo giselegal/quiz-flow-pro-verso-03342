@@ -5,6 +5,7 @@ import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { CanvasDropZone } from './canvas/CanvasDropZone';
 import { EnhancedUniversalPropertiesPanel } from '@/components/universal/EnhancedUniversalPropertiesPanel';
+import { FunnelStagesPanel } from './funnel/FunnelStagesPanel';
 import ComponentsSidebar from './sidebar/ComponentsSidebar';
 import FunnelNavbar from '../live-editor/navbar/FunnelNavbar';
 
@@ -136,19 +137,28 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
         onViewportSizeChange={setViewportSize}
       />
 
-      {/* Main Editor Layout */}
+      {/* Main Editor Layout - 4 Columns */}
       <ResizablePanelGroup direction="horizontal" className="flex-1">
-        {/* Sidebar de componentes */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
-          <div className="h-full border-r border-gray-200">
+        {/* Column 1: Stages Panel */}
+        <ResizablePanel defaultSize={15} minSize={12} maxSize={25} className="min-w-[200px]">
+          <div className="h-full border-r border-gray-200 bg-card/50">
+            <FunnelStagesPanel />
+          </div>
+        </ResizablePanel>
+
+        <ResizableHandle withHandle />
+
+        {/* Column 2: Components Sidebar */}
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={30} className="min-w-[250px]">
+          <div className="h-full border-r border-gray-200 bg-card/30">
             <ComponentsSidebar onComponentSelect={handleComponentSelect} />
           </div>
         </ResizablePanel>
 
         <ResizableHandle withHandle />
 
-        {/* Canvas principal */}
-        <ResizablePanel defaultSize={55}>
+        {/* Column 3: Canvas Principal */}
+        <ResizablePanel defaultSize={40} minSize={30} className="min-w-[400px]">
           <div className="h-full p-4 bg-gray-50 overflow-auto">
             <div className={getCanvasClassName()}>
               <CanvasDropZone
@@ -164,9 +174,9 @@ const EnhancedLiveEditor: React.FC<EnhancedLiveEditorProps> = ({
 
         <ResizableHandle withHandle />
 
-        {/* Painel de propriedades */}
-        <ResizablePanel defaultSize={25} minSize={20} maxSize={35}>
-          <div className="h-full border-l border-gray-200">
+        {/* Column 4: Properties Panel */}
+        <ResizablePanel defaultSize={25} minSize={20} maxSize={35} className="min-w-[300px]">
+          <div className="h-full border-l border-gray-200 bg-card/30">
             {selectedBlock && !isPreviewing ? (
               <EnhancedUniversalPropertiesPanel
                 selectedBlock={selectedBlock}
