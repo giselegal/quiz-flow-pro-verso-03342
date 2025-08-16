@@ -100,10 +100,10 @@ export const HOOKS_STATS = {
     'useUnifiedEditor (compatibility layer)',
     'useEditor (compatibility layer)', 
     'Hooks with @ts-nocheck (7 hooks marked for migration)',
-  ]
-};
+  ],
+  performance_improvements: {
     'memory_leaks': 'prevented',
-    'schema_conflicts': 'unified',
+    'schema_conflicts': 'unified', 
     'type_errors': 'reduced',
   },
   lastOptimized: new Date().toISOString(),

@@ -18,10 +18,7 @@
  */
 
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { EditorContext } from '../../context/EditorContext';
-import { UnifiedBlock, UnifiedStage, UnifiedFunnel, UnifiedProperty, ValidationService } from '../../types/master-schema';
-import { UnifiedPersistenceService } from '../../services/unified-persistence';
-import { PerformanceManager } from '../../utils/performance-manager';
+import { UnifiedBlock, UnifiedStage, UnifiedFunnel } from '../../types/master-schema';
 
 // =============================================================================
 // TYPES AND INTERFACES
@@ -114,8 +111,8 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     // Note: PerformanceManager and UnifiedPersistenceService will be created later
   });
 
-  // Context and services
-  const editorContext = useContext(EditorContext);
+  // Context (will be implemented later)
+  // const editorContext = useContext(EditorContext);
   
   // Core state
   const [state, setState] = useState<UnifiedEditorState>({
@@ -146,15 +143,15 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
     };
   }, []);
 
-  // Helper to add timeout with automatic cleanup
-  const safeTimeout = useCallback((callback: () => void, delay: number) => {
-    const timeout = setTimeout(() => {
-      timeoutsRef.current.delete(timeout);
-      callback();
-    }, delay);
-    timeoutsRef.current.add(timeout);
-    return timeout;
-  }, []);
+  // Helper to add timeout with automatic cleanup (for future use)
+  // const safeTimeout = useCallback((callback: () => void, delay: number) => {
+  //   const timeout = setTimeout(() => {
+  //     timeoutsRef.current.delete(timeout);
+  //     callback();
+  //   }, delay);
+  //   timeoutsRef.current.add(timeout);
+  //   return timeout;
+  // }, []);
 
   // =============================================================================
   // FUNNEL OPERATIONS
@@ -227,7 +224,9 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       id: `funnel_${Date.now()}`,
       name,
       stages: [],
-      settings: {}
+      settings: {},
+      version: '1.0',
+      status: 'draft'
     };
 
     setState(prev => ({
@@ -257,7 +256,9 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       blocks: [],
       blockOrder: [],
       settings: {},
-      order: state.funnel.stages.length
+      order: state.funnel.stages.length,
+      version: '1.0',
+      active: true
     };
 
     const updatedFunnel = { ...state.funnel };
@@ -312,7 +313,10 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
       properties: {},
       children: [],
       order: stage.blocks.length,
-      events: {}
+      events: {},
+      version: '1.0',
+      visible: true,
+      locked: false
     };
 
     const updatedStage = { ...stage };
@@ -548,7 +552,7 @@ export const useUnifiedEditor = (): UnifiedEditorReturn => {
  * Legacy useEditor hook for backward compatibility
  * @deprecated Use useUnifiedEditor instead
  */
-export const useEditor = () => {
+export const useEditor = (): any => {
   const unified = useUnifiedEditor();
   
   console.warn('useEditor is deprecated. Use useUnifiedEditor instead.');
@@ -557,13 +561,13 @@ export const useEditor = () => {
 };
 
 /**
- * Legacy useUnifiedEditor hook for backward compatibility  
+ * Legacy useConsolidatedEditor hook for backward compatibility  
  * @deprecated Use useUnifiedEditor instead
  */
-export const useUnifiedEditor = () => {
+export const useConsolidatedEditor = (): any => {
   const unified = useUnifiedEditor();
   
-  console.warn('useUnifiedEditor is deprecated. Use useUnifiedEditor instead.');
+  console.warn('useConsolidatedEditor is deprecated. Use useUnifiedEditor instead.');
   
   return {
     blocks: unified.activeBlocks,
