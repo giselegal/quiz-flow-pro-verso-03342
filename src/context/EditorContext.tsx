@@ -1,5 +1,6 @@
 import { Block, BlockType } from '@/types/editor';
 import { EditorAction, EditorState } from '@/types/editorTypes';
+import { ValidationService } from '@/types/validation';
 import React, {
   createContext,
   useCallback,
@@ -120,47 +121,10 @@ interface EditorContextType {
   };
 
   // Template validation
-  validation: {
-    validateTemplate: (blocks: Array<{
-      id: string;
-      type: string;
-      values: Record<string, unknown>;
-    }>) => {
-      isValid: boolean;
-      errors: Record<string, Record<string, Array<{path: string; message: string}>>>;
-    };
-    validateStep: (stepId: string, blocks: Array<{
-      id: string;
-      type: string;
-      values: Record<string, unknown>;
-    }>) => {
-      isValid: boolean;
-      errors: Record<string, Record<string, Array<{path: string; message: string}>>>;
-    };
-    validateTemplateField: (
-      blockId: string,
-      fieldId: string,
-      value: unknown,
-      blockType: string
-    ) => {
-      success: boolean;
-      errors?: Array<{path: string; message: string}>;
-    };
-    hasTemplateErrors: boolean;
-  };
+  validation: ValidationService;
 }
 
-const EditorContext = createContext<{
-  state: EditorState;
-  dispatch: React.Dispatch<EditorAction>;
-  addBlock: (type: BlockType) => void;
-  removeBlock: (id: string) => void;
-  updateBlock: (id: string, updates: Partial<Block>) => void;
-  moveBlockUp: (id: string) => void; 
-  moveBlockDown: (id: string) => void;
-  validationErrors: Record<string, string[]>;
-  isValid: boolean;
-} | null>(null);
+const EditorContext = createContext<EditorContextType | null>(null);
 
 // Initial state
 const initialState: EditorState = {
@@ -473,12 +437,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: st
   );
 
   // Integrar sistema de validação
-  const { 
-    validateTemplate,
-    validateStep, 
-    validateTemplateField,
-    hasErrors: hasTemplateErrors 
-  } = useTemplateValidation();
+  const validation = useTemplateValidation();
 
   const contextValue: EditorContextType = {
     // Core state
@@ -545,12 +504,7 @@ export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: st
     persistenceActions,
 
     // Validation
-    validation: {
-      validateTemplate,
-      validateStep,
-      validateTemplateField,
-      hasTemplateErrors
-    },
+    validation,
   };
 
   return <EditorContext.Provider value={contextValue}>{children}</EditorContext.Provider>;

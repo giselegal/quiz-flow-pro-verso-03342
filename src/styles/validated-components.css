@@ -80,9 +80,9 @@
 .template-validation-feedback {
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid #FEE2E2;
+  border: 1px solid #fee2e2;
   border-radius: 8px;
-  background-color: #FEF2F2;
+  background-color: #fef2f2;
 }
 
 .template-validation-block {
@@ -95,7 +95,7 @@
 
 .template-validation-block h4 {
   margin: 0 0 8px;
-  color: #991B1B;
+  color: #991b1b;
   font-size: 14px;
   font-weight: 600;
 }
@@ -107,7 +107,7 @@
 
 .field-name {
   font-weight: 500;
-  color: #991B1B;
+  color: #991b1b;
 }
 
 .error-list {
@@ -115,6 +115,6 @@
 }
 
 .error-message {
-  color: #B91C1C;
+  color: #b91c1c;
   font-size: 13px;
 }

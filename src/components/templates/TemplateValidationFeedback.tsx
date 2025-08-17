@@ -2,13 +2,13 @@ import React from 'react';
 import '../../styles/validated-components.css';
 
 interface TemplateValidationFeedbackProps {
-  errors: Record<string, Record<string, Array<{path: string; message: string}>>>;
+  errors: Record<string, Record<string, Array<{ path: string; message: string }>>>;
   showAllErrors?: boolean;
 }
 
 export const TemplateValidationFeedback: React.FC<TemplateValidationFeedbackProps> = ({
   errors,
-  showAllErrors = false
+  showAllErrors = false,
 }) => {
   // Se não houver erros, não renderiza nada
   if (!errors || Object.keys(errors).length === 0) {
@@ -25,13 +25,13 @@ export const TemplateValidationFeedback: React.FC<TemplateValidationFeedbackProp
               <li key={field}>
                 <span className="field-name">{field}:</span>
                 <ul className="error-list">
-                  {fieldErrors.map((error, index) => (
+                  {fieldErrors.map((error, index) =>
                     showAllErrors || index === 0 ? (
                       <li key={index} className="error-message">
                         {error.message}
                       </li>
                     ) : null
-                  ))}
+                  )}
                 </ul>
               </li>
             ))}

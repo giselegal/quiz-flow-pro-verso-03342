@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useTemplateValidation } from '../../hooks/useTemplateValidation';
-import { TemplateValidationFeedback } from '../templates/TemplateValidationFeedback';
-import { ValidatedPropertyPanel } from '../editor/ValidatedPropertyPanel';
 import '../../styles/validated-components.css';
+import { ValidatedPropertyPanel } from '../editor/ValidatedPropertyPanel';
+import { TemplateValidationFeedback } from '../templates/TemplateValidationFeedback';
 
 const initialBlocks = [
   {
@@ -10,40 +10,38 @@ const initialBlocks = [
     type: 'text-block',
     values: {
       content: '',
-      fontSize: '16px'
-    }
+      fontSize: '16px',
+    },
   },
   {
     id: 'question-1',
     type: 'question-block',
     values: {
       question: '',
-      options: []
-    }
+      options: [],
+    },
   },
   {
     id: 'button-1',
     type: 'button-block',
     values: {
       text: '',
-      action: ''
-    }
-  }
+      action: '',
+    },
+  },
 ];
 
 export const TemplateExample: React.FC = () => {
   const [blocks, setBlocks] = useState(initialBlocks);
   const [stepId] = useState('step-1');
-  const [validationErrors, setValidationErrors] = useState<Record<string, Record<string, Array<{path: string; message: string}>>>>({});
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, Record<string, Array<{ path: string; message: string }>>>
+  >({});
   const { validateStep, validateTemplateField } = useTemplateValidation();
 
   const handleBlockChange = (blockId: string, values: Record<string, unknown>) => {
     setBlocks(prevBlocks =>
-      prevBlocks.map(block =>
-        block.id === blockId
-          ? { ...block, values }
-          : block
-      )
+      prevBlocks.map(block => (block.id === blockId ? { ...block, values } : block))
     );
 
     // Validar o bloco quando seus valores mudam
@@ -81,10 +79,7 @@ export const TemplateExample: React.FC = () => {
         Validar Etapa
       </button>
 
-      <TemplateValidationFeedback 
-        errors={validationErrors}
-        showAllErrors
-      />
+      <TemplateValidationFeedback errors={validationErrors} showAllErrors />
 
       <style jsx>{`
         .template-example {
@@ -95,13 +90,13 @@ export const TemplateExample: React.FC = () => {
 
         .template-example h2 {
           margin: 0 0 24px;
-          color: #1F2937;
+          color: #1f2937;
         }
 
         .template-example-block {
           margin-bottom: 24px;
           padding: 16px;
-          background: #F9FAFB;
+          background: #f9fafb;
           border-radius: 8px;
         }
 
@@ -114,7 +109,7 @@ export const TemplateExample: React.FC = () => {
         .validate-button {
           margin-top: 24px;
           padding: 8px 16px;
-          background-color: #3B82F6;
+          background-color: #3b82f6;
           color: white;
           border: none;
           border-radius: 4px;
@@ -124,7 +119,7 @@ export const TemplateExample: React.FC = () => {
         }
 
         .validate-button:hover {
-          background-color: #2563EB;
+          background-color: #2563eb;
         }
       `}</style>
     </div>
