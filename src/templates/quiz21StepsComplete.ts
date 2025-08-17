@@ -25,6 +25,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         subtitle: 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.',
         description:
           'Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.',
+        showLogo: true,
+        showProgress: false,
+        showNavigation: false,
       },
       properties: {
         backgroundColor: '#F8F9FA',
@@ -106,6 +109,9 @@ export const QUIZ_STYLE_21_STEPS_TEMPLATE: Record<string, Block[]> = {
         title: 'Questão 1 de 10',
         subtitle: 'Descubra seu Estilo Predominante',
         description: 'Responda com honestidade para obter um resultado mais preciso.',
+        showLogo: true,
+        showProgress: true,
+        showNavigation: true,
       },
       properties: {
         backgroundColor: '#F8F9FA',
