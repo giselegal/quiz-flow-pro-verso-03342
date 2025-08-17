@@ -10,8 +10,8 @@ import { TemplateRenderer } from '../templates/TemplateRenderer';
 export const Step21Template: React.FC = () => {
   return (
     <TemplateRenderer 
-      templateId="step-21"
-      fallbackStep={21}
+      stepNumber={21}
+      sessionId="demo"
     />
   );
 };
