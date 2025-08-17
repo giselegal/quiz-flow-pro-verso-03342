@@ -1,10 +1,12 @@
 import React from 'react';
 import { useEditor } from '@/context/EditorContext';
+import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
 
 const DebugStep02: React.FC = () => {
   const { computed, stageActions, blockActions, activeStageId } = useEditor();
 
-  // TODO: Substituir por TemplateRenderer ou template JSON
+  // Obtém o template da etapa 2 do template completo
+  const step02Template = QUIZ_STYLE_21_STEPS_TEMPLATE['step-2'] || [];
   const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
   const debugInfo = {
