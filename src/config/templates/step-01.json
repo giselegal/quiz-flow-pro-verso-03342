@@ -6,12 +6,7 @@
     "description": "Introdução ao Quiz de Estilo",
     "category": "quiz-intro",
     "type": "intro",
-    "tags": [
-      "quiz",
-      "style",
-      "intro",
-      "gisele-galvao"
-    ],
+    "tags": ["quiz", "style", "intro", "gisele-galvao"],
     "createdAt": "2025-08-11T03:45:03.511Z",
     "updatedAt": "2025-08-11T03:45:03.511Z",
     "author": "giselegal"
@@ -209,18 +204,9 @@
   },
   "analytics": {
     "trackingId": "step-01-quiz-intro",
-    "events": [
-      "page_view",
-      "form_submit",
-      "validation_error",
-      "completion"
-    ],
+    "events": ["page_view", "form_submit", "validation_error", "completion"],
     "utmParams": true,
-    "customEvents": [
-      "component_mounted",
-      "lcp_rendered",
-      "user_interaction"
-    ]
+    "customEvents": ["component_mounted", "lcp_rendered", "user_interaction"]
   },
   "logic": {
     "navigation": {
@@ -235,13 +221,8 @@
       "errorHandling": "inline"
     },
     "stateManagement": {
-      "localState": [
-        "nome",
-        "error"
-      ],
-      "globalState": [
-        "userName"
-      ]
+      "localState": ["nome", "error"],
+      "globalState": ["userName"]
     },
     "scoring": null,
     "conditions": null

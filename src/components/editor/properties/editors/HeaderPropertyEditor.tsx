@@ -96,42 +96,42 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
     logoUrl:
       block.content?.logoUrl ||
       block.properties?.logoUrl ||
-      'https://via.placeholder.com/120x60?text=Logo',
-    logoAlt: block.content?.logoAlt || block.properties?.logoAlt || 'Logo',
+      'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+    logoAlt: block.content?.logoAlt || block.properties?.logoAlt || 'Logo Gisele Galvão',
     logoWidth: block.content?.logoWidth || block.properties?.logoWidth || 120,
-    logoHeight: block.content?.logoHeight || block.properties?.logoHeight || 60,
-    showLogo: block.content?.showLogo || block.properties?.showLogo || true,
+    logoHeight: block.content?.logoHeight || block.properties?.logoHeight || 50,
+    showLogo: block.content?.showLogo ?? block.properties?.showLogo ?? true,
     logoScale: block.content?.logoScale || block.properties?.logoScale || 100,
 
     // Progresso
-    showProgress: block.content?.showProgress || block.properties?.showProgress || true,
-    progressValue: block.content?.progressValue || block.properties?.progressValue || 15,
+    showProgress: block.content?.showProgress ?? block.properties?.showProgress ?? true,
+    progressValue: block.content?.progressValue || block.properties?.progressValue || 1,
     progressMax: block.content?.progressMax || block.properties?.progressMax || 21,
     progressBarThickness:
-      block.content?.progressBarThickness || block.properties?.progressBarThickness || 4,
+      block.content?.progressBarThickness || block.properties?.progressBarThickness || 6,
     progressBarColor:
       block.content?.progressBarColor || block.properties?.progressBarColor || '#B89B7A',
 
     // Navegação
-    showNavigation: block.content?.showNavigation || block.properties?.showNavigation || false,
-    showBackButton: block.content?.showBackButton || block.properties?.showBackButton || true,
+    showNavigation: block.content?.showNavigation ?? block.properties?.showNavigation ?? false,
+    showBackButton: block.content?.showBackButton ?? block.properties?.showBackButton ?? true,
 
     // Layout
-    isSticky: block.content?.isSticky || block.properties?.isSticky || false,
+    isSticky: block.content?.isSticky ?? block.properties?.isSticky ?? false,
     containerScale: block.content?.containerScale || block.properties?.containerScale || 100,
 
     // Margens e padding
     marginTop: block.content?.marginTop || block.properties?.marginTop || 0,
-    marginBottom: block.content?.marginBottom || block.properties?.marginBottom || 16,
+    marginBottom: block.content?.marginBottom || block.properties?.marginBottom || 24,
     marginLeft: block.content?.marginLeft || block.properties?.marginLeft || 0,
     marginRight: block.content?.marginRight || block.properties?.marginRight || 0,
-    paddingTop: block.content?.paddingTop || block.properties?.paddingTop || 24,
-    paddingBottom: block.content?.paddingBottom || block.properties?.paddingBottom || 24,
+    paddingTop: block.content?.paddingTop || block.properties?.paddingTop || 16,
+    paddingBottom: block.content?.paddingBottom || block.properties?.paddingBottom || 16,
     paddingLeft: block.content?.paddingLeft || block.properties?.paddingLeft || 24,
     paddingRight: block.content?.paddingRight || block.properties?.paddingRight || 24,
 
     // Cores
-    textColor: block.content?.textColor || block.properties?.textColor || '#6B4F43',
+    textColor: block.content?.textColor || block.properties?.textColor || '#432818',
     backgroundColor:
       block.content?.backgroundColor || block.properties?.backgroundColor || '#FFFFFF',
     containerBackgroundColor:
@@ -315,68 +315,36 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                         {properties.progressValue}/{properties.progressMax}
                       </Badge>
                     </div>
-                    <Slider
-                      value={[properties.progressValue]}
-                      onValueChange={([value]) => handlePropertyUpdate('progressValue', value)}
+                    <PropertySlider
+                      label=""
+                      value={properties.progressValue}
+                      onChange={value => handlePropertyUpdate('progressValue', value)}
                       min={0}
                       max={properties.progressMax}
                       step={1}
-                      className="w-full"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs">Máximo</Label>
-                      <Badge variant="outline" className="text-xs">
-                        {properties.progressMax}
-                      </Badge>
-                    </div>
-                    <Slider
-                      value={[properties.progressMax]}
-                      onValueChange={([value]) => handlePropertyUpdate('progressMax', value)}
-                      min={1}
-                      max={50}
-                      step={1}
-                      className="w-full"
-                    />
-                  </div>
+                  <PropertySlider
+                    label="Total de Etapas"
+                    value={properties.progressMax}
+                    onChange={value => handlePropertyUpdate('progressMax', value)}
+                    min={1}
+                    max={50}
+                    step={1}
+                  />
 
                   <PropertySlider
                     label="Espessura da Barra"
                     value={properties.progressBarThickness}
                     onChange={value => handlePropertyUpdate('progressBarThickness', value)}
                     min={2}
-                    max={12}
+                    max={20}
                     step={1}
                     unit="px"
                   />
                 </div>
               )}
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="showBackButton">Botão Voltar</Label>
-                  <p className="text-xs text-gray-500">Exibe o botão de retorno</p>
-                </div>
-                <Switch
-                  id="showBackButton"
-                  checked={properties.showBackButton}
-                  onCheckedChange={checked => handlePropertyUpdate('showBackButton', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="isSticky">Fixar no Topo</Label>
-                  <p className="text-xs text-gray-500">Header fica fixo ao rolar</p>
-                </div>
-                <Switch
-                  id="isSticky"
-                  checked={properties.isSticky}
-                  onCheckedChange={checked => handlePropertyUpdate('isSticky', checked)}
-                />
-              </div>
             </div>
           </TabsContent>
 
@@ -384,8 +352,8 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="showLogo">Mostrar Logo</Label>
-                  <p className="text-xs text-gray-500">Exibe a logo no header</p>
+                  <Label htmlFor="showLogo">Exibir Logo</Label>
+                  <p className="text-xs text-gray-500">Mostra/oculta o logo no header</p>
                 </div>
                 <Switch
                   id="showLogo"
@@ -396,64 +364,44 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
               {properties.showLogo && (
                 <>
-                  <div>
-                    <Label className="text-xs">URL da Logo</Label>
-                    <div className="flex gap-2 mt-1">
-                      <Input
-                        value={properties.logoUrl}
-                        onChange={e => handlePropertyUpdate('logoUrl', e.target.value)}
-                        placeholder="https://..."
-                        className="text-xs"
-                      />
-                      <Button variant="outline" size="sm">
-                        <Upload className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
+                  <PropertyInput
+                    label="URL do Logo"
+                    value={properties.logoUrl}
+                    onChange={value => handlePropertyUpdate('logoUrl', value)}
+                    placeholder="https://exemplo.com/logo.png"
+                  />
 
                   <PropertyInput
                     label="Texto Alternativo"
                     value={properties.logoAlt}
                     onChange={value => handlePropertyUpdate('logoAlt', value)}
-                    placeholder="Descrição da logo"
+                    placeholder="Descrição do logo"
                   />
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs">Largura</Label>
-                      <Badge variant="outline" className="text-xs">
-                        {properties.logoWidth}px
-                      </Badge>
-                    </div>
-                    <Slider
-                      value={[properties.logoWidth]}
-                      onValueChange={([value]) => handlePropertyUpdate('logoWidth', value)}
+                  <div className="grid grid-cols-2 gap-4">
+                    <PropertySlider
+                      label="Largura"
+                      value={properties.logoWidth}
+                      onChange={value => handlePropertyUpdate('logoWidth', value)}
                       min={50}
-                      max={400}
+                      max={300}
                       step={10}
-                      className="w-full"
+                      unit="px"
                     />
-                  </div>
 
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs">Altura</Label>
-                      <Badge variant="outline" className="text-xs">
-                        {properties.logoHeight}px
-                      </Badge>
-                    </div>
-                    <Slider
-                      value={[properties.logoHeight]}
-                      onValueChange={([value]) => handlePropertyUpdate('logoHeight', value)}
+                    <PropertySlider
+                      label="Altura"
+                      value={properties.logoHeight}
+                      onChange={value => handlePropertyUpdate('logoHeight', value)}
                       min={30}
                       max={200}
                       step={5}
-                      className="w-full"
+                      unit="px"
                     />
                   </div>
 
                   <PropertySlider
-                    label="Escala da Logo"
+                    label="Escala do Logo"
                     value={properties.logoScale}
                     onChange={value => handlePropertyUpdate('logoScale', value)}
                     min={50}
@@ -462,7 +410,6 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                     unit="%"
                   />
 
-                  {/* Preview da logo */}
                   <div className="mt-3 p-2 border rounded">
                     <div className="text-xs mb-2 text-[#6B4F43]">Preview:</div>
                     <img
@@ -475,7 +422,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                       }}
                       className="object-contain border"
                       onError={e => {
-                        e.currentTarget.src = 'https://via.placeholder.com/120x60?text=Logo';
+                        e.currentTarget.src = 'https://via.placeholder.com/120x50?text=Logo';
                       }}
                     />
                   </div>

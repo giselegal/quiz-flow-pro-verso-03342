@@ -12,7 +12,10 @@ const { execSync } = require('child_process');
 function findProblematicFiles() {
   try {
     // Busca por imports getStepXXTemplate em arquivos .ts e .tsx
-    const result = execSync(`grep -r "getStep.*Template.*from" src/ --include="*.ts" --include="*.tsx" -l`, { encoding: 'utf8' });
+    const result = execSync(
+      `grep -r "getStep.*Template.*from" src/ --include="*.ts" --include="*.tsx" -l`,
+      { encoding: 'utf8' }
+    );
     return result.split('\n').filter(line => line.trim().length > 0);
   } catch (error) {
     console.log('Nenhum arquivo encontrado ou erro na busca');
@@ -27,7 +30,8 @@ function fixFile(filePath) {
     let changed = false;
 
     // Remove TODOS os imports de getStepXXTemplate
-    const importRegex = /import\s*\{\s*[^}]*getStep\d+Template[^}]*\}\s*from\s*['"]\@?[^'"]*Step\d+Template['"]\s*;?\n?/g;
+    const importRegex =
+      /import\s*\{\s*[^}]*getStep\d+Template[^}]*\}\s*from\s*['"]\@?[^'"]*Step\d+Template['"]\s*;?\n?/g;
     if (content.match(importRegex)) {
       content = content.replace(importRegex, '');
       changed = true;
@@ -36,7 +40,10 @@ function fixFile(filePath) {
     // Remove chamadas para getStepXXTemplate() e substitui por array vazio ou comentário
     const callRegex = /const\s+\w+\s*=\s*getStep\d+Template\([^)]*\)\s*;?/g;
     if (content.match(callRegex)) {
-      content = content.replace(callRegex, '// TODO: Migrado para TemplateRenderer - remover se não necessário');
+      content = content.replace(
+        callRegex,
+        '// TODO: Migrado para TemplateRenderer - remover se não necessário'
+      );
       changed = true;
     }
 
@@ -55,7 +62,6 @@ function fixFile(filePath) {
       return true;
     }
     return false;
-
   } catch (error) {
     console.error(`❌ Erro ao processar ${filePath}:`, error.message);
     return false;
@@ -68,7 +74,7 @@ function main() {
   console.log('');
 
   const problematicFiles = findProblematicFiles();
-  
+
   if (problematicFiles.length === 0) {
     console.log('✅ Nenhum arquivo com imports problemáticos encontrado!');
     return;
