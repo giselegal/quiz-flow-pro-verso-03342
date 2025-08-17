@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,6 @@ import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Block } from '@/types/editor';
 import { Eye, Image, Layout, Palette, Settings, Type, Upload } from 'lucide-react';
-import React, { useState } from 'react';
 import { PropertyColorPicker } from '../components/PropertyColorPicker';
 import { PropertyInput } from '../components/PropertyInput';
 import { PropertySlider } from '../components/PropertySlider';
@@ -1099,4 +1099,3 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
       </CardContent>
     </Card>
   );
-};
