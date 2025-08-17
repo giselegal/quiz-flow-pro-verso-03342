@@ -7,7 +7,8 @@ import { Eye, Image, Layout, Mouse, Save, Settings, Type } from 'lucide-react';
 import { useState } from 'react';
 
 /**
- * Editor Fixed - Versão Simplificada e Funcional
+ * 🏆 EDITOR PRINCIPAL: EditorFixedPageWithDragDrop 
+ * Localização: src/pages/editor-fixed.tsx
  *
  * Editor de 4 colunas com layout responsivo baseado em ResizablePanel
  * Funcionalidades principais:
@@ -17,9 +18,12 @@ import { useState } from 'react';
  * - Painel de propriedades
  * - Toolbar com ações principais
  */
-const EditorFixed = () => {
-  const { currentStep, setCurrentStep, selectedComponent, setSelectedComponent } = useEditor();
+const EditorFixedPageWithDragDrop = () => {
+  const { state } = useEditor();
 
+  // Estado local para o editor
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedComponent, setSelectedComponent] = useState<any>(null);
   const [viewMode, setViewMode] = useState('desktop');
   const [showPreview, setShowPreview] = useState(false);
 
@@ -289,4 +293,4 @@ const EditorFixed = () => {
   );
 };
 
-export default EditorFixed;
+export default EditorFixedPageWithDragDrop;

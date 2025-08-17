@@ -15,8 +15,8 @@ import QuizFlowPage from './pages/QuizFlowPage';
 import ResultPage from './pages/ResultPage';
 
 // 🎨 EDITORES MAIS COMPLETOS - Lazy load
-// Temporariamente usando editor-fixed (simplificado) até resolver o problema
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed')); // Editor simplicado
+// 🏆 EDITOR PRINCIPAL: /editor-fixed (src/pages/editor-fixed.tsx → EditorFixedPageWithDragDrop)
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed')); // 🏆 EDITOR CORRETO
 const SchemaDrivenEditorResponsive = lazy(
   () => import('./components/editor/SchemaDrivenEditorResponsive')
 );
