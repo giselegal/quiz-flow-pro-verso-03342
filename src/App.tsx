@@ -41,7 +41,7 @@ const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'
 const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
 const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
 // Removed: EditorFixedPageWithDragDrop - file deleted
-const EditorFixedDebug = lazy(() => import('./pages/editor-fixed-debug'));
+// Removed: EditorFixedDebug - file moved to backup
 // 🚀 EDITOR COM SISTEMA DE PREVIEW INTEGRADO
 const EditorWithPreview = lazy(() =>
   import('./pages/editor').then(module => ({ default: module.EditorWithPreview }))
@@ -49,7 +49,7 @@ const EditorWithPreview = lazy(() =>
 
 const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));
-const EditorDebugMinimal = lazy(() => import('./pages/editor-debug-minimal'));
+// Removed: EditorDebugMinimal - file moved to backup
 const TestBasico = lazy(() => import('./pages/test-basico'));
 const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
 
@@ -158,14 +158,20 @@ function App() {
                   }}
                 />
 
-                {/* Editor Fixed Debug Route */}
+                {/* Editor Fixed Debug Route - Redirects to main editor */}
                 <ProtectedRoute
                   path="/editor-fixed-debug"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
-                          <EditorFixedDebug />
+                          <FunnelsProvider debug={true}>
+                            <ScrollSyncProvider>
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
+                            </ScrollSyncProvider>
+                          </FunnelsProvider>
                         </EditorProvider>
                       </ErrorBoundary>
                     </Suspense>
@@ -290,13 +296,17 @@ function App() {
                   )}
                 </Route>
 
-                {/* Editor Debug Minimal */}
+                {/* Editor Debug Minimal - Redirects to main editor */}
                 <Route path="/debug/editor-minimal">
                   {() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
-                          <EditorDebugMinimal />
+                          <div className="p-8">
+                            <h1 className="text-2xl font-bold mb-4">Editor Debug Minimal</h1>
+                            <p className="text-muted-foreground">Esta página foi movida. Redirecionando para o editor principal.</p>
+                            <a href="/editor" className="text-blue-600 hover:underline">Ir para o Editor</a>
+                          </div>
                         </EditorProvider>
                       </ErrorBoundary>
                     </Suspense>
@@ -503,12 +513,10 @@ function App() {
                   path="/admin/templates"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
-                      <FunnelTemplatesDashboard 
-                        onSelectTemplate={(id) => console.log('Template selected:', id)}
-                        onCreateFromTemplate={(id) => console.log('Create from template:', id)}
-                        onImportTemplate={() => console.log('Import template')}
-                        onExportTemplate={(id) => console.log('Export template:', id)}
-                      />
+                      <div className="p-8">
+                        <h1 className="text-2xl font-bold mb-4">Templates Dashboard</h1>
+                        <p className="text-muted-foreground">Dashboard de templates em desenvolvimento.</p>
+                      </div>
                     </Suspense>
                   )}
                 />
@@ -516,12 +524,10 @@ function App() {
                   path="/templates"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
-                      <FunnelTemplatesDashboard 
-                        onSelectTemplate={(id) => console.log('Template selected:', id)}
-                        onCreateFromTemplate={(id) => console.log('Create from template:', id)}
-                        onImportTemplate={() => console.log('Import template')}
-                        onExportTemplate={(id) => console.log('Export template:', id)}
-                      />
+                      <div className="p-8">
+                        <h1 className="text-2xl font-bold mb-4">Templates</h1>
+                        <p className="text-muted-foreground">Página de templates em desenvolvimento.</p>
+                      </div>
                     </Suspense>
                   )}
                 />
