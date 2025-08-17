@@ -50,7 +50,7 @@ const EditorWithPreview = lazy(() =>
 const ComponentTestingPage = lazy(() => import('./legacy/pages/component-testing'));
 const TestNavigation = lazy(() => import('./legacy/pages/TestNavigation'));
 // Removed: EditorDebugMinimal - file moved to backup
-const TestBasico = lazy(() => import('./pages/test-basico'));
+const TestBasico = lazy(() => import('./legacy/pages/test-basico.tsx'));
 // Removed: EditorFixedSimples - file moved to backup
 
 // Loading component
