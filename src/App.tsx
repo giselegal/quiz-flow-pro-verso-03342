@@ -51,7 +51,7 @@ const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
 const TestNavigation = lazy(() => import('./pages/TestNavigation'));
 // Removed: EditorDebugMinimal - file moved to backup
 const TestBasico = lazy(() => import('./pages/test-basico'));
-const EditorFixedSimples = lazy(() => import('./pages/editor-fixed-simples'));
+// Removed: EditorFixedSimples - file moved to backup
 
 // Loading component
 const PageLoading = () => (
@@ -121,14 +121,20 @@ function App() {
                   }}
                 />
 
-                {/* Editor Fixed Simples - Versão Garantida */}
+                {/* Editor Fixed Simples - Redirects to main editor */}
                 <ProtectedRoute
                   path="/editor-simples"
                   component={() => (
                     <Suspense fallback={<PageLoading />}>
                       <ErrorBoundary>
                         <EditorProvider>
-                          <EditorFixedSimples />
+                          <FunnelsProvider debug={true}>
+                            <ScrollSyncProvider>
+                              <div className="relative">
+                                <EditorWithPreview />
+                              </div>
+                            </ScrollSyncProvider>
+                          </FunnelsProvider>
                         </EditorProvider>
                       </ErrorBoundary>
                     </Suspense>
