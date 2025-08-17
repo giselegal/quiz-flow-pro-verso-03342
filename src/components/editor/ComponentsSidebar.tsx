@@ -1,15 +1,25 @@
-import React from 'react';
-import { useEditor } from '@/context/EditorContext';
-import { BlockType } from '@/types/editor';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Text, Heading, Image as ImageIcon, Video, 
-  MessageSquare, Layout, Box, Grid, Slash, 
-  Type, Form, CheckSquare, Award, Gift
+import { useEditor } from '@/context/EditorContext';
+import { BlockType } from '@/types/editor';
+import {
+  Award,
+  Box,
+  CheckSquare,
+  Form,
+  Gift,
+  Grid,
+  Heading,
+  Image as ImageIcon,
+  MessageSquare,
+  Slash,
+  Text,
+  Type,
+  Video,
 } from 'lucide-react';
+import React from 'react';
 
 interface BlockOption {
   type: BlockType;
@@ -27,31 +37,96 @@ const blockCategories: BlockCategory[] = [
   {
     title: 'Conteúdo',
     items: [
-      { type: 'text', label: 'Texto', icon: <Text className="h-4 w-4" />, description: 'Adicionar texto simples' },
-      { type: 'text-inline', label: 'Título', icon: <Heading className="h-4 w-4" />, description: 'Adicionar título ou subtítulo' },
-      { type: 'image', label: 'Imagem', icon: <ImageIcon className="h-4 w-4" />, description: 'Adicionar imagem' },
-      { type: 'video', label: 'Vídeo', icon: <Video className="h-4 w-4" />, description: 'Incorporar vídeo' }
-    ]
+      {
+        type: 'text',
+        label: 'Texto',
+        icon: <Text className="h-4 w-4" />,
+        description: 'Adicionar texto simples',
+      },
+      {
+        type: 'text-inline',
+        label: 'Título',
+        icon: <Heading className="h-4 w-4" />,
+        description: 'Adicionar título ou subtítulo',
+      },
+      {
+        type: 'image',
+        label: 'Imagem',
+        icon: <ImageIcon className="h-4 w-4" />,
+        description: 'Adicionar imagem',
+      },
+      {
+        type: 'video',
+        label: 'Vídeo',
+        icon: <Video className="h-4 w-4" />,
+        description: 'Incorporar vídeo',
+      },
+    ],
   },
   {
     title: 'Quiz',
     items: [
-      { type: 'quiz-header', label: 'Header Quiz', icon: <Type className="h-4 w-4" />, description: 'Cabeçalho do quiz' },
-      { type: 'quiz-intro-header', label: 'Intro Quiz', icon: <MessageSquare className="h-4 w-4" />, description: 'Introdução do quiz' },
-      { type: 'lead-form', label: 'Form Lead', icon: <Form className="h-4 w-4" />, description: 'Formulário de captura' },
-      { type: 'options-grid', label: 'Opções', icon: <CheckSquare className="h-4 w-4" />, description: 'Grid de opções' },
-      { type: 'result-display', label: 'Resultado', icon: <Award className="h-4 w-4" />, description: 'Exibição do resultado' },
-      { type: 'offer-cta', label: 'Oferta', icon: <Gift className="h-4 w-4" />, description: 'Call to action com oferta' }
-    ]
+      {
+        type: 'quiz-header',
+        label: 'Header Quiz',
+        icon: <Type className="h-4 w-4" />,
+        description: 'Cabeçalho do quiz',
+      },
+      {
+        type: 'quiz-intro-header',
+        label: 'Intro Quiz',
+        icon: <MessageSquare className="h-4 w-4" />,
+        description: 'Introdução do quiz',
+      },
+      {
+        type: 'lead-form',
+        label: 'Form Lead',
+        icon: <Form className="h-4 w-4" />,
+        description: 'Formulário de captura',
+      },
+      {
+        type: 'options-grid',
+        label: 'Opções',
+        icon: <CheckSquare className="h-4 w-4" />,
+        description: 'Grid de opções',
+      },
+      {
+        type: 'result-display',
+        label: 'Resultado',
+        icon: <Award className="h-4 w-4" />,
+        description: 'Exibição do resultado',
+      },
+      {
+        type: 'offer-cta',
+        label: 'Oferta',
+        icon: <Gift className="h-4 w-4" />,
+        description: 'Call to action com oferta',
+      },
+    ],
   },
   {
     title: 'Layout',
     items: [
-      { type: 'container', label: 'Container', icon: <Box className="h-4 w-4" />, description: 'Container flexível' },
-      { type: 'grid', label: 'Grid', icon: <Grid className="h-4 w-4" />, description: 'Layout em grid' },
-      { type: 'divider', label: 'Divisor', icon: <Slash className="h-4 w-4" />, description: 'Linha divisória' }
-    ]
-  }
+      {
+        type: 'container',
+        label: 'Container',
+        icon: <Box className="h-4 w-4" />,
+        description: 'Container flexível',
+      },
+      {
+        type: 'grid',
+        label: 'Grid',
+        icon: <Grid className="h-4 w-4" />,
+        description: 'Layout em grid',
+      },
+      {
+        type: 'divider',
+        label: 'Divisor',
+        icon: <Slash className="h-4 w-4" />,
+        description: 'Linha divisória',
+      },
+    ],
+  },
 ];
 
 export const ComponentsSidebar: React.FC = () => {
@@ -76,7 +151,7 @@ export const ComponentsSidebar: React.FC = () => {
                   {category.title}
                 </h3>
                 <div className="space-y-1">
-                  {category.items.map((block) => (
+                  {category.items.map(block => (
                     <Button
                       key={block.type}
                       variant="ghost"

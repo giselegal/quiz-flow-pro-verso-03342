@@ -1,28 +1,25 @@
-import React from 'react';
-import { useEditor } from '@/context/EditorContext';
-import { EditorBlock } from '@/types/editor';
-import { cn } from '@/lib/utils';
-import { useDropzone } from 'react-dropzone';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { BlockRenderer } from '@/components/blocks/BlockRenderer';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Grip, ChevronUp, ChevronDown, Copy, Trash } from 'lucide-react';
-import { BlockRenderer } from '@/components/blocks';
+import { useEditor } from '@/context/EditorContext';
+import { cn } from '@/lib/utils';
+import { Block } from '@/types/editor';
+import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
+import { ChevronDown, ChevronUp, Copy, Grip, Trash } from 'lucide-react';
+import React, { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 
 interface EditorCanvasProps {
   className?: string;
 }
 
 export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
-  const { 
-    blocks, 
-    selectedBlock, 
+  const {
+    state: { blocks },
+    computed: { selectedBlock },
+    blockActions: { deleteBlock, reorderBlocks },
+    dispatch,
     selectBlock,
-    moveBlock,
-    duplicateBlock,
-    deleteBlock,
-    reorderBlocks,
-    setIsDragging
   } = useEditor();
 
   const onDrop = React.useCallback((acceptedFiles: File[]) => {
@@ -33,29 +30,71 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     noClick: true,
-    noKeyboard: true
+    noKeyboard: true,
   });
 
-  const handleDragEnd = React.useCallback((result: any) => {
-    setIsDragging(false);
+  // Gerenciamento de arrasto
+  const [isDragging, setIsDragging] = React.useState(false);
 
-    if (!result.destination) return;
+  const handleDragEnd = useCallback(
+    (result: any) => {
+      setIsDragging(false);
 
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
+      if (!result.destination) return;
 
-    if (sourceIndex === destinationIndex) return;
+      const sourceIndex = result.source.index;
+      const destinationIndex = result.destination.index;
 
-    reorderBlocks(sourceIndex, destinationIndex);
-  }, [reorderBlocks, setIsDragging]);
+      if (sourceIndex === destinationIndex) return;
 
-  const handleDragStart = React.useCallback(() => {
+      reorderBlocks(sourceIndex, destinationIndex);
+    },
+    [reorderBlocks]
+  );
+
+  const handleDragStart = useCallback(() => {
     setIsDragging(true);
-  }, [setIsDragging]);
+  }, []);
 
-  const renderBlock = (block: EditorBlock, index: number) => {
+  const moveBlock = useCallback(
+    (blockId: string, direction: 'up' | 'down') => {
+      const blockIndex = blocks.findIndex(b => b.id === blockId);
+      if (blockIndex === -1) return;
+
+      let newIndex = blockIndex;
+      if (direction === 'up' && blockIndex > 0) {
+        newIndex = blockIndex - 1;
+      } else if (direction === 'down' && blockIndex < blocks.length - 1) {
+        newIndex = blockIndex + 1;
+      }
+
+      reorderBlocks(blockIndex, newIndex);
+    },
+    [blocks, reorderBlocks]
+  );
+
+  const duplicateBlock = useCallback(
+    (blockId: string) => {
+      const block = blocks.find(b => b.id === blockId);
+      if (!block) return;
+
+      const duplicatedBlock: Block = {
+        ...block,
+        id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        order: block.order + 1,
+      };
+
+      dispatch({
+        type: 'SET_BLOCKS',
+        payload: [...blocks, duplicatedBlock].map((b, idx) => ({ ...b, order: idx })),
+      });
+    },
+    [blocks, dispatch]
+  );
+
+  const renderBlock = (block: Block, index: number) => {
     const isSelected = selectedBlock?.id === block.id;
-    
+
     return (
       <Draggable key={block.id} draggableId={block.id} index={index}>
         {(provided, snapshot) => (
@@ -73,8 +112,8 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
                 <div {...provided.dragHandleProps}>
                   <Grip className="h-4 w-4 text-muted-foreground cursor-grab" />
                 </div>
-                
-                <div className="flex-1" onClick={() => selectBlock(block)}>
+
+                <div className="flex-1" onClick={() => selectBlock(block.id)}>
                   <BlockRenderer block={block} selected={isSelected} />
                 </div>
 
@@ -88,7 +127,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
                   >
                     <ChevronUp className="h-4 w-4" />
                   </Button>
-                  
+
                   <Button
                     variant="ghost"
                     size="icon"
@@ -98,7 +137,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
                   >
                     <ChevronDown className="h-4 w-4" />
                   </Button>
-                  
+
                   <Button
                     variant="ghost"
                     size="icon"
@@ -107,7 +146,7 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
-                  
+
                   <Button
                     variant="ghost"
                     size="icon"
@@ -126,23 +165,13 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
   };
 
   return (
-    <div
-      {...getRootProps()}
-      className={cn('editor-canvas min-h-screen p-8', className)}
-    >
+    <div {...getRootProps()} className={cn('editor-canvas min-h-screen p-8', className)}>
       <input {...getInputProps()} />
-      
-      <DragDropContext 
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-      >
+
+      <DragDropContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
         <Droppable droppableId="editor-blocks">
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className="space-y-4"
-            >
+          {provided => (
+            <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-4">
               {blocks.map((block, index) => renderBlock(block, index))}
               {provided.placeholder}
             </div>
@@ -153,18 +182,14 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({ className }) => {
       {isDragActive && (
         <div className="dropzone-overlay absolute inset-0 bg-blue-500/10 border-2 border-blue-500 border-dashed rounded-lg">
           <div className="flex items-center justify-center h-full">
-            <p className="text-blue-500 font-medium">
-              Solte os arquivos aqui...
-            </p>
+            <p className="text-blue-500 font-medium">Solte os arquivos aqui...</p>
           </div>
         </div>
       )}
 
       {blocks.length === 0 && (
         <Card className="flex flex-col items-center justify-center min-h-[400px] border-2 border-dashed">
-          <p className="text-muted-foreground mb-4">
-            Nenhum bloco adicionado
-          </p>
+          <p className="text-muted-foreground mb-4">Nenhum bloco adicionado</p>
           <p className="text-sm text-muted-foreground/60">
             Use o painel lateral para adicionar blocos
           </p>

@@ -1,7 +1,7 @@
-import React from 'react';
-import { EditorConfig } from '@/types/editor';
 import { EditorContext } from '@/context/EditorContext';
 import { useTemplateValidation } from '@/hooks/useTemplateValidation';
+import { EditorConfig } from '@/types/editor';
+import React from 'react';
 
 interface EditorProviderProps {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({ children, config
   const validation = useTemplateValidation();
 
   return (
-    <EditorContext.Provider 
+    <EditorContext.Provider
       value={{
         config,
         validation,
