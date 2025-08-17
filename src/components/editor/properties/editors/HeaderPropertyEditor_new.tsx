@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Block } from '@/types/editor';
 import { Type } from 'lucide-react';
 import React from 'react';
@@ -48,18 +48,12 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
         <div className={`space-y-1 ${headerType === 'hero' ? 'text-center' : ''}`}>
           <h2
             className={`font-bold ${
-              headerType === 'hero'
-                ? 'text-2xl'
-                : headerType === 'section'
-                  ? 'text-xl'
-                  : 'text-lg'
+              headerType === 'hero' ? 'text-2xl' : headerType === 'section' ? 'text-xl' : 'text-lg'
             } text-[#6B4F43]`}
           >
             {title || 'Título do Header'}
           </h2>
-          {subtitle && (
-            <p className="text-[#8B7355] text-sm">{subtitle}</p>
-          )}
+          {subtitle && <p className="text-[#8B7355] text-sm">{subtitle}</p>}
         </div>
       </div>
     );
@@ -104,9 +98,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="showLogo">Mostrar Logo</Label>
-              <p className="text-sm text-gray-500">
-                Exibe o logo do quiz no header
-              </p>
+              <p className="text-sm text-gray-500">Exibe o logo do quiz no header</p>
             </div>
             <Switch
               id="showLogo"
@@ -118,9 +110,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="showProgress">Mostrar Progresso</Label>
-              <p className="text-sm text-gray-500">
-                Exibe a barra de progresso do quiz
-              </p>
+              <p className="text-sm text-gray-500">Exibe a barra de progresso do quiz</p>
             </div>
             <Switch
               id="showProgress"
@@ -132,9 +122,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="showNavigation">Mostrar Navegação</Label>
-              <p className="text-sm text-gray-500">
-                Exibe botões de navegação (anterior/próximo)
-              </p>
+              <p className="text-sm text-gray-500">Exibe botões de navegação (anterior/próximo)</p>
             </div>
             <Switch
               id="showNavigation"
@@ -159,9 +147,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             >
               {title || 'Título do Header'}
             </h2>
-            {subtitle && (
-              <p className="text-[#8B7355] text-sm">{subtitle}</p>
-            )}
+            {subtitle && <p className="text-[#8B7355] text-sm">{subtitle}</p>}
           </div>
         </div>
       </CardContent>
