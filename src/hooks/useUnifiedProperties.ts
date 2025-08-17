@@ -341,7 +341,6 @@ export const useUnifiedProperties = (
 
     switch (blockType) {
       case 'header':
-      case 'quiz-intro':
       case 'quiz-intro-header':
       case 'quiz-result-header':
       case 'unified-header':
@@ -356,7 +355,9 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             'logoUrl',
-            currentBlock?.properties?.logoUrl || currentBlock?.properties?.logo || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            currentBlock?.properties?.logoUrl ||
+              currentBlock?.properties?.logo ||
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL do Logo',
             PropertyCategory.CONTENT,
@@ -378,8 +379,8 @@ export const useUnifiedProperties = (
             PropertyCategory.LAYOUT,
             { min: 0.5, max: 3, step: 0.1, unit: 'x' }
           ),
-          
-           // 🎯 CONTROLES DE EXIBIÇÃO
+
+          // 🎯 CONTROLES DE EXIBIÇÃO
           createProperty(
             'showTitle',
             currentBlock?.properties?.showTitle ?? true,
@@ -394,11 +395,13 @@ export const useUnifiedProperties = (
             'Mostrar Nome do Usuário',
             PropertyCategory.CONTENT
           ),
-          
+
           // 🎯 TÍTULOS E CONTEÚDO
           createProperty(
             'title',
-            currentBlock?.properties?.title || currentBlock?.properties?.customTitle || 'Parabéns, {userName}!',
+            currentBlock?.properties?.title ||
+              currentBlock?.properties?.customTitle ||
+              'Parabéns, {userName}!',
             PropertyType.TEXT,
             'Título',
             PropertyCategory.CONTENT,
@@ -420,7 +423,7 @@ export const useUnifiedProperties = (
             PropertyCategory.CONTENT,
             { placeholder: 'Nome de fallback (usado se não encontrado dinamicamente)' }
           ),
-          
+
           // 🎯 CORES E ESTILO
           createProperty(
             'backgroundColor',
@@ -446,11 +449,11 @@ export const useUnifiedProperties = (
               options: [
                 { value: 'left', label: 'Esquerda' },
                 { value: 'center', label: 'Centro' },
-                { value: 'right', label: 'Direita' }
-              ]
+                { value: 'right', label: 'Direita' },
+              ],
             }
           ),
-          
+
           // 🎯 LAYOUT E POSICIONAMENTO
           createProperty(
             'isSticky',
@@ -475,8 +478,8 @@ export const useUnifiedProperties = (
             PropertyCategory.LAYOUT,
             { min: 0, max: 100, step: 4, unit: 'px' }
           ),
-          
-           // 🎯 PROGRESSO (Para Quiz Headers)
+
+          // 🎯 PROGRESSO (Para Quiz Headers)
           createProperty(
             'enableProgressBar',
             currentBlock?.properties?.enableProgressBar ?? false,
@@ -567,7 +570,7 @@ export const useUnifiedProperties = (
             'Mostrar Barra do 3º Estilo',
             PropertyCategory.BEHAVIOR
           ),
-          
+
           // 🎯 NAVEGAÇÃO
           createProperty(
             'showBackButton',
@@ -576,7 +579,7 @@ export const useUnifiedProperties = (
             'Mostrar Botão Voltar',
             PropertyCategory.BEHAVIOR
           ),
-          
+
           // 🎯 IMAGEM HERO (Para Offer Headers)
           createProperty(
             'showImage',
@@ -591,13 +594,13 @@ export const useUnifiedProperties = (
             PropertyType.URL,
             'URL da Imagem Hero',
             PropertyCategory.CONTENT,
-            { 
+            {
               placeholder: 'https://...',
-              conditional: { key: 'showImage', value: true }
+              conditional: { key: 'showImage', value: true },
             }
           ),
         ];
-        
+
       case 'text-inline':
         return [
           // Conteúdo
@@ -838,11 +841,12 @@ export const useUnifiedProperties = (
       case 'quiz-intro':
         return [
           ...getUniversalProperties(),
-          
+
           // Content Properties
           createProperty(
             'logoUrl',
-            currentBlock?.properties?.logoUrl || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            currentBlock?.properties?.logoUrl ||
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL da Logo',
             PropertyCategory.CONTENT
@@ -878,13 +882,14 @@ export const useUnifiedProperties = (
           ),
           createProperty(
             'description',
-            currentBlock?.properties?.description || 'Em apenas alguns minutos, vamos revelar qual dos 8 estilos representa perfeitamente sua personalidade.',
+            currentBlock?.properties?.description ||
+              'Em apenas alguns minutos, vamos revelar qual dos 8 estilos representa perfeitamente sua personalidade.',
             PropertyType.TEXTAREA,
             'Descrição',
             PropertyCategory.CONTENT,
             { rows: 3 }
           ),
-          
+
           // Form Properties
           createProperty(
             'inputLabel',
@@ -922,7 +927,7 @@ export const useUnifiedProperties = (
             PropertyCategory.BEHAVIOR,
             { min: 1, max: 10, step: 1 }
           ),
-          
+
           // Style Properties
           createProperty(
             'backgroundColor',
@@ -945,7 +950,7 @@ export const useUnifiedProperties = (
             'Cor do Texto',
             PropertyCategory.STYLE
           ),
-          
+
           // Layout Properties
           createProperty(
             'variant',
@@ -957,8 +962,8 @@ export const useUnifiedProperties = (
               options: [
                 { value: 'default', label: 'Completo (padrão)' },
                 { value: 'compact', label: 'Compacto' },
-                { value: 'minimal', label: 'Minimalista' }
-              ]
+                { value: 'minimal', label: 'Minimalista' },
+              ],
             }
           ),
           createProperty(
@@ -1060,7 +1065,7 @@ export const useUnifiedProperties = (
             PropertyCategory.BEHAVIOR,
             { placeholder: 'userName, email, phone - usado para salvamento' }
           ),
-          
+
           // 🎯 VALIDATION PROPERTIES
           createProperty(
             'inputType',
@@ -1110,7 +1115,7 @@ export const useUnifiedProperties = (
             PropertyCategory.ADVANCED,
             { placeholder: 'Ex: ^[A-Za-z\\s]+$ para apenas letras' }
           ),
-          
+
           // 🎯 SUPABASE INTEGRATION
           createProperty(
             'saveToSupabase',
@@ -1130,7 +1135,7 @@ export const useUnifiedProperties = (
                 { value: 'quiz_users', label: 'Usuários do Quiz' },
                 { value: 'quiz_step_responses', label: 'Respostas das Etapas' },
                 { value: 'profiles', label: 'Perfis de Usuário' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -1145,11 +1150,11 @@ export const useUnifiedProperties = (
                 { value: 'email', label: 'E-mail' },
                 { value: 'phone', label: 'Telefone' },
                 { value: 'session_id', label: 'ID da Sessão' },
-              ]
+              ],
             }
           ),
-          
-          // 🎯 STYLE PROPERTIES  
+
+          // 🎯 STYLE PROPERTIES
           createProperty(
             'backgroundColor',
             currentBlock?.properties?.backgroundColor || '#FFFFFF',
@@ -1199,7 +1204,7 @@ export const useUnifiedProperties = (
                 { value: 'Playfair Display', label: 'Playfair Display' },
                 { value: 'Arial', label: 'Arial' },
                 { value: 'Georgia', label: 'Georgia' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -1215,7 +1220,7 @@ export const useUnifiedProperties = (
                 { value: '500', label: 'Médio (500)' },
                 { value: '600', label: 'Semi-Bold (600)' },
                 { value: '700', label: 'Bold (700)' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -1815,7 +1820,8 @@ export const useUnifiedProperties = (
           ...getUniversalProperties(),
           createProperty(
             'logoUrl',
-            currentBlock?.properties?.logoUrl || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+            currentBlock?.properties?.logoUrl ||
+              'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
             PropertyType.URL,
             'URL da Logo',
             PropertyCategory.CONTENT
@@ -1971,7 +1977,7 @@ export const useUnifiedProperties = (
           ),
         ];
 
-      // ✅ Step 21 Components  
+      // ✅ Step 21 Components
       case 'next-steps':
         return [
           ...getUniversalProperties(),
@@ -2025,7 +2031,7 @@ export const useUnifiedProperties = (
 
       // ✅ Additional inline components commonly used
       case 'urgency-countdown-inline':
-      case 'style-guides-visual-inline':  
+      case 'style-guides-visual-inline':
       case 'motivation-section-inline':
       case 'before-after-transformation-inline':
       case 'bonus-section-inline':
@@ -2118,7 +2124,7 @@ export const useUnifiedProperties = (
                 { value: '50%', label: '50%' },
                 { value: '75%', label: '75%' },
                 { value: '100%', label: '100%' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -2184,7 +2190,7 @@ export const useUnifiedProperties = (
                 { value: 'text-sm', label: 'Pequeno' },
                 { value: 'text-base', label: 'Médio' },
                 { value: 'text-lg', label: 'Grande' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -2198,7 +2204,7 @@ export const useUnifiedProperties = (
                 { value: 'text-left', label: 'Esquerda' },
                 { value: 'text-center', label: 'Centro' },
                 { value: 'text-right', label: 'Direita' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -2256,7 +2262,7 @@ export const useUnifiedProperties = (
                 { value: 'top-left', label: 'Superior Esquerda' },
                 { value: 'top-center', label: 'Superior Centro' },
                 { value: 'top-right', label: 'Superior Direita' },
-              ]
+              ],
             }
           ),
         ];
@@ -2310,7 +2316,7 @@ export const useUnifiedProperties = (
                 { value: '4/3', label: 'Padrão (4:3)' },
                 { value: '16/9', label: 'Widescreen (16:9)' },
                 { value: '3/2', label: 'Fotografia (3:2)' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -2325,7 +2331,7 @@ export const useUnifiedProperties = (
                 { value: 'contain', label: 'Conter (Contain)' },
                 { value: 'fill', label: 'Preencher (Fill)' },
                 { value: 'scale-down', label: 'Reduzir (Scale Down)' },
-              ]
+              ],
             }
           ),
           createProperty(
@@ -2353,7 +2359,7 @@ export const useUnifiedProperties = (
               options: [
                 { value: 'lazy', label: 'Lazy (Sob demanda)' },
                 { value: 'eager', label: 'Eager (Imediato)' },
-              ]
+              ],
             }
           ),
         ];
@@ -2377,30 +2383,30 @@ export const useUnifiedProperties = (
 
   const updateProperty = useCallback(
     (key: string, value: any) => {
-      console.log('🔄 useUnifiedProperties updateProperty CHAMADO:', { 
+      console.log('🔄 useUnifiedProperties updateProperty CHAMADO:', {
         blockId: block?.id,
-        blockType: block?.type, 
-        key, 
+        blockType: block?.type,
+        key,
         value,
         hasOnUpdate: !!onUpdateExternal,
-        currentProperties: block?.properties 
+        currentProperties: block?.properties,
       });
-      
+
       setProperties(prev => prev.map(prop => (prop.key === key ? { ...prop, value } : prop)));
 
       if (onUpdateExternal && block) {
         const updatedProps = { ...block.properties, [key]: value };
-        
+
         console.log('✅ useUnifiedProperties EXECUTANDO onUpdate:', {
           blockId: block.id,
-          updatedProps
+          updatedProps,
         });
-        
+
         onUpdateExternal(block.id, { properties: updatedProps });
       } else {
-        console.log('❌ useUnifiedProperties FALHOU:', { 
+        console.log('❌ useUnifiedProperties FALHOU:', {
           hasOnUpdate: !!onUpdateExternal,
-          hasBlock: !!block 
+          hasBlock: !!block,
         });
       }
     },
