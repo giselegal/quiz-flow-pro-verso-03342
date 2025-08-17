@@ -18,13 +18,14 @@ import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel'
 
 // Context & Hooks
 import { useEditor } from '@/context/EditorContext';
+import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
-import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { useEditorSave } from '@/services/editorPersistenceService';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
+// Adicione o import do saveEditor
+import { saveEditor } from '@/services/editorService';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -42,7 +43,6 @@ import { useLocation } from 'wouter';
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Navigation hook
   const [, setLocation] = useLocation();
-  const { save: saveEditor } = useEditorSave();
 
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
@@ -58,9 +58,9 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     activeStageId,
     selectedBlockId,
     blockActions: { addBlock, setSelectedBlockId, deleteBlock, updateBlock },
-    persistenceActions: { saveFunnel },
+    persistenceActions: {},
     uiState: { isPreviewing, setIsPreviewing, viewportSize, setViewportSize },
-    computed: { currentBlocks, selectedBlock, totalBlocks, stageCount },
+    computed: { currentBlocks, selectedBlock },
   } = useEditor();
 
   // 🆕 AUTO-SAVE COM DEBOUNCE - Implementação do salvamento automático
@@ -74,10 +74,10 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     onSave: async data => {
       try {
         console.log('🔄 Auto-save ativado:', data);
-        
+
         // Usar o novo serviço otimizado
         await saveEditor(data, false); // false = não mostrar toast para auto-save
-        
+
         console.log('✅ Auto-save realizado com sucesso');
       } catch (error) {
         console.warn('⚠️ Auto-save: Erro:', error);
@@ -105,7 +105,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-    // 🆕 HANDLER DE SAVE MANUAL MELHORADO
+  // 🆕 HANDLER DE SAVE MANUAL MELHORADO
   const handleSave = async () => {
     if (isSaving) return; // Prevenir cliques duplos
 
@@ -115,12 +115,15 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
       console.log('💾 Iniciando salvamento manual do editor...');
 
       // Usar o novo serviço otimizado com feedback
-      const result = await saveEditor({
-        blocks: currentBlocks,
-        activeStageId,
-        funnelId: `editor-manual-${Date.now()}`,
-        timestamp: Date.now(),
-      }, true); // true = mostrar toast
+      const result = await saveEditor(
+        {
+          blocks: currentBlocks,
+          activeStageId,
+          funnelId: `editor-manual-${Date.now()}`,
+          timestamp: Date.now(),
+        },
+        true
+      ); // true = mostrar toast
 
       console.log('✅ Salvamento manual concluído:', result);
     } catch (error) {
@@ -195,7 +198,11 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
         {/* 🚀 TOOLBAR PRINCIPAL - Sistema de Preview Integrado */}
         <EditorToolbar
           isPreviewing={isPreviewing}
-          viewportSize={["sm", "md", "lg", "xl"].includes(viewportSize) ? (viewportSize as "sm" | "md" | "lg" | "xl") : "lg"}
+          viewportSize={
+            ['sm', 'md', 'lg', 'xl'].includes(viewportSize)
+              ? (viewportSize as 'sm' | 'md' | 'lg' | 'xl')
+              : 'lg'
+          }
           onViewportSizeChange={setViewportSize}
           onTogglePreview={() => setIsPreviewing(!isPreviewing)}
           onSave={handleSave}
