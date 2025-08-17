@@ -15,17 +15,39 @@ import { BlockType } from '@/types/editor';
  * Editor de 4 colunas com layout responsivo baseado em ResizablePanel
  * Funcionalidades principais:
  * - Layout de 4 colunas ajustáveis
+ * - 21 etapas do funil
  * - Biblioteca de componentes
  * - Canvas de edição
- * - Painel de propriedades
+ * - Painel de propriedades avançado (PropertiesPanel)
  * - Toolbar com ações principais
  */
 const EditorFixedPageWithDragDrop = () => {
-  // Estado local para o editor
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedComponent, setSelectedComponent] = useState<any>(null);
+  // EditorContext para integração completa
+  const { 
+    selectedBlock, 
+    selectedBlockId,
+    setSelectedBlockId,
+    addBlock,
+    updateBlock,
+    deleteBlock,
+    state 
+  } = useEditor();
+
+  // Estado local para UI
   const [viewMode, setViewMode] = useState('desktop');
   const [showPreview, setShowPreview] = useState(false);
+
+  // 21 ETAPAS DO FUNIL - Baseadas no EditorContext
+  const currentStep = state?.currentStage || 1;
+  const funnelSteps = Array.from({ length: 21 }, (_, i) => ({
+    id: i + 1,
+    name: `Etapa ${i + 1}`,
+    active: currentStep === i + 1,
+    description: i === 0 ? 'Quiz Intro' : 
+                i === 20 ? 'Resultado Final' : 
+                i < 10 ? `Pergunta ${i}` : 
+                `Qualificação ${i - 9}`
+  }));
 
   // Componentes disponíveis
   const components = [
