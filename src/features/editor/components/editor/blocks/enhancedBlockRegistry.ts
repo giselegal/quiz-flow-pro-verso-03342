@@ -9,6 +9,7 @@ export const ENHANCED_BLOCK_REGISTRY = {
   text: lazy(() => import('@/components/editor/blocks/TextInlineBlock')),
   image: lazy(() => import('@/components/editor/blocks/ImageInlineBlock')),
   'form-input': lazy(() => import('@/components/editor/blocks/FormInputBlock')),
+  'form-container': lazy(() => import('@/components/editor/blocks/FormContainerBlock')),
   button: lazy(() => import('@/components/editor/blocks/ButtonInlineBlock')),
   'legal-notice': lazy(() => import('@/components/editor/blocks/LegalNoticeInlineBlock')),
 
@@ -49,6 +50,7 @@ export const AVAILABLE_COMPONENTS = [
   { type: 'text', label: 'Texto', category: 'step01' },
   { type: 'image', label: 'Imagem', category: 'step01' },
   { type: 'form-input', label: 'Campo de Nome', category: 'step01' },
+  { type: 'form-container', label: 'Container de Formulário', category: 'step01' },
   { type: 'button', label: 'Botão', category: 'step01' },
   { type: 'legal-notice', label: 'Aviso Legal', category: 'step01' },
 

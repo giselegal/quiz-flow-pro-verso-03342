@@ -1,4 +1,4 @@
-import { Block, BlockType } from '@/types/editor';
+import { Block, BlockType, EditorConfig } from '@/types/editor';
 import { EditorAction, EditorState } from '@/types/editorTypes';
 import { ValidationService } from '@/types/validation';
 import React, {
@@ -17,6 +17,9 @@ interface EditorContextType {
   // Core state
   state: EditorState;
   dispatch: React.Dispatch<EditorAction>;
+
+  // Configuration
+  config?: EditorConfig;
 
   // Funnel management
   funnelId: string;
@@ -165,10 +168,11 @@ function editorReducer(state: EditorState, action: EditorAction): EditorState {
   }
 }
 
-export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: string }> = ({
-  children,
-  funnelId: initialFunnelId = 'default-funnel',
-}) => {
+export const EditorProvider: React.FC<{
+  children: React.ReactNode;
+  funnelId?: string;
+  config?: EditorConfig;
+}> = ({ children, funnelId: initialFunnelId = 'default-funnel', config }) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);
   const [currentFunnelId, setCurrentFunnelId] = useState<string>(initialFunnelId);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -443,6 +447,9 @@ export const EditorProvider: React.FC<{ children: React.ReactNode; funnelId?: st
     // Core state
     state,
     dispatch,
+
+    // Configuration
+    config,
 
     // Funnel management
     funnelId: currentFunnelId,

@@ -572,11 +572,65 @@ export interface FunnelStage {
 }
 
 export interface EditorConfig {
-  blocks: EditorBlock[];
+  // Layout configuration
+  layout?: {
+    sidebar?: {
+      width?: number;
+      collapsible?: boolean;
+    };
+    canvas?: {
+      width?: string;
+      maxWidth?: number;
+    };
+    properties?: {
+      width?: number;
+      collapsible?: boolean;
+    };
+  };
 
-  globalStyles: Record<string, any>;
+  // Block configuration
+  blocks?:
+    | EditorBlock[]
+    | {
+        maxPerPage?: number;
+        defaultSpacing?: number;
+        gridColumns?: number;
+      };
 
-  theme?: string;
+  // Editor features
+  features?: {
+    autoSave?: boolean;
+    undoRedo?: boolean;
+    preview?: boolean;
+    dragAndDrop?: boolean;
+    validation?: boolean;
+  };
+
+  // Validation rules
+  validation?: {
+    debounceMs?: number;
+    validateOnChange?: boolean;
+    validateOnBlur?: boolean;
+    showErrorsImmediately?: boolean;
+  };
+
+  // Theme configuration
+  theme?:
+    | {
+        colorScheme?: string;
+        radius?: string;
+        spacing?: string;
+      }
+    | string;
+
+  // Performance settings
+  performance?: {
+    lazyLoadBlocks?: boolean;
+    renderThrottle?: number;
+    maxBlocksBeforePagination?: number;
+  };
+
+  globalStyles?: Record<string, any>;
 }
 
 /**

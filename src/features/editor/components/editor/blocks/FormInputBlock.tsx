@@ -2,7 +2,6 @@ import type { BlockComponentProps } from '@/types/blocks';
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
-
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;
   onValueChange?: (value: string) => void;

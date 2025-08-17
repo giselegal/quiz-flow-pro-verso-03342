@@ -122,7 +122,7 @@ export const EditorExample: React.FC = () => {
         ))}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .editor-example {
           display: flex;
           flex-direction: column;

@@ -1,12 +1,11 @@
-// @ts-nocheck
-import React, { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { EditorBlock } from '@/types/editor';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { EditorBlock } from '@/types/editor';
-import { Card } from '../ui/card';
+import { ChevronDown, ChevronUp, Copy, GripVertical, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { Button } from '../ui/button';
-import { Trash2, GripVertical, ChevronDown, ChevronUp, Copy } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Card } from '../ui/card';
 import EditBlockContent from './EditBlockContent';
 
 interface EditorBlockItemProps {
@@ -16,7 +15,10 @@ interface EditorBlockItemProps {
 }
 
 // Função para converter valores de margem em classes Tailwind (Sistema Universal)
-const getMarginClass = (value, type) => {
+const getMarginClass = (
+  value: string | number,
+  type: 'top' | 'bottom' | 'left' | 'right'
+): string => {
   const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
 
   if (isNaN(numValue) || numValue === 0) return '';

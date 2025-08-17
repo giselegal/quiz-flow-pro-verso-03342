@@ -81,7 +81,7 @@ export const TemplateExample: React.FC = () => {
 
       <TemplateValidationFeedback errors={validationErrors} showAllErrors />
 
-      <style jsx>{`
+      <style>{`
         .template-example {
           padding: 24px;
           max-width: 800px;
