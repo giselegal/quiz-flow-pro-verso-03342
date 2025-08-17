@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,8 +15,8 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Block } from '@/types/editor';
-import { Eye, Image, Layout, Palette, Settings, Type, Upload } from 'lucide-react';
-import { PropertyColorPicker } from '../components/PropertyColorPicker';
+import { Eye, Image, Layout, Palette, Type, Upload } from 'lucide-react';
+import React, { useState } from 'react';
 import { PropertyInput } from '../components/PropertyInput';
 import { PropertySlider } from '../components/PropertySlider';
 
@@ -50,9 +49,7 @@ const ColorPicker: React.FC<{
 
   return (
     <div className="space-y-3">
-      <Label className="text-xs font-medium text-[#6B4F43]">
-        {label}
-      </Label>
+      <Label className="text-xs font-medium text-[#6B4F43]">{label}</Label>
       <div className="flex items-center gap-2">
         <div
           className="w-8 h-8 rounded border-2 cursor-pointer"
@@ -65,11 +62,7 @@ const ColorPicker: React.FC<{
             input.click();
           }}
         />
-        <Input
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          className="text-xs h-8"
-        />
+        <Input value={value} onChange={e => onChange(e.target.value)} className="text-xs h-8" />
       </div>
       <div className="grid grid-cols-6 gap-1">
         {presetColors.map(color => (
@@ -98,30 +91,35 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
     title: block.content?.title || block.properties?.title || '',
     subtitle: block.content?.subtitle || block.properties?.subtitle || '',
     headerType: block.content?.headerType || block.properties?.headerType || 'main',
-    
+
     // Logo
-    logoUrl: block.content?.logoUrl || block.properties?.logoUrl || 'https://via.placeholder.com/120x60?text=Logo',
+    logoUrl:
+      block.content?.logoUrl ||
+      block.properties?.logoUrl ||
+      'https://via.placeholder.com/120x60?text=Logo',
     logoAlt: block.content?.logoAlt || block.properties?.logoAlt || 'Logo',
     logoWidth: block.content?.logoWidth || block.properties?.logoWidth || 120,
     logoHeight: block.content?.logoHeight || block.properties?.logoHeight || 60,
     showLogo: block.content?.showLogo || block.properties?.showLogo || true,
     logoScale: block.content?.logoScale || block.properties?.logoScale || 100,
-    
+
     // Progresso
     showProgress: block.content?.showProgress || block.properties?.showProgress || true,
     progressValue: block.content?.progressValue || block.properties?.progressValue || 15,
     progressMax: block.content?.progressMax || block.properties?.progressMax || 21,
-    progressBarThickness: block.content?.progressBarThickness || block.properties?.progressBarThickness || 4,
-    progressBarColor: block.content?.progressBarColor || block.properties?.progressBarColor || '#B89B7A',
-    
+    progressBarThickness:
+      block.content?.progressBarThickness || block.properties?.progressBarThickness || 4,
+    progressBarColor:
+      block.content?.progressBarColor || block.properties?.progressBarColor || '#B89B7A',
+
     // Navegação
     showNavigation: block.content?.showNavigation || block.properties?.showNavigation || false,
     showBackButton: block.content?.showBackButton || block.properties?.showBackButton || true,
-    
+
     // Layout
     isSticky: block.content?.isSticky || block.properties?.isSticky || false,
     containerScale: block.content?.containerScale || block.properties?.containerScale || 100,
-    
+
     // Margens e padding
     marginTop: block.content?.marginTop || block.properties?.marginTop || 0,
     marginBottom: block.content?.marginBottom || block.properties?.marginBottom || 16,
@@ -131,11 +129,15 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
     paddingBottom: block.content?.paddingBottom || block.properties?.paddingBottom || 24,
     paddingLeft: block.content?.paddingLeft || block.properties?.paddingLeft || 24,
     paddingRight: block.content?.paddingRight || block.properties?.paddingRight || 24,
-    
+
     // Cores
     textColor: block.content?.textColor || block.properties?.textColor || '#6B4F43',
-    backgroundColor: block.content?.backgroundColor || block.properties?.backgroundColor || '#FFFFFF',
-    containerBackgroundColor: block.content?.containerBackgroundColor || block.properties?.containerBackgroundColor || 'transparent',
+    backgroundColor:
+      block.content?.backgroundColor || block.properties?.backgroundColor || '#FFFFFF',
+    containerBackgroundColor:
+      block.content?.containerBackgroundColor ||
+      block.properties?.containerBackgroundColor ||
+      'transparent',
   };
 
   const handlePropertyUpdate = (field: string, value: any) => {
@@ -150,10 +152,10 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
         [field]: value,
       },
     };
-    
+
     console.log('🔄 HeaderPropertyEditor - Updating property:', field, '=', value);
     console.log('🔄 HeaderPropertyEditor - Full updates:', updates);
-    
+
     onUpdate(updates);
   };
 
@@ -187,7 +189,11 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
 
           <h2
             className={`font-bold ${
-              properties.headerType === 'hero' ? 'text-2xl' : properties.headerType === 'section' ? 'text-xl' : 'text-lg'
+              properties.headerType === 'hero'
+                ? 'text-2xl'
+                : properties.headerType === 'section'
+                  ? 'text-xl'
+                  : 'text-lg'
             }`}
             style={{ color: properties.textColor }}
           >
@@ -209,7 +215,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 <div
                   className="h-full transition-all duration-300"
                   style={{
-                    width: `${Math.min(properties.progressValue, properties.progressMax) / properties.progressMax * 100}%`,
+                    width: `${(Math.min(properties.progressValue, properties.progressMax) / properties.progressMax) * 100}%`,
                     backgroundColor: properties.progressBarColor,
                   }}
                 />
@@ -468,7 +474,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                         transform: `scale(${properties.logoScale / 100})`,
                       }}
                       className="object-contain border"
-                      onError={(e) => {
+                      onError={e => {
                         e.currentTarget.src = 'https://via.placeholder.com/120x60?text=Logo';
                       }}
                     />
@@ -613,7 +619,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                     transform: `scale(${properties.logoScale / 100})`,
                   }}
                   className="mx-auto object-contain"
-                  onError={(e) => {
+                  onError={e => {
                     e.currentTarget.src = 'https://via.placeholder.com/120x60?text=Logo';
                   }}
                 />
@@ -648,7 +654,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   <div
                     className="h-full transition-all duration-300"
                     style={{
-                      width: `${Math.min(properties.progressValue, properties.progressMax) / properties.progressMax * 100}%`,
+                      width: `${(Math.min(properties.progressValue, properties.progressMax) / properties.progressMax) * 100}%`,
                       backgroundColor: properties.progressBarColor,
                     }}
                   />

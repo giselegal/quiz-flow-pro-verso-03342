@@ -6,7 +6,13 @@
     "description": "Página de confirmação e próximos passos após conversão",
     "category": "thank-you",
     "type": "thankYou",
-    "tags": ["quiz", "style", "thank-you", "confirmation", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "thank-you",
+      "confirmation",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.520Z",
     "updatedAt": "2025-08-10T03:45:03.520Z",
     "author": "giselegal"
@@ -71,12 +77,24 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 120,
         "logoHeight": 120,
-        "progressValue": 100,
-        "progressTotal": 100,
         "showProgress": false,
-        "showBackButton": false,
+        "progressValue": 21,
+        "progressMax": 21,
+        "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -154,9 +172,15 @@
   },
   "analytics": {
     "trackingId": "step-21-thank-you",
-    "events": ["page_view", "completion"],
+    "events": [
+      "page_view",
+      "completion"
+    ],
     "utmParams": true,
-    "customEvents": ["thank_you_viewed", "quiz_completed"]
+    "customEvents": [
+      "thank_you_viewed",
+      "quiz_completed"
+    ]
   },
   "logic": {
     "navigation": {
@@ -170,5 +194,6 @@
       "showUserName": "if-available",
       "personalizeMessage": "based-on-purchase-status"
     }
-  }
+  },
+  "updatedAt": "2025-08-17T18:36:30.905Z"
 }

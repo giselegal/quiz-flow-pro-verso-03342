@@ -6,7 +6,12 @@
     "description": "Questão estratégica 5 - Investimento em conteúdo",
     "category": "quiz-strategic",
     "type": "strategic-question",
-    "tags": ["quiz", "style", "strategic-question", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "strategic-question",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.518Z",
     "updatedAt": "2025-08-10T03:45:03.518Z",
     "author": "giselegal"
@@ -71,12 +76,24 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 74,
-        "progressTotal": 100,
         "showProgress": true,
+        "progressValue": 16,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -187,7 +204,12 @@
   },
   "analytics": {
     "trackingId": "step-16-strategic-question",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
     "utmParams": true,
     "customEvents": []
   },
@@ -200,5 +222,6 @@
     },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T18:36:30.902Z"
 }

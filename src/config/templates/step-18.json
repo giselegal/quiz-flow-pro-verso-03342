@@ -6,7 +6,12 @@
     "description": "Transição final antes dos resultados",
     "category": "quiz-transition",
     "type": "transition",
-    "tags": ["quiz", "style", "strategic-question", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "strategic-question",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.519Z",
     "updatedAt": "2025-08-10T03:45:03.519Z",
     "author": "giselegal"
@@ -71,12 +76,24 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 82,
-        "progressTotal": 100,
         "showProgress": true,
+        "progressValue": 18,
+        "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -142,7 +159,10 @@
   },
   "analytics": {
     "trackingId": "step-18-transition-page",
-    "events": ["page_view", "transition_continue"],
+    "events": [
+      "page_view",
+      "transition_continue"
+    ],
     "utmParams": true,
     "customEvents": []
   },
@@ -155,5 +175,6 @@
     },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T18:36:30.904Z"
 }

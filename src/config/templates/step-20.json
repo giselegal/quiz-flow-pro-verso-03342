@@ -6,7 +6,13 @@
     "description": "Página de conversão com resultado do quiz e oferta personalizada",
     "category": "conversion-page",
     "type": "conversionResult",
-    "tags": ["quiz", "style", "result", "conversion", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "result",
+      "conversion",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.520Z",
     "updatedAt": "2025-08-10T03:45:03.520Z",
     "author": "giselegal"
@@ -64,18 +70,32 @@
   },
   "blocks": [
     {
-      "id": "step20-result-header",
-      "type": "result-header-inline",
+      "id": "step20-header",
+      "type": "quiz-intro-header",
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
+        "logoWidth": 120,
         "logoHeight": 40,
-        "userName": "",
-        "showUserName": true,
-        "backgroundColor": "#ffffff",
+        "showProgress": true,
+        "progressValue": 20,
+        "progressMax": 21,
+        "showBackButton": true,
         "containerWidth": "full",
         "spacing": "normal",
-        "marginBottom": 0
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#ffffff",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 0,
+        "userName": "",
+        "showUserName": true,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -128,9 +148,17 @@
   },
   "analytics": {
     "trackingId": "step-20-conversion-result",
-    "events": ["page_view", "interaction", "conversion", "cta_clicked"],
+    "events": [
+      "page_view",
+      "interaction",
+      "conversion",
+      "cta_clicked"
+    ],
     "utmParams": true,
-    "customEvents": ["guide_download", "payment_initiated"]
+    "customEvents": [
+      "guide_download",
+      "payment_initiated"
+    ]
   },
   "logic": {
     "navigation": {
@@ -145,5 +173,6 @@
       "showUserName": "if-available",
       "styleCategory": "calculated-from-quiz"
     }
-  }
+  },
+  "updatedAt": "2025-08-17T18:36:30.905Z"
 }

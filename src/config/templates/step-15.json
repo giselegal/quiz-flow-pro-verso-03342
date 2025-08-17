@@ -6,7 +6,12 @@
     "description": "Questão estratégica 4 - Consciência do investimento em material",
     "category": "quiz-strategic",
     "type": "strategic-question",
-    "tags": ["quiz", "style", "transition", "gisele-galvao"],
+    "tags": [
+      "quiz",
+      "style",
+      "transition",
+      "gisele-galvao"
+    ],
     "createdAt": "2025-08-10T03:45:03.517Z",
     "updatedAt": "2025-08-10T03:45:03.517Z",
     "author": "giselegal"
@@ -71,11 +76,24 @@
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 96,
         "logoHeight": 96,
-        "progressValue": 70,
-        "progressTotal": 100,
         "showProgress": true,
+        "progressValue": 15,
+        "progressMax": 21,
+        "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "small"
+        "spacing": "small",
+        "showLogo": true,
+        "progressBarColor": "#B89B7A",
+        "progressBarThickness": 6,
+        "backgroundColor": "#FFFFFF",
+        "textColor": "#432818",
+        "paddingTop": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 24,
+        "paddingRight": 24,
+        "marginBottom": 24,
+        "progressTotal": 100,
+        "type": "quiz-intro-header"
       }
     },
     {
@@ -201,7 +219,12 @@
   },
   "analytics": {
     "trackingId": "step-15-transition",
-    "events": ["page_view", "interaction", "validation_error", "completion"],
+    "events": [
+      "page_view",
+      "interaction",
+      "validation_error",
+      "completion"
+    ],
     "utmParams": true,
     "customEvents": []
   },
@@ -214,5 +237,6 @@
     },
     "scoring": null,
     "conditions": null
-  }
+  },
+  "updatedAt": "2025-08-17T18:36:30.902Z"
 }
