@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 import { HeaderProperties } from '@/config/headerPropertiesMapping';
 

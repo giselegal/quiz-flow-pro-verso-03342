@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Check } from 'lucide-react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface BenefitItem {
   text: string;

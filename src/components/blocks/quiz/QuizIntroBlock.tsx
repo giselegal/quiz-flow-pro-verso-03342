@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useQuizTracking } from '@/hooks/useQuizTracking';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * QuizIntroBlock - Schema-driven compatible version

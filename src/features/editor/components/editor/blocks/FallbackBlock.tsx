@@ -5,7 +5,7 @@
 
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Info } from 'lucide-react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * FallbackBlock - Componente de fallback para tipos de bloco não encontrados

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 import { Users, TrendingUp, Heart, Clock, Star, Award, Target, Zap, BarChart3 } from 'lucide-react';
 
 /**

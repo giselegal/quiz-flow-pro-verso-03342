@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface OptionItem {
   id: string;

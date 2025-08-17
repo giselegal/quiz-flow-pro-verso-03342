@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
 import { Award, Users, BookOpen } from 'lucide-react';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface MentorBlockProps extends BlockComponentProps {
   disabled?: boolean;

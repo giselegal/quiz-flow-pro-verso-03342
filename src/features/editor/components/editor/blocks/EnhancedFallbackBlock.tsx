@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 // Componente de fallback mais rico para componentes não implementados
 export // Função para converter valores de margem em classes Tailwind (Sistema Universal)

@@ -1,7 +1,7 @@
 import { TextCursorInput } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 interface FormInputBlockProps extends BlockComponentProps {
   funnelId?: string;

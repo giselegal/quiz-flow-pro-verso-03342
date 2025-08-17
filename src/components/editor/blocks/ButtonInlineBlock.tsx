@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { userResponseService } from '../../../services/userResponseService';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 import { trackQuizStart } from '../../../utils/analytics';
 
 /**

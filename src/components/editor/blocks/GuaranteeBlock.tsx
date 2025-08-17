@@ -1,5 +1,5 @@
 // @ts-nocheck
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 import { cn } from '@/lib/utils';
 import { Shield, CheckCircle } from 'lucide-react';
 

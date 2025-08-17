@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { cn } from '@/lib/utils';
-import type { BlockComponentProps } from '../../../types/blocks';
+import type { BlockComponentProps } from '@/types/blocks';
 
 /**
  * ResultStyleCardBlock - Componente para exibir resultado do estilo
