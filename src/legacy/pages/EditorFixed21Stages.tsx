@@ -15,7 +15,11 @@ import { BlockType } from '@/types/editor';
 // Componentes otimizados
 import { useEditorState } from '@/hooks/useEditorState';
 import { BlockLoadingStates } from '@/components/editor/LoadingStates';
-import { PropertiesPanel } from '@/components/editor/PropertiesPanel';
+import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
+import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
+import { PreviewProvider } from '@/contexts/PreviewContext';
+// 🆕 NOVO PAINEL DE PROPRIEDADES (AGORA PADRÃO)
+import { PropertiesPanel } from '@/components/editor/properties/PropertiesPanel';
 import { ErrorBoundary } from '@/components/editor/ErrorBoundary';
 import BlockRenderer from '@/components/editor/blocks/BlockRenderer';
 
@@ -290,7 +294,15 @@ const EditorFixed21Stages: React.FC = () => {
                 </h2>
               </div>
               <div className="p-4">
-                <PropertiesPanel block={selectedBlockData} onUpdate={updateBlock} />
+                <PropertiesPanel 
+                  selectedBlock={selectedBlockData} 
+                  onUpdate={updateBlock}
+                  onClose={() => selectBlock(null)}
+                  onDelete={(blockId: string) => {
+                    deleteBlock(blockId);
+                    selectBlock(null);
+                  }}
+                />
               </div>
             </div>
           </ResizablePanel>

@@ -1,6 +1,3 @@
-// Main components
-export { PropertiesPanel, default as PropertiesPanelDefault } from './PropertiesPanel';
-
 // Property editors
 export { HeaderPropertyEditor } from './editors/HeaderPropertyEditor';
 
