@@ -112,15 +112,6 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
   const handleOpenMyTemplates = () => {
     setLocation('/meus-templates');
   };
-      // 1. Clear current blocks
-      // 2. Load template components
-      // 3. Update funnel data
-
-      console.log('✅ Template importado com sucesso!');
-    } catch (error) {
-      console.error('❌ Erro ao importar template:', error);
-    }
-  };
 
   const getStepNumberFromStageId = (stageId: string | null): number => {
     if (!stageId) return 1;
