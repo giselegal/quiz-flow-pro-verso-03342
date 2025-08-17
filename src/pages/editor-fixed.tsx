@@ -2,7 +2,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { useEditor } from '@/context/EditorContext';
 import { Eye, Image, Layout, Mouse, Save, Settings, Type } from 'lucide-react';
 import { useState } from 'react';
 
@@ -19,8 +18,6 @@ import { useState } from 'react';
  * - Toolbar com ações principais
  */
 const EditorFixedPageWithDragDrop = () => {
-  const { state } = useEditor();
-
   // Estado local para o editor
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedComponent, setSelectedComponent] = useState<any>(null);
