@@ -5,8 +5,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
 
-// Main pages - using existing files
-import ModernQuizPage from './pages/ModernQuizPage';
+// Main pages - using existing files that work
+import QuizFlowPage from './pages/QuizFlowPage';
 import ResultPage from './pages/ResultPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import EditorPage from './pages/admin/EditorPage';
@@ -23,7 +23,7 @@ const App = () => {
             <Route path="/" component={Home} />
 
             {/* 🎯 Quiz Principal */}
-            <Route path="/quiz" component={ModernQuizPage} />
+            <Route path="/quiz" component={QuizFlowPage} />
 
             {/* 📊 Resultados */}
             <Route path="/result" component={ResultPage} />
