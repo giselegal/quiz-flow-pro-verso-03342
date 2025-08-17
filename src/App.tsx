@@ -14,9 +14,9 @@ import Home from './pages/Home';
 import QuizFlowPage from './pages/QuizFlowPage';
 import ResultPage from './pages/ResultPage';
 
-// 🎨 EDITORES MAIS COMPLETOS - Lazy load
-const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed')); // Editor simplificado
-const EditorCompleto = lazy(() => import('./pages/editor')); // 🏆 EDITOR COMPLETO REAL (FourColumnLayout)
+// 🎨 EDITOR CORRETO - Único editor funcional
+// 🏆 EDITOR CORRETO: src/pages/editor-fixed.tsx → EditorFixedPageWithDragDrop
+const EditorFixedPageWithDragDrop = lazy(() => import('./pages/editor-fixed'));
 const SchemaDrivenEditorResponsive = lazy(
   () => import('./components/editor/SchemaDrivenEditorResponsive')
 );
@@ -40,17 +40,17 @@ const App = () => {
                 <Route path="/result" component={ResultPage} />
                 <Route path="/result-test" component={ResultPage} />
 
-                {/* 🎨 EDITOR MAIS COMPLETO - 4 Colunas com Drag & Drop */}
+                {/* � EDITOR CORRETO - Principal */}
                 <Route path="/editor">
                   <div className="h-screen w-full">
                     <EditorFixedPageWithDragDrop />
                   </div>
                 </Route>
 
-                {/* 🏆 EDITOR PRINCIPAL - Rota específica do editor-fixed */}
+                {/* 🏆 EDITOR CORRETO - Rota alternativa */}
                 <Route path="/editor-fixed">
                   <div className="h-screen w-full">
-                    <EditorCompleto />
+                    <EditorFixedPageWithDragDrop />
                   </div>
                 </Route>
 
@@ -81,8 +81,8 @@ const App = () => {
                       <p className="text-gray-600">A página que você procura não existe.</p>
                       <div className="mt-4 text-sm text-gray-500">
                         <p>🎨 Editores disponíveis:</p>
-                        <p>/editor - Editor simplificado</p>
-                        <p>/editor-fixed - 🏆 Editor completo com FourColumnLayout</p>
+                        <p>/editor - 🏆 Editor correto (EditorFixedPageWithDragDrop)</p>
+                        <p>/editor-fixed - 🏆 Editor correto (mesmo editor)</p>
                         <p>/editor-schema - Editor schema-driven</p>
                         <p>/editor-improved - Editor melhorado</p>
                       </div>
