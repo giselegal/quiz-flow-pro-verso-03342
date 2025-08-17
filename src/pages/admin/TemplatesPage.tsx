@@ -1,5 +1,5 @@
-import React from 'react';
 import { EnhancedEditorDashboard } from '@/components/enhanced-editor/dashboard/EnhancedEditorDashboard';
+import React from 'react';
 
 const TemplatesPage: React.FC = () => {
   const handleCreateFunnel = () => {

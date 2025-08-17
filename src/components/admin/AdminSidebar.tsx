@@ -45,6 +45,12 @@ const sidebarItems = [
     description: 'Gerenciar templates salvos',
   },
   {
+    title: 'Meus Templates',
+    href: '/meus-templates',
+    icon: Layers,
+    description: 'Templates pessoais salvos',
+  },
+  {
     title: 'Testes A/B',
     href: '/admin/ab-tests',
     icon: Target,

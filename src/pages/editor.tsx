@@ -22,6 +22,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { BlockType } from '@/types/editor';
+import { useLocation } from 'wouter';
 
 /**
  * Editor Fixed - Versão Corrigida do Editor Principal
@@ -36,6 +37,9 @@ import { BlockType } from '@/types/editor';
  * 🚀 SISTEMA DE PREVIEW INTEGRADO
  */
 const EditorFixedPageWithDragDrop: React.FC = () => {
+  // Navigation hook
+  const [, setLocation] = useLocation();
+  
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
   const propertyHistory = usePropertyHistory();
@@ -99,6 +103,14 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
 
       // TODO: Implement template import logic
       // This would involve:
+    } catch (error) {
+      console.error('❌ Erro ao importar template:', error);
+    }
+  };
+
+  const handleOpenMyTemplates = () => {
+    setLocation('/meus-templates');
+  };
       // 1. Clear current blocks
       // 2. Load template components
       // 3. Update funnel data

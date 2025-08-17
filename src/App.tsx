@@ -40,6 +40,7 @@ const DebugStep02 = lazy(() => import('./components/debug/DebugStep02'));
 const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'));
 const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
 const TestStep02Direct = lazy(() => import('./components/debug/TestStep02Direct'));
+const MyTemplatesPage = lazy(() => import('./pages/MyTemplatesPage'));
 // Removed: EditorFixedPageWithDragDrop - file deleted
 // Removed: EditorFixedDebug - file moved to backup
 // 🚀 EDITOR COM SISTEMA DE PREVIEW INTEGRADO
@@ -503,6 +504,19 @@ function App() {
                     </Suspense>
                   )}
                 />
+
+                {/* Meus Templates - Rota dedicada */}
+                <ProtectedRoute
+                  path="/meus-templates"
+                  component={() => (
+                    <Suspense fallback={<PageLoading />}>
+                      <ErrorBoundary>
+                        <MyTemplatesPage />
+                      </ErrorBoundary>
+                    </Suspense>
+                  )}
+                />
+
                 <ProtectedRoute
                   path="/admin/funis"
                   component={() => (

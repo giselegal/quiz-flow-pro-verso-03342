@@ -6,6 +6,7 @@ import {
   Activity,
   Eye,
   FileText,
+  FolderOpen,
   Maximize2,
   Monitor,
   Save,
@@ -21,6 +22,7 @@ interface EditorToolbarProps {
   onTogglePreview: () => void;
   onSave: () => void;
   onSaveAsTemplate?: () => void;
+  onOpenMyTemplates?: () => void;
   onShowFunnelSettings?: () => void;
   onShowMonitoring?: () => void;
   currentFunnelData?: any;
@@ -35,6 +37,7 @@ export function EditorToolbar({
   onTogglePreview,
   onSave,
   onSaveAsTemplate,
+  onOpenMyTemplates,
   onShowFunnelSettings,
   onShowMonitoring,
   currentFunnelData,
@@ -180,6 +183,18 @@ export function EditorToolbar({
           >
             <FileText className="w-4 h-4 mr-2" />
             Salvar como Template
+          </Button>
+        )}
+
+        {onOpenMyTemplates && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onOpenMyTemplates}
+            className="border-[#B89B7A] text-[#432818] hover:bg-[#B89B7A]/10"
+          >
+            <FolderOpen className="w-4 h-4 mr-2" />
+            Meus Templates
           </Button>
         )}
       </div>
