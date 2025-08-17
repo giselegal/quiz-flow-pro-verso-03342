@@ -22,7 +22,7 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
 import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
-import { useToast } from '@/hooks/use-toast';
+import { useEditorSave } from '@/services/editorPersistenceService';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
 
@@ -42,7 +42,7 @@ import { useLocation } from 'wouter';
 const EditorFixedPageWithDragDrop: React.FC = () => {
   // Navigation hook
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
+  const { save: saveEditor } = useEditorSave();
 
   // Hooks para funcionalidades avançadas
   const { scrollRef } = useSyncedScroll({ source: 'canvas' });
@@ -68,35 +68,19 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     data: {
       blocks: currentBlocks,
       activeStageId,
-      totalBlocks,
+      funnelId: `editor-${Date.now()}`,
       timestamp: Date.now(),
     },
     onSave: async data => {
       try {
         console.log('🔄 Auto-save ativado:', data);
-
-        // Salvar no localStorage primeiro (garantia)
-        localStorage.setItem(
-          'editor-autosave',
-          JSON.stringify({
-            ...data,
-            savedAt: new Date().toISOString(),
-          })
-        );
-
-        // Tentar salvar na nuvem
-        await saveFunnel();
-
+        
+        // Usar o novo serviço otimizado
+        await saveEditor(data, false); // false = não mostrar toast para auto-save
+        
         console.log('✅ Auto-save realizado com sucesso');
       } catch (error) {
-        console.warn('⚠️ Auto-save: Erro na nuvem, mantendo local:', error);
-
-        // Toast de aviso (não erro, porque local funcionou)
-        toast({
-          title: 'Salvo localmente',
-          description: 'Alterações salvas no dispositivo. Sync na nuvem pendente.',
-          variant: 'default',
-        });
+        console.warn('⚠️ Auto-save: Erro:', error);
       }
     },
     delay: 3000, // 3 segundos após última alteração
@@ -121,7 +105,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     }
   };
 
-  // 🆕 HANDLER DE SAVE MANUAL MELHORADO
+    // 🆕 HANDLER DE SAVE MANUAL MELHORADO
   const handleSave = async () => {
     if (isSaving) return; // Prevenir cliques duplos
 
@@ -130,38 +114,17 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
     try {
       console.log('💾 Iniciando salvamento manual do editor...');
 
-      // Salvar no localStorage imediatamente
-      const editorData = {
+      // Usar o novo serviço otimizado com feedback
+      const result = await saveEditor({
         blocks: currentBlocks,
         activeStageId,
-        totalBlocks,
-        savedAt: new Date().toISOString(),
-        savedManually: true,
-      };
+        funnelId: `editor-manual-${Date.now()}`,
+        timestamp: Date.now(),
+      }, true); // true = mostrar toast
 
-      localStorage.setItem('editor-manual-save', JSON.stringify(editorData));
-
-      // Tentar salvar na nuvem
-      await saveFunnel();
-
-      // Toast de sucesso
-      toast({
-        title: 'Salvo com sucesso!',
-        description: `${totalBlocks} blocos salvos na nuvem e localmente.`,
-        variant: 'default',
-      });
-
-      console.log('✅ Salvamento manual concluído com sucesso!');
+      console.log('✅ Salvamento manual concluído:', result);
     } catch (error) {
       console.error('❌ Erro no salvamento manual:', error);
-
-      // Toast informativo (não de erro, porque local funcionou)
-      toast({
-        title: 'Salvo localmente',
-        description:
-          'Alterações foram salvas no seu dispositivo. Tentaremos sincronizar na nuvem automaticamente.',
-        variant: 'default',
-      });
     } finally {
       setIsSaving(false);
     }
