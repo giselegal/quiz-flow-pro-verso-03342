@@ -74,10 +74,7 @@ export const PropertyColorPicker: React.FC<PropertyColorPickerProps> = ({
           onChange={handleInputChange}
           placeholder="#000000"
           disabled={disabled}
-          className={cn(
-            'flex-1',
-            error && 'border-red-500 focus:border-red-500'
-          )}
+          className={cn('flex-1', error && 'border-red-500 focus:border-red-500')}
         />
       </div>
 
@@ -92,9 +89,7 @@ export const PropertyColorPicker: React.FC<PropertyColorPickerProps> = ({
         </button>
       )}
 
-      {error && errorMessage && (
-        <p className="text-xs text-red-600">{errorMessage}</p>
-      )}
+      {error && errorMessage && <p className="text-xs text-red-600">{errorMessage}</p>}
     </div>
   );
 };

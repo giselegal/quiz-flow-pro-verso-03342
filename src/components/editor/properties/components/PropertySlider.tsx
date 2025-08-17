@@ -50,7 +50,8 @@ export const PropertySlider: React.FC<PropertySliderProps> = ({
         </Label>
         {showValue && (
           <span className="text-sm text-gray-600 font-mono">
-            {value}{unit}
+            {value}
+            {unit}
           </span>
         )}
       </div>
@@ -68,13 +69,17 @@ export const PropertySlider: React.FC<PropertySliderProps> = ({
       </div>
 
       <div className="flex justify-between text-xs text-gray-500">
-        <span>{min}{unit}</span>
-        <span>{max}{unit}</span>
+        <span>
+          {min}
+          {unit}
+        </span>
+        <span>
+          {max}
+          {unit}
+        </span>
       </div>
 
-      {error && errorMessage && (
-        <p className="text-xs text-red-600">{errorMessage}</p>
-      )}
+      {error && errorMessage && <p className="text-xs text-red-600">{errorMessage}</p>}
     </div>
   );
 };

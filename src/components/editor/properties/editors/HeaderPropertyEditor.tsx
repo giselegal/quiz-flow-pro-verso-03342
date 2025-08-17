@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -9,12 +7,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
 import { Block } from '@/types/editor';
-import { Type, Palette, Layout, Settings } from 'lucide-react';
+import { Layout, Palette, Settings, Type } from 'lucide-react';
 import React from 'react';
+import { PropertyColorPicker } from '../components/PropertyColorPicker';
 import { PropertyInput } from '../components/PropertyInput';
 import { PropertySlider } from '../components/PropertySlider';
-import { PropertyColorPicker } from '../components/PropertyColorPicker';
 
 interface HeaderPropertyEditorProps {
   block: Block;
@@ -31,18 +31,18 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
   const title = block.content?.title || '';
   const subtitle = block.content?.subtitle || '';
   const headerType = block.content?.headerType || 'main';
-  
+
   // Propriedades de elementos de interface
   const showLogo = block.content?.showLogo || false;
   const showProgress = block.content?.showProgress || false;
   const showNavigation = block.content?.showNavigation || false;
-  
+
   // Propriedades de escala e dimensões
   const logoScale = block.content?.logoScale || 100;
   const containerScale = block.content?.containerScale || 100;
   const progressBarThickness = block.content?.progressBarThickness || 4;
   const progressValue = block.content?.progressValue || 0;
-  
+
   // Propriedades de margens
   const marginTop = block.content?.marginTop || 0;
   const marginBottom = block.content?.marginBottom || 0;
@@ -52,7 +52,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
   const paddingBottom = block.content?.paddingBottom || 24;
   const paddingLeft = block.content?.paddingLeft || 24;
   const paddingRight = block.content?.paddingRight || 24;
-  
+
   // Propriedades de cores
   const textColor = block.content?.textColor || '#6B4F43';
   const backgroundColor = block.content?.backgroundColor || '#F8F9FA';
@@ -92,26 +92,22 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               </div>
             </div>
           )}
-          
+
           <h2
             className={`font-bold ${
-              headerType === 'hero'
-                ? 'text-2xl'
-                : headerType === 'section'
-                  ? 'text-xl'
-                  : 'text-lg'
+              headerType === 'hero' ? 'text-2xl' : headerType === 'section' ? 'text-xl' : 'text-lg'
             }`}
             style={{ color: textColor }}
           >
             {title || 'Título do Header'}
           </h2>
-          
+
           {subtitle && (
             <p className="text-sm opacity-80" style={{ color: textColor }}>
               {subtitle}
             </p>
           )}
-          
+
           {showProgress && (
             <div className="mt-4">
               <div
@@ -128,7 +124,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               </div>
             </div>
           )}
-          
+
           {showNavigation && (
             <div className="mt-4 flex justify-between">
               <div className="w-8 h-8 bg-gray-300 rounded flex items-center justify-center">←</div>
@@ -156,7 +152,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             <Type className="h-4 w-4" />
             Conteúdo
           </h3>
-          
+
           <PropertyInput
             label="Título"
             value={title}
@@ -247,7 +243,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   step={1}
                   unit="%"
                 />
-                
+
                 <PropertySlider
                   label="Espessura da Barra"
                   value={progressBarThickness}
@@ -257,7 +253,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                   step={1}
                   unit="px"
                 />
-                
+
                 <PropertyColorPicker
                   label="Cor da Barra de Progresso"
                   value={progressBarColor}
@@ -317,7 +313,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               step={4}
               unit="px"
             />
-            
+
             <PropertySlider
               label="Margem Inferior"
               value={marginBottom}
@@ -337,7 +333,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               step={4}
               unit="px"
             />
-            
+
             <PropertySlider
               label="Margem Direita"
               value={marginRight}
@@ -359,7 +355,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               step={4}
               unit="px"
             />
-            
+
             <PropertySlider
               label="Padding Inferior"
               value={paddingBottom}
@@ -379,7 +375,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
               step={4}
               unit="px"
             />
-            
+
             <PropertySlider
               label="Padding Direito"
               value={paddingRight}
@@ -447,7 +443,7 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 </div>
               </div>
             )}
-            
+
             <h2
               className={`font-bold ${
                 headerType === 'hero'
@@ -460,13 +456,13 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
             >
               {title || 'Título do Header'}
             </h2>
-            
+
             {subtitle && (
               <p className="text-sm opacity-80" style={{ color: textColor }}>
                 {subtitle}
               </p>
             )}
-            
+
             {showProgress && (
               <div className="mt-4">
                 <div
@@ -483,11 +479,15 @@ export const HeaderPropertyEditor: React.FC<HeaderPropertyEditorProps> = ({
                 </div>
               </div>
             )}
-            
+
             {showNavigation && (
               <div className="mt-4 flex justify-between">
-                <div className="w-6 h-6 bg-gray-300 rounded flex items-center justify-center text-xs">←</div>
-                <div className="w-6 h-6 bg-gray-300 rounded flex items-center justify-center text-xs">→</div>
+                <div className="w-6 h-6 bg-gray-300 rounded flex items-center justify-center text-xs">
+                  ←
+                </div>
+                <div className="w-6 h-6 bg-gray-300 rounded flex items-center justify-center text-xs">
+                  →
+                </div>
               </div>
             )}
           </div>
