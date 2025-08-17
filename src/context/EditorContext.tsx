@@ -124,7 +124,7 @@ interface EditorContextType {
   validation: ValidationService;
 }
 
-const EditorContext = createContext<EditorContextType | null>(null);
+export const EditorContext = createContext<EditorContextType | null>(null);
 
 // Initial state
 const initialState: EditorState = {

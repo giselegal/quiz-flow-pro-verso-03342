@@ -19,8 +19,7 @@ export const ValidatedPropertyPanel: React.FC<PropertyPanelProps> = ({
   onChange,
   validations,
 }) => {
-  const { validateBlock, getFieldErrors } = useEditorFieldValidation();
-  const errors = getFieldErrors(blockId);
+  const { validateBlock } = useEditorFieldValidation();
 
   const handleFieldChange = (fieldId: string, value: unknown) => {
     const newValues = {

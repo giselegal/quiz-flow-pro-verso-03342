@@ -93,6 +93,7 @@ export type BlockType =
 
   // Blocos de quiz
   | 'quiz-intro-header'
+  | 'quiz-header'
   | 'quiz-start-page-inline'
   | 'quiz-question-inline'
   | 'quiz-result-inline'
@@ -104,6 +105,7 @@ export type BlockType =
   | 'style-result'
   | 'style-card-inline'
   | 'result-card-inline'
+  | 'result-display'
   | 'result-header-inline'
   | 'secondary-styles'
   | 'secondaryStylesTitle'
@@ -111,11 +113,15 @@ export type BlockType =
   // Blocos de layout
   | 'two-column'
   | 'form-container'
+  | 'lead-form'
   | 'options-grid'
   | 'hero-section'
   | 'hero'
   | 'header'
   | 'carousel'
+  | 'container'
+  | 'grid'
+  | 'divider'
   | 'decorative-bar-inline'
 
   // Blocos de acessibilidade
@@ -134,6 +140,7 @@ export type BlockType =
   | 'pricing-card-inline'
   | 'guarantee'
   | 'cta'
+  | 'offer-cta'
   | 'offerHero'
   | 'products'
   | 'video'

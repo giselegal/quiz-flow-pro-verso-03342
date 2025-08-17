@@ -18,12 +18,7 @@ import {
 } from 'lucide-react';
 import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
 
-interface FunnelTemplate {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  theme: string;
+// Mock templates para demonstração
   thumbnailUrl?: string;
   stepCount: number;
   isOfficial: boolean;
