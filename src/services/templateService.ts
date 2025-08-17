@@ -1,9 +1,6 @@
 import { STEP_TEMPLATES, getStepTemplate } from '../config/templates/templates';
 import type { Block, BlockType } from '../types/editor';
 
-// ===== IMPORT DO STEP01 TYPESCRIPT FUNCIONAL =====
-import { getStep01Template } from '../components/steps/Step01Template';
-
 // Interfaces para corresponder à estrutura real dos templates
 export interface TemplateMetadata {
   id: string;
