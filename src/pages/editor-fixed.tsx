@@ -7,7 +7,7 @@ import { Eye, Image, Layout, Mouse, Save, Settings, Type } from 'lucide-react';
 import { useState } from 'react';
 
 /**
- * 🏆 EDITOR PRINCIPAL: EditorFixedPageWithDragDrop 
+ * 🏆 EDITOR PRINCIPAL: EditorFixedPageWithDragDrop
  * Localização: src/pages/editor-fixed.tsx
  *
  * Editor de 4 colunas com layout responsivo baseado em ResizablePanel
