@@ -4,6 +4,7 @@ import { Router, Route, Switch } from 'wouter';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import { LoadingFallback } from '@/components/ui/loading-fallback';
+import { AuthProvider } from '@/context/AuthContext';
 
 // Main pages - using existing files that work
 import QuizFlowPage from './pages/QuizFlowPage';
@@ -15,7 +16,8 @@ import Home from './pages/Home';
 
 const App = () => {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+    <AuthProvider>
+      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
       <Router>
         <Suspense fallback={<LoadingFallback />}>
           <Switch>
@@ -49,6 +51,7 @@ const App = () => {
       </Router>
       <Toaster />
     </ThemeProvider>
+    </AuthProvider>
   );
 };
 
