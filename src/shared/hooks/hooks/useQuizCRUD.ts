@@ -4,6 +4,7 @@ import { supabase } from '../integrations/supabase/client';
 import { QuizQuestion } from '@/types/quiz';
 import { Funnel, FunnelPage } from '../types/unified-schema';
 import { useEffect, useState } from 'react';
+import { toast } from '@/hooks/use-toast';
 
 export interface QuizMetadata {
   title: string;

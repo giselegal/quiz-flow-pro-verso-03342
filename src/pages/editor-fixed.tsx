@@ -22,6 +22,8 @@ import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { usePropertyHistory } from '@/hooks/usePropertyHistory';
 import { useSyncedScroll } from '@/hooks/useSyncedScroll';
+import { useEditorSave } from '@/services/editorPersistenceService';
+import { toast } from '@/hooks/use-toast';
 import { BlockType } from '@/types/editor';
 import { useLocation } from 'wouter';
 // Adicione o import do saveEditor
