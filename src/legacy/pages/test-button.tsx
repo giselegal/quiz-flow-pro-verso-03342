@@ -1,4 +1,4 @@
-import ButtonInlineFixed from '../components/blocks/inline/ButtonInlineFixed';
+import ButtonInlineFixed from '../../components/blocks/inline/ButtonInlineFixed';
 
 const TestButton = () => {
   const testBlock = {

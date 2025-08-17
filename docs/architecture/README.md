@@ -5,16 +5,19 @@ Esta pasta contém documentação sobre a arquitetura e design do sistema.
 ## 🎯 Conteúdo
 
 ### Design de Sistema
+
 - Diagramas de fluxo
 - Mapas visuais
 - Estrutura de componentes
 
 ### Organização
+
 - Arquitetura de pastas
 - Relacionamentos entre módulos
 - Padrões de design implementados
 
 ### Componentes
+
 - Hierarquia de componentes
 - Sistema de propriedades
 - Registry e definições
@@ -30,6 +33,7 @@ Esta pasta contém documentação sobre a arquitetura e design do sistema.
 ## 🔄 Evolução da Arquitetura
 
 A arquitetura evoluiu de:
+
 1. **Estrutura Plana** - Todos os arquivos na raiz
 2. **Organização por Tipo** - Separação por funcionalidade
 3. **Arquitetura por Features** - Organização modular atual

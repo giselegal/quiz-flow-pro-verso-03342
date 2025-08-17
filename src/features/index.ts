@@ -7,8 +7,8 @@ export * from './editor/components';
 
 // === QUIZ FEATURE ===
 // Quiz building and management
-export * from './quiz/components';
 export * from './quiz/builder';
+export * from './quiz/components';
 
 // === SHARED COMPONENTS ===
 // Reusable UI components and utilities

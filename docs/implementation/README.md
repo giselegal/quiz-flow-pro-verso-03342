@@ -5,16 +5,19 @@ Esta pasta contém documentação sobre implementações realizadas e correçõe
 ## � Tipos de Conteúdo
 
 ### Implementações
+
 - Novas funcionalidades desenvolvidas
 - Sistemas implementados
 - Integrações realizadas
 
 ### Correções
+
 - Bugs corrigidos
 - Problemas resolvidos
 - Otimizações aplicadas
 
 ### Atualizações
+
 - Melhorias incrementais
 - Refatorações
 - Modernizações de código

@@ -5,16 +5,19 @@ Esta pasta contém relatórios detalhados sobre o estado e evolução do projeto
 ## 📋 Tipos de Relatórios
 
 ### Relatórios de Sistema
+
 - Estado geral do projeto
 - Builds e deployments
 - Análises de performance
 
 ### Relatórios de Desenvolvimento
+
 - Progresso de implementação
 - Verificações de qualidade
 - Status de features
 
 ### Relatórios de Problemas
+
 - Erros identificados e resolvidos
 - Problemas de compatibilidade
 - Soluções implementadas

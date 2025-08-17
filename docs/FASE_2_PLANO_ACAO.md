@@ -3,16 +3,19 @@
 ## 🎯 Objetivos da Fase 2
 
 ### 1. Reorganização da estrutura `/src/`
+
 - Organizar por features ao invés de tipos
 - Consolidar componentes duplicados
 - Otimizar imports e dependências
 
 ### 2. Consolidação de Editores
+
 - Identificar editor principal funcional
 - Mover editores obsoletos para pasta legacy
 - Manter apenas 1-2 editores funcionais
 
 ### 3. Estrutura por Features
+
 - `/src/features/editor/` - Funcionalidades do editor
 - `/src/features/quiz/` - Sistema de quiz
 - `/src/features/auth/` - Autenticação
@@ -21,6 +24,7 @@
 ## 📊 Análise Atual
 
 ### Editores Identificados (páginas):
+
 - `editor.tsx` - Editor principal React/TS
 - `editor-fixed.js` - Editor JavaScript funcional
 - `editor-minimal.jsx` - Editor mínimo para bypass
@@ -29,6 +33,7 @@
 - E mais 20+ variações...
 
 ### Componentes Duplicados:
+
 - `PropertyPanel.tsx` (5+ versões)
 - `ComponentsSidebar.tsx` (múltiplas versões)
 - `BlockRenderer.tsx` (4+ implementações)
@@ -64,21 +69,25 @@ src/
 ## 📋 Fases de Execução
 
 ### Fase 2.1: Backup e Análise
+
 - [x] Backup dos editores atuais
 - [x] Identificação de componentes funcionais
 - [x] Mapeamento de dependências
 
 ### Fase 2.2: Criação da Nova Estrutura
+
 - [ ] Criar pastas `features/`
 - [ ] Criar pasta `shared/`
 - [ ] Mover componentes por categoria
 
 ### Fase 2.3: Consolidação de Editores
+
 - [ ] Identificar editor principal
 - [ ] Mover editores legados
 - [ ] Atualizar rotas
 
 ### Fase 2.4: Otimização de Imports
+
 - [ ] Atualizar imports para nova estrutura
 - [ ] Remover dependências órfãs
 - [ ] Validar funcionamento
@@ -94,16 +103,19 @@ src/
 ## 📈 Benefícios Esperados
 
 ### Para Desenvolvedores
+
 - Navegação intuitiva por features
 - Redução de complexidade
 - Facilidade para encontrar código relacionado
 
 ### Para o Projeto
+
 - Estrutura escalável
 - Manutenção simplificada
 - Performance otimizada
 
 ### Para o Futuro
+
 - Base sólida para novas features
 - Facilidade de onboarding
 - Arquitetura sustentável

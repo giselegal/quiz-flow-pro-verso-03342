@@ -5,16 +5,19 @@ Esta pasta contém documentos sobre o status atual de várias partes do projeto.
 ## 📊 Tipos de Status
 
 ### Status de Implementação
+
 - Features concluídas
 - Funcionalidades em produção
 - Módulos finalizados
 
 ### Status de Integração
+
 - Integrações ativas
 - Conexões com serviços externos
 - APIs implementadas
 
 ### Status de Qualidade
+
 - Testes implementados
 - Validações ativas
 - Métricas de qualidade

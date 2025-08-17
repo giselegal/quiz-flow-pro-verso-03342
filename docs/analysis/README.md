@@ -5,16 +5,19 @@ Esta pasta contém análises detalhadas do projeto, incluindo:
 ## 🔍 Tipos de Análise
 
 ### Estrutura e Arquitetura
+
 - Análises de componentes
 - Mapeamento de dependências
 - Avaliação de complexidade
 
 ### Performance e Otimização
+
 - Análises de rendering
 - Identificação de gargalos
 - Propostas de otimização
 
 ### Qualidade de Código
+
 - Auditorias de código
 - Identificação de duplicações
 - Análises de compatibilidade

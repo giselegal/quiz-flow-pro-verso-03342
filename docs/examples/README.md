@@ -5,16 +5,19 @@ Esta pasta contém exemplos práticos de código e snippets úteis.
 ## 🎯 Tipos de Exemplos
 
 ### Componentes
+
 - Exemplos de uso
 - Configurações típicas
 - Patterns comuns
 
 ### Implementações
+
 - Códigos de referência
 - Soluções completas
 - Integrações
 
 ### Configurações
+
 - Setups de desenvolvimento
 - Configurações de produção
 - Templates de projeto
@@ -36,16 +39,19 @@ Esta pasta contém exemplos práticos de código e snippets úteis.
 ## 📚 Categorias
 
 ### Templates React
+
 - Componentes funcionais
 - Hooks customizados
 - Context providers
 
 ### Configurações
+
 - Configs de build
 - Setups de ambiente
 - Integrações
 
 ### Utilitários
+
 - Helpers functions
 - Validation schemas
 - Type definitions
@@ -53,6 +59,7 @@ Esta pasta contém exemplos práticos de código e snippets úteis.
 ## 🚀 Contribuição
 
 Para adicionar novos exemplos:
+
 1. Use nomenclatura clara
 2. Inclua comentários
 3. Forneça contexto de uso

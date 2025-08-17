@@ -5,21 +5,25 @@ Esta pasta contém guias práticos, checklists e documentação de uso.
 ## 📖 Tipos de Conteúdo
 
 ### Guias de Implementação
+
 - Como implementar features
 - Passos de configuração
 - Boas práticas
 
 ### Checklists
+
 - Verificações de qualidade
 - Listas de tarefas
 - Procedimentos padrão
 
 ### Planos de Ação
+
 - Roadmaps de desenvolvimento
 - Planos de implementação
 - Estratégias de execução
 
 ### Referências Rápidas
+
 - APIs e interfaces
 - Comandos úteis
 - Referências técnicas

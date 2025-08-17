@@ -5,21 +5,25 @@ Esta pasta contém documentação específica para desenvolvedores.
 ## 👨‍💻 Conteúdo para Devs
 
 ### Desenvolvimento de Componentes
+
 - Padrões de criação
 - Estruturas de código
 - Configurações específicas
 
 ### Sistema de Propriedades
+
 - Painéis dinâmicos
 - Schemas de validação
 - Interfaces de configuração
 
 ### Editor e Interface
+
 - Funcionalidades do editor
 - Componentes de UI
 - Sistemas de layout
 
 ### Integrações
+
 - APIs e serviços
 - Hooks customizados
 - Utilitários
@@ -36,11 +40,13 @@ Esta pasta contém documentação específica para desenvolvedores.
 ## 🔧 Ferramentas
 
 ### Performance
+
 - Console cleanup
 - Otimizações de render
 - Debugging tools
 
 ### Desenvolvimento
+
 - Hot reload
 - Dev tools
 - Debugging helpers
