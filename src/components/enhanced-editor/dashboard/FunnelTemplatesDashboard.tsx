@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -16,6 +16,7 @@ import {
   Gift,
   Zap
 } from 'lucide-react';
+import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
 
 interface FunnelTemplate {
   id: string;
@@ -89,7 +90,7 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     isOfficial: true,
     usageCount: 1247,
     tags: ['estilo', 'moda', 'personalidade', 'completo'],
-    thumbnailUrl: '/api/placeholder/300/200'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop&auto=format'
   },
   {
     id: 'lead-capture-simple',
@@ -101,7 +102,7 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     isOfficial: true,
     usageCount: 892,
     tags: ['leads', 'simples', 'conversão'],
-    thumbnailUrl: '/api/placeholder/300/200'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=300&h=200&fit=crop&auto=format'
   },
   {
     id: 'personality-assessment',
@@ -113,7 +114,7 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     isOfficial: true,
     usageCount: 634,
     tags: ['personalidade', 'psicologia', 'comportamento'],
-    thumbnailUrl: '/api/placeholder/300/200'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=300&h=200&fit=crop&auto=format'
   },
   {
     id: 'product-matcher',
@@ -125,7 +126,7 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     isOfficial: false,
     usageCount: 445,
     tags: ['produto', 'recomendação', 'vendas'],
-    thumbnailUrl: '/api/placeholder/300/200'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop&auto=format'
   },
   {
     id: 'skill-assessment',
@@ -137,7 +138,7 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     isOfficial: true,
     usageCount: 723,
     tags: ['habilidades', 'profissional', 'certificação'],
-    thumbnailUrl: '/api/placeholder/300/200'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&auto=format'
   },
   {
     id: 'sales-funnel-premium',
@@ -149,7 +150,55 @@ const SAMPLE_TEMPLATES: FunnelTemplate[] = [
     isOfficial: false,
     usageCount: 356,
     tags: ['vendas', 'premium', 'alta-conversão'],
-    thumbnailUrl: '/api/placeholder/300/200'
+    thumbnailUrl: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=300&h=200&fit=crop&auto=format'
+  },
+  {
+    id: 'wellness-assessment',
+    name: 'Avaliação de Bem-estar',
+    description: 'Quiz sobre hábitos saudáveis e estilo de vida',
+    category: 'personality-test',
+    theme: 'wellness-soft',
+    stepCount: 10,
+    isOfficial: true,
+    usageCount: 567,
+    tags: ['bem-estar', 'saúde', 'lifestyle'],
+    thumbnailUrl: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&auto=format'
+  },
+  {
+    id: 'mini-lead-magnet',
+    name: 'Mini Lead Magnet',
+    description: 'Funil rápido de 3 etapas para captura express',
+    category: 'lead-generation',
+    theme: 'business-clean',
+    stepCount: 3,
+    isOfficial: true,
+    usageCount: 1023,
+    tags: ['rápido', 'magnet', 'express'],
+    thumbnailUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=200&fit=crop&auto=format'
+  },
+  {
+    id: 'career-assessment',
+    name: 'Orientação de Carreira',
+    description: 'Teste para descobrir a carreira ideal',
+    category: 'assessment',
+    theme: 'corporate-blue',
+    stepCount: 14,
+    isOfficial: true,
+    usageCount: 445,
+    tags: ['carreira', 'profissional', 'orientação'],
+    thumbnailUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&auto=format'
+  },
+  {
+    id: 'luxury-product-finder',
+    name: 'Localizador de Produtos Luxo',
+    description: 'Recomendação de produtos de alta gama',
+    category: 'product-recommendation',
+    theme: 'luxury-gold',
+    stepCount: 8,
+    isOfficial: false,
+    usageCount: 234,
+    tags: ['luxo', 'premium', 'exclusivo'],
+    thumbnailUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop&auto=format'
   }
 ];
 
@@ -161,6 +210,25 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [templates, setTemplates] = useState<FunnelTemplate[]>(SAMPLE_TEMPLATES);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Load templates from the service
+  useEffect(() => {
+    const loadTemplates = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedTemplates = await funnelTemplateService.getTemplates(selectedCategory);
+        setTemplates(fetchedTemplates.length > 0 ? fetchedTemplates : SAMPLE_TEMPLATES);
+      } catch (error) {
+        console.error('Error loading templates:', error);
+        setTemplates(SAMPLE_TEMPLATES); // Fallback to sample data
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadTemplates();
+  }, [selectedCategory]);
 
   const filteredTemplates = selectedCategory === 'all' 
     ? templates 
@@ -205,6 +273,65 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
             Criar Novo
           </Button>
         </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center">
+              <FileText className="w-8 h-8 text-[#B89B7A] mr-3" />
+              <div>
+                <p className="text-sm text-[#6B4F43]">Total Templates</p>
+                <p className="text-2xl font-bold text-[#432818]">{templates.length}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center">
+              <Badge className="w-8 h-8 bg-[#B89B7A] text-white mr-3 flex items-center justify-center">
+                <span className="text-xs">★</span>
+              </Badge>
+              <div>
+                <p className="text-sm text-[#6B4F43]">Oficiais</p>
+                <p className="text-2xl font-bold text-[#432818]">
+                  {templates.filter(t => t.isOfficial).length}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center">
+              <TrendingUp className="w-8 h-8 text-green-500 mr-3" />
+              <div>
+                <p className="text-sm text-[#6B4F43]">Mais Usado</p>
+                <p className="text-lg font-bold text-[#432818]">
+                  {Math.max(...templates.map(t => t.usageCount)).toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center">
+              <Palette className="w-8 h-8 text-[#E91E63] mr-3" />
+              <div>
+                <p className="text-sm text-[#6B4F43]">Categorias</p>
+                <p className="text-2xl font-bold text-[#432818]">
+                  {Object.keys(TEMPLATE_THEMES).length}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Category Filter */}
@@ -253,125 +380,154 @@ const FunnelTemplatesDashboard: React.FC<FunnelTemplatesDashboardProps> = ({
 
       {/* Templates Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredTemplates.map(template => {
-          const CategoryIcon = getCategoryIcon(template.category);
-          const categoryColor = getCategoryColor(template.category);
-          
-          return (
-            <Card 
-              key={template.id} 
-              className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group"
-              onClick={() => onSelectTemplate?.(template.id)}
-            >
-              {/* Template Image */}
-              <div className="relative h-40 bg-gradient-to-br from-gray-100 to-gray-200">
-                {template.thumbnailUrl ? (
-                  <img 
-                    src={template.thumbnailUrl} 
-                    alt={template.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div 
-                    className="w-full h-full flex items-center justify-center"
-                    style={{ backgroundColor: `${categoryColor}20` }}
-                  >
-                    <CategoryIcon 
-                      className="w-16 h-16 opacity-60" 
-                      style={{ color: categoryColor }}
-                    />
-                  </div>
-                )}
-                <div className="absolute top-3 right-3">
-                  {template.isOfficial && (
-                    <Badge className="bg-[#B89B7A] text-white">
-                      Oficial
-                    </Badge>
-                  )}
-                </div>
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <div className="flex space-x-2">
-                    <Button size="sm" variant="secondary">
-                      <Eye className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="secondary">
-                      <Edit3 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
+        {isLoading ? (
+          // Loading skeleton
+          Array.from({ length: 8 }).map((_, index) => (
+            <Card key={index} className="overflow-hidden">
+              <div className="h-48 bg-gray-200 animate-pulse"></div>
               <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-sm" style={{ color: '#432818' }}>
-                    {template.name}
-                  </h3>
-                  <CategoryIcon 
-                    className="w-4 h-4 flex-shrink-0" 
-                    style={{ color: categoryColor }}
-                  />
-                </div>
-                
-                <p className="text-xs mb-3" style={{ color: '#6B4F43' }}>
-                  {template.description}
-                </p>
-
-                <div className="flex items-center justify-between text-xs mb-3" style={{ color: '#8B7355' }}>
-                  <span>{template.stepCount} etapas</span>
-                  <span>{template.usageCount} usos</span>
-                </div>
-
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {template.tags.slice(0, 2).map(tag => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {template.tags.length > 2 && (
-                    <Badge variant="secondary" className="text-xs">
-                      +{template.tags.length - 2}
-                    </Badge>
-                  )}
-                </div>
-
+                <div className="h-4 bg-gray-200 animate-pulse mb-2"></div>
+                <div className="h-3 bg-gray-200 animate-pulse mb-3"></div>
                 <div className="flex space-x-2">
-                  <Button 
-                    size="sm" 
-                    className="flex-1 bg-[#B89B7A] hover:bg-[#A38A69] text-xs"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onCreateFromTemplate?.(template.id);
-                    }}
-                  >
-                    Usar Modelo
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onExportTemplate?.(template.id);
-                    }}
-                  >
-                    <Download className="w-3 h-3" />
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onCreateFromTemplate?.(`copy-${template.id}`);
-                    }}
-                  >
-                    <Copy className="w-3 h-3" />
-                  </Button>
+                  <div className="h-8 bg-gray-200 animate-pulse flex-1"></div>
+                  <div className="h-8 w-8 bg-gray-200 animate-pulse"></div>
                 </div>
               </CardContent>
             </Card>
-          );
-        })}
+          ))
+        ) : (
+          filteredTemplates.map(template => {
+            const CategoryIcon = getCategoryIcon(template.category);
+            const categoryColor = getCategoryColor(template.category);
+            
+            return (
+              <Card 
+                key={template.id} 
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                onClick={() => onSelectTemplate?.(template.id)}
+              >
+                {/* Template Image */}
+                <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                  {template.thumbnailUrl ? (
+                    <img 
+                      src={template.thumbnailUrl} 
+                      alt={template.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div 
+                      className="w-full h-full flex items-center justify-center"
+                      style={{ backgroundColor: `${categoryColor}20` }}
+                    >
+                      <CategoryIcon 
+                        className="w-16 h-16 opacity-60" 
+                        style={{ color: categoryColor }}
+                      />
+                    </div>
+                  )}
+                  {/* Category Badge */}
+                  <div className="absolute top-3 left-3">
+                    <div 
+                      className="flex items-center px-2 py-1 rounded-full text-xs font-medium text-white bg-black bg-opacity-60 backdrop-blur-sm"
+                      style={{ backgroundColor: `${categoryColor}90` }}
+                    >
+                      <CategoryIcon className="w-3 h-3 mr-1" />
+                      {TEMPLATE_THEMES[template.category as keyof typeof TEMPLATE_THEMES]?.name || template.category}
+                    </div>
+                  </div>
+                  {/* Official Badge */}
+                  <div className="absolute top-3 right-3">
+                    {template.isOfficial && (
+                      <Badge className="bg-[#B89B7A] text-white text-xs">
+                        Oficial
+                      </Badge>
+                    )}
+                  </div>
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="flex space-x-2">
+                      <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white">
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" variant="secondary" className="bg-white/90 hover:bg-white">
+                        <Edit3 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-sm" style={{ color: '#432818' }}>
+                      {template.name}
+                    </h3>
+                    <CategoryIcon 
+                      className="w-4 h-4 flex-shrink-0" 
+                      style={{ color: categoryColor }}
+                    />
+                  </div>
+                  
+                  <p className="text-xs mb-3" style={{ color: '#6B4F43' }}>
+                    {template.description}
+                  </p>
+
+                  <div className="flex items-center justify-between text-xs mb-3" style={{ color: '#8B7355' }}>
+                    <span>{template.stepCount} etapas</span>
+                    <span>{template.usageCount} usos</span>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {template.tags.slice(0, 2).map(tag => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                    {template.tags.length > 2 && (
+                      <Badge variant="secondary" className="text-xs">
+                        +{template.tags.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+
+                  <div className="flex space-x-2">
+                    <Button 
+                      size="sm" 
+                      className="flex-1 bg-[#B89B7A] hover:bg-[#A38A69] text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onCreateFromTemplate?.(template.id);
+                      }}
+                    >
+                      Usar Modelo
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onExportTemplate?.(template.id);
+                      }}
+                    >
+                      <Download className="w-3 h-3" />
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="border-[#B89B7A] text-[#6B4F43] hover:bg-[#B89B7A]/10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onCreateFromTemplate?.(`copy-${template.id}`);
+                      }}
+                    >
+                      <Copy className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
       </div>
 
       {/* Empty State */}

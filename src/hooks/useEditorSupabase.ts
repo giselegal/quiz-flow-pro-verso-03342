@@ -53,7 +53,11 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
         throw fetchError;
       }
 
-      setComponents(data || []);
+      setComponents((data || []).map(item => ({
+        ...item,
+        funnel_id: item.funnel_id || null,
+        quiz_id: null // Legacy field for backward compatibility
+      })));
       console.log('✅ Componentes carregados do Supabase:', data?.length || 0);
     } catch (err: any) {
       const errorMessage = `Erro ao carregar componentes: ${err.message}`;
@@ -113,6 +117,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       const componentWithDefaults: SupabaseComponent = {
         ...data,
         order_index: data.order_index ?? 0,
+        quiz_id: null, // Legacy field for backward compatibility
       };
 
       setComponents(prev => [...prev, componentWithDefaults]);
@@ -148,10 +153,15 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
 
     setIsLoading(true);
     try {
+      // Clean the updates object to remove null values that aren't allowed by Supabase
+      const cleanedUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([_, value]) => value !== null)
+      );
+      
       const { data, error: updateError } = await supabase
         .from('component_instances')
         .update({
-          ...updates,
+          ...cleanedUpdates,
           updated_at: new Date().toISOString(),
         })
         .eq('id', componentId)
@@ -165,6 +175,7 @@ export const useEditorSupabase = (funnelId?: string, quizId?: string) => {
       const updatedComponent: SupabaseComponent = {
         ...data,
         order_index: data.order_index ?? 0,
+        quiz_id: null, // Legacy field for backward compatibility
       };
 
       setComponents(prev =>

@@ -9,7 +9,6 @@ import { toast } from '@/hooks/use-toast';
 import { 
   Download, 
   Upload, 
-  FileText, 
   CheckCircle, 
   AlertCircle,
   Copy,

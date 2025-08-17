@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Eye, Save, Smartphone, Tablet, Monitor, Maximize2, Settings, Activity } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import TemplateImportExport from '@/components/enhanced-editor/TemplateImportExport';
 
 interface EditorToolbarProps {
   isPreviewing: boolean;
@@ -11,6 +12,9 @@ interface EditorToolbarProps {
   onSave: () => void;
   onShowFunnelSettings?: () => void;
   onShowMonitoring?: () => void;
+  currentFunnelData?: any;
+  currentComponents?: any[];
+  onImportTemplate?: (template: any) => void;
 }
 
 export function EditorToolbar({
@@ -21,6 +25,9 @@ export function EditorToolbar({
   onSave,
   onShowFunnelSettings,
   onShowMonitoring,
+  currentFunnelData,
+  currentComponents,
+  onImportTemplate,
 }: EditorToolbarProps) {
   return (
     <div className="border-b border-[#B89B7A]/20 p-4 bg-white flex items-center justify-between">
@@ -101,6 +108,13 @@ export function EditorToolbar({
       </div>
 
       <div className="flex gap-2">
+        <TemplateImportExport
+          currentFunnelData={currentFunnelData}
+          currentComponents={currentComponents}
+          onImportTemplate={onImportTemplate}
+          className="mr-2"
+        />
+        
         {onShowMonitoring && (
           <Button
             variant="outline"

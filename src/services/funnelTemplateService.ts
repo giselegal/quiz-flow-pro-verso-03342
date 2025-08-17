@@ -49,7 +49,22 @@ class FunnelTemplateService {
         return this.getFallbackTemplates(category);
       }
 
-      return data || this.getFallbackTemplates(category);
+      return (data || []).map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.description || '',
+        category: item.category,
+        theme: item.theme || 'default',
+        stepCount: item.step_count || 1,
+        isOfficial: item.is_official || false,
+        usageCount: item.usage_count || 0,
+        tags: item.tags || [],
+        thumbnailUrl: item.thumbnail_url || undefined,
+        templateData: item.template_data || {},
+        components: Array.isArray(item.components) ? item.components : [],
+        createdAt: item.created_at || new Date().toISOString(),
+        updatedAt: item.updated_at || new Date().toISOString(),
+      })) || this.getFallbackTemplates(category);
     } catch (error) {
       console.error('Error in getTemplates:', error);
       return this.getFallbackTemplates(category);
@@ -123,7 +138,22 @@ class FunnelTemplateService {
         .single();
 
       if (!error && data) {
-        return data;
+        return {
+          id: data.id,
+          name: data.name,
+          description: data.description || '',
+          category: data.category,
+          theme: data.theme || 'default',
+          stepCount: data.step_count || 1,
+          isOfficial: data.is_official || false,
+          usageCount: data.usage_count || 0,
+          tags: data.tags || [],
+          thumbnailUrl: data.thumbnail_url || undefined,
+          templateData: data.template_data || {},
+          components: Array.isArray(data.components) ? data.components : [],
+          createdAt: data.created_at || new Date().toISOString(),
+          updatedAt: data.updated_at || new Date().toISOString(),
+        };
       }
 
       // Fallback to step templates for the 21-step system
@@ -201,7 +231,7 @@ class FunnelTemplateService {
           name: funnelName || `${template.name} - Cópia`,
           description: template.description,
           user_id: user.id,
-          config: {
+          settings: {
             theme: template.theme,
             template_id: templateId,
             created_from_template: true
@@ -259,7 +289,17 @@ class FunnelTemplateService {
       const { data, error } = await supabase
         .from('funnel_templates')
         .insert([{
-          ...template,
+          name: template.name,
+          description: template.description,
+          category: template.category,
+          theme: template.theme,
+          step_count: template.stepCount,
+          is_official: template.isOfficial,
+          usage_count: template.usageCount,
+          tags: template.tags,
+          thumbnail_url: template.thumbnailUrl,
+          template_data: template.templateData,
+          components: template.components,
           created_by: user.id,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
@@ -430,7 +470,7 @@ class FunnelTemplateService {
           name: funnelName,
           description: 'Funil completo de quiz de estilo com 21 etapas',
           user_id: user.id,
-          config: {
+          settings: {
             theme: 'style-quiz',
             template_id: 'style-quiz-21-steps',
             step_count: 21,

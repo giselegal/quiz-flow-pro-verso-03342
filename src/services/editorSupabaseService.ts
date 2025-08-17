@@ -118,7 +118,7 @@ export const fetchComponents = async (
     const hasMore = pagination ? pagination.page * pagination.limit < total : false;
 
     return {
-      components: data || [],
+      components: (data || []) as SupabaseComponent[],
       total,
       hasMore,
     };

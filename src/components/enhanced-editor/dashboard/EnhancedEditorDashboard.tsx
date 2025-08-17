@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus, Template } from 'lucide-react';
+import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from 'lucide-react';
 import FunnelTemplatesDashboard from './FunnelTemplatesDashboard';
 import TemplateImportExport from '../TemplateImportExport';
 
@@ -126,7 +126,6 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
         <div className="flex space-x-3">
           <TemplateImportExport
             onImportTemplate={onImportTemplate}
-            onExportTemplate={onExportTemplate}
           />
           <Button onClick={onCreateFunnel} className="bg-[#B89B7A] hover:bg-[#A38A69]">
             <Plus className="w-4 h-4 mr-2" />
