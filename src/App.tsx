@@ -15,7 +15,7 @@ const Home = lazy(() => import('./pages/Home'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 // Editor inline component to bypass TypeScript config issues
 const TemplatesIA = lazy(() => import('./pages/TemplatesIA'));
-const QuizEditorPage = lazy(() => import('./pages/QuizEditorPage'));
+const QuizEditorPage = lazy(() => import('./legacy/pages/QuizEditorPage'));
 const FunnelsPage = lazy(() => import('./pages/FunnelsPage'));
 const ResultPage = lazy(() => import('./pages/ResultPage'));
 const ResultConfigPage = lazy(() =>
@@ -33,9 +33,9 @@ const IntegratedQuizEditor = lazy(
 );
 
 // Lazy load das páginas de debug (apenas em desenvolvimento)
-const DebugEditorContext = lazy(() => import('./pages/debug-editor'));
-const TestButton = lazy(() => import('./pages/test-button'));
-const TestPropertiesPanel = lazy(() => import('./pages/test-properties'));
+const DebugEditorContext = lazy(() => import('./legacy/pages/debug-editor'));
+const TestButton = lazy(() => import('./legacy/pages/test-button'));
+const TestPropertiesPanel = lazy(() => import('./legacy/pages/test-properties'));
 const DebugStep02 = lazy(() => import('./components/debug/DebugStep02'));
 const TestAllTemplates = lazy(() => import('./components/debug/TestAllTemplates'));
 const TestOptionsRendering = lazy(() => import('./components/debug/TestOptionsRendering'));
@@ -47,8 +47,8 @@ const EditorWithPreview = lazy(() =>
   import('./pages/editor').then(module => ({ default: module.EditorWithPreview }))
 );
 
-const ComponentTestingPage = lazy(() => import('./pages/component-testing'));
-const TestNavigation = lazy(() => import('./pages/TestNavigation'));
+const ComponentTestingPage = lazy(() => import('./legacy/pages/component-testing'));
+const TestNavigation = lazy(() => import('./legacy/pages/TestNavigation'));
 // Removed: EditorDebugMinimal - file moved to backup
 const TestBasico = lazy(() => import('./pages/test-basico'));
 // Removed: EditorFixedSimples - file moved to backup

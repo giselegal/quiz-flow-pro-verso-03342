@@ -1,0 +1,2 @@
+// Quiz Components Index
+export {};

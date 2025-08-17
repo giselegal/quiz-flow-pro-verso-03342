@@ -1,0 +1,477 @@
+import { cn } from '@/lib/utils';
+import { ArrowRight, Download, Edit3, MousePointer2, Play, Star } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { userResponseService } from '../../../services/userResponseService';
+import type { BlockComponentProps } from '../../../types/blocks';
+import { trackQuizStart } from '../../../utils/analytics';
+
+/**
+ * ButtonInlineBlock - Componente modular inline horizontal
+ * Botão responsivo e configurável com múltiplas variantes
+ * MODULAR | REUTILIZÁVEL | RESPONSIVO | INDEPENDENTE
+ */
+
+// Função para converter valores de margem em classes Tailwind (Sistema Universal)
+const getMarginClass = (
+  value: string | number,
+  type: 'top' | 'bottom' | 'left' | 'right'
+): string => {
+  const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+
+  if (isNaN(numValue) || numValue === 0) return '';
+
+  const prefix = type === 'top' ? 'mt' : type === 'bottom' ? 'mb' : type === 'left' ? 'ml' : 'mr';
+
+  // Margens negativas
+  if (numValue < 0) {
+    const absValue = Math.abs(numValue);
+    if (absValue <= 4) return `-${prefix}-1`;
+    if (absValue <= 8) return `-${prefix}-2`;
+    if (absValue <= 12) return `-${prefix}-3`;
+    if (absValue <= 16) return `-${prefix}-4`;
+    if (absValue <= 20) return `-${prefix}-5`;
+    if (absValue <= 24) return `-${prefix}-6`;
+    if (absValue <= 28) return `-${prefix}-7`;
+    if (absValue <= 32) return `-${prefix}-8`;
+    if (absValue <= 36) return `-${prefix}-9`;
+    if (absValue <= 40) return `-${prefix}-10`;
+    return `-${prefix}-10`; // Máximo para negativas
+  }
+
+  // Margens positivas (expandido para suportar até 100px)
+  if (numValue <= 4) return `${prefix}-1`;
+  if (numValue <= 8) return `${prefix}-2`;
+  if (numValue <= 12) return `${prefix}-3`;
+  if (numValue <= 16) return `${prefix}-4`;
+  if (numValue <= 20) return `${prefix}-5`;
+  if (numValue <= 24) return `${prefix}-6`;
+  if (numValue <= 28) return `${prefix}-7`;
+  if (numValue <= 32) return `${prefix}-8`;
+  if (numValue <= 36) return `${prefix}-9`;
+  if (numValue <= 40) return `${prefix}-10`;
+  if (numValue <= 44) return `${prefix}-11`;
+  if (numValue <= 48) return `${prefix}-12`;
+  if (numValue <= 56) return `${prefix}-14`;
+  if (numValue <= 64) return `${prefix}-16`;
+  if (numValue <= 80) return `${prefix}-20`;
+  if (numValue <= 96) return `${prefix}-24`;
+  if (numValue <= 112) return `${prefix}-28`;
+  return `${prefix}-32`; // Máximo suportado
+};
+
+const ButtonInlineBlock: React.FC<BlockComponentProps> = ({
+  block,
+  isSelected = false,
+  onClick,
+  onPropertyChange: _onPropertyChange,
+  className = '',
+}) => {
+  // Verificação de segurança para evitar erro de undefined
+  if (!block) {
+    return (
+      <div style={{ borderColor: '#B89B7A' }}>
+        <p style={{ color: '#432818' }}>Erro: Bloco não encontrado</p>
+      </div>
+    );
+  }
+
+  if (!block.properties) {
+    return <div style={{ color: '#432818' }}>⚠️ Erro: Propriedades do bloco não encontradas</div>;
+  }
+
+  const {
+    text = 'Clique aqui',
+    variant = 'primary',
+    size = 'medium',
+    icon = 'none',
+    iconPosition = 'right',
+    href = '',
+    url = '', // Campo adicional para URL
+    target = '_blank',
+    disabled = false,
+    customStyles: _customStyles = '',
+    requiresValidInput = false,
+    // Configurações de cores
+    backgroundColor = '#B89B7A',
+    textColor = '#FFFFFF',
+    borderColor = '#B89B7A',
+    // Configurações de fonte
+    fontSize = '16',
+    fontFamily = 'inherit',
+    fontWeight = '500',
+    // Configurações de navegação/fluxo
+    action = 'none', // "next-step", "url", "none"
+    nextStepId = '', // ID da próxima etapa
+    // Sistema completo de margens com controles deslizantes
+    marginTop = 8,
+    marginBottom = 8,
+    marginLeft = 0,
+    marginRight = 0,
+    // Novas propriedades de efeitos visuais
+    shadowType = 'none',
+    shadowColor = '#000000',
+    effectType = 'none',
+    borderRadius = 8,
+    hoverOpacity = 90,
+    // Estado visual/validação
+    showDisabledState = false,
+    disabledText = '',
+    disabledOpacity = 50,
+  } = (block?.properties as any) || {};
+
+  const [isValidated, setIsValidated] = useState(false);
+
+  // Efeito para verificar validação quando necessário
+  useEffect(() => {
+    if (requiresValidInput) {
+      // Verificar se há input válido (exemplo: nome preenchido)
+      userResponseService.getResponse('intro-name-input').then(nameValue => {
+        setIsValidated(!!nameValue && nameValue.trim().length > 0);
+      }).catch(() => {
+        setIsValidated(false);
+      });
+    } else {
+      setIsValidated(true);
+    }
+  }, [requiresValidInput]);
+
+  // Efeito para ouvir mudanças de seleção do quiz
+  useEffect(() => {
+    const handleQuizSelectionChange = (event: CustomEvent) => {
+      const { isValid } = event.detail;
+      if (requiresValidInput) {
+        setIsValidated(isValid);
+      }
+    };
+
+    if (requiresValidInput) {
+      window.addEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+      return () => {
+        window.removeEventListener('quiz-selection-change', handleQuizSelectionChange as EventListener);
+      };
+    }
+  }, [requiresValidInput]);
+
+  // Determinar se o botão deve estar desabilitado
+  const isButtonDisabled = disabled || (requiresValidInput && !isValidated);
+  // 🚀 Função para inicializar quiz no Supabase
+  const initializeQuizWithSupabase = async (userName: string) => {
+    try {
+      // Placeholder - Supabase integration will be implemented later
+      console.log('Supabase integration placeholder:', {
+        name: userName,
+        utm_source: new URLSearchParams(window.location.search).get('utm_source') || undefined,
+      });
+
+      console.log('✅ Quiz inicializado no Supabase com sucesso');
+    } catch (error) {
+      console.error('❌ Erro ao inicializar quiz no Supabase:', error);
+    }
+  };
+
+  // Ícones disponíveis
+  const iconMap = {
+    none: null,
+    'arrow-right': ArrowRight,
+    download: Download,
+    play: Play,
+    star: Star,
+  };
+
+  const IconComponent = iconMap[icon as keyof typeof iconMap];
+
+  // Função para gerar classes de sombra
+  const getShadowClasses = () => {
+    const shadowClasses = {
+      none: '',
+      small: 'shadow-sm',
+      medium: 'shadow-md',
+      large: 'shadow-lg',
+      inner: 'shadow-inner',
+      glow: `shadow-lg`,
+    };
+
+    return shadowClasses[shadowType as keyof typeof shadowClasses] || '';
+  };
+
+  // Função para gerar estilos de sombra customizada
+  const getShadowStyles = () => {
+    if (shadowType === 'glow') {
+      return {
+        boxShadow: `0 0 20px ${shadowColor}40, 0 0 40px ${shadowColor}20`,
+      };
+    }
+    if (shadowType === 'inner') {
+      return {
+        boxShadow: `inset 0 2px 4px ${shadowColor}30`,
+      };
+    }
+    if (shadowType !== 'none' && shadowColor !== '#000000') {
+      const intensity = shadowType === 'small' ? '20' : shadowType === 'medium' ? '30' : '40';
+      const blur = shadowType === 'small' ? '6px' : shadowType === 'medium' ? '10px' : '15px';
+      const offset = shadowType === 'small' ? '2px' : shadowType === 'medium' ? '4px' : '6px';
+      return {
+        boxShadow: `0 ${offset} ${blur} ${shadowColor}${intensity}`,
+      };
+    }
+    return {};
+  };
+
+  // Função para gerar classes de efeitos visuais
+  const getEffectClasses = () => {
+    const effectClasses = {
+      none: '',
+      'hover-lift': 'hover:transform hover:-translate-y-1 hover:scale-105',
+      pulse: 'animate-pulse',
+      bounce: 'animate-bounce',
+      gradient: 'bg-gradient-to-r',
+      shine: 'relative overflow-hidden',
+    };
+
+    return effectClasses[effectType as keyof typeof effectClasses] || '';
+  };
+
+  // Variantes de cor - usando as configurações customizáveis
+  const getButtonStyles = () => {
+    const baseStyle = {
+      fontFamily: fontFamily,
+      fontSize: `${fontSize}px`,
+      fontWeight: fontWeight,
+      borderRadius: `${borderRadius}px`,
+      transition: 'all 0.3s ease',
+      ...getShadowStyles(),
+    };
+
+    if (variant === 'custom' || variant === 'primary') {
+      // Suporte a gradiente para effectType === "gradient"
+      if (effectType === 'gradient') {
+        return {
+          ...baseStyle,
+          background: `linear-gradient(135deg, ${backgroundColor}, ${backgroundColor}dd)`,
+          color: textColor,
+          borderColor: borderColor,
+        };
+      }
+
+      return {
+        ...baseStyle,
+        backgroundColor: backgroundColor,
+        color: textColor,
+        borderColor: borderColor,
+      };
+    }
+
+    const predefinedStyles = {
+      secondary: {
+        backgroundColor: '#6B7280',
+        color: '#FFFFFF',
+        borderColor: '#6B7280',
+      },
+      success: {
+        backgroundColor: '#10B981',
+        color: '#FFFFFF',
+        borderColor: '#10B981',
+      },
+      warning: {
+        backgroundColor: '#F59E0B',
+        color: '#FFFFFF',
+        borderColor: '#F59E0B',
+      },
+      danger: {
+        backgroundColor: '#aa6b5d',
+        color: '#FFFFFF',
+        borderColor: '#aa6b5d',
+      },
+      outline: {
+        backgroundColor: 'transparent',
+        color: backgroundColor,
+        borderColor: backgroundColor,
+      },
+    };
+
+    const selectedStyle =
+      predefinedStyles[variant as keyof typeof predefinedStyles] || predefinedStyles.secondary;
+
+    // Aplicar gradiente se necessário
+    if (effectType === 'gradient') {
+      return {
+        ...baseStyle,
+        background: `linear-gradient(135deg, ${selectedStyle.backgroundColor}, ${selectedStyle.backgroundColor}dd)`,
+        color: selectedStyle.color,
+        borderColor: selectedStyle.borderColor,
+      };
+    }
+
+    return {
+      ...baseStyle,
+      ...selectedStyle,
+    };
+  };
+
+  // Tamanhos de botão
+  const sizeClasses = {
+    small: 'px-3 py-1.5 text-sm gap-1.5 min-h-[32px]',
+    medium: 'px-4 py-2 text-base gap-2 min-h-[40px]',
+    large: 'px-6 py-3 text-lg gap-2.5 min-h-[48px]',
+  };
+
+  const iconSizes = {
+    small: 'w-3 h-3',
+    medium: 'w-4 h-4',
+    large: 'w-5 h-5',
+  };
+
+  // Função para determinar classes responsivas
+  const getResponsiveClasses = () => {
+    return cn(
+      // Classes base do botão
+      'inline-flex items-center justify-center font-medium transition-all duration-300',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B89B7A] focus-visible:ring-offset-2',
+      'disabled:pointer-events-none disabled:opacity-50',
+      'border-2 w-full',
+
+      // Aplicar tamanho
+      sizeClasses[size as keyof typeof sizeClasses],
+
+      // Classes de sombra
+      getShadowClasses(),
+
+      // Classes de efeitos visuais
+      getEffectClasses(),
+
+      // Hover dinâmico baseado na opacidade configurada
+      `hover:opacity-[${hoverOpacity}%]`,
+
+      // Estado de seleção no editor
+      isSelected && 'ring-2 ring-[#B89B7A] ring-offset-2',
+
+      // Classes customizadas
+      className
+    );
+  };
+
+  return (
+    <div
+      className={cn(
+        'group relative inline-flex w-full cursor-pointer transition-all duration-200',
+        isSelected && 'ring-1 ring-[#B89B7A]/40',
+        // Margens universais com controles deslizantes
+        getMarginClass(marginTop, 'top'),
+        getMarginClass(marginBottom, 'bottom'),
+        getMarginClass(marginLeft, 'left'),
+        getMarginClass(marginRight, 'right')
+      )}
+      onClick={onClick}
+      data-block-id={block?.id}
+      data-block-type={block?.type}
+    >
+      {/* Botão principal */}
+      <button
+        type="button"
+        disabled={isButtonDisabled}
+        aria-disabled={isButtonDisabled}
+        className={getResponsiveClasses()}
+        style={{
+          ...getButtonStyles(),
+          ...(isButtonDisabled && showDisabledState
+            ? { opacity: Math.max(0, Math.min(100, Number(disabledOpacity))) / 100 }
+            : {}),
+        }}
+        onClick={async e => {
+          e.stopPropagation();
+          if (!isButtonDisabled) {
+            // Handle URL navigation
+            if (action === 'url' && (href || url)) {
+              const targetUrl = url || href;
+              window.open(targetUrl, target);
+              return;
+            }
+
+            // Handle step navigation
+            if (action === 'next-step' && nextStepId) {
+              window.dispatchEvent(
+                new CustomEvent('navigate-to-step', {
+                  detail: { stepId: nextStepId, source: `button-${block?.id}` },
+                })
+              );
+              return;
+            }
+
+            // Handle quiz start button
+            if (text && text.includes('Descobrir meu Estilo')) {
+              const userName = await userResponseService.getResponse('intro-name-input') || 'Anônimo';
+              console.log('🚀 Iniciando tracking do quiz para:', userName);
+
+              // Initialize quiz with Supabase
+              await initializeQuizWithSupabase(userName);
+
+              // Track quiz start
+              trackQuizStart(userName);
+
+              // Save start time and user data
+              localStorage.setItem('quiz_start_time', Date.now().toString());
+              localStorage.setItem('quiz_start_tracked', 'true');
+              localStorage.setItem('userName', userName);
+
+              // Dispatch quiz start event
+              window.dispatchEvent(
+                new CustomEvent('quiz-start', {
+                  detail: { userName, timestamp: Date.now() },
+                })
+              );
+
+              // Navigate to first question
+              window.dispatchEvent(
+                new CustomEvent('navigate-to-step', {
+                  detail: { stepId: 'etapa-2', source: 'step1-button' },
+                })
+              );
+            }
+          }
+        }}
+      >
+        {/* Efeito de brilho deslizante */}
+        {effectType === 'shine' && (
+          <div className="absolute inset-0 -top-1 -bottom-1 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+        )}
+
+        {/* Ícone à esquerda */}
+        {IconComponent && iconPosition === 'left' && (
+          <IconComponent
+            className={cn(iconSizes[size as keyof typeof iconSizes], 'mr-2 relative z-10')}
+          />
+        )}
+
+        {/* Texto do botão */}
+        <span className="flex-1 text-center truncate relative z-10 font-medium">
+          {(isButtonDisabled && showDisabledState && disabledText ? disabledText : text) ||
+            'Clique aqui'}
+        </span>
+
+        {/* Ícone à direita */}
+        {IconComponent && iconPosition === 'right' && (
+          <IconComponent
+            className={cn(iconSizes[size as keyof typeof iconSizes], 'ml-2 relative z-10')}
+          />
+        )}
+      </button>
+
+      {/* Indicador de seleção */}
+      {isSelected && (
+        <div className="absolute -top-2 -right-2 bg-[#B89B7A]/100 text-white rounded-full p-1">
+          <Edit3 className="w-3 h-3" />
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!text && (
+        <div style={{ color: '#8B7355' }}>
+          <MousePointer2 className="w-4 h-4 mr-2" />
+          Clique para selecionar e editar no painel
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ButtonInlineBlock;
