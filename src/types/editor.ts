@@ -1,10 +1,16 @@
 import { LucideIcon } from 'lucide-react';
 
 // Import PropertyType and PropertySchema for internal use
-import { PropertyType, PropertySchema } from './propertySchema';
+import { PropertySchema, PropertyType } from './propertySchema';
 
 // Re-export the unified PropertySchema as the primary interface
-export type { PropertySchema, PropertyType, PropertyCategory, PropertyCategoryOrString, UnifiedProperty } from './propertySchema';
+export type {
+  PropertyCategory,
+  PropertyCategoryOrString,
+  PropertySchema,
+  PropertyType,
+  UnifiedProperty,
+} from './propertySchema';
 
 // Remove the duplicate PropertyType enum - use the one from propertySchema.ts
 
@@ -596,4 +602,32 @@ export interface OptimizedSystemState {
   hooksIntegrated: boolean;
   componentsLoaded: number;
   lastOptimizedAt: Date;
+}
+
+/**
+ * 🎯 INTERFACES DE VALIDAÇÃO
+ */
+export interface ValidationProps {
+  type: string;
+  properties: Record<string, any>;
+}
+
+export interface ValidationResult {
+  success: boolean;
+  errors?: Array<{
+    path: string;
+    message: string;
+  }>;
+}
+
+export interface BlockValidation {
+  schema?: unknown;
+  rules?: ValidationRule[];
+  customValidation?: (value: unknown) => boolean;
+}
+
+export interface ValidationRule {
+  type: string;
+  value?: unknown;
+  message: string;
 }

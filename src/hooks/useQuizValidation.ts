@@ -1,16 +1,12 @@
 /**
  * useQuizValidation Hook - Input Validation and Feedback
- * 
+ *
  * Provides validation logic for quiz steps, user inputs, and form data.
  * Includes real-time feedback and error handling capabilities.
  */
 
+import { QuizValidationHook, UserAnswer, ValidationResult } from '@/types/quizCore';
 import { useCallback } from 'react';
-import { 
-  QuizValidationHook, 
-  ValidationResult, 
-  UserAnswer
-} from '@/types/quizCore';
 
 // NOTE: Default validation rules available for extension
 /*
@@ -41,12 +37,20 @@ const defaultValidationRules: Record<string, ValidationRule[]> = {
 };
 */
 
-// Step-specific validation configurations
+// Step-specific validation configurations with enhanced feedback
 const stepValidationConfig: Record<string, any> = {
   'step-1': {
     type: 'intro',
     requiredFields: ['userName'],
     minLength: { userName: 2 },
+    validation: {
+      realTime: true,
+      showVisualFeedback: true,
+      customMessages: {
+        required: 'Por favor, informe seu nome para continuar',
+        minLength: 'Seu nome deve ter pelo menos 2 caracteres',
+      },
+    },
   },
   'step-2': {
     type: 'question',
@@ -69,7 +73,7 @@ const stepValidationConfig: Record<string, any> = {
   'step-9': { type: 'question', minSelections: 3, maxSelections: 3, requiredSelections: 3 },
   'step-10': { type: 'question', minSelections: 3, maxSelections: 3, requiredSelections: 3 },
   'step-11': { type: 'question', minSelections: 3, maxSelections: 3, requiredSelections: 3 },
-  
+
   // Strategic questions (steps 13-18)
   'step-13': { type: 'strategic', minSelections: 1, maxSelections: 1, requiredSelections: 1 },
   'step-14': { type: 'strategic', minSelections: 1, maxSelections: 1, requiredSelections: 1 },
@@ -83,61 +87,63 @@ export const useQuizValidation = (
   userAnswers: UserAnswer[] = [],
   sessionData: Record<string, any> = {}
 ): QuizValidationHook => {
-  
   // Validate a complete step
-  const validateStep = useCallback((stepId: string, answers: UserAnswer[]): ValidationResult => {
-    const config = stepValidationConfig[stepId];
-    const errors: string[] = [];
-    const warnings: string[] = [];
+  const validateStep = useCallback(
+    (stepId: string, answers: UserAnswer[]): ValidationResult => {
+      const config = stepValidationConfig[stepId];
+      const errors: string[] = [];
+      const warnings: string[] = [];
 
-    if (!config) {
+      if (!config) {
+        return {
+          isValid: true,
+          errors,
+          warnings: ['⚠️ No validation config found for this step'],
+        };
+      }
+
+      // Find answer for this step
+      const stepAnswer = answers.find(answer => answer.stepId === stepId);
+
+      // Validate based on step type
+      if (config.type === 'intro') {
+        // Validate name input
+        const userName = sessionData.userName || '';
+
+        if (!userName || userName.trim().length === 0) {
+          errors.push('Nome é obrigatório para continuar');
+        } else if (userName.trim().length < 2) {
+          errors.push('Nome deve ter pelo menos 2 caracteres');
+        }
+      } else if (config.type === 'question' || config.type === 'strategic') {
+        // Validate selections
+        if (!stepAnswer) {
+          errors.push('Nenhuma resposta encontrada para esta etapa');
+        } else {
+          const selectedCount = stepAnswer.selectedOptions.length;
+
+          if (config.requiredSelections && selectedCount < config.requiredSelections) {
+            errors.push(`Selecione ${config.requiredSelections} opções para continuar`);
+          }
+
+          if (config.minSelections && selectedCount < config.minSelections) {
+            errors.push(`Selecione pelo menos ${config.minSelections} opções`);
+          }
+
+          if (config.maxSelections && selectedCount > config.maxSelections) {
+            errors.push(`Selecione no máximo ${config.maxSelections} opções`);
+          }
+        }
+      }
+
       return {
-        isValid: true,
+        isValid: errors.length === 0,
         errors,
-        warnings: ['⚠️ No validation config found for this step'],
+        warnings,
       };
-    }
-
-    // Find answer for this step
-    const stepAnswer = answers.find(answer => answer.stepId === stepId);
-
-    // Validate based on step type
-    if (config.type === 'intro') {
-      // Validate name input
-      const userName = sessionData.userName || '';
-      
-      if (!userName || userName.trim().length === 0) {
-        errors.push('Nome é obrigatório para continuar');
-      } else if (userName.trim().length < 2) {
-        errors.push('Nome deve ter pelo menos 2 caracteres');
-      }
-    } else if (config.type === 'question' || config.type === 'strategic') {
-      // Validate selections
-      if (!stepAnswer) {
-        errors.push('Nenhuma resposta encontrada para esta etapa');
-      } else {
-        const selectedCount = stepAnswer.selectedOptions.length;
-        
-        if (config.requiredSelections && selectedCount < config.requiredSelections) {
-          errors.push(`Selecione ${config.requiredSelections} opções para continuar`);
-        }
-        
-        if (config.minSelections && selectedCount < config.minSelections) {
-          errors.push(`Selecione pelo menos ${config.minSelections} opções`);
-        }
-        
-        if (config.maxSelections && selectedCount > config.maxSelections) {
-          errors.push(`Selecione no máximo ${config.maxSelections} opções`);
-        }
-      }
-    }
-
-    return {
-      isValid: errors.length === 0,
-      errors,
-      warnings,
-    };
-  }, [sessionData]);
+    },
+    [sessionData]
+  );
 
   // Validate a single answer
   const validateAnswer = useCallback((answer: UserAnswer): ValidationResult => {
@@ -170,16 +176,22 @@ export const useQuizValidation = (
   }, []);
 
   // Get errors for a specific step
-  const getStepErrors = useCallback((stepId: string): string[] => {
-    const validation = validateStep(stepId, userAnswers);
-    return validation.errors;
-  }, [validateStep, userAnswers]);
+  const getStepErrors = useCallback(
+    (stepId: string): string[] => {
+      const validation = validateStep(stepId, userAnswers);
+      return validation.errors;
+    },
+    [validateStep, userAnswers]
+  );
 
   // Check if a step is valid
-  const isStepValid = useCallback((stepId: string): boolean => {
-    const validation = validateStep(stepId, userAnswers);
-    return validation.isValid;
-  }, [validateStep, userAnswers]);
+  const isStepValid = useCallback(
+    (stepId: string): boolean => {
+      const validation = validateStep(stepId, userAnswers);
+      return validation.isValid;
+    },
+    [validateStep, userAnswers]
+  );
 
   return {
     validateStep,
