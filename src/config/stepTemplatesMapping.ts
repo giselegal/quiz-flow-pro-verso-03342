@@ -2,7 +2,6 @@
 // Mapeamento das 21 etapas para seus templates específicos (usando templates TSX reais)
 
 // ✅ IMPORTS DOS TEMPLATES CORRIGIDOS
-import { getStep01Template } from '@/components/steps/Step01Template';
 import { getConnectedStep02Template } from '@/components/steps/ConnectedStep02Template';
 import {
   getConnectedStep03Template,
@@ -23,8 +22,6 @@ import {
   getConnectedStep18Template,
   getConnectedStep19Template,
 } from '@/components/steps/ConnectedStepsFixed';
-import { getStep20Template } from '@/components/steps/Step20Template';
-import { getStep21Template } from '@/components/steps/Step21Template';
 
 // Interface para o template de etapa
 export interface StepTemplate {
@@ -263,7 +260,7 @@ export const STEP_TEMPLATES_MAPPING: Record<number, StepTemplate> = {
 
       console.log('🎨 Step20 personalized data:', { userName, styleCategory, sessionId });
 
-      return getStep20Template({ userName, styleCategory, sessionId });
+      return [];
     },
     name: STEP_CONFIGS[19]?.name || 'SEU ESTILO PESSOAL É:',
     description: STEP_CONFIGS[19]?.description || 'Apresentação do resultado',

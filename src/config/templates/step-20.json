@@ -76,25 +76,24 @@
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
         "logoWidth": 120,
-        "logoHeight": 40,
+        "logoHeight": 50,
         "showProgress": true,
         "progressValue": 20,
         "progressMax": 21,
         "showBackButton": true,
         "containerWidth": "full",
-        "spacing": "normal",
+        "spacing": "small",
         "showLogo": true,
         "progressBarColor": "#B89B7A",
         "progressBarThickness": 6,
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "#FFFFFF",
         "textColor": "#432818",
         "paddingTop": 16,
         "paddingBottom": 16,
         "paddingLeft": 24,
         "paddingRight": 24,
-        "marginBottom": 0,
-        "userName": "",
-        "showUserName": true,
+        "marginBottom": 24,
+        "progressTotal": 100,
         "type": "quiz-intro-header"
       }
     },
@@ -174,5 +173,5 @@
       "styleCategory": "calculated-from-quiz"
     }
   },
-  "updatedAt": "2025-08-17T18:36:30.905Z"
+  "updatedAt": "2025-08-17T19:06:10.222Z"
 }

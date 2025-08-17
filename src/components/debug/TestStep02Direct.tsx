@@ -1,7 +1,6 @@
-import { getStep02Template } from '@/components/steps/Step02Template';
 
 const TestStep02Direct: React.FC = () => {
-  const step02Template = getStep02Template();
+  // TODO: Migrado para TemplateRenderer - remover se não necessário
   const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
   console.log('🧪 TestStep02Direct:', {

@@ -1,11 +1,10 @@
 import React from 'react';
 import { useEditor } from '@/context/EditorContext';
-import { getStep02Template } from '@/components/steps/Step02Template';
 
 const DebugStep02: React.FC = () => {
   const { computed, stageActions, blockActions, activeStageId } = useEditor();
 
-  const step02Template = getStep02Template();
+  // TODO: Substituir por TemplateRenderer ou template JSON
   const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
   const debugInfo = {

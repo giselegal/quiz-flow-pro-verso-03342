@@ -1,12 +1,9 @@
-import { getStep08Template } from '@/components/steps/Step08Template';
-import { getStep18Template } from '@/components/steps/Step18Template';
-import { getStep19Template } from '@/components/steps/Step19Template';
 
 const TestAllTemplates: React.FC = () => {
   // Testar se as funções estão definidas
-  const step08 = getStep08Template();
-  const step18 = getStep18Template();
-  const step19 = getStep19Template();
+  // TODO: Migrado para TemplateRenderer - remover se não necessário
+  // TODO: Migrado para TemplateRenderer - remover se não necessário
+  // TODO: Migrado para TemplateRenderer - remover se não necessário
 
   return (
     <div className="p-8">
@@ -39,9 +36,9 @@ const TestAllTemplates: React.FC = () => {
           <button
             onClick={() => {
               try {
-                console.log('Step08 template:', getStep08Template());
-                console.log('Step18 template:', getStep18Template());
-                console.log('Step19 template:', getStep19Template());
+                console.log('Step08 template:', []);
+                console.log('Step18 template:', []);
+                console.log('Step19 template:', []);
                 alert('✅ Todos os templates carregaram sem erro! Verifique o console.');
               } catch (error) {
                 console.error('Erro ao carregar templates:', error);

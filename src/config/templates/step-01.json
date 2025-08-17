@@ -101,6 +101,7 @@
         "paddingLeft": 24,
         "paddingRight": 24,
         "marginBottom": 24,
+        "progressTotal": 100,
         "type": "quiz-intro-header"
       }
     },
@@ -265,5 +266,5 @@
     "keyboardNavigation": true,
     "screenReader": true
   },
-  "updatedAt": "2025-08-17T18:36:30.891Z"
+  "updatedAt": "2025-08-17T19:06:10.212Z"
 }

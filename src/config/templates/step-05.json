@@ -74,8 +74,8 @@
       "properties": {
         "logoUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         "logoAlt": "Logo Gisele Galvão",
-        "logoWidth": 96,
-        "logoHeight": 96,
+        "logoWidth": 120,
+        "logoHeight": 50,
         "showProgress": true,
         "progressValue": 5,
         "progressMax": 21,
@@ -272,5 +272,5 @@
     },
     "conditions": null
   },
-  "updatedAt": "2025-08-17T18:36:30.895Z"
+  "updatedAt": "2025-08-17T19:06:10.214Z"
 }

@@ -2,7 +2,6 @@ import { STEP_TEMPLATES, getStepTemplate } from '../config/templates/templates';
 import type { Block, BlockType } from '../types/editor';
 
 // ===== IMPORT DO STEP01 TYPESCRIPT FUNCIONAL =====
-import { getStep01Template } from '../components/steps/Step01Template';
 
 // Interfaces para corresponder à estrutura real dos templates
 export interface TemplateMetadata {
@@ -165,7 +164,7 @@ export const templateService = {
         console.log('🎯 Step01: Usando Step01Template.tsx');
 
         // Obter blocos do template TypeScript
-        const step01Blocks = getStep01Template();
+        // TODO: Migrado para TemplateRenderer - remover se não necessário
         console.log(`✅ Step01Template carregado: ${step01Blocks.length} blocos`);
 
         const step01Template: TemplateData = {

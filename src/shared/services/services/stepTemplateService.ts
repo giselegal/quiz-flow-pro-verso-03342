@@ -3,25 +3,6 @@
 // Este serviço centraliza o acesso aos templates individuais mantendo a modularidade
 
 // ⚠️ NOTA: Step01 migrado para sistema JSON (step-01.json) - não usa mais componente
-import { getStep02Template } from '../components/steps/Step02Template';
-import { getStep03Template } from '../components/steps/Step03Template';
-import { getStep04Template } from '../components/steps/Step04Template';
-import { getStep05Template } from '../components/steps/Step05Template';
-import { getStep06Template } from '../components/steps/Step06Template';
-import { getStep07Template } from '../components/steps/Step07Template';
-import { getStep09Template } from '../components/steps/Step09Template';
-import { getStep10Template } from '../components/steps/Step10Template';
-import { getStep11Template } from '../components/steps/Step11Template';
-import { getStep12Template } from '../components/steps/Step12Template';
-import { getStep13Template } from '../components/steps/Step13Template';
-import { getStep14Template } from '../components/steps/Step14Template';
-import { getStep15Template } from '../components/steps/Step15Template';
-import { getStep16Template } from '../components/steps/Step16Template';
-import { getStep17Template } from '../components/steps/Step17Template';
-import { getStep18Template } from '../components/steps/Step18Template';
-import { getStep19Template } from '../components/steps/Step19Template';
-import { getStep20Template } from '../components/steps/Step20Template';
-import { getStep21Template } from '../components/steps/Step21Template';
 
 export interface StepInfo {
   id: string;

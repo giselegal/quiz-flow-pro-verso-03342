@@ -5,12 +5,11 @@
  */
 
 import QuizOptionsGridBlock from '@/components/blocks/quiz/QuizOptionsGridBlock';
-import { getStep02Template } from '@/components/steps/Step02Template';
 
 const TestOptionsRendering = () => {
   console.log('🔍 TESTE: Iniciando teste de renderização de opções');
 
-  const step02Template = getStep02Template();
+  // TODO: Migrado para TemplateRenderer - remover se não necessário
   const optionsBlock = step02Template.find(block => block.type === 'options-grid');
 
   console.log('🔍 TESTE: Bloco de opções encontrado:', optionsBlock);
