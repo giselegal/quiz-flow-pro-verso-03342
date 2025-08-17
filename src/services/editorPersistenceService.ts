@@ -1,5 +1,5 @@
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import { generateId } from '@/types/unified-schema';
 
 export interface EditorSaveData {
@@ -38,7 +38,7 @@ export const editorPersistenceService = {
 
       localStorage.setItem('editor-current-state', JSON.stringify(localData));
       localStorage.setItem(`editor-backup-${Date.now()}`, JSON.stringify(localData));
-      
+
       result.savedToLocal = true;
       console.log('✅ Editor: Salvamento local realizado');
     } catch (localError) {
@@ -49,8 +49,10 @@ export const editorPersistenceService = {
 
     // 2. Tentar salvar na nuvem (Supabase)
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         console.warn('⚠️ Editor: Usuário não autenticado - apenas local');
         result.success = true;
@@ -58,7 +60,7 @@ export const editorPersistenceService = {
       }
 
       const funnelId = data.funnelId || `editor-funnel-${generateId()}`;
-      
+
       // Preparar dados para Supabase
       const funnelData = {
         id: funnelId,
@@ -98,14 +100,9 @@ export const editorPersistenceService = {
       };
 
       // Deletar página existente e criar nova (upsert simples)
-      await supabase
-        .from('funnel_pages')
-        .delete()
-        .eq('funnel_id', funnelId);
+      await supabase.from('funnel_pages').delete().eq('funnel_id', funnelId);
 
-      const { error: pageError } = await supabase
-        .from('funnel_pages')
-        .insert([pageData]);
+      const { error: pageError } = await supabase.from('funnel_pages').insert([pageData]);
 
       if (pageError) {
         throw new Error(`Erro na página: ${pageError.message}`);
@@ -113,14 +110,13 @@ export const editorPersistenceService = {
 
       result.savedToCloud = true;
       result.success = true;
-      
+
       console.log('✅ Editor: Salvamento na nuvem realizado');
       console.log('📊 Editor: Dados salvos:', {
         funnelId,
         blocksCount: data.blocks.length,
         activeStage: data.activeStageId,
       });
-
     } catch (cloudError) {
       console.error('❌ Editor: Falha no salvamento na nuvem:', cloudError);
       result.error = `Nuvem: ${cloudError.message}`;
@@ -135,8 +131,10 @@ export const editorPersistenceService = {
     // 1. Tentar carregar da nuvem primeiro
     if (funnelId) {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
         if (user) {
           const { data: funnel } = await supabase
             .from('funnels')
@@ -148,7 +146,7 @@ export const editorPersistenceService = {
           if (funnel && funnel.funnel_pages?.[0]) {
             const page = funnel.funnel_pages[0];
             const settings = (funnel.settings as any) || {};
-            
+
             return {
               blocks: (page.blocks as any) || [],
               activeStageId: settings.editor?.activeStageId || 'step-1',
@@ -179,10 +177,8 @@ export const editorPersistenceService = {
 
   async clearBackups(keepRecent: number = 10): Promise<void> {
     try {
-      const keys = Object.keys(localStorage).filter(key => 
-        key.startsWith('editor-backup-')
-      );
-      
+      const keys = Object.keys(localStorage).filter(key => key.startsWith('editor-backup-'));
+
       // Ordenar por timestamp e manter apenas os mais recentes
       const sortedKeys = keys
         .map(key => ({
@@ -194,7 +190,7 @@ export const editorPersistenceService = {
         .map(item => item.key);
 
       sortedKeys.forEach(key => localStorage.removeItem(key));
-      
+
       console.log(`🧹 Editor: ${sortedKeys.length} backups antigos removidos`);
     } catch (error) {
       console.error('❌ Editor: Erro ao limpar backups:', error);

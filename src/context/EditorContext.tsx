@@ -1,3 +1,4 @@
+import { useAutoSaveWithDebounce } from '@/hooks/editor/useAutoSaveWithDebounce';
 import { toast } from '@/hooks/use-toast';
 import { funnelPersistenceService } from '@/services/funnelPersistence';
 import { Block, BlockType, EditorConfig } from '@/types/editor';
@@ -337,6 +338,17 @@ export const EditorProvider: React.FC<{
       });
     }
   }, [currentFunnelId, state.blocks]);
+
+  // 🚀 AUTO-SAVE COM DEBOUNCE - Solução para problema de salvamento
+  useAutoSaveWithDebounce({
+    data: { blocks: state.blocks, activeStageId: state.activeStageId },
+    onSave: async () => {
+      await save();
+    },
+    delay: 3000, // 3 segundos após parar de editar
+    enabled: true,
+    showToasts: false, // Não mostrar toast no auto-save, apenas no save manual
+  });
 
   // Mock data for stages (21 stages)
   const stages = useMemo(() => {
