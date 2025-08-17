@@ -75,7 +75,7 @@ export const userResponseService = {
         .insert({
           session_id: response.sessionId,
           step_number: stepNumber,
-          component_id: response.data.componentId || 'unknown',
+          component_id: response.data.componentId || response.data.fieldName || 'unknown',
           component_type: response.data.componentType || 'form-input',
           response_data: {
             originalData: response.data,
@@ -122,20 +122,33 @@ export const userResponseService = {
     }
   },
 
-  async getResponse(id: string): Promise<string> {
+  async getResponse(componentId: string): Promise<string> {
     try {
-      const { data, error } = await supabase
-        .from('quiz_step_responses')
-        .select('*')
-        .eq('id', id)
-        .single();
+      // Primeiro tentar buscar pela session_id ativa e component_id
+      const sessionId = localStorage.getItem('quiz_session_id') || '';
+      
+      if (sessionId) {
+        const { data, error } = await supabase
+          .from('quiz_step_responses')
+          .select('*')
+          .eq('session_id', sessionId)
+          .eq('component_id', componentId)
+          .order('responded_at', { ascending: false })
+          .limit(1)
+          .single();
 
-      if (error) throw error;
-      return (data as any)?.response_data?.value || JSON.stringify((data as any)?.response_data) || '';
+        if (!error && data) {
+          return (data as any)?.response_data?.originalData?.name || (data as any)?.response_data?.value || JSON.stringify((data as any)?.response_data) || '';
+        }
+      }
+      
+      // Fallback to localStorage
+      const stored = localStorage.getItem(`quiz_response_${componentId}`);
+      return stored ? JSON.parse(stored).data : '';
     } catch (error) {
       console.error('❌ Failed to get response:', error);
       // Fallback to localStorage
-      const stored = localStorage.getItem(`quiz_response_${id}`);
+      const stored = localStorage.getItem(`quiz_response_${componentId}`);
       return stored ? JSON.parse(stored).data : '';
     }
   },

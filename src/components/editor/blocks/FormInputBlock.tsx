@@ -160,7 +160,11 @@ const FormInputBlock: React.FC<FormInputBlockProps> = ({
               userId: sessionId,
               sessionId: sessionId,
               step: 'step-01',
-              data: { name: newValue.trim(), fieldName: name },
+              data: { 
+                name: newValue.trim(), 
+                fieldName: name,
+                componentId: block?.id || 'intro-name-input'
+              },
               timestamp: new Date().toISOString(),
             });
 
