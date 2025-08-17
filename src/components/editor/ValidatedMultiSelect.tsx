@@ -86,50 +86,7 @@ export const ValidatedMultiSelect: React.FC<ValidatedMultiSelectProps> = ({
         />
       )}
 
-      <style jsx>{`
-        .validated-multiselect-container {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .validated-multiselect-label {
-          font-size: 14px;
-          font-weight: 500;
-          color: #374151;
-        }
-
-        .validated-multiselect-options {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: 8px;
-          padding: 8px;
-          border: 1px solid #E5E7EB;
-          border-radius: 4px;
-        }
-
-        .validated-multiselect-error {
-          border-color: #EF4444;
-        }
-
-        .validated-multiselect-option {
-          padding: 8px 12px;
-          border: 1px solid #E5E7EB;
-          border-radius: 4px;
-          cursor: pointer;
-          user-select: none;
-          transition: all 0.2s;
-        }
-
-        .validated-multiselect-option:hover {
-          background-color: #F3F4F6;
-        }
-
-        .validated-multiselect-option.selected {
-          background-color: #EBF5FF;
-          border-color: #3B82F6;
-        }
-      `}</style>
+      
     </div>
   );
 };

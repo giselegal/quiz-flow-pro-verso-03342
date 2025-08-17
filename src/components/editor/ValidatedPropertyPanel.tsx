@@ -111,17 +111,7 @@ export const ValidatedPropertyPanel: React.FC<PropertyPanelProps> = ({
     <div className="validated-property-panel">
       {renderFields()}
 
-      <style jsx>{`
-        .validated-property-panel {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-          padding: 16px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-      `}</style>
+      
     </div>
   );
 };

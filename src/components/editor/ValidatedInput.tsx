@@ -74,42 +74,7 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
         />
       )}
 
-      <style jsx>{`
-        .validated-input-container {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .validated-input-label {
-          font-size: 14px;
-          font-weight: 500;
-          color: #374151;
-        }
-
-        .validated-input {
-          padding: 8px 12px;
-          border: 1px solid #E5E7EB;
-          border-radius: 4px;
-          font-size: 14px;
-          transition: all 0.2s;
-        }
-
-        .validated-input:focus {
-          outline: none;
-          border-color: #3B82F6;
-          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-        }
-
-        .validated-input-error {
-          border-color: #EF4444;
-        }
-
-        .validated-input-error:focus {
-          border-color: #EF4444;
-          box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
-        }
-      `}</style>
+      
     </div>
   );
 };
