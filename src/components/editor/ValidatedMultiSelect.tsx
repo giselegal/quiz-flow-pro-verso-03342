@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useEditorFieldValidation } from '../../hooks/useEditorFieldValidation';
 import { ValidationProps } from '../../types/editor';
-import { useValidationContext } from '../../context/ValidationContext';
 import { ValidationFeedback } from '../ui/ValidationFeedback';
 
 interface Option {
@@ -27,42 +27,37 @@ export const ValidatedMultiSelect: React.FC<ValidatedMultiSelectProps> = ({
   onChange,
   onBlur,
   validations = [],
-  className = ''
+  className = '',
 }) => {
-  const { validateField, getFieldErrors } = useValidationContext();
-  const [touched, setTouched] = useState(false);
+  const { validateField, getFieldErrors, isFieldTouched } = useEditorFieldValidation();
   const errors = getFieldErrors(id);
-  const hasError = touched && errors.length > 0;
+  const hasError = isFieldTouched(id) && errors.length > 0;
 
   useEffect(() => {
-    if (touched) {
+    if (isFieldTouched(id)) {
       validateField(id, value, validations);
     }
-  }, [id, value, validations, touched, validateField]);
+  }, [id, value, validations, isFieldTouched, validateField]);
 
   const handleSelect = (optionValue: string) => {
     const newValue = value.includes(optionValue)
       ? value.filter(v => v !== optionValue)
       : [...value, optionValue];
-    
+
     onChange(newValue);
+    validateField(id, newValue, validations);
   };
 
   const handleBlur = () => {
-    setTouched(true);
     validateField(id, value, validations);
     onBlur?.();
   };
 
   return (
     <div className="validated-multiselect-container">
-      {label && (
-        <label className="validated-multiselect-label">
-          {label}
-        </label>
-      )}
-      
-      <div 
+      {label && <label className="validated-multiselect-label">{label}</label>}
+
+      <div
         className={`validated-multiselect-options ${hasError ? 'validated-multiselect-error' : ''} ${className}`}
         onBlur={handleBlur}
       >
@@ -78,15 +73,13 @@ export const ValidatedMultiSelect: React.FC<ValidatedMultiSelectProps> = ({
       </div>
 
       {hasError && (
-        <ValidationFeedback 
+        <ValidationFeedback
           result={{
             success: false,
-            errors: errors
+            errors: errors,
           }}
         />
       )}
-
-      
     </div>
   );
 };

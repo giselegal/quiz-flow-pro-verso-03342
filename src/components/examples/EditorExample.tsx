@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ValidationProvider } from '../../context/ValidationContext';
-import { ValidatedPropertyPanel } from '../editor/ValidatedPropertyPanel';
-import { ValidationProps } from '../../types/editor';
 import '../../styles/validated-components.css';
+import { ValidationProps } from '../../types/editor';
+import { ValidatedPropertyPanel } from '../editor/ValidatedPropertyPanel';
 
 interface ExampleBlock {
   id: string;
@@ -14,56 +14,56 @@ const blockValidations: Record<string, ValidationProps[]> = {
   content: [
     {
       type: 'required',
-      properties: {}
+      properties: {},
     },
     {
       type: 'minLength',
-      properties: { min: 10 }
-    }
+      properties: { min: 10 },
+    },
   ],
   style: [
     {
       type: 'pattern',
-      properties: { 
+      properties: {
         regex: '^[a-zA-Z-]+$',
-        message: 'Apenas letras e hífens são permitidos'
-      }
-    }
+        message: 'Apenas letras e hífens são permitidos',
+      },
+    },
   ],
   question: [
     {
       type: 'required',
-      properties: {}
-    }
+      properties: {},
+    },
   ],
   selected: [
     {
       type: 'options',
       properties: {
         min: 1,
-        max: 3
-      }
-    }
+        max: 3,
+      },
+    },
   ],
   src: [
     {
       type: 'required',
-      properties: {}
+      properties: {},
     },
     {
       type: 'pattern',
       properties: {
         regex: '^https?://.+',
-        message: 'URL inválida'
-      }
-    }
+        message: 'URL inválida',
+      },
+    },
   ],
   alt: [
     {
       type: 'required',
-      properties: {}
-    }
-  ]
+      properties: {},
+    },
+  ],
 };
 
 export const EditorExample: React.FC = () => {
@@ -73,8 +73,8 @@ export const EditorExample: React.FC = () => {
       type: 'text',
       values: {
         content: '',
-        style: ''
-      }
+        style: '',
+      },
     },
     {
       id: 'block2',
@@ -84,28 +84,24 @@ export const EditorExample: React.FC = () => {
         options: [
           { value: '1', label: 'Opção 1' },
           { value: '2', label: 'Opção 2' },
-          { value: '3', label: 'Opção 3' }
+          { value: '3', label: 'Opção 3' },
         ],
-        selected: []
-      }
+        selected: [],
+      },
     },
     {
       id: 'block3',
       type: 'image',
       values: {
         src: '',
-        alt: ''
-      }
-    }
+        alt: '',
+      },
+    },
   ]);
 
   const handleBlockChange = (blockId: string, newValues: Record<string, unknown>) => {
-    setBlocks(prevBlocks => 
-      prevBlocks.map(block => 
-        block.id === blockId 
-          ? { ...block, values: newValues }
-          : block
-      )
+    setBlocks(prevBlocks =>
+      prevBlocks.map(block => (block.id === blockId ? { ...block, values: newValues } : block))
     );
   };
 
@@ -137,14 +133,14 @@ export const EditorExample: React.FC = () => {
         }
 
         .editor-example-block {
-          background: #F9FAFB;
+          background: #f9fafb;
           padding: 16px;
           border-radius: 8px;
         }
 
         .editor-example-block h3 {
           margin: 0 0 16px;
-          color: #1F2937;
+          color: #1f2937;
         }
       `}</style>
     </ValidationProvider>

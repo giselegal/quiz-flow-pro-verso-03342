@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useEditorFieldValidation } from '../../hooks/useEditorFieldValidation';
 import { ValidationProps } from '../../types/editor';
-import { useValidationContext } from '../../context/ValidationContext';
 import { ValidationFeedback } from '../ui/ValidationFeedback';
 
 interface ValidatedInputProps {
@@ -22,25 +22,23 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
   onBlur,
   validations = [],
   placeholder,
-  className = ''
+  className = '',
 }) => {
-  const { validateField, getFieldErrors, clearFieldErrors } = useValidationContext();
-  const [touched, setTouched] = useState(false);
+  const { validateField, getFieldErrors, isFieldTouched } = useEditorFieldValidation();
   const errors = getFieldErrors(id);
-  const hasError = touched && errors.length > 0;
+  const hasError = isFieldTouched(id) && errors.length > 0;
 
   useEffect(() => {
-    if (touched) {
+    if (isFieldTouched(id)) {
       validateField(id, value, validations);
     }
-  }, [id, value, validations, touched, validateField]);
+  }, [id, value, validations, isFieldTouched, validateField]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
 
   const handleBlur = () => {
-    setTouched(true);
     validateField(id, value, validations);
     onBlur?.();
   };
@@ -48,14 +46,11 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
   return (
     <div className="validated-input-container">
       {label && (
-        <label 
-          htmlFor={id}
-          className="validated-input-label"
-        >
+        <label htmlFor={id} className="validated-input-label">
           {label}
         </label>
       )}
-      
+
       <input
         id={id}
         value={value}
@@ -66,15 +61,13 @@ export const ValidatedInput: React.FC<ValidatedInputProps> = ({
       />
 
       {hasError && (
-        <ValidationFeedback 
+        <ValidationFeedback
           result={{
             success: false,
-            errors: errors
+            errors: errors,
           }}
         />
       )}
-
-      
     </div>
   );
 };
