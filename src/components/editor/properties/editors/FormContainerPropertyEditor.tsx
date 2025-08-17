@@ -217,7 +217,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
 
       <CardContent className="space-y-4 max-h-[70vh] overflow-y-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-5 h-8">
+          <TabsList className="grid w-full grid-cols-4 h-8">
             <TabsTrigger value="fields" className="text-xs">
               <FileText className="h-3 w-3 mr-1" />
               Campos
@@ -233,10 +233,6 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
             <TabsTrigger value="style" className="text-xs">
               <Palette className="h-3 w-3 mr-1" />
               Estilo
-            </TabsTrigger>
-            <TabsTrigger value="behavior" className="text-xs">
-              <Settings className="h-3 w-3 mr-1" />
-              Comportamento
             </TabsTrigger>
           </TabsList>
 
@@ -394,6 +390,14 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                 />
               </div>
 
+              {enableButtonOnlyWhenValid && (
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-xs text-blue-700">
+                    ⚠️ Validação ativa: O botão ficará desabilitado até que todos os campos obrigatórios sejam preenchidos.
+                  </p>
+                </div>
+              )}
+
               <PropertyColorPicker
                 label="Cor de Fundo do Botão"
                 value={buttonBackgroundColor}
@@ -413,7 +417,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                 value={buttonFontSize}
                 onChange={value => handleContentUpdate('buttonFontSize', value)}
                 min={12}
-                max={24}
+                max={28}
                 step={1}
                 unit="px"
               />
@@ -491,7 +495,7 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Efeito Hover</Label>
-                  <p className="text-xs text-gray-500">Animação ao passar o mouse</p>
+                  <p className="text-xs text-gray-500">Animação ao passar o mouse (escala 105%)</p>
                 </div>
                 <Switch
                   checked={buttonHoverEffect}
@@ -513,34 +517,50 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="step">Próxima Etapa</SelectItem>
+                    <SelectItem value="step">Próxima Etapa (Recomendado)</SelectItem>
                     <SelectItem value="url">URL Personalizada</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               {navigationMode === 'step' ? (
-                <PropertySlider
-                  label="Próxima Etapa"
-                  value={nextStep}
-                  onChange={value => handleContentUpdate('nextStep', value)}
-                  min={1}
-                  max={50}
-                  step={1}
-                />
+                <>
+                  <PropertySlider
+                    label="Próxima Etapa"
+                    value={nextStep}
+                    onChange={value => handleContentUpdate('nextStep', value)}
+                    min={2}
+                    max={50}
+                    step={1}
+                  />
+                  <div className="p-3 bg-green-50 border border-green-200 rounded">
+                    <p className="text-xs text-green-700">
+                      ✅ Configurado para ir para a etapa {nextStep} após submissão do formulário.
+                    </p>
+                  </div>
+                </>
               ) : (
-                <PropertyInput
-                  label="URL de Destino"
-                  value={nextUrl}
-                  onChange={value => handleContentUpdate('nextUrl', value)}
-                  placeholder="https://exemplo.com/proxima-pagina"
-                />
+                <>
+                  <PropertyInput
+                    label="URL de Destino"
+                    value={nextUrl}
+                    onChange={value => handleContentUpdate('nextUrl', value)}
+                    placeholder="https://exemplo.com/proxima-pagina"
+                  />
+                  {nextUrl && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded">
+                      <p className="text-xs text-green-700">
+                        ✅ Configurado para redirecionar para: {nextUrl}
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Avançar Automaticamente</Label>
-                  <p className="text-xs text-gray-500">Vai para próxima etapa automaticamente após preencher</p>
+                  <p className="text-xs text-gray-500">Navega automaticamente após submissão bem-sucedida</p>
                 </div>
                 <Switch
                   checked={autoAdvanceOnComplete}
@@ -548,12 +568,24 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
                 />
               </div>
 
-              <PropertyInput
-                label="Chave de Dados (Supabase)"
-                value={dataKey}
-                onChange={value => handleContentUpdate('dataKey', value)}
-                placeholder="userData"
-              />
+              <Separator />
+
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-[#6B4F43]">Integração com Banco de Dados</h4>
+                
+                <PropertyInput
+                  label="Chave de Dados (Supabase)"
+                  value={dataKey}
+                  onChange={value => handleContentUpdate('dataKey', value)}
+                  placeholder="userData"
+                />
+
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded">
+                  <p className="text-xs text-amber-700">
+                    💾 Os dados coletados serão salvos no Supabase usando a chave: <code className="bg-amber-100 px-1 rounded">{dataKey || 'userData'}</code>
+                  </p>
+                </div>
+              </div>
             </div>
           </TabsContent>
 
@@ -607,81 +639,49 @@ export const FormContainerPropertyEditor: React.FC<FormContainerPropertyEditorPr
               />
             </div>
           </TabsContent>
+        </Tabs>
 
-          <TabsContent value="behavior" className="space-y-4 m-0">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Mostrar Feedback de Validação</Label>
-                  <p className="text-xs text-gray-500">Exibe mensagens de erro/sucesso</p>
-                </div>
-                <Switch
-                  checked={showValidationFeedback}
-                  onCheckedChange={checked => handleContentUpdate('showValidationFeedback', checked)}
-                />
-              </div>
+        <Separator />
 
-              <div className="space-y-4">
-                <h4 className="text-sm font-medium text-[#6B4F43]">Espaçamento</h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <PropertySlider
-                    label="Margem Superior"
-                    value={marginTop}
-                    onChange={value => handleContentUpdate('marginTop', value)}
-                    min={0}
-                    max={100}
-                    step={4}
-                    unit="px"
-                  />
-
-                  <PropertySlider
-                    label="Margem Inferior"
-                    value={marginBottom}
-                    onChange={value => handleContentUpdate('marginBottom', value)}
-                    min={0}
-                    max={100}
-                    step={4}
-                    unit="px"
-                  />
-
-                  <PropertySlider
-                    label="Padding Superior"
-                    value={paddingTop}
-                    onChange={value => handleContentUpdate('paddingTop', value)}
-                    min={0}
-                    max={80}
-                    step={4}
-                    unit="px"
-                  />
-
-                  <PropertySlider
-                    label="Padding Inferior"
-                    value={paddingBottom}
-                    onChange={value => handleContentUpdate('paddingBottom', value)}
-                    min={0}
-                    max={80}
-                    step={4}
-                    unit="px"
-                  />
-
-                  <PropertySlider
-                    label="Padding Esquerdo"
-                    value={paddingLeft}
-                    onChange={value => handleContentUpdate('paddingLeft', value)}
-                    min={0}
-                    max={80}
-                    step={4}
-                    unit="px"
-                  />
-
-                  <PropertySlider
-                    label="Padding Direito"
-                    value={paddingRight}
-                    onChange={value => handleContentUpdate('paddingRight', value)}
-                    min={0}
-                    max={80}
-                    step={4}
-                    unit="px"
+        {/* === CONFIGURAÇÃO RESUMO === */}
+        <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+          <h4 className="text-sm font-medium text-[#6B4F43] flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Resumo da Configuração:
+          </h4>
+          
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between">
+              <span>Campos ativos:</span>
+              <span className="font-medium">
+                {[showNameField && 'Nome', showEmailField && 'Email', showPhoneField && 'Telefone'].filter(Boolean).join(', ') || 'Nenhum'}
+              </span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span>Validação de botão:</span>
+              <span className="font-medium">
+                {enableButtonOnlyWhenValid ? 'Ativada' : 'Desativada'}
+              </span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span>Navegação:</span>
+              <span className="font-medium">
+                {navigationMode === 'step' ? `Etapa ${nextStep}` : (nextUrl || 'Não configurada')}
+              </span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span>Banco de dados:</span>
+              <span className="font-medium">{dataKey}</span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
                   />
                 </div>
               </div>
