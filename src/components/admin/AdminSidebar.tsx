@@ -5,6 +5,7 @@ import {
   BookOpen,
   Code,
   Eye,
+  FileText,
   Home,
   Layers,
   Palette,
@@ -36,6 +37,12 @@ const sidebarItems = [
     href: '/admin/funis',
     icon: Layers,
     description: 'Gerenciar funis de vendas',
+  },
+  {
+    title: 'Templates',
+    href: '/admin/templates',
+    icon: FileText,
+    description: 'Gerenciar templates salvos',
   },
   {
     title: 'Testes A/B',

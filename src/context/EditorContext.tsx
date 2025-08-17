@@ -1,3 +1,5 @@
+import { toast } from '@/hooks/use-toast';
+import { funnelPersistenceService } from '@/services/funnelPersistence';
 import { Block, BlockType, EditorConfig } from '@/types/editor';
 import { EditorAction, EditorState } from '@/types/editorTypes';
 import { ValidationService } from '@/types/validation';
@@ -11,8 +13,6 @@ import React, {
   useState,
 } from 'react';
 import { useTemplateValidation } from '../hooks/useTemplateValidation';
-import { funnelPersistenceService } from '@/services/funnelPersistence';
-import { toast } from '@/hooks/use-toast';
 
 // Extended interface with all expected properties
 interface EditorContextType {
@@ -287,7 +287,7 @@ export const EditorProvider: React.FC<{
   const save = useCallback(async () => {
     console.log('💾 Saving funnel with ID:', currentFunnelId);
     console.log('📊 Blocks to save:', state.blocks.length);
-    
+
     try {
       // Preparar dados para salvamento
       const funnelData = {
@@ -298,19 +298,21 @@ export const EditorProvider: React.FC<{
         isPublished: false,
         version: 1,
         settings: {},
-        pages: [{
-          id: `page-${currentFunnelId}-1`,
-          pageType: 'quiz-step',
-          pageOrder: 1,
-          title: 'Quiz Step',
-          blocks: state.blocks,
-          metadata: { stage: 'step-1', timestamp: new Date().toISOString() }
-        }]
+        pages: [
+          {
+            id: `page-${currentFunnelId}-1`,
+            pageType: 'quiz-step',
+            pageOrder: 1,
+            title: 'Quiz Step',
+            blocks: state.blocks,
+            metadata: { stage: 'step-1', timestamp: new Date().toISOString() },
+          },
+        ],
       };
 
       // Salvar usando o serviço de persistência
       const result = await funnelPersistenceService.saveFunnel(funnelData);
-      
+
       if (result.success) {
         console.log('✅ Funnel salvo com sucesso!');
         toast({

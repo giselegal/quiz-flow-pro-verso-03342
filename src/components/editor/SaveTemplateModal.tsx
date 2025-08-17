@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -7,10 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -19,12 +19,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { FileText, Tag, X } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import { funnelTemplateService } from '@/services/funnelTemplateService';
 import { Block } from '@/types/editor';
+import { FileText, Tag, X } from 'lucide-react';
+import React, { useState } from 'react';
 
 interface SaveTemplateModalProps {
   isOpen: boolean;
@@ -39,9 +39,9 @@ const TEMPLATE_CATEGORIES = {
   'lead-generation': 'Geração de Leads',
   'personality-test': 'Teste de Personalidade',
   'product-recommendation': 'Recomendação de Produto',
-  'assessment': 'Avaliações',
+  assessment: 'Avaliações',
   'offer-funnel': 'Funil de Oferta',
-  'custom': 'Personalizado',
+  custom: 'Personalizado',
 };
 
 const TEMPLATE_THEMES = {
@@ -69,7 +69,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
     isOfficial: false,
     tags: [] as string[],
   });
-  
+
   const [newTag, setNewTag] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -175,7 +175,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
       }
     } catch (error) {
       console.error('❌ Erro ao salvar template:', error);
-      
+
       // Fallback: salvar no localStorage
       try {
         const localTemplate = {
@@ -187,9 +187,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
           updatedAt: new Date().toISOString(),
         };
 
-        const existingTemplates = JSON.parse(
-          localStorage.getItem('saved-templates') || '[]'
-        );
+        const existingTemplates = JSON.parse(localStorage.getItem('saved-templates') || '[]');
         existingTemplates.push(localTemplate);
         localStorage.setItem('saved-templates', JSON.stringify(existingTemplates));
 
@@ -239,7 +237,8 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
             Salvar como Template
           </DialogTitle>
           <DialogDescription>
-            Salve o funil atual como um template reutilizável. O template incluirá todos os {currentBlocks.length} componentes atuais.
+            Salve o funil atual como um template reutilizável. O template incluirá todos os{' '}
+            {currentBlocks.length} componentes atuais.
           </DialogDescription>
         </DialogHeader>
 
@@ -248,7 +247,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
           <Card>
             <CardContent className="p-4 space-y-4">
               <h3 className="font-semibold text-[#432818]">Informações Básicas</h3>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="template-name">Nome do Template *</Label>
                 <Input
@@ -265,7 +264,9 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
                   id="template-description"
                   placeholder="Descreva o propósito e características do seu template..."
                   value={templateData.description}
-                  onChange={e => setTemplateData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={e =>
+                    setTemplateData(prev => ({ ...prev, description: e.target.value }))
+                  }
                   rows={3}
                 />
               </div>
@@ -276,7 +277,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
           <Card>
             <CardContent className="p-4 space-y-4">
               <h3 className="font-semibold text-[#432818]">Categorização</h3>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="template-category">Categoria</Label>
@@ -323,7 +324,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
           <Card>
             <CardContent className="p-4 space-y-4">
               <h3 className="font-semibold text-[#432818]">Tags</h3>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="new-tag">Adicionar Tags</Label>
                 <div className="flex gap-2">
@@ -362,7 +363,7 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
           <Card>
             <CardContent className="p-4 space-y-4">
               <h3 className="font-semibold text-[#432818]">Configurações</h3>
-              
+
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <Label htmlFor="is-official">Template Oficial</Label>
@@ -373,7 +374,9 @@ export const SaveTemplateModal: React.FC<SaveTemplateModalProps> = ({
                 <Switch
                   id="is-official"
                   checked={templateData.isOfficial}
-                  onCheckedChange={checked => setTemplateData(prev => ({ ...prev, isOfficial: checked }))}
+                  onCheckedChange={checked =>
+                    setTemplateData(prev => ({ ...prev, isOfficial: checked }))
+                  }
                 />
               </div>
             </CardContent>

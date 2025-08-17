@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useSavedTemplates, type SavedTemplate } from '@/hooks/useSavedTemplates';
 import {
-  FileText,
-  Edit3,
-  Copy,
-  Trash2,
-  Download,
-  MoreVertical,
-  Eye,
   Calendar,
+  Copy,
+  Download,
+  Edit3,
+  Eye,
+  FileText,
+  MoreVertical,
   Tag,
+  Trash2,
 } from 'lucide-react';
-import { funnelTemplateService, type FunnelTemplate } from '@/services/funnelTemplateService';
-import { toast } from '@/hooks/use-toast';
+import React, { useEffect } from 'react';
 
 interface SavedTemplatesDashboardProps {
   onSelectTemplate?: (templateId: string) => void;
@@ -35,142 +34,70 @@ export const SavedTemplatesDashboard: React.FC<SavedTemplatesDashboardProps> = (
   onDuplicateTemplate,
   onLoadTemplate,
 }) => {
-  const [templates, setTemplates] = useState<FunnelTemplate[]>([]);
-  const [localTemplates, setLocalTemplates] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    templates,
+    localTemplates,
+    isLoading,
+    loadSavedTemplates,
+    loadTemplateToEditor,
+    duplicateTemplate,
+    deleteTemplate,
+    exportTemplate,
+    findTemplateById,
+  } = useSavedTemplates();
 
   useEffect(() => {
-    loadTemplates();
-  }, []);
+    loadSavedTemplates();
+  }, [loadSavedTemplates]);
 
-  const loadTemplates = async () => {
-    setIsLoading(true);
+  const handleLoadTemplate = async (templateId: string) => {
     try {
-      // Carregar templates do Supabase
-      const supabaseTemplates = await funnelTemplateService.getUserTemplates();
-      setTemplates(supabaseTemplates || []);
-
-      // Carregar templates locais
-      const localTemplatesStr = localStorage.getItem('saved-templates');
-      if (localTemplatesStr) {
-        const parsedLocalTemplates = JSON.parse(localTemplatesStr);
-        setLocalTemplates(parsedLocalTemplates || []);
+      const result = findTemplateById(templateId);
+      if (result) {
+        const template = await loadTemplateToEditor(templateId, result.isLocal);
+        onLoadTemplate?.(templateId);
+        console.log('Template carregado:', template);
       }
     } catch (error) {
-      console.error('Erro ao carregar templates:', error);
-      toast({
-        title: 'Erro',
-        description: 'Erro ao carregar templates salvos.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
+      console.error('Erro ao carregar template:', error);
     }
   };
 
-  const handleDeleteTemplate = async (templateId: string, isLocal: boolean = false) => {
+  const handleDuplicateTemplate = async (templateId: string) => {
+    try {
+      const result = findTemplateById(templateId);
+      if (result) {
+        const duplicated = await duplicateTemplate(templateId, result.isLocal);
+        onDuplicateTemplate?.(duplicated.id);
+      }
+    } catch (error) {
+      console.error('Erro ao duplicar template:', error);
+    }
+  };
+
+  const handleDeleteTemplate = async (templateId: string) => {
     if (!window.confirm('Tem certeza que deseja excluir este template?')) {
       return;
     }
 
     try {
-      if (isLocal) {
-        // Remover template local
-        const updatedLocalTemplates = localTemplates.filter(t => t.id !== templateId);
-        setLocalTemplates(updatedLocalTemplates);
-        localStorage.setItem('saved-templates', JSON.stringify(updatedLocalTemplates));
-      } else {
-        // Remover template do Supabase
-        await funnelTemplateService.deleteTemplate(templateId);
-        setTemplates(prev => prev.filter(t => t.id !== templateId));
+      const result = findTemplateById(templateId);
+      if (result) {
+        await deleteTemplate(templateId, result.isLocal);
       }
-
-      toast({
-        title: 'Sucesso',
-        description: 'Template excluído com sucesso.',
-        variant: 'default',
-      });
     } catch (error) {
       console.error('Erro ao excluir template:', error);
-      toast({
-        title: 'Erro',
-        description: 'Erro ao excluir template.',
-        variant: 'destructive',
-      });
     }
   };
 
-  const handleDuplicateTemplate = async (template: any, isLocal: boolean = false) => {
+  const handleExportTemplate = async (templateId: string) => {
     try {
-      const duplicatedTemplate = {
-        ...template,
-        id: `${template.id}-copy-${Date.now()}`,
-        name: `${template.name} (Cópia)`,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      if (isLocal) {
-        // Duplicar template local
-        const updatedLocalTemplates = [...localTemplates, duplicatedTemplate];
-        setLocalTemplates(updatedLocalTemplates);
-        localStorage.setItem('saved-templates', JSON.stringify(updatedLocalTemplates));
-      } else {
-        // Duplicar template no Supabase
-        const newTemplateId = await funnelTemplateService.saveTemplate(duplicatedTemplate);
-        if (newTemplateId) {
-          loadTemplates(); // Recarregar lista
-        }
+      const result = findTemplateById(templateId);
+      if (result) {
+        await exportTemplate(templateId, result.isLocal);
       }
-
-      toast({
-        title: 'Sucesso',
-        description: 'Template duplicado com sucesso.',
-        variant: 'default',
-      });
-
-      onDuplicateTemplate?.(duplicatedTemplate.id);
-    } catch (error) {
-      console.error('Erro ao duplicar template:', error);
-      toast({
-        title: 'Erro',
-        description: 'Erro ao duplicar template.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleExportTemplate = (template: any) => {
-    try {
-      const exportData = {
-        ...template,
-        exportedAt: new Date().toISOString(),
-        version: '1.0.0',
-      };
-
-      const dataStr = JSON.stringify(exportData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `template-${template.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.json`;
-      link.click();
-
-      URL.revokeObjectURL(url);
-
-      toast({
-        title: 'Sucesso',
-        description: 'Template exportado com sucesso.',
-        variant: 'default',
-      });
     } catch (error) {
       console.error('Erro ao exportar template:', error);
-      toast({
-        title: 'Erro',
-        description: 'Erro ao exportar template.',
-        variant: 'destructive',
-      });
     }
   };
 
@@ -182,27 +109,33 @@ export const SavedTemplatesDashboard: React.FC<SavedTemplatesDashboardProps> = (
     });
   };
 
-  const TemplateCard = ({ template, isLocal = false }: { template: any; isLocal?: boolean }) => (
+  const TemplateCard = ({
+    template,
+    isLocal = false,
+  }: {
+    template: SavedTemplate;
+    isLocal?: boolean;
+  }) => (
     <Card className="hover:shadow-lg transition-all duration-300 group">
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <h3 className="font-semibold text-[#432818] mb-1 line-clamp-1">
-              {template.name}
-            </h3>
-            <p className="text-sm text-[#6B4F43] mb-2 line-clamp-2">
-              {template.description}
-            </p>
+            <h3 className="font-semibold text-[#432818] mb-1 line-clamp-1">{template.name}</h3>
+            <p className="text-sm text-[#6B4F43] mb-2 line-clamp-2">{template.description}</p>
           </div>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+              >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onLoadTemplate?.(template.id)}>
+              <DropdownMenuItem onClick={() => handleLoadTemplate(template.id)}>
                 <Eye className="h-4 w-4 mr-2" />
                 Carregar no Editor
               </DropdownMenuItem>
@@ -210,16 +143,16 @@ export const SavedTemplatesDashboard: React.FC<SavedTemplatesDashboardProps> = (
                 <Edit3 className="h-4 w-4 mr-2" />
                 Editar
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDuplicateTemplate(template, isLocal)}>
+              <DropdownMenuItem onClick={() => handleDuplicateTemplate(template.id)}>
                 <Copy className="h-4 w-4 mr-2" />
                 Duplicar
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExportTemplate(template)}>
+              <DropdownMenuItem onClick={() => handleExportTemplate(template.id)}>
                 <Download className="h-4 w-4 mr-2" />
                 Exportar JSON
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => handleDeleteTemplate(template.id, isLocal)}
+              <DropdownMenuItem
+                onClick={() => handleDeleteTemplate(template.id)}
                 className="text-red-600"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -231,13 +164,13 @@ export const SavedTemplatesDashboard: React.FC<SavedTemplatesDashboardProps> = (
 
         <div className="flex items-center justify-between text-xs text-[#8B7355] mb-3">
           <div className="flex items-center gap-4">
-            <span>{template.stepCount || template.components?.length || 0} componentes</span>
+            <span>{template.stepCount || 0} componentes</span>
             <div className="flex items-center gap-1">
               <Calendar className="h-3 w-3" />
               {formatDate(template.createdAt || template.updatedAt)}
             </div>
           </div>
-          
+
           {isLocal && (
             <Badge variant="outline" className="text-xs">
               Local
@@ -265,7 +198,7 @@ export const SavedTemplatesDashboard: React.FC<SavedTemplatesDashboardProps> = (
           <Button
             size="sm"
             className="flex-1 bg-[#B89B7A] hover:bg-[#A38A69] text-white"
-            onClick={() => onLoadTemplate?.(template.id)}
+            onClick={() => handleLoadTemplate(template.id)}
           >
             Carregar no Editor
           </Button>
@@ -312,7 +245,7 @@ export const SavedTemplatesDashboard: React.FC<SavedTemplatesDashboardProps> = (
             Templates salvos que você pode reutilizar em novos projetos
           </p>
         </div>
-        <Button onClick={loadTemplates} variant="outline" className="border-[#B89B7A]">
+        <Button onClick={loadSavedTemplates} variant="outline" className="border-[#B89B7A]">
           Atualizar Lista
         </Button>
       </div>

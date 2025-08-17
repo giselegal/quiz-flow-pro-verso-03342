@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { SavedTemplatesDashboard } from '@/components/dashboard/SavedTemplatesDashboard';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Users, TrendingUp, Eye, Edit3, Copy, Trash2, Plus } from 'lucide-react';
-import FunnelTemplatesDashboard from './FunnelTemplatesDashboard';
+import { BarChart3, Copy, Edit3, Eye, Plus, Trash2, TrendingUp, Users } from 'lucide-react';
+import React, { useState } from 'react';
 import TemplateImportExport from '../TemplateImportExport';
+import FunnelTemplatesDashboard from './FunnelTemplatesDashboard';
 
 interface DashboardStats {
   totalFunnels: number;
@@ -35,6 +36,9 @@ interface EnhancedEditorDashboardProps {
   onCreateFromTemplate?: (templateId: string) => void;
   onImportTemplate?: () => void;
   onExportTemplate?: (templateId: string) => void;
+  onLoadSavedTemplate?: (templateId: string) => void;
+  onEditSavedTemplate?: (templateId: string) => void;
+  onDuplicateSavedTemplate?: (templateId: string) => void;
 }
 
 const DEFAULT_STATS: DashboardStats = {
@@ -85,6 +89,9 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
   onCreateFromTemplate,
   onImportTemplate,
   onExportTemplate,
+  onLoadSavedTemplate,
+  onEditSavedTemplate,
+  onDuplicateSavedTemplate,
 }) => {
   const [selectedFunnel, setSelectedFunnel] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('my-funnels');
@@ -134,8 +141,9 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
 
       {/* Tabs for different views */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="my-funnels">Meus Funis</TabsTrigger>
+          <TabsTrigger value="my-templates">Meus Templates</TabsTrigger>
           <TabsTrigger value="templates">Modelos de Funil</TabsTrigger>
         </TabsList>
 
@@ -275,6 +283,18 @@ export const EnhancedEditorDashboard: React.FC<EnhancedEditorDashboardProps> = (
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* My Templates Tab */}
+        <TabsContent value="my-templates">
+          <SavedTemplatesDashboard
+            onSelectTemplate={templateId => {
+              console.log('Saved template selected:', templateId);
+            }}
+            onEditTemplate={onEditSavedTemplate}
+            onDuplicateTemplate={onDuplicateSavedTemplate}
+            onLoadTemplate={onLoadSavedTemplate}
+          />
         </TabsContent>
 
         {/* Templates Tab */}

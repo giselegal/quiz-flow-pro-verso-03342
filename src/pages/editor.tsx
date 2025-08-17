@@ -7,8 +7,8 @@ import { DndProvider } from '@/components/editor/dnd/DndProvider';
 import { FunnelSettingsPanel } from '@/components/editor/funnel-settings/FunnelSettingsPanel';
 import { FunnelStagesPanel } from '@/components/editor/funnel/FunnelStagesPanel';
 import { FourColumnLayout } from '@/components/editor/layout/FourColumnLayout';
-import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 import { SaveTemplateModal } from '@/components/editor/SaveTemplateModal';
+import { EditorToolbar } from '@/components/enhanced-editor/toolbar/EditorToolbar';
 // 🚀 PREVIEW SYSTEM
 import { PreviewNavigation } from '@/components/preview/PreviewNavigation';
 import { PreviewToggleButton } from '@/components/preview/PreviewToggleButton';
@@ -260,7 +260,7 @@ const EditorFixedPageWithDragDrop: React.FC = () => {
           onClose={() => setShowSaveTemplateModal(false)}
           currentBlocks={currentBlocks || []}
           currentFunnelId={activeStageId || 'default'}
-          onSaveSuccess={(templateId) => {
+          onSaveSuccess={templateId => {
             console.log('✅ Template salvo com ID:', templateId);
             // Opcional: redirecionar para dashboard ou mostrar próximos passos
           }}

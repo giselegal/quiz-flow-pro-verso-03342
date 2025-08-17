@@ -1,6 +1,6 @@
-import React from 'react';
 import { useEditor } from '@/context/EditorContext';
 import { QUIZ_STYLE_21_STEPS_TEMPLATE } from '@/templates/quiz21StepsComplete';
+import React from 'react';
 
 const DebugStep02: React.FC = () => {
   const { computed, stageActions, blockActions, activeStageId } = useEditor();

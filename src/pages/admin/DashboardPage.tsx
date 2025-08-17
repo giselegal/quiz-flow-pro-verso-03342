@@ -12,6 +12,7 @@ const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
 const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
 const EditorPage = lazy(() => import('./EditorPage'));
+const TemplatesPage = lazy(() => import('./TemplatesPage'));
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -46,6 +47,7 @@ const DashboardPage: React.FC = () => {
               <Route path="/admin/criativos" component={CreativesPage} />
               <Route path="/admin/analytics" component={AnalyticsPage} />
               <Route path="/admin/editor" component={EditorPage} />
+              <Route path="/admin/templates" component={TemplatesPage} />
             </Switch>
           </Suspense>
         </main>
