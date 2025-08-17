@@ -11,6 +11,8 @@ import React, {
   useState,
 } from 'react';
 import { useTemplateValidation } from '../hooks/useTemplateValidation';
+import { funnelPersistenceService } from '@/services/funnelPersistence';
+import { toast } from '@/hooks/use-toast';
 
 // Extended interface with all expected properties
 interface EditorContextType {
@@ -285,8 +287,53 @@ export const EditorProvider: React.FC<{
   const save = useCallback(async () => {
     console.log('💾 Saving funnel with ID:', currentFunnelId);
     console.log('📊 Blocks to save:', state.blocks.length);
-    // Here you would integrate with Supabase or your backend
-    // await saveFunnelToSupabase(currentFunnelId, state.blocks);
+    
+    try {
+      // Preparar dados para salvamento
+      const funnelData = {
+        id: currentFunnelId,
+        name: `Funnel ${currentFunnelId}`,
+        description: 'Funnel criado no editor',
+        userId: 'anonymous',
+        isPublished: false,
+        version: 1,
+        settings: {},
+        pages: [{
+          id: `page-${currentFunnelId}-1`,
+          pageType: 'quiz-step',
+          pageOrder: 1,
+          title: 'Quiz Step',
+          blocks: state.blocks,
+          metadata: { stage: 'step-1', timestamp: new Date().toISOString() }
+        }]
+      };
+
+      // Salvar usando o serviço de persistência
+      const result = await funnelPersistenceService.saveFunnel(funnelData);
+      
+      if (result.success) {
+        console.log('✅ Funnel salvo com sucesso!');
+        toast({
+          title: 'Sucesso!',
+          description: 'Funnel salvo com sucesso.',
+          variant: 'default',
+        });
+      } else {
+        console.warn('⚠️ Salvamento parcial:', result.error);
+        toast({
+          title: 'Aviso',
+          description: result.error || 'Salvamento parcial - dados salvos localmente.',
+          variant: 'default',
+        });
+      }
+    } catch (error) {
+      console.error('❌ Erro ao salvar funnel:', error);
+      toast({
+        title: 'Erro',
+        description: 'Erro ao salvar. Tente novamente.',
+        variant: 'destructive',
+      });
+    }
   }, [currentFunnelId, state.blocks]);
 
   // Mock data for stages (21 stages)
