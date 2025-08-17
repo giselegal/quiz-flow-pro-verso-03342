@@ -20,7 +20,7 @@ const STEP_COMPONENT_TEMPLATE = stepNumber => {
   const stepId = stepNumber.toString().padStart(2, '0');
 
   return `import React from 'react';
-import { TemplateRenderer } from '../template/TemplateRenderer';
+import { TemplateRenderer } from '../templates/TemplateRenderer';
 
 /**
  * 📋 STEP ${stepId} - Quiz Template Component

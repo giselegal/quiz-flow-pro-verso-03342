@@ -1,5 +1,5 @@
 import React from 'react';
-import { TemplateRenderer } from '../template/TemplateRenderer';
+import { TemplateRenderer } from '../templates/TemplateRenderer';
 
 /**
  * 📋 STEP 17 - Quiz Template Component
